@@ -13,8 +13,7 @@ class PhotosAlbumManager: AlbumManager {
     
     var albums:[Album] = [Album]()
     
-    
-    func loadAlbums(completionHandler: (Error) -> Void) {
+    func loadAlbums(completionHandler: ((Error?) -> Void)?) {
         let options : PHFetchOptions = PHFetchOptions()
         options.wantsIncrementalChangeDetails = false
         options.includeHiddenAssets = false
@@ -64,6 +63,8 @@ class PhotosAlbumManager: AlbumManager {
             let album = PhotosAlbum(collection)
             self.albums.append(album)
         })
+        
+        completionHandler?(nil)
         
     }
     

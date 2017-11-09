@@ -11,5 +11,5 @@ import UIKit
 protocol AlbumManager {
     var albums:[Album] { get }
     
-    func loadAlbums(completionHandler: (_ error: Error) -> Void)
+    func loadAlbums(completionHandler: ((_ error: Error?) -> Void)?)
 }

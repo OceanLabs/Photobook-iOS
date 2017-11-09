@@ -10,6 +10,8 @@ import UIKit
 
 class AlbumsCollectionViewController: UICollectionViewController {
     
+    var searchController: UISearchController?
+    
     let albumCellLabelsHeight = CGFloat(50)
     let marginBetweenAlbums = CGFloat(20)
     
@@ -18,27 +20,40 @@ class AlbumsCollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Setup the Search Controller
+        let searchResultsViewController = self.storyboard?.instantiateViewController(withIdentifier: "AlbumSearchResultsTableViewController") as! AlbumSearchResultsTableViewController
+        searchController = UISearchController(searchResultsController: searchResultsViewController)
+        searchController?.searchResultsUpdater = searchResultsViewController
+        searchController?.searchBar.placeholder = "Search Albums"
+        searchController?.searchBar.barTintColor = UIColor.white
+        
         if #available(iOS 11.0, *) {
             self.navigationController?.navigationBar.prefersLargeTitles = true
         }
         
         albumManager.loadAlbums(completionHandler: {(error) in
-            collectionView?.reloadData()
+            self.collectionView?.reloadData()
+            searchResultsViewController.albums = self.albumManager.albums
         })
     }
+    
+    @IBAction func searchIconTapped(_ sender: Any) {
+        guard let searchController = searchController else { return }
+        present(searchController, animated: true, completion: nil)
+    }
+    
     
 }
 
 extension AlbumsCollectionViewController{
-
-    // MARK: UICollectionViewDataSource
+    // MARK: - UICollectionViewDataSource
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return albumManager.albums.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumCollectionViewCell", for: indexPath) as! AlbumCollectionViewCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumCollectionViewCell", for: indexPath) as? AlbumCollectionViewCell else { return UICollectionViewCell() }
     
         let album = albumManager.albums[indexPath.item]
         cell.albumId = album.identifier
@@ -67,6 +82,7 @@ extension AlbumsCollectionViewController{
 }
 
 extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout{
+    // MARK: - UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var usableSpace = collectionView.frame.size.width - marginBetweenAlbums;
         if let insets = (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset{
