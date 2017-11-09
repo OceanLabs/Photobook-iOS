@@ -10,11 +10,6 @@
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="LeagueGothic-Regular.otf">
-            <string>LeagueGothic-Regular</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--Stories-->
         <scene sceneID="tne-QT-ifu">
@@ -46,7 +41,7 @@
                                     </constraints>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SingleStoryTableViewCell" rowHeight="210" id="htl-9v-aX7" customClass="SingleStoryTableViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="StoryTableViewCell" rowHeight="210" id="htl-9v-aX7" customClass="StoryTableViewCell" customModule="Photobook" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="72" width="414" height="210"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="htl-9v-aX7" id="eJT-Z8-4Pn">
@@ -64,17 +59,24 @@
                                                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zha-Il-YlN">
-                                                            <rect key="frame" x="15" y="62" width="344" height="77"/>
+                                                            <rect key="frame" x="15" y="45.666666666666664" width="344" height="110.33333333333334"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LAST WEEK" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RjH-Ge-cK0">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="344" height="62.666666666666664"/>
-                                                                    <fontDescription key="fontDescription" name="LeagueGothic-Regular" family="League Gothic" pointSize="52"/>
-                                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RjH-Ge-cK0">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="344" height="96"/>
+                                                                    <attributedString key="attributedText">
+                                                                        <fragment content="LAST WEEK WAS QUITE AMAZING">
+                                                                            <attributes>
+                                                                                <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                                <font key="NSFont" size="48" name="LeagueGothic-Regular"/>
+                                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" maximumLineHeight="48" tighteningFactorForTruncation="0.0"/>
+                                                                            </attributes>
+                                                                        </fragment>
+                                                                    </attributedString>
                                                                     <nil key="highlightedColor"/>
                                                                     <size key="shadowOffset" width="0.0" height="0.0"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SEP 2017" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sg0-91-3dP">
-                                                                    <rect key="frame" x="0.0" y="62.666666666666664" width="344" height="14.333333333333336"/>
+                                                                    <rect key="frame" x="0.0" y="96" width="344" height="14.333333333333329"/>
                                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
                                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                     <nil key="highlightedColor"/>
@@ -94,7 +96,6 @@
                                                     </subviews>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Zha-Il-YlN" secondAttribute="bottom" id="8mp-kR-KC3"/>
                                                         <constraint firstAttribute="trailing" secondItem="brz-7e-Mrr" secondAttribute="trailing" id="CEs-Pb-dKv"/>
                                                         <constraint firstAttribute="bottom" secondItem="Y3Z-vI-ghw" secondAttribute="bottom" id="DrM-QZ-nok"/>
                                                         <constraint firstItem="brz-7e-Mrr" firstAttribute="leading" secondItem="CPv-r5-C4F" secondAttribute="leading" id="GLe-Ey-1rB"/>
@@ -107,7 +108,6 @@
                                                         <constraint firstItem="Y3Z-vI-ghw" firstAttribute="leading" secondItem="CPv-r5-C4F" secondAttribute="leading" id="tJ0-d9-roO"/>
                                                         <constraint firstAttribute="trailing" secondItem="Y3Z-vI-ghw" secondAttribute="trailing" id="und-Hm-HDX"/>
                                                         <constraint firstAttribute="bottom" secondItem="brz-7e-Mrr" secondAttribute="bottom" id="vH9-gA-b7M"/>
-                                                        <constraint firstItem="Zha-Il-YlN" firstAttribute="top" relation="greaterThanOrEqual" secondItem="CPv-r5-C4F" secondAttribute="top" id="wky-dc-Uz2"/>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -286,12 +286,12 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="leftCoverImageView" destination="XP8-sz-FlQ" id="Mop-zY-MTe"/>
-                                            <outlet property="leftDatesLabel" destination="98S-YZ-ATE" id="K7Q-XF-Y1B"/>
-                                            <outlet property="leftTitleLabel" destination="eOz-ny-Awi" id="NVe-V4-rap"/>
-                                            <outlet property="rightCoverImageView" destination="OAo-UX-egq" id="pXI-ym-m1A"/>
-                                            <outlet property="rightDatesLabel" destination="S8o-db-JJh" id="4wL-x2-RZe"/>
-                                            <outlet property="rightTitleLabel" destination="a7S-9F-Ten" id="apd-AH-bGa"/>
+                                            <outlet property="coverImageView" destination="XP8-sz-FlQ" id="SDH-7i-pZr"/>
+                                            <outlet property="datesLabel" destination="98S-YZ-ATE" id="6AG-sf-7YU"/>
+                                            <outlet property="secondCoverImageView" destination="OAo-UX-egq" id="c4g-SH-18t"/>
+                                            <outlet property="secondDatesLabel" destination="S8o-db-JJh" id="Cvq-ff-Ckk"/>
+                                            <outlet property="secondTitleLabel" destination="a7S-9F-Ten" id="mPj-5E-5Ba"/>
+                                            <outlet property="titleLabel" destination="eOz-ny-Awi" id="GMa-bY-W7p"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

@@ -43,5 +43,7 @@
 	<array>
 		<string>LeagueGothic-Regular.otf</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Permission is required so you can use your photos in the app</string>
 </dict>
 </plist>

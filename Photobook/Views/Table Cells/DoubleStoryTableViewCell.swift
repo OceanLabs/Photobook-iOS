@@ -8,30 +8,17 @@
 
 import UIKit
 
-class DoubleStoryTableViewCell: UITableViewCell {
+class DoubleStoryTableViewCell: StoryTableViewCell {
     
-    static let reuseIdentifier = NSStringFromClass(DoubleStoryTableViewCell.self).components(separatedBy: ".").last!
-    
-    @IBOutlet private weak var leftTitleLabel: UILabel!
-    @IBOutlet private weak var leftDatesLabel: UILabel!
-    @IBOutlet private weak var leftCoverImageView: UIImageView!
-    @IBOutlet private weak var rightTitleLabel: UILabel!
-    @IBOutlet private weak var rightDatesLabel: UILabel!
-    @IBOutlet private weak var rightCoverImageView: UIImageView!
-    
-    var leftStoryViewModel: StoryViewModel? {
-        didSet {
-            leftTitleLabel.text = leftStoryViewModel?.title //setTextWithLineSpacing(text: leftStoryViewModel?.title, lineHeightMultiple: 0.9)
-            leftDatesLabel.text = leftStoryViewModel?.dates
-            leftCoverImageView.image = leftStoryViewModel?.image
-        }
+    override class func reuseIdentifier() -> String {
+        return NSStringFromClass(StoryTableViewCell.self).components(separatedBy: ".").last!
     }
+
+    @IBOutlet private weak var secondTitleLabel: UILabel!
+    @IBOutlet private weak var secondDatesLabel: UILabel!
+    @IBOutlet private weak var secondCoverImageView: UIImageView!
     
-    var rightStoryViewModel: StoryViewModel? {
-        didSet {
-            rightTitleLabel.text = rightStoryViewModel?.title
-            rightDatesLabel.text = rightStoryViewModel?.dates
-            rightCoverImageView.image = rightStoryViewModel?.image
-        }
-    }
+    var secondTitle: String? { didSet { secondTitleLabel.text = secondTitle } }
+    var secondDates: String? { didSet { secondDatesLabel.text = secondDates } }
+    var secondCover: UIImage? { didSet { secondCoverImageView.image = secondCover} }
 }

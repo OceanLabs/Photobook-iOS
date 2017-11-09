@@ -10,30 +10,47 @@ import UIKit
 
 class StoriesViewController: UIViewController {
 
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet private weak var tableView: UITableView!
+    
+    private var stories = [Story]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        StoriesManager.shared.topStories(10) { [weak welf = self] (stories) in
+            // TODO: Handle permissions error
+            guard let stories = stories else { return }
+            welf?.stories = stories
+            welf?.tableView.reloadData()
+        }
     }
 }
 
 extension StoriesViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return stories.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row == 1 {
-            let doubleCell = tableView.dequeueReusableCell(withIdentifier: DoubleStoryTableViewCell.reuseIdentifier, for: indexPath) as! DoubleStoryTableViewCell
-            doubleCell.leftStoryViewModel = StoryViewModel(title: "DOUBLE THE LEFT TROUBLE", dates: "NOVEMBER 17", image: UIImage())
-            doubleCell.rightStoryViewModel = StoryViewModel(title: "DOUBLE THE RIGHT TROUBLE", dates: "DECEMBER 17", image: UIImage())
-            return doubleCell
-        }
+//        if indexPath.row == 1 {
+//            let doubleCell = tableView.dequeueReusableCell(withIdentifier: DoubleStoryTableViewCell.reuseIdentifier, for: indexPath) as! DoubleStoryTableViewCell
+//            doubleCell.leftStoryViewModel = StoryViewModel(title: "DOUBLE THE LEFT TROUBLE", dates: "NOVEMBER 17", image: UIImage())
+//            doubleCell.rightStoryViewModel = StoryViewModel(title: "DOUBLE THE RIGHT TROUBLE", dates: "DECEMBER 17", image: UIImage())
+//            return doubleCell
+//        }
         
-        let singleCell = tableView.dequeueReusableCell(withIdentifier: SingleStoryTableViewCell.reuseIdentifier, for: indexPath) as! SingleStoryTableViewCell
-        singleCell.storyViewModel = StoryViewModel(title: "SINGLE TROUBLE", dates: "SEPTEMBER 17", image: UIImage())
+        let story = stories[indexPath.row]
+        
+        let singleCell = tableView.dequeueReusableCell(withIdentifier: StoryTableViewCell.reuseIdentifier(), for: indexPath) as! StoryTableViewCell
+        singleCell.title = story.title
+        singleCell.dates = story.subtitle
+        
+        // TODO: Add check for localizedIndenfier
+        StoriesManager.shared.thumbnailForPhoto(story.cover, size: singleCell.coverSize) { (image) in
+            singleCell.cover = image
+        }
+
         return singleCell
     }
 }
