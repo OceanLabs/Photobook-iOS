@@ -10,6 +10,8 @@ import UIKit
 
 class PhotoBookNavigationBar: UINavigationBar {
     
+    var hasAddedWhiteUnderlay = false
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -22,6 +24,9 @@ class PhotoBookNavigationBar: UINavigationBar {
     
     func setup() {
         barTintColor = .white
+        if #available(iOS 11.0, *) {
+            prefersLargeTitles = true
+        }
         shadowImage = UIImage()
     }
     
