@@ -12,13 +12,13 @@ class SelectedAssetsManager: NSObject {
 
     private static var selectedAssets = [String:[Asset]]()
     
-    static func selectedAssets(_ album: Album) -> Int{
+    static func selectedAssets(_ album: Album) -> [Asset]{
         let assets = selectedAssets[album.identifier]
         if assets == nil{
             selectedAssets[album.identifier] = [Asset]()
         }
         
-        return selectedAssets[album.identifier]!.count
+        return selectedAssets[album.identifier]!
     }
     
 }

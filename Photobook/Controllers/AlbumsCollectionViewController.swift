@@ -72,13 +72,24 @@ extension AlbumsCollectionViewController{
         cell.albumAssetsCountLabel.isHidden = totalNumberOfAssets == NSNotFound
         cell.albumAssetsCountLabel.text = "\(totalNumberOfAssets)"
         
-        let selectedAssetsCount = SelectedAssetsManager.selectedAssets(album)
+        let selectedAssetsCount = SelectedAssetsManager.selectedAssets(album).count
         cell.selectedCountLabel.text = "\(selectedAssetsCount)"
         cell.selectedCountLabel.isHidden = selectedAssetsCount == 0
     
         return cell
     }
 
+}
+
+extension AlbumsCollectionViewController{
+    // MARK: - UICollectionViewDelegate
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }
+        assetPickerController.album = albumManager.albums[indexPath.item]
+        
+        self.navigationController?.pushViewController(assetPickerController, animated: true)
+    }
 }
 
 extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout{
