@@ -8,10 +8,6 @@
 
 import UIKit
 
-protocol AlbumSearchResultsTableViewControllerDelegate {
-    func albumSearchResultsTableViewControllerDelegate(didSelect album:Album)
-}
-
 class AlbumSearchResultsTableViewController: UITableViewController {
     
     var albums: [Album]! {
@@ -20,8 +16,15 @@ class AlbumSearchResultsTableViewController: UITableViewController {
         }
     }
     private var filteredAlbums: [Album]!
-    private var searchQuery: String?
-    var delegate: AlbumSearchResultsTableViewControllerDelegate?
+    weak var searchBar: UISearchBar?
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            self.searchBar?.alpha = 1
+        })
+    }
 }
 
 extension AlbumSearchResultsTableViewController{
@@ -44,7 +47,7 @@ extension AlbumSearchResultsTableViewController{
         cell.imageCountLabel.text = "\(album.numberOfAssets)"
         
         // Color the matched part of the name black and gray out the rest
-        if let searchQuery = self.searchQuery, searchQuery != "", let albumName = album.localizedName, let matchRange = albumName.lowercased().range(of: searchQuery){
+        if let searchQuery = self.searchBar?.text?.lowercased(), searchQuery != "", let albumName = album.localizedName, let matchRange = albumName.lowercased().range(of: searchQuery){
             let attributedString = NSMutableAttributedString(string: albumName, attributes: [.foregroundColor: UIColor.gray])
             attributedString.addAttribute(.foregroundColor, value: UIColor.black, range: NSRange(matchRange, in: albumName))
             
@@ -67,7 +70,14 @@ extension AlbumSearchResultsTableViewController{
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.albumSearchResultsTableViewControllerDelegate(didSelect: filteredAlbums[indexPath.row])
+        guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }
+        assetPickerController.album = filteredAlbums[indexPath.row]
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            self.searchBar?.alpha = 0
+        })
+        self.searchBar?.resignFirstResponder()
+        self.navigationController?.pushViewController(assetPickerController, animated: true)
     }
 
 }
@@ -76,10 +86,9 @@ extension AlbumSearchResultsTableViewController: UISearchResultsUpdating {
     // MARK: - UISearchResultsUpdating Delegate
     
     func updateSearchResults(for searchController: UISearchController) {
-        self.searchQuery = searchController.searchBar.text?.lowercased()
         filteredAlbums = albums.filter({(album) -> Bool in
             guard let albumName = album.localizedName?.lowercased() else { return false }
-            guard let searchQuery = self.searchQuery, searchQuery != "" else { return true }
+            guard let searchQuery = self.searchBar?.text?.lowercased(), searchQuery != "" else { return true }
             
             return albumName.contains(searchQuery)
         })

@@ -25,11 +25,11 @@ class AlbumsCollectionViewController: UICollectionViewController {
         
         // Setup the Search Controller
         let searchResultsViewController = self.storyboard?.instantiateViewController(withIdentifier: "AlbumSearchResultsTableViewController") as! AlbumSearchResultsTableViewController
-        searchResultsViewController.delegate = self
-        searchController = UISearchController(searchResultsController: searchResultsViewController)
+        searchController = UISearchController(searchResultsController: UINavigationController(rootViewController: searchResultsViewController))
         searchController?.searchResultsUpdater = searchResultsViewController
         searchController?.searchBar.placeholder = NSLocalizedString("Albums/Search/BarPlaceholder", value: "Search Albums", comment: "Search bar placeholder text")
         searchController?.searchBar.barTintColor = UIColor.white
+        searchResultsViewController.searchBar = searchController?.searchBar
         
         albumManager.loadAlbums(completionHandler: {(error) in
             self.collectionView?.reloadData()
@@ -114,16 +114,5 @@ extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout{
         }
         let cellWidth = usableSpace / 2.0
         return CGSize(width: cellWidth, height: cellWidth + albumCellLabelsHeight)
-    }
-}
-
-extension AlbumsCollectionViewController: AlbumSearchResultsTableViewControllerDelegate{
-    func albumSearchResultsTableViewControllerDelegate(didSelect album: Album) {
-        guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }
-        assetPickerController.album = album
-        
-        searchController?.dismiss(animated: true, completion: nil)
-        
-        self.navigationController?.pushViewController(assetPickerController, animated: true)
     }
 }
