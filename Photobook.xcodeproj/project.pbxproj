@@ -78,7 +78,7 @@
 				2E0B58831FB30F2100F31A9E /* Main.storyboard */,
 				2E0B589B1FB3290500F31A9E /* Controllers */,
 				2E0B58931FB3277C00F31A9E /* Model */,
-				2E0B589E1FB3295400F31A9E /* Cells */,
+				2E4458771FB5B0B3000BE68D /* Views */,
 				2E0B58861FB30F2100F31A9E /* Assets.xcassets */,
 				2E0B58881FB30F2100F31A9E /* LaunchScreen.storyboard */,
 				2E0B588B1FB30F2100F31A9E /* Info.plist */,
@@ -103,13 +103,13 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
-		2E0B589E1FB3295400F31A9E /* Cells */ = {
+		2E0B589E1FB3295400F31A9E /* Albums */ = {
 			isa = PBXGroup;
 			children = (
 				2E0B589F1FB3297300F31A9E /* AlbumCollectionViewCell.swift */,
 				2ED5B3821FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift */,
 			);
-			path = Cells;
+			path = Albums;
 			sourceTree = "<group>";
 		};
 		2E0B58A51FB32B2300F31A9E /* Assets */ = {
@@ -132,6 +132,14 @@
 				2E0B589C1FB3293100F31A9E /* PhotosAsset.swift */,
 			);
 			path = Photos;
+			sourceTree = "<group>";
+		};
+		2E4458771FB5B0B3000BE68D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2E0B589E1FB3295400F31A9E /* Albums */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
