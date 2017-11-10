@@ -22,6 +22,7 @@ class Story {
     }
     
     lazy var subtitle: String? = {
+        // TODO: Localise this format
         if self.isWeekend { return ("Weekend in " + dateString()).uppercased() }
         if self.isHoliday { return (dateString() + " Trip").uppercased() }
         return dateString().uppercased()
@@ -38,8 +39,7 @@ class Story {
         
         // Check if it's same day
         if NSCalendar.current.isDate(startDate, inSameDayAs: endDate) {
-            dateFormatter.dateFormat = "dd MMM yyyy"
-            
+            dateFormatter.dateStyle = .medium            
             return dateFormatter.string(from: startDate)
         }
         
@@ -48,7 +48,7 @@ class Story {
         
         // Different years
         if startDateComponents.year != endDateComponents.year {
-            dateFormatter.dateFormat = "yyyy"
+            dateFormatter.dateFormat = "MMM yyyy"
             return dateFormatter.string(from: startDate) + " - " + dateFormatter.string(from: endDate)
         }
         
