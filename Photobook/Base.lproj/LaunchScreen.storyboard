@@ -4,6 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -20,14 +21,23 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Image-Launch" translatesAutoresizingMaskIntoConstraints="NO" id="KQq-fU-WgG">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Image-CanonLogo" translatesAutoresizingMaskIntoConstraints="NO" id="y7b-g1-L2u">
+                                <rect key="frame" x="118.66666666666669" y="639" width="177" height="37"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="37" id="6LB-WH-MmE"/>
+                                    <constraint firstAttribute="width" constant="177" id="aIA-is-NQ6"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="KQq-fU-WgG" secondAttribute="trailing" id="Fcj-ic-BjL"/>
                             <constraint firstItem="KQq-fU-WgG" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Hzs-zr-Fz1"/>
+                            <constraint firstItem="y7b-g1-L2u" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="M4B-a1-8yE"/>
                             <constraint firstItem="KQq-fU-WgG" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="WeL-02-wGv"/>
                             <constraint firstAttribute="bottom" secondItem="KQq-fU-WgG" secondAttribute="bottom" id="c6G-15-aMm"/>
                             <constraint firstItem="KQq-fU-WgG" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="iys-rG-7t0"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="y7b-g1-L2u" secondAttribute="bottom" constant="60" id="jYM-lL-IbA"/>
                             <constraint firstItem="KQq-fU-WgG" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="tV8-nd-Ei0"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -35,10 +45,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="52" y="374.66266866566718"/>
+            <point key="canvasLocation" x="50.724637681159422" y="374.18478260869568"/>
         </scene>
     </scenes>
     <resources>
+        <image name="Image-CanonLogo" width="177" height="37"/>
         <image name="Image-Launch" width="881" height="1000"/>
     </resources>
 </document>

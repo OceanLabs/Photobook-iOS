@@ -22,6 +22,8 @@
 		2E0B58A91FB3508B00F31A9E /* SelectedAssetsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58A81FB3508B00F31A9E /* SelectedAssetsManager.swift */; };
 		2ED5B3811FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */; };
 		2ED5B3831FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3821FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift */; };
+		B981B9591FB60223000FE3AB /* PhotoPermissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B981B9581FB60223000FE3AB /* PhotoPermissionViewController.swift */; };
+		B981B95C1FB6023C000FE3AB /* Intro.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B981B95A1FB6023C000FE3AB /* Intro.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +44,8 @@
 		2E0B58A81FB3508B00F31A9E /* SelectedAssetsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedAssetsManager.swift; sourceTree = "<group>"; };
 		2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSearchResultsTableViewController.swift; sourceTree = "<group>"; };
 		2ED5B3821FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSearchResultsTableViewCell.swift; sourceTree = "<group>"; };
+		B981B9581FB60223000FE3AB /* PhotoPermissionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoPermissionViewController.swift; sourceTree = "<group>"; };
+		B981B95B1FB6023C000FE3AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Intro.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,9 +84,9 @@
 				2E0B58931FB3277C00F31A9E /* Model */,
 				2E4458771FB5B0B3000BE68D /* Views */,
 				2E0B58861FB30F2100F31A9E /* Assets.xcassets */,
+				B981B95A1FB6023C000FE3AB /* Intro.storyboard */,
 				2E0B58881FB30F2100F31A9E /* LaunchScreen.storyboard */,
 				2E0B588B1FB30F2100F31A9E /* Info.plist */,
-				B981B9541FB34EAA000FE3AB /* Intro.storyboard */,
 			);
 			path = Photobook;
 			sourceTree = "<group>";
@@ -98,6 +102,7 @@
 		2E0B589B1FB3290500F31A9E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				B981B9581FB60223000FE3AB /* PhotoPermissionViewController.swift */,
 				2E0B58911FB325FF00F31A9E /* AlbumsCollectionViewController.swift */,
 				2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */,
 			);
@@ -205,7 +210,7 @@
 				2E0B588A1FB30F2100F31A9E /* LaunchScreen.storyboard in Resources */,
 				2E0B58871FB30F2100F31A9E /* Assets.xcassets in Resources */,
 				2E0B58851FB30F2100F31A9E /* Main.storyboard in Resources */,
-				B981B9551FB34EAA000FE3AB /* Intro.storyboard in Resources */,
+				B981B95C1FB6023C000FE3AB /* Intro.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,6 +222,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E0B58A41FB32ADD00F31A9E /* PhotosAlbumManager.swift in Sources */,
+				B981B9591FB60223000FE3AB /* PhotoPermissionViewController.swift in Sources */,
 				2E0B58A01FB3297300F31A9E /* AlbumCollectionViewCell.swift in Sources */,
 				2E0B58991FB328B800F31A9E /* Asset.swift in Sources */,
 				2E0B58951FB3280000F31A9E /* AlbumManager.swift in Sources */,
@@ -248,6 +254,14 @@
 				2E0B58891FB30F2100F31A9E /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		B981B95A1FB6023C000FE3AB /* Intro.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B981B95B1FB6023C000FE3AB /* Base */,
+			);
+			name = Intro.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

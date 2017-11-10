@@ -23,7 +23,7 @@ class PhotoPermissionViewController: UIViewController {
     
         switch status {
         case .notDetermined:
-            PHPhotoLibrary.requestAuthorization({status in
+            PHPhotoLibrary.requestAuthorization({ status in
                 if status == .authorized {
                     self.dismiss()
                 } else {
@@ -46,8 +46,8 @@ class PhotoPermissionViewController: UIViewController {
     }
     
     func showPermissionDeniedDialog() {
-        let alert = UIAlertController(title: "Alert", message: "This app doesn't work without access to your photos", preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "Settings", style: UIAlertActionStyle.default, handler: { (action) in
+        let alert = UIAlertController(title: "Alert", message: "Photo access is restricted, but needed to create beautiful photo books.\nYou can turn it on in the system settings", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Open Settings", style: UIAlertActionStyle.default, handler: { (action) in
             if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
                 UIApplication.shared.open(appSettings, options: [:], completionHandler: { (success) in
                     
