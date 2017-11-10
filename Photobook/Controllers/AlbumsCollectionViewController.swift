@@ -28,7 +28,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
         let searchResultsViewController = self.storyboard?.instantiateViewController(withIdentifier: "AlbumSearchResultsTableViewController") as! AlbumSearchResultsTableViewController
         searchController = UISearchController(searchResultsController: searchResultsViewController)
         searchController?.searchResultsUpdater = searchResultsViewController
-        searchController?.searchBar.placeholder = "Search Albums"
+        searchController?.searchBar.placeholder = NSLocalizedString("Albums/Search/BarPlaceholder", value: "Search Albums", comment: "Search bar placeholder text")
         searchController?.searchBar.barTintColor = UIColor.white
         
         if #available(iOS 11.0, *) {

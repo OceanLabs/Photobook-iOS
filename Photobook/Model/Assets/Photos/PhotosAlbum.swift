@@ -12,7 +12,7 @@ import Photos
 class PhotosAlbum: Album {
     
     private let assetCollection: PHAssetCollection
-    var assets: [Asset] = [Asset]()
+    var assets = [Asset]()
 
     init(_ assetCollection: PHAssetCollection) {
         self.assetCollection = assetCollection
