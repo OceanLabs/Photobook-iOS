@@ -34,8 +34,6 @@ extension Asset{
     ///   - completionHandler: The completion handler that returns the image
     func image(size: CGSize, applyEdits: Bool = true, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)? = nil, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void){
         
-        //TODO: This should all be done in a background serial queue
-        
         uneditedImage(size: size, progressHandler: progressHandler, completionHandler: {(image: UIImage?, error: Error?) -> Void in
             guard error == nil else{
                 completionHandler(nil, error)

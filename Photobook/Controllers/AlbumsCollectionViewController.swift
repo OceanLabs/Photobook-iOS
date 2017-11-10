@@ -8,12 +8,15 @@
 
 import UIKit
 
+
+/// View Controller to show albums. It doesn't care about the source of those albums as long as they conform to the Album protocol.
 class AlbumsCollectionViewController: UICollectionViewController {
     
-    var searchController: UISearchController?
+    private var searchController: UISearchController?
     
-    let albumCellLabelsHeight = CGFloat(50)
-    let marginBetweenAlbums = CGFloat(20)
+    /// The height between the bottom of the image and bottom of the cell where the labels sit
+    private let albumCellLabelsHeight = CGFloat(50)
+    private let marginBetweenAlbums = CGFloat(20)
     
     let albumManager: AlbumManager/*!*/ = PhotosAlbumManager() //TODO: this should be set from outside of this class
 
@@ -22,19 +25,26 @@ class AlbumsCollectionViewController: UICollectionViewController {
         
         // Setup the Search Controller
         let searchResultsViewController = self.storyboard?.instantiateViewController(withIdentifier: "AlbumSearchResultsTableViewController") as! AlbumSearchResultsTableViewController
+        searchResultsViewController.delegate = self
         searchController = UISearchController(searchResultsController: searchResultsViewController)
         searchController?.searchResultsUpdater = searchResultsViewController
-        searchController?.searchBar.placeholder = "Search Albums"
+        searchController?.searchBar.placeholder = NSLocalizedString("Albums/Search/BarPlaceholder", value: "Search Albums", comment: "Search bar placeholder text")
         searchController?.searchBar.barTintColor = UIColor.white
-        
-        if #available(iOS 11.0, *) {
-            self.navigationController?.navigationBar.prefersLargeTitles = true
-        }
         
         albumManager.loadAlbums(completionHandler: {(error) in
             self.collectionView?.reloadData()
             searchResultsViewController.albums = self.albumManager.albums
         })
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if #available(iOS 11.0, *) {
+            navigationController?.navigationBar.prefersLargeTitles = true
+        }
+        
+        collectionView?.reloadData()
     }
     
     @IBAction func searchIconTapped(_ sender: Any) {
@@ -75,6 +85,8 @@ extension AlbumsCollectionViewController{
         let selectedAssetsCount = SelectedAssetsManager.selectedAssets(album).count
         cell.selectedCountLabel.text = "\(selectedAssetsCount)"
         cell.selectedCountLabel.isHidden = selectedAssetsCount == 0
+        cell.selectedCountLabel.layer.cornerRadius = cell.selectedCountLabel.frame.size.height / 2.0
+        cell.selectedCountLabel.layer.masksToBounds = true
     
         return cell
     }
@@ -94,6 +106,7 @@ extension AlbumsCollectionViewController{
 
 extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout{
     // MARK: - UICollectionViewDelegateFlowLayout
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var usableSpace = collectionView.frame.size.width - marginBetweenAlbums;
         if let insets = (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset{
@@ -101,5 +114,16 @@ extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout{
         }
         let cellWidth = usableSpace / 2.0
         return CGSize(width: cellWidth, height: cellWidth + albumCellLabelsHeight)
+    }
+}
+
+extension AlbumsCollectionViewController: AlbumSearchResultsTableViewControllerDelegate{
+    func albumSearchResultsTableViewControllerDelegate(didSelect album: Album) {
+        guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }
+        assetPickerController.album = album
+        
+        searchController?.dismiss(animated: true, completion: nil)
+        
+        self.navigationController?.pushViewController(assetPickerController, animated: true)
     }
 }

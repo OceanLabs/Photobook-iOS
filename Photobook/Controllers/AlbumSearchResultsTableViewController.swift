@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol AlbumSearchResultsTableViewControllerDelegate {
+    func albumSearchResultsTableViewControllerDelegate(didSelect album:Album)
+}
+
 class AlbumSearchResultsTableViewController: UITableViewController {
     
     var albums: [Album]! {
@@ -15,12 +19,13 @@ class AlbumSearchResultsTableViewController: UITableViewController {
             filteredAlbums = albums
         }
     }
-    var filteredAlbums: [Album]!
-    var searchQuery: String?
+    private var filteredAlbums: [Album]!
+    private var searchQuery: String?
+    var delegate: AlbumSearchResultsTableViewControllerDelegate?
 }
 
 extension AlbumSearchResultsTableViewController{
-    // MARK: - UITableView DataSource & Delegate
+    // MARK: - UITableViewDataSource
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return filteredAlbums.count
@@ -38,6 +43,7 @@ extension AlbumSearchResultsTableViewController{
         
         cell.imageCountLabel.text = "\(album.numberOfAssets)"
         
+        // Color the matched part of the name black and gray out the rest
         if let searchQuery = self.searchQuery, searchQuery != "", let albumName = album.localizedName, let matchRange = albumName.lowercased().range(of: searchQuery){
             let attributedString = NSMutableAttributedString(string: albumName, attributes: [.foregroundColor: UIColor.gray])
             attributedString.addAttribute(.foregroundColor, value: UIColor.black, range: NSRange(matchRange, in: albumName))
@@ -50,10 +56,18 @@ extension AlbumSearchResultsTableViewController{
         
         return cell
     }
+}
+
+extension AlbumSearchResultsTableViewController{
+    // MARK: - UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         guard let cell = cell as? AlbumSearchResultsTableViewCell else { return }
         cell.albumCoverImageView.image = nil
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        delegate?.albumSearchResultsTableViewControllerDelegate(didSelect: filteredAlbums[indexPath.row])
     }
 
 }
@@ -69,6 +83,8 @@ extension AlbumSearchResultsTableViewController: UISearchResultsUpdating {
             
             return albumName.contains(searchQuery)
         })
+        
+        // Avoid reloading when this vc is first shown
         if !(tableView.numberOfRows(inSection: 0) == albums.count && albums.count == filteredAlbums.count){
             tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
         }

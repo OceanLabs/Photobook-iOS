@@ -10,7 +10,25 @@ import UIKit
 
 class AssetPickerCollectionViewController: UICollectionViewController {
 
-    var album: Album!
+    private let marginBetweenImages = CGFloat(1)
+    private let numberOfCellsPerRow = CGFloat(4) //CGFloat because it's used in size calculations
+    var album: Album! {
+        didSet{
+            self.title = album.localizedName
+            
+            if album.assets.count == 0{
+                album.loadAssets(completionHandler: nil)
+            }
+        }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        if #available(iOS 11.0, *) {
+            self.navigationController?.navigationBar.prefersLargeTitles = false
+        }
+    }
 
 }
 
@@ -35,7 +53,8 @@ extension AssetPickerCollectionViewController {
             cell.selectedStatusImageView.image = UIImage(named: "Tick-empty")
         }
         
-        asset.image(size: CGSize(width: 100, height: 100), completionHandler: {(image, _) in
+        let size = self.collectionView(collectionView, layout: collectionView.collectionViewLayout, sizeForItemAt: indexPath)
+        asset.image(size: size, completionHandler: {(image, _) in
             guard cell.assetId == asset.identifier else { return }
             cell.imageView.image = image
         })
@@ -43,4 +62,36 @@ extension AssetPickerCollectionViewController {
         return cell
     }
     
+}
+
+extension AssetPickerCollectionViewController {
+    //MARK: - UICollectionViewDelegate
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let asset = album.assets[indexPath.item]
+        
+        var selectedAssets = SelectedAssetsManager.selectedAssets(album)
+        if let index = selectedAssets.index(where: { (selectedAsset) in
+            return selectedAsset.identifier == asset.identifier
+        }){
+            selectedAssets.remove(at: index)
+        } else {
+            selectedAssets.append(asset)
+        }
+        
+        SelectedAssetsManager.setSelectedAssets(album, newSelectedAssets: selectedAssets)
+        collectionView.reloadItems(at: [indexPath])
+    }
+    
+}
+
+extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayout{
+    // MARK: - UICollectionViewDelegateFlowLayout
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        var usableSpace = collectionView.frame.size.width - marginBetweenImages;
+        usableSpace -= (numberOfCellsPerRow - 1.0) * marginBetweenImages
+        let cellWidth = usableSpace / numberOfCellsPerRow
+        return CGSize(width: cellWidth, height: cellWidth)
+    }
 }

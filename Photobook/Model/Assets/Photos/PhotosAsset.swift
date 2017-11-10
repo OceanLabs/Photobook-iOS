@@ -26,7 +26,8 @@ class PhotosAsset: Asset {
         options.deliveryMode = .opportunistic
         options.isNetworkAccessAllowed = true
         
-        PHImageManager.default().requestImage(for: photosAsset, targetSize: size, contentMode: .aspectFill, options: options) { (image, _) in
+        let imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())
+        PHImageManager.default().requestImage(for: photosAsset, targetSize: imageSize, contentMode: .aspectFill, options: options) { (image, _) in
             completionHandler(image, nil)
         }
     }
