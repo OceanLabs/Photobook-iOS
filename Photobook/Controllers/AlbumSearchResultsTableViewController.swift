@@ -38,6 +38,7 @@ extension AlbumSearchResultsTableViewController{
         
         cell.imageCountLabel.text = "\(album.numberOfAssets)"
         
+        // Color the matched part of the name black and gray out the rest
         if let searchQuery = self.searchQuery, searchQuery != "", let albumName = album.localizedName, let matchRange = albumName.lowercased().range(of: searchQuery){
             let attributedString = NSMutableAttributedString(string: albumName, attributes: [.foregroundColor: UIColor.gray])
             attributedString.addAttribute(.foregroundColor, value: UIColor.black, range: NSRange(matchRange, in: albumName))
@@ -69,6 +70,8 @@ extension AlbumSearchResultsTableViewController: UISearchResultsUpdating {
             
             return albumName.contains(searchQuery)
         })
+        
+        // Avoid reloading when this vc is first shown
         if !(tableView.numberOfRows(inSection: 0) == albums.count && albums.count == filteredAlbums.count){
             tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
         }

@@ -8,10 +8,14 @@
 
 import UIKit
 
+
+/// View Controller to show albums. It doesn't care about the source of those albums as long as they conform to the Album protocol.
 class AlbumsCollectionViewController: UICollectionViewController {
     
     var searchController: UISearchController?
     
+    
+    /// The height between the bottom of the image and bottom of the cell where the labels sit
     let albumCellLabelsHeight = CGFloat(50)
     let marginBetweenAlbums = CGFloat(20)
     
@@ -83,6 +87,7 @@ extension AlbumsCollectionViewController{
 
 extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout{
     // MARK: - UICollectionViewDelegateFlowLayout
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var usableSpace = collectionView.frame.size.width - marginBetweenAlbums;
         if let insets = (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset{

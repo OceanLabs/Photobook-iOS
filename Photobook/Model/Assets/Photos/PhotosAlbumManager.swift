@@ -22,6 +22,8 @@ class PhotosAlbumManager: AlbumManager {
         // Get "All Photos" album
         if let collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: options).firstObject{
             let album = PhotosAlbum(collection)
+            
+            // Load assets here so that we know the number of assets in this album
             album.loadAssets(completionHandler: nil)
             albums.append(album)
         }
@@ -29,6 +31,8 @@ class PhotosAlbumManager: AlbumManager {
         // Get Favorites album
         if let collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumFavorites, options: options).firstObject{
             let album = PhotosAlbum(collection)
+            
+            // Load assets here so that we know the number of assets in this album
             album.loadAssets(completionHandler: nil)
             albums.append(album)
         }
@@ -36,6 +40,8 @@ class PhotosAlbumManager: AlbumManager {
         // Get Selfies album
         if let collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumSelfPortraits, options: options).firstObject{
             let album = PhotosAlbum(collection)
+            
+            // Load assets here so that we know the number of assets in this album
             album.loadAssets(completionHandler: nil)
             albums.append(album)
         }
@@ -44,6 +50,8 @@ class PhotosAlbumManager: AlbumManager {
         if #available(iOS 10.2, *) {
             if let collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumDepthEffect, options: options).firstObject{
                 let album = PhotosAlbum(collection)
+                
+                // Load assets here so that we know the number of assets in this album
                 album.loadAssets(completionHandler: nil)
                 albums.append(album)
             }
@@ -52,6 +60,8 @@ class PhotosAlbumManager: AlbumManager {
         // Get Panoramas album
         if let collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumPanoramas, options: options).firstObject{
             let album = PhotosAlbum(collection)
+            
+            // Load assets here so that we know the number of assets in this album
             album.loadAssets(completionHandler: nil)
             albums.append(album)
         }

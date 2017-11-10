@@ -8,6 +8,8 @@
 
 import UIKit
 
+
+/// Temporary class to hold selected assets. Replace with whatever solution is implemented in PHO-5
 class SelectedAssetsManager: NSObject {
 
     private static var selectedAssets = [String:[Asset]]()
