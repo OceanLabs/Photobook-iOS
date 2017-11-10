@@ -13,7 +13,6 @@ class Story {
     var cover: PHAsset!
     var components: [String]!
     var photoCount = 0
-    var isHoliday = false
     var isWeekend = false
     var score = 0
     
@@ -22,9 +21,10 @@ class Story {
     }
     
     lazy var subtitle: String? = {
-        // TODO: Localise this format
-        if self.isWeekend { return ("Weekend in " + dateString()).uppercased() }
-        if self.isHoliday { return (dateString() + " Trip").uppercased() }
+        if isWeekend {
+            return String.localizedStringWithFormat(NSLocalizedString("stories/story/date", value: "WEEKEND IN %@",
+                                  comment: "A subtitle for a story identified as a weekend"), dateString().uppercased())
+        }
         return dateString().uppercased()
     }()
     

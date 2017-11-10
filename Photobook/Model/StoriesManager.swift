@@ -134,7 +134,6 @@ class StoriesManager {
                     if componentsHolidayCheck.day! > 3 && componentsHolidayCheck.day! < 20  {
                         if !hasCommonLocation {
                             story.score += 20
-                            story.isHoliday = true
                         } else {
                             story.score -= 10
                         }

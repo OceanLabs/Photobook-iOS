@@ -65,7 +65,6 @@ class StoryTests: XCTestCase {
     
     func testShouldInitialisePublicVars() {
         XCTAssertEqual(story.photoCount, 0, "Should have 0 photos")
-        XCTAssertFalse(story.isHoliday, "Should not be a holiday")
         XCTAssertFalse(story.isWeekend, "Should not be a weekend")
         XCTAssertEqual(story.score, 0, "Should have a score of 0")
     }
