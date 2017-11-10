@@ -13,7 +13,7 @@ extension UILabel {
     func setLineHeight(_ lineHeight: CGFloat) {
         guard let title = self.text else { return }
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.maximumLineHeight = 48.0
+        paragraphStyle.maximumLineHeight = lineHeight
         paragraphStyle.alignment = self.textAlignment
         paragraphStyle.lineBreakMode = .byTruncatingTail
         

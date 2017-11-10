@@ -22,7 +22,7 @@ class StoryTableViewCell: UITableViewCell {
     var title: String? {
         didSet {
             titleLabel.text = title
-            titleLabel.setLineHeight(48.0)
+            titleLabel.setLineHeight(titleLabel.font.pointSize)
         }
     }
     var dates: String? { didSet { datesLabel.text = dates } }

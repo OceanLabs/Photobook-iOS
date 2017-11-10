@@ -11,14 +11,19 @@ import UIKit
 class DoubleStoryTableViewCell: StoryTableViewCell {
     
     override class func reuseIdentifier() -> String {
-        return NSStringFromClass(StoryTableViewCell.self).components(separatedBy: ".").last!
+        return NSStringFromClass(DoubleStoryTableViewCell.self).components(separatedBy: ".").last!
     }
 
     @IBOutlet private weak var secondTitleLabel: UILabel!
     @IBOutlet private weak var secondDatesLabel: UILabel!
     @IBOutlet private weak var secondCoverImageView: UIImageView!
     
-    var secondTitle: String? { didSet { secondTitleLabel.text = secondTitle } }
+    var secondTitle: String? {
+        didSet {
+            secondTitleLabel.text = secondTitle
+            secondTitleLabel.setLineHeight(secondTitleLabel.font.pointSize)
+        }
+    }
     var secondDates: String? { didSet { secondDatesLabel.text = secondDates } }
     var secondCover: UIImage? { didSet { secondCoverImageView.image = secondCover} }
 }
