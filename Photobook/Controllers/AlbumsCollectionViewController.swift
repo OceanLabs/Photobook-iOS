@@ -31,6 +31,10 @@ class AlbumsCollectionViewController: UICollectionViewController {
         searchController?.searchBar.barTintColor = UIColor.white
         searchResultsViewController.searchBar = searchController?.searchBar
         
+        if #available(iOS 11.0, *) {
+            navigationController?.navigationBar.prefersLargeTitles = true
+        }
+        
         albumManager.loadAlbums(completionHandler: {(error) in
             self.collectionView?.reloadData()
             searchResultsViewController.albums = self.albumManager.albums
@@ -40,10 +44,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if #available(iOS 11.0, *) {
-            navigationController?.navigationBar.prefersLargeTitles = true
-        }
-        
+        // Refresh number of assets selected badges
         collectionView?.reloadData()
     }
     
