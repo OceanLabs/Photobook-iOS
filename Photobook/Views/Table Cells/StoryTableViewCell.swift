@@ -27,6 +27,7 @@ class StoryTableViewCell: UITableViewCell {
     }
     var dates: String? { didSet { datesLabel.text = dates } }
     var cover: UIImage? { didSet { coverImageView.image = cover} }
+    var localIdentifier: String?
     
     lazy var coverSize = {
         return self.coverImageView.bounds.size

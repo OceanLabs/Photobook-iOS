@@ -73,13 +73,18 @@ extension StoriesViewController: UITableViewDataSource {
             doubleCell.dates = story.subtitle
             doubleCell.secondTitle = secondStory.title
             doubleCell.secondDates = secondStory.subtitle
+            doubleCell.localIdentifier = story.cover.localIdentifier
             
             // TODO: Add check for localizedIndenfier
             StoriesManager.shared.thumbnailForPhoto(story.cover, size: doubleCell.coverSize) { (image) in
-                doubleCell.cover = image
+                if doubleCell.localIdentifier == story.cover.localIdentifier {
+                    doubleCell.cover = image
+                }
             }
             StoriesManager.shared.thumbnailForPhoto(secondStory.cover, size: doubleCell.coverSize) { (image) in
-                doubleCell.secondCover = image
+                if doubleCell.localIdentifier == story.cover.localIdentifier {
+                    doubleCell.secondCover = image
+                }
             }
             
             return doubleCell
@@ -91,10 +96,13 @@ extension StoriesViewController: UITableViewDataSource {
             let singleCell = tableView.dequeueReusableCell(withIdentifier: StoryTableViewCell.reuseIdentifier(), for: indexPath) as! StoryTableViewCell
             singleCell.title = story.title
             singleCell.dates = story.subtitle
+            singleCell.localIdentifier = story.cover.localIdentifier
             
             // TODO: Add check for localizedIndenfier
             StoriesManager.shared.thumbnailForPhoto(story.cover, size: singleCell.coverSize) { (image) in
-                singleCell.cover = image
+                if singleCell.localIdentifier == story.cover.localIdentifier {
+                    singleCell.cover = image
+                }
             }
             
             return singleCell
