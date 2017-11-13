@@ -119,7 +119,7 @@ class StoriesManager {
                 }
                 
                 if let startDate = story.collectionList.startDate {
-                    // Is it a holiday?
+                    // Is it a trip?
                     
                     // Check if the locations are among the most visited
                     var hasCommonLocation = false
@@ -130,14 +130,14 @@ class StoriesManager {
                         }
                     }
                     
-                    let componentsHolidayCheck = NSCalendar.current.dateComponents([.day], from: startDate, to: endDate)
-                    if componentsHolidayCheck.day! > 3 && componentsHolidayCheck.day! < 20  {
+                    let componentsTripCheck = NSCalendar.current.dateComponents([.day], from: startDate, to: endDate)
+                    if componentsTripCheck.day! > 3 && componentsTripCheck.day! < 20  {
                         if !hasCommonLocation {
                             story.score += 20
                         } else {
                             story.score -= 10
                         }
-                    } else if componentsHolidayCheck.day! <= 3 {
+                    } else if componentsTripCheck.day! <= 3 {
                         // Is it a weekend event?
                         let startWeekDay = NSCalendar(identifier: .gregorian)!.component(.weekday, from: startDate)
                         let endWeekDay = NSCalendar(identifier: .gregorian)!.component(.weekday, from: endDate)
