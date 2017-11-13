@@ -70,7 +70,7 @@ class StoriesManager {
             }
             
             // Minimum asset count
-            guard totalAssetCount > 20 else { return }
+            guard totalAssetCount > Constants.photosPerBook else { return }
             
             let story = Story(list: list)
             story.components = locationComponents
