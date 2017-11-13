@@ -26,4 +26,11 @@ class DoubleStoryTableViewCell: StoryTableViewCell {
     }
     var secondDates: String? { didSet { secondDatesLabel.text = secondDates } }
     var secondCover: UIImage? { didSet { secondCoverImageView.image = secondCover} }
+    
+    @IBAction func tappedSecondStory(_ sender: UIButton) {
+        guard let storyIndex = storyIndex else {
+            fatalError("Story index not set")
+        }
+        delegate?.didTapOnStory(index: storyIndex + 1)
+    }
 }

@@ -82,6 +82,8 @@ extension StoriesViewController: UITableViewDataSource {
             doubleCell.secondTitle = secondStory.title
             doubleCell.secondDates = secondStory.subtitle
             doubleCell.localIdentifier = story.cover.localIdentifier
+            doubleCell.storyIndex = storyIndex
+            doubleCell.delegate = self
             
             StoriesManager.shared.thumbnailForPhoto(story.cover, size: doubleCell.coverSize) { (image) in
                 if doubleCell.localIdentifier == story.cover.localIdentifier {
@@ -103,6 +105,8 @@ extension StoriesViewController: UITableViewDataSource {
         singleCell.title = story.title
         singleCell.dates = story.subtitle
         singleCell.localIdentifier = story.cover.localIdentifier
+        singleCell.storyIndex = storyIndex
+        singleCell.delegate = self
 
         StoriesManager.shared.thumbnailForPhoto(story.cover, size: singleCell.coverSize) { (image) in
             if singleCell.localIdentifier == story.cover.localIdentifier {
@@ -111,5 +115,13 @@ extension StoriesViewController: UITableViewDataSource {
         }
 
         return singleCell
+    }
+}
+
+extension StoriesViewController: StoryTableViewCellDelegate {
+    
+    func didTapOnStory(index: Int) {
+        // TODO: Segue
+        print("Tapped story \(index)")
     }
 }

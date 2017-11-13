@@ -9,6 +9,10 @@
 import UIKit
 import Photos
 
+protocol StoryTableViewCellDelegate: class {
+    func didTapOnStory(index: Int) -> ()
+}
+
 class StoryTableViewCell: UITableViewCell {
     
     class func reuseIdentifier() -> String {
@@ -28,8 +32,19 @@ class StoryTableViewCell: UITableViewCell {
     var dates: String? { didSet { datesLabel.text = dates } }
     var cover: UIImage? { didSet { coverImageView.image = cover} }
     var localIdentifier: String?
+    var storyIndex: Int?
+    
+    weak var delegate: StoryTableViewCellDelegate?
     
     lazy var coverSize = {
         return self.coverImageView.bounds.size
     }()
+    
+    @IBAction func tappedStory(_ sender: UIButton) {
+        guard let storyIndex = storyIndex else {
+            fatalError("Story index not set")
+        }
+        delegate?.didTapOnStory(index: storyIndex)
+    }
+    
 }
