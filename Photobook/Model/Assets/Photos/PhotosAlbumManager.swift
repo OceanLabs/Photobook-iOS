@@ -15,7 +15,7 @@ class PhotosAlbumManager: AlbumManager {
     
     func loadAlbums(completionHandler: ((Error?) -> Void)?) {
         DispatchQueue.global(qos: .background).async {
-            let options : PHFetchOptions = PHFetchOptions()
+            let options = PHFetchOptions()
             options.wantsIncrementalChangeDetails = false
             options.includeHiddenAssets = false
             options.includeAllBurstAssets = false
@@ -25,9 +25,9 @@ class PhotosAlbumManager: AlbumManager {
                 let album = PhotosAlbum(collection)
                 
                 // Load assets here so that we know the number of assets in this album
-                album.loadAssets(completionHandler: {(error) in
+                album.loadAssets(completionHandler: { [weak welf = self] (error) in
                     guard album.assets.count > 0 else { return }
-                    self.albums.append(album)
+                    welf?.albums.append(album)
                 })
                 
             }
@@ -37,9 +37,9 @@ class PhotosAlbumManager: AlbumManager {
                 let album = PhotosAlbum(collection)
                 
                 // Load assets here so that we know the number of assets in this album
-                album.loadAssets(completionHandler: {(error) in
+                album.loadAssets(completionHandler: { [weak welf = self] (error) in
                     guard album.assets.count > 0 else { return }
-                    self.albums.append(album)
+                    welf?.albums.append(album)
                 })
             }
             
@@ -48,9 +48,9 @@ class PhotosAlbumManager: AlbumManager {
                 let album = PhotosAlbum(collection)
                 
                 // Load assets here so that we know the number of assets in this album
-                album.loadAssets(completionHandler: {(error) in
+                album.loadAssets(completionHandler: { [weak welf = self] (error) in
                     guard album.assets.count > 0 else { return }
-                    self.albums.append(album)
+                    welf?.albums.append(album)
                 })
             }
             
@@ -60,9 +60,9 @@ class PhotosAlbumManager: AlbumManager {
                     let album = PhotosAlbum(collection)
                     
                     // Load assets here so that we know the number of assets in this album
-                    album.loadAssets(completionHandler: {(error) in
+                    album.loadAssets(completionHandler: { [weak welf = self] (error) in
                         guard album.assets.count > 0 else { return }
-                        self.albums.append(album)
+                        welf?.albums.append(album)
                     })
                 }
             }
@@ -72,18 +72,18 @@ class PhotosAlbumManager: AlbumManager {
                 let album = PhotosAlbum(collection)
                 
                 // Load assets here so that we know the number of assets in this album
-                album.loadAssets(completionHandler: {(error) in
+                album.loadAssets(completionHandler: { [weak welf = self] (error) in
                     guard album.assets.count > 0 else { return }
-                    self.albums.append(album)
+                    welf?.albums.append(album)
                 })
             }
             
             // Get User albums
             let collections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: options)
-            collections.enumerateObjects({ (collection, index, stop) in
+            collections.enumerateObjects({ [weak welf = self] (collection, _, _) in
                 guard collection.estimatedAssetCount != 0 else { return }
                 let album = PhotosAlbum(collection)
-                self.albums.append(album)
+                welf?.albums.append(album)
             })
             
             DispatchQueue.main.async(execute: {() -> Void in

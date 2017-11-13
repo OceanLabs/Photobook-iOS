@@ -17,8 +17,8 @@ class AlbumsCollectionViewController: UICollectionViewController {
     
     
     /// The height between the bottom of the image and bottom of the cell where the labels sit
-    let albumCellLabelsHeight = CGFloat(50)
-    let marginBetweenAlbums = CGFloat(20)
+    let albumCellLabelsHeight: CGFloat = 50
+    let marginBetweenAlbums: CGFloat = 20
     
     var albumManager: AlbumManager!
 
@@ -36,9 +36,9 @@ class AlbumsCollectionViewController: UICollectionViewController {
             self.navigationController?.navigationBar.prefersLargeTitles = true
         }
         
-        albumManager.loadAlbums(completionHandler: {(error) in
-            self.activityIndicator.stopAnimating()
-            self.collectionView?.reloadData()
+        albumManager.loadAlbums(completionHandler: { [weak welf = self] (error) in
+            welf?.activityIndicator.stopAnimating()
+            welf?.collectionView?.reloadData()
             searchResultsViewController.albums = self.albumManager.albums
         })
     }
