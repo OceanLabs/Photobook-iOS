@@ -355,7 +355,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="KNZ-RY-mmL">
             <objects>
-                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="d5b-Ic-QyB" customClass="TabBarController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="d5b-Ic-QyB" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="EDE-ls-DB7" customClass="PhotoBookTabBar" customModule="Photobook" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
