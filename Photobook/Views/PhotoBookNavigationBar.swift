@@ -10,6 +10,8 @@ import UIKit
 
 class PhotoBookNavigationBar: UINavigationBar {
     
+    private static let navigationBarHeight: CGFloat = 44.0
+    
     var hasAddedBlur = false
     var effectView: UIVisualEffectView!
     
@@ -30,7 +32,7 @@ class PhotoBookNavigationBar: UINavigationBar {
             
             let statusBarHeight = UIApplication.shared.statusBarFrame.height
             effectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
-            effectView.frame = CGRect(x: 0.0, y: -statusBarHeight, width: bounds.width, height: frame.maxY + statusBarHeight)
+            effectView.frame = CGRect(x: 0.0, y: -statusBarHeight, width: bounds.width, height: PhotoBookNavigationBar.navigationBarHeight + statusBarHeight)
             effectView.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
             insertSubview(effectView, at: 0)
         }
