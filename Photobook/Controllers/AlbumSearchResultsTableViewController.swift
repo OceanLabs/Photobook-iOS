@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol AlbumSearchResultsTableViewControllerDelegate: class {
+    func albumSearchResultsTableViewControllerDelegate(didSelect album:Album)
+}
+
 class AlbumSearchResultsTableViewController: UITableViewController {
     
     var albums: [Album]! {
@@ -17,14 +21,7 @@ class AlbumSearchResultsTableViewController: UITableViewController {
     }
     private var filteredAlbums: [Album]!
     weak var searchBar: UISearchBar?
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        UIView.animate(withDuration: 0.3, animations: {
-            self.searchBar?.alpha = 1
-        })
-    }
+    weak var delegate: AlbumSearchResultsTableViewControllerDelegate?
 }
 
 extension AlbumSearchResultsTableViewController{
@@ -69,15 +66,8 @@ extension AlbumSearchResultsTableViewController{
         cell.albumCoverImageView.image = nil
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }
-        assetPickerController.album = filteredAlbums[indexPath.row]
-        
-        UIView.animate(withDuration: 0.3, animations: {
-            self.searchBar?.alpha = 0
-        })
-        self.searchBar?.resignFirstResponder()
-        self.navigationController?.pushViewController(assetPickerController, animated: true)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {        
+        self.delegate?.albumSearchResultsTableViewControllerDelegate(didSelect: filteredAlbums[indexPath.row])
     }
 
 }

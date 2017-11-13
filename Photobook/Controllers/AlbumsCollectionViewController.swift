@@ -12,8 +12,6 @@ import UIKit
 /// View Controller to show albums. It doesn't care about the source of those albums as long as they conform to the Album protocol.
 class AlbumsCollectionViewController: UICollectionViewController {
     
-    private var searchController: UISearchController?
-    
     /// The height between the bottom of the image and bottom of the cell where the labels sit
     private let albumCellLabelsHeight = CGFloat(50)
     private let marginBetweenAlbums = CGFloat(20)
@@ -23,21 +21,12 @@ class AlbumsCollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Setup the Search Controller
-        let searchResultsViewController = self.storyboard?.instantiateViewController(withIdentifier: "AlbumSearchResultsTableViewController") as! AlbumSearchResultsTableViewController
-        searchController = UISearchController(searchResultsController: UINavigationController(rootViewController: searchResultsViewController))
-        searchController?.searchResultsUpdater = searchResultsViewController
-        searchController?.searchBar.placeholder = NSLocalizedString("Albums/Search/BarPlaceholder", value: "Search Albums", comment: "Search bar placeholder text")
-        searchController?.searchBar.barTintColor = UIColor.white
-        searchResultsViewController.searchBar = searchController?.searchBar
-        
         if #available(iOS 11.0, *) {
             navigationController?.navigationBar.prefersLargeTitles = true
         }
         
         albumManager.loadAlbums(completionHandler: {(error) in
             self.collectionView?.reloadData()
-            searchResultsViewController.albums = self.albumManager.albums
         })
     }
     
@@ -49,7 +38,17 @@ class AlbumsCollectionViewController: UICollectionViewController {
     }
     
     @IBAction func searchIconTapped(_ sender: Any) {
-        guard let searchController = searchController else { return }
+        let searchResultsViewController = self.storyboard?.instantiateViewController(withIdentifier: "AlbumSearchResultsTableViewController") as! AlbumSearchResultsTableViewController
+        searchResultsViewController.delegate = self
+        searchResultsViewController.albums = self.albumManager.albums
+        
+        let searchController = UISearchController(searchResultsController: searchResultsViewController)
+        searchController.searchResultsUpdater = searchResultsViewController
+        searchController.searchBar.placeholder = NSLocalizedString("Albums/Search/BarPlaceholder", value: "Search Albums", comment: "Search bar placeholder text")
+        searchController.searchBar.barTintColor = UIColor.white
+        searchResultsViewController.searchBar = searchController.searchBar
+        
+        definesPresentationContext = true
         present(searchController, animated: true, completion: nil)
     }
     
@@ -116,4 +115,15 @@ extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout{
         let cellWidth = usableSpace / 2.0
         return CGSize(width: cellWidth, height: cellWidth + albumCellLabelsHeight)
     }
+}
+
+extension AlbumsCollectionViewController: AlbumSearchResultsTableViewControllerDelegate{
+    func albumSearchResultsTableViewControllerDelegate(didSelect album: Album) {
+        guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }
+        assetPickerController.album = album
+        
+        self.navigationController?.pushViewController(assetPickerController, animated: true)
+    }
+    
+    
 }
