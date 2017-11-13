@@ -10,6 +10,8 @@ import UIKit
 
 class PhotoBookTabBar: UITabBar {
     
+    var effectView: UIVisualEffectView?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -20,9 +22,16 @@ class PhotoBookTabBar: UITabBar {
         setup()
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        effectView?.frame = bounds
+    }
+    
     func setup() {
         let effectView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
-        effectView.frame = bounds
+        self.effectView = effectView
+        
         effectView.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
         insertSubview(effectView, at: 0)
         backgroundImage = UIImage(color: .clear)
