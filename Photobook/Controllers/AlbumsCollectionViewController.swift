@@ -12,6 +12,7 @@ import UIKit
 /// View Controller to show albums. It doesn't care about the source of those albums as long as they conform to the Album protocol.
 class AlbumsCollectionViewController: UICollectionViewController {
     
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     var searchController: UISearchController?
     
     
@@ -36,6 +37,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
         }
         
         albumManager.loadAlbums(completionHandler: {(error) in
+            self.activityIndicator.stopAnimating()
             self.collectionView?.reloadData()
             searchResultsViewController.albums = self.albumManager.albums
         })

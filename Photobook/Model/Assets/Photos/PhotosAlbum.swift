@@ -53,7 +53,9 @@ class PhotosAlbum: Album {
             fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
             
             guard let coverAsset = PHAsset.fetchAssets(in: self.assetCollection, options: fetchOptions).firstObject else{
-                completionHandler(nil, nil) //TODO: return an error
+                DispatchQueue.main.async {
+                    completionHandler(nil, nil) //TODO: return an error
+                }
                 return
             }
             
@@ -63,7 +65,9 @@ class PhotosAlbum: Album {
             
             PHImageManager.default().requestImage(for: coverAsset, targetSize: size, contentMode: .aspectFill, options: options, resultHandler: { (image, _) in
                 guard let image = image else {
-                    completionHandler(nil, nil) //TODO: return an error
+                    DispatchQueue.main.async {
+                        completionHandler(nil, nil) //TODO: return an error
+                    }
                     return
                 }
                 
