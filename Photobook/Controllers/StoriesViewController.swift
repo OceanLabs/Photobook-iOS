@@ -11,12 +11,10 @@ import UIKit
 class StoriesViewController: UIViewController {
 
     private struct Constants {
-        static let rowsPerBatch = 4
-        static let storiesPerBatch = 6
-        static let thirdLayoutRow = 2
-        static let fourthLayoutRow = 3
-        static let firstThirdRowStory = 3
-        static let firstFourthRowStory = 5
+        static let storiesInHeader = 6
+        static let rowsInHeader = 4
+        static let storiesPerLayoutPattern = 3
+        static let rowsPerLayoutPattern = 2
     }
     
     @IBOutlet private weak var tableView: UITableView!
@@ -38,32 +36,42 @@ class StoriesViewController: UIViewController {
 extension StoriesViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let batches = stories.count / Constants.storiesPerBatch  // Number of sets of story layouts
-        let extra = stories.count % Constants.storiesPerBatch  // Stories that don't make up a full layout
-        
-        var rows = Constants.rowsPerBatch * batches // Number of rows for full batches
-        
-        // Calculate the additional rows for the extra stories
-        if extra <= 2 { rows += extra }     // First two stories go in single cells
-        else { rows += 3 }  // If we have 3 or 4 stories, then we need 3 extra cells (1-1-2)
-        
-        return rows
+
+        if stories.count <= Constants.storiesInHeader {
+            switch stories.count {
+            case 1, 2: return stories.count
+            case 3, 4: return Constants.rowsInHeader - 1
+            case 5, 6: return Constants.rowsInHeader
+            default: return 0
+            }
+        } else {
+            let withoutHeadStories = stories.count - Constants.storiesInHeader
+            let baseOffset = withoutHeadStories / Constants.storiesPerLayoutPattern
+            let repeatedLayoutIndex = withoutHeadStories % Constants.rowsPerLayoutPattern
+            return baseOffset * Constants.rowsPerLayoutPattern + (repeatedLayoutIndex == 0 ? 1 : 2) + Constants.rowsInHeader
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let masterIndex = indexPath.row % Constants.rowsPerBatch // Determine the index in the layout design (0-3)
-        let storyBaseOffset = (indexPath.row / Constants.rowsPerBatch) * Constants.storiesPerBatch // All rows before this layout instance
-        
+        var isDouble = false
         var storyIndex = 0
         
-        switch masterIndex {
-        case Constants.thirdLayoutRow where stories.count > storyBaseOffset + Constants.firstThirdRowStory:
-            storyIndex = storyBaseOffset + masterIndex
-            fallthrough
-        case Constants.fourthLayoutRow where stories.count > storyBaseOffset + Constants.firstFourthRowStory:
-            if storyIndex == 0 {
-                storyIndex = storyBaseOffset + masterIndex + 1 // Add one to the offset because the third row has 2 stories
-            }
+        switch indexPath.row {
+        case 0, 1: // Single cells for the first and second rows
+            storyIndex = indexPath.row
+        case 2, 3: // Double cells for the second and third rows
+            storyIndex = indexPath.row == 2 ? 2 : 4 // Indexes corresponding to the first story of the third and fourth rows
+            isDouble = true
+        default:
+            let minusHeaderRows = indexPath.row - Constants.rowsInHeader
+            let numberOfLayouts = minusHeaderRows / Constants.rowsPerLayoutPattern
+            let potentialDouble = minusHeaderRows % Constants.rowsPerLayoutPattern == 1 // First row in the layout pattern is a single & the second a double
+            
+            storyIndex = numberOfLayouts * Constants.storiesPerLayoutPattern + (potentialDouble ? 1 : 0) + Constants.storiesInHeader
+            isDouble = (potentialDouble && storyIndex < stories.count - 1)
+        }
+        
+        if isDouble {
             // Double cell
             let story = stories[storyIndex]
             let secondStory = stories[storyIndex + 1]
@@ -75,7 +83,6 @@ extension StoriesViewController: UITableViewDataSource {
             doubleCell.secondDates = secondStory.subtitle
             doubleCell.localIdentifier = story.cover.localIdentifier
             
-            // TODO: Add check for localizedIndenfier
             StoriesManager.shared.thumbnailForPhoto(story.cover, size: doubleCell.coverSize) { (image) in
                 if doubleCell.localIdentifier == story.cover.localIdentifier {
                     doubleCell.cover = image
@@ -88,24 +95,21 @@ extension StoriesViewController: UITableViewDataSource {
             }
             
             return doubleCell
-        default:
-            // Single cell
-            storyIndex = storyBaseOffset + masterIndex
-            let story = stories[storyIndex]
-            
-            let singleCell = tableView.dequeueReusableCell(withIdentifier: StoryTableViewCell.reuseIdentifier(), for: indexPath) as! StoryTableViewCell
-            singleCell.title = story.title
-            singleCell.dates = story.subtitle
-            singleCell.localIdentifier = story.cover.localIdentifier
-            
-            // TODO: Add check for localizedIndenfier
-            StoriesManager.shared.thumbnailForPhoto(story.cover, size: singleCell.coverSize) { (image) in
-                if singleCell.localIdentifier == story.cover.localIdentifier {
-                    singleCell.cover = image
-                }
-            }
-            
-            return singleCell
         }
+        
+        let story = stories[storyIndex]
+
+        let singleCell = tableView.dequeueReusableCell(withIdentifier: StoryTableViewCell.reuseIdentifier(), for: indexPath) as! StoryTableViewCell
+        singleCell.title = story.title
+        singleCell.dates = story.subtitle
+        singleCell.localIdentifier = story.cover.localIdentifier
+
+        StoriesManager.shared.thumbnailForPhoto(story.cover, size: singleCell.coverSize) { (image) in
+            if singleCell.localIdentifier == story.cover.localIdentifier {
+                singleCell.cover = image
+            }
+        }
+
+        return singleCell
     }
 }
