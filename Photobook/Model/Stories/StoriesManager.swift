@@ -160,7 +160,7 @@ class StoriesManager {
     
     func thumbnailForPhoto(_ photo: PHAsset, size: CGSize, completion: @escaping (UIImage?)->()) {
         let options = PHImageRequestOptions()
-        options.deliveryMode = .highQualityFormat
+        options.isNetworkAccessAllowed = true
         
         imageManager.requestImage(for: photo, targetSize: size, contentMode: .aspectFill, options: PHImageRequestOptions()) { (image, _) in
             completion(image)
