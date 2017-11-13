@@ -20,7 +20,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     let albumCellLabelsHeight = CGFloat(50)
     let marginBetweenAlbums = CGFloat(20)
     
-    let albumManager: AlbumManager/*!*/ = PhotosAlbumManager() //TODO: this should be set from outside of this class
+    var albumManager: AlbumManager!
 
     override func viewDidLoad() {
         super.viewDidLoad()
