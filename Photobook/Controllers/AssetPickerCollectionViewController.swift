@@ -10,6 +10,7 @@ import UIKit
 
 class AssetPickerCollectionViewController: UICollectionViewController {
 
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     private let marginBetweenImages = CGFloat(1)
     private let numberOfCellsPerRow = CGFloat(4) //CGFloat because it's used in size calculations
     var album: Album! {
@@ -17,7 +18,14 @@ class AssetPickerCollectionViewController: UICollectionViewController {
             self.title = album.localizedName
             
             if album.assets.count == 0{
-                album.loadAssets(completionHandler: nil)
+                DispatchQueue.global(qos: .background).async { [weak welf = self] in
+                    welf?.album.loadAssets(completionHandler: { (_) in
+                        DispatchQueue.main.async {
+                            welf?.activityIndicator.stopAnimating()
+                            welf?.collectionView?.reloadData()
+                        }
+                    })
+                }
             }
         }
     }

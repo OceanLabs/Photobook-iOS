@@ -15,6 +15,7 @@ class Story {
     var photoCount = 0
     var isWeekend = false
     var score = 0
+    var assets = [Asset]()
     
     var title: String {
         return collectionList.localizedTitle!.uppercased()
@@ -69,4 +70,42 @@ class Story {
     }
 }
 
+extension Story: Album{
+    var numberOfAssets: Int {
+        return photoCount
+    }
+    
+    var localizedName: String? {
+        return title
+    }
+    
+    var identifier: String {
+        return collectionList.localIdentifier
+    }
+    
+    func loadAssets(completionHandler: ((Error?) -> Void)?) {
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.wantsIncrementalChangeDetails = false
+        fetchOptions.includeHiddenAssets = false
+        fetchOptions.includeAllBurstAssets = false
+        
+        let moments = PHAssetCollection.fetchMoments(inMomentList: collectionList, options: PHFetchOptions())
+        moments.enumerateObjects { (collection: PHAssetCollection, index: Int,  stop: UnsafeMutablePointer<ObjCBool>) in
+            
+            fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
+            let fetchedAssets = PHAsset.fetchAssets(in: collection, options: fetchOptions)
+            fetchedAssets.enumerateObjects({ (asset, _, _) in
+                self.assets.append(PhotosAsset(asset))
+            })
+        }
+        
+        completionHandler?(nil)
+    }
+    
+    func coverImage(size: CGSize, completionHandler: @escaping (UIImage?, Error?) -> Void) {
+        // Not needed yet
+    }
+    
+    
+}
 
