@@ -14,68 +14,82 @@ class PhotosAlbumManager: AlbumManager {
     var albums:[Album] = [Album]()
     
     func loadAlbums(completionHandler: ((Error?) -> Void)?) {
-        let options : PHFetchOptions = PHFetchOptions()
-        options.wantsIncrementalChangeDetails = false
-        options.includeHiddenAssets = false
-        options.includeAllBurstAssets = false
-        
-        // Get "All Photos" album
-        if let collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: options).firstObject{
-            let album = PhotosAlbum(collection)
+        DispatchQueue.global(qos: .background).async {
+            let options = PHFetchOptions()
+            options.wantsIncrementalChangeDetails = false
+            options.includeHiddenAssets = false
+            options.includeAllBurstAssets = false
             
-            // Load assets here so that we know the number of assets in this album
-            album.loadAssets(completionHandler: nil)
-            albums.append(album)
-        }
-        
-        // Get Favorites album
-        if let collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumFavorites, options: options).firstObject{
-            let album = PhotosAlbum(collection)
-            
-            // Load assets here so that we know the number of assets in this album
-            album.loadAssets(completionHandler: nil)
-            albums.append(album)
-        }
-        
-        // Get Selfies album
-        if let collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumSelfPortraits, options: options).firstObject{
-            let album = PhotosAlbum(collection)
-            
-            // Load assets here so that we know the number of assets in this album
-            album.loadAssets(completionHandler: nil)
-            albums.append(album)
-        }
-        
-        // Get Portrait album
-        if #available(iOS 10.2, *) {
-            if let collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumDepthEffect, options: options).firstObject{
+            // Get "All Photos" album
+            if let collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: options).firstObject{
                 let album = PhotosAlbum(collection)
                 
                 // Load assets here so that we know the number of assets in this album
-                album.loadAssets(completionHandler: nil)
-                albums.append(album)
+                album.loadAssets(completionHandler: { [weak welf = self] (error) in
+                    guard album.assets.count > 0 else { return }
+                    welf?.albums.append(album)
+                })
+                
             }
-        }
-        
-        // Get Panoramas album
-        if let collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumPanoramas, options: options).firstObject{
-            let album = PhotosAlbum(collection)
             
-            // Load assets here so that we know the number of assets in this album
-            album.loadAssets(completionHandler: nil)
-            albums.append(album)
+            // Get Favorites album
+            if let collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumFavorites, options: options).firstObject{
+                let album = PhotosAlbum(collection)
+                
+                // Load assets here so that we know the number of assets in this album
+                album.loadAssets(completionHandler: { [weak welf = self] (error) in
+                    guard album.assets.count > 0 else { return }
+                    welf?.albums.append(album)
+                })
+            }
+            
+            // Get Selfies album
+            if let collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumSelfPortraits, options: options).firstObject{
+                let album = PhotosAlbum(collection)
+                
+                // Load assets here so that we know the number of assets in this album
+                album.loadAssets(completionHandler: { [weak welf = self] (error) in
+                    guard album.assets.count > 0 else { return }
+                    welf?.albums.append(album)
+                })
+            }
+            
+            // Get Portrait album
+            if #available(iOS 10.2, *) {
+                if let collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumDepthEffect, options: options).firstObject{
+                    let album = PhotosAlbum(collection)
+                    
+                    // Load assets here so that we know the number of assets in this album
+                    album.loadAssets(completionHandler: { [weak welf = self] (error) in
+                        guard album.assets.count > 0 else { return }
+                        welf?.albums.append(album)
+                    })
+                }
+            }
+            
+            // Get Panoramas album
+            if let collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumPanoramas, options: options).firstObject{
+                let album = PhotosAlbum(collection)
+                
+                // Load assets here so that we know the number of assets in this album
+                album.loadAssets(completionHandler: { [weak welf = self] (error) in
+                    guard album.assets.count > 0 else { return }
+                    welf?.albums.append(album)
+                })
+            }
+            
+            // Get User albums
+            let collections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: options)
+            collections.enumerateObjects({ [weak welf = self] (collection, _, _) in
+                guard collection.estimatedAssetCount != 0 else { return }
+                let album = PhotosAlbum(collection)
+                welf?.albums.append(album)
+            })
+            
+            DispatchQueue.main.async(execute: {() -> Void in
+                completionHandler?(nil)
+            })
         }
-        
-        // Get User albums
-        let collections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: options)
-        collections.enumerateObjects({ (collection, index, stop) in
-            guard collection.estimatedAssetCount != 0 else { return }
-            let album = PhotosAlbum(collection)
-            self.albums.append(album)
-        })
-        
-        completionHandler?(nil)
-        
     }
     
 
