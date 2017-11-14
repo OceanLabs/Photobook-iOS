@@ -13,6 +13,7 @@ import UIKit
 class SelectedAssetsManager: NSObject {
 
     private static var selectedAssets = [String:[Asset]]()
+    private static let maximumAllowedPhotosForSelectAll = 70
     
     static func selectedAssets(_ album: Album) -> [Asset]{
         let assets = selectedAssets[album.identifier]
@@ -25,6 +26,16 @@ class SelectedAssetsManager: NSObject {
     
     static func setSelectedAssets(_ album: Album, newSelectedAssets: [Asset]){
         selectedAssets[album.identifier] = newSelectedAssets
+    }
+    
+    static func willSelectingAllExceedTotalAllowed(in album: Album) -> Bool{
+        var count = 0
+        for selectedAssetsInAlbum in selectedAssets{
+            if selectedAssetsInAlbum.key == album.identifier { continue } //Skip counting selected in album
+            count += selectedAssetsInAlbum.value.count
+        }
+        
+        return count + album.assets.count > maximumAllowedPhotosForSelectAll
     }
     
 }

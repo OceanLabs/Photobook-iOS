@@ -10,23 +10,14 @@ import UIKit
 
 class AssetPickerCollectionViewController: UICollectionViewController {
 
+    @IBOutlet weak var selectAllButton: UIBarButtonItem!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    private let marginBetweenImages = CGFloat(1)
-    private let numberOfCellsPerRow = CGFloat(4) //CGFloat because it's used in size calculations
+    private let marginBetweenImages: CGFloat = 1
+    private let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
+    
     var album: Album! {
         didSet{
             self.title = album.localizedName
-            
-            if album.assets.count == 0{
-                DispatchQueue.global(qos: .background).async { [weak welf = self] in
-                    welf?.album.loadAssets(completionHandler: { (_) in
-                        DispatchQueue.main.async {
-                            welf?.activityIndicator.stopAnimating()
-                            welf?.collectionView?.reloadData()
-                        }
-                    })
-                }
-            }
         }
     }
     
@@ -36,8 +27,72 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         if #available(iOS 11.0, *) {
             navigationItem.largeTitleDisplayMode = .never
         }
+        
+        if album.assets.count == 0{
+            DispatchQueue.global(qos: .background).async { [weak welf = self] in
+                welf?.album.loadAssets(completionHandler: { (_) in
+                    DispatchQueue.main.async {
+                        welf?.collectionView?.reloadData()
+                        welf?.postAlbumLoadSetup()
+                    }
+                })
+            }
+        }
+        else{
+            postAlbumLoadSetup()
+        }
     }
 
+    @IBAction func selectAllButtonTapped(_ sender: UIBarButtonItem) {
+        let selectedAssets = SelectedAssetsManager.selectedAssets(album)
+        if selectedAssets.count == album.assets.count{
+            deselectAllAssets()
+        }
+        else{
+            selectAllAssets()
+        }
+        
+        updateSelectAllButtonTitle()
+        collectionView?.reloadData()
+    }
+    
+    func postAlbumLoadSetup(){
+        activityIndicator.stopAnimating()
+        
+        // Hide "Select All" if current album has too many photos
+        if SelectedAssetsManager.willSelectingAllExceedTotalAllowed(in: album){
+            selectAllButton.title = nil
+            return
+        }
+        
+        updateSelectAllButtonTitle()
+    }
+    
+    func selectAllAssets(){
+        var selectedAssets = SelectedAssetsManager.selectedAssets(album)
+        for asset in album.assets{
+            if !selectedAssets.contains(where: { (selectedAsset) in
+                return selectedAsset.identifier == asset.identifier
+            }){
+                selectedAssets.append(asset)
+            }
+        }
+        SelectedAssetsManager.setSelectedAssets(album, newSelectedAssets: selectedAssets)
+    }
+    
+    func deselectAllAssets(){
+        SelectedAssetsManager.setSelectedAssets(album, newSelectedAssets: [Asset]())
+    }
+    
+    func updateSelectAllButtonTitle(){
+        if SelectedAssetsManager.selectedAssets(self.album).count == self.album.assets.count {
+            selectAllButton.title = NSLocalizedString("ImagePicker/Button/DeselectAll", value: "Deselect All", comment: "Button title for de-selecting all selected photos")
+        }
+        else{
+            selectAllButton.title = NSLocalizedString("ImagePicker/Button/SelectAll", value: "Select All", comment: "Button title for selecting all selected photos")
+        }
+    }
+    
 }
 
 extension AssetPickerCollectionViewController {
@@ -89,6 +144,8 @@ extension AssetPickerCollectionViewController {
         
         SelectedAssetsManager.setSelectedAssets(album, newSelectedAssets: selectedAssets)
         collectionView.reloadItems(at: [indexPath])
+        
+        updateSelectAllButtonTitle()
     }
     
 }
