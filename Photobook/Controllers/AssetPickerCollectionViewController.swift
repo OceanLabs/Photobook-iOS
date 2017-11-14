@@ -28,7 +28,13 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         if #available(iOS 11.0, *) {
             navigationItem.largeTitleDisplayMode = .never
         }
+        
+        if traitCollection.forceTouchCapability == .available{
+            registerForPreviewing(with: self, sourceView: collectionView!)
+        }
     }
+    
+    @IBAction func unwindToThisView(withUnwindSegue unwindSegue: UIStoryboardSegue) {}
 
 }
 
@@ -93,5 +99,53 @@ extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayou
         usableSpace -= (numberOfCellsPerRow - 1.0) * marginBetweenImages
         let cellWidth = usableSpace / numberOfCellsPerRow
         return CGSize(width: cellWidth, height: cellWidth)
+    }
+}
+
+extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegate{
+    // MARK: - UIViewControllerPreviewingDelegate
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        guard let collectionView = collectionView,
+            let indexPath = collectionView.indexPathForItem(at: location),
+            let cell = collectionView.cellForItem(at: indexPath) as? AssetPickerCollectionViewCell,
+            let thumbnailImage = cell.imageView.image,
+            let fullScreenImageViewController = storyboard?.instantiateViewController(withIdentifier: "FullScreenImageViewController") as? FullScreenImageViewController
+            else { return nil }
+        
+        previewingContext.sourceRect = cell.convert(cell.contentView.frame, to: collectionView)
+        
+        fullScreenImageViewController.asset = album.assets[indexPath.item]
+        fullScreenImageViewController.album = album
+        fullScreenImageViewController.sourceView = cell.imageView
+        fullScreenImageViewController.delegate = self
+        fullScreenImageViewController.providesPresentationContextTransitionStyle = true
+        fullScreenImageViewController.definesPresentationContext = true
+        fullScreenImageViewController.modalPresentationStyle = .overCurrentContext
+        
+        // Use the cell's image to calculate the image's aspect ratio
+        fullScreenImageViewController.preferredContentSize = CGSize(width: view.frame.size.width, height: view.frame.size.width * (thumbnailImage.size.height / thumbnailImage.size.width) - 1) // -1 because otherwise a black line can be seen above the image
+        
+        return fullScreenImageViewController
+    }
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        guard let fullScreenImageViewController = viewControllerToCommit as? FullScreenImageViewController else { return }
+        fullScreenImageViewController.prepareForPop()
+        
+        present(viewControllerToCommit, animated: true, completion: nil)
+    }
+    
+}
+
+extension AssetPickerCollectionViewController: FullScreenImageViewControllerDelegate{
+    func fullScreenImageViewControllerDidUpdateAsset(asset: Asset) {
+        guard let index = album.assets.index(where: { (selectedAsset) in
+            return selectedAsset.identifier == asset.identifier
+        }),
+            index != NSNotFound
+            else { return }
+        
+        collectionView?.reloadItems(at: [IndexPath(item: index, section: 0)])
     }
 }
