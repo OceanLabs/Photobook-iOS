@@ -14,12 +14,12 @@ protocol AlbumSearchResultsTableViewControllerDelegate: class {
 
 class AlbumSearchResultsTableViewController: UITableViewController {
     
-    var albums: [Album]! {
+    var albums: [Album]? {
         didSet{
             filteredAlbums = albums
         }
     }
-    private var filteredAlbums: [Album]!
+    private var filteredAlbums: [Album]?
     weak var searchBar: UISearchBar?
     weak var delegate: AlbumSearchResultsTableViewControllerDelegate?
 }
@@ -28,30 +28,32 @@ extension AlbumSearchResultsTableViewController{
     // MARK: - UITableViewDataSource
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredAlbums.count
+        return filteredAlbums?.count ?? 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "AlbumSearchResultsTableViewCell", for: indexPath) as? AlbumSearchResultsTableViewCell else { return UITableViewCell() }
-        let album = filteredAlbums[indexPath.item]
-        cell.albumId = album.identifier
+        let album = filteredAlbums?[indexPath.item]
+        cell.albumId = album?.identifier
         
-        album.coverImage(size: CGSize(width: tableView.rowHeight, height: tableView.rowHeight), completionHandler: {(image, _) in
-            guard cell.albumId == album.identifier else { return }
+        album?.coverImage(size: CGSize(width: tableView.rowHeight, height: tableView.rowHeight), completionHandler: {(image, _) in
+            guard cell.albumId == album?.identifier else { return }
             cell.albumCoverImageView.image = image
         })
         
-        cell.imageCountLabel.text = "\(album.numberOfAssets)"
+        if let albumCount = album?.numberOfAssets{
+            cell.imageCountLabel.text = "\(albumCount)"
+        }
         
         // Color the matched part of the name black and gray out the rest
-        if let searchQuery = self.searchBar?.text?.lowercased(), searchQuery != "", let albumName = album.localizedName, let matchRange = albumName.lowercased().range(of: searchQuery){
+        if let searchQuery = self.searchBar?.text?.lowercased(), searchQuery != "", let albumName = album?.localizedName, let matchRange = albumName.lowercased().range(of: searchQuery){
             let attributedString = NSMutableAttributedString(string: albumName, attributes: [.foregroundColor: UIColor.gray])
             attributedString.addAttribute(.foregroundColor, value: UIColor.black, range: NSRange(matchRange, in: albumName))
             
             cell.albumNameLabel.attributedText = attributedString
         }
         else{
-            cell.albumNameLabel.text = album.localizedName
+            cell.albumNameLabel.text = album?.localizedName
         }
         
         return cell
@@ -66,7 +68,9 @@ extension AlbumSearchResultsTableViewController{
         cell.albumCoverImageView.image = nil
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {        
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let filteredAlbums = filteredAlbums else { return }
+        
         self.delegate?.searchDidSelect(filteredAlbums[indexPath.row])
     }
 
@@ -76,7 +80,7 @@ extension AlbumSearchResultsTableViewController: UISearchResultsUpdating {
     // MARK: - UISearchResultsUpdating Delegate
     
     func updateSearchResults(for searchController: UISearchController) {
-        filteredAlbums = albums.filter({(album) -> Bool in
+        filteredAlbums = albums?.filter({(album) -> Bool in
             guard let albumName = album.localizedName?.lowercased() else { return false }
             guard let searchQuery = self.searchBar?.text?.lowercased(), searchQuery != "" else { return true }
             
@@ -84,7 +88,9 @@ extension AlbumSearchResultsTableViewController: UISearchResultsUpdating {
         })
         
         // Avoid reloading when this vc is first shown
-        if !(tableView.numberOfRows(inSection: 0) == albums.count && albums.count == filteredAlbums.count){
+        let albumsCount = albums?.count ?? 0
+        let filteredAlbumsCount = filteredAlbums?.count ?? 0
+        if !(tableView.numberOfRows(inSection: 0) == albumsCount && albumsCount == filteredAlbumsCount){
             tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
         }
         searchController.searchResultsController?.view.isHidden = false

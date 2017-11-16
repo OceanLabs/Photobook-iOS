@@ -14,7 +14,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     private let marginBetweenImages: CGFloat = 1
     private let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
-    var selectedAssetsManager: SelectedAssetsManager!
+    var selectedAssetsManager: SelectedAssetsManager?
     
     var album: Album! {
         didSet{
@@ -45,11 +45,11 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     }
 
     @IBAction func selectAllButtonTapped(_ sender: UIBarButtonItem) {
-        if selectedAssetsManager.selectedAssetCount(for: album) == album.assets.count {
-            selectedAssetsManager.deselectAllAssets(for: album)
+        if selectedAssetsManager?.selectedAssetCount(for: album) == album.assets.count {
+            selectedAssetsManager?.deselectAllAssets(for: album)
         }
         else {
-            selectedAssetsManager.selectAllAssets(for: album)
+            selectedAssetsManager?.selectAllAssets(for: album)
         }
         
         updateSelectAllButtonTitle()
@@ -60,7 +60,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         activityIndicator.stopAnimating()
         
         // Hide "Select All" if current album has too many photos
-        if selectedAssetsManager.willSelectingAllExceedTotalAllowed(for: album){
+        if selectedAssetsManager?.willSelectingAllExceedTotalAllowed(for: album) ?? false{
             selectAllButton.title = nil
             return
         }
@@ -69,7 +69,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     }
     
     func updateSelectAllButtonTitle() {
-        if selectedAssetsManager.selectedAssetCount(for: album) == self.album.assets.count {
+        if selectedAssetsManager?.selectedAssetCount(for: album) == self.album.assets.count {
             selectAllButton.title = NSLocalizedString("ImagePicker/Button/DeselectAll", value: "Deselect All", comment: "Button title for de-selecting all selected photos")
         }
         else{
@@ -92,7 +92,7 @@ extension AssetPickerCollectionViewController {
         let asset = album.assets[indexPath.item]
         cell.assetId = asset.identifier
         
-        if selectedAssetsManager.isSelected(asset, for: album){
+        if selectedAssetsManager?.isSelected(asset, for: album) ?? false {
             cell.selectedStatusImageView.image = UIImage(named: "Tick")
         } else {
             cell.selectedStatusImageView.image = UIImage(named: "Tick-empty")
@@ -114,7 +114,7 @@ extension AssetPickerCollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = album.assets[indexPath.item]
-        selectedAssetsManager.toggleSelected(asset, for: album)
+        selectedAssetsManager?.toggleSelected(asset, for: album)
         
         collectionView.reloadItems(at: [indexPath])
         
