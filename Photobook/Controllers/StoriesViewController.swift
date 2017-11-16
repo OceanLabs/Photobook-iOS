@@ -20,6 +20,7 @@ class StoriesViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
     
     private var stories = [Story]()
+    private let selectedAssetsManager = SelectedAssetsManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -131,6 +132,8 @@ extension StoriesViewController: StoryTableViewCellDelegate {
     func didTapOnStory(index: Int) {
          guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }       
         assetPickerController.album = stories[index]
+        assetPickerController.selectedAssetsManager = selectedAssetsManager
+        
         self.navigationController?.pushViewController(assetPickerController, animated: true)
     }
 }

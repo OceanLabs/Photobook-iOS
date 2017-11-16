@@ -19,13 +19,10 @@ class AlbumsCollectionViewController: UICollectionViewController {
     private let marginBetweenAlbums: CGFloat = 20
     
     var albumManager: AlbumManager!
+    private let selectedAssetsManager = SelectedAssetsManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if #available(iOS 11.0, *) {
-            navigationController?.navigationBar.prefersLargeTitles = true
-        }
         
         albumManager.loadAlbums(completionHandler: { [weak welf = self] (error) in
             welf?.activityIndicator.stopAnimating()
@@ -55,6 +52,13 @@ class AlbumsCollectionViewController: UICollectionViewController {
         present(searchController, animated: true, completion: nil)
     }
     
+    func showAlbum(album: Album){
+        guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }
+        assetPickerController.album = album
+        assetPickerController.selectedAssetsManager = selectedAssetsManager
+        
+        self.navigationController?.pushViewController(assetPickerController, animated: true)
+    }
     
 }
 
@@ -85,7 +89,7 @@ extension AlbumsCollectionViewController{
         cell.albumAssetsCountLabel.isHidden = totalNumberOfAssets == NSNotFound
         cell.albumAssetsCountLabel.text = "\(totalNumberOfAssets)"
         
-        let selectedAssetsCount = SelectedAssetsManager.selectedAssets(album).count
+        let selectedAssetsCount = selectedAssetsManager.selectedAssetCount(for: album)
         cell.selectedCountLabel.text = "\(selectedAssetsCount)"
         cell.selectedCountLabel.isHidden = selectedAssetsCount == 0
         cell.selectedCountLabel.layer.cornerRadius = cell.selectedCountLabel.frame.size.height / 2.0
@@ -100,10 +104,7 @@ extension AlbumsCollectionViewController{
     // MARK: - UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }
-        assetPickerController.album = albumManager.albums[indexPath.item]
-        
-        self.navigationController?.pushViewController(assetPickerController, animated: true)
+        showAlbum(album: albumManager.albums[indexPath.item])
     }
 }
 
@@ -121,11 +122,8 @@ extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout{
 }
 
 extension AlbumsCollectionViewController: AlbumSearchResultsTableViewControllerDelegate{
-    func albumSearchResultsTableViewControllerDelegate(didSelect album: Album) {
-        guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }
-        assetPickerController.album = album
-        
-        self.navigationController?.pushViewController(assetPickerController, animated: true)
+    func searchDidSelect(_ album: Album) {
+        showAlbum(album: album)
     }
     
     

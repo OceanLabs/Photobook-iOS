@@ -9,7 +9,7 @@
 import UIKit
 
 protocol AlbumSearchResultsTableViewControllerDelegate: class {
-    func albumSearchResultsTableViewControllerDelegate(didSelect album:Album)
+    func searchDidSelect(_ album:Album)
 }
 
 class AlbumSearchResultsTableViewController: UITableViewController {
@@ -67,7 +67,7 @@ extension AlbumSearchResultsTableViewController{
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {        
-        self.delegate?.albumSearchResultsTableViewControllerDelegate(didSelect: filteredAlbums[indexPath.row])
+        self.delegate?.searchDidSelect(filteredAlbums[indexPath.row])
     }
 
 }
