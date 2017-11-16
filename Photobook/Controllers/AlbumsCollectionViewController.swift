@@ -12,14 +12,15 @@ import UIKit
 /// View Controller to show albums. It doesn't care about the source of those albums as long as they conform to the Album protocol.
 class AlbumsCollectionViewController: UICollectionViewController {
     
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     var searchController: UISearchController?
     
     
     /// The height between the bottom of the image and bottom of the cell where the labels sit
-    let albumCellLabelsHeight = CGFloat(50)
-    let marginBetweenAlbums = CGFloat(20)
+    let albumCellLabelsHeight: CGFloat = 50
+    let marginBetweenAlbums: CGFloat = 20
     
-    let albumManager: AlbumManager/*!*/ = PhotosAlbumManager() //TODO: this should be set from outside of this class
+    var albumManager: AlbumManager!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,8 +36,9 @@ class AlbumsCollectionViewController: UICollectionViewController {
             self.navigationController?.navigationBar.prefersLargeTitles = true
         }
         
-        albumManager.loadAlbums(completionHandler: {(error) in
-            self.collectionView?.reloadData()
+        albumManager.loadAlbums(completionHandler: { [weak welf = self] (error) in
+            welf?.activityIndicator.stopAnimating()
+            welf?.collectionView?.reloadData()
             searchResultsViewController.albums = self.albumManager.albums
         })
     }
