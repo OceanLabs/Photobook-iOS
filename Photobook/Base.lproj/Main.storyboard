@@ -648,7 +648,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" image="Drag-down-arrow" translatesAutoresizingMaskIntoConstraints="NO" id="jed-GU-uvQ">
-                                <rect key="frame" x="189" y="544.66666666666663" width="36" height="12"/>
+                                <rect key="frame" x="189" y="772.66666666666663" width="36" height="12"/>
                                 <gestureRecognizers/>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="4gs-fc-q3m" appends="YES" id="OP4-OZ-aZn"/>
@@ -658,11 +658,8 @@
                                 <rect key="frame" x="188.66666666666666" y="359.66666666666669" width="37" height="37"/>
                                 <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </activityIndicatorView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="XqZ-ir-owp">
-                                <rect key="frame" x="0.0" y="228" width="414" height="300"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="300" placeholder="YES" id="x6h-S4-oGn"/>
-                                </constraints>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XqZ-ir-owp">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="756"/>
                             </imageView>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tick-empty" translatesAutoresizingMaskIntoConstraints="NO" id="qIG-Cy-Lbb">
                                 <rect key="frame" x="378" y="15" width="26" height="26"/>
@@ -674,6 +671,7 @@
                             <constraint firstItem="60f-Mx-P4u" firstAttribute="centerX" secondItem="9P2-06-guk" secondAttribute="centerX" id="4t0-lH-FTe"/>
                             <constraint firstItem="XqZ-ir-owp" firstAttribute="centerY" secondItem="9P2-06-guk" secondAttribute="centerY" id="88V-4g-aKH"/>
                             <constraint firstItem="XqZ-ir-owp" firstAttribute="leading" secondItem="84B-qY-2Nb" secondAttribute="leading" priority="750" id="9rR-ro-cMH"/>
+                            <constraint firstItem="XqZ-ir-owp" firstAttribute="top" secondItem="84B-qY-2Nb" secondAttribute="top" priority="750" id="ALr-I9-Zax"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="XqZ-ir-owp" secondAttribute="trailing" id="Khq-s9-XS7"/>
                             <constraint firstItem="XqZ-ir-owp" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="84B-qY-2Nb" secondAttribute="leading" id="LrL-t7-N3r"/>
                             <constraint firstItem="9P2-06-guk" firstAttribute="trailing" secondItem="qIG-Cy-Lbb" secondAttribute="trailing" constant="10" id="XAa-oh-U6C"/>
@@ -681,6 +679,7 @@
                             <constraint firstItem="jed-GU-uvQ" firstAttribute="top" secondItem="XqZ-ir-owp" secondAttribute="bottom" constant="17" id="daE-yi-v9d"/>
                             <constraint firstItem="jed-GU-uvQ" firstAttribute="centerX" secondItem="9P2-06-guk" secondAttribute="centerX" id="djN-Yc-hTp"/>
                             <constraint firstItem="XqZ-ir-owp" firstAttribute="centerX" secondItem="9P2-06-guk" secondAttribute="centerX" id="i3W-PM-bDy"/>
+                            <constraint firstItem="XqZ-ir-owp" firstAttribute="top" relation="greaterThanOrEqual" secondItem="84B-qY-2Nb" secondAttribute="top" id="ntY-mY-CXB"/>
                             <constraint firstItem="qIG-Cy-Lbb" firstAttribute="top" secondItem="9P2-06-guk" secondAttribute="top" constant="-5" id="ty5-Mp-pNd"/>
                             <constraint firstAttribute="trailing" secondItem="XqZ-ir-owp" secondAttribute="trailing" priority="750" id="vnS-iw-FTh"/>
                         </constraints>
