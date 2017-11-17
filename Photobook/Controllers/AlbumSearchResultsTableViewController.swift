@@ -32,28 +32,28 @@ extension AlbumSearchResultsTableViewController{
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "AlbumSearchResultsTableViewCell", for: indexPath) as? AlbumSearchResultsTableViewCell else { return UITableViewCell() }
-        let album = filteredAlbums?[indexPath.item]
-        cell.albumId = album?.identifier
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "AlbumSearchResultsTableViewCell", for: indexPath) as? AlbumSearchResultsTableViewCell,
+            let album = filteredAlbums?[indexPath.item]
+            else { return UITableViewCell() }
         
-        album?.coverImage(size: CGSize(width: tableView.rowHeight, height: tableView.rowHeight), completionHandler: {(image, _) in
-            guard cell.albumId == album?.identifier else { return }
+        cell.albumId = album.identifier
+        
+        album.coverImage(size: CGSize(width: tableView.rowHeight, height: tableView.rowHeight), completionHandler: {(image, _) in
+            guard cell.albumId == album.identifier else { return }
             cell.albumCoverImageView.image = image
         })
         
-        if let albumCount = album?.numberOfAssets{
-            cell.imageCountLabel.text = "\(albumCount)"
-        }
+        cell.imageCountLabel.text = "\(album.numberOfAssets)"
         
         // Color the matched part of the name black and gray out the rest
-        if let searchQuery = self.searchBar?.text?.lowercased(), searchQuery != "", let albumName = album?.localizedName, let matchRange = albumName.lowercased().range(of: searchQuery){
+        if let searchQuery = self.searchBar?.text?.lowercased(), searchQuery != "", let albumName = album.localizedName, let matchRange = albumName.lowercased().range(of: searchQuery){
             let attributedString = NSMutableAttributedString(string: albumName, attributes: [.foregroundColor: UIColor.gray])
             attributedString.addAttribute(.foregroundColor, value: UIColor.black, range: NSRange(matchRange, in: albumName))
             
             cell.albumNameLabel.attributedText = attributedString
         }
         else{
-            cell.albumNameLabel.text = album?.localizedName
+            cell.albumNameLabel.text = album.localizedName
         }
         
         return cell

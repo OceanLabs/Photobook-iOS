@@ -95,7 +95,6 @@ extension AlbumsCollectionViewController{
             guard cell.albumId == album.identifier else { return }
             cell.albumCoverImageView.image = image
         })
-        cell.albumCoverImageView.cornerRadius = 5
         
         cell.albumNameLabel.text = album.localizedName
         
@@ -103,7 +102,7 @@ extension AlbumsCollectionViewController{
         cell.albumAssetsCountLabel.isHidden = totalNumberOfAssets == NSNotFound
         cell.albumAssetsCountLabel.text = "\(totalNumberOfAssets)"
         
-        let selectedAssetsCount = selectedAssetsManager.selectedAssetCount(for: album)
+        let selectedAssetsCount = selectedAssetsManager.count(for: album)
         cell.selectedCountLabel.text = "\(selectedAssetsCount)"
         cell.selectedCountLabel.isHidden = selectedAssetsCount == 0
         cell.selectedCountLabel.cornerRadius = cell.selectedCountLabel.frame.size.height / 2.0

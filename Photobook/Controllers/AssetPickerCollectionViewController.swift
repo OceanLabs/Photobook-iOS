@@ -43,7 +43,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     }
 
     @IBAction func selectAllButtonTapped(_ sender: UIBarButtonItem) {
-        if selectedAssetsManager?.selectedAssetCount(for: album) == album.assets.count {
+        if selectedAssetsManager?.count(for: album) == album.assets.count {
             selectedAssetsManager?.deselectAllAssets(for: album)
         }
         else {
@@ -67,7 +67,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     }
     
     func updateSelectAllButtonTitle() {
-        if selectedAssetsManager?.selectedAssetCount(for: album) == self.album.assets.count {
+        if selectedAssetsManager?.count(for: album) == self.album.assets.count {
             selectAllButton.title = NSLocalizedString("ImagePicker/Button/DeselectAll", value: "Deselect All", comment: "Button title for de-selecting all selected photos")
         }
         else{

@@ -70,7 +70,7 @@ class SelectedAssetsManager: NSObject {
         return true
     }
     
-    func selectedAssetCount(for album:Album) -> Int {
+    func count(for album:Album) -> Int {
         return selectedAssets(for: album).count
     }
     
