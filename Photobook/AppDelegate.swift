@@ -25,13 +25,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //Intro screen flow
         if PHPhotoLibrary.authorizationStatus() == .authorized {
+            //if user denied access before, but enabled manually by going to the settings screen. Upon returning we don't want to display the intro screen anymore.
             IntroViewController.userHasDismissed = true
         }
         if IntroViewController.userHasDismissed {
             //set initial view controller to tab bar vc
-            self.window = UIWindow(frame: UIScreen.main.bounds)
             self.window?.rootViewController = tabBarController
-            self.window?.makeKeyAndVisible()
         }
         
         return true
