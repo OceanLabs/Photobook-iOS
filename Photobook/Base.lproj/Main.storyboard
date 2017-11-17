@@ -50,7 +50,7 @@
                                                                         <fragment content="LAST WEEK WAS QUITE AMAZING">
                                                                             <attributes>
                                                                                 <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                                                <font key="NSFont" metaFont="system" size="48"/>
+                                                                                <font key="NSFont" size="48" name="LeagueGothic-Regular"/>
                                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" maximumLineHeight="48" tighteningFactorForTruncation="0.0"/>
                                                                             </attributes>
                                                                         </fragment>
@@ -140,15 +140,15 @@
                                                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vkU-Hq-4Fn">
-                                                            <rect key="frame" x="15" y="45.666666666666664" width="152.33333333333334" height="110.33333333333334"/>
+                                                            <rect key="frame" x="15" y="61.666666666666679" width="152.33333333333334" height="78.333333333333314"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eOz-ny-Awi">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="152.33333333333334" height="96"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="152.33333333333334" height="64"/>
                                                                     <attributedString key="attributedText">
                                                                         <fragment content="DOUBLE THE LEFT TROUBLE">
                                                                             <attributes>
                                                                                 <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                                                <font key="NSFont" metaFont="system" size="32"/>
+                                                                                <font key="NSFont" size="32" name="LeagueGothic-Regular"/>
                                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="truncatingTail" baseWritingDirection="natural" maximumLineHeight="32" tighteningFactorForTruncation="0.0"/>
                                                                             </attributes>
                                                                         </fragment>
@@ -157,7 +157,7 @@
                                                                     <size key="shadowOffset" width="0.0" height="0.0"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SEP 2017" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="98S-YZ-ATE">
-                                                                    <rect key="frame" x="0.0" y="96" width="152.33333333333334" height="14.333333333333329"/>
+                                                                    <rect key="frame" x="0.0" y="63.999999999999993" width="152.33333333333334" height="14.333333333333336"/>
                                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
                                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                     <nil key="highlightedColor"/>
@@ -218,15 +218,15 @@
                                                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zYM-e0-yG9">
-                                                            <rect key="frame" x="15" y="45.666666666666664" width="151.66666666666666" height="110.33333333333334"/>
+                                                            <rect key="frame" x="15" y="61.666666666666679" width="151.66666666666666" height="78.333333333333314"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a7S-9F-Ten">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="151.66666666666666" height="96"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="151.66666666666666" height="64"/>
                                                                     <attributedString key="attributedText">
                                                                         <fragment content="DOUBLE THE RIGHT TROUBLE">
                                                                             <attributes>
                                                                                 <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                                                <font key="NSFont" metaFont="system" size="32"/>
+                                                                                <font key="NSFont" size="32" name="LeagueGothic-Regular"/>
                                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="truncatingTail" baseWritingDirection="natural" maximumLineHeight="32" tighteningFactorForTruncation="0.0"/>
                                                                             </attributes>
                                                                         </fragment>
@@ -235,7 +235,7 @@
                                                                     <size key="shadowOffset" width="0.0" height="0.0"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SEP 2017" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S8o-db-JJh">
-                                                                    <rect key="frame" x="0.0" y="96" width="151.66666666666666" height="14.333333333333329"/>
+                                                                    <rect key="frame" x="0.0" y="63.999999999999993" width="151.66666666666666" height="14.333333333333336"/>
                                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
                                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                     <nil key="highlightedColor"/>
@@ -674,7 +674,7 @@
         <image name="Albums" width="22" height="22"/>
         <image name="Canon" width="177" height="37"/>
         <image name="IntroTitle" width="285" height="100"/>
-        <image name="LaunchImage" width="736" height="736"/>
+        <image name="LaunchImage" width="414" height="812"/>
         <image name="Stories" width="29" height="24"/>
     </resources>
 </document>
