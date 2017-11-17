@@ -15,11 +15,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
         
+        if let albumViewController = (tabBarController.viewControllers?[1] as? UINavigationController)?.topViewController as? AlbumsCollectionViewController{
+            albumViewController.albumManager = PhotosAlbumManager()
+        }
         
         //Intro screen flow
         if PHPhotoLibrary.authorizationStatus() == .authorized {
@@ -30,11 +32,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.window = UIWindow(frame: UIScreen.main.bounds)
             self.window?.rootViewController = tabBarController
             self.window?.makeKeyAndVisible()
-        }
-        
-        
-        if let albumViewController = (tabBarController.viewControllers?[1] as? UINavigationController)?.topViewController as? AlbumsCollectionViewController{
-            albumViewController.albumManager = PhotosAlbumManager()
         }
         
         return true
