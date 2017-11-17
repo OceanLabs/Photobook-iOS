@@ -30,14 +30,10 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         }
         
         if album.assets.count == 0{
-            DispatchQueue.global(qos: .background).async { [weak welf = self] in
-                welf?.album.loadAssets(completionHandler: { (_) in
-                    DispatchQueue.main.async {
-                        welf?.collectionView?.reloadData()
-                        welf?.postAlbumLoadSetup()
-                    }
-                })
-            }
+            self.album.loadAssets(completionHandler: { (_) in
+                self.collectionView?.reloadData()
+                self.postAlbumLoadSetup()
+            })
         }
         else{
             postAlbumLoadSetup()

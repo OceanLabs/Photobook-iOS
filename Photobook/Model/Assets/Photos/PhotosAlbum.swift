@@ -31,6 +31,15 @@ class PhotosAlbum: Album {
     }
     
     func loadAssets(completionHandler: ((Error?) -> Void)?) {
+        DispatchQueue.global(qos: .background).async { [weak welf = self] in
+            welf?.loadAssetsFromPhotoLibrary()
+            DispatchQueue.main.async {
+                completionHandler?(nil)
+            }
+        }
+    }
+    
+    func loadAssetsFromPhotoLibrary() {
         let fetchOptions = PHFetchOptions()
         fetchOptions.wantsIncrementalChangeDetails = false
         fetchOptions.includeHiddenAssets = false
@@ -40,7 +49,6 @@ class PhotosAlbum: Album {
         fetchedAssets.enumerateObjects({ (asset, _, _) in
             self.assets.append(PhotosAsset(asset))
         })
-        completionHandler?(nil)
     }
     
     func coverImage(size: CGSize, completionHandler: @escaping (UIImage?, Error?) -> Void) {
