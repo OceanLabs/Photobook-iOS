@@ -63,9 +63,7 @@ class IntroViewController: UIViewController {
                 
                 self.view.layoutIfNeeded()
             })
-        }) { (completed) in
-            
-        }
+        })
 
     }
     
