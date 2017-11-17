@@ -33,6 +33,7 @@
 		6FB670731FB5BB1A0062D630 /* StoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB670721FB5BB1A0062D630 /* StoryTests.swift */; };
 		6FDF25E51FB604E100F46BB0 /* PhotoBookTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF25E41FB604E100F46BB0 /* PhotoBookTabBar.swift */; };
 		6FDF25E71FB6052A00F46BB0 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF25E61FB6052A00F46BB0 /* UIImageExtensions.swift */; };
+		B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +77,7 @@
 		6FB670721FB5BB1A0062D630 /* StoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryTests.swift; sourceTree = "<group>"; };
 		6FDF25E41FB604E100F46BB0 /* PhotoBookTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoBookTabBar.swift; sourceTree = "<group>"; };
 		6FDF25E61FB6052A00F46BB0 /* UIImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
+		B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,6 +175,7 @@
 		6F4DE64C1FB323280099A97E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */,
 				6F4DE64D1FB323540099A97E /* StoriesViewController.swift */,
 				2E0B58911FB325FF00F31A9E /* AlbumsCollectionViewController.swift */,
 				2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */,
@@ -370,6 +373,7 @@
 				2E0B58A01FB3297300F31A9E /* AlbumCollectionViewCell.swift in Sources */,
 				2E0B58991FB328B800F31A9E /* Asset.swift in Sources */,
 				2E0B58951FB3280000F31A9E /* AlbumManager.swift in Sources */,
+				B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */,
 				2E0B58A21FB32AC100F31A9E /* PhotosAlbum.swift in Sources */,
 				2E0B58A91FB3508B00F31A9E /* SelectedAssetsManager.swift in Sources */,
 				2E0B589D1FB3293100F31A9E /* PhotosAsset.swift in Sources */,
@@ -413,14 +417,6 @@
 				2E0B58891FB30F2100F31A9E /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		B981B95A1FB6023C000FE3AB /* Intro.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B981B95B1FB6023C000FE3AB /* Base */,
-			);
-			name = Intro.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

@@ -9,8 +9,19 @@
 import UIKit
 import Photos
 
-class PhotoPermissionViewController: UIViewController {
+class IntroViewController: UIViewController {
     
+    public static var userHasDismissed:Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "IntroViewController.userHasDismissed")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "IntroViewController.userHasDismissed")
+            UserDefaults.standard.synchronize()
+        }
+    }
+    
+    @IBOutlet weak var ctaButton: UIButton!
     @IBOutlet weak var ctaContainerView: UIView!
     @IBOutlet weak var bgImageView: UIImageView!
     
@@ -34,9 +45,7 @@ class PhotoPermissionViewController: UIViewController {
         super.viewWillAppear(animated)
         
         if PHPhotoLibrary.authorizationStatus() == .authorized {
-            self.dismiss(animated: false, completion: {
-                
-            })
+            self.dismiss()
         }
     }
     
@@ -47,7 +56,7 @@ class PhotoPermissionViewController: UIViewController {
         
         self.view.layoutIfNeeded()
         
-        UIView.animateKeyframes(withDuration: animationDuration, delay: 0, options: .calculationModePaced, animations: {
+        UIView.animateKeyframes(withDuration: animationDuration, delay: 1, options: .calculationModePaced, animations: {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1, animations: {
                 self.ctaVisibleConstraint.priority = .init(751)
                 self.ctaInvisibleConstraint.priority = .defaultLow
@@ -65,11 +74,15 @@ class PhotoPermissionViewController: UIViewController {
     
         switch status {
         case .notDetermined:
+            self.ctaButton.isEnabled = false
             PHPhotoLibrary.requestAuthorization({ status in
-                if status == .authorized {
-                    self.dismiss()
-                } else {
-                    self.showPermissionDeniedDialog()
+                DispatchQueue.main.async {
+                    self.ctaButton.isEnabled = true
+                    if status == .authorized {
+                        self.dismiss()
+                    } else {
+                        self.showPermissionDeniedDialog()
+                    }
                 }
             })
         case .denied: fallthrough
@@ -82,9 +95,8 @@ class PhotoPermissionViewController: UIViewController {
     }
     
     func dismiss() {
-        self.dismiss(animated: true) {
-            
-        }
+        self.performSegue(withIdentifier: "IntroDismiss", sender: nil)
+        IntroViewController.userHasDismissed = true
     }
     
     @objc func appWillTerminate() {
@@ -97,16 +109,16 @@ class PhotoPermissionViewController: UIViewController {
     func showPermissionDeniedDialog() {
         
         let alertText = NSLocalizedString("Controllers/PhotoPermissionController/PermissionDeniedDialogText",
-                                                       value: "Photo access is restricted, but it's needed to create beautiful photo books.\nYou can turn it on in the system settings",
+                                                       value: "Photo access has been restricted, but it's needed to create beautiful photo books.\nYou can turn it back on in the system settings",
                                                        comment: "Alert dialog when photo library access has been disabled")
         let alertTitle = NSLocalizedString("Controllers/PhotoPermissionController/PermissionDeniedDialogTitle",
-                                                       value: "Hm...",
+                                                       value: "Photo Access",
                                                        comment: "Alert dialog when photo library access has been disabled")
         let alertOpenSettings = NSLocalizedString("Controllers/PhotoPermissionController/PermissionDeniedDialogOpenSettings",
                                                  value: "Open Settings",
                                                  comment: "Alert dialog button when photo library access has been disabled")
         let alertOK = NSLocalizedString("Controllers/PhotoPermissionController/PermissionDeniedDialogOK",
-                                                  value: "Open Settings",
+                                                  value: "OK",
                                                   comment: "Alert dialog button when photo library access has been disabled")
         
         
