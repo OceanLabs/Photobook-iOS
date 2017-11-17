@@ -20,6 +20,7 @@ class StoriesViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
     
     private var stories = [Story]()
+    private let selectedAssetsManager = SelectedAssetsManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +30,13 @@ class StoriesViewController: UIViewController {
             guard let stories = stories else { return }
             welf?.stories = stories
             welf?.tableView.reloadData()
+            
+            // Once we are done loading the things needed to show on this screen, load the assets from each story so that they are ready if the user taps on a story
+            for story in stories{
+                story.loadAssets(completionHandler: nil)
+            }
         }
+        
     }
 }
 
@@ -81,20 +88,20 @@ extension StoriesViewController: UITableViewDataSource {
             doubleCell.dates = story.subtitle
             doubleCell.secondTitle = secondStory.title
             doubleCell.secondDates = secondStory.subtitle
-            doubleCell.localIdentifier = story.cover.localIdentifier
+            doubleCell.localIdentifier = story.identifier
             doubleCell.storyIndex = storyIndex
             doubleCell.delegate = self
             
-            StoriesManager.shared.thumbnailForPhoto(story.cover, size: doubleCell.coverSize) { (image) in
-                if doubleCell.localIdentifier == story.cover.localIdentifier {
+            story.coverImage(size: doubleCell.coverSize, completionHandler:{ (image, _) in
+                if doubleCell.localIdentifier == story.identifier {
                     doubleCell.cover = image
                 }
-            }
-            StoriesManager.shared.thumbnailForPhoto(secondStory.cover, size: doubleCell.coverSize) { (image) in
-                if doubleCell.localIdentifier == story.cover.localIdentifier {
+            })
+            secondStory.coverImage(size: doubleCell.coverSize, completionHandler: { (image, _) in
+                if doubleCell.localIdentifier == story.identifier {
                     doubleCell.secondCover = image
                 }
-            }
+            })
             
             return doubleCell
         }
@@ -104,15 +111,15 @@ extension StoriesViewController: UITableViewDataSource {
         let singleCell = tableView.dequeueReusableCell(withIdentifier: StoryTableViewCell.reuseIdentifier(), for: indexPath) as! StoryTableViewCell
         singleCell.title = story.title
         singleCell.dates = story.subtitle
-        singleCell.localIdentifier = story.cover.localIdentifier
+        singleCell.localIdentifier = story.identifier
         singleCell.storyIndex = storyIndex
         singleCell.delegate = self
 
-        StoriesManager.shared.thumbnailForPhoto(story.cover, size: singleCell.coverSize) { (image) in
-            if singleCell.localIdentifier == story.cover.localIdentifier {
+        story.coverImage(size: singleCell.coverSize, completionHandler: { (image, _) in
+            if singleCell.localIdentifier == story.identifier {
                 singleCell.cover = image
             }
-        }
+        })
 
         return singleCell
     }
@@ -121,7 +128,10 @@ extension StoriesViewController: UITableViewDataSource {
 extension StoriesViewController: StoryTableViewCellDelegate {
     
     func didTapOnStory(index: Int) {
-        // TODO: Segue
-        print("Tapped story \(index)")
+         guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }       
+        assetPickerController.album = stories[index]
+        assetPickerController.selectedAssetsManager = selectedAssetsManager
+        
+        self.navigationController?.pushViewController(assetPickerController, animated: true)
     }
 }

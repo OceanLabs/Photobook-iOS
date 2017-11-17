@@ -25,10 +25,10 @@ class PhotosAlbumManager: AlbumManager {
                 let album = PhotosAlbum(collection)
                 
                 // Load assets here so that we know the number of assets in this album
-                album.loadAssets(completionHandler: { [weak welf = self] (error) in
-                    guard album.assets.count > 0 else { return }
-                    welf?.albums.append(album)
-                })
+                album.loadAssetsFromPhotoLibrary()
+                if album.assets.count > 0 {
+                    self.albums.append(album)
+                }
                 
             }
             
@@ -37,10 +37,10 @@ class PhotosAlbumManager: AlbumManager {
                 let album = PhotosAlbum(collection)
                 
                 // Load assets here so that we know the number of assets in this album
-                album.loadAssets(completionHandler: { [weak welf = self] (error) in
-                    guard album.assets.count > 0 else { return }
-                    welf?.albums.append(album)
-                })
+                album.loadAssetsFromPhotoLibrary()
+                if album.assets.count > 0 {
+                    self.albums.append(album)
+                }
             }
             
             // Get Selfies album
@@ -48,10 +48,10 @@ class PhotosAlbumManager: AlbumManager {
                 let album = PhotosAlbum(collection)
                 
                 // Load assets here so that we know the number of assets in this album
-                album.loadAssets(completionHandler: { [weak welf = self] (error) in
-                    guard album.assets.count > 0 else { return }
-                    welf?.albums.append(album)
-                })
+                album.loadAssetsFromPhotoLibrary()
+                if album.assets.count > 0 {
+                    self.albums.append(album)
+                }
             }
             
             // Get Portrait album
@@ -60,10 +60,10 @@ class PhotosAlbumManager: AlbumManager {
                     let album = PhotosAlbum(collection)
                     
                     // Load assets here so that we know the number of assets in this album
-                    album.loadAssets(completionHandler: { [weak welf = self] (error) in
-                        guard album.assets.count > 0 else { return }
-                        welf?.albums.append(album)
-                    })
+                    album.loadAssetsFromPhotoLibrary()
+                    if album.assets.count > 0 {
+                        self.albums.append(album)
+                    }
                 }
             }
             
@@ -72,10 +72,10 @@ class PhotosAlbumManager: AlbumManager {
                 let album = PhotosAlbum(collection)
                 
                 // Load assets here so that we know the number of assets in this album
-                album.loadAssets(completionHandler: { [weak welf = self] (error) in
-                    guard album.assets.count > 0 else { return }
-                    welf?.albums.append(album)
-                })
+                album.loadAssetsFromPhotoLibrary()
+                if album.assets.count > 0 {
+                    self.albums.append(album)
+                }
             }
             
             // Get User albums
