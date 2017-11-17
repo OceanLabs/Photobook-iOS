@@ -28,6 +28,9 @@ class AlbumsCollectionViewController: UICollectionViewController {
             welf?.activityIndicator.stopAnimating()
             welf?.collectionView?.reloadData()
         })
+        
+        calcAndSetCellSize()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -50,6 +53,17 @@ class AlbumsCollectionViewController: UICollectionViewController {
         
         definesPresentationContext = true
         present(searchController, animated: true, completion: nil)
+    }
+    
+    func calcAndSetCellSize(){
+        // Calc the cell size
+        guard let collectionView = collectionView else { return }
+        var usableSpace = collectionView.frame.size.width - marginBetweenAlbums;
+        if let insets = (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset{
+            usableSpace -= insets.left + insets.right
+        }
+        let cellWidth = usableSpace / 2.0
+        (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize = CGSize(width: cellWidth, height: cellWidth + albumCellLabelsHeight)
     }
     
     func showAlbum(album: Album){
@@ -76,7 +90,7 @@ extension AlbumsCollectionViewController{
         cell.albumId = album.identifier
         cell.albumCoverImageView.image = nil
         
-        let cellWidth = self.collectionView(collectionView, layout: collectionView.collectionViewLayout, sizeForItemAt: indexPath).width
+        let cellWidth = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize.width ?? 0
         album.coverImage(size: CGSize(width: cellWidth, height: cellWidth), completionHandler: {(image, error) in
             guard cell.albumId == album.identifier else { return }
             cell.albumCoverImageView.image = image
@@ -104,19 +118,6 @@ extension AlbumsCollectionViewController{
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         showAlbum(album: albumManager.albums[indexPath.item])
-    }
-}
-
-extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout{
-    // MARK: - UICollectionViewDelegateFlowLayout
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var usableSpace = collectionView.frame.size.width - marginBetweenAlbums;
-        if let insets = (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset{
-            usableSpace -= insets.left + insets.right
-        }
-        let cellWidth = usableSpace / 2.0
-        return CGSize(width: cellWidth, height: cellWidth + albumCellLabelsHeight)
     }
 }
 
