@@ -88,20 +88,20 @@ extension StoriesViewController: UITableViewDataSource {
             doubleCell.dates = story.subtitle
             doubleCell.secondTitle = secondStory.title
             doubleCell.secondDates = secondStory.subtitle
-            doubleCell.localIdentifier = story.cover.localIdentifier
+            doubleCell.localIdentifier = story.identifier
             doubleCell.storyIndex = storyIndex
             doubleCell.delegate = self
             
-            StoriesManager.shared.thumbnailForPhoto(story.cover, size: doubleCell.coverSize) { (image) in
-                if doubleCell.localIdentifier == story.cover.localIdentifier {
+            story.coverImage(size: doubleCell.coverSize, completionHandler:{ (image, _) in
+                if doubleCell.localIdentifier == story.identifier {
                     doubleCell.cover = image
                 }
-            }
-            StoriesManager.shared.thumbnailForPhoto(secondStory.cover, size: doubleCell.coverSize) { (image) in
-                if doubleCell.localIdentifier == story.cover.localIdentifier {
+            })
+            secondStory.coverImage(size: doubleCell.coverSize, completionHandler: { (image, _) in
+                if doubleCell.localIdentifier == story.identifier {
                     doubleCell.secondCover = image
                 }
-            }
+            })
             
             return doubleCell
         }
@@ -111,15 +111,15 @@ extension StoriesViewController: UITableViewDataSource {
         let singleCell = tableView.dequeueReusableCell(withIdentifier: StoryTableViewCell.reuseIdentifier(), for: indexPath) as! StoryTableViewCell
         singleCell.title = story.title
         singleCell.dates = story.subtitle
-        singleCell.localIdentifier = story.cover.localIdentifier
+        singleCell.localIdentifier = story.identifier
         singleCell.storyIndex = storyIndex
         singleCell.delegate = self
 
-        StoriesManager.shared.thumbnailForPhoto(story.cover, size: singleCell.coverSize) { (image) in
-            if singleCell.localIdentifier == story.cover.localIdentifier {
+        story.coverImage(size: singleCell.coverSize, completionHandler: { (image, _) in
+            if singleCell.localIdentifier == story.identifier {
                 singleCell.cover = image
             }
-        }
+        })
 
         return singleCell
     }

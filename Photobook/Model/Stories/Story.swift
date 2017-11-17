@@ -10,7 +10,7 @@ import Photos
 
 class Story {
     let collectionList: PHCollectionList
-    var cover: PHAsset!
+    let collectionForCoverPhoto: PHAssetCollection
     var components: [String]!
     var photoCount = 0
     var isWeekend = false
@@ -29,8 +29,9 @@ class Story {
         return dateString().uppercased()
     }()
     
-    init(list: PHCollectionList) {
+    init(list: PHCollectionList, coverCollection: PHAssetCollection) {
         collectionList = list
+        collectionForCoverPhoto = coverCollection
     }
     
     private func dateString() -> String {
@@ -103,7 +104,7 @@ extension Story: Album{
     }
     
     func coverImage(size: CGSize, completionHandler: @escaping (UIImage?, Error?) -> Void) {
-        // Not needed yet
+        collectionForCoverPhoto.coverImage(size: size, completionHandler: completionHandler)
     }
     
     
