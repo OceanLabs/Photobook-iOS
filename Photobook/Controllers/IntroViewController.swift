@@ -35,10 +35,6 @@ class IntroViewController: UIViewController {
         ctaInvisibleConstraint.priority = .init(751)
         
         view.layoutIfNeeded()
-        
-    
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(appWillTerminate), name: Notification.Name.UIApplicationWillTerminate, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -95,13 +91,6 @@ class IntroViewController: UIViewController {
     func dismiss() {
         performSegue(withIdentifier: "IntroDismiss", sender: nil)
         IntroViewController.userHasDismissed = true
-    }
-    
-    @objc func appWillTerminate() {
-        ctaVisibleConstraint.priority = .defaultLow
-        ctaInvisibleConstraint.priority = .init(751)
-        
-        view.layoutIfNeeded()
     }
     
     func showPermissionDeniedDialog() {
