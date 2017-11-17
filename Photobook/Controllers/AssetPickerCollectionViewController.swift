@@ -10,15 +10,15 @@ import UIKit
 
 class AssetPickerCollectionViewController: UICollectionViewController {
 
-    private let marginBetweenImages = CGFloat(1)
-    private let numberOfCellsPerRow = CGFloat(4) //CGFloat because it's used in size calculations
+    @IBOutlet weak var selectAllButton: UIBarButtonItem!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    private let marginBetweenImages: CGFloat = 1
+    private let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
+    var selectedAssetsManager: SelectedAssetsManager?
+    
     var album: Album! {
         didSet{
             self.title = album.localizedName
-            
-            if album.assets.count == 0{
-                album.loadAssets(completionHandler: nil)
-            }
         }
     }
     
@@ -29,6 +29,18 @@ class AssetPickerCollectionViewController: UICollectionViewController {
             navigationItem.largeTitleDisplayMode = .never
         }
         
+        if album.assets.count == 0{
+            self.album.loadAssets(completionHandler: { (_) in
+                self.collectionView?.reloadData()
+                self.postAlbumLoadSetup()
+            })
+        }
+        else{
+            postAlbumLoadSetup()
+        }
+        
+        calcAndSetCellSize()
+        
         if traitCollection.forceTouchCapability == .available{
             registerForPreviewing(with: self, sourceView: collectionView!)
         }
@@ -36,6 +48,47 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     
     @IBAction func unwindToThisView(withUnwindSegue unwindSegue: UIStoryboardSegue) {}
 
+    @IBAction func selectAllButtonTapped(_ sender: UIBarButtonItem) {
+        if selectedAssetsManager?.count(for: album) == album.assets.count {
+            selectedAssetsManager?.deselectAllAssets(for: album)
+        }
+        else {
+            selectedAssetsManager?.selectAllAssets(for: album)
+        }
+        
+        updateSelectAllButtonTitle()
+        collectionView?.reloadData()
+    }
+    
+    func postAlbumLoadSetup() {
+        activityIndicator.stopAnimating()
+        
+        // Hide "Select All" if current album has too many photos
+        if selectedAssetsManager?.willSelectingAllExceedTotalAllowed(for: album) ?? false{
+            selectAllButton.title = nil
+            return
+        }
+        
+        updateSelectAllButtonTitle()
+    }
+    
+    func updateSelectAllButtonTitle() {
+        if selectedAssetsManager?.count(for: album) == self.album.assets.count {
+            selectAllButton.title = NSLocalizedString("ImagePicker/Button/DeselectAll", value: "Deselect All", comment: "Button title for de-selecting all selected photos")
+        }
+        else{
+            selectAllButton.title = NSLocalizedString("ImagePicker/Button/SelectAll", value: "Select All", comment: "Button title for selecting all selected photos")
+        }
+    }
+    
+    func calcAndSetCellSize() {
+        guard let collectionView = collectionView else { return }
+        var usableSpace = collectionView.frame.size.width - marginBetweenImages;
+        usableSpace -= (numberOfCellsPerRow - 1.0) * marginBetweenImages
+        let cellWidth = usableSpace / numberOfCellsPerRow
+        (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize = CGSize(width: cellWidth, height: cellWidth)
+    }
+    
 }
 
 extension AssetPickerCollectionViewController {
@@ -51,15 +104,10 @@ extension AssetPickerCollectionViewController {
         let asset = album.assets[indexPath.item]
         cell.assetId = asset.identifier
         
-        if SelectedAssetsManager.selectedAssets(album).contains(where: { (selectedAsset) in
-            return selectedAsset.identifier == asset.identifier
-        }) {
-            cell.selectedStatusImageView.image = UIImage(named: "Tick")
-        } else {
-            cell.selectedStatusImageView.image = UIImage(named: "Tick-empty")
-        }
+        let selected = selectedAssetsManager?.isSelected(asset, for: album) ?? false
+        cell.selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
         
-        let size = self.collectionView(collectionView, layout: collectionView.collectionViewLayout, sizeForItemAt: indexPath)
+        let size = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize ?? .zero
         asset.image(size: size, completionHandler: {(image, _) in
             guard cell.assetId == asset.identifier else { return }
             cell.imageView.image = image
@@ -75,31 +123,13 @@ extension AssetPickerCollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = album.assets[indexPath.item]
+        selectedAssetsManager?.toggleSelected(asset, for: album)
         
-        var selectedAssets = SelectedAssetsManager.selectedAssets(album)
-        if let index = selectedAssets.index(where: { (selectedAsset) in
-            return selectedAsset.identifier == asset.identifier
-        }){
-            selectedAssets.remove(at: index)
-        } else {
-            selectedAssets.append(asset)
-        }
-        
-        SelectedAssetsManager.setSelectedAssets(album, newSelectedAssets: selectedAssets)
         collectionView.reloadItems(at: [indexPath])
+        
+        updateSelectAllButtonTitle()
     }
     
-}
-
-extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayout{
-    // MARK: - UICollectionViewDelegateFlowLayout
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var usableSpace = collectionView.frame.size.width - marginBetweenImages;
-        usableSpace -= (numberOfCellsPerRow - 1.0) * marginBetweenImages
-        let cellWidth = usableSpace / numberOfCellsPerRow
-        return CGSize(width: cellWidth, height: cellWidth)
-    }
 }
 
 extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegate{
@@ -118,6 +148,7 @@ extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegat
         fullScreenImageViewController.asset = album.assets[indexPath.item]
         fullScreenImageViewController.album = album
         fullScreenImageViewController.sourceView = cell.imageView
+        fullScreenImageViewController.selectedAssetsManager = selectedAssetsManager
         fullScreenImageViewController.delegate = self
         fullScreenImageViewController.providesPresentationContextTransitionStyle = true
         fullScreenImageViewController.definesPresentationContext = true
@@ -133,7 +164,7 @@ extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegat
         guard let fullScreenImageViewController = viewControllerToCommit as? FullScreenImageViewController else { return }
         fullScreenImageViewController.prepareForPop()
         
-        present(viewControllerToCommit, animated: true, completion: nil)
+        tabBarController?.present(viewControllerToCommit, animated: true, completion: nil)
     }
     
 }

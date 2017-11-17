@@ -12,22 +12,25 @@ import UIKit
 /// View Controller to show albums. It doesn't care about the source of those albums as long as they conform to the Album protocol.
 class AlbumsCollectionViewController: UICollectionViewController {
     
-    /// The height between the bottom of the image and bottom of the cell where the labels sit
-    private let albumCellLabelsHeight = CGFloat(50)
-    private let marginBetweenAlbums = CGFloat(20)
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
-    let albumManager: AlbumManager/*!*/ = PhotosAlbumManager() //TODO: this should be set from outside of this class
+    /// The height between the bottom of the image and bottom of the cell where the labels sit
+    private let albumCellLabelsHeight: CGFloat = 50
+    private let marginBetweenAlbums: CGFloat = 20
+    
+    var albumManager: AlbumManager!
+    private let selectedAssetsManager = SelectedAssetsManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if #available(iOS 11.0, *) {
-            navigationController?.navigationBar.prefersLargeTitles = true
-        }
-        
-        albumManager.loadAlbums(completionHandler: {(error) in
-            self.collectionView?.reloadData()
+        albumManager.loadAlbums(completionHandler: { [weak welf = self] (error) in
+            welf?.activityIndicator.stopAnimating()
+            welf?.collectionView?.reloadData()
         })
+        
+        calcAndSetCellSize()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -52,6 +55,24 @@ class AlbumsCollectionViewController: UICollectionViewController {
         present(searchController, animated: true, completion: nil)
     }
     
+    func calcAndSetCellSize(){
+        // Calc the cell size
+        guard let collectionView = collectionView else { return }
+        var usableSpace = collectionView.frame.size.width - marginBetweenAlbums;
+        if let insets = (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset{
+            usableSpace -= insets.left + insets.right
+        }
+        let cellWidth = usableSpace / 2.0
+        (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize = CGSize(width: cellWidth, height: cellWidth + albumCellLabelsHeight)
+    }
+    
+    func showAlbum(album: Album){
+        guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }
+        assetPickerController.album = album
+        assetPickerController.selectedAssetsManager = selectedAssetsManager
+        
+        self.navigationController?.pushViewController(assetPickerController, animated: true)
+    }
     
 }
 
@@ -69,12 +90,11 @@ extension AlbumsCollectionViewController{
         cell.albumId = album.identifier
         cell.albumCoverImageView.image = nil
         
-        let cellWidth = self.collectionView(collectionView, layout: collectionView.collectionViewLayout, sizeForItemAt: indexPath).width
+        let cellWidth = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize.width ?? 0
         album.coverImage(size: CGSize(width: cellWidth, height: cellWidth), completionHandler: {(image, error) in
             guard cell.albumId == album.identifier else { return }
             cell.albumCoverImageView.image = image
         })
-        cell.albumCoverImageView.layer.cornerRadius = 5
         
         cell.albumNameLabel.text = album.localizedName
         
@@ -82,11 +102,10 @@ extension AlbumsCollectionViewController{
         cell.albumAssetsCountLabel.isHidden = totalNumberOfAssets == NSNotFound
         cell.albumAssetsCountLabel.text = "\(totalNumberOfAssets)"
         
-        let selectedAssetsCount = SelectedAssetsManager.selectedAssets(album).count
+        let selectedAssetsCount = selectedAssetsManager.count(for: album)
         cell.selectedCountLabel.text = "\(selectedAssetsCount)"
         cell.selectedCountLabel.isHidden = selectedAssetsCount == 0
-        cell.selectedCountLabel.layer.cornerRadius = cell.selectedCountLabel.frame.size.height / 2.0
-        cell.selectedCountLabel.layer.masksToBounds = true
+        cell.selectedCountLabel.cornerRadius = cell.selectedCountLabel.frame.size.height / 2.0
     
         return cell
     }
@@ -97,32 +116,13 @@ extension AlbumsCollectionViewController{
     // MARK: - UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }
-        assetPickerController.album = albumManager.albums[indexPath.item]
-        
-        self.navigationController?.pushViewController(assetPickerController, animated: true)
-    }
-}
-
-extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout{
-    // MARK: - UICollectionViewDelegateFlowLayout
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var usableSpace = collectionView.frame.size.width - marginBetweenAlbums;
-        if let insets = (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset{
-            usableSpace -= insets.left + insets.right
-        }
-        let cellWidth = usableSpace / 2.0
-        return CGSize(width: cellWidth, height: cellWidth + albumCellLabelsHeight)
+        showAlbum(album: albumManager.albums[indexPath.item])
     }
 }
 
 extension AlbumsCollectionViewController: AlbumSearchResultsTableViewControllerDelegate{
-    func albumSearchResultsTableViewControllerDelegate(didSelect album: Album) {
-        guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }
-        assetPickerController.album = album
-        
-        self.navigationController?.pushViewController(assetPickerController, animated: true)
+    func searchDidSelect(_ album: Album) {
+        showAlbum(album: album)
     }
     
     

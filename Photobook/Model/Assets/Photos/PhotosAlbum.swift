@@ -31,6 +31,15 @@ class PhotosAlbum: Album {
     }
     
     func loadAssets(completionHandler: ((Error?) -> Void)?) {
+        DispatchQueue.global(qos: .background).async { [weak welf = self] in
+            welf?.loadAssetsFromPhotoLibrary()
+            DispatchQueue.main.async {
+                completionHandler?(nil)
+            }
+        }
+    }
+    
+    func loadAssetsFromPhotoLibrary() {
         let fetchOptions = PHFetchOptions()
         fetchOptions.wantsIncrementalChangeDetails = false
         fetchOptions.includeHiddenAssets = false
@@ -40,37 +49,9 @@ class PhotosAlbum: Album {
         fetchedAssets.enumerateObjects({ (asset, _, _) in
             self.assets.append(PhotosAsset(asset))
         })
-        completionHandler?(nil)
     }
     
     func coverImage(size: CGSize, completionHandler: @escaping (UIImage?, Error?) -> Void) {
-        DispatchQueue.global(qos: .background).async {
-            let fetchOptions = PHFetchOptions()
-            fetchOptions.fetchLimit = 1
-            fetchOptions.wantsIncrementalChangeDetails = false
-            fetchOptions.includeHiddenAssets = false
-            fetchOptions.includeAllBurstAssets = false
-            fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
-            
-            guard let coverAsset = PHAsset.fetchAssets(in: self.assetCollection, options: fetchOptions).firstObject else{
-                completionHandler(nil, nil) //TODO: return an error
-                return
-            }
-            
-            let options = PHImageRequestOptions()
-            options.deliveryMode = .highQualityFormat
-            options.isNetworkAccessAllowed = true
-            
-            PHImageManager.default().requestImage(for: coverAsset, targetSize: size, contentMode: .aspectFill, options: options, resultHandler: { (image, _) in
-                guard let image = image else {
-                    completionHandler(nil, nil) //TODO: return an error
-                    return
-                }
-                
-                DispatchQueue.main.async {
-                    completionHandler(image, nil)
-                }
-            })
-        }
+        assetCollection.coverImage(size: size, completionHandler: completionHandler)
     }
 }

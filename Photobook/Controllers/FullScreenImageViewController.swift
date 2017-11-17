@@ -23,6 +23,7 @@ class FullScreenImageViewController: UIViewController {
     var album: Album!
     weak var sourceView: UIView?
     weak var delegate: FullScreenImageViewControllerDelegate?
+    var selectedAssetsManager: SelectedAssetsManager?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,9 +37,8 @@ class FullScreenImageViewController: UIViewController {
     }
     
     private func updateSelectedStatusIndicator(){
-        selectedStatusImageView.image = SelectedAssetsManager.selectedAssets(album).contains(where: { (selectedAsset) in
-            return selectedAsset.identifier == asset.identifier
-        }) ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
+        let selected = selectedAssetsManager?.isSelected(asset, for: album) ?? false
+        selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
     }
     
     // Run when the user presses even more firmly to pop the preview to full screen
@@ -61,17 +61,9 @@ class FullScreenImageViewController: UIViewController {
     
     // Select or deselect the asset
     @IBAction func tapGestureRecognized(_ sender: Any) {
-        var selectedAssets = SelectedAssetsManager.selectedAssets(album)
-        if let index = selectedAssets.index(where: { (selectedAsset) in
-            return selectedAsset.identifier == asset.identifier
-        }){
-            selectedAssets.remove(at: index)
-        } else {
-            selectedAssets.append(asset)
-        }
-        
-        SelectedAssetsManager.setSelectedAssets(album, newSelectedAssets: selectedAssets)
+        selectedAssetsManager?.toggleSelected(asset, for: album)
         updateSelectedStatusIndicator()
+        
         self.delegate?.fullScreenImageViewControllerDidUpdateAsset(asset: asset)
     }
     

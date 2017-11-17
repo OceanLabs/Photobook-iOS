@@ -9,17 +9,17 @@
 import UIKit
 
 protocol AlbumSearchResultsTableViewControllerDelegate: class {
-    func albumSearchResultsTableViewControllerDelegate(didSelect album:Album)
+    func searchDidSelect(_ album:Album)
 }
 
 class AlbumSearchResultsTableViewController: UITableViewController {
     
-    var albums: [Album]! {
+    var albums: [Album]? {
         didSet{
             filteredAlbums = albums
         }
     }
-    private var filteredAlbums: [Album]!
+    private var filteredAlbums: [Album]?
     weak var searchBar: UISearchBar?
     weak var delegate: AlbumSearchResultsTableViewControllerDelegate?
 }
@@ -28,12 +28,14 @@ extension AlbumSearchResultsTableViewController{
     // MARK: - UITableViewDataSource
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredAlbums.count
+        return filteredAlbums?.count ?? 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "AlbumSearchResultsTableViewCell", for: indexPath) as? AlbumSearchResultsTableViewCell else { return UITableViewCell() }
-        let album = filteredAlbums[indexPath.item]
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "AlbumSearchResultsTableViewCell", for: indexPath) as? AlbumSearchResultsTableViewCell,
+            let album = filteredAlbums?[indexPath.item]
+            else { return UITableViewCell() }
+        
         cell.albumId = album.identifier
         
         album.coverImage(size: CGSize(width: tableView.rowHeight, height: tableView.rowHeight), completionHandler: {(image, _) in
@@ -66,8 +68,10 @@ extension AlbumSearchResultsTableViewController{
         cell.albumCoverImageView.image = nil
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {        
-        self.delegate?.albumSearchResultsTableViewControllerDelegate(didSelect: filteredAlbums[indexPath.row])
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let filteredAlbums = filteredAlbums else { return }
+        
+        self.delegate?.searchDidSelect(filteredAlbums[indexPath.row])
     }
 
 }
@@ -76,7 +80,7 @@ extension AlbumSearchResultsTableViewController: UISearchResultsUpdating {
     // MARK: - UISearchResultsUpdating Delegate
     
     func updateSearchResults(for searchController: UISearchController) {
-        filteredAlbums = albums.filter({(album) -> Bool in
+        filteredAlbums = albums?.filter({(album) -> Bool in
             guard let albumName = album.localizedName?.lowercased() else { return false }
             guard let searchQuery = self.searchBar?.text?.lowercased(), searchQuery != "" else { return true }
             
@@ -84,7 +88,9 @@ extension AlbumSearchResultsTableViewController: UISearchResultsUpdating {
         })
         
         // Avoid reloading when this vc is first shown
-        if !(tableView.numberOfRows(inSection: 0) == albums.count && albums.count == filteredAlbums.count){
+        let albumsCount = albums?.count ?? 0
+        let filteredAlbumsCount = filteredAlbums?.count ?? 0
+        if !(tableView.numberOfRows(inSection: 0) == albumsCount && albumsCount == filteredAlbumsCount){
             tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
         }
         searchController.searchResultsController?.view.isHidden = false
