@@ -147,7 +147,6 @@ extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegat
         
         fullScreenImageViewController.asset = album.assets[indexPath.item]
         fullScreenImageViewController.album = album
-        fullScreenImageViewController.sourceView = cell.imageView
         fullScreenImageViewController.selectedAssetsManager = selectedAssetsManager
         fullScreenImageViewController.delegate = self
         fullScreenImageViewController.providesPresentationContextTransitionStyle = true
@@ -170,7 +169,7 @@ extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegat
 }
 
 extension AssetPickerCollectionViewController: FullScreenImageViewControllerDelegate{
-    func fullScreenImageViewControllerDidUpdateAsset(asset: Asset) {
+    func previewDidUpdate(asset: Asset) {
         guard let index = album.assets.index(where: { (selectedAsset) in
             return selectedAsset.identifier == asset.identifier
         }),
@@ -178,5 +177,17 @@ extension AssetPickerCollectionViewController: FullScreenImageViewControllerDele
             else { return }
         
         collectionView?.reloadItems(at: [IndexPath(item: index, section: 0)])
+    }
+    
+    func sourceView(for asset:Asset) -> UIView?{
+        guard let index = album.assets.index(where: { (selectedAsset) in
+            return selectedAsset.identifier == asset.identifier
+        }),
+            index != NSNotFound,
+        let cell = collectionView?.cellForItem(at: IndexPath(item: index, section: 0)) as? AssetPickerCollectionViewCell
+            else { return nil }
+        
+        return cell.imageView
+        
     }
 }

@@ -9,7 +9,8 @@
 import UIKit
 
 protocol FullScreenImageViewControllerDelegate: class {
-    func fullScreenImageViewControllerDidUpdateAsset(asset: Asset)
+    func previewDidUpdate(asset: Asset)
+    func sourceView(for asset:Asset) -> UIView?
 }
 
 class FullScreenImageViewController: UIViewController {
@@ -21,7 +22,6 @@ class FullScreenImageViewController: UIViewController {
     
     var asset: Asset!
     var album: Album!
-    weak var sourceView: UIView?
     weak var delegate: FullScreenImageViewControllerDelegate?
     var selectedAssetsManager: SelectedAssetsManager?
     
@@ -64,12 +64,13 @@ class FullScreenImageViewController: UIViewController {
         selectedAssetsManager?.toggleSelected(asset, for: album)
         updateSelectedStatusIndicator()
         
-        self.delegate?.fullScreenImageViewControllerDidUpdateAsset(asset: asset)
+        self.delegate?.previewDidUpdate(asset: asset)
     }
     
     @IBAction func panGestureRecognized(_ sender: UIPanGestureRecognizer) {
         switch sender.state {
         case .began:
+            delegate?.sourceView(for: asset)?.isHidden = true
             UIView.animate(withDuration: 0.3, animations: {
                 self.swipeDownIndicator.alpha = 0
                 self.selectedStatusImageView.alpha = 0

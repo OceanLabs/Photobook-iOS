@@ -12,9 +12,14 @@ class FullScreenImageUnwindSegue: UIStoryboardSegue {
 
     override func perform() {
         guard let source = source as? FullScreenImageViewController,
-            let sourceView = source.sourceView,
+            let sourceView = source.delegate?.sourceView(for: source.asset),
             let sourceViewSuperview = sourceView.superview
-            else { self.source.dismiss(animated: true, completion: nil) ; return }
+            else {
+                self.source.dismiss(animated: true, completion: nil)
+                return
+        }
+        
+        sourceView.isHidden = true
         
         let imageView = source.imageView!
         
@@ -32,6 +37,7 @@ class FullScreenImageUnwindSegue: UIStoryboardSegue {
             animationImageView.frame = endFrame
             source.view.backgroundColor = UIColor.clear
         }, completion:{(finished: Bool) in
+            sourceView.isHidden = false
             source.dismiss(animated: false, completion: nil)
         })
         
