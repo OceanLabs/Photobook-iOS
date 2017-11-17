@@ -31,12 +31,12 @@ class IntroViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.ctaVisibleConstraint.priority = .defaultLow
-        self.ctaInvisibleConstraint.priority = .init(751)
+        ctaVisibleConstraint.priority = .defaultLow
+        ctaInvisibleConstraint.priority = .init(751)
         
-        self.view.layoutIfNeeded()
+        view.layoutIfNeeded()
         
-        
+    
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(appWillTerminate), name: Notification.Name.UIApplicationWillTerminate, object: nil)
     }
@@ -45,7 +45,7 @@ class IntroViewController: UIViewController {
         super.viewWillAppear(animated)
         
         if PHPhotoLibrary.authorizationStatus() == .authorized {
-            self.dismiss()
+            dismiss()
         }
     }
     
@@ -54,7 +54,7 @@ class IntroViewController: UIViewController {
         
         let animationDuration:Double = 0.7
         
-        self.view.layoutIfNeeded()
+        view.layoutIfNeeded()
         
         UIView.animateKeyframes(withDuration: animationDuration, delay: 1, options: .calculationModePaced, animations: {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1, animations: {
@@ -72,7 +72,7 @@ class IntroViewController: UIViewController {
     
         switch status {
         case .notDetermined:
-            self.ctaButton.isEnabled = false
+            ctaButton.isEnabled = false
             PHPhotoLibrary.requestAuthorization({ status in
                 DispatchQueue.main.async {
                     self.ctaButton.isEnabled = true
@@ -85,23 +85,23 @@ class IntroViewController: UIViewController {
             })
         case .denied: fallthrough
         case .restricted:
-            self.showPermissionDeniedDialog()
+            showPermissionDeniedDialog()
         case .authorized: fallthrough
         default:
-            self.dismiss()
+            dismiss()
         }
     }
     
     func dismiss() {
-        self.performSegue(withIdentifier: "IntroDismiss", sender: nil)
+        performSegue(withIdentifier: "IntroDismiss", sender: nil)
         IntroViewController.userHasDismissed = true
     }
     
     @objc func appWillTerminate() {
-        self.ctaVisibleConstraint.priority = .defaultLow
-        self.ctaInvisibleConstraint.priority = .init(751)
+        ctaVisibleConstraint.priority = .defaultLow
+        ctaInvisibleConstraint.priority = .init(751)
         
-        self.view.layoutIfNeeded()
+        view.layoutIfNeeded()
     }
     
     func showPermissionDeniedDialog() {
@@ -131,7 +131,7 @@ class IntroViewController: UIViewController {
         alert.addAction(UIAlertAction(title: alertOK, style: UIAlertActionStyle.cancel, handler: { (action) in
             
         }))
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
 
 }
