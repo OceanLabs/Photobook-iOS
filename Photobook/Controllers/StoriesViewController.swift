@@ -31,11 +31,9 @@ class StoriesViewController: UIViewController {
             welf?.stories = stories
             welf?.tableView.reloadData()
             
-            // Once we are done loading the things needed to show on this screen, load the assets from each story in the background so that they are ready if the user taps on a story
-            DispatchQueue.global(qos: .background).async {
-                for story in stories{
-                    story.loadAssets(completionHandler: nil)
-                }
+            // Once we are done loading the things needed to show on this screen, load the assets from each story so that they are ready if the user taps on a story
+            for story in stories{
+                story.loadAssets(completionHandler: nil)
             }
         }
         

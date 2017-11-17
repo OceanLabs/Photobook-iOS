@@ -38,6 +38,8 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         else{
             postAlbumLoadSetup()
         }
+        
+        calcAndSetCellSize()
     }
 
     @IBAction func selectAllButtonTapped(_ sender: UIBarButtonItem) {
@@ -73,6 +75,14 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         }
     }
     
+    func calcAndSetCellSize() {
+        guard let collectionView = collectionView else { return }
+        var usableSpace = collectionView.frame.size.width - marginBetweenImages;
+        usableSpace -= (numberOfCellsPerRow - 1.0) * marginBetweenImages
+        let cellWidth = usableSpace / numberOfCellsPerRow
+        (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize = CGSize(width: cellWidth, height: cellWidth)
+    }
+    
 }
 
 extension AssetPickerCollectionViewController {
@@ -88,13 +98,10 @@ extension AssetPickerCollectionViewController {
         let asset = album.assets[indexPath.item]
         cell.assetId = asset.identifier
         
-        if selectedAssetsManager?.isSelected(asset, for: album) ?? false {
-            cell.selectedStatusImageView.image = UIImage(named: "Tick")
-        } else {
-            cell.selectedStatusImageView.image = UIImage(named: "Tick-empty")
-        }
+        let selected = selectedAssetsManager?.isSelected(asset, for: album) ?? false
+        cell.selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
         
-        let size = self.collectionView(collectionView, layout: collectionView.collectionViewLayout, sizeForItemAt: indexPath)
+        let size = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize ?? .zero
         asset.image(size: size, completionHandler: {(image, _) in
             guard cell.assetId == asset.identifier else { return }
             cell.imageView.image = image
@@ -117,15 +124,4 @@ extension AssetPickerCollectionViewController {
         updateSelectAllButtonTitle()
     }
     
-}
-
-extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayout{
-    // MARK: - UICollectionViewDelegateFlowLayout
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var usableSpace = collectionView.frame.size.width - marginBetweenImages;
-        usableSpace -= (numberOfCellsPerRow - 1.0) * marginBetweenImages
-        let cellWidth = usableSpace / numberOfCellsPerRow
-        return CGSize(width: cellWidth, height: cellWidth)
-    }
 }
