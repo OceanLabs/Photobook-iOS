@@ -93,7 +93,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     
     func calcAndSetCellSize() {
         guard let collectionView = collectionView else { return }
-        var usableSpace = collectionView.frame.size.width - marginBetweenImages;
+        var usableSpace = collectionView.frame.size.width;
         usableSpace -= (numberOfCellsPerRow - 1.0) * marginBetweenImages
         let cellWidth = usableSpace / numberOfCellsPerRow
         (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize = CGSize(width: cellWidth, height: cellWidth)
