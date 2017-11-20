@@ -425,6 +425,7 @@
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="DRx-Ip-dVX">
                                             <rect key="frame" x="0.0" y="0.0" width="177" height="177"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.040000000000000001" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                     <real key="value" value="5"/>
@@ -834,12 +835,91 @@
             </objects>
             <point key="canvasLocation" x="-1239" y="32"/>
         </scene>
+        <!--Full Screen Image View Controller-->
+        <scene sceneID="XBA-8v-eiC">
+            <objects>
+                <viewController storyboardIdentifier="FullScreenImageViewController" id="nLV-6U-Lei" customClass="FullScreenImageViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="84B-qY-2Nb">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" image="Drag-down-arrow" translatesAutoresizingMaskIntoConstraints="NO" id="jed-GU-uvQ">
+                                <rect key="frame" x="189" y="772.66666666666663" width="36" height="12"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="4gs-fc-q3m" appends="YES" id="OP4-OZ-aZn"/>
+                                </connections>
+                            </imageView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="60f-Mx-P4u">
+                                <rect key="frame" x="188.66666666666666" y="359.66666666666669" width="37" height="37"/>
+                                <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </activityIndicatorView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XqZ-ir-owp">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="756"/>
+                            </imageView>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tick-empty" translatesAutoresizingMaskIntoConstraints="NO" id="qIG-Cy-Lbb">
+                                <rect key="frame" x="378" y="35" width="26" height="26"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="60f-Mx-P4u" firstAttribute="centerX" secondItem="9P2-06-guk" secondAttribute="centerX" id="4t0-lH-FTe"/>
+                            <constraint firstItem="XqZ-ir-owp" firstAttribute="centerY" secondItem="9P2-06-guk" secondAttribute="centerY" id="88V-4g-aKH"/>
+                            <constraint firstItem="XqZ-ir-owp" firstAttribute="leading" secondItem="84B-qY-2Nb" secondAttribute="leading" priority="750" id="9rR-ro-cMH"/>
+                            <constraint firstItem="XqZ-ir-owp" firstAttribute="top" secondItem="84B-qY-2Nb" secondAttribute="top" priority="750" id="ALr-I9-Zax"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="XqZ-ir-owp" secondAttribute="trailing" id="Khq-s9-XS7"/>
+                            <constraint firstItem="XqZ-ir-owp" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="84B-qY-2Nb" secondAttribute="leading" id="LrL-t7-N3r"/>
+                            <constraint firstItem="9P2-06-guk" firstAttribute="trailing" secondItem="qIG-Cy-Lbb" secondAttribute="trailing" constant="10" id="XAa-oh-U6C"/>
+                            <constraint firstItem="60f-Mx-P4u" firstAttribute="centerY" secondItem="9P2-06-guk" secondAttribute="centerY" id="bUO-nL-ghu"/>
+                            <constraint firstItem="jed-GU-uvQ" firstAttribute="top" secondItem="XqZ-ir-owp" secondAttribute="bottom" constant="17" id="daE-yi-v9d"/>
+                            <constraint firstItem="jed-GU-uvQ" firstAttribute="centerX" secondItem="9P2-06-guk" secondAttribute="centerX" id="djN-Yc-hTp"/>
+                            <constraint firstItem="XqZ-ir-owp" firstAttribute="centerX" secondItem="9P2-06-guk" secondAttribute="centerX" id="i3W-PM-bDy"/>
+                            <constraint firstItem="XqZ-ir-owp" firstAttribute="top" relation="greaterThanOrEqual" secondItem="84B-qY-2Nb" secondAttribute="top" id="ntY-mY-CXB"/>
+                            <constraint firstItem="qIG-Cy-Lbb" firstAttribute="top" secondItem="9P2-06-guk" secondAttribute="top" constant="15" id="ty5-Mp-pNd"/>
+                            <constraint firstAttribute="trailing" secondItem="XqZ-ir-owp" secondAttribute="trailing" priority="750" id="vnS-iw-FTh"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="9P2-06-guk"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="hc3-RD-zCb" appends="YES" id="8ZH-BX-MxX"/>
+                            <outletCollection property="gestureRecognizers" destination="Y1l-LO-4J7" appends="YES" id="gTo-l5-0h5"/>
+                        </connections>
+                    </view>
+                    <connections>
+                        <outlet property="activityIndicator" destination="60f-Mx-P4u" id="bzp-BO-RYm"/>
+                        <outlet property="imageView" destination="XqZ-ir-owp" id="mRV-WA-VrO"/>
+                        <outlet property="selectedStatusImageView" destination="qIG-Cy-Lbb" id="nfq-na-frN"/>
+                        <outlet property="swipeDownIndicator" destination="jed-GU-uvQ" id="ZMJ-zY-Nfv"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tpz-Pi-yap" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="QSg-eJ-ts9" userLabel="Exit" sceneMemberID="exit"/>
+                <tapGestureRecognizer id="hc3-RD-zCb">
+                    <connections>
+                        <action selector="tapGestureRecognized:" destination="nLV-6U-Lei" id="EzE-R4-JJJ"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="4gs-fc-q3m">
+                    <connections>
+                        <segue destination="QSg-eJ-ts9" kind="unwind" identifier="FullScreenImageUnwindSegue" customClass="FullScreenImageUnwindSegue" customModule="Photobook" customModuleProvider="target" unwindAction="unwindToThisViewWithUnwindSegue:" id="8qw-uk-XVQ"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="Y1l-LO-4J7">
+                    <connections>
+                        <action selector="panGestureRecognized:" destination="nLV-6U-Lei" id="aV9-0D-NcY"/>
+                    </connections>
+                </panGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="1796" y="1458"/>
+        </scene>
     </scenes>
     <resources>
         <image name="Albums" width="22" height="22"/>
         <image name="Canon" width="177" height="37"/>
+        <image name="Drag-down-arrow" width="36" height="12"/>
         <image name="IntroTitle" width="285" height="100"/>
         <image name="LaunchImage" width="414" height="812"/>
         <image name="Stories" width="29" height="24"/>
+        <image name="Tick-empty" width="26" height="26"/>
     </resources>
 </document>

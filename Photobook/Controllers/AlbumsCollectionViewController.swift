@@ -69,6 +69,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     func showAlbum(album: Album){
         guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }
         assetPickerController.album = album
+        assetPickerController.albumManager = albumManager
         assetPickerController.selectedAssetsManager = selectedAssetsManager
         
         self.navigationController?.pushViewController(assetPickerController, animated: true)
