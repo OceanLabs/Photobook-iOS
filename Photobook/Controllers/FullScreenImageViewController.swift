@@ -85,8 +85,9 @@ class FullScreenImageViewController: UIViewController {
             let translation = sender.translation(in: view)
             let transform = CGAffineTransform(translationX: translation.x, y: translation.y)
             
-            // As the user drags down, fade out the background and slightly scale the image
-            let percentOfHalfScreenSwiped = abs(translation.y / (view.bounds.size.height / 2.0))
+            // As the user drags away from the center, fade out the background and slightly scale the image
+            let distance = sqrt(translation.x * translation.x + translation.y * translation.y)
+            let percentOfHalfScreenSwiped = abs(distance / (view.bounds.size.height / 2.0))
             view.backgroundColor = UIColor(white: 0, alpha: 1.0 - percentOfHalfScreenSwiped)
             
             let scale = 1 - 0.25 * percentOfHalfScreenSwiped
