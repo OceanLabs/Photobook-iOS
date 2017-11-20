@@ -331,6 +331,36 @@
             </objects>
             <point key="canvasLocation" x="1078.2608695652175" y="31.793478260869566"/>
         </scene>
+        <!--PDF-->
+        <scene sceneID="ORu-lZ-EEn">
+            <objects>
+                <viewController id="KJy-BU-pka" customClass="PhotobookViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="xU9-BG-yCd">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9QC-Ss-fw4">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="687"/>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="9QC-Ss-fw4" firstAttribute="leading" secondItem="LPM-ss-vBJ" secondAttribute="leading" id="JEP-as-y3i"/>
+                            <constraint firstItem="9QC-Ss-fw4" firstAttribute="trailing" secondItem="LPM-ss-vBJ" secondAttribute="trailing" id="Kev-8w-S4P"/>
+                            <constraint firstItem="9QC-Ss-fw4" firstAttribute="bottom" secondItem="LPM-ss-vBJ" secondAttribute="bottom" id="TUD-Ce-aV3"/>
+                            <constraint firstItem="9QC-Ss-fw4" firstAttribute="top" secondItem="xU9-BG-yCd" secondAttribute="top" id="hr6-5e-PFl"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="LPM-ss-vBJ"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="PDF" selectedImage="Stories" id="6UQ-pI-0Ay"/>
+                    <connections>
+                        <outlet property="scrollView" destination="9QC-Ss-fw4" id="tBP-iC-BSu"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bdR-KA-SRS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="250.72463768115944" y="-664.4021739130435"/>
+        </scene>
         <!--Stories-->
         <scene sceneID="CWX-gk-uYw">
             <objects>
@@ -366,11 +396,12 @@
                     <connections>
                         <segue destination="hhS-Lc-qF3" kind="relationship" relationship="viewControllers" id="RNg-LV-Iuv"/>
                         <segue destination="mcv-na-BVN" kind="relationship" relationship="viewControllers" id="MX7-xb-oNn"/>
+                        <segue destination="KJy-BU-pka" kind="relationship" relationship="viewControllers" id="tKB-Nr-vte"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KS4-Ss-yFr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-509" y="32"/>
+            <point key="canvasLocation" x="-510" y="32"/>
         </scene>
         <!--Browse-->
         <scene sceneID="F3Q-q1-ZX1">

@@ -32,6 +32,11 @@
 		6FB670621FB49FF90062D630 /* UILabelExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB670611FB49FF90062D630 /* UILabelExtensions.swift */; };
 		6FB670731FB5BB1A0062D630 /* StoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB670721FB5BB1A0062D630 /* StoryTests.swift */; };
 		6FC7E8761FBD985900D2BCDA /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E8751FBD985900D2BCDA /* APIClient.swift */; };
+		6FC7E8791FBEF4BB00D2BCDA /* Photobook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E8781FBEF4BB00D2BCDA /* Photobook.swift */; };
+		6FC7E87B1FBEF7FC00D2BCDA /* PhotobookManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E87A1FBEF7FC00D2BCDA /* PhotobookManager.swift */; };
+		6FC7E87D1FBF350B00D2BCDA /* PhotobookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E87C1FBF350B00D2BCDA /* PhotobookViewController.swift */; };
+		6FC7E87F1FC3329400D2BCDA /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E87E1FC3329400D2BCDA /* Layout.swift */; };
+		6FC7E8811FC332A500D2BCDA /* LayoutBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E8801FC332A500D2BCDA /* LayoutBox.swift */; };
 		6FDF25E51FB604E100F46BB0 /* PhotoBookTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF25E41FB604E100F46BB0 /* PhotoBookTabBar.swift */; };
 		6FDF25E71FB6052A00F46BB0 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF25E61FB6052A00F46BB0 /* UIImageExtensions.swift */; };
 /* End PBXBuildFile section */
@@ -76,6 +81,11 @@
 		6FB6706B1FB5BAD40062D630 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FB670721FB5BB1A0062D630 /* StoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryTests.swift; sourceTree = "<group>"; };
 		6FC7E8751FBD985900D2BCDA /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		6FC7E8781FBEF4BB00D2BCDA /* Photobook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photobook.swift; sourceTree = "<group>"; };
+		6FC7E87A1FBEF7FC00D2BCDA /* PhotobookManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookManager.swift; sourceTree = "<group>"; };
+		6FC7E87C1FBF350B00D2BCDA /* PhotobookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookViewController.swift; sourceTree = "<group>"; };
+		6FC7E87E1FC3329400D2BCDA /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
+		6FC7E8801FC332A500D2BCDA /* LayoutBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutBox.swift; sourceTree = "<group>"; };
 		6FDF25E41FB604E100F46BB0 /* PhotoBookTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoBookTabBar.swift; sourceTree = "<group>"; };
 		6FDF25E61FB6052A00F46BB0 /* UIImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -166,6 +176,7 @@
 		6F139E0D1FB45E67005B937E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				6FC7E8771FBEF49E00D2BCDA /* Photobooks */,
 				6FDF25E91FB9A07800F46BB0 /* Stories */,
 				2E0B58A51FB32B2300F31A9E /* Assets */,
 				6FC7E8751FBD985900D2BCDA /* APIClient.swift */,
@@ -179,6 +190,7 @@
 				6F4DE64D1FB323540099A97E /* StoriesViewController.swift */,
 				2E0B58911FB325FF00F31A9E /* AlbumsCollectionViewController.swift */,
 				2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */,
+				6FC7E87C1FBF350B00D2BCDA /* PhotobookViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -235,6 +247,17 @@
 				6FB670721FB5BB1A0062D630 /* StoryTests.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		6FC7E8771FBEF49E00D2BCDA /* Photobooks */ = {
+			isa = PBXGroup;
+			children = (
+				6FC7E8781FBEF4BB00D2BCDA /* Photobook.swift */,
+				6FC7E87A1FBEF7FC00D2BCDA /* PhotobookManager.swift */,
+				6FC7E87E1FC3329400D2BCDA /* Layout.swift */,
+				6FC7E8801FC332A500D2BCDA /* LayoutBox.swift */,
+			);
+			path = Photobooks;
 			sourceTree = "<group>";
 		};
 		6FDF25E81FB9A05D00F46BB0 /* Stories */ = {
@@ -364,9 +387,13 @@
 				6F4DE6571FB452390099A97E /* DoubleStoryTableViewCell.swift in Sources */,
 				6F4DE64E1FB323540099A97E /* StoriesViewController.swift in Sources */,
 				6FDF25E51FB604E100F46BB0 /* PhotoBookTabBar.swift in Sources */,
+				6FC7E87F1FC3329400D2BCDA /* Layout.swift in Sources */,
 				6FC7E8761FBD985900D2BCDA /* APIClient.swift in Sources */,
+				6FC7E8791FBEF4BB00D2BCDA /* Photobook.swift in Sources */,
 				2E0B58801FB30F2100F31A9E /* AppDelegate.swift in Sources */,
+				6FC7E87D1FBF350B00D2BCDA /* PhotobookViewController.swift in Sources */,
 				6F4DE6551FB4522A0099A97E /* StoryTableViewCell.swift in Sources */,
+				6FC7E87B1FBEF7FC00D2BCDA /* PhotobookManager.swift in Sources */,
 				6FDF25E71FB6052A00F46BB0 /* UIImageExtensions.swift in Sources */,
 				6F4DE6591FB453090099A97E /* PhotoBookNavigationBar.swift in Sources */,
 				6F139E0C1FB45DD8005B937E /* StoriesManager.swift in Sources */,
@@ -379,6 +406,7 @@
 				2E0B589D1FB3293100F31A9E /* PhotosAsset.swift in Sources */,
 				2ED5B3831FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift in Sources */,
 				2ED5B3811FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift in Sources */,
+				6FC7E8811FC332A500D2BCDA /* LayoutBox.swift in Sources */,
 				2E0B58921FB325FF00F31A9E /* AlbumsCollectionViewController.swift in Sources */,
 				2E0B58971FB3287900F31A9E /* Album.swift in Sources */,
 			);

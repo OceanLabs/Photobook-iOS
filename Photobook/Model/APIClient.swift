@@ -47,7 +47,7 @@ class APIClient {
     }
 
     // Generic dataTask handling function
-    private func dataTask(context: APIContext, endpoint: String, parameters: [String : Any]?, method: HTTPMethod, completionHandler:@escaping (Error?, [String : AnyObject]?) -> ()) {
+    private func dataTask(context: APIContext, endpoint: String, parameters: [String : Any]?, method: HTTPMethod, completion:@escaping (AnyObject?, Error?) -> ()) {
         
         var request = URLRequest(url: URL(string: baseURLString(for: context) + endpoint)!)
         
@@ -96,35 +96,36 @@ class APIClient {
                 let error = error as NSError?
                 switch error!.code {
                 case Int(CFNetworkErrors.cfurlErrorBadServerResponse.rawValue):
-                    completionHandler(APIClientError.server(code: 500, message: ""), nil)
+                    completion(nil, APIClientError.server(code: 500, message: ""))
                 case Int(CFNetworkErrors.cfurlErrorSecureConnectionFailed.rawValue) ..< Int(CFNetworkErrors.cfurlErrorUnknown.rawValue):
-                    completionHandler(APIClientError.connection, nil)
+                    completion(nil, APIClientError.connection)
                 default:
-                    completionHandler(APIClientError.server(code: error!.code, message: error!.localizedDescription), nil)
+                    completion(nil, APIClientError.server(code: error!.code, message: error!.localizedDescription))
                 }
                 return
             }
             
             guard let data = data else {
-                completionHandler(error, nil)
+                completion(nil, error)
                 return
             }
             
             // Attempt parsing to JSON
-            guard let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String : AnyObject] else {
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) else {
                 if let stringData = String(data: data, encoding: String.Encoding.utf8) {
                     print("API: \(stringData)")
                 }
-                completionHandler(APIClientError.parsing, nil)
+                completion(nil, APIClientError.parsing)
                 return
             }
             
             // Check if there's an error in the response
-            let errorDict = json["error"] as? [String : AnyObject]
-            if let errorMessage = (errorDict?["message"] as? [AnyObject])?.last as? String{
-                completionHandler(APIClientError.server(code: (response as? HTTPURLResponse)?.statusCode ?? 0, message: errorMessage), nil)
+            if let responseDictionary = json as? [String: AnyObject],
+                let errorDict = responseDictionary["error"] as? [String : AnyObject],
+                let errorMessage = (errorDict["message"] as? [AnyObject])?.last as? String {
+                completion(nil, APIClientError.server(code: (response as? HTTPURLResponse)?.statusCode ?? 0, message: errorMessage))
             } else {
-                completionHandler(nil, json)
+                completion(json as AnyObject, nil)
             }
             
             }.resume()
@@ -134,16 +135,16 @@ class APIClient {
 // MARK: - Public methods
 extension APIClient {
     
-    func post(context: APIContext, endpoint: String, parameters: [String : Any]?, completionHandler:@escaping (Error?, [String : AnyObject]?) -> ()) {
-        dataTask(context: context, endpoint: endpoint, parameters: parameters, method: .post, completionHandler: completionHandler)
+    func post(context: APIContext, endpoint: String, parameters: [String : Any]?, completion:@escaping (AnyObject?, Error?) -> ()) {
+        dataTask(context: context, endpoint: endpoint, parameters: parameters, method: .post, completion: completion)
     }
     
-    func get(context: APIContext, endpoint: String, parameters: [String : Any]?, completionHandler:@escaping (Error?, [String : AnyObject]?) -> ()) {
-        dataTask(context: context, endpoint: endpoint, parameters: parameters, method: .get, completionHandler: completionHandler)
+    func get(context: APIContext, endpoint: String, parameters: [String : Any]?, completion:@escaping (AnyObject?, Error?) -> ()) {
+        dataTask(context: context, endpoint: endpoint, parameters: parameters, method: .get, completion: completion)
     }
     
-    func put(context: APIContext, endpoint: String, parameters: [String : Any]?, completionHandler:@escaping (Error?, [String : AnyObject]?) -> ()) {
-        dataTask(context: context, endpoint: endpoint, parameters: parameters, method: .put, completionHandler: completionHandler)
+    func put(context: APIContext, endpoint: String, parameters: [String : Any]?, completion:@escaping (AnyObject?, Error?) -> ()) {
+        dataTask(context: context, endpoint: endpoint, parameters: parameters, method: .put, completion: completion)
     }
     
 }
