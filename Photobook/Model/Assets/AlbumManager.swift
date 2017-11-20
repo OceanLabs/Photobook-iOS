@@ -12,4 +12,8 @@ protocol AlbumManager {
     var albums:[Album] { get }
     
     func loadAlbums(completionHandler: ((_ error: Error?) -> Void)?)
+    
+    func stopCachingImagesForAllAssets()
+    func startCachingImages(for assets: [Asset], targetSize: CGSize)
+    func stopCachingImages(for assets: [Asset], targetSize: CGSize)
 }

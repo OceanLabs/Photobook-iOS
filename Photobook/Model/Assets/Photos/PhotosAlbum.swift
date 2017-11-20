@@ -54,4 +54,5 @@ class PhotosAlbum: Album {
     func coverImage(size: CGSize, completionHandler: @escaping (UIImage?, Error?) -> Void) {
         assetCollection.coverImage(size: size, completionHandler: completionHandler)
     }
+    
 }

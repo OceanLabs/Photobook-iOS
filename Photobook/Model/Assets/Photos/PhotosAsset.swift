@@ -11,7 +11,7 @@ import Photos
 
 class PhotosAsset: Asset {
     
-    private var photosAsset: PHAsset
+    var photosAsset: PHAsset
     
     var identifier: String{
         return photosAsset.localIdentifier
