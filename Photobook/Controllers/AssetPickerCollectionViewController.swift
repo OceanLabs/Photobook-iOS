@@ -123,7 +123,9 @@ extension AssetPickerCollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = album.assets[indexPath.item]
-        selectedAssetsManager?.toggleSelected(asset, for: album)
+        
+        // TODO: Use result to present alert that we have selected the maximum amount of photos
+        _ = selectedAssetsManager?.toggleSelected(asset, for: album)
         
         collectionView.reloadItems(at: [indexPath])
         
@@ -162,6 +164,7 @@ extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegat
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
         guard let fullScreenImageViewController = viewControllerToCommit as? FullScreenImageViewController else { return }
         fullScreenImageViewController.prepareForPop()
+        fullScreenImageViewController.modalPresentationCapturesStatusBarAppearance = true
         
         tabBarController?.present(viewControllerToCommit, animated: true, completion: nil)
     }

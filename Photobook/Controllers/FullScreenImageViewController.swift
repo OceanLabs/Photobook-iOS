@@ -34,6 +34,11 @@ class FullScreenImageViewController: UIViewController {
                 welf?.activityIndicator.stopAnimating()
             }
         })
+        
+    }
+    
+    override var prefersStatusBarHidden: Bool{
+        return true
     }
     
     private func updateSelectedStatusIndicator(){
@@ -61,7 +66,8 @@ class FullScreenImageViewController: UIViewController {
     
     // Select or deselect the asset
     @IBAction func tapGestureRecognized(_ sender: Any) {
-        selectedAssetsManager?.toggleSelected(asset, for: album)
+        // TODO: Use result to present alert that we have selected the maximum amount of photos
+        _ = selectedAssetsManager?.toggleSelected(asset, for: album)
         updateSelectedStatusIndicator()
         
         self.delegate?.previewDidUpdate(asset: asset)
