@@ -12,6 +12,7 @@ import Photos
 class PhotosAlbumManager: AlbumManager {
     
     var albums:[Album] = [Album]()
+    static let imageManager = PHCachingImageManager()
     
     func loadAlbums(completionHandler: ((Error?) -> Void)?) {
         DispatchQueue.global(qos: .background).async {
@@ -92,5 +93,26 @@ class PhotosAlbumManager: AlbumManager {
         }
     }
     
+    func stopCachingImagesForAllAssets() {
+        PhotosAlbumManager.imageManager.stopCachingImagesForAllAssets()
+    }
+    
+    func startCachingImages(for assets: [Asset], targetSize: CGSize) {
+        PhotosAlbumManager.imageManager.startCachingImages(for: photosAssets(from: assets), targetSize: targetSize, contentMode: .aspectFill, options: nil)
+    }
+    
+    func stopCachingImages(for assets: [Asset], targetSize: CGSize) {
+        PhotosAlbumManager.imageManager.stopCachingImages(for: photosAssets(from: assets), targetSize: targetSize, contentMode: .aspectFill, options: nil)
+    }
+    
+    func photosAssets(from assets:[Asset]) -> [PHAsset]{
+        var photosAssets = [PHAsset]()
+        for asset in assets{
+            guard let photosAsset = asset as? PhotosAsset else { continue }
+            photosAssets.append(photosAsset.photosAsset)
+        }
+        
+        return photosAssets
+    }
 
 }
