@@ -777,7 +777,7 @@
                                 <rect key="frame" x="378" y="15" width="26" height="26"/>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="60f-Mx-P4u" firstAttribute="centerX" secondItem="9P2-06-guk" secondAttribute="centerX" id="4t0-lH-FTe"/>
@@ -832,9 +832,9 @@
     <resources>
         <image name="Albums" width="22" height="22"/>
         <image name="Canon" width="177" height="37"/>
+        <image name="Drag-down-arrow" width="36" height="12"/>
         <image name="IntroTitle" width="285" height="100"/>
         <image name="LaunchImage" width="414" height="812"/>
-        <image name="Drag-down-arrow" width="36" height="12"/>
         <image name="Stories" width="29" height="24"/>
         <image name="Tick-empty" width="26" height="26"/>
     </resources>
