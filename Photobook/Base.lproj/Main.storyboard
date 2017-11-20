@@ -424,6 +424,7 @@
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="DRx-Ip-dVX">
                                             <rect key="frame" x="0.0" y="0.0" width="177" height="177"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.040000000000000001" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                     <real key="value" value="5"/>
@@ -774,7 +775,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="756"/>
                             </imageView>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tick-empty" translatesAutoresizingMaskIntoConstraints="NO" id="qIG-Cy-Lbb">
-                                <rect key="frame" x="378" y="15" width="26" height="26"/>
+                                <rect key="frame" x="378" y="35" width="26" height="26"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -792,7 +793,7 @@
                             <constraint firstItem="jed-GU-uvQ" firstAttribute="centerX" secondItem="9P2-06-guk" secondAttribute="centerX" id="djN-Yc-hTp"/>
                             <constraint firstItem="XqZ-ir-owp" firstAttribute="centerX" secondItem="9P2-06-guk" secondAttribute="centerX" id="i3W-PM-bDy"/>
                             <constraint firstItem="XqZ-ir-owp" firstAttribute="top" relation="greaterThanOrEqual" secondItem="84B-qY-2Nb" secondAttribute="top" id="ntY-mY-CXB"/>
-                            <constraint firstItem="qIG-Cy-Lbb" firstAttribute="top" secondItem="9P2-06-guk" secondAttribute="top" constant="-5" id="ty5-Mp-pNd"/>
+                            <constraint firstItem="qIG-Cy-Lbb" firstAttribute="top" secondItem="9P2-06-guk" secondAttribute="top" constant="15" id="ty5-Mp-pNd"/>
                             <constraint firstAttribute="trailing" secondItem="XqZ-ir-owp" secondAttribute="trailing" priority="750" id="vnS-iw-FTh"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="9P2-06-guk"/>
