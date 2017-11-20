@@ -45,10 +45,16 @@ class StoriesViewController: UIViewController {
         switch segueName {
         case Constants.viewStorySegueName:
             guard let assetPickerController = segue.destination as? AssetPickerCollectionViewController,
-                let index = sender as? Int
+                let segue = segue as? ViewStorySegue,
+                let sender = sender as? (index: Int, sourceView: UIView?),
+                let sourceView = sender.sourceView,
+                let asset = stories[sender.index].assets.first
                 else { return }
-            assetPickerController.album = stories[index]
+            assetPickerController.album = stories[sender.index]
             assetPickerController.selectedAssetsManager = selectedAssetsManager
+            
+            segue.asset = asset
+            segue.sourceView = sourceView
         default:
             break
         }
@@ -141,8 +147,7 @@ extension StoriesViewController: UITableViewDataSource {
 }
 
 extension StoriesViewController: StoryTableViewCellDelegate {
-    
-    func didTapOnStory(index: Int) {
-        performSegue(withIdentifier: Constants.viewStorySegueName, sender: index)
+    func didTapOnStory(index: Int, sourceView: UIView?) {
+        performSegue(withIdentifier: Constants.viewStorySegueName, sender: (index: index, sourceView: sourceView))
     }
 }

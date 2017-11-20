@@ -16,7 +16,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     private let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
     private var previousPreheatRect = CGRect.zero
     var selectedAssetsManager: SelectedAssetsManager?
-    private let coverAspectRatio: CGFloat = 1.87
+    static let coverAspectRatio: CGFloat = 2.723684211
     
     var albumManager: AlbumManager?
     var album: Album! {
@@ -223,7 +223,7 @@ extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayou
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         guard (album as? Story) != nil else { return .zero }
         
-        return CGSize(width: view.bounds.size.width, height: view.bounds.size.width / coverAspectRatio)
+        return CGSize(width: view.bounds.size.width, height: view.bounds.size.width / AssetPickerCollectionViewController.coverAspectRatio)
     }
 }
 
