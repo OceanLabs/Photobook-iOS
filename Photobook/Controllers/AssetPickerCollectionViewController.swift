@@ -15,6 +15,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     private let marginBetweenImages: CGFloat = 1
     private let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
     var selectedAssetsManager: SelectedAssetsManager?
+    private let coverAspectRatio: CGFloat = 1.87
     
     var album: Album! {
         didSet{
@@ -110,6 +111,33 @@ extension AssetPickerCollectionViewController {
         return cell
     }
     
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        // We only show covers for Stories
+        guard let story = album as? Story,
+            let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "coverCell", for: indexPath) as? AssetPickerCoverCollectionViewCell
+            else { return UICollectionReusableView() }
+        
+        let size = self.collectionView(collectionView, layout: collectionView.collectionViewLayout, referenceSizeForHeaderInSection: indexPath.section)
+        story.coverImage(size: size, completionHandler: {(image, _) in
+            cell.cover = image
+        })
+        
+        cell.title = story.title
+        cell.dates = story.subtitle
+        
+        return cell
+    }
+    
+}
+
+extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayout {
+    //MARK: - UICollectionViewDelegateFlowLayout
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        guard (album as? Story) != nil else { return .zero }
+        
+        return CGSize(width: view.bounds.size.width, height: view.bounds.size.width / coverAspectRatio)
+    }
 }
 
 extension AssetPickerCollectionViewController {

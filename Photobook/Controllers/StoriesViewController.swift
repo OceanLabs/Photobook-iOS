@@ -15,6 +15,7 @@ class StoriesViewController: UIViewController {
         static let rowsInHeader = 4
         static let storiesPerLayoutPattern = 3
         static let rowsPerLayoutPattern = 2
+        static let viewStorySegueName = "ViewStorySegue"
     }
     
     @IBOutlet private weak var tableView: UITableView!
@@ -37,6 +38,20 @@ class StoriesViewController: UIViewController {
             }
         }
         
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let segueName = segue.identifier else { return }
+        switch segueName {
+        case Constants.viewStorySegueName:
+            guard let assetPickerController = segue.destination as? AssetPickerCollectionViewController,
+                let index = sender as? Int
+                else { return }
+            assetPickerController.album = stories[index]
+            assetPickerController.selectedAssetsManager = selectedAssetsManager
+        default:
+            break
+        }
     }
 }
 
@@ -128,10 +143,6 @@ extension StoriesViewController: UITableViewDataSource {
 extension StoriesViewController: StoryTableViewCellDelegate {
     
     func didTapOnStory(index: Int) {
-         guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }       
-        assetPickerController.album = stories[index]
-        assetPickerController.selectedAssetsManager = selectedAssetsManager
-        
-        self.navigationController?.pushViewController(assetPickerController, animated: true)
+        performSegue(withIdentifier: Constants.viewStorySegueName, sender: index)
     }
 }
