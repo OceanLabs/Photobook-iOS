@@ -221,6 +221,7 @@ extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayou
     //MARK: - UICollectionViewDelegateFlowLayout
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        // We only show covers for Stories
         guard (album as? Story) != nil else { return .zero }
         
         return CGSize(width: view.bounds.size.width, height: view.bounds.size.width / AssetPickerCollectionViewController.coverAspectRatio)

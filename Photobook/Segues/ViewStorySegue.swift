@@ -25,6 +25,7 @@ class ViewStorySegue: UIStoryboardSegue {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.alpha = 0
+        imageView.cornerRadius = 4
         
         navigationController.view.addSubview(imageView)
         let frame = sourceViewSuperView.convert(sourceView.frame, to: navigationController.view)
@@ -51,6 +52,7 @@ class ViewStorySegue: UIStoryboardSegue {
                 UIView.animate(withDuration: 0.4, animations: {
                     imageView.frame = CGRect(x: 0, y: navigationController.navigationBar.frame.maxY, width: size.width, height: size.height)
                     shadeView.frame = imageView.bounds
+                    imageView.layer.cornerRadius = 0
                 }, completion: { (_) in
                     UIView.animate(withDuration: 0.1, animations: {
                         imageView.alpha = 0
