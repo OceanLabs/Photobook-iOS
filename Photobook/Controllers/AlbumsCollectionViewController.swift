@@ -79,7 +79,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
         guard let segueName = segue.identifier else { return }
         switch segueName {
         case "TODORemoveMe":
-            (segue.destination as? BookViewController)?.selectedAssetsManager = selectedAssetsManager
+            (segue.destination as? PhotoBookViewController)?.selectedAssetsManager = selectedAssetsManager
         default:
             break
         }

@@ -648,10 +648,10 @@
             </objects>
             <point key="canvasLocation" x="1840" y="791"/>
         </scene>
-        <!--Book View Controller-->
+        <!--Photo Book View Controller-->
         <scene sceneID="suS-5G-9Zz">
             <objects>
-                <viewController hidesBottomBarWhenPushed="YES" id="l0p-H6-Aqd" customClass="BookViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="l0p-H6-Aqd" customClass="PhotoBookViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hYx-pR-ckZ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -666,14 +666,14 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="bookCell" id="IdR-Q3-Knr" customClass="BookCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="bookCell" id="IdR-Q3-Knr" customClass="PhotoBookCollectionViewCell" customModule="Photobook" customModuleProvider="target">
                                         <rect key="frame" x="27.666666666666668" y="0.0" width="359" height="207"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="359" height="207"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3BP-mf-zJk" customClass="BookView" customModule="Photobook" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3BP-mf-zJk" customClass="PhotoBookView" customModule="Photobook" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="359" height="207"/>
                                                 </view>
                                             </subviews>

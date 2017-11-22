@@ -1,5 +1,5 @@
 //
-//  BookCollectionViewCell.swift
+//  PhotoBookCollectionViewCell.swift
 //  Photobook
 //
 //  Created by Konstadinos Karayannis on 21/11/2017.
@@ -8,9 +8,9 @@
 
 import UIKit
 
-class BookCollectionViewCell: UICollectionViewCell {
+class PhotoBookCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var bookView: BookView!
+    @IBOutlet weak var bookView: PhotoBookView!
     var leftIndex: Int?
     var rightIndex: Int?
 }

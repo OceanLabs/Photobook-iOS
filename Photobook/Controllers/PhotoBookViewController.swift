@@ -1,5 +1,5 @@
 //
-//  BookViewController.swift
+//  PhotoBookViewController.swift
 //  Photobook
 //
 //  Created by Konstadinos Karayannis on 21/11/2017.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BookViewController: UIViewController {
+class PhotoBookViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
     var selectedAssetsManager: SelectedAssetsManager?
@@ -51,14 +51,14 @@ class BookViewController: UIViewController {
     }
 }
 
-extension BookViewController: UICollectionViewDataSource{
+extension PhotoBookViewController: UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return (selectedAssetsManager?.count() ?? 0 ) / 2
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "bookCell", for: indexPath) as? BookCollectionViewCell else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "bookCell", for: indexPath) as? PhotoBookCollectionViewCell else { return UICollectionViewCell() }
         
         let leftIndex = indexPath.item * 2
         cell.leftIndex = leftIndex
@@ -82,7 +82,7 @@ extension BookViewController: UICollectionViewDataSource{
     }
 }
 
-extension BookViewController: UICollectionViewDelegate{
+extension PhotoBookViewController: UICollectionViewDelegate{
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let navBar = navigationController?.navigationBar as? PhotoBookNavigationBar else { return }

@@ -1,5 +1,5 @@
 //
-//  BookView.swift
+//  PhotoBookView.swift
 //  Photobook
 //
 //  Created by Konstadinos Karayannis on 21/11/2017.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BookView: UIView {
+class PhotoBookView: UIView {
     
     @IBOutlet var contentView: UIView!
     @IBOutlet weak var backgroundImageView: UIImageView!
@@ -28,7 +28,7 @@ class BookView: UIView {
     }
     
     private func setup(){
-        Bundle.main.loadNibNamed("Book", owner: self, options: nil)
+        Bundle.main.loadNibNamed("PhotoBook", owner: self, options: nil)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         addSubview(contentView)
