@@ -23,11 +23,11 @@ struct LayoutBox {
         guard
             let contentTypeString = layoutBoxDictionary["contentType"] as? String,
             let dimensionsPercentages = layoutBoxDictionary["dimensionsPercentages"] as? [String: AnyObject],
-            let width = dimensionsPercentages["width"] as? CGFloat,
-            let height = dimensionsPercentages["height"] as? CGFloat,
+            let width = dimensionsPercentages["width"] as? CGFloat, width.isNormalised,
+            let height = dimensionsPercentages["height"] as? CGFloat, height.isNormalised,
             let relativeStartPoint = layoutBoxDictionary["relativeStartPoint"] as? [String: AnyObject],
-            let x = relativeStartPoint["x"] as? CGFloat,
-            let y = relativeStartPoint["y"] as? CGFloat
+            let x = relativeStartPoint["x"] as? CGFloat, x.isNormalised,
+            let y = relativeStartPoint["y"] as? CGFloat, y.isNormalised
             else { return nil }
         
         var layoutBoxType: LayoutBoxType
@@ -40,6 +40,6 @@ struct LayoutBox {
             return nil
         }
         
-        return LayoutBox(type: layoutBoxType, normalisedSize: CGSize(width: width / 100.0, height: height / 100.0), normalisedOrigin: CGPoint(x: x / 100.0, y: y / 100.0))
+        return LayoutBox(type: layoutBoxType, normalisedSize: CGSize(width: width, height: height), normalisedOrigin: CGPoint(x: x, y: y))
     }
 }

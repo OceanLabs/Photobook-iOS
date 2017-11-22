@@ -1,0 +1,129 @@
+{
+"products": [
+	{
+		"id": 1,
+		"name": "Small Square",
+		"pageWidth": 612,
+		"pageHeight": 400,
+		"coverWidth": 620,
+		"coverHeight": 420,
+		"cost": { "EUR": 50.00, "USD": 54.99, "GBP": 51.99 },
+		"costPerPage": { "EUR": 1.00, "USD": 1.99, "GBP": 1.25 },
+		"layouts": [ 10, 11, 12, 13 ]
+	}
+],
+"layouts": [
+	{
+		"id": 10,
+		"imageUrl": "/images/layout10.png",
+		"layoutBoxes": [
+			{
+				"contentType": "image",
+				"dimensionsPercentages": {
+					"width": 0.6,
+					"height": 0.4
+				},
+				"relativeStartPoint": {
+					"x": 0.4,
+					"y": 0.2
+				}
+			},
+			{
+				"contentType": "text",
+				"dimensionsPercentages": {
+					"width": 0.8, 
+					"height": 0.04
+				},
+				"relativeStartPoint": {
+					"x": 0.1,
+					"y": 0.82
+				}
+			}			
+		],
+	},
+	{
+		"id": 11,
+		"imageUrl": "/images/layout10.png",
+		"layoutBoxes": [
+			{
+				"contentType": "image",
+				"dimensionsPercentages": {
+					"width": 0.4,
+					"height": 0.6
+				},
+				"relativeStartPoint": {
+					"x": 0.1,
+					"y": 0.2
+				}
+			},
+			{
+				"contentType": "text",
+				"dimensionsPercentages": {
+					"width": 0.2, 
+					"height": 0.04
+				},
+				"relativeStartPoint": {
+					"x": 0.5,
+					"y": 0.1
+				}
+			}			
+		],
+	},
+	{
+		"id": 12,
+		"imageUrl": "/images/layout10.png",
+		"layoutBoxes": [
+			{
+				"contentType": "image",
+				"dimensionsPercentages": {
+					"width": 1.0,
+					"height": 0.8
+				},
+				"relativeStartPoint": {
+					"x": 0.0,
+					"y": 0.0
+				}
+			},
+			{
+				"contentType": "text",
+				"dimensionsPercentages": {
+					"width": 0.9, 
+					"height": 0.04
+				},
+				"relativeStartPoint": {
+					"x": 0.05,
+					"y": 0.9
+				}
+			}			
+		],
+	},
+	{
+		"id": 13,
+		"imageUrl": "/images/layout10.png",
+		"layoutBoxes": [
+			{
+				"contentType": "image",
+				"dimensionsPercentages": {
+					"width": 0.375,
+					"height": 0.9
+				},
+				"relativeStartPoint": {
+					"x": 0.05,
+					"y": 0.05
+				}
+			},
+			{
+				"contentType": "image",
+				"dimensionsPercentages": {
+					"width": 0.375,
+					"height": 0.9
+				},
+				"relativeStartPoint": {
+					"x": 0.475,
+					"y": 0.05
+				}
+			}	
+		],
+	}		
+]
+}

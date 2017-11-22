@@ -130,11 +130,8 @@ class APIClient {
             
             }.resume()
     }
-}
 
-// MARK: - Public methods
-extension APIClient {
-    
+    // MARK: - Public methods
     func post(context: APIContext, endpoint: String, parameters: [String : Any]?, completion:@escaping (AnyObject?, Error?) -> ()) {
         dataTask(context: context, endpoint: endpoint, parameters: parameters, method: .post, completion: completion)
     }

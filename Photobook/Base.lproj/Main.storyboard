@@ -352,7 +352,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="LPM-ss-vBJ"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="PDF" selectedImage="Stories" id="6UQ-pI-0Ay"/>
+                    <tabBarItem key="tabBarItem" title="PDF" image="Stories" selectedImage="Stories" id="6UQ-pI-0Ay"/>
                     <connections>
                         <outlet property="scrollView" destination="9QC-Ss-fw4" id="tBP-iC-BSu"/>
                     </connections>

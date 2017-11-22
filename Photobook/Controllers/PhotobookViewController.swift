@@ -17,20 +17,24 @@ class PhotobookViewController: UIViewController {
         static let pagePreviewMargin: CGFloat = 40.0
     }
 
-    lazy var photobookWidth: CGFloat = {
-        return (self.view.bounds.width - Constants.margin - Constants.pagePreviewMargin) * 2.0
+    lazy var pageWidth: CGFloat = {
+        return self.view.bounds.width - Constants.margin - Constants.pagePreviewMargin
     }()
+    
+    var layouts: [Layout]!
+    var photobooks: [Photobook]!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-        
-        PhotobookManager.shared.requestPhotobooks { [weak welf = self] (error) in
-            guard error == nil else {
+        PhotobookAPIManager.shared.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, error) in
+            guard error == nil, (photobooks ?? []).count > 0, (layouts ?? []).count > 0 else {
                 print("PB: Can't retrieve photobooks")
                 return
             }
+            
+            welf?.photobooks = photobooks
+            welf?.layouts = layouts
             
             welf?.buildPages()
         }
@@ -38,30 +42,19 @@ class PhotobookViewController: UIViewController {
 
     func buildPages() {
         
-        guard let photobook = PhotobookManager.shared.photobooks?.first else {
-            print("PB: Can't find the photobook")
-            return
-        }
+        var xPosition = Constants.margin
         
-        PhotobookManager.shared.requestLayouts(for: photobook) { [weak welf = self] (error) in
-            guard photobook.layouts != nil, welf != nil else {
-                print("PB: Could not parse layouts for photobook")
-                return
-            }
-            
-            var xPosition = Constants.margin
-            
-            for layout in photobook.layouts {
-                welf!.addLayout(layout, at: xPosition, photobook: photobook)
-                xPosition += Constants.margin + welf!.photobookWidth
-                welf!.scrollView.contentSize = CGSize(width: xPosition, height: welf!.scrollView.bounds.height)
-            }
+        var i = 0
+        for layout in layouts {
+            addLayout(layout, at: xPosition, photobook: photobooks.first!)
+            xPosition += (i % 2 == 1 ? Constants.margin + pageWidth : pageWidth)
+            scrollView.contentSize = CGSize(width: xPosition, height: scrollView.bounds.height)
+            i += 1
         }
-        
     }
     
     private func addLayout(_ layout: Layout, at x: CGFloat, photobook: Photobook) {
-        let pageContainerView = UIView(frame: CGRect(x: x, y: 0.0, width: photobookWidth, height: photobookWidth / photobook.pageSizeRatio))
+        let pageContainerView = UIView(frame: CGRect(x: x, y: 0.0, width: pageWidth, height: pageWidth / photobook.pageSizeRatio))
         pageContainerView.center = CGPoint(x: pageContainerView.center.x, y: scrollView.center.y)
         pageContainerView.backgroundColor = .white
         
@@ -78,5 +71,5 @@ class PhotobookViewController: UIViewController {
         let boxView = UIView(frame: CGRect(x: origin.x, y: origin.y, width: size.width, height: size.height))
         boxView.backgroundColor = layoutBox.type == .photo ? .darkGray : .lightGray
         containerView.addSubview(boxView)
-    }    
+    }
 }
