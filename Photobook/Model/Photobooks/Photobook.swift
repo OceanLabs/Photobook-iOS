@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 // Defines the characteristics of a photobook / product
-struct Photobook {
+class Photobook {
     var id: Int
     var name: String!
     var coverSizeRatio: CGFloat!
@@ -21,6 +21,20 @@ struct Photobook {
     
     // FIXME: Min pages? Currencies?
     
+    init() {
+        fatalError("Use parse(_:) instead")
+    }
+    
+    private init(id: Int, name: String, coverSizeRatio: CGFloat, pageSizeRatio: CGFloat, baseCost: Decimal, costPerPage: Decimal, layouts: [Int]) {
+        self.id = id
+        self.name = name
+        self.coverSizeRatio = coverSizeRatio
+        self.pageSizeRatio = pageSizeRatio
+        self.baseCost = baseCost
+        self.costPerPage = costPerPage
+        self.layouts = layouts
+    }
+
     // Parses a photobook dictionary.
     static func parse(_ dictionary: [String: AnyObject]) -> Photobook? {
         

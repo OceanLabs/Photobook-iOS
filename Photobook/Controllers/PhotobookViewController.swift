@@ -66,8 +66,8 @@ class PhotobookViewController: UIViewController {
     }
     
     private func addLayoutBox(_ layoutBox: LayoutBox, to containerView: UIView) {
-        let origin = CGPoint(x: containerView.bounds.width * layoutBox.normalisedOrigin.x, y: containerView.bounds.height * layoutBox.normalisedOrigin.y)
-        let size = CGSize(width: containerView.bounds.width * layoutBox.normalisedSize.width, height: containerView.bounds.height * layoutBox.normalisedSize.height)
+        let origin = CGPoint(x: containerView.bounds.width * layoutBox.origin.x, y: containerView.bounds.height * layoutBox.origin.y)
+        let size = CGSize(width: containerView.bounds.width * layoutBox.size.width, height: containerView.bounds.height * layoutBox.size.height)
         let boxView = UIView(frame: CGRect(x: origin.x, y: origin.y, width: size.width, height: size.height))
         boxView.backgroundColor = layoutBox.type == .photo ? .darkGray : .lightGray
         containerView.addSubview(boxView)

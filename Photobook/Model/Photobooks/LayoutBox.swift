@@ -14,10 +14,22 @@ enum LayoutBoxType {
 }
 
 // A bounding box for an image or text
-struct LayoutBox {
+class LayoutBox {
     let type: LayoutBoxType!
-    let normalisedSize: CGSize!
-    let normalisedOrigin: CGPoint!
+    // Normalised origin value
+    let origin: CGPoint!
+    // Normalised  size value
+    let size: CGSize!
+    
+    init() {
+        fatalError("Use parse(_:) instead")
+    }
+    
+    private init(type: LayoutBoxType, origin: CGPoint, size: CGSize) {
+        self.type = type
+        self.origin = origin
+        self.size = size
+    }
     
     static func parse(_ layoutBoxDictionary: [String: AnyObject]) -> LayoutBox? {
         guard
@@ -40,6 +52,6 @@ struct LayoutBox {
             return nil
         }
         
-        return LayoutBox(type: layoutBoxType, normalisedSize: CGSize(width: width, height: height), normalisedOrigin: CGPoint(x: x, y: y))
+        return LayoutBox(type: layoutBoxType, origin: CGPoint(x: x, y: y), size: CGSize(width: width, height: height))
     }
 }

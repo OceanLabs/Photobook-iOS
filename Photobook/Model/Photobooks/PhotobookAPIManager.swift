@@ -29,13 +29,16 @@ class PhotobookAPIManager {
         
         apiClient.get(context: .pdfGenerator, endpoint: endPoints.products, parameters: nil) { (jsonData, error) in            
             
-            // TEMP: Fake api response
-            let jsonData = self.json(file: "photobooks")
-            
-//            guard error == nil else {
-//                completion(nil, nil, error!)
-//                return
-//            }
+            // TEMP: Fake api response. Don't run for tests.x
+            var jsonData = jsonData
+            if NSClassFromString("XCTest") == nil {
+                jsonData = self.json(file: "photobooks")
+            } else {
+                if error != nil {
+                    completion(nil, nil, error!)
+                    return
+                }
+            }
             
             guard
                 let photobooksData = jsonData as? [String: AnyObject],
@@ -80,12 +83,12 @@ class PhotobookAPIManager {
         }
     }
     
-    private func json(file: String) -> Any? {
+    private func json(file: String) -> AnyObject? {
         guard let path = Bundle.main.path(forResource: file, ofType: "json") else { return nil }
         
         do {
             let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
-            return try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+            return try JSONSerialization.jsonObject(with: data, options: .mutableLeaves) as AnyObject
         } catch {
             print("JSON: Could not parse file")
         }
