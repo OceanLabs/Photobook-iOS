@@ -24,13 +24,15 @@
 		2E6B9EDC1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9EDB1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift */; };
 		2E6B9EDF1FBF1B0D00F28C00 /* FullScreenImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9EDE1FBF1B0D00F28C00 /* FullScreenImageViewController.swift */; };
 		2E6B9EE51FBF1CFB00F28C00 /* FullScreenImageUnwindSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9EE41FBF1CFB00F28C00 /* FullScreenImageUnwindSegue.swift */; };
+		2EB39DD31FC5AD34009EC5B2 /* PhotoBookPageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2EB39DD21FC5AD34009EC5B2 /* PhotoBookPageView.xib */; };
+		2EB39DD51FC5AE0F009EC5B2 /* PhotoBookPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB39DD41FC5AE0F009EC5B2 /* PhotoBookPageView.swift */; };
 		2ED5B3811FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */; };
 		2ED5B3831FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3821FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift */; };
 		2ED79FE91FBAEDE90046B96C /* AssetPickerCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */; };
 		2ED79FEB1FBAEDFA0046B96C /* UIScreenExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED79FEA1FBAEDFA0046B96C /* UIScreenExtensions.swift */; };
 		2ED79FEE1FBAEE630046B96C /* AssetPickerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED79FED1FBAEE630046B96C /* AssetPickerCollectionViewCell.swift */; };
 		2EECB7DB1FC440E700916107 /* PhotoBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EECB7DA1FC440E700916107 /* PhotoBookViewController.swift */; };
-		2EECB7DD1FC4650200916107 /* PhotoBook.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2EECB7DC1FC4650200916107 /* PhotoBook.xib */; };
+		2EECB7DD1FC4650200916107 /* PhotoBookView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2EECB7DC1FC4650200916107 /* PhotoBookView.xib */; };
 		2EECB7DF1FC46A6000916107 /* PhotoBookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EECB7DE1FC46A6000916107 /* PhotoBookView.swift */; };
 		2EECB7E41FC46EA800916107 /* PhotoBookCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EECB7E31FC46EA700916107 /* PhotoBookCollectionViewCell.swift */; };
 		6F139E0C1FB45DD8005B937E /* StoriesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F139E0B1FB45DD8005B937E /* StoriesManager.swift */; };
@@ -77,13 +79,15 @@
 		2E6B9EDB1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PHAssetCollectionExtensions.swift; sourceTree = "<group>"; };
 		2E6B9EDE1FBF1B0D00F28C00 /* FullScreenImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullScreenImageViewController.swift; sourceTree = "<group>"; };
 		2E6B9EE41FBF1CFB00F28C00 /* FullScreenImageUnwindSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullScreenImageUnwindSegue.swift; sourceTree = "<group>"; };
+		2EB39DD21FC5AD34009EC5B2 /* PhotoBookPageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhotoBookPageView.xib; sourceTree = "<group>"; };
+		2EB39DD41FC5AE0F009EC5B2 /* PhotoBookPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoBookPageView.swift; sourceTree = "<group>"; };
 		2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSearchResultsTableViewController.swift; sourceTree = "<group>"; };
 		2ED5B3821FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSearchResultsTableViewCell.swift; sourceTree = "<group>"; };
 		2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerCollectionViewController.swift; sourceTree = "<group>"; };
 		2ED79FEA1FBAEDFA0046B96C /* UIScreenExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIScreenExtensions.swift; sourceTree = "<group>"; };
 		2ED79FED1FBAEE630046B96C /* AssetPickerCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerCollectionViewCell.swift; sourceTree = "<group>"; };
 		2EECB7DA1FC440E700916107 /* PhotoBookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoBookViewController.swift; sourceTree = "<group>"; };
-		2EECB7DC1FC4650200916107 /* PhotoBook.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhotoBook.xib; sourceTree = "<group>"; };
+		2EECB7DC1FC4650200916107 /* PhotoBookView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhotoBookView.xib; sourceTree = "<group>"; };
 		2EECB7DE1FC46A6000916107 /* PhotoBookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoBookView.swift; sourceTree = "<group>"; };
 		2EECB7E31FC46EA700916107 /* PhotoBookCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoBookCollectionViewCell.swift; sourceTree = "<group>"; };
 		6F139E0B1FB45DD8005B937E /* StoriesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesManager.swift; sourceTree = "<group>"; };
@@ -150,7 +154,8 @@
 				2E0B587F1FB30F2100F31A9E /* AppDelegate.swift */,
 				2E0B58831FB30F2100F31A9E /* Main.storyboard */,
 				2E0B58881FB30F2100F31A9E /* LaunchScreen.storyboard */,
-				2EECB7DC1FC4650200916107 /* PhotoBook.xib */,
+				2EECB7DC1FC4650200916107 /* PhotoBookView.xib */,
+				2EB39DD21FC5AD34009EC5B2 /* PhotoBookPageView.xib */,
 				2E0B588B1FB30F2100F31A9E /* Info.plist */,
 			);
 			path = Photobook;
@@ -250,6 +255,7 @@
 				6F4DE6581FB453090099A97E /* PhotoBookNavigationBar.swift */,
 				6FDF25E41FB604E100F46BB0 /* PhotoBookTabBar.swift */,
 				2EECB7DE1FC46A6000916107 /* PhotoBookView.swift */,
+				2EB39DD41FC5AE0F009EC5B2 /* PhotoBookPageView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -396,9 +402,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E0B588A1FB30F2100F31A9E /* LaunchScreen.storyboard in Resources */,
-				2EECB7DD1FC4650200916107 /* PhotoBook.xib in Resources */,
+				2EECB7DD1FC4650200916107 /* PhotoBookView.xib in Resources */,
 				2E0B58871FB30F2100F31A9E /* Assets.xcassets in Resources */,
 				2E0B58851FB30F2100F31A9E /* Main.storyboard in Resources */,
+				2EB39DD31FC5AD34009EC5B2 /* PhotoBookPageView.xib in Resources */,
 				6F4DE6511FB35B010099A97E /* LeagueGothic-Regular.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -448,6 +455,7 @@
 				2ED5B3811FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift in Sources */,
 				2EECB7DB1FC440E700916107 /* PhotoBookViewController.swift in Sources */,
 				2E0B58921FB325FF00F31A9E /* AlbumsCollectionViewController.swift in Sources */,
+				2EB39DD51FC5AE0F009EC5B2 /* PhotoBookPageView.swift in Sources */,
 				2E0B58971FB3287900F31A9E /* Album.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

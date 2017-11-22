@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
-        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -11,10 +14,8 @@
             <connections>
                 <outlet property="backgroundImageView" destination="2ho-fq-8k1" id="bAL-W3-c44"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="HtY-B2-mfF"/>
-                <outlet property="leftPage" destination="ZTU-WW-vrM" id="02E-kp-bk4"/>
-                <outlet property="leftPageImageView" destination="U6M-ye-zMl" id="pXV-ZS-Fbr"/>
-                <outlet property="rightPage" destination="vb5-pM-17X" id="V2w-Tb-Qhj"/>
-                <outlet property="rightPageImageView" destination="cf1-8a-gJa" id="Mfi-Pc-WgQ"/>
+                <outlet property="leftPage" destination="ZTU-WW-vrM" id="AE3-0I-UPv"/>
+                <outlet property="rightPage" destination="vb5-pM-17X" id="fcm-eu-t8C"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -25,35 +26,13 @@
                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2ho-fq-8k1">
                     <rect key="frame" x="0.0" y="0.0" width="645" height="327"/>
                 </imageView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZTU-WW-vrM">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZTU-WW-vrM" customClass="PhotoBookPageView" customModule="Photobook" customModuleProvider="target">
                     <rect key="frame" x="10" y="10" width="307.5" height="307"/>
-                    <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="U6M-ye-zMl">
-                            <rect key="frame" x="77" y="77" width="153.5" height="153.5"/>
-                        </imageView>
-                    </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <constraints>
-                        <constraint firstItem="U6M-ye-zMl" firstAttribute="width" secondItem="ZTU-WW-vrM" secondAttribute="width" multiplier="0.5" id="2pT-7B-bd5"/>
-                        <constraint firstItem="U6M-ye-zMl" firstAttribute="centerX" secondItem="ZTU-WW-vrM" secondAttribute="centerX" id="UV0-R4-jZV"/>
-                        <constraint firstItem="U6M-ye-zMl" firstAttribute="centerY" secondItem="ZTU-WW-vrM" secondAttribute="centerY" id="VNo-Ag-It5"/>
-                        <constraint firstItem="U6M-ye-zMl" firstAttribute="height" secondItem="ZTU-WW-vrM" secondAttribute="height" multiplier="0.5" id="Vfx-RF-L6x"/>
-                    </constraints>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vb5-pM-17X">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vb5-pM-17X" customClass="PhotoBookPageView" customModule="Photobook" customModuleProvider="target">
                     <rect key="frame" x="327.5" y="10" width="307.5" height="307"/>
-                    <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="cf1-8a-gJa">
-                            <rect key="frame" x="77" y="77" width="153.5" height="153.5"/>
-                        </imageView>
-                    </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <constraints>
-                        <constraint firstItem="cf1-8a-gJa" firstAttribute="centerY" secondItem="vb5-pM-17X" secondAttribute="centerY" id="Erk-yu-DXs"/>
-                        <constraint firstItem="cf1-8a-gJa" firstAttribute="centerX" secondItem="vb5-pM-17X" secondAttribute="centerX" id="PZ0-N3-tc8"/>
-                        <constraint firstItem="cf1-8a-gJa" firstAttribute="height" secondItem="vb5-pM-17X" secondAttribute="height" multiplier="0.5" id="R8v-CS-peI"/>
-                        <constraint firstItem="cf1-8a-gJa" firstAttribute="width" secondItem="vb5-pM-17X" secondAttribute="width" multiplier="0.5" id="ycf-wE-QLR"/>
-                    </constraints>
                 </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

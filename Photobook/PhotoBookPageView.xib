@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PhotoBookPageView" customModule="Photobook" customModuleProvider="target">
+            <connections>
+                <outlet property="contentView" destination="iN0-l3-epB" id="TaE-vE-3V5"/>
+                <outlet property="imageView" destination="iJp-cS-1PQ" id="MWq-4d-eV8"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="250" height="250"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="iJp-cS-1PQ">
+                    <rect key="frame" x="62.5" y="62.5" width="125" height="125"/>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="iJp-cS-1PQ" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="1qY-Hb-qan"/>
+                <constraint firstItem="iJp-cS-1PQ" firstAttribute="width" relation="lessThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.777778" id="NdE-d0-Ofm"/>
+                <constraint firstItem="iJp-cS-1PQ" firstAttribute="width" relation="greaterThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.42" priority="750" id="TG2-V2-crY"/>
+                <constraint firstItem="iJp-cS-1PQ" firstAttribute="height" relation="greaterThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="height" multiplier="0.42" priority="750" id="UYc-me-OLh"/>
+                <constraint firstItem="iJp-cS-1PQ" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="Utm-c2-jsR"/>
+                <constraint firstItem="iJp-cS-1PQ" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" multiplier="0.5" priority="750" id="WRI-cI-tO0"/>
+                <constraint firstItem="iJp-cS-1PQ" firstAttribute="height" relation="lessThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="height" multiplier="0.777778" id="uUj-u8-iuX"/>
+                <constraint firstItem="iJp-cS-1PQ" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.5" priority="750" id="w86-W3-wPf"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-28" y="262"/>
+        </view>
+    </objects>
+</document>

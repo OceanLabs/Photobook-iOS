@@ -12,10 +12,8 @@ class PhotoBookView: UIView {
     
     @IBOutlet var contentView: UIView!
     @IBOutlet weak var backgroundImageView: UIImageView!
-    @IBOutlet weak var leftPage: UIView!
-    @IBOutlet weak var leftPageImageView: UIImageView!
-    @IBOutlet weak var rightPage: UIView!
-    @IBOutlet weak var rightPageImageView: UIImageView!
+    @IBOutlet weak var leftPage: PhotoBookPageView!
+    @IBOutlet weak var rightPage: PhotoBookPageView!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -28,7 +26,7 @@ class PhotoBookView: UIView {
     }
     
     private func setup(){
-        Bundle.main.loadNibNamed("PhotoBook", owner: self, options: nil)
+        Bundle.main.loadNibNamed("PhotoBookView", owner: self, options: nil)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         addSubview(contentView)

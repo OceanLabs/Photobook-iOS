@@ -71,16 +71,20 @@ extension PhotoBookViewController: UICollectionViewDataSource{
         let rightIndex = indexPath.item * 2 + 1
         cell.rightIndex = rightIndex
         
-        selectedAssetsManager?.assets()[leftIndex].image(size: CGSize(width: 100, height: 100), completionHandler: { (image, _) in
-            guard cell.leftIndex == leftIndex else { return }
+        //Don't bother calculating the exact size, request a slightly larger size
+        //TODO: handle full width pages
+        let imageSize = CGSize(width: collectionView.frame.size.width / 2.0, height: collectionView.frame.size.width / 2.0)
+        
+        selectedAssetsManager?.assets()[leftIndex].image(size: imageSize, completionHandler: { (image, _) in
+            guard cell.leftIndex == leftIndex, let image = image else { return }
             
-            cell.bookView.leftPageImageView.image = image
+            cell.bookView.leftPage.image = image
         })
         
-        selectedAssetsManager?.assets()[rightIndex].image(size: CGSize(width: 100, height: 100), completionHandler: { (image, _) in
-            guard cell.rightIndex == rightIndex else { return }
+        selectedAssetsManager?.assets()[rightIndex].image(size: imageSize, completionHandler: { (image, _) in
+            guard cell.rightIndex == rightIndex, let image = image else { return }
             
-            cell.bookView.rightPageImageView.image = image
+            cell.bookView.rightPage.image = image
         })
         
         return cell
