@@ -49,6 +49,11 @@ class PhotoBookViewController: UIViewController {
     @IBAction func didTapRearrange(_ sender: UIBarButtonItem) {
         //TODO: Enter rearrange mode
     }
+    
+    @IBAction func didTapCheckout(_ sender: UIButton) {
+        print("Tapped Checkout")
+    }
+    
 }
 
 extension PhotoBookViewController: UICollectionViewDataSource{

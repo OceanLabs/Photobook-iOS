@@ -694,13 +694,47 @@
                                     <outlet property="delegate" destination="l0p-H6-Aqd" id="SkF-xG-eWb"/>
                                 </connections>
                             </collectionView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9PF-H7-3d7">
+                                <rect key="frame" x="0.0" y="656" width="414" height="80"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MlZ-hI-WeW">
+                                        <rect key="frame" x="20" y="15" width="374" height="50"/>
+                                        <color key="backgroundColor" red="0.0" green="0.47843137254901957" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="hjF-VC-ege"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                        <state key="normal" title="Checkout">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="didTapCheckout:" destination="l0p-H6-Aqd" eventType="touchUpInside" id="8mD-kA-KkC"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.89019607840000003" green="0.8980392157" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="MlZ-hI-WeW" firstAttribute="top" secondItem="9PF-H7-3d7" secondAttribute="top" constant="15" id="3AF-Zw-WmM"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.8901960784313725" green="0.89803921568627454" blue="0.90196078431372551" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstAttribute="bottom" secondItem="9PF-H7-3d7" secondAttribute="bottom" id="0IP-6f-2xi"/>
                             <constraint firstAttribute="trailing" secondItem="TBG-9p-ivA" secondAttribute="trailing" id="Hji-0y-uul"/>
+                            <constraint firstItem="5ur-7F-Rc5" firstAttribute="trailing" secondItem="MlZ-hI-WeW" secondAttribute="trailing" constant="20" id="J1h-fX-xLv"/>
                             <constraint firstAttribute="bottom" secondItem="TBG-9p-ivA" secondAttribute="bottom" id="NOb-rL-Lvt"/>
                             <constraint firstItem="TBG-9p-ivA" firstAttribute="leading" secondItem="hYx-pR-ckZ" secondAttribute="leading" id="XjE-e5-L0D"/>
                             <constraint firstItem="TBG-9p-ivA" firstAttribute="top" secondItem="hYx-pR-ckZ" secondAttribute="top" id="gZc-W1-xMM"/>
+                            <constraint firstItem="9PF-H7-3d7" firstAttribute="leading" secondItem="hYx-pR-ckZ" secondAttribute="leading" id="gwG-Fj-LLZ"/>
+                            <constraint firstItem="MlZ-hI-WeW" firstAttribute="leading" secondItem="5ur-7F-Rc5" secondAttribute="leading" constant="20" id="r8u-34-xaQ"/>
+                            <constraint firstAttribute="trailing" secondItem="9PF-H7-3d7" secondAttribute="trailing" id="rV6-a5-aoM"/>
+                            <constraint firstItem="5ur-7F-Rc5" firstAttribute="bottom" secondItem="MlZ-hI-WeW" secondAttribute="bottom" constant="15" id="rfz-gH-PGi"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="5ur-7F-Rc5"/>
                     </view>
