@@ -75,6 +75,16 @@ class AlbumsCollectionViewController: UICollectionViewController {
         self.navigationController?.pushViewController(assetPickerController, animated: true)
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let segueName = segue.identifier else { return }
+        switch segueName {
+        case "TODORemoveMe":
+            (segue.destination as? BookViewController)?.selectedAssetsManager = selectedAssetsManager
+        default:
+            break
+        }
+    }
+    
 }
 
 extension AlbumsCollectionViewController{

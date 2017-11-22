@@ -70,8 +70,17 @@ class SelectedAssetsManager: NSObject {
         return true
     }
     
-    func count(for album:Album) -> Int {
-        return selectedAssets(for: album).count
+    func count(for album:Album? = nil) -> Int {
+        if let album = album{
+            return selectedAssets(for: album).count
+        }
+        
+        var count = 0
+        for selectedAssetsInAlbum in selectedAssets{
+            count += selectedAssetsInAlbum.value.count
+        }
+        
+        return count
     }
     
     func willSelectingAllExceedTotalAllowed(for album: Album) -> Bool {
@@ -99,6 +108,15 @@ class SelectedAssetsManager: NSObject {
                 select(asset, for: album)
             }
         }
+    }
+    
+    func assets() -> [Asset]{
+        var assets = [Asset]()
+        for selectedAssetsInAlbum in selectedAssets{
+            assets.append(contentsOf: selectedAssetsInAlbum.value)
+        }
+        
+        return assets
     }
     
 }
