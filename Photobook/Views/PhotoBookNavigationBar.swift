@@ -50,3 +50,18 @@ class PhotoBookNavigationBar: UINavigationBar {
     }
     
 }
+
+extension PhotoBookNavigationBar: UINavigationControllerDelegate{
+    
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool){
+        if viewController as? BookViewController != nil{
+            barTintColor = UIColor(red:0.89, green:0.9, blue:0.9, alpha:1)
+            effectView.alpha = 0
+        }
+        else{
+            barTintColor = .white
+            effectView.alpha = 1
+        }
+    }
+    
+}

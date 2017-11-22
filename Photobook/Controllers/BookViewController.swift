@@ -81,3 +81,13 @@ extension BookViewController: UICollectionViewDataSource{
         return cell
     }
 }
+
+extension BookViewController: UICollectionViewDelegate{
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let navBar = navigationController?.navigationBar as? PhotoBookNavigationBar else { return }
+        
+        navBar.effectView.alpha = scrollView.contentOffset.y <= -(UIApplication.shared.statusBarFrame.height + (navigationController?.navigationBar.frame.height ?? 0)) ? 0 : 1
+    }
+    
+}
