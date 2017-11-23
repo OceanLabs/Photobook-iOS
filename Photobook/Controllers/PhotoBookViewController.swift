@@ -23,6 +23,7 @@ class PhotoBookViewController: UIViewController {
         
         setupTitleView()
         
+        selectedAssetsManager?.sortAssets(minimumNumberOfAssets: 21) //TODO: Replace with product minimum
     }
     
     override func viewDidLayoutSubviews() {
@@ -79,7 +80,7 @@ extension PhotoBookViewController: UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section{
         case 2:
-            return ((selectedAssetsManager?.count() ?? 0 ) - 3) / 2
+            return ((selectedAssetsManager?.assets.count ?? 0 ) - 3) / 2
         default:
             return 1
         }
@@ -93,7 +94,7 @@ extension PhotoBookViewController: UICollectionViewDataSource{
             //Don't bother calculating the exact size, request a slightly larger size
             //TODO: handle full width pages
             let imageSize = CGSize(width: collectionView.frame.size.width / 2.0, height: collectionView.frame.size.width / 2.0)
-            selectedAssetsManager?.assets()[0].image(size: imageSize, completionHandler: { (image, _) in
+            selectedAssetsManager?.assets[0].image(size: imageSize, completionHandler: { (image, _) in
                 cell.coverView.coverPage.image = image
             })
             
@@ -108,7 +109,7 @@ extension PhotoBookViewController: UICollectionViewDataSource{
             //Don't bother calculating the exact size, request a slightly larger size
             //TODO: handle full width pages
             let imageSize = CGSize(width: collectionView.frame.size.width / 2.0, height: collectionView.frame.size.width / 2.0)
-            selectedAssetsManager?.assets()[rightIndex].image(size: imageSize, completionHandler: { (image, _) in
+            selectedAssetsManager?.assets[rightIndex].image(size: imageSize, completionHandler: { (image, _) in
                 guard cell.bookView.rightIndex == rightIndex, let image = image else { return }
                 
                 cell.bookView.rightPage.image = image
@@ -127,13 +128,13 @@ extension PhotoBookViewController: UICollectionViewDataSource{
             //Don't bother calculating the exact size, request a slightly larger size
             //TODO: handle full width pages
             let imageSize = CGSize(width: collectionView.frame.size.width / 2.0, height: collectionView.frame.size.width / 2.0)
-            selectedAssetsManager?.assets()[leftIndex].image(size: imageSize, completionHandler: { (image, _) in
+            selectedAssetsManager?.assets[leftIndex].image(size: imageSize, completionHandler: { (image, _) in
                 guard cell.bookView.leftIndex == leftIndex, let image = image else { return }
                 
                 cell.bookView.leftPage.image = image
             })
             
-            selectedAssetsManager?.assets()[rightIndex].image(size: imageSize, completionHandler: { (image, _) in
+            selectedAssetsManager?.assets[rightIndex].image(size: imageSize, completionHandler: { (image, _) in
                 guard cell.bookView.rightIndex == rightIndex, let image = image else { return }
                 
                 cell.bookView.rightPage.image = image
@@ -143,14 +144,14 @@ extension PhotoBookViewController: UICollectionViewDataSource{
         case 3:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "doublePageCell", for: indexPath) as? PhotoBookCollectionViewCell else { return UICollectionViewCell() }
             
-            let leftIndex = (selectedAssetsManager?.assets().count ?? 0) - 1
+            let leftIndex = (selectedAssetsManager?.assets.count ?? 0) - 1
             cell.bookView.leftIndex = leftIndex
             cell.bookView.rightIndex = nil
             
             //Don't bother calculating the exact size, request a slightly larger size
             //TODO: handle full width pages
             let imageSize = CGSize(width: collectionView.frame.size.width / 2.0, height: collectionView.frame.size.width / 2.0)
-            selectedAssetsManager?.assets()[leftIndex].image(size: imageSize, completionHandler: { (image, _) in
+            selectedAssetsManager?.assets[leftIndex].image(size: imageSize, completionHandler: { (image, _) in
                 guard cell.bookView.leftIndex == leftIndex, let image = image else { return }
                 
                 cell.bookView.leftPage.image = image

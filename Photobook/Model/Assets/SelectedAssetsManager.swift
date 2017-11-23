@@ -15,6 +15,10 @@ struct Constants {
 class SelectedAssetsManager: NSObject {
 
     private var selectedAssets = [String:[Asset]]()
+    private var sortedAssets = [Asset]()
+    var assets:[Asset] {
+        return sortedAssets
+    }
     
     private func selectedAssets(for album: Album) -> [Asset] {
         let assets = selectedAssets[album.identifier]
@@ -28,6 +32,7 @@ class SelectedAssetsManager: NSObject {
     private func select(_ asset:Asset, for album:Album) {
         var selectedAssetsForAlbum = selectedAssets(for: album)
         selectedAssetsForAlbum.append(asset)
+        sortedAssets.append(asset)
         selectedAssets[album.identifier] = selectedAssetsForAlbum
     }
     
@@ -41,6 +46,12 @@ class SelectedAssetsManager: NSObject {
         }
         
         selectedAssets[album.identifier] = selectedAssetsForAlbum
+        
+        if let sortedIndex = sortedAssets.index(where: { (selectedAsset) in
+            return selectedAsset.identifier == asset.identifier
+        }){
+            sortedAssets.remove(at: sortedIndex)
+        }
     }
     
     func isSelected(_ asset:Asset, for album:Album) -> Bool {
@@ -110,13 +121,14 @@ class SelectedAssetsManager: NSObject {
         }
     }
     
-    func assets() -> [Asset]{
+    func sortAssets(minimumNumberOfAssets minimum:Int = 0){
         var assets = [Asset]()
-        for selectedAssetsInAlbum in selectedAssets{
-            assets.append(contentsOf: selectedAssetsInAlbum.value)
+        
+        while assets.count < minimum{
+            assets.append(PlaceholderAsset())
         }
         
-        return assets
+        sortedAssets = assets
     }
     
 }
