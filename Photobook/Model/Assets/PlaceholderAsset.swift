@@ -12,7 +12,13 @@ class PlaceholderAsset: Asset {
     var identifier: String = UUID().uuidString
     
     func uneditedImage(size: CGSize, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
-        completionHandler(UIImage(named: "placeholder"), nil)
+        DispatchQueue.global(qos: .background).async {
+            let image = UIImage(named: "placeholder")
+            DispatchQueue.main.async {
+                completionHandler(image, nil)
+            }
+        }
+        
     }
     
 

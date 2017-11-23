@@ -23,7 +23,7 @@ class PhotoBookViewController: UIViewController {
         
         setupTitleView()
         
-        selectedAssetsManager?.sortAssets(minimumNumberOfAssets: 21) //TODO: Replace with product minimum
+        selectedAssetsManager?.preparePhotoBookAssets(minimumNumberOfAssets: 21) //TODO: Replace with product minimum
     }
     
     override func viewDidLayoutSubviews() {
@@ -69,103 +69,96 @@ class PhotoBookViewController: UIViewController {
         print("Tapped Checkout")
     }
     
+    func load(page: PhotoBookPageView, size: CGSize){
+        page.setImage(image: nil)
+        page.pageLayout = nil
+        
+        guard let index = page.index else {
+            page.contentView.isHidden = true
+            return
+        }
+        page.contentView.isHidden = false
+        
+        let asset = selectedAssetsManager?.assets[index]
+        
+        asset?.image(size: size, completionHandler: { (image, _) in
+            guard page.index == index, let image = image else { return }
+            
+            page.setImage(image: image, contentMode: (asset as? PlaceholderAsset) == nil ? .scaleAspectFill : .center)
+        })
+    }
+    
 }
 
 extension PhotoBookViewController: UICollectionViewDataSource{
+    // MARK: - UICollectionViewDataSource
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 4
+        return 2
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section{
-        case 2:
-            return ((selectedAssetsManager?.assets.count ?? 0 ) - 3) / 2
+        case 1:
+            //TODO: Get this from Photobook model
+            return ((selectedAssetsManager?.assets.count ?? 0 ) - 1) / 2
         default:
             return 1
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        //Don't bother calculating the exact size, request a slightly larger size
+        //TODO: Full width pages shouldn't divide by 2
+        let imageSize = CGSize(width: collectionView.frame.size.width / 2.0, height: collectionView.frame.size.width / 2.0)
+        
         switch indexPath.section{
         case 0:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "coverCell", for: indexPath) as? PhotoBookCoverCollectionViewCell else { return UICollectionViewCell() }
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "coverCell", for: indexPath) as? PhotoBookCoverCollectionViewCell,
+                let page = cell.coverView.page
+                else { return UICollectionViewCell() }
             
-            //Don't bother calculating the exact size, request a slightly larger size
-            //TODO: handle full width pages
-            let imageSize = CGSize(width: collectionView.frame.size.width / 2.0, height: collectionView.frame.size.width / 2.0)
-            selectedAssetsManager?.assets[0].image(size: imageSize, completionHandler: { (image, _) in
-                cell.coverView.coverPage.image = image
-            })
-            
-            return cell
-        case 1:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "doublePageCell", for: indexPath) as? PhotoBookCollectionViewCell else { return UICollectionViewCell() }
-            
-            let rightIndex = 1
-            cell.bookView.leftIndex = nil
-            cell.bookView.rightIndex = rightIndex
-            
-            //Don't bother calculating the exact size, request a slightly larger size
-            //TODO: handle full width pages
-            let imageSize = CGSize(width: collectionView.frame.size.width / 2.0, height: collectionView.frame.size.width / 2.0)
-            selectedAssetsManager?.assets[rightIndex].image(size: imageSize, completionHandler: { (image, _) in
-                guard cell.bookView.rightIndex == rightIndex, let image = image else { return }
-                
-                cell.bookView.rightPage.image = image
-            })
-            
-            return cell
-        case 2:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "doublePageCell", for: indexPath) as? PhotoBookCollectionViewCell else { return UICollectionViewCell() }
-            
-            let leftIndex = indexPath.item * 2 + 2
-            cell.bookView.leftIndex = leftIndex
-            
-            let rightIndex = indexPath.item * 2 + 3
-            cell.bookView.rightIndex = rightIndex
-            
-            //Don't bother calculating the exact size, request a slightly larger size
-            //TODO: handle full width pages
-            let imageSize = CGSize(width: collectionView.frame.size.width / 2.0, height: collectionView.frame.size.width / 2.0)
-            selectedAssetsManager?.assets[leftIndex].image(size: imageSize, completionHandler: { (image, _) in
-                guard cell.bookView.leftIndex == leftIndex, let image = image else { return }
-                
-                cell.bookView.leftPage.image = image
-            })
-            
-            selectedAssetsManager?.assets[rightIndex].image(size: imageSize, completionHandler: { (image, _) in
-                guard cell.bookView.rightIndex == rightIndex, let image = image else { return }
-                
-                cell.bookView.rightPage.image = image
-            })
-            
-            return cell
-        case 3:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "doublePageCell", for: indexPath) as? PhotoBookCollectionViewCell else { return UICollectionViewCell() }
-            
-            let leftIndex = (selectedAssetsManager?.assets.count ?? 0) - 1
-            cell.bookView.leftIndex = leftIndex
-            cell.bookView.rightIndex = nil
-            
-            //Don't bother calculating the exact size, request a slightly larger size
-            //TODO: handle full width pages
-            let imageSize = CGSize(width: collectionView.frame.size.width / 2.0, height: collectionView.frame.size.width / 2.0)
-            selectedAssetsManager?.assets[leftIndex].image(size: imageSize, completionHandler: { (image, _) in
-                guard cell.bookView.leftIndex == leftIndex, let image = image else { return }
-                
-                cell.bookView.leftPage.image = image
-            })
+            page.index = 0
+            load(page: page, size: imageSize)
             
             return cell
         default:
-            return UICollectionViewCell()
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "doublePageCell", for: indexPath) as? PhotoBookCollectionViewCell,
+                let page = cell.bookView.page
+                else { return UICollectionViewCell() }
+            
+            let rightPage = (cell.bookView as? PhotoBookDoublePageView)?.rightPage
+            
+            // First and last pages of the book are courtesy pages, no photos on them
+            switch indexPath.item{
+            case 0:
+                page.index = nil
+                rightPage?.index = 1
+            case collectionView.numberOfItems(inSection: 1) - 1: // Last page
+                page.index = (selectedAssetsManager?.assets.count ?? 0) - 1
+                rightPage?.index = nil
+            default:
+                //TODO: Get indexes from Photobook model, because full width layouts means that we can't rely on indexPaths
+                page.index = indexPath.item * 2
+                rightPage?.index = indexPath.item * 2 + 1
+            }
+            
+            load(page: page, size: imageSize)
+            
+            if rightPage != nil{
+                load(page: rightPage!, size: imageSize)
+            }
+
+            return cell
+        
         }
     }
     
 }
 
 extension PhotoBookViewController: UICollectionViewDelegate{
+    // MARK: - UICollectionViewDelegate
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let navBar = navigationController?.navigationBar as? PhotoBookNavigationBar else { return }

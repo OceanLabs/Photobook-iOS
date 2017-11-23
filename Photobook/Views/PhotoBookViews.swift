@@ -12,19 +12,8 @@ class PhotoBookView: UIView {
     
     @IBOutlet var contentView: UIView!
     @IBOutlet weak var backgroundImageView: UIImageView!
-    @IBOutlet weak var leftPage: PhotoBookPageView!
-    @IBOutlet weak var rightPage: PhotoBookPageView!
-    
-    var leftIndex: Int?{
-        didSet{
-            leftPage.isHidden = leftIndex == nil
-        }
-    }
-    var rightIndex: Int?{
-        didSet{
-            rightPage.isHidden = rightIndex == nil
-        }
-    }
+    @IBOutlet weak var page: PhotoBookPageView!
+    var nibName: String { return "PhotoBookView" }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -37,11 +26,19 @@ class PhotoBookView: UIView {
     }
     
     private func setup(){
-        Bundle.main.loadNibNamed("PhotoBookView", owner: self, options: nil)
+        Bundle.main.loadNibNamed(nibName, owner: self, options: nil)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         addSubview(contentView)
     }
     
-    
+}
+
+class PhotoBookDoublePageView: PhotoBookView{
+    @IBOutlet weak var rightPage: PhotoBookPageView!
+    override var nibName: String { return "PhotoBookDoublePageView" }
+}
+
+class PhotoBookCoverView: PhotoBookView {
+    override var nibName: String { return "PhotoBookCoverView" }
 }

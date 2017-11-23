@@ -15,9 +15,9 @@ struct Constants {
 class SelectedAssetsManager: NSObject {
 
     private var selectedAssets = [String:[Asset]]()
-    private var sortedAssets = [Asset]()
+    private var photoBookAssets = [Asset]()
     var assets:[Asset] {
-        return sortedAssets
+        return photoBookAssets
     }
     
     private func selectedAssets(for album: Album) -> [Asset] {
@@ -32,7 +32,7 @@ class SelectedAssetsManager: NSObject {
     private func select(_ asset:Asset, for album:Album) {
         var selectedAssetsForAlbum = selectedAssets(for: album)
         selectedAssetsForAlbum.append(asset)
-        sortedAssets.append(asset)
+        photoBookAssets.append(asset)
         selectedAssets[album.identifier] = selectedAssetsForAlbum
     }
     
@@ -47,10 +47,10 @@ class SelectedAssetsManager: NSObject {
         
         selectedAssets[album.identifier] = selectedAssetsForAlbum
         
-        if let sortedIndex = sortedAssets.index(where: { (selectedAsset) in
+        if let sortedIndex = photoBookAssets.index(where: { (selectedAsset) in
             return selectedAsset.identifier == asset.identifier
         }){
-            sortedAssets.remove(at: sortedIndex)
+            photoBookAssets.remove(at: sortedIndex)
         }
     }
     
@@ -121,14 +121,26 @@ class SelectedAssetsManager: NSObject {
         }
     }
     
-    func sortAssets(minimumNumberOfAssets minimum:Int = 0){
+    func preparePhotoBookAssets(minimumNumberOfAssets minimum:Int = 0){
         var assets = [Asset]()
+        
+        for selectedAssetsInAlbum in selectedAssets{
+            assets.append(contentsOf: selectedAssetsInAlbum.value)
+        }
+        
+        // TODO: Sort
+//        assets.sort(by: {$0.date > $1.date})
+        
+        // Duplicate the first photo to use as both the cover AND the first page 🙄
+        if let first = assets.first{
+            assets.insert(first, at: 0)
+        }
         
         while assets.count < minimum{
             assets.append(PlaceholderAsset())
         }
         
-        sortedAssets = assets
+        photoBookAssets = assets
     }
     
 }

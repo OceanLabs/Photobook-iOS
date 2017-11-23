@@ -8,55 +8,91 @@
 
 import UIKit
 
-enum AspectRatio: CGFloat{
-    case landscape = 1.777777778
-    case portrait = 0.5625
-    case square = 1.0
+enum PageLayout{
+    case centerLandscape
+    case centerPortrait
+    case centerSquare
+    case custom
 }
 
 class PhotoBookPageView: UIView {
     
+    private struct Constants{
+        static let landscapeAspectRatio: CGFloat = 16.0/9.0
+        static let portraitAspectRatio: CGFloat = 9.0/16.0
+        static let centerRectangleRelativeSize: CGFloat = 0.8
+        static let centerSquareRelativeSize: CGFloat = 0.5
+    }
+    
     @IBOutlet var contentView: UIView!
-    @IBOutlet weak private var imageView: UIImageView!
-    private var imageViewAspectRatioConstraint: NSLayoutConstraint?
-    
-    
-    /// By default the aspect ratio of the image view will use the aspect ratio of the image. This overrides that.
-    var aspectRatioOverride: AspectRatio? {
+    @IBOutlet weak private var imageView: UIImageView! {
         didSet{
-            guard let aspectRatioOverride = aspectRatioOverride else { return }
-            aspectRatio = aspectRatioOverride
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+        }
+    }
+    var index: Int?
+    var relativeLayoutInsets: UIEdgeInsets?{
+        didSet{
+            pageLayout = .custom
         }
     }
     
-    private var aspectRatio: AspectRatio = .landscape {
-        didSet{
-            if let imageViewAspectRatioConstraint = imageViewAspectRatioConstraint{
-                guard oldValue != aspectRatio else { return }
-                imageView.removeConstraint(imageViewAspectRatioConstraint)
-            }
-            imageViewAspectRatioConstraint = NSLayoutConstraint(item: imageView, attribute: .width, relatedBy: .equal, toItem: imageView, attribute: .height, multiplier: aspectRatio.rawValue, constant: 0)
-            imageView.addConstraint(imageViewAspectRatioConstraint!)
-        }
-    }
     
-    var image: UIImage? {
-        get{
-            return imageView.image
-        }
-        set(newImage){
-            imageView.image = newImage
+    var pageLayout: PageLayout? {
+        didSet{
+            guard let pageLayout = pageLayout else { return }
             
-            guard aspectRatioOverride == nil, let newImage = newImage else { return }
-            let imageAspectRatio = newImage.size.width / newImage.size.height
-            if imageAspectRatio == 1{
-                aspectRatio = .square
+            // Clear previous constraints
+            removeConstraints(constraints)
+            imageView.removeConstraints(imageView.constraints)
+            
+            switch pageLayout {
+            case .centerLandscape:
+                imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .width, relatedBy: .equal, toItem: imageView, attribute: .height, multiplier: Constants.landscapeAspectRatio, constant: 0))
+                imageView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+                imageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+                imageView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: Constants.centerRectangleRelativeSize).isActive = true
+            case .centerPortrait:
+                imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .width, relatedBy: .equal, toItem: imageView, attribute: .height, multiplier: Constants.portraitAspectRatio, constant: 0))
+                imageView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+                imageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+                imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: Constants.centerRectangleRelativeSize).isActive = true
+            case .centerSquare:
+                imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .width, relatedBy: .equal, toItem: imageView, attribute: .height, multiplier: 1, constant: 0))
+                imageView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+                imageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+                imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: Constants.centerSquareRelativeSize).isActive = true
+            case .custom:
+                guard let insets = relativeLayoutInsets else { break }
+                imageView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 1.0 - insets.left - insets.right).isActive = true
+                imageView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 1.0 - insets.top - insets.bottom).isActive = true
+                addConstraint(NSLayoutConstraint(item: imageView, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0 - insets.right, constant: 0))
+                addConstraint(NSLayoutConstraint(item: imageView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0 - insets.bottom, constant: 0))
             }
-            aspectRatio = imageAspectRatio > 1 ? .landscape : .portrait
             
             setNeedsLayout()
             layoutIfNeeded()
         }
+    }
+    
+    func setImage (image: UIImage?, contentMode: UIViewContentMode? = nil) {
+        if let contentMode = contentMode{
+            imageView.contentMode = contentMode
+            
+            if contentMode == .center{
+                // Placeholder asset
+                pageLayout = .centerSquare
+            }
+        }
+        imageView.image = image
+        
+        guard pageLayout == nil, let image = image else { return }
+        // By default the aspect ratio of the image view will use the aspect ratio of the image.
+        let imageAspectRatio = image.size.width / image.size.height
+        if imageAspectRatio == 1{
+            pageLayout = .centerSquare
+        }
+        pageLayout = imageAspectRatio > 1 ? .centerLandscape : .centerPortrait
     }
     
     override init(frame: CGRect) {
