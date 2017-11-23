@@ -663,11 +663,47 @@
                                     <size key="itemSize" width="359" height="207"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="10" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="bookCell" id="IdR-Q3-Knr" customClass="PhotoBookCollectionViewCell" customModule="Photobook" customModuleProvider="target">
-                                        <rect key="frame" x="27.666666666666668" y="0.0" width="359" height="207"/>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="coverCell" id="mmq-M6-EIJ" customClass="PhotoBookCoverCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                                        <rect key="frame" x="27.666666666666668" y="10" width="359" height="207"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="359" height="207"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HjI-Hn-h7A" customClass="PhotoBookCoverView" customModule="Photobook" customModuleProvider="target">
+                                                    <rect key="frame" x="85" y="0.0" width="190" height="207"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="190" id="7Zp-QP-MXP"/>
+                                                    </constraints>
+                                                </view>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2kp-TH-DwS">
+                                                    <rect key="frame" x="59" y="0.0" width="10" height="207"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="10" id="fjF-or-Drj"/>
+                                                    </constraints>
+                                                </view>
+                                            </subviews>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="2kp-TH-DwS" firstAttribute="top" secondItem="HjI-Hn-h7A" secondAttribute="top" id="0fY-KG-6Uk"/>
+                                            <constraint firstItem="HjI-Hn-h7A" firstAttribute="centerX" secondItem="mmq-M6-EIJ" secondAttribute="centerX" id="DGo-xp-vO7"/>
+                                            <constraint firstItem="HjI-Hn-h7A" firstAttribute="top" secondItem="mmq-M6-EIJ" secondAttribute="top" id="GjC-6h-vmu"/>
+                                            <constraint firstItem="2kp-TH-DwS" firstAttribute="bottom" secondItem="HjI-Hn-h7A" secondAttribute="bottom" id="WXJ-T6-7i8"/>
+                                            <constraint firstItem="HjI-Hn-h7A" firstAttribute="leading" secondItem="2kp-TH-DwS" secondAttribute="trailing" constant="16" id="rWC-b0-5Sm"/>
+                                            <constraint firstAttribute="bottom" secondItem="HjI-Hn-h7A" secondAttribute="bottom" id="uge-jX-qWL"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="coverView" destination="HjI-Hn-h7A" id="ccU-PK-GKL"/>
+                                            <outlet property="edgeView" destination="2kp-TH-DwS" id="WP4-kW-4Z3"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="doublePageCell" id="IdR-Q3-Knr" customClass="PhotoBookCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                                        <rect key="frame" x="27.666666666666668" y="227" width="359" height="207"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="359" height="207"/>
@@ -747,6 +783,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="collectionView" destination="TBG-9p-ivA" id="kYP-Tq-eWB"/>
+                        <outlet property="ctaButtonContainer" destination="9PF-H7-3d7" id="hMk-Zi-KJ0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="suS-9V-cjP" userLabel="First Responder" sceneMemberID="firstResponder"/>

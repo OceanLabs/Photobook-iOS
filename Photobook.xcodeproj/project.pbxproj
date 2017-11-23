@@ -20,6 +20,9 @@
 		2E0B58A21FB32AC100F31A9E /* PhotosAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58A11FB32AC100F31A9E /* PhotosAlbum.swift */; };
 		2E0B58A41FB32ADD00F31A9E /* PhotosAlbumManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58A31FB32ADD00F31A9E /* PhotosAlbumManager.swift */; };
 		2E0B58A91FB3508B00F31A9E /* SelectedAssetsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58A81FB3508B00F31A9E /* SelectedAssetsManager.swift */; };
+		2E63B4981FC6D39900C6BBE6 /* PhotoBookCoverView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E63B4971FC6D39900C6BBE6 /* PhotoBookCoverView.xib */; };
+		2E63B49A1FC6D9F700C6BBE6 /* PhotoBookCoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E63B4991FC6D9F700C6BBE6 /* PhotoBookCoverView.swift */; };
+		2E63B49C1FC6DC4500C6BBE6 /* PhotoBookCoverCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E63B49B1FC6DC4500C6BBE6 /* PhotoBookCoverCollectionViewCell.swift */; };
 		2E6B9EDA1FBDEEF500F28C00 /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9ED91FBDEEF400F28C00 /* UIViewExtensions.swift */; };
 		2E6B9EDC1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9EDB1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift */; };
 		2E6B9EDF1FBF1B0D00F28C00 /* FullScreenImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9EDE1FBF1B0D00F28C00 /* FullScreenImageViewController.swift */; };
@@ -75,6 +78,9 @@
 		2E0B58A11FB32AC100F31A9E /* PhotosAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosAlbum.swift; sourceTree = "<group>"; };
 		2E0B58A31FB32ADD00F31A9E /* PhotosAlbumManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosAlbumManager.swift; sourceTree = "<group>"; };
 		2E0B58A81FB3508B00F31A9E /* SelectedAssetsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedAssetsManager.swift; sourceTree = "<group>"; };
+		2E63B4971FC6D39900C6BBE6 /* PhotoBookCoverView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoBookCoverView.xib; sourceTree = "<group>"; };
+		2E63B4991FC6D9F700C6BBE6 /* PhotoBookCoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoBookCoverView.swift; sourceTree = "<group>"; };
+		2E63B49B1FC6DC4500C6BBE6 /* PhotoBookCoverCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoBookCoverCollectionViewCell.swift; sourceTree = "<group>"; };
 		2E6B9ED91FBDEEF400F28C00 /* UIViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
 		2E6B9EDB1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PHAssetCollectionExtensions.swift; sourceTree = "<group>"; };
 		2E6B9EDE1FBF1B0D00F28C00 /* FullScreenImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullScreenImageViewController.swift; sourceTree = "<group>"; };
@@ -155,6 +161,7 @@
 				2E0B58831FB30F2100F31A9E /* Main.storyboard */,
 				2E0B58881FB30F2100F31A9E /* LaunchScreen.storyboard */,
 				2EECB7DC1FC4650200916107 /* PhotoBookView.xib */,
+				2E63B4971FC6D39900C6BBE6 /* PhotoBookCoverView.xib */,
 				2EB39DD21FC5AD34009EC5B2 /* PhotoBookPageView.xib */,
 				2E0B588B1FB30F2100F31A9E /* Info.plist */,
 			);
@@ -212,6 +219,7 @@
 			isa = PBXGroup;
 			children = (
 				2EECB7E31FC46EA700916107 /* PhotoBookCollectionViewCell.swift */,
+				2E63B49B1FC6DC4500C6BBE6 /* PhotoBookCoverCollectionViewCell.swift */,
 			);
 			path = PhotoBook;
 			sourceTree = "<group>";
@@ -255,6 +263,7 @@
 				6F4DE6581FB453090099A97E /* PhotoBookNavigationBar.swift */,
 				6FDF25E41FB604E100F46BB0 /* PhotoBookTabBar.swift */,
 				2EECB7DE1FC46A6000916107 /* PhotoBookView.swift */,
+				2E63B4991FC6D9F700C6BBE6 /* PhotoBookCoverView.swift */,
 				2EB39DD41FC5AE0F009EC5B2 /* PhotoBookPageView.swift */,
 			);
 			path = Views;
@@ -403,6 +412,7 @@
 			files = (
 				2E0B588A1FB30F2100F31A9E /* LaunchScreen.storyboard in Resources */,
 				2EECB7DD1FC4650200916107 /* PhotoBookView.xib in Resources */,
+				2E63B4981FC6D39900C6BBE6 /* PhotoBookCoverView.xib in Resources */,
 				2E0B58871FB30F2100F31A9E /* Assets.xcassets in Resources */,
 				2E0B58851FB30F2100F31A9E /* Main.storyboard in Resources */,
 				2EB39DD31FC5AD34009EC5B2 /* PhotoBookPageView.xib in Resources */,
@@ -424,6 +434,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E63B49C1FC6DC4500C6BBE6 /* PhotoBookCoverCollectionViewCell.swift in Sources */,
 				6FB670621FB49FF90062D630 /* UILabelExtensions.swift in Sources */,
 				6F139E0F1FB45EFC005B937E /* Story.swift in Sources */,
 				2E6B9EE51FBF1CFB00F28C00 /* FullScreenImageUnwindSegue.swift in Sources */,
@@ -438,6 +449,7 @@
 				6FDF25E71FB6052A00F46BB0 /* UIImageExtensions.swift in Sources */,
 				2EECB7DF1FC46A6000916107 /* PhotoBookView.swift in Sources */,
 				6F4DE6591FB453090099A97E /* PhotoBookNavigationBar.swift in Sources */,
+				2E63B49A1FC6D9F700C6BBE6 /* PhotoBookCoverView.swift in Sources */,
 				6F139E0C1FB45DD8005B937E /* StoriesManager.swift in Sources */,
 				2ED79FEE1FBAEE630046B96C /* AssetPickerCollectionViewCell.swift in Sources */,
 				2E0B58A41FB32ADD00F31A9E /* PhotosAlbumManager.swift in Sources */,

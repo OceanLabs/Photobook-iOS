@@ -11,6 +11,4 @@ import UIKit
 class PhotoBookCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var bookView: PhotoBookView!
-    var leftIndex: Int?
-    var rightIndex: Int?
 }

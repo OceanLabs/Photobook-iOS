@@ -1,30 +1,18 @@
 //
-//  PhotoBookView.swift
+//  PhotoBookCoverView.swift
 //  Photobook
 //
-//  Created by Konstadinos Karayannis on 21/11/2017.
+//  Created by Konstadinos Karayannis on 23/11/2017.
 //  Copyright © 2017 Kite.ly. All rights reserved.
 //
 
 import UIKit
 
-class PhotoBookView: UIView {
-    
+class PhotoBookCoverView: UIView {
+
     @IBOutlet var contentView: UIView!
     @IBOutlet weak var backgroundImageView: UIImageView!
-    @IBOutlet weak var leftPage: PhotoBookPageView!
-    @IBOutlet weak var rightPage: PhotoBookPageView!
-    
-    var leftIndex: Int?{
-        didSet{
-            leftPage.isHidden = leftIndex == nil
-        }
-    }
-    var rightIndex: Int?{
-        didSet{
-            rightPage.isHidden = rightIndex == nil
-        }
-    }
+    @IBOutlet weak var coverPage: PhotoBookPageView!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -37,11 +25,10 @@ class PhotoBookView: UIView {
     }
     
     private func setup(){
-        Bundle.main.loadNibNamed("PhotoBookView", owner: self, options: nil)
+        Bundle.main.loadNibNamed("PhotoBookCoverView", owner: self, options: nil)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         addSubview(contentView)
     }
-    
-    
+
 }
