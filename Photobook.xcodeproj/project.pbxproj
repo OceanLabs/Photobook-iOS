@@ -41,6 +41,8 @@
 		6FDF25E51FB604E100F46BB0 /* PhotoBookTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF25E41FB604E100F46BB0 /* PhotoBookTabBar.swift */; };
 		6FDF25E71FB6052A00F46BB0 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF25E61FB6052A00F46BB0 /* UIImageExtensions.swift */; };
 		B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */; };
+		B9BC2E271FBF195200F4AA56 /* ImageCollectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BC2E261FBF195200F4AA56 /* ImageCollectorViewController.swift */; };
+		B9BE9F941FBF33320002C459 /* ImageCollectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BE9F931FBF33320002C459 /* ImageCollectorCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +94,8 @@
 		6FDF25E41FB604E100F46BB0 /* PhotoBookTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoBookTabBar.swift; sourceTree = "<group>"; };
 		6FDF25E61FB6052A00F46BB0 /* UIImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
 		B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
+		B9BC2E261FBF195200F4AA56 /* ImageCollectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectorViewController.swift; sourceTree = "<group>"; };
+		B9BE9F931FBF33320002C459 /* ImageCollectorCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectorCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -210,8 +214,9 @@
 				6F4DE64D1FB323540099A97E /* StoriesViewController.swift */,
 				2E0B58911FB325FF00F31A9E /* AlbumsCollectionViewController.swift */,
 				2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */,
-				2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */,
+				B9BC2E261FBF195200F4AA56 /* ImageCollectorViewController.swift */,
 				2E6B9EDE1FBF1B0D00F28C00 /* FullScreenImageViewController.swift */,
+				2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -238,6 +243,7 @@
 		6F4DE6531FB452070099A97E /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				B9BE9F921FBF32C90002C459 /* Collector */,
 				2E0B589E1FB3295400F31A9E /* Albums */,
 				6FDF25E81FB9A05D00F46BB0 /* Stories */,
 				2ED79FEC1FBAEE290046B96C /* Picker */,
@@ -290,6 +296,14 @@
 				6F139E0E1FB45EFC005B937E /* Story.swift */,
 			);
 			path = Stories;
+			sourceTree = "<group>";
+		};
+		B9BE9F921FBF32C90002C459 /* Collector */ = {
+			isa = PBXGroup;
+			children = (
+				B9BE9F931FBF33320002C459 /* ImageCollectorCollectionViewCell.swift */,
+			);
+			path = Collector;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -412,6 +426,7 @@
 				2ED79FEE1FBAEE630046B96C /* AssetPickerCollectionViewCell.swift in Sources */,
 				2E0B58A41FB32ADD00F31A9E /* PhotosAlbumManager.swift in Sources */,
 				2ED79FEB1FBAEDFA0046B96C /* UIScreenExtensions.swift in Sources */,
+				B9BE9F941FBF33320002C459 /* ImageCollectorCollectionViewCell.swift in Sources */,
 				2E0B58A01FB3297300F31A9E /* AlbumCollectionViewCell.swift in Sources */,
 				2E0B58991FB328B800F31A9E /* Asset.swift in Sources */,
 				2E6B9EDF1FBF1B0D00F28C00 /* FullScreenImageViewController.swift in Sources */,
@@ -420,6 +435,7 @@
 				2E0B58A21FB32AC100F31A9E /* PhotosAlbum.swift in Sources */,
 				2E0B58A91FB3508B00F31A9E /* SelectedAssetsManager.swift in Sources */,
 				2E0B589D1FB3293100F31A9E /* PhotosAsset.swift in Sources */,
+				B9BC2E271FBF195200F4AA56 /* ImageCollectorViewController.swift in Sources */,
 				2ED5B3831FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift in Sources */,
 				2E6B9EDA1FBDEEF500F28C00 /* UIViewExtensions.swift in Sources */,
 				2ED5B3811FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift in Sources */,

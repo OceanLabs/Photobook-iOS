@@ -13,6 +13,7 @@ import UIKit
 class AlbumsCollectionViewController: UICollectionViewController {
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    var imageCollectorController:ImageCollectorViewController?
     
     /// The height between the bottom of the image and bottom of the cell where the labels sit
     private let albumCellLabelsHeight: CGFloat = 50

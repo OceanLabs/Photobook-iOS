@@ -12,6 +12,12 @@ class PhotoBookTabBar: UITabBar {
     
     var effectView: UIVisualEffectView?
     
+    var isBackgroundHidden:Bool = false {
+        didSet {
+            effectView?.isHidden = isBackgroundHidden
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -37,4 +43,5 @@ class PhotoBookTabBar: UITabBar {
         backgroundImage = UIImage(color: .clear)
         shadowImage = UIImage()
     }
+    
 }
