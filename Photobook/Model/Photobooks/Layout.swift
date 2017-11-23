@@ -18,12 +18,12 @@ class Layout {
         fatalError("Use parse(_:) instead")
     }
     
-    private init(id: Int, imageUrl: String, layoutBoxes: [LayoutBox]) {
+    init(id: Int, imageUrl: String, layoutBoxes: [LayoutBox]) {
         self.id = id
         self.imageUrl = imageUrl
         self.layoutBoxes = layoutBoxes
     }
-
+    
     static func parse(_ layoutDictionary: [String: AnyObject]) -> Layout? {
         guard
             let id = layoutDictionary["id"] as? Int,

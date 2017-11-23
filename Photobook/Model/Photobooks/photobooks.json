@@ -9,6 +9,7 @@
 		"coverHeight": 420,
 		"cost": { "EUR": 50.00, "USD": 54.99, "GBP": 51.99 },
 		"costPerPage": { "EUR": 1.00, "USD": 1.99, "GBP": 1.25 },
+        "coverLayouts": [ 12 ]
 		"layouts": [ 10, 11, 12, 13 ]
 	}
 ],
@@ -18,6 +19,7 @@
 		"imageUrl": "/images/layout10.png",
 		"layoutBoxes": [
 			{
+                "id" : 901
 				"contentType": "image",
 				"dimensionsPercentages": {
 					"width": 0.6,
@@ -29,6 +31,7 @@
 				}
 			},
 			{
+                "id" : 902
 				"contentType": "text",
 				"dimensionsPercentages": {
 					"width": 0.8, 
@@ -46,6 +49,7 @@
 		"imageUrl": "/images/layout10.png",
 		"layoutBoxes": [
 			{
+                "id" : 903
 				"contentType": "image",
 				"dimensionsPercentages": {
 					"width": 0.4,
@@ -57,6 +61,7 @@
 				}
 			},
 			{
+                "id" : 904
 				"contentType": "text",
 				"dimensionsPercentages": {
 					"width": 0.2, 
@@ -74,6 +79,7 @@
 		"imageUrl": "/images/layout10.png",
 		"layoutBoxes": [
 			{
+                "id" : 905
 				"contentType": "image",
 				"dimensionsPercentages": {
 					"width": 1.0,
@@ -85,6 +91,7 @@
 				}
 			},
 			{
+                "id" : 906
 				"contentType": "text",
 				"dimensionsPercentages": {
 					"width": 0.9, 
@@ -102,6 +109,7 @@
 		"imageUrl": "/images/layout10.png",
 		"layoutBoxes": [
 			{
+                "id" : 907
 				"contentType": "image",
 				"dimensionsPercentages": {
 					"width": 0.375,
@@ -113,6 +121,7 @@
 				}
 			},
 			{
+                "id" : 908
 				"contentType": "image",
 				"dimensionsPercentages": {
 					"width": 0.375,

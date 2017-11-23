@@ -17,6 +17,7 @@ class Photobook {
     var pageSizeRatio: CGFloat!
     var baseCost: Decimal!
     var costPerPage: Decimal!
+    var coverLayouts: [Int]!
     var layouts: [Int]! // IDs of the permitted layouts
     
     // FIXME: Min pages? Currencies?
@@ -25,13 +26,14 @@ class Photobook {
         fatalError("Use parse(_:) instead")
     }
     
-    private init(id: Int, name: String, coverSizeRatio: CGFloat, pageSizeRatio: CGFloat, baseCost: Decimal, costPerPage: Decimal, layouts: [Int]) {
+    private init(id: Int, name: String, coverSizeRatio: CGFloat, pageSizeRatio: CGFloat, baseCost: Decimal, costPerPage: Decimal, coverLayouts: [Int], layouts: [Int]) {
         self.id = id
         self.name = name
         self.coverSizeRatio = coverSizeRatio
         self.pageSizeRatio = pageSizeRatio
         self.baseCost = baseCost
         self.costPerPage = costPerPage
+        self.coverLayouts = coverLayouts
         self.layouts = layouts
     }
 
@@ -51,6 +53,7 @@ class Photobook {
             let costPerPageDictionary = dictionary["costPerPage"] as? [String: AnyObject],
             let baseCost = costDictionary["GBP"] as? Double,
             let costPerPage = costPerPageDictionary["GBP"] as? Double,
+            let coverLayouts = dictionary["coverLayouts"] as? [Int],
             let layouts = dictionary["layouts"] as? [Int],
             layouts.count > 0
         else { return nil }
@@ -58,6 +61,6 @@ class Photobook {
         let coverSizeRatio = coverWidth / coverHeight
         let pageSizeRatio = pageWidth / pageHeight
 
-        return Photobook(id: id, name: name, coverSizeRatio: coverSizeRatio, pageSizeRatio: pageSizeRatio, baseCost: Decimal(baseCost), costPerPage: Decimal(costPerPage), layouts: layouts)
+        return Photobook(id: id, name: name, coverSizeRatio: coverSizeRatio, pageSizeRatio: pageSizeRatio, baseCost: Decimal(baseCost), costPerPage: Decimal(costPerPage), coverLayouts: coverLayouts, layouts: layouts)
     }
 }

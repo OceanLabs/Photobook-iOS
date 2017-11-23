@@ -11,11 +11,11 @@ import XCTest
 
 class LayoutTests: XCTestCase {
     
-    let validDictionary: [String: AnyObject] = [
-        "id": 0 as AnyObject,
-        "imageUrl": "/images/layout10.png" as AnyObject,
-        "layoutBoxes": []  as AnyObject
-    ]
+    let validDictionary = ([
+        "id": 0,
+        "imageUrl": "/images/layout10.png",
+        "layoutBoxes": []
+        ]) as [String: AnyObject]
     
     func testParse_ShouldSucceedWithAValidDictionary() {
         let layout = Layout.parse(validDictionary)

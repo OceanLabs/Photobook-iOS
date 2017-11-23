@@ -11,15 +11,23 @@ import XCTest
 
 class LayoutBoxTests: XCTestCase {
     
-    let validDictionary: [String: AnyObject] = [
-        "contentType": "image" as AnyObject,
-        "dimensionsPercentages": [ "width": 0.01, "height": 0.1] as AnyObject,
-        "relativeStartPoint": [ "x": 0.1, "y": 0.2] as AnyObject
-    ]
-    
+    let validDictionary = ([
+        "id": 1,
+        "contentType": "image",
+        "dimensionsPercentages": [ "width": 0.01, "height": 0.1],
+        "relativeStartPoint": [ "x": 0.1, "y": 0.2]
+        ]) as [String: AnyObject]
+
     func testParse_ShouldSucceedWithAValidDictionary() {
         let layoutBox = LayoutBox.parse(validDictionary)
         XCTAssertNotNil(layoutBox, "Parse: Should succeed with a valid dictionary")
+    }
+    
+    func testParse_ShouldReturnNifIfIdIsMissing() {
+        var layoutDictionary = validDictionary
+        layoutDictionary["id"] = nil
+        let layoutBox = LayoutBox.parse(layoutDictionary)
+        XCTAssertNil(layoutBox, "Parse: Should return nil if ID is missing")
     }
     
     func testParse_ShouldSucceedIfContentTypeIsText() {

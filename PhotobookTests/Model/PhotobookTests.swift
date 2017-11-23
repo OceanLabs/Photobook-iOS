@@ -11,17 +11,18 @@ import XCTest
 
 class PhotobookTests: XCTestCase {
     
-    let validDictionary: [String: AnyObject] = [
-        "id": 10 as AnyObject,
-        "name": "210 x 210" as AnyObject,
-        "pageWidth": 1000 as AnyObject,
-        "pageHeight": 400 as AnyObject,
-        "coverWidth": 1030 as AnyObject,
-        "coverHeight": 415 as AnyObject,
-        "cost": [ "EUR": 10.00 as Decimal, "USD": 12.00 as Decimal, "GBP": 9.00 as Decimal ] as AnyObject,
-        "costPerPage": [ "EUR": 1.00 as Decimal, "USD": 1.20 as Decimal, "GBP": 0.85 as Decimal ] as AnyObject,
-        "layouts": [ 10, 11, 12, 13 ] as AnyObject
-    ]
+    let validDictionary = ([
+        "id": 10,
+        "name": "210 x 210",
+        "pageWidth": 1000,
+        "pageHeight": 400,
+        "coverWidth": 1030,
+        "coverHeight": 415,
+        "cost": [ "EUR": 10.00 as Decimal, "USD": 12.00 as Decimal, "GBP": 9.00 as Decimal ],
+        "costPerPage": [ "EUR": 1.00 as Decimal, "USD": 1.20 as Decimal, "GBP": 0.85 as Decimal ],
+        "coverLayouts": [ 9, 10 ],
+        "layouts": [ 10, 11, 12, 13 ]
+    ]) as [String: AnyObject]
     
     func testParse_ShouldSucceedWithAValidDictionary() {
         let photobook = Photobook.parse(validDictionary)
@@ -118,6 +119,20 @@ class PhotobookTests: XCTestCase {
     }
 
     // Layouts
+    func testParse_ShouldReturnNifIfCoverLayoutsIsMissing() {
+        var photobookDictionary = validDictionary
+        photobookDictionary["coverLayouts"] = nil
+        let photobookBox = Photobook.parse(photobookDictionary)
+        XCTAssertNil(photobookBox, "Parse: Should return nil if coverLayouts is missing")
+    }
+    
+    func testParse_ShouldReturnNifIfCoverLayoutCountIsZero() {
+        var photobookDictionary = validDictionary
+        photobookDictionary["coverLayouts"] = [] as AnyObject
+        let photobookBox = Photobook.parse(photobookDictionary)
+        XCTAssertNil(photobookBox, "Parse: Should return nil if the coverLayout count is zero")
+    }
+
     func testParse_ShouldReturnNifIfLayoutsIsMissing() {
         var photobookDictionary = validDictionary
         photobookDictionary["layouts"] = nil
