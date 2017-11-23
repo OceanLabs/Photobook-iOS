@@ -104,8 +104,8 @@ class SelectedAssetsManager: NSObject {
     
     func deselectAllAssets(for album: Album){
         for asset in album.assets{
-            if !isSelected(asset, for: album){
-                select(asset, for: album)
+            if isSelected(asset, for: album){
+                deselect(asset, for: album)
             }
         }
     }
