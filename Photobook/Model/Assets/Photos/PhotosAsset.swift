@@ -27,8 +27,13 @@ class PhotosAsset: Asset {
         options.isNetworkAccessAllowed = true
         
         let imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())
-        PHImageManager.default().requestImage(for: photosAsset, targetSize: imageSize, contentMode: .aspectFill, options: options) { (image, _) in
-            completionHandler(image, nil)
+        DispatchQueue.global(qos: .background).async { [weak welf = self] in
+            guard let asset = welf?.photosAsset else { return }
+            PHImageManager.default().requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options) { (image, _) in
+                DispatchQueue.main.async {
+                    completionHandler(image, nil)
+                }
+            }
         }
     }
     
