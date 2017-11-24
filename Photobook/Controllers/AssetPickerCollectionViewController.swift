@@ -83,6 +83,8 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     }
     
     func updateSelectAllButtonTitle() {
+        guard selectAllButton.title != nil else { return }
+        
         if selectedAssetsManager?.count(for: album) == self.album.assets.count {
             selectAllButton.title = NSLocalizedString("ImagePicker/Button/DeselectAll", value: "Deselect All", comment: "Button title for de-selecting all selected photos")
         }
