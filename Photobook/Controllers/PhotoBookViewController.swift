@@ -101,7 +101,7 @@ class PhotoBookViewController: UIViewController {
         
         asset?.image(size: size, completionHandler: { (image, _) in
             guard page.index == index, let image = image else { return }
-            
+                        
             page.setImage(image: image, contentMode: (asset as? PlaceholderAsset) == nil ? .scaleAspectFill : .center)
         })
     }

@@ -32,7 +32,7 @@ class PhotoBookPageView: UIView {
     }
     var index: Int?
     weak var delegate: PhotoBookViewDelegate?
-    var relativeLayoutInsets: UIEdgeInsets?{
+    var relativeFrame: CGRect?{
         didSet{
             pageLayout = .custom
         }
@@ -64,11 +64,11 @@ class PhotoBookPageView: UIView {
                 imageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
                 imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: Constants.centerSquareRelativeSize).isActive = true
             case .custom:
-                guard let insets = relativeLayoutInsets else { break }
-                imageView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 1.0 - insets.left - insets.right).isActive = true
-                imageView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 1.0 - insets.top - insets.bottom).isActive = true
-                addConstraint(NSLayoutConstraint(item: imageView, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0 - insets.right, constant: 0))
-                addConstraint(NSLayoutConstraint(item: imageView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0 - insets.bottom, constant: 0))
+                guard let frame = relativeFrame else { break }
+                imageView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: frame.size.width).isActive = true
+                imageView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: frame.size.height).isActive = true
+                addConstraint(NSLayoutConstraint(item: imageView, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: frame.origin.x + frame.size.width, constant: 0))
+                addConstraint(NSLayoutConstraint(item: imageView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: frame.origin.y + frame.size.height, constant: 0))
             }
             
             setNeedsLayout()
