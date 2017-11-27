@@ -72,17 +72,9 @@ class StoriesManager {
             // Minimum asset count
             guard totalAssetCount > Constants.photosPerBook else { return }
             
-            let story = Story(list: list)
+            let story = Story(list: list, coverCollection: moments.firstObject!)
             story.components = locationComponents
             story.photoCount = totalAssetCount
-            
-            // Get cover
-            let assetOptions = PHFetchOptions()
-            assetOptions.fetchLimit = 1
-            assetOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: true) ]
-            
-            let photos = PHAsset.fetchAssets(in: moments.firstObject!, options: assetOptions)
-            story.cover = photos.firstObject
             
             stories.append(story)
         }
@@ -156,15 +148,6 @@ class StoriesManager {
         }
         
         return sortedStories
-    }
-    
-    func thumbnailForPhoto(_ photo: PHAsset, size: CGSize, completion: @escaping (UIImage?)->()) {
-        let options = PHImageRequestOptions()
-        options.isNetworkAccessAllowed = true
-        
-        imageManager.requestImage(for: photo, targetSize: size, contentMode: .aspectFill, options: PHImageRequestOptions()) { (image, _) in
-            completion(image)
-        }
     }
     
     private func breakDownLocation(title location: String) -> [String] {
