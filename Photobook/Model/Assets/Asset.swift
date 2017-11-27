@@ -9,5 +9,7 @@
 import UIKit
 
 protocol Asset {
-
+    var width: CGFloat { get }
+    var height: CGFloat { get }
+    var isLandscape: Bool { get set }
 }

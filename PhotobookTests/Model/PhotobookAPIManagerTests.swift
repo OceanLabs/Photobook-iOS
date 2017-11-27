@@ -80,28 +80,25 @@ class PhotobookAPIManagerTests: XCTestCase {
     }
     
     func testRequestPhotobookInfo_ShouldParseValidObjects() {
-        let products = [
-            [ "id": 10 as AnyObject,
-              "name": "210 x 210" as AnyObject,
-              "pageWidth": 1000 as AnyObject,
-              "pageHeight": 400 as AnyObject,
-              "coverWidth": 1030 as AnyObject,
-              "coverHeight": 415 as AnyObject,
-              "cost": [ "EUR": Decimal(10.00), "USD": Decimal(12.00), "GBP": Decimal(9.00) ] as AnyObject,
-              "costPerPage": [ "EUR": Decimal(1.00), "USD": Decimal(1.20), "GBP": Decimal(0.85) ] as AnyObject,
-              "layouts": [ 10 ]
-              ]
-        ]
+        let product = [ "id": 10,
+          "name": "210 x 210",
+          "pageWidth": 1000,
+          "pageHeight": 400,
+          "coverWidth": 1030,
+          "coverHeight": 415,
+          "cost": [ "EUR": Decimal(10.00), "USD": Decimal(12.00), "GBP": Decimal(9.00) ] as [String: Decimal],
+          "costPerPage": [ "EUR": Decimal(1.00), "USD": Decimal(1.20), "GBP": Decimal(0.85) ] as [String: Decimal],
+          "coverLayouts": [ 10 ],
+          "layouts": [ 10 ]
+        ] as [String: AnyObject]
         
-        let layouts = [
-            [ "id": 10, "name": "layout10", "imageUrl": "/images/10.png",
-              "layoutBoxes": [
-                    [ "contentType": "image", "dimensionsPercentages": [ "width": 0.1, "height": 0.1 ], "relativeStartPoint": [ "x": 0.0, "y": 0.01 ] ]
-                ]
-            ]
-        ]
+        let layout =
+            [ "id": 10, "category": 1, "name": "layout10", "imageUrl": "/images/10.png",
+              "imageLayoutBox": [ "dimensionsPercentages": [ "width": 0.1, "height": 0.1 ], "relativeStartPoint": [ "x": 0.0, "y": 0.01 ] ],
+              "textLayoutBox": [ "dimensionsPercentages": [ "width": 0.1, "height": 0.1 ], "relativeStartPoint": [ "x": 0.0, "y": 0.01 ] ]
+            ] as [String: AnyObject]
         
-        apiClient.response = [ "products": products, "layouts": layouts] as AnyObject
+        apiClient.response = [ "products": [ product ], "layouts": [ layout ]] as AnyObject
         
         photobookAPIManager.requestPhotobookInfo { (photobooks, layouts, error) in
             XCTAssertNil(error, "PhotobookInfo: Error should be nil with a valid response")

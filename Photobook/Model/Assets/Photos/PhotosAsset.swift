@@ -12,7 +12,11 @@ import Photos
 class PhotosAsset: Asset {
     private var photosAsset: PHAsset
     
-    init(_ asset: PHAsset){
+    var width: CGFloat { return CGFloat(photosAsset.pixelWidth) }
+    var height: CGFloat { return CGFloat(photosAsset.pixelHeight) }
+    var isLandscape: Bool = false
+    
+    init(_ asset: PHAsset) {
         photosAsset = asset
     }
 }

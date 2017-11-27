@@ -12,100 +12,17 @@ enum ProductColor {
     case white, black
 }
 
-// A page in the user's photobook
-class ProductLayout: Layout {
-    var containedItems = [ContainedItem]()
-    
-    init(layout: Layout, containedItems: [ContainedItem]) {
-        super.init(id: layout.id, imageUrl: layout.imageUrl, layoutBoxes: layout.layoutBoxes)
-        self.containedItems = containedItems
-    }
-    
-    // Reassigns boxes to ContainedItems if possible, i.e. reassigning images and text to new layoutBoxId.
-    // Recalculates origin and size according to the new layouts (images only) for reassigned boxes.
-    // Unassigned boxes are persisted.
-    func fitItemsInLayout() {
-        
-        var layoutBoxesCopy = layoutBoxes!
-        for containedItem in containedItems {
-            for (index, layoutBox) in layoutBoxesCopy.enumerated() {
-                guard layoutBox.type == containedItem.type else { continue }
-
-                containedItem.assignTo(layoutBox)
-                layoutBoxesCopy.remove(at: index)
-            }
-        }
-    }
-    
-    /// Sets an asset for a particular box in the page layout caller
-    ///
-    /// - Parameters:
-    ///   - asset: The image asset to use
-    ///   - layoutBoxIndex: The container box index in the page layout caller
-    func setAsset(_ asset: Asset, layoutBoxIndex: Int) {
-        setContainedItem(asset: asset, text: nil, layoutBoxIndex: layoutBoxIndex)
-    }
-    
-    /// Sets copy for a particular box in the page layout caller
-    ///
-    /// - Parameters:
-    ///   - text: The copy to use
-    ///   - layoutBoxIndex: The container box index in the page layout caller
-    func setText(_ text: String, layoutBoxIndex: Int) {
-        setContainedItem(asset: nil, text: text, layoutBoxIndex: layoutBoxIndex)
-    }
-    
-    private func setContainedItem(asset: Asset?, text: String?, layoutBoxIndex: Int) {
-        guard layoutBoxIndex < layoutBoxes.count else { return }
-        let layoutBox = layoutBoxes[layoutBoxIndex]
-        switch layoutBox.type {
-        case .photo where asset == nil:
-            print("ProductLayout: Asset missing when trying to assign to photo layout box!")
-            return
-        case .text where text == nil:
-            print("ProductLayout: Copy missing when trying to assign to text layout box!")
-            return
-        default:
-            break
-        }
-        
-        var containedItem = containedItems.first(where: { $0.layoutBoxId == layoutBox.id})
-        if containedItem == nil { containedItem = ContainedItem() }
-        containedItem!.asset = asset
-        containedItem!.text = text
-
-        containedItems.append(containedItem!)
-    }
-}
-
-// A placeholder in the user's photobook with photo, text and edits info
-class ContainedItem {
-    var layoutBoxId: Int!
-    var asset: Asset? {
-        didSet {
-            guard asset != nil else { return }
-            rotation = 0.0
-            // TODO: Calculate scale
-        }
-    }
-    var text: String?
-    var relativeOrigin = CGPoint.zero
-    var scale: CGFloat = 1.0
-    var rotation: CGFloat = 0.0
-    
-    var type: LayoutBoxType {
-        return asset != nil ? .photo : .text
-    }
-    
-    func assignTo(_ layoutBox: LayoutBox) {
-        layoutBoxId = layoutBox.id
-        
-        // TODO: Calculate scale
-    }
-}
-
 class ProductManager {
     static let shared = ProductManager()
+    
+    private var apiManager = PhotobookAPIManager.shared
+    
+    #if DEBUG
+    convenience init(apiManager: PhotobookAPIManager) {
+        self.init()
+        self.apiManager = apiManager
+    }
+    #endif
 
     // Public info about photobook products
     private(set) var products: [Photobook]?
@@ -118,14 +35,14 @@ class ProductManager {
     var coverColor: ProductColor = .white
     var pageColor: ProductColor = .white
     var productLayouts = [ProductLayout]()
+    
     // TODO: Spine
     
-    
-    /// Requests the photobook details
+    /// Requests the photobook details so the user can start building their photobook
     ///
     /// - Parameter completion: Completion block with an optional error
-    func requestPhotobookDetails(completion:@escaping (Error?)->()) {
-        PhotobookAPIManager.shared.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, error) in
+    func initialise(completion:@escaping (Error?)->()) {
+        apiManager.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, error) in
             guard error != nil else {
                 completion(error!)
                 return
@@ -136,17 +53,88 @@ class ProductManager {
         }
     }
     
+    func setPhotobook(_ photobook: Photobook, withAssets assets: [Asset]) {
+        guard
+            let coverLayouts = coverLayouts(for: photobook),
+            coverLayouts.count > 0,
+            let layouts = layouts(for: photobook),
+            layouts.count > 0
+        else {
+            print("ProductManager: Missing layouts for selected photobook")
+            return
+        }
+
+        var unusedAssets = assets
+
+        var portraitLayouts = layouts.filter { !$0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
+        var landscapeLayouts = layouts.filter { $0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
+        
+        // First photobook
+        // TODO: Number of pages 3 + 2 * i
+        if product == nil {
+            var tempLayouts = [ProductLayout]()
+
+            var currentPortraitLayout = 0
+            var currentLandscapeLayout = 0
+
+            // Use first photo for the cover
+            let productLayoutAsset = ProductLayoutAsset()
+            productLayoutAsset.asset = unusedAssets.remove(at: 0)
+            let productLayout = ProductLayout(layout: coverLayouts.first!, productLayoutAsset: productLayoutAsset)
+            tempLayouts.append(productLayout)
+            
+            // Loop through the remaining assets
+            for asset in unusedAssets {
+                // FIXME: Logic TBC
+                let productLayoutAsset = ProductLayoutAsset()
+                productLayoutAsset.asset = asset
+
+                var layout: Layout
+                if asset.isLandscape {
+                    layout = landscapeLayouts[currentLandscapeLayout]
+                    currentLandscapeLayout = currentLandscapeLayout < landscapeLayouts.count - 1 ? currentLandscapeLayout + 1 : 0
+                } else {
+                    layout = portraitLayouts[currentPortraitLayout]
+                    currentPortraitLayout = currentPortraitLayout < portraitLayouts.count - 1 ? currentPortraitLayout + 1 : 0
+                }
+                let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset)
+                tempLayouts.append(productLayout)
+            }
+            
+            productLayouts = tempLayouts
+            product = photobook
+            return
+        }
+        
+        // Switching products
+        for pageLayout in productLayouts {
+            // Match layouts from the current product to the new one
+            var newLayout = layouts.first { $0.category == pageLayout.layout.category }
+            if newLayout == nil {
+                // Should not happen but to be safe, pick the first layout
+                newLayout = layouts.first!
+            }
+            pageLayout.layout = newLayout
+        }
+    }
+    
+    private func coverLayouts(for photobook: Photobook) -> [Layout]? {
+        guard let layouts = layouts else { return nil }
+        return layouts.filter { photobook.coverLayouts.contains($0.id) }
+    }
+    
+    private func layouts(for photobook: Photobook) -> [Layout]? {
+        guard let layouts = layouts else { return nil }
+        return layouts.filter { photobook.layouts.contains($0.id) }
+    }
+    
     /// Sets one of the available layouts for a page number
     ///
     /// - Parameters:
     ///   - layout: The layout to use
     ///   - page: The page index in the photobook
     func setLayout(_ layout: Layout, forPage page: Int) {
-        let previousLayout = productLayouts[page]
-        // Create a new page layout instance with layout data and the previously added images and text
-        let newLayout = ProductLayout(layout: layout, containedItems: previousLayout.containedItems)
-        newLayout.fitItemsInLayout()
-        productLayouts[page] = newLayout
+        productLayouts[page].layout = layout
     }
     
     /// Sets an asset as the content of one of the containers of a page in the photobook
@@ -154,10 +142,8 @@ class ProductManager {
     /// - Parameters:
     ///   - asset: The image asset to use
     ///   - page: The page index in the photbook
-    ///   - layoutBoxIndex: The container box index on that page
-    func setAsset(_ asset: Asset, page: Int, layoutBoxIndex: Int) {
-        let layout = productLayouts[page]
-        layout.setAsset(asset, layoutBoxIndex: layoutBoxIndex)
+    func setAsset(_ asset: Asset, forPage page: Int) {
+        productLayouts[page].asset = asset
     }
     
     /// Sets copy as the content of one of the containers of a page in the photobook
@@ -165,9 +151,7 @@ class ProductManager {
     /// - Parameters:
     ///   - text: The copy to use
     ///   - page: The page index in the photbook
-    ///   - layoutBoxIndex: The container box index on that page
-    func setText(_ text: String, page: Int, layoutBoxIndex: Int) {
-        let layout = productLayouts[page]
-        layout.setText(text, layoutBoxIndex: layoutBoxIndex)
+    func setText(_ text: String, forPage page: Int) {
+        productLayouts[page].text = text
     }
 }

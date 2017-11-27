@@ -60,16 +60,20 @@ class PhotobookViewController: UIViewController {
         
         scrollView.addSubview(pageContainerView)
         
-        for layoutBox in layout.layoutBoxes {
-            addLayoutBox(layoutBox, to: pageContainerView)
+        if let imageLayoutBox = layout.imageLayoutBox {
+            addLayoutBox(imageLayoutBox, color: .darkGray, to: pageContainerView)
+        }
+        
+        if let textLayoutBox = layout.textLayoutBox {
+            addLayoutBox(textLayoutBox, color: .lightGray, to: pageContainerView)
         }
     }
     
-    private func addLayoutBox(_ layoutBox: LayoutBox, to containerView: UIView) {
+    private func addLayoutBox(_ layoutBox: LayoutBox, color: UIColor, to containerView: UIView) {
         let origin = CGPoint(x: containerView.bounds.width * layoutBox.origin.x, y: containerView.bounds.height * layoutBox.origin.y)
         let size = CGSize(width: containerView.bounds.width * layoutBox.size.width, height: containerView.bounds.height * layoutBox.size.height)
         let boxView = UIView(frame: CGRect(x: origin.x, y: origin.y, width: size.width, height: size.height))
-        boxView.backgroundColor = layoutBox.type == .photo ? .darkGray : .lightGray
+        boxView.backgroundColor = color
         containerView.addSubview(boxView)
     }
 }

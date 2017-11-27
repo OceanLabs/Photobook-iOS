@@ -53,14 +53,13 @@ class Photobook {
             let costPerPageDictionary = dictionary["costPerPage"] as? [String: AnyObject],
             let baseCost = costDictionary["GBP"] as? Double,
             let costPerPage = costPerPageDictionary["GBP"] as? Double,
-            let coverLayouts = dictionary["coverLayouts"] as? [Int],
-            let layouts = dictionary["layouts"] as? [Int],
-            layouts.count > 0
+            let coverLayouts = dictionary["coverLayouts"] as? [Int], coverLayouts.count > 0,
+            let layouts = dictionary["layouts"] as? [Int], layouts.count > 0
         else { return nil }
         
         let coverSizeRatio = coverWidth / coverHeight
         let pageSizeRatio = pageWidth / pageHeight
 
         return Photobook(id: id, name: name, coverSizeRatio: coverSizeRatio, pageSizeRatio: pageSizeRatio, baseCost: Decimal(baseCost), costPerPage: Decimal(costPerPage), coverLayouts: coverLayouts, layouts: layouts)
-    }
+    }    
 }
