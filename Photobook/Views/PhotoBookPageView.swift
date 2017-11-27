@@ -31,6 +31,7 @@ class PhotoBookPageView: UIView {
         }
     }
     var index: Int?
+    weak var delegate: PhotoBookViewDelegate?
     var relativeLayoutInsets: UIEdgeInsets?{
         didSet{
             pageLayout = .custom
@@ -111,5 +112,10 @@ class PhotoBookPageView: UIView {
         contentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         addSubview(contentView)
     }
-
+    
+    @IBAction func didTapOnPage(_ sender: UITapGestureRecognizer) {
+        guard let index = index else { return }
+        delegate?.didTapOnPage(index: index)
+    }
+    
 }

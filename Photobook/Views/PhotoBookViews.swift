@@ -8,11 +8,20 @@
 
 import UIKit
 
+protocol PhotoBookViewDelegate: class{
+    func didTapOnPage(index: Int)
+}
+
 class PhotoBookView: UIView {
     
     @IBOutlet var contentView: UIView!
     @IBOutlet weak var backgroundImageView: UIImageView!
-    @IBOutlet weak var page: PhotoBookPageView!
+    @IBOutlet weak var page: PhotoBookPageView! {
+        didSet{
+            page.delegate = delegate
+        }
+    }
+    weak var delegate: PhotoBookViewDelegate?
     var nibName: String { return "PhotoBookView" }
     
     override init(frame: CGRect) {
@@ -35,7 +44,11 @@ class PhotoBookView: UIView {
 }
 
 class PhotoBookDoublePageView: PhotoBookView{
-    @IBOutlet weak var rightPage: PhotoBookPageView!
+    @IBOutlet weak var rightPage: PhotoBookPageView! {
+        didSet{
+            page.delegate = delegate
+        }
+    }
     override var nibName: String { return "PhotoBookDoublePageView" }
 }
 

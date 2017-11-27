@@ -26,8 +26,17 @@
                 </imageView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <gestureRecognizers/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outletCollection property="gestureRecognizers" destination="nV7-n3-4nm" appends="YES" id="pOo-y9-PYi"/>
+            </connections>
             <point key="canvasLocation" x="-28" y="262"/>
         </view>
+        <tapGestureRecognizer id="nV7-n3-4nm">
+            <connections>
+                <action selector="didTapOnPage:" destination="-1" id="0mq-ma-cof"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
 </document>

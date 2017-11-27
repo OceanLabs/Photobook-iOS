@@ -11,5 +11,5 @@ import UIKit
 class PhotoBookCoverCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var coverView: PhotoBookCoverView!
-    @IBOutlet weak var edgeView: UIView!
+    @IBOutlet weak var spineView: UIView!
 }

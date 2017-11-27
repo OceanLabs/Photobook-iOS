@@ -76,10 +76,15 @@ class PhotoBookViewController: UIViewController {
 
     @IBAction func didTapRearrange(_ sender: UIBarButtonItem) {
         //TODO: Enter rearrange mode
+        print("Tapped Rearrange")
     }
     
     @IBAction func didTapCheckout(_ sender: UIButton) {
         print("Tapped Checkout")
+    }
+    
+    @IBAction func didTapOnSpine(_ sender: UITapGestureRecognizer) {
+        print("Tapped on spine")
     }
     
     func load(page: PhotoBookPageView, size: CGSize){
@@ -114,7 +119,7 @@ extension PhotoBookViewController: UICollectionViewDataSource{
         switch section{
         case 1:
             //TODO: Get this from Photobook model
-            return ((selectedAssetsManager?.assets.count ?? 0 ) - 1) / 2
+            return ((selectedAssetsManager?.assets.count ?? 0 ) + 1) / 2
         default:
             return 1
         }
@@ -133,6 +138,7 @@ extension PhotoBookViewController: UICollectionViewDataSource{
                 else { return UICollectionViewCell() }
             
             page.index = 0
+            page.delegate = self
             load(page: page, size: imageSize)
             
             return cell
@@ -142,6 +148,9 @@ extension PhotoBookViewController: UICollectionViewDataSource{
                 else { return UICollectionViewCell() }
             
             let rightPage = (cell.bookView as? PhotoBookDoublePageView)?.rightPage
+            
+            rightPage?.delegate = self
+            page.delegate = self
             
             // First and last pages of the book are courtesy pages, no photos on them
             switch indexPath.item{
@@ -177,6 +186,15 @@ extension PhotoBookViewController: UICollectionViewDelegate{
         guard let navBar = navigationController?.navigationBar as? PhotoBookNavigationBar else { return }
         
         navBar.effectView.alpha = scrollView.contentOffset.y <= -(UIApplication.shared.statusBarFrame.height + (navigationController?.navigationBar.frame.height ?? 0)) ? 0 : 1
+    }
+    
+}
+
+extension PhotoBookViewController: PhotoBookViewDelegate{
+    // MARK: - PhotoBookViewDelegate
+    
+    func didTapOnPage(index: Int) {
+        print("Tapped on page:\(index)")
     }
     
 }

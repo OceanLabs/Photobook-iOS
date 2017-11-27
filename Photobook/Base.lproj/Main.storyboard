@@ -683,9 +683,13 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2kp-TH-DwS">
                                                     <rect key="frame" x="59" y="0.0" width="10" height="207"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <gestureRecognizers/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="10" id="fjF-or-Drj"/>
                                                     </constraints>
+                                                    <connections>
+                                                        <outletCollection property="gestureRecognizers" destination="bPD-Ng-yCX" appends="YES" id="HGP-qY-cHC"/>
+                                                    </connections>
                                                 </view>
                                             </subviews>
                                         </view>
@@ -699,7 +703,7 @@
                                         </constraints>
                                         <connections>
                                             <outlet property="coverView" destination="HjI-Hn-h7A" id="ccU-PK-GKL"/>
-                                            <outlet property="edgeView" destination="2kp-TH-DwS" id="WP4-kW-4Z3"/>
+                                            <outlet property="spineView" destination="2kp-TH-DwS" id="qN2-9P-1th"/>
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="doublePageCell" id="IdR-Q3-Knr" customClass="PhotoBookCollectionViewCell" customModule="Photobook" customModuleProvider="target">
@@ -787,6 +791,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="suS-9V-cjP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="bPD-Ng-yCX">
+                    <connections>
+                        <action selector="didTapOnSpine:" destination="l0p-H6-Aqd" id="spO-hr-XPG"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2579.7101449275365" y="790.76086956521749"/>
         </scene>
