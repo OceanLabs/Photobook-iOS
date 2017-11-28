@@ -54,10 +54,10 @@ class ProductLayout {
         guard layout != nil else { return }
         
         if productLayoutAsset != nil && layout.imageLayoutBox != nil {
-            productLayoutAsset!.containerSize = layout.imageLayoutBox!.size
+            productLayoutAsset!.containerSize = layout.imageLayoutBox!.rect.size
         }
         if productLayoutText != nil && layout.textLayoutBox != nil {
-            productLayoutText!.containerSize = layout.textLayoutBox!.size
+            productLayoutText!.containerSize = layout.textLayoutBox!.rect.size
         }
     }
 }

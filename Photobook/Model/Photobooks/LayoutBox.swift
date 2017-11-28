@@ -13,13 +13,11 @@ import UIKit
 struct LayoutBox {
     
     let id: Int!
-    // Normalised origin value
-    let origin: CGPoint!
-    // Normalised  size value
-    let size: CGSize!
+    // Normalised rect
+    let rect: CGRect!
     
     func isLandscape() -> Bool {
-        return size.height > size.width
+        return rect.height > rect.width
     }
     
     static func parse(_ layoutBoxDictionary: [String: AnyObject]) -> LayoutBox? {
@@ -33,6 +31,6 @@ struct LayoutBox {
             let y = relativeStartPoint["y"] as? CGFloat, y.isNormalised
             else { return nil }
         
-        return LayoutBox(id: id, origin: CGPoint(x: x, y: y), size: CGSize(width: width, height: height))
+        return LayoutBox(id: id, rect: CGRect(x: x, y: y, width: width, height: height))
     }
 }
