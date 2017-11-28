@@ -19,7 +19,9 @@ class PhotosAsset: Asset {
     
     var width: CGFloat { return CGFloat(photosAsset.pixelWidth) }
     var height: CGFloat { return CGFloat(photosAsset.pixelHeight) }
-    var isLandscape: Bool = false
+    var isLandscape: Bool {
+        return self.width > self.height
+    }
     
     init(_ asset: PHAsset) {
         photosAsset = asset
