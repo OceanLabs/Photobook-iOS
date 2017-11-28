@@ -29,7 +29,7 @@ class PhotobookAPIManager {
         
         apiClient.get(context: .pdfGenerator, endpoint: endPoints.products, parameters: nil) { (jsonData, error) in            
             
-            // TEMP: Fake api response. Don't run for tests.x
+            // TEMP: Fake api response. Don't run for tests.
             var jsonData = jsonData
             if NSClassFromString("XCTest") == nil {
                 jsonData = self.json(file: "photobooks")
