@@ -31,6 +31,6 @@ class DoubleStoryTableViewCell: StoryTableViewCell {
         guard let storyIndex = storyIndex else {
             fatalError("Story index not set")
         }
-        delegate?.didTapOnStory(index: storyIndex + 1, sourceView: secondCoverImageView)
+        delegate?.didTapOnStory(index: storyIndex + 1, sourceView: secondCoverImageView.superview)
     }
 }

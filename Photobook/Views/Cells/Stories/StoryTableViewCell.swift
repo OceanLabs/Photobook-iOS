@@ -44,7 +44,7 @@ class StoryTableViewCell: UITableViewCell {
         guard let storyIndex = storyIndex else {
             fatalError("Story index not set")
         }
-        delegate?.didTapOnStory(index: storyIndex, sourceView: coverImageView)
+        delegate?.didTapOnStory(index: storyIndex, sourceView: coverImageView.superview)
     }
     
 }
