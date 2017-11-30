@@ -12,8 +12,7 @@ let assetMaximumSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CG
 
 protocol Asset {
     var identifier: String { get }
-    var width: CGFloat { get }
-    var height: CGFloat { get }
+    var size: CGSize { get }
     var isLandscape: Bool { get }
 
     /// Request the original, unedited image that this asset represents. Avoid using this method directly, instead use image(size:applyEdits:contentMode:cacheResult:progressHandler:completionHandler:)

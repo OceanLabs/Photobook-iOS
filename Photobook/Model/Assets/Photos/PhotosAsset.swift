@@ -13,14 +13,13 @@ class PhotosAsset: Asset {
     
     var photosAsset: PHAsset
     
-    var identifier: String{
+    var identifier: String {
         return photosAsset.localIdentifier
     }
     
-    var width: CGFloat { return CGFloat(photosAsset.pixelWidth) }
-    var height: CGFloat { return CGFloat(photosAsset.pixelHeight) }
+    var size: CGSize { return CGSize(width: photosAsset.pixelWidth, height: photosAsset.pixelHeight) }
     var isLandscape: Bool {
-        return self.width > self.height
+        return self.size.width > self.size.height
     }
     
     init(_ asset: PHAsset) {

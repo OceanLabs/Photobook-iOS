@@ -362,6 +362,49 @@
             </objects>
             <point key="canvasLocation" x="250.72463768115944" y="-664.4021739130435"/>
         </scene>
+        <!--Item-->
+        <scene sceneID="aV4-px-0dI">
+            <objects>
+                <viewController id="8W6-D6-DdS" customClass="EditPageTestViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="uT3-ib-k9d">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view autoresizesSubviews="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uwc-yq-cvw">
+                                <rect key="frame" x="20" y="220.66666666666663" width="374" height="295"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="295" id="AmN-bL-Jzo"/>
+                                    <constraint firstAttribute="width" constant="374" id="RYr-vn-GIf"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <real key="value" value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="uwc-yq-cvw" firstAttribute="centerY" secondItem="uT3-ib-k9d" secondAttribute="centerY" id="Qsl-Z2-NUO"/>
+                            <constraint firstItem="uwc-yq-cvw" firstAttribute="centerX" secondItem="uT3-ib-k9d" secondAttribute="centerX" id="py7-sq-ZXk"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="B7r-gL-e1U"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="y1g-Is-byo"/>
+                    <connections>
+                        <outlet property="containerView" destination="uwc-yq-cvw" id="W2F-Oq-7vB"/>
+                        <outlet property="containerViewHeightConstraints" destination="AmN-bL-Jzo" id="Kdj-4p-k0J"/>
+                        <outlet property="containerViewWidthConstraints" destination="RYr-vn-GIf" id="qV1-TL-ekb"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yhy-Ko-8R5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="982.60869565217399" y="-665.21739130434787"/>
+        </scene>
         <!--Stories-->
         <scene sceneID="CWX-gk-uYw">
             <objects>
@@ -399,6 +442,7 @@
                         <segue destination="hhS-Lc-qF3" kind="relationship" relationship="viewControllers" id="RNg-LV-Iuv"/>
                         <segue destination="mcv-na-BVN" kind="relationship" relationship="viewControllers" id="MX7-xb-oNn"/>
                         <segue destination="KJy-BU-pka" kind="relationship" relationship="viewControllers" id="tKB-Nr-vte"/>
+                        <segue destination="8W6-D6-DdS" kind="relationship" relationship="viewControllers" id="T2b-ZL-OLt"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KS4-Ss-yFr" userLabel="First Responder" sceneMemberID="firstResponder"/>
