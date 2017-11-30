@@ -21,6 +21,8 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     var albumManager: AlbumManager?
     var album: Album! {
         didSet{
+            // We don't want a title for stories
+            guard album as? Story == nil else { return }
             self.title = album.localizedName
         }
     }
