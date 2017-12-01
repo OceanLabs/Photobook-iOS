@@ -44,7 +44,7 @@ class ProductLayoutAsset {
         // Calculate scale
         // Match largest dimension in the container. Rescale with other dimension if the aspect ratio is higher.
         // Ignore any previous translation or rotation
-        let scale = LayoutUtils.scaleFactorToFill(containerSize: containerSize, withSize: asset.size, atAngle: 0.0)
+        let scale = LayoutUtils.scaleToFill(containerSize: containerSize, withSize: asset.size, atAngle: 0.0)
         transform = CGAffineTransform.identity.scaledBy(x: scale, y: scale)
     }
 }
