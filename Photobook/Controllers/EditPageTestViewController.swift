@@ -82,34 +82,7 @@ class EditPageTestViewController: UIViewController {
         panGestureRecognizer.delegate = self
         view.addGestureRecognizer(panGestureRecognizer)
     }
-    
-    func transformUsingRecognizer(_ recognizer: UIGestureRecognizer, transform: CGAffineTransform) -> CGAffineTransform {
-        if let rotateRecognizer = recognizer as? UIRotationGestureRecognizer {
-            return transform.rotated(by: rotateRecognizer.rotation)
-        }
-        if let pinchRecognizer = recognizer as? UIPinchGestureRecognizer {
-            var scale = pinchRecognizer.scale
-            
-            // Makes it harder to scale down the image below 1.0
-            if scale < 1.0 {
-                scale = 1.4 - pow(0.4, scale)
-            }
-            return transform.scaledBy(x: scale, y: scale)
-        }
-        if let panRecognizer = recognizer as? UIPanGestureRecognizer {
-            let deltaX = panRecognizer.translation(in: containerView).x
-            let deltaY = panRecognizer.translation(in: containerView).y
-            
-            let angle = atan2(transform.b, transform.a)
-            
-            let tx = deltaX * cos(angle) + deltaY * sin(angle)
-            let ty = -deltaX * sin(angle) + deltaY * cos(angle)
-
-            return transform.translatedBy(x: tx, y: ty)
-        }
-        return transform
-    }
-    
+        
     @IBAction func processTransform(_ sender: Any) {
         let gesture = sender as! UIGestureRecognizer
         
@@ -119,7 +92,7 @@ class EditPageTestViewController: UIViewController {
             gestures.insert(gesture)
         case .changed:
             if var initial = initialTransform {
-                gestures.forEach({ (gesture) in initial = transformUsingRecognizer(gesture, transform: initial) })
+                gestures.forEach({ (gesture) in initial = LayoutUtils.adjustTransform(initial, withRecognizer: gesture, inParentView: containerView) })
                 imageView.transform = initial
             }
         case .ended:

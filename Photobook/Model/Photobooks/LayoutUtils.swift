@@ -57,6 +57,40 @@ class LayoutUtils {
         
         return newTransform
     }
+    
+    /// Amends a transform in response to a zooming, panning or rotating gesture
+    ///
+    /// - Parameters:
+    ///   - transform: The current transform
+    ///   - recognizer: The recognizer that responded to the user's gesture
+    ///   - parentView: The view to use as a coordinate space for the gesture
+    /// - Returns: A new adjusted transform that reflects the user's intent
+    static func adjustTransform(_ transform: CGAffineTransform, withRecognizer recognizer: UIGestureRecognizer, inParentView parentView: UIView) -> CGAffineTransform {
+        if let rotateRecognizer = recognizer as? UIRotationGestureRecognizer {
+            return transform.rotated(by: rotateRecognizer.rotation)
+        }
+        if let pinchRecognizer = recognizer as? UIPinchGestureRecognizer {
+            var scale = pinchRecognizer.scale
+            
+            // Makes it harder to scale down the image below 1.0
+            if scale < 1.0 {
+                scale = 1.4 - pow(0.4, scale)
+            }
+            return transform.scaledBy(x: scale, y: scale)
+        }
+        if let panRecognizer = recognizer as? UIPanGestureRecognizer {
+            let deltaX = panRecognizer.translation(in: parentView).x
+            let deltaY = panRecognizer.translation(in: parentView).y
+            
+            let angle = atan2(transform.b, transform.a)
+            
+            let tx = deltaX * cos(angle) + deltaY * sin(angle)
+            let ty = -deltaX * sin(angle) + deltaY * cos(angle)
+            
+            return transform.translatedBy(x: tx, y: ty)
+        }
+        return transform
+    }
 
     /// Returns the scale (where 1.0 is the View's original size) needed to fill the Container
     /// IMPORTANT: Assumes that both views are centred
