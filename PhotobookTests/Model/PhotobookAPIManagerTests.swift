@@ -93,9 +93,17 @@ class PhotobookAPIManagerTests: XCTestCase {
         ] as [String: AnyObject]
         
         let layout =
-            [ "id": 10, "category": 1, "name": "layout10", "imageUrl": "/images/10.png",
-              "imageLayoutBox": [ "dimensionsPercentages": [ "width": 0.1, "height": 0.1 ], "relativeStartPoint": [ "x": 0.0, "y": 0.01 ] ],
-              "textLayoutBox": [ "dimensionsPercentages": [ "width": 0.1, "height": 0.1 ], "relativeStartPoint": [ "x": 0.0, "y": 0.01 ] ]
+            [ "id": 10,
+              "category": "squareCentred",
+              "imageUrl": "/images/10.png",
+              "imageLayoutBox": [
+                "id": 1,
+                "rect": [ "x": 0.0, "y": 0.01, "width": 0.1, "height": 0.1 ]
+               ],
+              "textLayoutBox": [
+                "id": 2,
+                "rect" : [ "x": 0.0, "y": 0.01, "width": 0.1, "height": 0.1 ]
+                ]
             ] as [String: AnyObject]
         
         apiClient.response = [ "products": [ product ], "layouts": [ layout ]] as AnyObject

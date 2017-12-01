@@ -12,8 +12,8 @@ import XCTest
 class LayoutTests: XCTestCase {
     
     let validDictionary = ([
-        "id": 0,
-        "category": 1,
+        "id": 10,
+        "category": "squareCentred",
         "imageUrl": "/images/layout10.png",
         ]) as [String: AnyObject]
     
