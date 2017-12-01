@@ -80,39 +80,25 @@ class PhotobookAPIManagerTests: XCTestCase {
     }
     
     func testRequestPhotobookInfo_ShouldParseValidObjects() {
-        let product = [ "id": 10,
-          "name": "210 x 210",
-          "pageWidth": 1000,
-          "pageHeight": 400,
-          "coverWidth": 1030,
-          "coverHeight": 415,
-          "cost": [ "EUR": Decimal(10.00), "USD": Decimal(12.00), "GBP": Decimal(9.00) ] as [String: Decimal],
-          "costPerPage": [ "EUR": Decimal(1.00), "USD": Decimal(1.20), "GBP": Decimal(0.85) ] as [String: Decimal],
-          "coverLayouts": [ 10 ],
-          "layouts": [ 10 ]
-        ] as [String: AnyObject]
-        
-        let layout =
-            [ "id": 10,
-              "category": "squareCentred",
-              "imageUrl": "/images/10.png",
-              "imageLayoutBox": [
-                "id": 1,
-                "rect": [ "x": 0.0, "y": 0.01, "width": 0.1, "height": 0.1 ]
-               ],
-              "textLayoutBox": [
-                "id": 2,
-                "rect" : [ "x": 0.0, "y": 0.01, "width": 0.1, "height": 0.1 ]
-                ]
-            ] as [String: AnyObject]
-        
-        apiClient.response = [ "products": [ product ], "layouts": [ layout ]] as AnyObject
+        apiClient.response = self.json(file: "photobooks")
         
         photobookAPIManager.requestPhotobookInfo { (photobooks, layouts, error) in
             XCTAssertNil(error, "PhotobookInfo: Error should be nil with a valid response")
-            XCTAssertTrue((photobooks ?? []).count == 1, "PhotobookInfo: Photobooks should include one product")
-            XCTAssertTrue((layouts ?? []).count == 1, "PhotobookInfo: Photobooks should include one product")
+            XCTAssertTrue((photobooks ?? []).count == 2, "PhotobookInfo: Photobooks should include layouts products")
+            XCTAssertTrue((layouts ?? []).count == 26, "PhotobookInfo: Layouts should include 26 layouts")
         }
+    }
+    
+    func json(file: String) -> AnyObject? {
+        guard let path = Bundle.main.path(forResource: file, ofType: "json") else { return nil }
+        
+        do {
+            let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
+            return try JSONSerialization.jsonObject(with: data, options: .mutableLeaves) as AnyObject
+        } catch {
+            print("JSON: Could not parse file")
+        }
+        return nil
     }
 }
 

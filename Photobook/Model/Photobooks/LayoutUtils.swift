@@ -83,9 +83,10 @@ class LayoutUtils {
             let deltaY = panRecognizer.translation(in: parentView).y
             
             let angle = atan2(transform.b, transform.a)
+            let scale = sqrt(transform.a * transform.a + transform.c * transform.c)
             
-            let tx = deltaX * cos(angle) + deltaY * sin(angle)
-            let ty = -deltaX * sin(angle) + deltaY * cos(angle)
+            let tx = (deltaX * cos(angle) + deltaY * sin(angle)) / scale
+            let ty = (-deltaX * sin(angle) + deltaY * cos(angle)) / scale
             
             return transform.translatedBy(x: tx, y: ty)
         }
