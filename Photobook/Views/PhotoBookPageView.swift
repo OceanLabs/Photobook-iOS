@@ -8,13 +8,6 @@
 
 import UIKit
 
-enum PageLayout{
-    case centerLandscape
-    case centerPortrait
-    case centerSquare
-    case custom
-}
-
 class PhotoBookPageView: UIView {
     
     private struct Constants{
@@ -34,46 +27,24 @@ class PhotoBookPageView: UIView {
     weak var delegate: PhotoBookViewDelegate?
     var relativeFrame: CGRect?{
         didSet{
-            pageLayout = .custom
+            setupLayout()
         }
     }
     
-    
-    var pageLayout: PageLayout? {
-        didSet{
-            guard let pageLayout = pageLayout else { return }
-            
-            // Clear previous constraints
-            removeConstraints(constraints)
-            imageView.removeConstraints(imageView.constraints)
-            
-            switch pageLayout {
-            case .centerLandscape:
-                imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .width, relatedBy: .equal, toItem: imageView, attribute: .height, multiplier: Constants.landscapeAspectRatio, constant: 0))
-                imageView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-                imageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-                imageView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: Constants.centerRectangleRelativeSize).isActive = true
-            case .centerPortrait:
-                imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .width, relatedBy: .equal, toItem: imageView, attribute: .height, multiplier: Constants.portraitAspectRatio, constant: 0))
-                imageView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-                imageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-                imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: Constants.centerRectangleRelativeSize).isActive = true
-            case .centerSquare:
-                imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .width, relatedBy: .equal, toItem: imageView, attribute: .height, multiplier: 1, constant: 0))
-                imageView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-                imageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-                imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: Constants.centerSquareRelativeSize).isActive = true
-            case .custom:
-                guard let frame = relativeFrame else { break }
-                imageView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: frame.size.width).isActive = true
-                imageView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: frame.size.height).isActive = true
-                addConstraint(NSLayoutConstraint(item: imageView, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: frame.origin.x + frame.size.width, constant: 0))
-                addConstraint(NSLayoutConstraint(item: imageView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: frame.origin.y + frame.size.height, constant: 0))
-            }
-            
-            setNeedsLayout()
-            layoutIfNeeded()
-        }
+    func setupLayout() {
+        
+        // Clear previous constraints
+        removeConstraints(constraints)
+        imageView.removeConstraints(imageView.constraints)
+        
+        guard let frame = relativeFrame else { return }
+        imageView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: frame.size.width).isActive = true
+        imageView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: frame.size.height).isActive = true
+        addConstraint(NSLayoutConstraint(item: imageView, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: frame.origin.x + frame.size.width, constant: 0))
+        addConstraint(NSLayoutConstraint(item: imageView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: frame.origin.y + frame.size.height, constant: 0))
+        
+        setNeedsLayout()
+        layoutIfNeeded()
     }
     
     func setImage (image: UIImage?, contentMode: UIViewContentMode? = nil) {
@@ -82,18 +53,10 @@ class PhotoBookPageView: UIView {
             
             if contentMode == .center{
                 // Placeholder asset
-                pageLayout = .centerSquare
+                relativeFrame = CGRect(x: 0, y: 0, width: 1, height: 1)
             }
         }
         imageView.image = image
-        
-        guard pageLayout == nil, let image = image else { return }
-        // By default the aspect ratio of the image view will use the aspect ratio of the image.
-        let imageAspectRatio = image.size.width / image.size.height
-        if imageAspectRatio == 1{
-            pageLayout = .centerSquare
-        }
-        pageLayout = imageAspectRatio > 1 ? .centerLandscape : .centerPortrait
     }
     
     override init(frame: CGRect) {
