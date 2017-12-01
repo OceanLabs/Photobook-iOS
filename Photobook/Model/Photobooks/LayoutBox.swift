@@ -23,12 +23,11 @@ struct LayoutBox {
     static func parse(_ layoutBoxDictionary: [String: AnyObject]) -> LayoutBox? {
         guard
             let id = layoutBoxDictionary["id"] as? Int,
-            let dimensionsPercentages = layoutBoxDictionary["dimensionsPercentages"] as? [String: AnyObject],
-            let width = dimensionsPercentages["width"] as? CGFloat, width.isNormalised,
-            let height = dimensionsPercentages["height"] as? CGFloat, height.isNormalised,
-            let relativeStartPoint = layoutBoxDictionary["relativeStartPoint"] as? [String: AnyObject],
-            let x = relativeStartPoint["x"] as? CGFloat, x.isNormalised,
-            let y = relativeStartPoint["y"] as? CGFloat, y.isNormalised
+            let rectDictionary = layoutBoxDictionary["rect"] as? [String: AnyObject],
+            let x = rectDictionary["x"] as? CGFloat, x.isNormalised,
+            let y = rectDictionary["y"] as? CGFloat, y.isNormalised,
+            let width = rectDictionary["width"] as? CGFloat, width.isNormalised,
+            let height = rectDictionary["height"] as? CGFloat, height.isNormalised
             else { return nil }
         
         return LayoutBox(id: id, rect: CGRect(x: x, y: y, width: width, height: height))
