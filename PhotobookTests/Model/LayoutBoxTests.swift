@@ -13,8 +13,7 @@ class LayoutBoxTests: XCTestCase {
     
     let validDictionary = ([
         "id": 1,
-        "dimensionsPercentages": [ "width": 0.01, "height": 0.1],
-        "relativeStartPoint": [ "x": 0.1, "y": 0.2]
+        "rect": [ "x": 0.1, "y": 0.2, "width": 0.01, "height": 0.1 ]
         ]) as [String: AnyObject]
 
     func testParse_ShouldSucceedWithAValidDictionary() {
@@ -29,32 +28,39 @@ class LayoutBoxTests: XCTestCase {
         XCTAssertNil(layoutBox, "Parse: Should return nil if ID is missing")
     }
         
-    func testParse_ShouldReturnNifIfDimensionPercentagesIsMissing() {
+    func testParse_ShouldReturnNifIfRectIsMissing() {
         var layoutDictionary = validDictionary
-        layoutDictionary["dimensionsPercentages"] = nil
+        layoutDictionary["rect"] = nil
         let layoutBox = LayoutBox.parse(layoutDictionary)
-        XCTAssertNil(layoutBox, "Parse: Should return nil if dimensionPercentages is missing")
+        XCTAssertNil(layoutBox, "Parse: Should return nil if rect is missing")
     }
 
-    func testParse_ShouldReturnNifIfDimensionPercentagesIsNotNormalised() {
+    func testParse_ShouldReturnNifIfXIsNotNormalised() {
         var layoutDictionary = validDictionary
-        layoutDictionary["dimensionsPercentages"] = [ "width": 12.03, "height": 33 ] as AnyObject
+        layoutDictionary["rect"] = [ "x": 12.03, "y": 0.1, "width": 0.1, "height": 0.1 ] as AnyObject
         let layoutBox = LayoutBox.parse(layoutDictionary)
-        XCTAssertNil(layoutBox, "Parse: Should return nil if dimensionPercentages is not normalised")
+        XCTAssertNil(layoutBox, "Parse: Should return nil if X is not normalised")
     }
 
-    func testParse_ShouldReturnNifIfRelativeStartPointIsNotNormalised() {
+    func testParse_ShouldReturnNifIfYIsNotNormalised() {
         var layoutDictionary = validDictionary
-        layoutDictionary["relativeStartPoint"] = [ "x": 12.03, "y": 33 ] as AnyObject
+        layoutDictionary["rect"] = [ "x": 0.03, "y": 1.01, "width": 0.1, "height": 0.1 ] as AnyObject
         let layoutBox = LayoutBox.parse(layoutDictionary)
-        XCTAssertNil(layoutBox, "Parse: Should return nil if relativeStartPoint is not normalised")
+        XCTAssertNil(layoutBox, "Parse: Should return nil if Y is not normalised")
     }
 
-    func testParse_ShouldReturnNifIfRelativeStartPointIsMissing() {
+    func testParse_ShouldReturnNifIfWidthIsNotNormalised() {
         var layoutDictionary = validDictionary
-        layoutDictionary["relativeStartPoint"] = nil
+        layoutDictionary["rect"] = [ "x": 0.03, "y": 0.1, "width": 2.01, "height": 0.1 ] as AnyObject
         let layoutBox = LayoutBox.parse(layoutDictionary)
-        XCTAssertNil(layoutBox, "Parse: Should return nil if relativeStartPoint is missing")
+        XCTAssertNil(layoutBox, "Parse: Should return nil if Width is not normalised")
+    }
+
+    func testParse_ShouldReturnNifIfHeightIsNotNormalised() {
+        var layoutDictionary = validDictionary
+        layoutDictionary["rect"] = [ "x": 0.03, "y": 0.1, "width": 0.01, "height": 4.1 ] as AnyObject
+        let layoutBox = LayoutBox.parse(layoutDictionary)
+        XCTAssertNil(layoutBox, "Parse: Should return nil if Height is not normalised")
     }
 
 }
