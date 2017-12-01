@@ -10,7 +10,7 @@
 		"cost": { "EUR": 50.00, "USD": 54.99, "GBP": 51.99 },
 		"costPerPage": { "EUR": 1.00, "USD": 1.99, "GBP": 1.25 },
         "coverLayouts": [ 1, 2, 3, 4, 5 ],
-		"layouts": [ 6, 7, 8, 9, 10, 11, 12, 13, 14 ]
+		"layouts": [ 6, 7, 8, 9, 10, 11, 12, 13 ]
 	},
 	{
 		"id": 2,
@@ -21,16 +21,15 @@
 		"coverHeight": 36000,
 		"cost": { "EUR": 40.00, "USD": 44.99, "GBP": 41.99 },
 		"costPerPage": { "EUR": 0.96, "USD": 1.94, "GBP": 1.20 },
-        "coverLayouts": [ 15, 16, 17, 18, 19 ],
-		"layouts": [ 20, 21, 22, 23, 24, 25, 26, 27 ]
+        "coverLayouts": [ 14, 15, 16, 17, 18 ],
+		"layouts": [ 19, 20, 21, 22, 23, 24, 25, 26 ]
 	}
 ],
 "layouts": [
-// Covers Landscape 210x152
 	{
 		"id": 1,
         "category": "empty",
-		"imageUrl": "/images/layout1.png",
+		"imageUrl": "/images/layout1.png"
 	},	
 	{
 		"id": 2,
@@ -115,11 +114,10 @@
 				}
 			}		
 	},
-// Pages Landscape 210x152
 	{
-		"id": 7,
+		"id": 6,
         "category": "centredSquarePhotoText",
-		"imageUrl": "/images/layout7.png",
+		"imageUrl": "/images/layout6.png",
 		"imageLayoutBox": {
                 "id": 108,
 				"rect": {
@@ -140,9 +138,9 @@
 			}		
 	},
 	{
-		"id": 8,
+		"id": 7,
         "category": "centredLandscapePhotoText",
-		"imageUrl": "/images/layout8.png",
+		"imageUrl": "/images/layout7.png",
 		"imageLayoutBox": {
                 "id": 110,
 				"rect": {
@@ -163,9 +161,9 @@
 			}		
 	},
 	{
-		"id": 9,
+		"id": 8,
         "category": "centredPortraitPhotoText",
-		"imageUrl": "/images/layout9.png",
+		"imageUrl": "/images/layout8.png",
 		"imageLayoutBox": {
                 "id": 112,
 				"rect": {
@@ -186,9 +184,9 @@
 			}		
 	},
 	{
-		"id": 10,
+		"id": 9,
         "category": "textOnly",
-		"imageUrl": "/images/layout10.png",
+		"imageUrl": "/images/layout9.png",
         "textLayoutBox": {
                 "id": 114,
 				"rect": {
@@ -200,9 +198,9 @@
 			}		
 	},
 	{
-		"id": 11,
+		"id": 10,
         "category": "fullPagePhoto",
-		"imageUrl": "/images/layout11.png",
+		"imageUrl": "/images/layout10.png",
 		"imageLayoutBox": {
                 "id": 115,
 				"rect": {
@@ -214,9 +212,9 @@
 		}
 	},
 	{
-		"id": 12,
+		"id": 11,
         "category": "squarePhotoCentred",
-		"imageUrl": "/images/layout12.png",
+		"imageUrl": "/images/layout11.png",
 		"imageLayoutBox": {
                 "id": 116,
 				"rect": {
@@ -228,9 +226,9 @@
 		}
 	},
 	{
-		"id": 13,
+		"id": 12,
         "category": "portraitLeftRight",
-		"imageUrl": "/images/layout13.png",
+		"imageUrl": "/images/layout12.png",
 		"imageLayoutBox": {
                 "id": 117,
 				"rect": {
@@ -242,9 +240,9 @@
 		}
 	},
 	{
-		"id": 14,
+		"id": 13,
         "category": "portraitTopBottom",
-		"imageUrl": "/images/layout14.png",
+		"imageUrl": "/images/layout13.png",
 		"imageLayoutBox": {
                 "id": 118,
 				"rect": {
@@ -255,16 +253,15 @@
 				}
 		}
 	},
-// Covers Square 127x127
 	{
-		"id": 15,
+		"id": 14,
         "category": "empty",
-		"imageUrl": "/images/layout15.png"
+		"imageUrl": "/images/layout14.png"
 	},
 	{
-		"id": 16,
+		"id": 15,
         "category": "centredSquarePhotoText",
-		"imageUrl": "/images/layout16.png",
+		"imageUrl": "/images/layout15.png",
 		"imageLayoutBox": {
                 "id": 119,
 				"rect": {
@@ -285,9 +282,9 @@
 		}		
 	},
 	{
-		"id": 17,
+		"id": 16,
         "category": "centredLandscapePhotoText",
-		"imageUrl": "/images/layout17.png",
+		"imageUrl": "/images/layout16.png",
 		"imageLayoutBox": {
                 "id": 121,
 				"rect": {
@@ -308,9 +305,9 @@
 		}				
 	},
 	{
-		"id": 18,
+		"id": 17,
         "category": "centredPortraitPhotoText",
-		"imageUrl": "/images/layout18.png",
+		"imageUrl": "/images/layout17.png",
 		"imageLayoutBox": {
                 "id": 123,
 				"rect": {
@@ -331,9 +328,9 @@
 		}				
 	},
 	{
-		"id": 19,
+		"id": 18,
         "category": "bottomLeftText",
-		"imageUrl": "/images/layout19.png",
+		"imageUrl": "/images/layout18.png",
 		"textLayoutBox": {
                 "id": 125,
 				"rect": {
@@ -344,11 +341,10 @@
 				}
 		}				
 	},
-// Pages Square 127x127
 	{
-		"id": 20,
+		"id": 19,
         "category": "centredSquarePhotoText",
-		"imageUrl": "/images/layout20.png",
+		"imageUrl": "/images/layout19.png",
 		"imageLayoutBox": {
                 "id": 126,
 				"rect": {
@@ -369,9 +365,9 @@
 		}				
 	},
 	{
-		"id": 21,
+		"id": 20,
         "category": "centredLandscapePhotoText",
-		"imageUrl": "/images/layout21.png",
+		"imageUrl": "/images/layout20.png",
 		"imageLayoutBox": {
                 "id": 128,
 				"rect": {
@@ -392,9 +388,9 @@
 		}				
 	},
 	{
-		"id": 22,
+		"id": 21,
         "category": "centredPortraitPhotoText",
-		"imageUrl": "/images/layout22.png",
+		"imageUrl": "/images/layout21.png",
 		"imageLayoutBox": {
                 "id": 130,
 				"rect": {
@@ -415,9 +411,9 @@
 		}				
 	},
 	{
-		"id": 23,
+		"id": 22,
         "category": "textOnly",
-		"imageUrl": "/images/layout23.png",
+		"imageUrl": "/images/layout22.png",
 		"textLayoutBox": {
                 "id": 132,
 				"rect": {
@@ -429,9 +425,9 @@
 		}				
 	},
 	{
-		"id": 24,
+		"id": 23,
         "category": "fullPagePhoto",
-		"imageUrl": "/images/layout24.png",
+		"imageUrl": "/images/layout23.png",
 		"imageLayoutBox": {
                 "id": 133,
 				"rect": {
@@ -443,9 +439,9 @@
 		}
 	},
 	{
-		"id": 25,
+		"id": 24,
         "category": "squarePhotoCentred",
-		"imageUrl": "/images/layout25.png",
+		"imageUrl": "/images/layout24.png",
 		"imageLayoutBox": {
                 "id": 134,
 				"rect": {
@@ -457,9 +453,9 @@
 		}
 	},
 	{
-		"id": 26,
+		"id": 25,
         "category": "portraitLeftRight",
-		"imageUrl": "/images/layout26.png",
+		"imageUrl": "/images/layout25.png",
 		"imageLayoutBox": {
                 "id": 135,
 				"rect": {
@@ -471,9 +467,9 @@
 		}
 	},
 	{
-		"id": 27,
+		"id": 26,
         "category": "portraitTopBottom",
-		"imageUrl": "/images/layout27.png",
+		"imageUrl": "/images/layout26.png",
 		"imageLayoutBox": {
                 "id": 136,
 				"rect": {
