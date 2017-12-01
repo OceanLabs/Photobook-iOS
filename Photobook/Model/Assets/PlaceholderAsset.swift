@@ -9,6 +9,10 @@
 import UIKit
 
 class PlaceholderAsset: Asset {
+    var size: CGSize = .zero
+    
+    var isLandscape = false
+    
     var identifier: String = UUID().uuidString
     
     func uneditedImage(size: CGSize, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {

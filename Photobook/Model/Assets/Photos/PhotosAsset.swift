@@ -13,11 +13,16 @@ class PhotosAsset: Asset {
     
     var photosAsset: PHAsset
     
-    var identifier: String{
+    var identifier: String {
         return photosAsset.localIdentifier
     }
     
-    init(_ asset: PHAsset){
+    var size: CGSize { return CGSize(width: photosAsset.pixelWidth, height: photosAsset.pixelHeight) }
+    var isLandscape: Bool {
+        return self.size.width > self.size.height
+    }
+    
+    init(_ asset: PHAsset) {
         photosAsset = asset
     }
     
