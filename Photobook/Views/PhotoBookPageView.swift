@@ -25,7 +25,7 @@ class PhotoBookPageView: UIView {
     }
     var index: Int?
     weak var delegate: PhotoBookViewDelegate?
-    var relativeFrame: CGRect?{
+    var productLayout: ProductLayout?{
         didSet{
             setupLayout()
         }
@@ -37,11 +37,11 @@ class PhotoBookPageView: UIView {
         removeConstraints(constraints)
         imageView.removeConstraints(imageView.constraints)
         
-        guard let frame = relativeFrame else { return }
-        imageView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: frame.size.width).isActive = true
-        imageView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: frame.size.height).isActive = true
-        addConstraint(NSLayoutConstraint(item: imageView, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: frame.origin.x + frame.size.width, constant: 0))
-        addConstraint(NSLayoutConstraint(item: imageView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: frame.origin.y + frame.size.height, constant: 0))
+        guard let imageFrame = productLayout?.layout.imageLayoutBox?.rect else { return }
+        imageView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: imageFrame.size.width).isActive = true
+        imageView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: imageFrame.size.height).isActive = true
+        addConstraint(NSLayoutConstraint(item: imageView, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: imageFrame.origin.x + imageFrame.size.width, constant: 0))
+        addConstraint(NSLayoutConstraint(item: imageView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: imageFrame.origin.y + imageFrame.size.height, constant: 0))
         
         setNeedsLayout()
         layoutIfNeeded()
@@ -50,11 +50,6 @@ class PhotoBookPageView: UIView {
     func setImage (image: UIImage?, contentMode: UIViewContentMode? = nil) {
         if let contentMode = contentMode{
             imageView.contentMode = contentMode
-            
-            if contentMode == .center{
-                // Placeholder asset
-                relativeFrame = CGRect(x: 0, y: 0, width: 1, height: 1)
-            }
         }
         imageView.image = image
     }

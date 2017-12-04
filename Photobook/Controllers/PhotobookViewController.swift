@@ -13,8 +13,15 @@ class PhotoBookViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var ctaButtonContainer: UIView!
     var selectedAssetsManager: SelectedAssetsManager?
-    var photobook = ProductManager.shared.products?.first
     var titleLabel: UILabel?
+    var photobook: Photobook? {
+        if ProductManager.shared.product == nil{
+            guard let photobook = ProductManager.shared.products?.first, let assets = selectedAssetsManager?.assets else { return nil }
+            ProductManager.shared.setPhotobook(photobook, withAssets: assets)
+        }
+        
+        return ProductManager.shared.product
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,6 +111,11 @@ class PhotoBookViewController: UIViewController {
                         
             page.setImage(image: image, contentMode: (asset as? PlaceholderAsset) == nil ? .scaleAspectFill : .center)
         })
+        
+        let layoutAsset = ProductManager.shared.productLayouts[index]
+        layoutAsset.asset = asset
+        page.productLayout = layoutAsset
+        
     }
     
 }
