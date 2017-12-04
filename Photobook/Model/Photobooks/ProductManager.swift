@@ -112,7 +112,7 @@ class ProductManager {
             var newLayout = layouts.first { $0.category == pageLayout.layout.category }
             if newLayout == nil {
                 // Should not happen but to be safe, pick the first layout
-                newLayout = layouts.first!
+                newLayout = layouts.first
             }
             pageLayout.layout = newLayout
         }
