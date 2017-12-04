@@ -19,10 +19,7 @@ class PhotoBookViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if #available(iOS 11.0, *) {
-            navigationItem.largeTitleDisplayMode = .never
-        }
-        
+        navigationItem.largeTitleDisplayMode = .never
         setupTitleView()
         
         selectedAssetsManager?.preparePhotoBookAssets(minimumNumberOfAssets: 21) //TODO: Replace with product minimum
@@ -31,12 +28,8 @@ class PhotoBookViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        var bottomInset = ctaButtonContainer.frame.size.height
-        
-        if #available(iOS 11.0, *) {
-            bottomInset -= view.safeAreaInsets.bottom
-        }
-        
+        let bottomInset = ctaButtonContainer.frame.size.height - view.safeAreaInsets.bottom
+                
         collectionView.contentInset = UIEdgeInsets(top: collectionView.contentInset.top, left: collectionView.contentInset.left, bottom: bottomInset, right: collectionView.contentInset.right)
         collectionView.scrollIndicatorInsets = collectionView.contentInset
     }

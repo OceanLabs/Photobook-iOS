@@ -28,10 +28,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         super.viewDidLoad()
         
         resetCachedAssets()
-        
-        if #available(iOS 11.0, *) {
-            navigationItem.largeTitleDisplayMode = .never
-        }
+        navigationItem.largeTitleDisplayMode = .never
         
         if album.assets.count == 0{
             self.album.loadAssets(completionHandler: { (_) in

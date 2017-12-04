@@ -41,9 +41,7 @@ class PhotoBookNavigationBar: UINavigationBar {
     
     func setup() {
         barTintColor = .white
-        if #available(iOS 11.0, *) {
-            prefersLargeTitles = true
-        }
+        prefersLargeTitles = true
         
         setBackgroundImage(UIImage(color: .clear), for: .default)
         shadowImage = UIImage()
