@@ -76,6 +76,7 @@ class LayoutUtils {
     /// - Returns: A new adjusted transform that reflects the user's intent
     static func adjustTransform(_ transform: CGAffineTransform, withRecognizer recognizer: UIGestureRecognizer, inParentView parentView: UIView) -> CGAffineTransform {
         if let rotateRecognizer = recognizer as? UIRotationGestureRecognizer {
+
             return transform.rotated(by: rotateRecognizer.rotation)
         }
         if let pinchRecognizer = recognizer as? UIPinchGestureRecognizer {
@@ -99,6 +100,22 @@ class LayoutUtils {
             
             return transform.translatedBy(x: tx, y: ty)
         }
+        return transform
+    }
+    
+    
+    /// Amends a view's transform to use the centre of the parentView as reference.
+    /// This can be used after rotating the view around an arbitrary anchor point to take the transform back to a valid state.
+    ///
+    /// - Parameters:
+    ///   - transform: The current transform
+    ///   - parentView: The view to use as a coordinate space
+    ///   - point: The current center of the view
+    /// - Returns: A transform where the translation takes the centre of the parentView as reference
+    static func centerTransform(_ transform: CGAffineTransform, inParentView parentView: UIView, fromPoint point: CGPoint) -> CGAffineTransform {
+        var transform = transform
+        transform.tx += point.x - parentView.bounds.midX
+        transform.ty += point.y - parentView.bounds.midY
         return transform
     }
 

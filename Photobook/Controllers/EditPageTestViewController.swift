@@ -50,12 +50,10 @@ class EditPageTestViewController: UIViewController {
         }
     }
     
-    func setupTestImage() {
+    private func setupTestImage() {
         let image = UIImage(named: "LaunchImage")!
         imageView.image = image
         imageView.contentMode = .scaleAspectFit
-        imageView.layer.borderColor = UIColor.black.cgColor
-        imageView.layer.borderWidth = 2.0
 
         let testAsset = TestAsset()
         testAsset.image = image
@@ -69,7 +67,7 @@ class EditPageTestViewController: UIViewController {
         containerView.addSubview(imageView)
     }
     
-    func addGestures() {
+    private func addGestures() {
         let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(processTransform(_:)))
         pinchGestureRecognizer.delegate = self
         view.addGestureRecognizer(pinchGestureRecognizer)
@@ -82,6 +80,21 @@ class EditPageTestViewController: UIViewController {
         panGestureRecognizer.delegate = self
         view.addGestureRecognizer(panGestureRecognizer)
     }
+    
+    private func startedRotationGesture(_ gesture: UIRotationGestureRecognizer, inView view: UIView) {
+        let location = gesture.location(in: view)
+        let normalised = CGPoint(x: location.x / view.bounds.width, y: location.y / view.bounds.height)
+        setAnchorPoint(anchorPoint: normalised, view: view)
+    }
+    
+    private func setAnchorPoint(anchorPoint: CGPoint, view: UIView){
+        let oldOrigin = view.frame.origin
+        view.layer.anchorPoint = anchorPoint
+        let newOrigin = view.frame.origin
+
+        let transition = CGPoint(x: newOrigin.x - oldOrigin.x, y: newOrigin.y - oldOrigin.y)
+        view.center = CGPoint(x: view.center.x - transition.x, y: view.center.y - transition.y)
+    }
         
     @IBAction func processTransform(_ sender: Any) {
         let gesture = sender as! UIGestureRecognizer
@@ -90,6 +103,9 @@ class EditPageTestViewController: UIViewController {
         case .began:
             if gestures.count == 0 { initialTransform = imageView.transform }
             gestures.insert(gesture)
+            if let gesture = gesture as? UIRotationGestureRecognizer {
+                startedRotationGesture(gesture, inView: imageView)
+            }
         case .changed:
             if var initial = initialTransform {
                 gestures.forEach({ (gesture) in initial = LayoutUtils.adjustTransform(initial, withRecognizer: gesture, inParentView: containerView) })
@@ -98,11 +114,16 @@ class EditPageTestViewController: UIViewController {
         case .ended:
             gestures.remove(gesture)
             if gestures.count == 0 {
+                setAnchorPoint(anchorPoint: CGPoint(x: 0.5, y: 0.5), view: imageView)
+                
+                imageView.transform = LayoutUtils.centerTransform(imageView.transform, inParentView: containerView, fromPoint: imageView.center)
+                imageView.center = CGPoint(x: containerView.bounds.midX, y: containerView.bounds.midY)
+                
                 productLayoutAsset.transform = imageView.transform
                 productLayoutAsset.adjustTransform()
-                
+
                 // The keyframe animation prevents a known bug where the UI jumps when animating to a new transform
-                UIView.animateKeyframes(withDuration: 0.3, delay: 0.0, options: [ .calculationModePaced ], animations: {
+                UIView.animateKeyframes(withDuration: 0.2, delay: 0.0, options: [ .calculationModeCubicPaced ], animations: {
                     UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1.0, animations: {
                         self.imageView.transform = self.productLayoutAsset.transform
                     })
