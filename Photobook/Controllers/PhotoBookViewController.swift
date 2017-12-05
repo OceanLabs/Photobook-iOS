@@ -10,11 +10,16 @@ import UIKit
 
 class PhotoBookViewController: UIViewController {
 
-    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var collectionView: UICollectionView!{
+        didSet{
+            collectionView.dropDelegate = self
+        }
+    }
     @IBOutlet weak var ctaButtonContainer: UIView!
     var selectedAssetsManager: SelectedAssetsManager?
     var photobook: String = "210x210 mm" //TODO: Replace with photobook model
     var titleLabel: UILabel?
+    var dragItemIndex: Int?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -140,6 +145,8 @@ extension PhotoBookViewController: UICollectionViewDataSource{
                 let page = cell.bookView.page
                 else { return UICollectionViewCell() }
             
+            cell.contentView.isHidden = indexPath.item == dragItemIndex
+            
             let rightPage = (cell.bookView as? PhotoBookDoublePageView)?.rightPage
             
             rightPage?.delegate = self
@@ -157,6 +164,13 @@ extension PhotoBookViewController: UICollectionViewDataSource{
                 //TODO: Get indexes from Photobook model, because full width layouts means that we can't rely on indexPaths
                 page.index = indexPath.item * 2
                 rightPage?.index = indexPath.item * 2 + 1
+                
+                // Enable drag interaction
+                if cell.interactions.count == 0{
+                    let dragInteraction = UIDragInteraction(delegate: self)
+                    cell.addInteraction(dragInteraction)
+                    dragInteraction.isEnabled = true
+                }
             }
             
             load(page: page, size: imageSize)
@@ -172,7 +186,7 @@ extension PhotoBookViewController: UICollectionViewDataSource{
     
 }
 
-extension PhotoBookViewController: UICollectionViewDelegate{
+extension PhotoBookViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -181,6 +195,72 @@ extension PhotoBookViewController: UICollectionViewDelegate{
         navBar.effectView.alpha = scrollView.contentOffset.y <= -(UIApplication.shared.statusBarFrame.height + (navigationController?.navigationBar.frame.height ?? 0)) ? 0 : 1
     }
     
+}
+
+extension PhotoBookViewController: UIDragInteractionDelegate {
+    // MARK: - UIDragInteractionDelegate
+    
+    func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {
+        guard let cell = interaction.view as? UICollectionViewCell else { return [] }
+        let index = collectionView.indexPath(for: cell)?.item
+        session.localContext = index
+        dragItemIndex = index
+        
+        let itemProvider = NSItemProvider()
+        let dragItem = UIDragItem(itemProvider: itemProvider)
+        return [dragItem]
+    }
+    
+    func dragInteraction(_ interaction: UIDragInteraction, willAnimateLiftWith animator: UIDragAnimating, session: UIDragSession) {
+        guard let cell = interaction.view as? UICollectionViewCell else { return }
+        animator.addCompletion({(_) in
+            cell.contentView.isHidden = true
+        })
+    }
+    
+    func dragInteraction(_ interaction: UIDragInteraction, prefersFullSizePreviewsFor session: UIDragSession) -> Bool {
+        return true
+    }
+    
+    func dragInteraction(_ interaction: UIDragInteraction, sessionIsRestrictedToDraggingApplication session: UIDragSession) -> Bool {
+        return true
+    }
+    
+    func dragInteraction(_ interaction: UIDragInteraction, session: UIDragSession, didEndWith operation: UIDropOperation) {
+        dragItemIndex = nil
+        
+        guard let cell = interaction.view as? UICollectionViewCell else { return }
+        cell.contentView.isHidden = false
+    }
+    
+}
+
+extension PhotoBookViewController: UICollectionViewDropDelegate {
+    // MARK: - UICollectionViewDropDelegate
+    
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal{
+        
+        // Prevent dragging to the same indexPath and the next
+        guard
+            let index = session.localDragSession?.localContext as? Int,
+            let indexPath = destinationIndexPath,
+            index != indexPath.item,
+            index + 1 != indexPath.item
+            else { return UICollectionViewDropProposal(operation: .cancel)}
+        
+        // Disallow dragging to the first and last pages and cover.
+        guard
+            collectionView.cellForItem(at: indexPath) as? PhotoBookCoverCollectionViewCell == nil,
+            indexPath.item != 0,
+            indexPath.item != collectionView.numberOfItems(inSection: 1) - 1 // Last Page
+            else { return UICollectionViewDropProposal(operation: .forbidden) }
+        
+        return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        
+    }
 }
 
 extension PhotoBookViewController: PhotoBookViewDelegate{

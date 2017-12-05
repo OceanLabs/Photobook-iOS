@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="2XF-yO-9gv">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="2XF-yO-9gv">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -718,12 +717,18 @@
                                                 </view>
                                             </subviews>
                                         </view>
+                                        <color key="backgroundColor" red="0.85504835844039917" green="0.86273437738418579" blue="0.86274617910385132" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="3BP-mf-zJk" secondAttribute="trailing" id="HoZ-mJ-jIz"/>
                                             <constraint firstAttribute="bottom" secondItem="3BP-mf-zJk" secondAttribute="bottom" id="eTX-4U-tVl"/>
                                             <constraint firstItem="3BP-mf-zJk" firstAttribute="leading" secondItem="IdR-Q3-Knr" secondAttribute="leading" id="lJU-Ri-phV"/>
                                             <constraint firstItem="3BP-mf-zJk" firstAttribute="top" secondItem="IdR-Q3-Knr" secondAttribute="top" id="q1x-A4-c8n"/>
                                         </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                         <connections>
                                             <outlet property="bookView" destination="3BP-mf-zJk" id="S1n-MX-sFh"/>
                                         </connections>
