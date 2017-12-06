@@ -12,13 +12,19 @@ import Photos
 class PhotosAsset: Asset {
     
     var photosAsset: PHAsset
+    var photosAssetCollection: PHAssetCollection
     
     var identifier: String{
         return photosAsset.localIdentifier
     }
     
-    init(_ asset: PHAsset){
+    var albumIdentifier: String {
+        return photosAssetCollection.localIdentifier
+    }
+    
+    init(_ asset: PHAsset, collection:PHAssetCollection){
         photosAsset = asset
+        photosAssetCollection = collection
     }
     
     func uneditedImage(size: CGSize, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {

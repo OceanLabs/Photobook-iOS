@@ -31,10 +31,18 @@ class AlbumsCollectionViewController: UICollectionViewController {
         })
         
         // Setup the Image Collector Controller
-        imageCollectorController = ImageCollectorViewController.instance(fromStoryboardWithParent: self)
+        imageCollectorController = ImageCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
         
         calcAndSetCellSize()
         
+        //listen to asset manager
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameCleared, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -79,6 +87,10 @@ class AlbumsCollectionViewController: UICollectionViewController {
         self.navigationController?.pushViewController(assetPickerController, animated: true)
     }
     
+    @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
+        collectionView?.reloadData()
+    }
+    
 }
 
 extension AlbumsCollectionViewController{
@@ -114,7 +126,31 @@ extension AlbumsCollectionViewController{
     
         return cell
     }
+    
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        switch kind {
+        case UICollectionElementKindSectionFooter:
+            let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Footer", for: indexPath)
+            footerView.backgroundColor = UIColor.clear
+            return footerView
+            
+        default:
+            assert(false, "Unexpected element kind")
+        }
 
+    }
+    
+}
+
+extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        var height:CGFloat = 0
+        if let imageCollectorVC = imageCollectorController {
+            height = imageCollectorVC.viewHeight
+        }
+        return CGSize(width: collectionView.frame.size.width, height: height)
+    }
 }
 
 extension AlbumsCollectionViewController{

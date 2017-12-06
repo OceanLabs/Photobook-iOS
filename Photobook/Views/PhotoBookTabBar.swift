@@ -35,10 +35,10 @@ class PhotoBookTabBar: UITabBar {
     }
     
     func setup() {
-        let effectView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+        let effectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
         self.effectView = effectView
         
-        effectView.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
+        effectView.backgroundColor = UIColor(white: 1.0, alpha: 0.75)
         insertSubview(effectView, at: 0)
         backgroundImage = UIImage(color: .clear)
         shadowImage = UIImage()

@@ -16,6 +16,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     private let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
     private var previousPreheatRect = CGRect.zero
     var selectedAssetsManager: SelectedAssetsManager?
+    var imageCollectorController:ImageCollectorViewController?
     
     var albumManager: AlbumManager?
     var album: Album! {
@@ -48,6 +49,20 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         if traitCollection.forceTouchCapability == .available{
             registerForPreviewing(with: self, sourceView: collectionView!)
         }
+        
+        // Setup the Image Collector Controller
+        if let manager = selectedAssetsManager {
+            imageCollectorController = ImageCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: manager)
+        }
+        
+        //listen to asset manager
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameCleared, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -74,7 +89,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         activityIndicator.stopAnimating()
         
         // Hide "Select All" if current album has too many photos
-        if selectedAssetsManager?.willSelectingAllExceedTotalAllowed(for: album) ?? false{
+        if selectedAssetsManager?.willSelectingAllExceedTotalAllowed() ?? false {
             selectAllButton.title = nil
             return
         }
@@ -170,6 +185,10 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         }
     }
     
+    @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
+        collectionView?.reloadData()
+    }
+    
 }
 
 extension AssetPickerCollectionViewController {
@@ -185,7 +204,7 @@ extension AssetPickerCollectionViewController {
         let asset = album.assets[indexPath.item]
         cell.assetId = asset.identifier
         
-        let selected = selectedAssetsManager?.isSelected(asset, for: album) ?? false
+        let selected = selectedAssetsManager?.isSelected(asset) ?? false
         cell.selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
         
         let size = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize ?? .zero
@@ -197,6 +216,20 @@ extension AssetPickerCollectionViewController {
         return cell
     }
     
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        switch kind {
+        case UICollectionElementKindSectionFooter:
+            let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Footer", for: indexPath)
+            footerView.backgroundColor = UIColor.clear
+            return footerView
+            
+        default:
+            assert(false, "Unexpected element kind")
+        }
+        
+    }
+    
 }
 
 extension AssetPickerCollectionViewController {
@@ -206,13 +239,23 @@ extension AssetPickerCollectionViewController {
         let asset = album.assets[indexPath.item]
         
         // TODO: Use result to present alert that we have selected the maximum amount of photos
-        _ = selectedAssetsManager?.toggleSelected(asset, for: album)
+        _ = selectedAssetsManager?.toggleSelected(asset)
         
         collectionView.reloadItems(at: [indexPath])
         
         updateSelectAllButtonTitle()
     }
     
+}
+
+extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        var height:CGFloat = 0
+        if let imageCollectorVC = imageCollectorController {
+            height = imageCollectorVC.viewHeight
+        }
+        return CGSize(width: collectionView.frame.size.width, height: height)
+    }
 }
 
 extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegate{

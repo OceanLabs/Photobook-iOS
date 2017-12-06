@@ -7,45 +7,64 @@
 //
 
 import UIKit
+import Photos
 
 struct Constants {
     static let maximumAllowedPhotosForSelectAll = 70
 }
 
 class SelectedAssetsManager: NSObject {
+    
+    static let notificationUserObjectKeyAsset = "asset"
+    static let notificationUserObjectKeyIndex = "index"
+    static let notificationNameSelected = Notification.Name("SelectedAssetsManager.Selected")
+    static let notificationNameDeselected = Notification.Name("SelectedAssetsManager.Deselected")
+    static let notificationNameCleared = Notification.Name("SelectedAssetsManager.Cleared")
 
-    private var selectedAssets = [String:[Asset]]()
+    private(set) var selectedAssets = [Asset]()
+    
+    override init() {
+        super.init()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    private func areAssetsEqual(_ asset1:Asset, _ asset2:Asset) -> Bool {
+        return asset1.identifier == asset2.identifier && asset1.albumIdentifier == asset2.albumIdentifier
+    }
     
     private func selectedAssets(for album: Album) -> [Asset] {
-        let assets = selectedAssets[album.identifier]
-        if assets == nil{
-            selectedAssets[album.identifier] = [Asset]()
+        return selectedAssets.filter { (a) -> Bool in
+            return a.albumIdentifier == album.identifier
+        }
+    }
+    
+    private func select(_ asset:Asset) {
+        if selectedAssets.index(where: { (selectedAsset) in
+            return areAssetsEqual(selectedAsset, asset)
+        }) != nil {
+            //already added
+            return
         }
         
-        return selectedAssets[album.identifier]!
+        selectedAssets.append(asset)
+        NotificationCenter.default.post(name: SelectedAssetsManager.notificationNameSelected, object: nil, userInfo: [SelectedAssetsManager.notificationUserObjectKeyAsset:asset, SelectedAssetsManager.notificationUserObjectKeyIndex:selectedAssets.count-1])
     }
     
-    private func select(_ asset:Asset, for album:Album) {
-        var selectedAssetsForAlbum = selectedAssets(for: album)
-        selectedAssetsForAlbum.append(asset)
-        selectedAssets[album.identifier] = selectedAssetsForAlbum
-    }
-    
-    private func deselect(_ asset:Asset, for album:Album) {
-        var selectedAssetsForAlbum = selectedAssets(for: album)
-        
-        if let index = selectedAssetsForAlbum.index(where: { (selectedAsset) in
-            return selectedAsset.identifier == asset.identifier
-        }){
-            selectedAssetsForAlbum.remove(at: index)
+    func deselect(_ asset:Asset) {
+        if let index = selectedAssets.index(where: { (selectedAsset) in
+            return areAssetsEqual(selectedAsset, asset)
+        }) {
+            selectedAssets.remove(at: index)
+            NotificationCenter.default.post(name: SelectedAssetsManager.notificationNameDeselected, object: nil, userInfo: [SelectedAssetsManager.notificationUserObjectKeyAsset:asset, SelectedAssetsManager.notificationUserObjectKeyIndex:index])
         }
-        
-        selectedAssets[album.identifier] = selectedAssetsForAlbum
     }
     
-    func isSelected(_ asset:Asset, for album:Album) -> Bool {
-        let index = selectedAssets(for: album).index(where: { (selectedAsset) in
-            return selectedAsset.identifier == asset.identifier
+    func isSelected(_ asset:Asset) -> Bool {
+        let index = selectedAssets.index(where: { (selectedAsset) in
+            return areAssetsEqual(selectedAsset, asset)
         })
         
         return index != nil
@@ -58,12 +77,12 @@ class SelectedAssetsManager: NSObject {
     ///   - asset: The asset to toggle
     ///   - album: The album the asset is in
     /// - Returns: False if the asset is not able to be selected because of reaching the limit
-    func toggleSelected(_ asset:Asset, for album:Album) -> Bool {
-        if isSelected(asset, for: album){
-            deselect(asset, for: album)
+    func toggleSelected(_ asset:Asset) -> Bool {
+        if isSelected(asset){
+            deselect(asset)
         }
-        else{
-            select(asset, for: album)
+        else {
+            select(asset)
         }
         
         //TODO: Check if we've reached the limit
@@ -74,31 +93,30 @@ class SelectedAssetsManager: NSObject {
         return selectedAssets(for: album).count
     }
     
-    func willSelectingAllExceedTotalAllowed(for album: Album) -> Bool {
-        var count = 0
-        for selectedAssetsInAlbum in selectedAssets{
-            if selectedAssetsInAlbum.key == album.identifier { continue } //Skip counting selected in album
-            count += selectedAssetsInAlbum.value.count
-        }
-        
-        return count + album.assets.count > Constants.maximumAllowedPhotosForSelectAll
+    func willSelectingAllExceedTotalAllowed() -> Bool {
+        return selectedAssets.count > Constants.maximumAllowedPhotosForSelectAll
     }
     
     
     func selectAllAssets(for album: Album){
         for asset in album.assets{
-            if !isSelected(asset, for: album){
-                select(asset, for: album)
+            if !isSelected(asset) {
+                select(asset)
             }
         }
     }
     
     func deselectAllAssets(for album: Album){
         for asset in album.assets{
-            if !isSelected(asset, for: album){
-                select(asset, for: album)
+            if !isSelected(asset) {
+                select(asset)
             }
         }
+    }
+    
+    func deselectAllAssets(){
+        selectedAssets = [Asset]()
+        NotificationCenter.default.post(name: SelectedAssetsManager.notificationNameCleared, object: nil)
     }
     
 }
