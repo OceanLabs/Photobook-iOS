@@ -30,6 +30,9 @@ class AlbumsCollectionViewController: UICollectionViewController {
             welf?.collectionView?.reloadData()
         })
         
+        // Setup the Image Collector Controller
+        imageCollectorController = ImageCollectorViewController.instance(fromStoryboardWithParent: self)
+        
         calcAndSetCellSize()
         
     }
