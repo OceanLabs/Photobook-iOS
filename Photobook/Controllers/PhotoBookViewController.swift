@@ -171,8 +171,7 @@ extension PhotoBookViewController: UICollectionViewDataSource{
                     let dragInteraction = UIDragInteraction(delegate: self)
                     cell.bookView.addInteraction(dragInteraction)
                     dragInteraction.isEnabled = true
-                    
-                    cell.contentView.clipsToBounds = false
+                    cell.clipsToBounds = false
                 }
             }
             
