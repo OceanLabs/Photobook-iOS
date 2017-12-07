@@ -27,7 +27,7 @@ class ImageCollectorViewController: UIViewController {
     @IBOutlet weak var useTheseCountView: UILabel!
     @IBOutlet weak var deleteDoneButton: UIButton!
     
-    private var longPressGestureRecognizer: UILongPressGestureRecognizer?
+    @IBOutlet var longPressGestureRecognizer: UILongPressGestureRecognizer!
     
     private var selectedAssetsManager:SelectedAssetsManager?
     private var assets:[Asset] {
@@ -48,7 +48,7 @@ class ImageCollectorViewController: UIViewController {
                 deleteDoneButton.isHidden = !isDeletingEnabled
                 useTheseButtonContainer.isHidden = isDeletingEnabled
                 pickMoreLabel.isHidden = isDeletingEnabled
-                longPressGestureRecognizer?.isEnabled = !isDeletingEnabled
+                longPressGestureRecognizer.isEnabled = !isDeletingEnabled
             }
         }
     }
@@ -56,9 +56,10 @@ class ImageCollectorViewController: UIViewController {
     var isHidden:Bool = false {
         didSet {
             if oldValue != isHidden {
-                viewHeight = isHidden ? 0 : viewHeightDefault
+                viewHeight = isHidden    ? 0 : viewHeightDefault
                 let duration : TimeInterval = isHideShowAnimated ? 0.2 : 0
-                UIView.animate(withDuration: duration, delay: 0, options: [UIViewAnimationOptions.curveEaseOut], animations: {
+                let options = isHidden ? UIViewAnimationOptions.curveEaseIn : UIViewAnimationOptions.curveEaseOut
+                UIView.animate(withDuration: duration, delay: 0, options: options, animations: {
                     self.topContainerView.isHidden = self.isHidden
                     self.imageCollectionView.isHidden = self.isHidden
                     self.adaptToParent()
@@ -109,6 +110,8 @@ class ImageCollectorViewController: UIViewController {
         
         isHideShowAnimated = false //disable animation for this hidden state change
         isHidden = true
+        
+        imageCollectionView.contentInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
         
         //listen to asset manager
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerAddedAsset(_:)), name: SelectedAssetsManager.notificationNameSelected, object: nil)
@@ -223,7 +226,9 @@ class ImageCollectorViewController: UIViewController {
                 pickMoreLabel.text = String(format: pickMoreText, "\(requiredPhotosCount-assets.count)")
             }
         }
-        
+    }
+    
+    private func moveToCollectionViewEnd() {
         if assets.count > 0 {
             let indexPath = IndexPath(item: assets.count-1, section: 0)
             imageCollectionView.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.right, animated: true)
@@ -242,13 +247,29 @@ class ImageCollectorViewController: UIViewController {
             }
             imageCollectionView.reloadItems(at: indexPaths)
             adaptToNewAssetCount()
+            moveToCollectionViewEnd()
         }
     }
     
     @objc private func selectedAssetManagerDeletedAsset(_ notification: NSNotification) {
         if let index = notification.userInfo?[SelectedAssetsManager.notificationUserObjectKeyIndex] as? Int {
-            imageCollectionView.deleteItems(at: [IndexPath(row: index, section: 0)])
-            adaptToNewAssetCount()
+            
+            /* custom animation that caused crashes when deleting multiple items quickly
+             let cell = imageCollectionView.cellForItem(at: IndexPath(row: index, section: 0))
+            
+            let animationDuration:TimeInterval = 0.1
+            UIView.animate(withDuration: animationDuration, animations: {
+                cell?.alpha = 0
+            }, completion: { (done) in
+                self.imageCollectionView.performBatchUpdates({
+                    self.imageCollectionView.deleteItems(at: [IndexPath(row: index, section: 0)])
+                    self.adaptToNewAssetCount()
+                }, completion: nil)
+            })*/
+            
+            self.imageCollectionView.deleteItems(at: [IndexPath(row: index, section: 0)])
+            self.adaptToNewAssetCount()
+            
         }
     }
     
@@ -256,7 +277,6 @@ class ImageCollectorViewController: UIViewController {
         imageCollectionView.reloadData()
         adaptToNewAssetCount()
     }
-
 }
 
 //MARK: - Collection View
@@ -275,7 +295,6 @@ extension ImageCollectorViewController: UICollectionViewDataSource, UICollection
             cell.imageView.image = image
         })
         cell.isDeletingEnabled = isDeletingEnabled
-        print("cell deleting enabled: \(cell.isDeletingEnabled)")
         
         return cell
     }

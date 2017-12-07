@@ -228,6 +228,7 @@ extension AssetPickerCollectionViewController {
             assert(false, "Unexpected element kind")
         }
         
+        return UICollectionReusableView(frame: CGRect())
     }
     
 }

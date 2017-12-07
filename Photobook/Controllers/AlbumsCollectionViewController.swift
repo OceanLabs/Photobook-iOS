@@ -138,6 +138,8 @@ extension AlbumsCollectionViewController{
         default:
             assert(false, "Unexpected element kind")
         }
+        
+        return UICollectionReusableView(frame: CGRect())
 
     }
     

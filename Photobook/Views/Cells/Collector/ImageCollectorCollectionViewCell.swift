@@ -43,6 +43,7 @@ class ImageCollectorCollectionViewCell: UICollectionViewCell {
     }
     
     @IBAction func startWobbleAnimation() {
+        
         let animation = CAKeyframeAnimation(keyPath: "transform")
         let wobbleAngle:CGFloat = 0.05
         let valLeft = NSValue(caTransform3D: CATransform3DMakeRotation(wobbleAngle, 0, 0, 1))
@@ -54,7 +55,9 @@ class ImageCollectorCollectionViewCell: UICollectionViewCell {
         animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
         
         containerView.layer.removeAllAnimations()
-        containerView.layer.add(animation, forKey: "transform")
+        DispatchQueue.main.asyncAfter(deadline: .now() + Double(Float.random(min: 0, max: 0.1))) {
+            self.containerView.layer.add(animation, forKey: "transform")
+        }
         
         isWobbling = true
     }

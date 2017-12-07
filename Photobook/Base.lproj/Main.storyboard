@@ -508,15 +508,15 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="64" id="e4R-Ob-pnm"/>
                                         </constraints>
-                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="6" minimumInteritemSpacing="6" id="fVE-p9-zUQ">
+                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="6" minimumInteritemSpacing="6" id="bOf-MA-wkw">
                                             <size key="itemSize" width="64" height="64"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                            <inset key="sectionInset" minX="12" minY="0.0" maxX="12" maxY="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
                                             <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ImageCollectorCollectionViewCell" id="6nK-PW-pTc" customClass="ImageCollectorCollectionViewCell" customModule="Photobook" customModuleProvider="target">
-                                                <rect key="frame" x="12" y="0.0" width="64" height="64"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                                     <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
@@ -638,6 +638,7 @@
                         <outlet property="clearButton" destination="Ry0-H3-zfR" id="AiY-nx-diR"/>
                         <outlet property="deleteDoneButton" destination="prZ-l5-jwQ" id="c8O-dA-2qg"/>
                         <outlet property="imageCollectionView" destination="Vnf-n4-Ta6" id="iLl-CD-nQh"/>
+                        <outlet property="longPressGestureRecognizer" destination="yMP-3o-IpA" id="Id6-Q8-jgT"/>
                         <outlet property="pickMoreLabel" destination="CFW-ge-S2V" id="G3S-pC-bSZ"/>
                         <outlet property="topContainerView" destination="xdb-Md-YZB" id="Wu6-43-cIr"/>
                         <outlet property="useTheseButtonContainer" destination="dWa-a1-3BW" id="Ply-Bx-jLW"/>
