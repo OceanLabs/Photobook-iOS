@@ -19,7 +19,7 @@ class PhotoBookViewController: UIViewController {
     var selectedAssetsManager: SelectedAssetsManager?
     var photobook: String = "210x210 mm" //TODO: Replace with photobook model
     var titleLabel: UILabel?
-    var dragItemIndex: Int?
+    private var dragItemIndexPath: IndexPath?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -145,7 +145,8 @@ extension PhotoBookViewController: UICollectionViewDataSource{
                 let page = cell.bookView.page
                 else { return UICollectionViewCell() }
             
-            cell.contentView.isHidden = indexPath.item == dragItemIndex
+            cell.bookView.indexPath = indexPath
+            cell.obscuringView.isHidden = indexPath != dragItemIndexPath
             
             let rightPage = (cell.bookView as? PhotoBookDoublePageView)?.rightPage
             
@@ -166,10 +167,12 @@ extension PhotoBookViewController: UICollectionViewDataSource{
                 rightPage?.index = indexPath.item * 2 + 1
                 
                 // Enable drag interaction
-                if cell.interactions.count == 0{
+                if cell.bookView.interactions.count == 0{
                     let dragInteraction = UIDragInteraction(delegate: self)
-                    cell.addInteraction(dragInteraction)
+                    cell.bookView.addInteraction(dragInteraction)
                     dragInteraction.isEnabled = true
+                    
+                    cell.contentView.clipsToBounds = false
                 }
             }
             
@@ -201,10 +204,11 @@ extension PhotoBookViewController: UIDragInteractionDelegate {
     // MARK: - UIDragInteractionDelegate
     
     func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {
-        guard let cell = interaction.view as? UICollectionViewCell else { return [] }
-        let index = collectionView.indexPath(for: cell)?.item
-        session.localContext = index
-        dragItemIndex = index
+        guard let bookView = interaction.view as? PhotoBookView,
+            let indexPath = bookView.indexPath
+            else { return [] }
+        
+        dragItemIndexPath = indexPath
         
         let itemProvider = NSItemProvider()
         let dragItem = UIDragItem(itemProvider: itemProvider)
@@ -212,9 +216,15 @@ extension PhotoBookViewController: UIDragInteractionDelegate {
     }
     
     func dragInteraction(_ interaction: UIDragInteraction, willAnimateLiftWith animator: UIDragAnimating, session: UIDragSession) {
-        guard let cell = interaction.view as? UICollectionViewCell else { return }
-        animator.addCompletion({(_) in
-            cell.contentView.isHidden = true
+        guard let bookView = interaction.view as? PhotoBookView,
+            let indexPath = bookView.indexPath,
+            let cell = collectionView.cellForItem(at: indexPath) as? PhotoBookCollectionViewCell
+            else { return }
+        
+        animator.addCompletion({(position) in
+            if position == .end{
+                cell.obscuringView.isHidden = false
+            }
         })
     }
     
@@ -226,11 +236,28 @@ extension PhotoBookViewController: UIDragInteractionDelegate {
         return true
     }
     
-    func dragInteraction(_ interaction: UIDragInteraction, session: UIDragSession, didEndWith operation: UIDropOperation) {
-        dragItemIndex = nil
+    func dragInteraction(_ interaction: UIDragInteraction, previewForCancelling item: UIDragItem, withDefault defaultPreview: UITargetedDragPreview) -> UITargetedDragPreview? {
+        guard let view = interaction.view else { return nil }
+        return UITargetedDragPreview(view: view)
+    }
+    
+    func dragInteraction(_ interaction: UIDragInteraction, item: UIDragItem, willAnimateCancelWith animator: UIDragAnimating) {
+        guard let indexPath = dragItemIndexPath,
+            let cell = collectionView.cellForItem(at: indexPath) as? PhotoBookCollectionViewCell else { return }
         
-        guard let cell = interaction.view as? UICollectionViewCell else { return }
-        cell.contentView.isHidden = false
+        animator.addCompletion({(_) in
+            cell.obscuringView.isHidden = true
+        })
+    }
+    
+    func dragInteraction(_ interaction: UIDragInteraction, session: UIDragSession, didEndWith operation: UIDropOperation) {
+        dragItemIndexPath = nil
+
+        guard let bookView = interaction.view as? PhotoBookView,
+            let indexPath = bookView.indexPath,
+            let cell = collectionView.cellForItem(at: indexPath) as? PhotoBookCollectionViewCell else { return }
+        
+        cell.obscuringView.isHidden = true
     }
     
 }

@@ -11,4 +11,5 @@ import UIKit
 class PhotoBookCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var bookView: PhotoBookView!
+    @IBOutlet weak var obscuringView: UIView!
 }

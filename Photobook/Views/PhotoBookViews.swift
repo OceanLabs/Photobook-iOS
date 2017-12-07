@@ -14,6 +14,7 @@ protocol PhotoBookViewDelegate: class{
 
 class PhotoBookView: UIView {
     
+    var indexPath: IndexPath?
     @IBOutlet var contentView: UIView!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var page: PhotoBookPageView! {

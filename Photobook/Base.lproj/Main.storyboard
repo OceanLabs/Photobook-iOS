@@ -655,7 +655,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TBG-9p-ivA">
+                            <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TBG-9p-ivA">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="MEd-aD-PzO">
@@ -705,7 +705,7 @@
                                             <outlet property="spineView" destination="2kp-TH-DwS" id="qN2-9P-1th"/>
                                         </connections>
                                     </collectionViewCell>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="doublePageCell" id="IdR-Q3-Knr" customClass="PhotoBookCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="doublePageCell" id="IdR-Q3-Knr" customClass="PhotoBookCollectionViewCell" customModule="Photobook" customModuleProvider="target">
                                         <rect key="frame" x="27.666666666666668" y="227" width="359" height="207"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -715,14 +715,21 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3BP-mf-zJk" customClass="PhotoBookDoublePageView" customModule="Photobook" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="359" height="207"/>
                                                 </view>
+                                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xma-jv-CAu">
+                                                    <rect key="frame" x="0.0" y="0.0" width="359" height="207"/>
+                                                    <color key="backgroundColor" red="0.85504835840000004" green="0.86273437740000003" blue="0.86274617909999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                </view>
                                             </subviews>
                                         </view>
-                                        <color key="backgroundColor" red="0.85504835844039917" green="0.86273437738418579" blue="0.86274617910385132" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
+                                            <constraint firstItem="xma-jv-CAu" firstAttribute="leading" secondItem="IdR-Q3-Knr" secondAttribute="leading" id="GNX-DA-QDp"/>
                                             <constraint firstAttribute="trailing" secondItem="3BP-mf-zJk" secondAttribute="trailing" id="HoZ-mJ-jIz"/>
+                                            <constraint firstAttribute="bottom" secondItem="xma-jv-CAu" secondAttribute="bottom" id="Yhb-C9-0PC"/>
+                                            <constraint firstItem="xma-jv-CAu" firstAttribute="top" secondItem="IdR-Q3-Knr" secondAttribute="top" id="aPw-1a-Yeq"/>
                                             <constraint firstAttribute="bottom" secondItem="3BP-mf-zJk" secondAttribute="bottom" id="eTX-4U-tVl"/>
                                             <constraint firstItem="3BP-mf-zJk" firstAttribute="leading" secondItem="IdR-Q3-Knr" secondAttribute="leading" id="lJU-Ri-phV"/>
                                             <constraint firstItem="3BP-mf-zJk" firstAttribute="top" secondItem="IdR-Q3-Knr" secondAttribute="top" id="q1x-A4-c8n"/>
+                                            <constraint firstAttribute="trailing" secondItem="xma-jv-CAu" secondAttribute="trailing" id="s6j-u8-K3l"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -731,6 +738,7 @@
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <outlet property="bookView" destination="3BP-mf-zJk" id="S1n-MX-sFh"/>
+                                            <outlet property="obscuringView" destination="xma-jv-CAu" id="HeI-uS-vaE"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
