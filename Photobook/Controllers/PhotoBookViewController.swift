@@ -9,7 +9,18 @@
 import UIKit
 
 class PhotoBookViewController: UIViewController {
+    
+    private struct Constants {
+        static let rearrageScale: CGFloat = 0.8
+    }
+    private var reverseRearrageScale: CGFloat {
+        return 1 + (1 - Constants.rearrageScale) / Constants.rearrageScale
+    }
 
+    @IBOutlet weak var collectionViewTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var collectionViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var collectionViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var collectionViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var collectionView: UICollectionView!{
         didSet{
             collectionView.dropDelegate = self
@@ -20,6 +31,25 @@ class PhotoBookViewController: UIViewController {
     var photobook: String = "210x210 mm" //TODO: Replace with photobook model
     var titleLabel: UILabel?
     private var dragItemIndexPath: IndexPath?
+    private var isRearranging = false {
+        didSet{
+            if isRearranging{
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.collectionView.transform = CGAffineTransform(translationX: 0, y: -self.collectionView.frame.size.height * (1.0-Constants.rearrageScale)/2.0).scaledBy(x: 0.8, y: 0.8)
+                    
+                    self.view.setNeedsLayout()
+                    self.view.layoutIfNeeded()
+                })
+            }
+            else{
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.collectionView.transform = .identity
+                    self.view.setNeedsLayout()
+                    self.view.layoutIfNeeded()
+                })
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,14 +58,18 @@ class PhotoBookViewController: UIViewController {
         setupTitleView()
         
         selectedAssetsManager?.preparePhotoBookAssets(minimumNumberOfAssets: 21) //TODO: Replace with product minimum
+        
+        collectionViewBottomConstraint.constant = -self.view.frame.height * (reverseRearrageScale - 1)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        let bottomInset = ctaButtonContainer.frame.size.height - view.safeAreaInsets.bottom
+        let bottomInset = isRearranging ? (ctaButtonContainer.frame.size.height - view.safeAreaInsets.bottom) * reverseRearrageScale : ctaButtonContainer.frame.size.height - view.safeAreaInsets.bottom - collectionViewBottomConstraint.constant
+        
+        let topInset = isRearranging ? (navigationController?.navigationBar.frame.maxY ?? 0) * (1 - Constants.rearrageScale) : 0
                 
-        collectionView.contentInset = UIEdgeInsets(top: collectionView.contentInset.top, left: collectionView.contentInset.left, bottom: bottomInset, right: collectionView.contentInset.right)
+        collectionView.contentInset = UIEdgeInsets(top: topInset, left: collectionView.contentInset.left, bottom: bottomInset, right: collectionView.contentInset.right)
         collectionView.scrollIndicatorInsets = collectionView.contentInset
     }
     
@@ -73,8 +107,7 @@ class PhotoBookViewController: UIViewController {
     }
 
     @IBAction func didTapRearrange(_ sender: UIBarButtonItem) {
-        //TODO: Enter rearrange mode
-        print("Tapped Rearrange")
+        isRearranging = !isRearranging
     }
     
     @IBAction func didTapCheckout(_ sender: UIButton) {
@@ -194,7 +227,7 @@ extension PhotoBookViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let navBar = navigationController?.navigationBar as? PhotoBookNavigationBar else { return }
         
-        navBar.effectView.alpha = scrollView.contentOffset.y <= -(UIApplication.shared.statusBarFrame.height + (navigationController?.navigationBar.frame.height ?? 0)) ? 0 : 1
+        navBar.effectView.alpha = scrollView.contentOffset.y <= -(navigationController?.navigationBar.frame.maxY ?? 0)  ? 0 : 1
     }
     
 }

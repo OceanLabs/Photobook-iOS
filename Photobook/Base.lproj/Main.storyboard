@@ -655,7 +655,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TBG-9p-ivA">
+                            <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TBG-9p-ivA">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="MEd-aD-PzO">
@@ -800,6 +800,10 @@
                     </navigationItem>
                     <connections>
                         <outlet property="collectionView" destination="TBG-9p-ivA" id="kYP-Tq-eWB"/>
+                        <outlet property="collectionViewBottomConstraint" destination="NOb-rL-Lvt" id="4ZO-T9-d17"/>
+                        <outlet property="collectionViewLeadingConstraint" destination="XjE-e5-L0D" id="Q5L-TT-Oq7"/>
+                        <outlet property="collectionViewTopConstraint" destination="gZc-W1-xMM" id="BiB-dw-zEN"/>
+                        <outlet property="collectionViewTrailingConstraint" destination="Hji-0y-uul" id="JI1-Tf-r5q"/>
                         <outlet property="ctaButtonContainer" destination="9PF-H7-3d7" id="hMk-Zi-KJ0"/>
                     </connections>
                 </viewController>
