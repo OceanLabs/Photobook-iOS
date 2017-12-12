@@ -15,8 +15,8 @@ struct Constants {
 
 class SelectedAssetsManager: NSObject {
     
-    static let notificationUserObjectKeyAsset = "asset"
-    static let notificationUserObjectKeyIndex = "index"
+    static let notificationUserObjectKeyAssets = "assets"
+    static let notificationUserObjectKeyIndices = "indices"
     static let notificationNameSelected = Notification.Name("SelectedAssetsManager.Selected")
     static let notificationNameDeselected = Notification.Name("SelectedAssetsManager.Deselected")
     static let notificationNameCleared = Notification.Name("SelectedAssetsManager.Cleared")
@@ -31,40 +31,64 @@ class SelectedAssetsManager: NSObject {
         NotificationCenter.default.removeObserver(self)
     }
     
-    private func areAssetsEqual(_ asset1:Asset, _ asset2:Asset) -> Bool {
-        return asset1.identifier == asset2.identifier && asset1.albumIdentifier == asset2.albumIdentifier
-    }
-    
     private func selectedAssets(for album: Album) -> [Asset] {
         return selectedAssets.filter { (a) -> Bool in
             return a.albumIdentifier == album.identifier
         }
     }
     
-    private func select(_ asset:Asset) {
-        if selectedAssets.index(where: { (selectedAsset) in
-            return areAssetsEqual(selectedAsset, asset)
-        }) != nil {
-            //already added
-            return
+    func select(_ asset:Asset) {
+        select([asset])
+    }
+    
+    func select(_ assets:[Asset]) {
+        var addedAssets = [Asset]()
+        var addedIndices = [Int]()
+        for asset in assets {
+            if selectedAssets.index(where: { (selectedAsset) in
+                return selectedAsset == asset
+            }) != nil {
+                //already added
+                continue
+            }
+            
+            selectedAssets.append(asset)
+            addedAssets.append(asset)
+            addedIndices.append(selectedAssets.count-1)
         }
-        
-        selectedAssets.append(asset)
-        NotificationCenter.default.post(name: SelectedAssetsManager.notificationNameSelected, object: nil, userInfo: [SelectedAssetsManager.notificationUserObjectKeyAsset:asset, SelectedAssetsManager.notificationUserObjectKeyIndex:selectedAssets.count-1])
+
+        NotificationCenter.default.post(name: SelectedAssetsManager.notificationNameSelected, object: self, userInfo: [SelectedAssetsManager.notificationUserObjectKeyAssets:addedAssets, SelectedAssetsManager.notificationUserObjectKeyIndices:addedIndices])
     }
     
     func deselect(_ asset:Asset) {
-        if let index = selectedAssets.index(where: { (selectedAsset) in
-            return areAssetsEqual(selectedAsset, asset)
-        }) {
-            selectedAssets.remove(at: index)
-            NotificationCenter.default.post(name: SelectedAssetsManager.notificationNameDeselected, object: nil, userInfo: [SelectedAssetsManager.notificationUserObjectKeyAsset:asset, SelectedAssetsManager.notificationUserObjectKeyIndex:index])
+        deselect([asset])
+    }
+    
+    func deselect(_ assets:[Asset]) {
+        var removedAssets = [Asset]()
+        var removedIndices = [Int]()
+        for asset in assets {
+            if let index = selectedAssets.index(where: { (selectedAsset) in
+                return selectedAsset == asset
+            }) {
+                removedAssets.append(asset)
+                removedIndices.append(index)
+            }
         }
+        for a in removedAssets {
+            if let index = selectedAssets.index(where: { (asset) in
+                return a == asset
+            }) {
+                selectedAssets.remove(at: index)
+            }
+        }
+        
+        NotificationCenter.default.post(name: SelectedAssetsManager.notificationNameDeselected, object: self, userInfo: [SelectedAssetsManager.notificationUserObjectKeyAssets:removedAssets, SelectedAssetsManager.notificationUserObjectKeyIndices:removedIndices])
     }
     
     func isSelected(_ asset:Asset) -> Bool {
         let index = selectedAssets.index(where: { (selectedAsset) in
-            return areAssetsEqual(selectedAsset, asset)
+            return selectedAsset == asset
         })
         
         return index != nil
@@ -116,7 +140,7 @@ class SelectedAssetsManager: NSObject {
     
     func deselectAllAssets(){
         selectedAssets = [Asset]()
-        NotificationCenter.default.post(name: SelectedAssetsManager.notificationNameCleared, object: nil)
+        NotificationCenter.default.post(name: SelectedAssetsManager.notificationNameCleared, object: self)
     }
     
 }

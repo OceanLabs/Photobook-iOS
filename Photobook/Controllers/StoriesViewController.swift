@@ -21,6 +21,7 @@ class StoriesViewController: UIViewController {
     
     private var stories = [Story]()
     private let selectedAssetsManager = SelectedAssetsManager()
+    private var imageCollectorController:AssetCollectorViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +38,21 @@ class StoriesViewController: UIViewController {
             }
         }
         
+        // Setup the Image Collector Controller
+        imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
+        
+        //listen to asset manager
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameCleared, object: selectedAssetsManager)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
+        tableView.reloadData()
     }
 }
 
@@ -78,10 +94,10 @@ extension StoriesViewController: UITableViewDataSource {
             isDouble = (potentialDouble && storyIndex < stories.count - 1)
         }
         
-        if isDouble {
+        if isDouble && false { //TODO: fix crash for double cells if 3 stories
             // Double cell
             let story = stories[storyIndex]
-            let secondStory = stories[storyIndex + 1]
+            let secondStory = stories[storyIndex + 1] //TODO: crashes here because no +1 index story exists
             
             let doubleCell = tableView.dequeueReusableCell(withIdentifier: DoubleStoryTableViewCell.reuseIdentifier(), for: indexPath) as! DoubleStoryTableViewCell
             doubleCell.title = story.title

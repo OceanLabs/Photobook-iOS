@@ -8,8 +8,8 @@
 
 import UIKit
 
-class ImageCollectorCollectionViewCell: UICollectionViewCell {
-    @IBOutlet weak var deleteView: UIVisualEffectView!
+class AssetCollectorCollectionViewCell: UICollectionViewCell {
+    @IBOutlet weak var deleteView: UIView!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var containerView: UIView!
     
@@ -24,18 +24,6 @@ class ImageCollectorCollectionViewCell: UICollectionViewCell {
                 endWobbleAnimation()
             }
         }
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
     }
     
     func setup() {
@@ -55,7 +43,7 @@ class ImageCollectorCollectionViewCell: UICollectionViewCell {
         animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
         
         containerView.layer.removeAllAnimations()
-        DispatchQueue.main.asyncAfter(deadline: .now() + Double(Float.random(min: 0, max: 0.1))) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + Random.double(min: 0, max: 0.1)) {
             self.containerView.layer.add(animation, forKey: "transform")
         }
         

@@ -51,3 +51,7 @@ extension Asset {
         })
     }
 }
+
+func ==(lhs: Asset, rhs: Asset) -> Bool{
+    return lhs.identifier == rhs.identifier && lhs.albumIdentifier == rhs.albumIdentifier
+}

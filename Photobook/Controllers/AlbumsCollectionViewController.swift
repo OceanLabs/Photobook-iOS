@@ -13,7 +13,7 @@ import UIKit
 class AlbumsCollectionViewController: UICollectionViewController {
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    var imageCollectorController:ImageCollectorViewController?
+    var imageCollectorController:AssetCollectorViewController?
     
     /// The height between the bottom of the image and bottom of the cell where the labels sit
     private let albumCellLabelsHeight: CGFloat = 50
@@ -31,14 +31,14 @@ class AlbumsCollectionViewController: UICollectionViewController {
         })
         
         // Setup the Image Collector Controller
-        imageCollectorController = ImageCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
+        imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
         
         calcAndSetCellSize()
         
         //listen to asset manager
-        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameCleared, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameCleared, object: selectedAssetsManager)
     }
     
     deinit {
@@ -88,7 +88,19 @@ class AlbumsCollectionViewController: UICollectionViewController {
     }
     
     @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
-        collectionView?.reloadData()
+        guard let assets = notification.userInfo?[SelectedAssetsManager.notificationUserObjectKeyAssets] as? [Asset], let collectionView = collectionView else {
+            return
+        }
+        var indexPathsToReload = [IndexPath]()
+        for asset in assets {
+            if let index = albumManager.albums.index(where: { (album) -> Bool in
+                return album.identifier == asset.albumIdentifier
+            }) {
+                indexPathsToReload.append(IndexPath(row: index, section: 0))
+            }
+        }
+        
+        collectionView.reloadItems(at: indexPathsToReload)
     }
     
 }

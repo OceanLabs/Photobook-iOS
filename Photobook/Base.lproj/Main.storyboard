@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="2XF-yO-9gv">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="2XF-yO-9gv">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -374,10 +374,10 @@
             </objects>
             <point key="canvasLocation" x="-509" y="32"/>
         </scene>
-        <!--Image Collector View Controller-->
+        <!--Asset Collector View Controller-->
         <scene sceneID="cPZ-5K-p1g">
             <objects>
-                <viewController storyboardIdentifier="ImageCollectorViewController" modalPresentationStyle="overCurrentContext" id="HYw-Yl-MfL" customClass="ImageCollectorViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ImageCollectorViewController" modalPresentationStyle="overCurrentContext" id="HYw-Yl-MfL" customClass="AssetCollectorViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="UMO-hB-Zun">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="125"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -515,7 +515,7 @@
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ImageCollectorCollectionViewCell" id="6nK-PW-pTc" customClass="ImageCollectorCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ImageCollectorCollectionViewCell" id="6nK-PW-pTc" customClass="AssetCollectorCollectionViewCell" customModule="Photobook" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -537,44 +537,26 @@
                                                                     <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </view>
-                                                                <visualEffectView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WQj-be-xxv">
-                                                                    <rect key="frame" x="21" y="21" width="22" height="22"/>
-                                                                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="27k-oG-d8q">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="22" height="22"/>
-                                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        <subviews>
-                                                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Minus" translatesAutoresizingMaskIntoConstraints="NO" id="6Nt-M8-OgJ">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="22" height="22"/>
-                                                                            </imageView>
-                                                                        </subviews>
-                                                                        <constraints>
-                                                                            <constraint firstAttribute="bottom" secondItem="6Nt-M8-OgJ" secondAttribute="bottom" id="Gly-CC-z11"/>
-                                                                            <constraint firstAttribute="trailing" secondItem="6Nt-M8-OgJ" secondAttribute="trailing" id="NP5-Xe-9aE"/>
-                                                                            <constraint firstItem="6Nt-M8-OgJ" firstAttribute="top" secondItem="27k-oG-d8q" secondAttribute="top" id="OVR-yd-iOK"/>
-                                                                            <constraint firstItem="6Nt-M8-OgJ" firstAttribute="leading" secondItem="27k-oG-d8q" secondAttribute="leading" id="XXm-6h-p4c"/>
-                                                                            <constraint firstItem="6Nt-M8-OgJ" firstAttribute="centerY" secondItem="27k-oG-d8q" secondAttribute="centerY" id="gvf-UX-402"/>
-                                                                            <constraint firstItem="6Nt-M8-OgJ" firstAttribute="centerX" secondItem="27k-oG-d8q" secondAttribute="centerX" id="ig6-Ug-IwE"/>
-                                                                        </constraints>
-                                                                    </view>
-                                                                    <color key="backgroundColor" white="1" alpha="0.75460188360000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Minus" translatesAutoresizingMaskIntoConstraints="NO" id="6Nt-M8-OgJ">
+                                                                    <rect key="frame" x="21.333333333333329" y="21.333333333333329" width="22" height="22"/>
+                                                                    <color key="backgroundColor" white="0.84502495659722221" alpha="0.89873180650684936" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
-                                                                        <constraint firstAttribute="height" constant="22" id="Lmt-rP-HBr"/>
-                                                                        <constraint firstAttribute="width" constant="22" id="lKc-s2-6qx"/>
+                                                                        <constraint firstAttribute="height" constant="22" id="ihh-14-I3h"/>
+                                                                        <constraint firstAttribute="width" constant="22" id="sD4-gw-9MT"/>
                                                                     </constraints>
-                                                                    <blurEffect style="light"/>
                                                                     <userDefinedRuntimeAttributes>
                                                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                                             <real key="value" value="11"/>
                                                                         </userDefinedRuntimeAttribute>
                                                                     </userDefinedRuntimeAttributes>
-                                                                </visualEffectView>
+                                                                </imageView>
                                                             </subviews>
                                                             <constraints>
                                                                 <constraint firstItem="dCo-5L-Muf" firstAttribute="width" secondItem="8rf-T8-n85" secondAttribute="width" id="794-1r-XwB"/>
                                                                 <constraint firstItem="8rf-T8-n85" firstAttribute="top" secondItem="rej-pF-a8L" secondAttribute="top" id="Dvm-uv-BWf"/>
-                                                                <constraint firstItem="WQj-be-xxv" firstAttribute="centerY" secondItem="rej-pF-a8L" secondAttribute="centerY" id="Mfb-4r-nfD"/>
-                                                                <constraint firstItem="WQj-be-xxv" firstAttribute="centerX" secondItem="rej-pF-a8L" secondAttribute="centerX" id="P8L-Gf-0Sp"/>
                                                                 <constraint firstItem="dCo-5L-Muf" firstAttribute="centerX" secondItem="rej-pF-a8L" secondAttribute="centerX" id="U85-Tn-nUV"/>
+                                                                <constraint firstItem="6Nt-M8-OgJ" firstAttribute="centerX" secondItem="rej-pF-a8L" secondAttribute="centerX" id="aW5-KX-1fo"/>
+                                                                <constraint firstItem="6Nt-M8-OgJ" firstAttribute="centerY" secondItem="rej-pF-a8L" secondAttribute="centerY" id="hEX-oU-Fc4"/>
                                                                 <constraint firstAttribute="trailing" secondItem="8rf-T8-n85" secondAttribute="trailing" id="i1G-Ef-lYe"/>
                                                                 <constraint firstItem="dCo-5L-Muf" firstAttribute="centerY" secondItem="rej-pF-a8L" secondAttribute="centerY" id="lbS-6W-K1Z"/>
                                                                 <constraint firstItem="8rf-T8-n85" firstAttribute="leading" secondItem="rej-pF-a8L" secondAttribute="leading" id="n9p-QK-CAh"/>
@@ -598,7 +580,7 @@
                                                 <size key="customSize" width="64" height="64"/>
                                                 <connections>
                                                     <outlet property="containerView" destination="rej-pF-a8L" id="Ng6-KV-Esc"/>
-                                                    <outlet property="deleteView" destination="WQj-be-xxv" id="W6u-eY-mGW"/>
+                                                    <outlet property="deleteView" destination="6Nt-M8-OgJ" id="g6c-uJ-pom"/>
                                                     <outlet property="imageView" destination="8rf-T8-n85" id="om2-0G-92C"/>
                                                 </connections>
                                             </collectionViewCell>

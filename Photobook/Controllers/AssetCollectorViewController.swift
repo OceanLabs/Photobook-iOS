@@ -10,14 +10,15 @@ import UIKit
 import Photos
 
 protocol ImageCollectorViewControllerDelegate : class {
-    func imageCollectorViewController(_ imageCollectorViewController:AssetCollectorViewController, didChangeHiddenStateTo hidden:Bool)
-    func imageCollectorViewController(_ imageCollectorViewController:AssetCollectorViewController, didFinishWithAssets:[Asset])
+    func imageCollectorViewController(_ imageCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool)
+    func imageCollectorViewController(_ imageCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset])
 }
 
 class AssetCollectorViewController: UIViewController {
     
-    public let requiredPhotosCount:Int = 15
-    public var delegate:ImageCollectorViewControllerDelegate?
+    private let requiredPhotosCount: Int = 15
+    
+    public var delegate: ImageCollectorViewControllerDelegate?
     
     @IBOutlet weak var topContainerView: UIView!
     @IBOutlet weak var clearButton: UIButton!
@@ -29,8 +30,8 @@ class AssetCollectorViewController: UIViewController {
     
     @IBOutlet var longPressGestureRecognizer: UILongPressGestureRecognizer!
     
-    private var selectedAssetsManager:SelectedAssetsManager?
-    private var assets:[Asset] {
+    private var selectedAssetsManager: SelectedAssetsManager!
+    private var assets: [Asset] {
         get {
             if let manager = selectedAssetsManager {
                 return manager.selectedAssets
@@ -40,9 +41,9 @@ class AssetCollectorViewController: UIViewController {
     }
     
     private let viewHeightDefault: CGFloat = 125
-    private(set) var viewHeight:CGFloat = 0
+    private(set) var viewHeight: CGFloat = 0
     
-    var isDeletingEnabled:Bool = false {
+    var isDeletingEnabled: Bool = false {
         didSet {
             if oldValue != isDeletingEnabled {
                 deleteDoneButton.isHidden = !isDeletingEnabled
@@ -53,26 +54,25 @@ class AssetCollectorViewController: UIViewController {
         }
     }
     private var isHideShowAnimated: Bool = false
-    var isHidden:Bool = false {
+    public var isHidden: Bool = false {
         didSet {
             if oldValue != isHidden {
-                viewHeight = isHidden    ? 0 : viewHeightDefault
-                let duration : TimeInterval = isHideShowAnimated ? 0.2 : 0
+                viewHeight = isHidden ? 0 : viewHeightDefault
+                let duration: TimeInterval = isHideShowAnimated ? 0.2 : 0
                 let options = isHidden ? UIViewAnimationOptions.curveEaseIn : UIViewAnimationOptions.curveEaseOut
                 UIView.animate(withDuration: duration, delay: 0, options: options, animations: {
                     self.topContainerView.isHidden = self.isHidden
                     self.imageCollectionView.isHidden = self.isHidden
-                    self.adaptToParent()
-                }, completion: { (completed) in
-                    
-                })
+                    self.adaptHeight()
+                }, completion: nil)
                 delegate?.imageCollectorViewController(self, didChangeHiddenStateTo: isHidden)
             }
         }
     }
     
-    private var horizontalConstraints:[NSLayoutConstraint]?
-    private var verticalConstraints:[NSLayoutConstraint]?
+    private var horizontalConstraints: [NSLayoutConstraint]?
+    private var verticalConstraints: [NSLayoutConstraint]?
+    private var heightConstraint: NSLayoutConstraint?
     
     //only set once
     private weak var parentController: UIViewController? {
@@ -83,7 +83,7 @@ class AssetCollectorViewController: UIViewController {
         }
     }
     
-    private var tabBar:PhotoBookTabBar? {
+    private var tabBar: PhotoBookTabBar? {
         get {
             var tabBar: UITabBar?
             if let tab = tabBarController {
@@ -95,11 +95,17 @@ class AssetCollectorViewController: UIViewController {
         }
     }
     
-    public static func instance(fromStoryboardWithParent parent:UIViewController, selectedAssetsManager:SelectedAssetsManager) -> AssetCollectorViewController {
+    public static func instance(fromStoryboardWithParent parent: UIViewController, selectedAssetsManager: SelectedAssetsManager) -> AssetCollectorViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "ImageCollectorViewController") as! AssetCollectorViewController
         vc.parentController = parent
         vc.selectedAssetsManager = selectedAssetsManager
+        
+        //listen to asset manager
+        NotificationCenter.default.addObserver(vc, selector: #selector(selectedAssetManagerAddedAsset(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
+        NotificationCenter.default.addObserver(vc, selector: #selector(selectedAssetManagerDeletedAsset(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
+        NotificationCenter.default.addObserver(vc, selector: #selector(selectedAssetManagerCleared(_:)), name: SelectedAssetsManager.notificationNameCleared, object: selectedAssetsManager)
+        
         return vc
     }
     
@@ -112,11 +118,6 @@ class AssetCollectorViewController: UIViewController {
         isHidden = true
         
         imageCollectionView.contentInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
-        
-        //listen to asset manager
-        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerAddedAsset(_:)), name: SelectedAssetsManager.notificationNameSelected, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerDeletedAsset(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCleared(_:)), name: SelectedAssetsManager.notificationNameCleared, object: nil)
     }
     
     deinit {
@@ -126,7 +127,7 @@ class AssetCollectorViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        isHideShowAnimated = true //enable animation for hidden state changes
+        isHideShowAnimated = false
         
         //adapt tabbar
         tabBar?.isBackgroundHidden = true
@@ -134,11 +135,20 @@ class AssetCollectorViewController: UIViewController {
         adaptToNewAssetCount()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        //adapt tabbar
+        tabBar?.isBackgroundHidden = true
+        isHideShowAnimated = true //enable animation for hidden state changes
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         //adapt tabbar
         tabBar?.isBackgroundHidden = false
+        isHideShowAnimated = false
     }
     
     //MARK: - API
@@ -180,7 +190,6 @@ class AssetCollectorViewController: UIViewController {
             didMove(toParentViewController: parentController)
         }
         
-        
         view.translatesAutoresizingMaskIntoConstraints = false
         
         if let vConstraints = verticalConstraints {
@@ -191,39 +200,80 @@ class AssetCollectorViewController: UIViewController {
         }
         
         let viewDictionary : [ String : UIView ] = [ "collectorView" : view ]
-        var height:Int = Int(viewHeight)
-        if let tabBar = tabBar {
-            height = height + Int(tabBar.frame.size.height)
-        }
         
         horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[collectorView]|", options: [], metrics: nil, views: viewDictionary)
-        verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[collectorView(\(height))]|", options: [], metrics: nil, views: viewDictionary)
+        verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[collectorView]|", options: [], metrics: nil, views: viewDictionary)
         
         view.superview?.addConstraints(horizontalConstraints! + verticalConstraints!)
         view.superview?.layoutIfNeeded()
-
+        
+        adaptHeight()
+    }
+    
+    private func adaptHeight() {
+        var height: CGFloat = viewHeight
+        if let tabBar = tabBar {
+            height = height + tabBar.frame.size.height
+        }
+        
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        if heightConstraint == nil {
+            //create new contraint
+            heightConstraint = NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 0)
+            view.addConstraint(heightConstraint!)
+        }
+        
+        //set constraint value
+        heightConstraint?.constant = height
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
     }
     
     private func adaptToNewAssetCount() {
         if assets.count == 0 {
             isHidden = true
             return
-        } else {
-            isHidden = false
         }
+        isHidden = false
         
         if !isDeletingEnabled {
+            
+            let fadeDuration: TimeInterval = 0.25
             if assets.count >= requiredPhotosCount {
+                //use these
+                let changesState = useTheseButtonContainer.isHidden == true || pickMoreLabel.isHidden == false
                 useTheseButtonContainer.isHidden = false
-                pickMoreLabel.isHidden = true
                 useTheseCountView.text = "\(assets.count)"
+                
+                //animate
+                let duration: TimeInterval = changesState ? fadeDuration : 0
+                useTheseButtonContainer.alpha = 0
+                UIView.animate(withDuration: duration, animations: {
+                    self.useTheseButtonContainer.alpha = 1
+                    self.pickMoreLabel.alpha = 0
+                }, completion: { (finished) in
+                    self.pickMoreLabel.isHidden = true
+                })
             } else {
+                //pick more
+                let changesState = useTheseButtonContainer.isHidden == false || pickMoreLabel.isHidden == true
                 useTheseButtonContainer.isHidden = true
                 pickMoreLabel.isHidden = false
                 let pickMoreText = NSLocalizedString("Controllers/ImageCollectionViewController/PickMoreLabel",
                                                      value: "Pick another %@",
                                                      comment: "Amount of additionally selected photos required to build a photobook")
                 pickMoreLabel.text = String(format: pickMoreText, "\(requiredPhotosCount-assets.count)")
+                
+                //animate
+                let duration: TimeInterval = changesState ? fadeDuration : 0
+                pickMoreLabel.alpha = 0
+                UIView.animate(withDuration: duration, animations: {
+                    self.pickMoreLabel.alpha = 1
+                    self.useTheseButtonContainer.alpha = 0
+                }, completion: { (finished) in
+                    self.useTheseButtonContainer.isHidden = true
+                })
             }
         }
     }
@@ -236,13 +286,21 @@ class AssetCollectorViewController: UIViewController {
     }
     
     @objc private func selectedAssetManagerAddedAsset(_ notification: NSNotification) {
-        if let index = notification.userInfo?[SelectedAssetsManager.notificationUserObjectKeyIndex] as? Int {
+        if let indices = notification.userInfo?[SelectedAssetsManager.notificationUserObjectKeyIndices] as? [Int] {
             isDeletingEnabled = false
-            imageCollectionView.insertItems(at: [IndexPath(row: index, section: 0)])
             var indexPaths = [IndexPath]()
+            for index in indices {
+                indexPaths.append(IndexPath(row: index, section: 0))
+            }
+            imageCollectionView.insertItems(at: indexPaths)
+            indexPaths.removeAll()
             var i = 0
-            while i<index {
-                indexPaths.append(IndexPath(item: i, section: 0))
+            while i<assets.count {
+                if indices.index(where: { (x) -> Bool in
+                    return x == i
+                }) == nil {
+                    indexPaths.append(IndexPath(item: i, section: 0))
+                }
                 i = i+1
             }
             imageCollectionView.reloadItems(at: indexPaths)
@@ -252,22 +310,13 @@ class AssetCollectorViewController: UIViewController {
     }
     
     @objc private func selectedAssetManagerDeletedAsset(_ notification: NSNotification) {
-        if let index = notification.userInfo?[SelectedAssetsManager.notificationUserObjectKeyIndex] as? Int {
+        if let indices = notification.userInfo?[SelectedAssetsManager.notificationUserObjectKeyIndices] as? [Int] {
+            var indexPaths = [IndexPath]()
+            for index in indices {
+                indexPaths.append(IndexPath(row: index, section: 0))
+            }
             
-            /* custom animation that caused crashes when deleting multiple items quickly
-             let cell = imageCollectionView.cellForItem(at: IndexPath(row: index, section: 0))
-            
-            let animationDuration:TimeInterval = 0.1
-            UIView.animate(withDuration: animationDuration, animations: {
-                cell?.alpha = 0
-            }, completion: { (done) in
-                self.imageCollectionView.performBatchUpdates({
-                    self.imageCollectionView.deleteItems(at: [IndexPath(row: index, section: 0)])
-                    self.adaptToNewAssetCount()
-                }, completion: nil)
-            })*/
-            
-            self.imageCollectionView.deleteItems(at: [IndexPath(row: index, section: 0)])
+            self.imageCollectionView.deleteItems(at: indexPaths)
             self.adaptToNewAssetCount()
             
         }
@@ -288,7 +337,7 @@ extension AssetCollectorViewController: UICollectionViewDataSource, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCollectorCollectionViewCell", for: indexPath) as! ImageCollectorCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCollectorCollectionViewCell", for: indexPath) as! AssetCollectorCollectionViewCell
         
         let asset = assets[indexPath.row]
         asset.image(size: cell.imageView.frame.size, completionHandler: { (image, error) in
