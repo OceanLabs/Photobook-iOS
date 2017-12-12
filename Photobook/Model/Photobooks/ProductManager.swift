@@ -96,7 +96,8 @@ class ProductManager {
         var landscapeLayouts = layouts.filter { $0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
         
         // First photobook
-        // TODO: Number of pages 3 + 2 * i
+        // TODO: Check if the minimum number of pages are met. Create empty pages that the user will have to assign
+        // assets to. Take into account that the first and last pages should be empty.
         if product == nil {
             var tempLayouts = [ProductLayout]()
 
