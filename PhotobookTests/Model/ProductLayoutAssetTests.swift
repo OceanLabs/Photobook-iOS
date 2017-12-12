@@ -14,27 +14,19 @@ class ProductLayoutAssetTests: XCTestCase {
     
     let tempFile: String = NSTemporaryDirectory() + "tempProductLayoutAsset.dat"
 
-    var photosAsset: PhotosAsset! = nil
-    
-    override func setUp() {
-        super.setUp()
+    var photosAsset: PhotosAsset = TestPhotosAsset()
         
-        let options = PHFetchOptions()
-        options.fetchLimit = 1
-        
-        let phAsset = PHAsset.fetchAssets(with: options).firstObject!
-        photosAsset = PhotosAsset(phAsset)
-    }
-    
     func testProductLayoutAsset_canBeEncodedAndDecoded() {
         
-        let originalTransform = CGAffineTransform.identity.rotated(by: 1.2)
-        let originalSize = CGSize(width: 200.0, height: 300.0)
+        var originalTransform = CGAffineTransform.identity.rotated(by: 1.2)
+        let originalContainerSize = CGSize(width: 200.0, height: 300.0)
         
         let productLayoutAsset = ProductLayoutAsset()
         productLayoutAsset.asset = photosAsset
         productLayoutAsset.transform = originalTransform
-        productLayoutAsset.containerSize = originalSize
+        productLayoutAsset.containerSize = originalContainerSize
+        
+        originalTransform = productLayoutAsset.transform
         
         guard let data = try? PropertyListEncoder().encode(productLayoutAsset) else {
             XCTFail("Should encode the ProductLayoutAsset to data")
@@ -64,8 +56,8 @@ class ProductLayoutAssetTests: XCTestCase {
             && transform.tx == originalTransform.tx
             && transform.ty == originalTransform.ty, "The decoded transform must match the original transform")
         
-        XCTAssertTrue(unarchivedProductLayoutAsset.containerSize.width == originalSize.width
-            && unarchivedProductLayoutAsset.containerSize.height == originalSize.height, "The decoded container size must match the original size")
+        XCTAssertTrue(unarchivedProductLayoutAsset.containerSize.width == originalContainerSize.width
+            && unarchivedProductLayoutAsset.containerSize.height == originalContainerSize.height, "The decoded container size must match the original size")
     }
     
 }

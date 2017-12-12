@@ -59,9 +59,14 @@ class ProductLayoutAsset: Codable {
         let remoteUrl = try? values.decode(String.self, forKey: .remoteUrl)
         
         if assetType == "Photobook.PhotosAsset" {
-            asset = PhotosAsset()
-            asset!.identifier = assetIdentifier
-            asset!.remoteUrl = remoteUrl
+            // For tests, we use a subclass with some stubs
+            if NSClassFromString("XCTest") != nil {
+                asset = TestPhotosAsset()
+            } else {
+                asset = PhotosAsset()
+                asset!.identifier = assetIdentifier
+                asset!.remoteUrl = remoteUrl
+            }
         }
     }
     

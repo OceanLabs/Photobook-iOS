@@ -7,18 +7,7 @@
 //
 
 import XCTest
-import Photos
 @testable import Photobook
-
-class TestPhotosAsset: PhotosAsset {
-    override init() {
-        super.init()
-        
-        let options = PHFetchOptions()
-        options.fetchLimit = 1
-        photosAsset = PHAsset.fetchAssets(with: options).firstObject!
-    }
-}
 
 class ProductManagerTests: XCTestCase {
 

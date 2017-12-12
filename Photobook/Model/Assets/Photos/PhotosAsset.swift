@@ -9,6 +9,15 @@
 import UIKit
 import Photos
 
+// Photos asset subclass with stubs to be used in testing
+class TestPhotosAsset: PhotosAsset {
+    override var size: CGSize { return CGSize(width: 10.0, height: 20.0) }
+    override init() {
+        super.init()
+        self.identifier = "id"
+    }
+}
+
 class PhotosAsset: Asset {
     
     var assetType: String {
