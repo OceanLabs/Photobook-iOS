@@ -10,11 +10,11 @@ import Foundation
 import UIKit
 
 // A photo item in the user's photobook assigned to a layout box
-class ProductLayoutText {
+class ProductLayoutText: Codable {
     var containerSize: CGSize! {
         didSet {
             // TODO: Apply text limitations
         }
     }
-    var text: String?    
+    var text: String?
 }

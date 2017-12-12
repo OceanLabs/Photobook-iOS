@@ -11,19 +11,34 @@ import Photos
 
 class PhotosAsset: Asset {
     
-    var photosAsset: PHAsset
+    var assetType: String {
+        return NSStringFromClass(PhotosAsset.self)
+    }
     
-    var identifier: String {
-        return photosAsset.localIdentifier
+    var photosAsset: PHAsset! {
+        didSet {
+            identifier = photosAsset.localIdentifier
+        }
+    }
+    var identifier: String! {
+        didSet {
+            if photosAsset == nil || photosAsset.localIdentifier != identifier,
+               let asset = PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: PHFetchOptions()).firstObject {
+                    photosAsset = asset
+            }
+        }
     }
     
     var size: CGSize { return CGSize(width: photosAsset.pixelWidth, height: photosAsset.pixelHeight) }
     var isLandscape: Bool {
         return self.size.width > self.size.height
     }
+    var remoteUrl: String?
     
-    init(_ asset: PHAsset) {
+    convenience init(_ asset: PHAsset) {
+        self.init()
         photosAsset = asset
+        identifier = photosAsset.localIdentifier
     }
     
     func uneditedImage(size: CGSize, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
@@ -36,5 +51,4 @@ class PhotosAsset: Asset {
             completionHandler(image, nil)
         }
     }
-    
 }

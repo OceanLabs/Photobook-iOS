@@ -11,10 +11,12 @@ import UIKit
 let assetMaximumSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
 
 protocol Asset {
-    var identifier: String { get }
+    var identifier: String! { get set }
     var size: CGSize { get }
     var isLandscape: Bool { get }
-
+    var remoteUrl: String? { get set }
+    var assetType: String { get }
+    
     /// Request the original, unedited image that this asset represents. Avoid using this method directly, instead use image(size:applyEdits:contentMode:cacheResult:progressHandler:completionHandler:)
     ///
     /// - Parameters:
@@ -24,7 +26,7 @@ protocol Asset {
     func uneditedImage(size: CGSize, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)?, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void);
 }
 
-extension Asset{
+extension Asset {
     
     /// Request the image that this asset represents. This method will do all of the processing in a serial background thread.
     ///

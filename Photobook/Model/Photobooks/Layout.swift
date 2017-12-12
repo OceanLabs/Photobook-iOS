@@ -9,7 +9,7 @@
 import Foundation
 
 // Information about a page layout
-struct Layout {
+struct Layout: Codable {
     let id: Int!
     let category: String!
     let imageUrl: String!

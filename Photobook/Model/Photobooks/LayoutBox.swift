@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 // A bounding box for an image or text
-struct LayoutBox {
+struct LayoutBox: Codable {
     
     let id: Int!
     // Normalised rect

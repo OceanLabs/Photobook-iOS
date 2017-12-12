@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 // Defines the characteristics of a photobook / product
-class Photobook {
+class Photobook: Codable {
     var id: Int
     var name: String!
     var coverSizeRatio: CGFloat!
@@ -20,7 +20,7 @@ class Photobook {
     var coverLayouts: [Int]!
     var layouts: [Int]! // IDs of the permitted layouts
     
-    // FIXME: Min pages? Currencies?
+    // TODO: Min pages? Currencies?
     
     init() {
         fatalError("Use parse(_:) instead")
