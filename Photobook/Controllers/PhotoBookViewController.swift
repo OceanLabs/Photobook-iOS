@@ -48,6 +48,12 @@ class PhotoBookViewController: UIViewController {
                     self.view.layoutIfNeeded()
                 })
             }
+            
+            // Update drag interaction enabled status
+            for cell in collectionView.visibleCells{
+                guard let photobookCell = cell as? PhotoBookCollectionViewCell else { continue }
+                (photobookCell.bookView.interactions.first as? UIDragInteraction)?.isEnabled = isRearranging
+            }
         }
     }
     
@@ -203,13 +209,13 @@ extension PhotoBookViewController: UICollectionViewDataSource{
                 rightPage?.index = indexPath.item * 2 + 1
                 cell.plusButton.isHidden = false
                 
-                // Enable drag interaction
+                // Add drag interaction
                 if cell.bookView.interactions.count == 0{
                     let dragInteraction = UIDragInteraction(delegate: self)
                     cell.bookView.addInteraction(dragInteraction)
-                    dragInteraction.isEnabled = true
                     cell.clipsToBounds = false
                 }
+                (cell.bookView.interactions.first as? UIDragInteraction)?.isEnabled = isRearranging
             }
             
             load(page: page, size: imageSize)
