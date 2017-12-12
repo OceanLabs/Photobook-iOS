@@ -49,12 +49,7 @@ class ProductLayoutAssetTests: XCTestCase {
         XCTAssertNotNil(asset, "The asset should be a PhotosAsset")
         
         let transform = unarchivedProductLayoutAsset.transform
-        XCTAssertTrue(transform.a == originalTransform.a
-            && transform.b == originalTransform.b
-            && transform.c == originalTransform.c
-            && transform.d == originalTransform.d
-            && transform.tx == originalTransform.tx
-            && transform.ty == originalTransform.ty, "The decoded transform must match the original transform")
+        XCTAssertTrue(transform == originalTransform, "The decoded transform must match the original transform")
         
         XCTAssertTrue(unarchivedProductLayoutAsset.containerSize.width == originalContainerSize.width
             && unarchivedProductLayoutAsset.containerSize.height == originalContainerSize.height, "The decoded container size must match the original size")
