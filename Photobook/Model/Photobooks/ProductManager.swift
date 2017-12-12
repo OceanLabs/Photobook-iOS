@@ -185,6 +185,7 @@ class ProductManager {
     ///
     /// - Parameter completionHandler: Executed when the uploads are on the way or failed to initiate them. The Int parameter provides the total upload count.
     func startPhotobookUpload(_ completionHandler: (Int, Error?) -> Void) {
+        self.saveUserPhotobook()
         apiManager.uploadPhotobook(completionHandler)
     }
     
