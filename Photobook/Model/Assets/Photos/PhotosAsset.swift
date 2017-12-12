@@ -47,7 +47,6 @@ class PhotosAsset: Asset {
     convenience init(_ asset: PHAsset) {
         self.init()
         photosAsset = asset
-        identifier = photosAsset.localIdentifier
     }
     
     func uneditedImage(size: CGSize, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
