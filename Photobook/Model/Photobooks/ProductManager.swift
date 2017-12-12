@@ -13,9 +13,19 @@ enum ProductColor {
 }
 
 class ProductManager {
+
+    // Notification keys
+    static let pendingUploadStatusUpdated = Notification.Name("ProductManagerPendingUploadStatusUpdated")
+    static let shouldRetryUploadingImages = Notification.Name("ProductManagerShouldRetryUploadingImages")
+    static let finishedPhotobookCreation = Notification.Name("ProductManagerFinishedPhotobookCreation")
+    
     static let shared = ProductManager()
     
-    private var apiManager = PhotobookAPIManager.shared
+    private lazy var apiManager: PhotobookAPIManager = {
+        let manager = PhotobookAPIManager()
+        manager.delegate = self
+        return manager
+    }()
     
     #if DEBUG
     convenience init(apiManager: PhotobookAPIManager) {
@@ -153,5 +163,43 @@ class ProductManager {
     ///   - page: The page index in the photbook
     func setText(_ text: String, forPage page: Int) {
         productLayouts[page].text = text
+    }
+    
+    /// Initiates the uploading of the user's photobook
+    ///
+    /// - Parameter completionHandler: Executed when the uploads are on the way or failed to initiate them. The Int parameter provides the total upload count.
+    func startPhotobookUpload(_ completionHandler: (Int, Error?) -> Void) {
+        apiManager.uploadPhotobook(completionHandler)
+    }
+    
+
+extension ProductManager: PhotobookAPIManagerDelegate {
+
+    func didFinishUploading(asset: Asset) {
+        let info: [String: Any] = [ "asset": asset, "pending": apiManager.pendingUploads ]
+        NotificationCenter.default.post(name: ProductManager.pendingUploadStatusUpdated, object: info)
+    }
+    
+    func didFailUpload(_ error: Error) {
+        if let error = error as? PhotobookAPIError {
+            switch error {
+            case .missingPhotobookInfo:
+                fatalError("ProductManager: incorrect or missing photobook info")
+            case .couldNotSaveTempImage:
+                let info = [ "pending": apiManager.pendingUploads ]
+                NotificationCenter.default.post(name: ProductManager.pendingUploadStatusUpdated, object: info)
+                
+                NotificationCenter.default.post(name: ProductManager.shouldRetryUploadingImages, object: nil)
+            case .couldNotBuildCreationParameters:
+                fatalError("PhotobookManager: could not build PDF creation request parameters")
+            }
+        } else if let _ = error as? APIClientError {
+            // Connection / server errors are handled by the system. This can only be a parsing error.
+            fatalError("ProductManager: could not parse upload response")
+        }
+    }
+    
+    func didFinishCreatingPdf(error: Error?) {
+        NotificationCenter.default.post(name: ProductManager.finishedPhotobookCreation, object: nil)
     }
 }
