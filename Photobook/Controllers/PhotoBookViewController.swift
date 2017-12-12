@@ -30,7 +30,7 @@ class PhotoBookViewController: UIViewController {
     var selectedAssetsManager: SelectedAssetsManager?
     var photobook: String = "210x210 mm" //TODO: Replace with photobook model
     var titleLabel: UILabel?
-    private var dragItemIndexPath: IndexPath?
+    private var interactingItemIndexPath: IndexPath?
     private var isRearranging = false {
         didSet{
             if isRearranging{
@@ -52,7 +52,7 @@ class PhotoBookViewController: UIViewController {
             // Update drag interaction enabled status
             for cell in collectionView.visibleCells{
                 guard let photobookCell = cell as? PhotoBookCollectionViewCell else { continue }
-                (photobookCell.bookView.interactions.first as? UIDragInteraction)?.isEnabled = isRearranging
+                photobookCell.bookView.setIsRearranging(isRearranging)
             }
         }
     }
@@ -66,6 +66,8 @@ class PhotoBookViewController: UIViewController {
         selectedAssetsManager?.preparePhotoBookAssets(minimumNumberOfAssets: 21) //TODO: Replace with product minimum
         
         collectionViewBottomConstraint.constant = -self.view.frame.height * (reverseRearrageScale - 1)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(menuDidHide), name: NSNotification.Name.UIMenuControllerDidHideMenu, object: nil)
     }
     
     override func viewDidLayoutSubviews() {
@@ -124,6 +126,10 @@ class PhotoBookViewController: UIViewController {
         print("Tapped on spine")
     }
     
+    override var canBecomeFirstResponder: Bool{
+        return true
+    }
+    
     func load(page: PhotoBookPageView, size: CGSize){
         page.setImage(image: nil)
         page.pageLayout = nil
@@ -141,6 +147,24 @@ class PhotoBookViewController: UIViewController {
                         
             page.setImage(image: image, contentMode: (asset as? PlaceholderAsset) == nil ? .scaleAspectFill : .center)
         })
+    }
+    
+    // MARK: - UIMenu actions
+    
+    @objc func copyPages() {
+        // TODO: copy
+    }
+    
+    @objc func pastePages() {
+        // TODO: paste
+    }
+    
+    @objc func deletePages() {
+        // TODO: delete
+    }
+    
+    @objc func menuDidHide() {
+            interactingItemIndexPath = nil
     }
     
 }
@@ -185,7 +209,7 @@ extension PhotoBookViewController: UICollectionViewDataSource{
                 else { return UICollectionViewCell() }
             
             cell.bookView.indexPath = indexPath
-            cell.obscuringView.isHidden = indexPath != dragItemIndexPath
+            cell.obscuringView.isHidden = indexPath != interactingItemIndexPath
             cell.delegate = self
             
             let rightPage = (cell.bookView as? PhotoBookDoublePageView)?.rightPage
@@ -215,7 +239,7 @@ extension PhotoBookViewController: UICollectionViewDataSource{
                     cell.bookView.addInteraction(dragInteraction)
                     cell.clipsToBounds = false
                 }
-                (cell.bookView.interactions.first as? UIDragInteraction)?.isEnabled = isRearranging
+                cell.bookView.setIsRearranging(isRearranging)
             }
             
             load(page: page, size: imageSize)
@@ -240,6 +264,25 @@ extension PhotoBookViewController: UICollectionViewDelegate {
         navBar.effectView.alpha = scrollView.contentOffset.y <= -(navigationController?.navigationBar.frame.maxY ?? 0)  ? 0 : 1
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        // Don't show the menu for the cover, fist and last page, when not rearranging and when we are already showing it
+        guard isRearranging,
+            interactingItemIndexPath == nil,
+            let cell = collectionView.cellForItem(at: indexPath),
+            indexPath.item != 0,
+            indexPath.item != collectionView.numberOfItems(inSection: 1) - 1 // Last Page
+            else { return }
+        UIMenuController.shared.setTargetRect(cell.frame, in: collectionView)
+        interactingItemIndexPath = indexPath
+        
+        let copyItem = UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemCopyTitle", value: "Copy", comment: "Copy/Paste interaction"), action: #selector(copyPages))
+        let pasteItem = UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemPasteTitle", value: "Paste", comment: "Copy/Paste interaction"), action: #selector(pastePages))
+        let deleteItem = UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemDeleteTitle", value: "Delete", comment: "Delete a page from the photobook"), action: #selector(deletePages))
+        UIMenuController.shared.menuItems = [copyItem, pasteItem, deleteItem]
+        UIMenuController.shared.setMenuVisible(true, animated: true)
+    }
+    
 }
 
 extension PhotoBookViewController: UIDragInteractionDelegate {
@@ -250,7 +293,7 @@ extension PhotoBookViewController: UIDragInteractionDelegate {
             let indexPath = bookView.indexPath
             else { return [] }
         
-        dragItemIndexPath = indexPath
+        interactingItemIndexPath = indexPath
         
         let itemProvider = NSItemProvider()
         let dragItem = UIDragItem(itemProvider: itemProvider)
@@ -284,7 +327,7 @@ extension PhotoBookViewController: UIDragInteractionDelegate {
     }
     
     func dragInteraction(_ interaction: UIDragInteraction, item: UIDragItem, willAnimateCancelWith animator: UIDragAnimating) {
-        guard let indexPath = dragItemIndexPath,
+        guard let indexPath = interactingItemIndexPath,
             let cell = collectionView.cellForItem(at: indexPath) as? PhotoBookCollectionViewCell else { return }
         
         animator.addCompletion({(_) in
@@ -293,7 +336,7 @@ extension PhotoBookViewController: UIDragInteractionDelegate {
     }
     
     func dragInteraction(_ interaction: UIDragInteraction, session: UIDragSession, didEndWith operation: UIDropOperation) {
-        dragItemIndexPath = nil
+        interactingItemIndexPath = nil
 
         guard let bookView = interaction.view as? PhotoBookView,
             let indexPath = bookView.indexPath,
@@ -336,6 +379,7 @@ extension PhotoBookViewController: PhotoBookViewDelegate {
     // MARK: - PhotoBookViewDelegate
     
     func didTapOnPage(index: Int) {
+        // TODO: Edit page
         print("Tapped on page:\(index)")
     }
     

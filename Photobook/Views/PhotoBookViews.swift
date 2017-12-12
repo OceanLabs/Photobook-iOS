@@ -42,6 +42,11 @@ class PhotoBookView: UIView {
         addSubview(contentView)
     }
     
+    func setIsRearranging(_ isRearranging: Bool) {
+        (interactions.first as? UIDragInteraction)?.isEnabled = isRearranging
+        page.tapGesture.isEnabled = !isRearranging
+    }
+    
 }
 
 class PhotoBookDoublePageView: PhotoBookView{
@@ -51,6 +56,11 @@ class PhotoBookDoublePageView: PhotoBookView{
         }
     }
     override var nibName: String { return "PhotoBookDoublePageView" }
+    
+    override func setIsRearranging(_ isRearranging: Bool) {
+        super.setIsRearranging(isRearranging)
+        rightPage.tapGesture.isEnabled = !isRearranging
+    }
 }
 
 class PhotoBookCoverView: PhotoBookView {

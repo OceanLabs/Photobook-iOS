@@ -24,6 +24,7 @@ class PhotoBookPageView: UIView {
         static let centerSquareRelativeSize: CGFloat = 0.5
     }
     
+    @IBOutlet var tapGesture: UITapGestureRecognizer!
     @IBOutlet var contentView: UIView!
     @IBOutlet weak private var imageView: UIImageView! {
         didSet{
@@ -106,7 +107,7 @@ class PhotoBookPageView: UIView {
         setup()
     }
     
-    private func setup(){
+    private func setup() {
         Bundle.main.loadNibNamed("PhotoBookPageView", owner: self, options: nil)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
