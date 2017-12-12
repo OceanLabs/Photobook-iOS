@@ -5,6 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -651,11 +652,11 @@
         <scene sceneID="suS-5G-9Zz">
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="l0p-H6-Aqd" customClass="PhotoBookViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="hYx-pR-ckZ">
+                    <view key="view" contentMode="scaleToFill" id="hYx-pR-ckZ" customClass="OutOfBoundsTouchView" customModule="Photobook" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TBG-9p-ivA">
+                            <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TBG-9p-ivA" customClass="OutOfBoundsTouchCollectionView" customModule="Photobook" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="MEd-aD-PzO">
@@ -719,15 +720,36 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="359" height="207"/>
                                                     <color key="backgroundColor" red="0.85504835840000004" green="0.86273437740000003" blue="0.86274617909999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 </view>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ALE-3X-DVw">
+                                                    <rect key="frame" x="369" y="-13" width="26" height="26"/>
+                                                    <color key="backgroundColor" red="0.85115176439285278" green="0.85870474576950073" blue="0.86666971445083618" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="26" id="aEu-55-kVa"/>
+                                                        <constraint firstAttribute="height" constant="26" id="dNC-mm-lYJ"/>
+                                                    </constraints>
+                                                    <state key="normal" title="+">
+                                                        <color key="titleColor" red="0.42745983600616455" green="0.42319035530090332" blue="0.44706451892852783" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    </state>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                            <real key="value" value="13"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="didTapPlus:" destination="IdR-Q3-Knr" eventType="touchUpInside" id="TiP-WT-eVJ"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                         </view>
                                         <constraints>
+                                            <constraint firstItem="xma-jv-CAu" firstAttribute="top" secondItem="ALE-3X-DVw" secondAttribute="centerY" id="3bs-bX-Xpb"/>
                                             <constraint firstItem="xma-jv-CAu" firstAttribute="leading" secondItem="IdR-Q3-Knr" secondAttribute="leading" id="GNX-DA-QDp"/>
                                             <constraint firstAttribute="trailing" secondItem="3BP-mf-zJk" secondAttribute="trailing" id="HoZ-mJ-jIz"/>
                                             <constraint firstAttribute="bottom" secondItem="xma-jv-CAu" secondAttribute="bottom" id="Yhb-C9-0PC"/>
                                             <constraint firstItem="xma-jv-CAu" firstAttribute="top" secondItem="IdR-Q3-Knr" secondAttribute="top" id="aPw-1a-Yeq"/>
                                             <constraint firstAttribute="bottom" secondItem="3BP-mf-zJk" secondAttribute="bottom" id="eTX-4U-tVl"/>
                                             <constraint firstItem="3BP-mf-zJk" firstAttribute="leading" secondItem="IdR-Q3-Knr" secondAttribute="leading" id="lJU-Ri-phV"/>
+                                            <constraint firstItem="ALE-3X-DVw" firstAttribute="leading" secondItem="xma-jv-CAu" secondAttribute="trailing" constant="10" id="lU6-hw-bcH"/>
                                             <constraint firstItem="3BP-mf-zJk" firstAttribute="top" secondItem="IdR-Q3-Knr" secondAttribute="top" id="q1x-A4-c8n"/>
                                             <constraint firstAttribute="trailing" secondItem="xma-jv-CAu" secondAttribute="trailing" id="s6j-u8-K3l"/>
                                         </constraints>
@@ -739,6 +761,7 @@
                                         <connections>
                                             <outlet property="bookView" destination="3BP-mf-zJk" id="S1n-MX-sFh"/>
                                             <outlet property="obscuringView" destination="xma-jv-CAu" id="HeI-uS-vaE"/>
+                                            <outlet property="plusButton" destination="ALE-3X-DVw" id="uWc-Pu-4Df"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>

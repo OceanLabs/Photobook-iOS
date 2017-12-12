@@ -180,6 +180,7 @@ extension PhotoBookViewController: UICollectionViewDataSource{
             
             cell.bookView.indexPath = indexPath
             cell.obscuringView.isHidden = indexPath != dragItemIndexPath
+            cell.delegate = self
             
             let rightPage = (cell.bookView as? PhotoBookDoublePageView)?.rightPage
             
@@ -191,13 +192,16 @@ extension PhotoBookViewController: UICollectionViewDataSource{
             case 0:
                 page.index = nil
                 rightPage?.index = 1
+                cell.plusButton.isHidden = true
             case collectionView.numberOfItems(inSection: 1) - 1: // Last page
                 page.index = (selectedAssetsManager?.assets.count ?? 0) - 1
                 rightPage?.index = nil
+                cell.plusButton.isHidden = false
             default:
                 //TODO: Get indexes from Photobook model, because full width layouts means that we can't rely on indexPaths
                 page.index = indexPath.item * 2
                 rightPage?.index = indexPath.item * 2 + 1
+                cell.plusButton.isHidden = false
                 
                 // Enable drag interaction
                 if cell.bookView.interactions.count == 0{
@@ -322,11 +326,20 @@ extension PhotoBookViewController: UICollectionViewDropDelegate {
     }
 }
 
-extension PhotoBookViewController: PhotoBookViewDelegate{
+extension PhotoBookViewController: PhotoBookViewDelegate {
     // MARK: - PhotoBookViewDelegate
     
     func didTapOnPage(index: Int) {
         print("Tapped on page:\(index)")
     }
     
+}
+
+extension PhotoBookViewController: PhotoBookCollectionViewCellDelegate {
+    // MARK: - PhotoBookCollectionViewCellDelegate
+    
+    func didTapOnPlusButton(at indexPath: IndexPath?) {
+        //TODO: Add page
+        print("Add page")
+    }
 }

@@ -8,8 +8,19 @@
 
 import UIKit
 
+protocol PhotoBookCollectionViewCellDelegate: class {
+    func didTapOnPlusButton(at indexPath: IndexPath?)
+}
+
 class PhotoBookCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var bookView: PhotoBookView!
     @IBOutlet weak var obscuringView: UIView!
+    @IBOutlet weak var plusButton: UIButton!
+    weak var delegate: PhotoBookCollectionViewCellDelegate?
+    
+    @IBAction func didTapPlus(_ sender: UIButton) {
+        delegate?.didTapOnPlusButton(at: bookView.indexPath)
+    }
+    
 }

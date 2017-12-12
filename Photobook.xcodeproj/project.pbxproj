@@ -30,6 +30,8 @@
 		2E8924941FC827E300CF3F0E /* PhotoBookView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E8924931FC827E300CF3F0E /* PhotoBookView.xib */; };
 		2EB39DD31FC5AD34009EC5B2 /* PhotoBookPageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2EB39DD21FC5AD34009EC5B2 /* PhotoBookPageView.xib */; };
 		2EB39DD51FC5AE0F009EC5B2 /* PhotoBookPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB39DD41FC5AE0F009EC5B2 /* PhotoBookPageView.swift */; };
+		2ECB5A971FDFE01100FF39A5 /* OutOfBoundsTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECB5A961FDFE01100FF39A5 /* OutOfBoundsTouchView.swift */; };
+		2ECB5A991FDFE71200FF39A5 /* OutOfBoundsTouchCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECB5A981FDFE71200FF39A5 /* OutOfBoundsTouchCollectionView.swift */; };
 		2ED5B3811FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */; };
 		2ED5B3831FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3821FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift */; };
 		2ED79FE91FBAEDE90046B96C /* AssetPickerCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */; };
@@ -89,6 +91,8 @@
 		2E8924931FC827E300CF3F0E /* PhotoBookView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoBookView.xib; sourceTree = "<group>"; };
 		2EB39DD21FC5AD34009EC5B2 /* PhotoBookPageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhotoBookPageView.xib; sourceTree = "<group>"; };
 		2EB39DD41FC5AE0F009EC5B2 /* PhotoBookPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoBookPageView.swift; sourceTree = "<group>"; };
+		2ECB5A961FDFE01100FF39A5 /* OutOfBoundsTouchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutOfBoundsTouchView.swift; sourceTree = "<group>"; };
+		2ECB5A981FDFE71200FF39A5 /* OutOfBoundsTouchCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutOfBoundsTouchCollectionView.swift; sourceTree = "<group>"; };
 		2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSearchResultsTableViewController.swift; sourceTree = "<group>"; };
 		2ED5B3821FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSearchResultsTableViewCell.swift; sourceTree = "<group>"; };
 		2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerCollectionViewController.swift; sourceTree = "<group>"; };
@@ -268,6 +272,8 @@
 				6FDF25E41FB604E100F46BB0 /* PhotoBookTabBar.swift */,
 				2EECB7DE1FC46A6000916107 /* PhotoBookViews.swift */,
 				2EB39DD41FC5AE0F009EC5B2 /* PhotoBookPageView.swift */,
+				2ECB5A961FDFE01100FF39A5 /* OutOfBoundsTouchView.swift */,
+				2ECB5A981FDFE71200FF39A5 /* OutOfBoundsTouchCollectionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -449,6 +455,7 @@
 				6FDF25E51FB604E100F46BB0 /* PhotoBookTabBar.swift in Sources */,
 				2ED79FE91FBAEDE90046B96C /* AssetPickerCollectionViewController.swift in Sources */,
 				2E0B58801FB30F2100F31A9E /* AppDelegate.swift in Sources */,
+				2ECB5A971FDFE01100FF39A5 /* OutOfBoundsTouchView.swift in Sources */,
 				2EECB7E41FC46EA800916107 /* PhotoBookCollectionViewCell.swift in Sources */,
 				6F4DE6551FB4522A0099A97E /* StoryTableViewCell.swift in Sources */,
 				6FDF25E71FB6052A00F46BB0 /* UIImageExtensions.swift in Sources */,
@@ -457,6 +464,7 @@
 				6F139E0C1FB45DD8005B937E /* StoriesManager.swift in Sources */,
 				2ED79FEE1FBAEE630046B96C /* AssetPickerCollectionViewCell.swift in Sources */,
 				2E0B58A41FB32ADD00F31A9E /* PhotosAlbumManager.swift in Sources */,
+				2ECB5A991FDFE71200FF39A5 /* OutOfBoundsTouchCollectionView.swift in Sources */,
 				2ED79FEB1FBAEDFA0046B96C /* UIScreenExtensions.swift in Sources */,
 				2E0B58A01FB3297300F31A9E /* AlbumCollectionViewCell.swift in Sources */,
 				2E0B58991FB328B800F31A9E /* Asset.swift in Sources */,
