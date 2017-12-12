@@ -142,7 +142,7 @@ class PhotobookAPIManager {
             guard let asset = layout.asset else { continue }
             
             // This might be a retry.
-            guard asset.remoteUrl == nil else {
+            guard asset.uploadUrl == nil else {
                 delegate?.didFinishUploading(asset: asset)
                 continue
             }
@@ -190,7 +190,7 @@ class PhotobookAPIManager {
         }
 
         // Store the URL string
-        productLayout.asset!.remoteUrl = url
+        productLayout.asset!.uploadUrl = url
         
         // Notify delegate
         delegate?.didFinishUploading(asset: productLayout.asset!)

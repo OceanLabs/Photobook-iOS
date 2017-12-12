@@ -14,7 +14,7 @@ protocol Asset {
     var identifier: String! { get set }
     var size: CGSize { get }
     var isLandscape: Bool { get }
-    var remoteUrl: String? { get set }
+    var uploadUrl: String? { get set }
     var assetType: String { get }
     
     /// Request the original, unedited image that this asset represents. Avoid using this method directly, instead use image(size:applyEdits:contentMode:cacheResult:progressHandler:completionHandler:)

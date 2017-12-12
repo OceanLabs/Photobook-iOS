@@ -42,7 +42,7 @@ class PhotosAsset: Asset {
     var isLandscape: Bool {
         return self.size.width > self.size.height
     }
-    var remoteUrl: String?
+    var uploadUrl: String?
     
     convenience init(_ asset: PHAsset) {
         self.init()

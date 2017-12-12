@@ -42,7 +42,7 @@ class ProductLayoutAsset: Codable {
         try container.encode(transform, forKey: .transform)
         try container.encode(containerSize, forKey: .containerSize)
         try container.encode(asset?.identifier, forKey: .assetIdentifier)
-        try container.encode(asset?.remoteUrl, forKey: .remoteUrl)
+        try container.encode(asset?.uploadUrl, forKey: .remoteUrl)
         try container.encode(asset?.assetType, forKey: .assetType)
     }
     
@@ -65,7 +65,7 @@ class ProductLayoutAsset: Codable {
             } else {
                 asset = PhotosAsset()
                 asset!.identifier = assetIdentifier
-                asset!.remoteUrl = remoteUrl
+                asset!.uploadUrl = remoteUrl
             }
         }
     }
