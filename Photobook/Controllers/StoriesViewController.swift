@@ -24,21 +24,13 @@ class StoriesViewController: UIViewController {
     private var stories = [Story]()
     private let selectedAssetsManager = SelectedAssetsManager()
     
+    private lazy var emptyScreenViewController: EmptyScreenViewController = {
+        return EmptyScreenViewController.emptyScreen(parent: self)
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        StoriesManager.shared.topStories(Constants.maxStoriesToDisplay) { [weak welf = self] (stories) in
-            // TODO: Handle permissions error
-            guard let stories = stories else { return }
-            welf?.stories = stories
-            welf?.tableView.reloadData()
-            
-            // Once we are done loading the things needed to show on this screen, load the assets from each story so that they are ready if the user taps on a story
-            for story in stories{
-                story.loadAssets(completionHandler: nil)
-            }
-        }
-        
+        loadStories()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -58,6 +50,28 @@ class StoriesViewController: UIViewController {
             segue.sourceView = sourceView
         default:
             break
+        }
+    }
+    
+    private func loadStories() {
+        StoriesManager.shared.topStories(Constants.maxStoriesToDisplay) { [weak welf = self] (stories) in
+            // TODO: Handle permissions error
+            guard let stories = stories else { return }
+            
+            if stories.count == 0 {
+                let title = NSLocalizedString("NoStoriesFound", value: "No Stories Found", comment: "Title shown to the user if the Photos app doesn't have any memory collections available")
+                let message = NSLocalizedString("YourPhotosApp", value: "You don't seem to have any stories yet!\nGet out there and take more photos.", comment: "Message shown to the user if the Photos app doesn't have any memory collections available")
+                welf?.emptyScreenViewController.show(message: message, title: title)
+                return
+            }
+            
+            welf?.stories = stories
+            welf?.tableView.reloadData()
+
+            // Once we are done loading the things needed to show on this screen, load the assets from each story so that they are ready if the user taps on a story
+            for story in stories{
+                story.loadAssets(completionHandler: nil)
+            }
         }
     }
 }
