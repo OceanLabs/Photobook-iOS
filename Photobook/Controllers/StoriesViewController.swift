@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 class StoriesViewController: UIViewController {
 
@@ -63,11 +64,16 @@ class StoriesViewController: UIViewController {
     }
 
     @objc private func loadStories() {
-        StoriesManager.shared.topStories(Constants.maxStoriesToDisplay) { [weak welf = self] (stories) in
-            // TODO: Handle permissions error
-            guard let stories = stories else { return }
+        guard PHPhotoLibrary.authorizationStatus() == .authorized else {
+            emptyScreenViewController.showGalleryPermissionsScreen()
+            return
+        }
+        
+        StoriesManager.shared.topStories(Constants.maxStoriesToDisplay) { [weak welf = self] (stories, error) in
+            // Ignore error as we've already handled it before the call to the function
+            guard error == nil else { return }
             
-            if stories.count == 0 {
+            guard let stories = stories, stories.count > 0 else {
                 let title = NSLocalizedString("NoStoriesFound", value: "No Stories Found", comment: "Title shown to the user if the Photos app doesn't have any memory collections available")
                 let message = NSLocalizedString("YourPhotosApp", value: "You don't seem to have any stories yet!\nGet out there and take more photos.", comment: "Message shown to the user if the Photos app doesn't have any memory collections available")
                 welf?.emptyScreenViewController.show(message: message, title: title)
@@ -78,7 +84,7 @@ class StoriesViewController: UIViewController {
             welf?.tableView.reloadData()
 
             // Once we are done loading the things needed to show on this screen, load the assets from each story so that they are ready if the user taps on a story
-            for story in stories{
+            for story in stories {
                 story.loadAssets(completionHandler: nil)
             }
             
