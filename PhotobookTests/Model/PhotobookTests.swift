@@ -29,14 +29,14 @@ class PhotobookTests: XCTestCase {
         XCTAssertNotNil(photobook, "Parse: Should succeed with a valid dictionary")
     }
     
-    func testParse_ShouldReturnNifIfIdIsMissing() {
+    func testParse_ShouldReturnNilIfIdIsMissing() {
         var photobookDictionary = validDictionary
         photobookDictionary["id"] = nil
         let photobookBox = Photobook.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if id is missing")
     }
 
-    func testParse_ShouldReturnNifIfNameIsMissing() {
+    func testParse_ShouldReturnNilIfNameIsMissing() {
         var photobookDictionary = validDictionary
         photobookDictionary["name"] = nil
         let photobookBox = Photobook.parse(photobookDictionary)
@@ -44,14 +44,14 @@ class PhotobookTests: XCTestCase {
     }
     
     // PageWidth
-    func testParse_ShouldReturnNifIfPageWidthIsMissing() {
+    func testParse_ShouldReturnNilIfPageWidthIsMissing() {
         var photobookDictionary = validDictionary
         photobookDictionary["pageWidth"] = nil
         let photobookBox = Photobook.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if pageWidth is missing")
     }
 
-    func testParse_ShouldReturnNifIfPageWidthIsZero() {
+    func testParse_ShouldReturnNilIfPageWidthIsZero() {
         var photobookDictionary = validDictionary
         photobookDictionary["pageWidth"] = 0.0 as AnyObject
         let photobookBox = Photobook.parse(photobookDictionary)
@@ -59,14 +59,14 @@ class PhotobookTests: XCTestCase {
     }
 
     // PageHeight
-    func testParse_ShouldReturnNifIfPageHeightIsMissing() {
+    func testParse_ShouldReturnNilIfPageHeightIsMissing() {
         var photobookDictionary = validDictionary
         photobookDictionary["pageHeight"] = nil
         let photobookBox = Photobook.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if pageHeight is missing")
     }
     
-    func testParse_ShouldReturnNifIfPageHeightIsZero() {
+    func testParse_ShouldReturnNilIfPageHeightIsZero() {
         var photobookDictionary = validDictionary
         photobookDictionary["pageHeight"] = 0.0 as AnyObject
         let photobookBox = Photobook.parse(photobookDictionary)
@@ -74,14 +74,14 @@ class PhotobookTests: XCTestCase {
     }
 
     // CoverWidth
-    func testParse_ShouldReturnNifIfCoverWidthIsMissing() {
+    func testParse_ShouldReturnNilIfCoverWidthIsMissing() {
         var photobookDictionary = validDictionary
         photobookDictionary["coverWidth"] = nil
         let photobookBox = Photobook.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if coverWidth is missing")
     }
     
-    func testParse_ShouldReturnNifIfCoverWidthIsZero() {
+    func testParse_ShouldReturnNilIfCoverWidthIsZero() {
         var photobookDictionary = validDictionary
         photobookDictionary["coverWidth"] = 0.0 as AnyObject
         let photobookBox = Photobook.parse(photobookDictionary)
@@ -89,14 +89,14 @@ class PhotobookTests: XCTestCase {
     }
     
     // CoverHeight
-    func testParse_ShouldReturnNifIfCoverHeightIsMissing() {
+    func testParse_ShouldReturnNilIfCoverHeightIsMissing() {
         var photobookDictionary = validDictionary
         photobookDictionary["coverHeight"] = nil
         let photobookBox = Photobook.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if coverHeight is missing")
     }
     
-    func testParse_ShouldReturnNifIfCoverHeightIsZero() {
+    func testParse_ShouldReturnNilIfCoverHeightIsZero() {
         var photobookDictionary = validDictionary
         photobookDictionary["coverHeight"] = 0.0 as AnyObject
         let photobookBox = Photobook.parse(photobookDictionary)
@@ -104,14 +104,14 @@ class PhotobookTests: XCTestCase {
     }
     
     // Base cost & Page cost
-    func testParse_ShouldReturnNifIfCostIsMissing() {
+    func testParse_ShouldReturnNilIfCostIsMissing() {
         var photobookDictionary = validDictionary
         photobookDictionary["cost"] = nil
         let photobookBox = Photobook.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if cost is missing")
     }
 
-    func testParse_ShouldReturnNifIfCostPerPageIsMissing() {
+    func testParse_ShouldReturnNilIfCostPerPageIsMissing() {
         var photobookDictionary = validDictionary
         photobookDictionary["costPerPage"] = nil
         let photobookBox = Photobook.parse(photobookDictionary)
@@ -119,28 +119,28 @@ class PhotobookTests: XCTestCase {
     }
 
     // Layouts
-    func testParse_ShouldReturnNifIfCoverLayoutsIsMissing() {
+    func testParse_ShouldReturnNilIfCoverLayoutsIsMissing() {
         var photobookDictionary = validDictionary
         photobookDictionary["coverLayouts"] = nil
         let photobookBox = Photobook.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if coverLayouts is missing")
     }
     
-    func testParse_ShouldReturnNifIfCoverLayoutCountIsZero() {
+    func testParse_ShouldReturnNilIfCoverLayoutCountIsZero() {
         var photobookDictionary = validDictionary
         photobookDictionary["coverLayouts"] = [] as AnyObject
         let photobookBox = Photobook.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if the coverLayout count is zero")
     }
 
-    func testParse_ShouldReturnNifIfLayoutsIsMissing() {
+    func testParse_ShouldReturnNilIfLayoutsIsMissing() {
         var photobookDictionary = validDictionary
         photobookDictionary["layouts"] = nil
         let photobookBox = Photobook.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if layouts is missing")
     }
 
-    func testParse_ShouldReturnNifIfLayoutCountIsZero() {
+    func testParse_ShouldReturnNilIfLayoutCountIsZero() {
         var photobookDictionary = validDictionary
         photobookDictionary["layouts"] = [] as AnyObject
         let photobookBox = Photobook.parse(photobookDictionary)

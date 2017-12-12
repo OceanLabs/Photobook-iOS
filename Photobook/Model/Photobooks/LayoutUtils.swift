@@ -12,6 +12,10 @@ import UIKit
 /// Utilities class that handles adjustments to a view in a container
 class LayoutUtils {
 
+    private struct Constants {
+        static let snapToZeroThreshold: CGFloat = 3.0
+    }
+    
     /// Amends a transform that will scale and nudge a View to fill a Container from its current transform
     /// IMPORTANT: It assumes that the View would be centred in the Container if the transform were the identity.
     ///
@@ -21,20 +25,25 @@ class LayoutUtils {
     ///   - containerSize: The size of the Container
     /// - Returns: A new adjusted transform where the Container will be completely filled by the View
     static func adjustTransform(_ transform: CGAffineTransform, forViewSize viewSize: CGSize, inContainerSize containerSize: CGSize) -> CGAffineTransform {
-        let angle = atan2(transform.b, transform.a)
+        var angle = atan2(transform.b, transform.a)
         var scale = sqrt(transform.a * transform.a + transform.c * transform.c)
         
-        // Check the minimum scale factor to fill the container taking into consideration the view's current rotation
-        let minScaleFactor = scaleFactorToFill(containerSize: containerSize, withSize: viewSize, atAngle: angle)
-        
-        var newTransform = transform
-        if scale < minScaleFactor {
-            newTransform = CGAffineTransform(scaleX: minScaleFactor, y: minScaleFactor)
-            newTransform = newTransform.rotated(by: angle)
-            newTransform.tx = transform.tx
-            newTransform.ty = transform.ty
-            scale = minScaleFactor
+        // Check if we need to snap to 0 degrees
+        if abs(angle.inDegrees()) < Constants.snapToZeroThreshold {
+            angle = 0.0
         }
+        
+        // Check the minimum scale factor to fill the container taking into consideration the view's current rotation
+        let minScale = scaleToFill(containerSize: containerSize, withSize: viewSize, atAngle: angle)
+
+        if scale < minScale {
+            scale = minScale
+        }
+        
+        var newTransform = CGAffineTransform(scaleX: scale, y: scale)
+        newTransform = newTransform.rotated(by: angle)
+        newTransform.tx = transform.tx
+        newTransform.ty = transform.ty
         
         // Figure out if nudging the View is needed
         let inverseTransform = newTransform.inverted()
@@ -67,6 +76,7 @@ class LayoutUtils {
     /// - Returns: A new adjusted transform that reflects the user's intent
     static func adjustTransform(_ transform: CGAffineTransform, withRecognizer recognizer: UIGestureRecognizer, inParentView parentView: UIView) -> CGAffineTransform {
         if let rotateRecognizer = recognizer as? UIRotationGestureRecognizer {
+
             return transform.rotated(by: rotateRecognizer.rotation)
         }
         if let pinchRecognizer = recognizer as? UIPinchGestureRecognizer {
@@ -92,6 +102,22 @@ class LayoutUtils {
         }
         return transform
     }
+    
+    
+    /// Amends a view's transform to use the centre of the parentView as reference.
+    /// This can be used after rotating the view around an arbitrary anchor point to take the transform back to a valid state.
+    ///
+    /// - Parameters:
+    ///   - transform: The current transform
+    ///   - parentView: The view to use as a coordinate space
+    ///   - point: The current center of the view
+    /// - Returns: A transform where the translation takes the centre of the parentView as reference
+    static func centerTransform(_ transform: CGAffineTransform, inParentView parentView: UIView, fromPoint point: CGPoint) -> CGAffineTransform {
+        var transform = transform
+        transform.tx += point.x - parentView.bounds.midX
+        transform.ty += point.y - parentView.bounds.midY
+        return transform
+    }
 
     /// Returns the scale (where 1.0 is the View's original size) needed to fill the Container
     /// IMPORTANT: Assumes that both views are centred
@@ -101,7 +127,7 @@ class LayoutUtils {
     ///   - size: The size of the View
     ///   - angle: The current rotation angle
     /// - Returns: The scale the View needs to be to fill the container
-    static func scaleFactorToFill(containerSize: CGSize, withSize size: CGSize, atAngle angle: CGFloat) -> CGFloat {
+    static func scaleToFill(containerSize: CGSize, withSize size: CGSize, atAngle angle: CGFloat) -> CGFloat {
         // FIXME: Is this angle correction necessary?
         var theta = abs(angle - 2.0 * .pi * trunc(angle / .pi / 2.0) - .pi)
         if theta > .pi / 2.0 {
@@ -117,3 +143,4 @@ class LayoutUtils {
         return scaleFactor
     }
 }
+

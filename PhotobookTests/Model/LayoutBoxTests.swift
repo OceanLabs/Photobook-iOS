@@ -21,42 +21,42 @@ class LayoutBoxTests: XCTestCase {
         XCTAssertNotNil(layoutBox, "Parse: Should succeed with a valid dictionary")
     }
     
-    func testParse_ShouldReturnNifIfIdIsMissing() {
+    func testParse_ShouldReturnNilIfIdIsMissing() {
         var layoutDictionary = validDictionary
         layoutDictionary["id"] = nil
         let layoutBox = LayoutBox.parse(layoutDictionary)
         XCTAssertNil(layoutBox, "Parse: Should return nil if ID is missing")
     }
         
-    func testParse_ShouldReturnNifIfRectIsMissing() {
+    func testParse_ShouldReturnNilIfRectIsMissing() {
         var layoutDictionary = validDictionary
         layoutDictionary["rect"] = nil
         let layoutBox = LayoutBox.parse(layoutDictionary)
         XCTAssertNil(layoutBox, "Parse: Should return nil if rect is missing")
     }
 
-    func testParse_ShouldReturnNifIfXIsNotNormalised() {
+    func testParse_ShouldReturnNilIfXIsNotNormalised() {
         var layoutDictionary = validDictionary
         layoutDictionary["rect"] = [ "x": 12.03, "y": 0.1, "width": 0.1, "height": 0.1 ] as AnyObject
         let layoutBox = LayoutBox.parse(layoutDictionary)
         XCTAssertNil(layoutBox, "Parse: Should return nil if X is not normalised")
     }
 
-    func testParse_ShouldReturnNifIfYIsNotNormalised() {
+    func testParse_ShouldReturnNilIfYIsNotNormalised() {
         var layoutDictionary = validDictionary
         layoutDictionary["rect"] = [ "x": 0.03, "y": 1.01, "width": 0.1, "height": 0.1 ] as AnyObject
         let layoutBox = LayoutBox.parse(layoutDictionary)
         XCTAssertNil(layoutBox, "Parse: Should return nil if Y is not normalised")
     }
 
-    func testParse_ShouldReturnNifIfWidthIsNotNormalised() {
+    func testParse_ShouldReturnNilIfWidthIsNotNormalised() {
         var layoutDictionary = validDictionary
         layoutDictionary["rect"] = [ "x": 0.03, "y": 0.1, "width": 2.01, "height": 0.1 ] as AnyObject
         let layoutBox = LayoutBox.parse(layoutDictionary)
         XCTAssertNil(layoutBox, "Parse: Should return nil if Width is not normalised")
     }
 
-    func testParse_ShouldReturnNifIfHeightIsNotNormalised() {
+    func testParse_ShouldReturnNilIfHeightIsNotNormalised() {
         var layoutDictionary = validDictionary
         layoutDictionary["rect"] = [ "x": 0.03, "y": 0.1, "width": 0.01, "height": 4.1 ] as AnyObject
         let layoutBox = LayoutBox.parse(layoutDictionary)
