@@ -91,9 +91,7 @@ class EmptyScreenViewController: UIViewController {
     ///
     /// - Parameter animated: Whether the Empty Screen should fade out or not. Defaults to false.
     func hide(animated: Bool = false) {
-        guard parentController != nil else {
-            fatalError("EmptyScreenViewController not added to parent!")
-        }
+        guard parentController != nil else { return }
         
         timer?.invalidate()
         

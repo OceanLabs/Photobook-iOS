@@ -31,6 +31,11 @@ class StoriesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         loadStories()
+        addObservers()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .UIApplicationDidBecomeActive, object: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -53,7 +58,11 @@ class StoriesViewController: UIViewController {
         }
     }
     
-    private func loadStories() {
+    private func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(loadStories), name: .UIApplicationDidBecomeActive, object: nil)
+    }
+
+    @objc private func loadStories() {
         StoriesManager.shared.topStories(Constants.maxStoriesToDisplay) { [weak welf = self] (stories) in
             // TODO: Handle permissions error
             guard let stories = stories else { return }
@@ -72,6 +81,8 @@ class StoriesViewController: UIViewController {
             for story in stories{
                 story.loadAssets(completionHandler: nil)
             }
+            
+            welf?.emptyScreenViewController.hide(animated: true)
         }
     }
 }
