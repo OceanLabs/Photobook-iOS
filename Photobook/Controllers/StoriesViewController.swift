@@ -15,6 +15,7 @@ class StoriesViewController: UIViewController {
         static let rowsInHeader = 4
         static let storiesPerLayoutPattern = 3
         static let rowsPerLayoutPattern = 2
+        static let maxStoriesToDisplay = 16
         static let viewStorySegueName = "ViewStorySegue"
     }
     
@@ -26,7 +27,7 @@ class StoriesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        StoriesManager.shared.topStories(10) { [weak welf = self] (stories) in
+        StoriesManager.shared.topStories(Constants.maxStoriesToDisplay) { [weak welf = self] (stories) in
             // TODO: Handle permissions error
             guard let stories = stories else { return }
             welf?.stories = stories
@@ -89,7 +90,7 @@ extension StoriesViewController: UITableViewDataSource {
             storyIndex = indexPath.row
         case 2, 3: // Double cells for the second and third rows
             storyIndex = indexPath.row == 2 ? 2 : 4 // Indexes corresponding to the first story of the third and fourth rows
-            isDouble = true
+            isDouble = stories.count >= (indexPath.row * 2) // Check if we have enought stories for a double cell
         default:
             let minusHeaderRows = indexPath.row - Constants.rowsInHeader
             let numberOfLayouts = minusHeaderRows / Constants.rowsPerLayoutPattern
