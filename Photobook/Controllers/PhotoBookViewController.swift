@@ -149,7 +149,7 @@ class PhotoBookViewController: UIViewController {
         })
     }
     
-    // MARK: - UIMenu actions
+    // MARK: - UIMenuController actions
     
     @objc func copyPages() {
         // TODO: copy
