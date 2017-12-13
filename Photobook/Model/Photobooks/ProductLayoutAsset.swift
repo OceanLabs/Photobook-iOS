@@ -21,7 +21,8 @@ class ProductLayoutAsset: Codable {
                 return
             }
             
-            // The asset was assigned a different layout. Fit the asset keeping the user's edits.
+            // The asset was assigned a different layout. Scale the image down to force a fit to container effect.
+            transform = transform.scaledBy(x: 0.001, y: 0.001)
             adjustTransform()
         }
     }

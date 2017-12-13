@@ -145,12 +145,12 @@ class ProductManager {
         }
     }
     
-    private func coverLayouts(for photobook: Photobook) -> [Layout]? {
+    func coverLayouts(for photobook: Photobook) -> [Layout]? {
         guard let layouts = layouts else { return nil }
         return layouts.filter { photobook.coverLayouts.contains($0.id) }
     }
     
-    private func layouts(for photobook: Photobook) -> [Layout]? {
+    func layouts(for photobook: Photobook) -> [Layout]? {
         guard let layouts = layouts else { return nil }
         return layouts.filter { photobook.layouts.contains($0.id) }
     }
