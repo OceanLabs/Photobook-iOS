@@ -374,7 +374,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KS4-Ss-yFr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-509" y="32"/>
+            <point key="canvasLocation" x="-510" y="32"/>
         </scene>
         <!--Browse-->
         <scene sceneID="F3Q-q1-ZX1">
