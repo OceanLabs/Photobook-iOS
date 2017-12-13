@@ -76,6 +76,8 @@ class ProductManager {
             
             welf?.products = photobooks
             welf?.layouts = layouts
+            
+            completion(nil)
         }
     }
     
