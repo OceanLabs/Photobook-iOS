@@ -13,8 +13,15 @@ class PhotoBookViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var ctaButtonContainer: UIView!
     var selectedAssetsManager: SelectedAssetsManager?
-    var photobook: String = "210x210 mm" //TODO: Replace with photobook model
     var titleLabel: UILabel?
+    var photobook: Photobook? {
+        if ProductManager.shared.product == nil{
+            guard let photobook = ProductManager.shared.products?.first, let assets = selectedAssetsManager?.assets else { return nil }
+            ProductManager.shared.setPhotobook(photobook, withAssets: assets)
+        }
+        
+        return ProductManager.shared.product
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +53,7 @@ class PhotoBookViewController: UIViewController {
         self.titleLabel = titleLabel
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         titleLabel.textAlignment = .center;
-        titleLabel.text = photobook //TODO: Replace with product name
+        titleLabel.text = photobook?.name
         
         let chevronView = UIImageView(image: UIImage(named:"chevron-down"))
         chevronView.contentMode = .scaleAspectFit
@@ -61,15 +68,16 @@ class PhotoBookViewController: UIViewController {
     }
     
     @objc func didTapOnTitle() {
-        // TODO: Get these from somewhere
-        let photobooks = ["210x210 mm", "B", "C", "D"]
+        guard let photobooks = ProductManager.shared.products else { return }
         
         let alertController = UIAlertController(title: nil, message: NSLocalizedString("Photobook/ChangeSizeTitle", value: "Changing the size keeps your layout intact", comment: "Information when the user wants to change the photo book's size"), preferredStyle: .actionSheet)
         for photobook in photobooks{
-            alertController.addAction(UIAlertAction(title: photobook, style: .default, handler: { [weak welf = self] (_) in
-                welf?.titleLabel?.text = photobook
+            alertController.addAction(UIAlertAction(title: photobook.name, style: .default, handler: { [weak welf = self] (_) in
+                welf?.titleLabel?.text = photobook.name
             }))
         }
+        
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("General/UI", value: "Cancel", comment: "Cancel a change"), style: .default, handler: nil))
         
         present(alertController, animated: true, completion: nil)
     }
@@ -89,7 +97,6 @@ class PhotoBookViewController: UIViewController {
     
     func load(page: PhotoBookPageView, size: CGSize){
         page.setImage(image: nil)
-        page.pageLayout = nil
         
         guard let index = page.index else {
             page.contentView.isHidden = true
@@ -104,6 +111,11 @@ class PhotoBookViewController: UIViewController {
                         
             page.setImage(image: image, contentMode: (asset as? PlaceholderAsset) == nil ? .scaleAspectFill : .center)
         })
+        
+        let layoutAsset = ProductManager.shared.productLayouts[index]
+        layoutAsset.asset = asset
+        page.productLayout = layoutAsset
+        
     }
     
 }

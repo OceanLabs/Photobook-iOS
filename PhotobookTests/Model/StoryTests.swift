@@ -32,12 +32,13 @@ class StoryTests: XCTestCase {
     
     var story: Story!
     var list = PHCollectionListMock()
+    var coverCollection = PHAssetCollection()
     let calendar = Calendar(identifier: Calendar.Identifier.gregorian)
     
     override func setUp() {
         super.setUp()
         
-        story = Story(list: list)
+        story = Story(list: list, coverCollection: coverCollection)
     }
     
     override func tearDown() {
@@ -53,13 +54,14 @@ class StoryTests: XCTestCase {
         XCTAssertEqual(story.collectionList.localIdentifier, list.localIdentifier, "Should have stored the collection list")
     }
     
-    func testShouldBeAbleToAssignCoverAndComponents() {
-        let cover = PHAsset()
+    func testTheCoverCollectionIsStored() {
+        XCTAssertEqual(story.collectionForCoverPhoto.localIdentifier, coverCollection.localIdentifier, "Should have stored the collection for the cover")
+    }
+    
+    func testShouldBeAbleToAssignComponents() {
         let components = [String]()
         
-        story.cover = cover
         story.components = components
-        XCTAssertEqual(story.cover.localIdentifier, cover.localIdentifier, "Should be able to assign a cover")
         XCTAssertEqual(story.components, components, "Should be able to assign location components")
     }
     
