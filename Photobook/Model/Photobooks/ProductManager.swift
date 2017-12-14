@@ -93,6 +93,10 @@ class ProductManager {
         }
 
         var unusedAssets = assets
+        
+        while unusedAssets.count < photobook.minimumPages {
+            unusedAssets.append(PlaceholderAsset())
+        }
 
         var portraitLayouts = layouts.filter { !$0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
         var landscapeLayouts = layouts.filter { $0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }

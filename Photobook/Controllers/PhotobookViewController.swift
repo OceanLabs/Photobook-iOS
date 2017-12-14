@@ -10,17 +10,25 @@ import UIKit
 
 class PhotoBookViewController: UIViewController {
 
-    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var collectionView: UICollectionView!{
+        didSet{
+            (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize = UICollectionViewFlowLayoutAutomaticSize
+            (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.estimatedItemSize = CGSize(width: 100, height: 100)
+        }
+    }
     @IBOutlet weak var ctaButtonContainer: UIView!
     var selectedAssetsManager: SelectedAssetsManager?
     var titleLabel: UILabel?
     var photobook: Photobook? {
-        if ProductManager.shared.product == nil{
-            guard let photobook = ProductManager.shared.products?.first, let assets = selectedAssetsManager?.assets else { return nil }
+        get{
+            return ProductManager.shared.product
+        }
+        set(newPhotoBook){
+            guard let assets = selectedAssetsManager?.assets,
+            let photobook = newPhotoBook
+            else { return }
             ProductManager.shared.setPhotobook(photobook, withAssets: assets)
         }
-        
-        return ProductManager.shared.product
     }
     
     override func viewDidLoad() {
@@ -30,9 +38,8 @@ class PhotoBookViewController: UIViewController {
             navigationItem.largeTitleDisplayMode = .never
         }
         
+        photobook = ProductManager.shared.products?.first
         setupTitleView()
-        
-        selectedAssetsManager?.preparePhotoBookAssets(minimumNumberOfAssets: 21) //TODO: Replace with product minimum
     }
     
     override func viewDidLayoutSubviews() {
@@ -95,26 +102,28 @@ class PhotoBookViewController: UIViewController {
         print("Tapped on spine")
     }
     
-    func load(page: PhotoBookPageView, size: CGSize){
+    func load(page: PhotoBookPageView?, size: CGSize){
+        guard let page = page else { return }
+        
         page.setImage(image: nil)
         
         guard let index = page.index else {
-            page.contentView.isHidden = true
+            page.isHidden = true
             return
         }
-        page.contentView.isHidden = false
+        page.isHidden = false
         
-        let asset = selectedAssetsManager?.assets[index]
-        
-        asset?.image(size: size, completionHandler: { (image, _) in
-            guard page.index == index, let image = image else { return }
-                        
-            page.setImage(image: image, contentMode: (asset as? PlaceholderAsset) == nil ? .scaleAspectFill : .center)
-        })
-        
-        let layoutAsset = ProductManager.shared.productLayouts[index]
-        layoutAsset.asset = asset
-        page.productLayout = layoutAsset
+        let productLayout = ProductManager.shared.productLayouts[index]
+        if productLayout.layout.imageLayoutBox != nil {
+            let asset = ProductManager.shared.productLayouts[index].asset
+            productLayout.asset = asset
+            asset?.image(size: size, completionHandler: { (image, _) in
+                guard page.index == index, let image = image else { return }
+                
+                page.setImage(image: image, contentMode: (asset as? PlaceholderAsset) == nil ? .scaleAspectFill : .center)
+            })
+        }
+        page.productLayout = productLayout
         
     }
     
@@ -130,8 +139,7 @@ extension PhotoBookViewController: UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section{
         case 1:
-            //TODO: Get this from Photobook model
-            return ((selectedAssetsManager?.assets.count ?? 0 ) + 1) / 2
+            return (ProductManager.shared.productLayouts.count + 1) / 2
         default:
             return 1
         }
@@ -145,44 +153,46 @@ extension PhotoBookViewController: UICollectionViewDataSource{
         
         switch indexPath.section{
         case 0:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "coverCell", for: indexPath) as? PhotoBookCoverCollectionViewCell,
-                let page = cell.coverView.page
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "coverCell", for: indexPath) as? PhotoBookCoverCollectionViewCell
                 else { return UICollectionViewCell() }
             
-            page.index = 0
-            page.delegate = self
-            load(page: page, size: imageSize)
+            cell.leftPageView.index = 0
+            cell.leftPageView.delegate = self
+            load(page: cell.leftPageView, size: imageSize)
             
             return cell
         default:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "doublePageCell", for: indexPath) as? PhotoBookCollectionViewCell,
-                let page = cell.bookView.page
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "doublePageCell", for: indexPath) as? PhotoBookCollectionViewCell
                 else { return UICollectionViewCell() }
             
-            let rightPage = (cell.bookView as? PhotoBookDoublePageView)?.rightPage
+            cell.bookWidthConstraint.constant = view.bounds.size.width - 20
             
-            rightPage?.delegate = self
-            page.delegate = self
-            
+            if let photobook = ProductManager.shared.product{
+            cell.aspectRatioHelperView.removeConstraint(cell.pageAspectRatioConstraint)
+            cell.pageAspectRatioConstraint = NSLayoutConstraint(item: cell.aspectRatioHelperView, attribute: .width, relatedBy: .equal, toItem: cell.aspectRatioHelperView, attribute: .height, multiplier: photobook.pageSizeRatio, constant: 0)
+            cell.pageAspectRatioConstraint.priority = UILayoutPriority(750)
+            cell.aspectRatioHelperView.addConstraint(cell.pageAspectRatioConstraint)
+            }
+
+            cell.rightPageView?.delegate = self
+            cell.leftPageView.delegate = self
+
             // First and last pages of the book are courtesy pages, no photos on them
             switch indexPath.item{
             case 0:
-                page.index = nil
-                rightPage?.index = 1
+                cell.leftPageView.index = nil
+                cell.rightPageView?.index = 1
             case collectionView.numberOfItems(inSection: 1) - 1: // Last page
-                page.index = (selectedAssetsManager?.assets.count ?? 0) - 1
-                rightPage?.index = nil
+                cell.leftPageView.index = ProductManager.shared.productLayouts.count - 1
+                cell.rightPageView?.index = nil
             default:
                 //TODO: Get indexes from Photobook model, because full width layouts means that we can't rely on indexPaths
-                page.index = indexPath.item * 2
-                rightPage?.index = indexPath.item * 2 + 1
+                cell.leftPageView.index = indexPath.item * 2
+                cell.rightPageView?.index = indexPath.item * 2 + 1
             }
-            
-            load(page: page, size: imageSize)
-            
-            if rightPage != nil{
-                load(page: rightPage!, size: imageSize)
-            }
+
+            load(page: cell.leftPageView, size: imageSize)
+            load(page: cell.rightPageView, size: imageSize)
 
             return cell
         
@@ -202,11 +212,12 @@ extension PhotoBookViewController: UICollectionViewDelegate{
     
 }
 
-extension PhotoBookViewController: PhotoBookViewDelegate{
+extension PhotoBookViewController: PhotoBookPageViewDelegate{
     // MARK: - PhotoBookViewDelegate
-    
+
     func didTapOnPage(index: Int) {
         print("Tapped on page:\(index)")
     }
-    
+
 }
+

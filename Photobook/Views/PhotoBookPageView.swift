@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol PhotoBookPageViewDelegate: class{
+    func didTapOnPage(index: Int)
+}
+
 class PhotoBookPageView: UIView {
     
     private struct Constants{
@@ -17,14 +21,9 @@ class PhotoBookPageView: UIView {
         static let centerSquareRelativeSize: CGFloat = 0.5
     }
     
-    @IBOutlet var contentView: UIView!
-    @IBOutlet weak private var imageView: UIImageView! {
-        didSet{
-            imageView.translatesAutoresizingMaskIntoConstraints = false
-        }
-    }
+    private var imageView: UIImageView = UIImageView()
     var index: Int?
-    weak var delegate: PhotoBookViewDelegate?
+    weak var delegate: PhotoBookPageViewDelegate?
     var productLayout: ProductLayout?{
         didSet{
             setupLayout()
@@ -51,6 +50,7 @@ class PhotoBookPageView: UIView {
         if let contentMode = contentMode{
             imageView.contentMode = contentMode
         }
+        imageView.isHidden = image == nil
         imageView.image = image
     }
     
@@ -65,10 +65,10 @@ class PhotoBookPageView: UIView {
     }
     
     private func setup(){
-        Bundle.main.loadNibNamed("PhotoBookPageView", owner: self, options: nil)
-        contentView.frame = self.bounds
-        contentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
-        addSubview(contentView)
+        backgroundColor = .white
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(imageView)
+        imageView.backgroundColor = UIColor(red:0.92, green:0.92, blue:0.92, alpha:1)
     }
     
     @IBAction func didTapOnPage(_ sender: UITapGestureRecognizer) {
@@ -77,3 +77,4 @@ class PhotoBookPageView: UIView {
     }
     
 }
+
