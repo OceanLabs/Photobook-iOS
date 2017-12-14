@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol PhotoBookPageViewDelegate: class{
+protocol PhotoBookPageViewDelegate: class {
     func didTapOnPage(index: Int)
 }
 
@@ -23,7 +23,7 @@ class PhotoBookPageView: UIView {
         }
     }
     
-    func setupLayout() {
+    private func setupLayout() {
         
         // Clear previous constraints
         removeConstraints(constraints)
@@ -57,7 +57,7 @@ class PhotoBookPageView: UIView {
         setup()
     }
     
-    private func setup(){
+    private func setup() {
         backgroundColor = .white
         imageView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(imageView)
@@ -65,7 +65,7 @@ class PhotoBookPageView: UIView {
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOnPage(_:))))
     }
     
-    @objc func didTapOnPage(_ sender: UITapGestureRecognizer) {
+    @objc private func didTapOnPage(_ sender: UITapGestureRecognizer) {
         guard let index = index else { return }
         delegate?.didTapOnPage(index: index)
     }

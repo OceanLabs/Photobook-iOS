@@ -10,7 +10,7 @@ import UIKit
 
 class PhotoBookViewController: UIViewController {
 
-    @IBOutlet weak var collectionView: UICollectionView!{
+    @IBOutlet weak var collectionView: UICollectionView! {
         didSet{
             (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize = UICollectionViewFlowLayoutAutomaticSize
             (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.estimatedItemSize = CGSize(width: 100, height: 100)
@@ -18,7 +18,7 @@ class PhotoBookViewController: UIViewController {
     }
     @IBOutlet weak var ctaButtonContainer: UIView!
     var selectedAssetsManager: SelectedAssetsManager?
-    var titleLabel: UILabel?
+    private var titleLabel: UILabel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,7 +48,7 @@ class PhotoBookViewController: UIViewController {
         collectionView.scrollIndicatorInsets = collectionView.contentInset
     }
     
-    func setupTitleView() {
+    private func setupTitleView() {
         let titleLabel = UILabel()
         self.titleLabel = titleLabel
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
@@ -67,7 +67,7 @@ class PhotoBookViewController: UIViewController {
         navigationItem.titleView = stackView;
     }
     
-    @objc func didTapOnTitle() {
+    @objc private func didTapOnTitle() {
         guard let photobooks = ProductManager.shared.products else { return }
         
         let alertController = UIAlertController(title: nil, message: NSLocalizedString("Photobook/ChangeSizeTitle", value: "Changing the size keeps your layout intact", comment: "Information when the user wants to change the photo book's size"), preferredStyle: .actionSheet)
@@ -90,20 +90,20 @@ class PhotoBookViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
     }
 
-    @IBAction func didTapRearrange(_ sender: UIBarButtonItem) {
+    @IBAction private func didTapRearrange(_ sender: UIBarButtonItem) {
         //TODO: Enter rearrange mode
         print("Tapped Rearrange")
     }
     
-    @IBAction func didTapCheckout(_ sender: UIButton) {
+    @IBAction private func didTapCheckout(_ sender: UIButton) {
         print("Tapped Checkout")
     }
     
-    @IBAction func didTapOnSpine(_ sender: UITapGestureRecognizer) {
+    @IBAction private func didTapOnSpine(_ sender: UITapGestureRecognizer) {
         print("Tapped on spine")
     }
     
-    func load(page: PhotoBookPageView?, size: CGSize){
+    private func load(page: PhotoBookPageView?, size: CGSize) {
         guard let page = page else { return }
         
         page.setImage(image: nil)
@@ -130,7 +130,7 @@ class PhotoBookViewController: UIViewController {
     
 }
 
-extension PhotoBookViewController: UICollectionViewDataSource{
+extension PhotoBookViewController: UICollectionViewDataSource {
     // MARK: - UICollectionViewDataSource
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -203,7 +203,7 @@ extension PhotoBookViewController: UICollectionViewDataSource{
     
 }
 
-extension PhotoBookViewController: UICollectionViewDelegate{
+extension PhotoBookViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -214,7 +214,7 @@ extension PhotoBookViewController: UICollectionViewDelegate{
     
 }
 
-extension PhotoBookViewController: PhotoBookPageViewDelegate{
+extension PhotoBookViewController: PhotoBookPageViewDelegate {
     // MARK: - PhotoBookViewDelegate
 
     func didTapOnPage(index: Int) {
