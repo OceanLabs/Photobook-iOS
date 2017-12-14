@@ -14,13 +14,6 @@ protocol PhotoBookPageViewDelegate: class{
 
 class PhotoBookPageView: UIView {
     
-    private struct Constants{
-        static let landscapeAspectRatio: CGFloat = 16.0/9.0
-        static let portraitAspectRatio: CGFloat = 9.0/16.0
-        static let centerRectangleRelativeSize: CGFloat = 0.8
-        static let centerSquareRelativeSize: CGFloat = 0.5
-    }
-    
     private var imageView: UIImageView = UIImageView()
     var index: Int?
     weak var delegate: PhotoBookPageViewDelegate?

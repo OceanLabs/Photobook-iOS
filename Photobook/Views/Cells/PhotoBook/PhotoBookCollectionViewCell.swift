@@ -15,12 +15,19 @@ class PhotoBookCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var leftPageView: PhotoBookPageView!
     @IBOutlet weak var rightPageView: PhotoBookPageView?
     @IBOutlet weak var bookWidthConstraint: NSLayoutConstraint!
-    @IBOutlet var pageAspectRatioConstraint: NSLayoutConstraint!
+    @IBOutlet private var pageAspectRatioConstraint: NSLayoutConstraint!
     
     /* This hidden view is here only to set the aspect ratio of the page,
      because if the aspect ratio constraint is set to one of the non-hidden views,
      the automatic sizing of the cells doesn't work. I don't know why, it might be a bug
      in autolayout.
      */
-    @IBOutlet weak var aspectRatioHelperView: UIView!
+    @IBOutlet private weak var aspectRatioHelperView: UIView!
+    
+    func configurePageAspectRatio(_ ratio: CGFloat) {
+        aspectRatioHelperView.removeConstraint(pageAspectRatioConstraint)
+        pageAspectRatioConstraint = NSLayoutConstraint(item: aspectRatioHelperView, attribute: .width, relatedBy: .equal, toItem: aspectRatioHelperView, attribute: .height, multiplier: ratio, constant: 0)
+        pageAspectRatioConstraint.priority = UILayoutPriority(750)
+        aspectRatioHelperView.addConstraint(pageAspectRatioConstraint)
+    }
 }

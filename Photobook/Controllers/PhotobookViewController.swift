@@ -19,17 +19,6 @@ class PhotoBookViewController: UIViewController {
     @IBOutlet weak var ctaButtonContainer: UIView!
     var selectedAssetsManager: SelectedAssetsManager?
     var titleLabel: UILabel?
-    var photobook: Photobook? {
-        get{
-            return ProductManager.shared.product
-        }
-        set(newPhotoBook){
-            guard let assets = selectedAssetsManager?.assets,
-            let photobook = newPhotoBook
-            else { return }
-            ProductManager.shared.setPhotobook(photobook, withAssets: assets)
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +27,11 @@ class PhotoBookViewController: UIViewController {
             navigationItem.largeTitleDisplayMode = .never
         }
         
-        photobook = ProductManager.shared.products?.first
+        guard let assets = selectedAssetsManager?.assets,
+            let photobook = ProductManager.shared.products?.first
+            else { return }
+        ProductManager.shared.setPhotobook(photobook, withAssets: assets)
+        
         setupTitleView()
     }
     
@@ -60,7 +53,7 @@ class PhotoBookViewController: UIViewController {
         self.titleLabel = titleLabel
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         titleLabel.textAlignment = .center;
-        titleLabel.text = photobook?.name
+        titleLabel.text = ProductManager.shared.product?.name
         
         let chevronView = UIImageView(image: UIImage(named:"chevron-down"))
         chevronView.contentMode = .scaleAspectFit
@@ -81,6 +74,14 @@ class PhotoBookViewController: UIViewController {
         for photobook in photobooks{
             alertController.addAction(UIAlertAction(title: photobook.name, style: .default, handler: { [weak welf = self] (_) in
                 welf?.titleLabel?.text = photobook.name
+                
+                var assets = [Asset]()
+                for layout in ProductManager.shared.productLayouts{
+                    guard let asset = layout.asset else { continue }
+                    assets.append(asset)
+                }
+                ProductManager.shared.setPhotobook(photobook, withAssets: assets)
+                self.collectionView.reloadData()
             }))
         }
         
@@ -168,10 +169,7 @@ extension PhotoBookViewController: UICollectionViewDataSource{
             cell.bookWidthConstraint.constant = view.bounds.size.width - 20
             
             if let photobook = ProductManager.shared.product{
-            cell.aspectRatioHelperView.removeConstraint(cell.pageAspectRatioConstraint)
-            cell.pageAspectRatioConstraint = NSLayoutConstraint(item: cell.aspectRatioHelperView, attribute: .width, relatedBy: .equal, toItem: cell.aspectRatioHelperView, attribute: .height, multiplier: photobook.pageSizeRatio, constant: 0)
-            cell.pageAspectRatioConstraint.priority = UILayoutPriority(750)
-            cell.aspectRatioHelperView.addConstraint(cell.pageAspectRatioConstraint)
+                cell.configurePageAspectRatio(photobook.pageSizeRatio)
             }
 
             cell.rightPageView?.delegate = self
