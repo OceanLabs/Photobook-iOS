@@ -69,9 +69,10 @@ class PhotoBookPageView: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(imageView)
         imageView.backgroundColor = UIColor(red:0.92, green:0.92, blue:0.92, alpha:1)
+        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOnPage(_:))))
     }
     
-    @IBAction func didTapOnPage(_ sender: UITapGestureRecognizer) {
+    @objc func didTapOnPage(_ sender: UITapGestureRecognizer) {
         guard let index = index else { return }
         delegate?.didTapOnPage(index: index)
     }
