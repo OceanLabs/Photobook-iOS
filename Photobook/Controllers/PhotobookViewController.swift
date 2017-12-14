@@ -157,6 +157,10 @@ extension PhotoBookViewController: UICollectionViewDataSource{
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "coverCell", for: indexPath) as? PhotoBookCoverCollectionViewCell
                 else { return UICollectionViewCell() }
             
+            if let photobook = ProductManager.shared.product{
+                cell.configurePageAspectRatio(photobook.coverSizeRatio)
+            }
+            
             cell.leftPageView.index = 0
             cell.leftPageView.delegate = self
             load(page: cell.leftPageView, size: imageSize)
@@ -166,7 +170,7 @@ extension PhotoBookViewController: UICollectionViewDataSource{
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "doublePageCell", for: indexPath) as? PhotoBookCollectionViewCell
                 else { return UICollectionViewCell() }
             
-            cell.bookWidthConstraint.constant = view.bounds.size.width - 20
+            cell.widthConstraint.constant = view.bounds.size.width - 20
             
             if let photobook = ProductManager.shared.product{
                 cell.configurePageAspectRatio(photobook.pageSizeRatio)

@@ -14,7 +14,7 @@ class PhotoBookCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var leftPageView: PhotoBookPageView!
     @IBOutlet weak var rightPageView: PhotoBookPageView?
-    @IBOutlet weak var bookWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var widthConstraint: NSLayoutConstraint!
     @IBOutlet private var pageAspectRatioConstraint: NSLayoutConstraint!
     
     /* This hidden view is here only to set the aspect ratio of the page,
