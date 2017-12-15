@@ -16,10 +16,13 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     private let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
     private var previousPreheatRect = CGRect.zero
     var selectedAssetsManager: SelectedAssetsManager?
+    static let coverAspectRatio: CGFloat = 2.723684211
     
     var albumManager: AlbumManager?
     var album: Album! {
         didSet{
+            // We don't want a title for stories
+            guard album as? Story == nil else { return }
             self.title = album.localizedName
         }
     }
@@ -198,6 +201,34 @@ extension AssetPickerCollectionViewController {
         return cell
     }
     
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        // We only show covers for Stories
+        guard let story = album as? Story,
+            let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "coverCell", for: indexPath) as? AssetPickerCoverCollectionViewCell
+            else { return UICollectionReusableView() }
+        
+        let size = self.collectionView(collectionView, layout: collectionView.collectionViewLayout, referenceSizeForHeaderInSection: indexPath.section)
+        story.coverImage(size: size, completionHandler: {(image, _) in
+            cell.cover = image
+        })
+        
+        cell.title = story.title
+        cell.dates = story.subtitle
+        
+        return cell
+    }
+    
+}
+
+extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayout {
+    //MARK: - UICollectionViewDelegateFlowLayout
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        // We only show covers for Stories
+        guard (album as? Story) != nil else { return .zero }
+        
+        return CGSize(width: view.bounds.size.width, height: view.bounds.size.width / AssetPickerCollectionViewController.coverAspectRatio)
+    }
 }
 
 extension AssetPickerCollectionViewController {

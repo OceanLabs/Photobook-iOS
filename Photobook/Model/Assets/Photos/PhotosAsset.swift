@@ -9,15 +9,43 @@
 import UIKit
 import Photos
 
+// Photos asset subclass with stubs to be used in testing
+class TestPhotosAsset: PhotosAsset {
+    override var size: CGSize { return CGSize(width: 10.0, height: 20.0) }
+    override init() {
+        super.init()
+        self.identifier = "id"
+    }
+}
+
 class PhotosAsset: Asset {
     
-    var photosAsset: PHAsset
-    
-    var identifier: String{
-        return photosAsset.localIdentifier
+    var assetType: String {
+        return NSStringFromClass(PhotosAsset.self)
     }
     
-    init(_ asset: PHAsset){
+    var photosAsset: PHAsset! {
+        didSet {
+            identifier = photosAsset.localIdentifier
+        }
+    }
+    var identifier: String! {
+        didSet {
+            if photosAsset == nil || photosAsset.localIdentifier != identifier,
+               let asset = PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: PHFetchOptions()).firstObject {
+                    photosAsset = asset
+            }
+        }
+    }
+    
+    var size: CGSize { return CGSize(width: photosAsset.pixelWidth, height: photosAsset.pixelHeight) }
+    var isLandscape: Bool {
+        return self.size.width > self.size.height
+    }
+    var uploadUrl: String?
+    
+    convenience init(_ asset: PHAsset) {
+        self.init()
         photosAsset = asset
     }
     
@@ -36,5 +64,4 @@ class PhotosAsset: Asset {
             }
         }
     }
-    
 }

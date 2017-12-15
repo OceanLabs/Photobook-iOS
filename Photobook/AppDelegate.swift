@@ -33,8 +33,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.window?.rootViewController = tabBarController
         }
         
+        ProductManager.shared.initialise(completion: { _ in })
+        
         return true
     }
-
+    
+    func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+        // The application was woken up by a background task
+        ProductManager.shared.loadUserPhotobook(completionHandler)
+    }
 }
 

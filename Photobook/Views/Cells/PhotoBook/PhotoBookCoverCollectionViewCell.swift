@@ -8,8 +8,6 @@
 
 import UIKit
 
-class PhotoBookCoverCollectionViewCell: UICollectionViewCell {
-    
-    @IBOutlet weak var coverView: PhotoBookCoverView!
+class PhotoBookCoverCollectionViewCell: PhotoBookCollectionViewCell {
     @IBOutlet weak var spineView: UIView!
 }

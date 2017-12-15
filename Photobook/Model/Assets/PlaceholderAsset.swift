@@ -8,8 +8,16 @@
 
 import UIKit
 
-class PlaceholderAsset: Asset {
-    var identifier: String = UUID().uuidString
+class PlaceholderAsset: Asset {    
+    var uploadUrl: String?
+    
+    var assetType: String = NSStringFromClass(PlaceholderAsset.self)
+    
+    var size: CGSize = .zero
+    
+    var isLandscape = false
+    
+    var identifier: String! = UUID().uuidString
     
     func uneditedImage(size: CGSize, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
         DispatchQueue.global(qos: .background).async {
