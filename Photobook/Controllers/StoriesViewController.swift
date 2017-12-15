@@ -15,6 +15,7 @@ class StoriesViewController: UIViewController {
         static let rowsInHeader = 4
         static let storiesPerLayoutPattern = 3
         static let rowsPerLayoutPattern = 2
+        static let viewStorySegueName = "ViewStorySegue"
     }
     
     @IBOutlet private weak var tableView: UITableView!
@@ -53,6 +54,26 @@ class StoriesViewController: UIViewController {
     
     @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
         tableView.reloadData()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let segueName = segue.identifier else { return }
+        switch segueName {
+        case Constants.viewStorySegueName:
+            guard let assetPickerController = segue.destination as? AssetPickerCollectionViewController,
+                let segue = segue as? ViewStorySegue,
+                let sender = sender as? (index: Int, sourceView: UIView?),
+                let sourceView = sender.sourceView,
+                let asset = stories[sender.index].assets.first
+                else { return }
+            assetPickerController.album = stories[sender.index]
+            assetPickerController.selectedAssetsManager = selectedAssetsManager
+            
+            segue.asset = asset
+            segue.sourceView = sourceView
+        default:
+            break
+        }
     }
 }
 
@@ -142,12 +163,7 @@ extension StoriesViewController: UITableViewDataSource {
 }
 
 extension StoriesViewController: StoryTableViewCellDelegate {
-    
-    func didTapOnStory(index: Int) {
-         guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }       
-        assetPickerController.album = stories[index]
-        assetPickerController.selectedAssetsManager = selectedAssetsManager
-        
-        self.navigationController?.pushViewController(assetPickerController, animated: true)
+    func didTapOnStory(index: Int, sourceView: UIView?) {
+        performSegue(withIdentifier: Constants.viewStorySegueName, sender: (index: index, sourceView: sourceView))
     }
 }

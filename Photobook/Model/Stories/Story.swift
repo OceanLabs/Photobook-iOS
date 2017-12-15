@@ -71,7 +71,8 @@ class Story {
     }
 }
 
-extension Story: Album{
+extension Story: Album {
+    
     var numberOfAssets: Int {
         return photoCount
     }
@@ -106,7 +107,5 @@ extension Story: Album{
     func coverImage(size: CGSize, completionHandler: @escaping (UIImage?, Error?) -> Void) {
         collectionForCoverPhoto.coverImage(size: size, completionHandler: completionHandler)
     }
-    
-    
 }
 
