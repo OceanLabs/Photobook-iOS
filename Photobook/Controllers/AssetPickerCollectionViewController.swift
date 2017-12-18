@@ -59,7 +59,6 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         //listen to asset manager
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
-        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameCleared, object: selectedAssetsManager)
     }
     
     deinit {
@@ -104,7 +103,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         if selectedAssetsManager?.count(for: album) == self.album.assets.count {
             selectAllButton.title = NSLocalizedString("ImagePicker/Button/DeselectAll", value: "Deselect All", comment: "Button title for de-selecting all selected photos")
         }
-        else{
+        else {
             selectAllButton.title = NSLocalizedString("ImagePicker/Button/SelectAll", value: "Select All", comment: "Button title for selecting all selected photos")
         }
     }
@@ -202,8 +201,15 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         }
         
         collectionView.reloadItems(at: indexPathsToReload)
+        updateSelectAllButtonTitle()
     }
     
+}
+
+extension AssetPickerCollectionViewController: AssetCollectorViewControllerDelegate {
+    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
+        collectionView?.collectionViewLayout.invalidateLayout()
+    }
 }
 
 extension AssetPickerCollectionViewController {
