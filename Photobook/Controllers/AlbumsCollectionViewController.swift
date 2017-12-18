@@ -112,8 +112,16 @@ class AlbumsCollectionViewController: UICollectionViewController {
 }
 
 extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
+    // MARK: - AssetCollectorViewControllerDelegate
+    
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
         collectionView?.collectionViewLayout.invalidateLayout()
+    }
+    
+    func imageCollectorViewController(_ imageCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset]) {
+        guard let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotoBookViewController") as? PhotoBookViewController else { return }
+        photobookViewController.selectedAssetsManager = selectedAssetsManager
+        navigationController?.pushViewController(photobookViewController, animated: true)
     }
 }
 
