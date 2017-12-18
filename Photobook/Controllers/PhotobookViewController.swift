@@ -33,6 +33,7 @@ class PhotoBookViewController: UIViewController {
     var photobook: String = "210x210 mm" //TODO: Replace with photobook model
     var titleLabel: UILabel?
     private var interactingItemIndexPath: IndexPath?
+    private var proposedDropIndexPath: IndexPath?
     private var isRearranging = false {
         didSet{
             if isRearranging{
@@ -150,7 +151,7 @@ class PhotoBookViewController: UIViewController {
         
         page.setImage(image: nil)
         
-        guard let index = page.index else {
+        guard let index = page.index, index < ProductManager.shared.productLayouts.count else {
             page.isHidden = true
             return
         }
@@ -374,26 +375,38 @@ extension PhotoBookViewController: UICollectionViewDropDelegate {
     
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal{
         
-        // Prevent dragging to the same indexPath and the next
+        // Prevent dragging to the same indexPath, the next, the cover and the first and last pages
         guard
             let draggingIndex = interactingItemIndexPath?.item,
             let dropIndexPath = destinationIndexPath,
             draggingIndex != dropIndexPath.item,
-            draggingIndex + 1 != dropIndexPath.item
-            else { return UICollectionViewDropProposal(operation: .cancel)}
-        
-        // Disallow dragging to the first and last pages and cover.
-        guard
+            draggingIndex + 1 != dropIndexPath.item,
             collectionView.cellForItem(at: dropIndexPath) as? PhotoBookCoverCollectionViewCell == nil,
             dropIndexPath.item != 0,
             dropIndexPath.item != collectionView.numberOfItems(inSection: 1) - 1 // Last Page
-            else { return UICollectionViewDropProposal(operation: .forbidden) }
+            else {
+                if proposedDropIndexPath != nil {
+                    return UICollectionViewDropProposal(operation:.move, intent: .unspecified)
+                }
+                return UICollectionViewDropProposal(operation: .cancel, intent: .unspecified)
+        }
         
+        proposedDropIndexPath = dropIndexPath
         return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        guard let sourceIndexPath = interactingItemIndexPath,
+            let destinationIndexPath = proposedDropIndexPath
+            else { return }
         
+        collectionView.performBatchUpdates({
+            collectionView.deleteItems(at: [sourceIndexPath])
+            collectionView.insertItems(at: [destinationIndexPath])
+        }, completion: { _ in
+            self.interactingItemIndexPath = nil
+            self.proposedDropIndexPath = nil
+        })
     }
 }
 
