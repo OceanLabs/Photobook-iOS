@@ -33,7 +33,7 @@ class PhotoBookNavigationBar: UINavigationBar {
             let statusBarHeight = UIApplication.shared.statusBarFrame.height
             effectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
             effectView.frame = CGRect(x: 0.0, y: -statusBarHeight, width: bounds.width, height: PhotoBookNavigationBar.navigationBarHeight + statusBarHeight)
-            effectView.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
+            effectView.backgroundColor = UIColor(white: 1.0, alpha: 0.75)
             insertSubview(effectView, at: 0)
         }
         sendSubview(toBack: effectView)

@@ -8,7 +8,9 @@
 
 import UIKit
 
-class PlaceholderAsset: Asset {    
+class PlaceholderAsset: Asset {
+    var albumIdentifier = ""
+    
     var uploadUrl: String?
     
     var assetType: String = NSStringFromClass(PlaceholderAsset.self)

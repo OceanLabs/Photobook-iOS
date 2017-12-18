@@ -42,7 +42,7 @@ class FullScreenImageViewController: UIViewController {
     }
     
     private func updateSelectedStatusIndicator(){
-        let selected = selectedAssetsManager?.isSelected(asset, for: album) ?? false
+        let selected = selectedAssetsManager?.isSelected(asset) ?? false
         selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
     }
     
@@ -67,7 +67,7 @@ class FullScreenImageViewController: UIViewController {
     // Select or deselect the asset
     @IBAction func tapGestureRecognized(_ sender: Any) {
         // TODO: Use result to present alert that we have selected the maximum amount of photos
-        _ = selectedAssetsManager?.toggleSelected(asset, for: album)
+        _ = selectedAssetsManager?.toggleSelected(asset)
         updateSelectedStatusIndicator()
         
         self.delegate?.previewDidUpdate(asset: asset)

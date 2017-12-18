@@ -22,6 +22,7 @@ class StoriesViewController: UIViewController {
     
     private var stories = [Story]()
     private let selectedAssetsManager = SelectedAssetsManager()
+    private var imageCollectorController:AssetCollectorViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +39,22 @@ class StoriesViewController: UIViewController {
             }
         }
         
+        // Setup the Image Collector Controller
+        imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
+        imageCollectorController?.delegate = self
+        
+        //listen to asset manager
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameCleared, object: selectedAssetsManager)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
+        tableView.reloadData()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -99,10 +116,10 @@ extension StoriesViewController: UITableViewDataSource {
             isDouble = (potentialDouble && storyIndex < stories.count - 1)
         }
         
-        if isDouble {
+        if isDouble && false { //TODO: fix crash for double cells if 3 stories
             // Double cell
             let story = stories[storyIndex]
-            let secondStory = stories[storyIndex + 1]
+            let secondStory = stories[storyIndex + 1] //TODO: crashes here because no +1 index story exists
             
             let doubleCell = tableView.dequeueReusableCell(withIdentifier: DoubleStoryTableViewCell.reuseIdentifier(), for: indexPath) as! DoubleStoryTableViewCell
             doubleCell.title = story.title
@@ -147,7 +164,24 @@ extension StoriesViewController: UITableViewDataSource {
 }
 
 extension StoriesViewController: StoryTableViewCellDelegate {
+    // MARK: - StoryTableViewCellDelegate
+    
     func didTapOnStory(index: Int, sourceView: UIView?) {
         performSegue(withIdentifier: Constants.viewStorySegueName, sender: (index: index, sourceView: sourceView))
     }
+}
+
+extension StoriesViewController: ImageCollectorViewControllerDelegate {
+    // MARK: - ImageCollectorViewControllerDelegate
+    
+    func imageCollectorViewController(_ imageCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset]) {
+        guard let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotoBookViewController") as? PhotoBookViewController else { return }
+        photobookViewController.selectedAssetsManager = selectedAssetsManager
+        navigationController?.pushViewController(photobookViewController, animated: true)
+    }
+    
+    func imageCollectorViewController(_ imageCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
+        
+    }
+    
 }
