@@ -116,7 +116,7 @@
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="65P-Rb-rBt">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="cls-2Q-OPO">
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="4" minimumInteritemSpacing="4" id="cls-2Q-OPO">
                                     <size key="itemSize" width="70" height="50"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -157,6 +157,11 @@
                                             <constraint firstItem="BeN-DA-vP5" firstAttribute="centerX" secondItem="KYw-qp-QZm" secondAttribute="centerX" id="Lwh-Qk-RFN"/>
                                             <constraint firstItem="BeN-DA-vP5" firstAttribute="centerY" secondItem="KYw-qp-QZm" secondAttribute="centerY" id="qHd-Jf-4Mx"/>
                                         </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="4"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                         <connections>
                                             <outlet property="pageHeightConstraint" destination="9b7-VU-Blg" id="bzJ-zC-utz"/>
                                             <outlet property="pageHorizontalAlignmentConstraint" destination="Lwh-Qk-RFN" id="RRB-m2-wbq"/>
