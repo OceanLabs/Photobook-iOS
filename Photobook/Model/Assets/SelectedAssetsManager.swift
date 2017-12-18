@@ -19,7 +19,6 @@ class SelectedAssetsManager: NSObject {
     static let notificationUserObjectKeyIndices = "indices"
     static let notificationNameSelected = Notification.Name("SelectedAssetsManager.Selected")
     static let notificationNameDeselected = Notification.Name("SelectedAssetsManager.Deselected")
-    static let notificationNameCleared = Notification.Name("SelectedAssetsManager.Cleared")
 
     private(set) var selectedAssets = [Asset]()
     
@@ -123,24 +122,15 @@ class SelectedAssetsManager: NSObject {
     
     
     func selectAllAssets(for album: Album){
-        for asset in album.assets{
-            if !isSelected(asset) {
-                select(asset)
-            }
-        }
+        select(album.assets)
     }
     
     func deselectAllAssets(for album: Album){
-        for asset in album.assets{
-            if !isSelected(asset) {
-                deselect(asset)
-            }
-        }
+        deselect(album.assets)
     }
     
     func deselectAllAssets(){
-        selectedAssets = [Asset]()
-        NotificationCenter.default.post(name: SelectedAssetsManager.notificationNameCleared, object: self)
+        deselect(selectedAssets)
     }
     
 }

@@ -41,11 +41,11 @@ class StoriesViewController: UIViewController {
         
         // Setup the Image Collector Controller
         imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
+        imageCollectorController?.delegate = self
         
         //listen to asset manager
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
-        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameCleared, object: selectedAssetsManager)
     }
     
     deinit {
@@ -74,6 +74,16 @@ class StoriesViewController: UIViewController {
         default:
             break
         }
+    }
+}
+
+extension StoriesViewController: AssetCollectorViewControllerDelegate {
+    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
+        var height:CGFloat = 0
+        if let imageCollectorVC = imageCollectorController {
+            height = imageCollectorVC.viewHeight
+        }
+        tableView.tableFooterView?.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: height)
     }
 }
 

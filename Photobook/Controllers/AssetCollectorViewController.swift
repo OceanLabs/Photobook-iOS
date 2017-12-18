@@ -9,16 +9,15 @@
 import UIKit
 import Photos
 
-protocol ImageCollectorViewControllerDelegate : class {
-    func imageCollectorViewController(_ imageCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool)
-    func imageCollectorViewController(_ imageCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset])
+protocol AssetCollectorViewControllerDelegate : class {
+    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool)
 }
 
 class AssetCollectorViewController: UIViewController {
     
     private let requiredPhotosCount: Int = 15
     
-    public var delegate: ImageCollectorViewControllerDelegate?
+    public var delegate: AssetCollectorViewControllerDelegate?
     
     @IBOutlet weak var topContainerView: UIView!
     @IBOutlet weak var clearButton: UIButton!
@@ -65,7 +64,7 @@ class AssetCollectorViewController: UIViewController {
                     self.imageCollectionView.isHidden = self.isHidden
                     self.adaptHeight()
                 }, completion: nil)
-                delegate?.imageCollectorViewController(self, didChangeHiddenStateTo: isHidden)
+                delegate?.assetCollectorViewController(self, didChangeHiddenStateTo: isHidden)
             }
         }
     }
@@ -104,7 +103,6 @@ class AssetCollectorViewController: UIViewController {
         //listen to asset manager
         NotificationCenter.default.addObserver(vc, selector: #selector(selectedAssetManagerAddedAsset(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
         NotificationCenter.default.addObserver(vc, selector: #selector(selectedAssetManagerDeletedAsset(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
-        NotificationCenter.default.addObserver(vc, selector: #selector(selectedAssetManagerCleared(_:)), name: SelectedAssetsManager.notificationNameCleared, object: selectedAssetsManager)
         
         return vc
     }
@@ -174,7 +172,7 @@ class AssetCollectorViewController: UIViewController {
     }
     
     @IBAction public func useThese() {
-        delegate?.imageCollectorViewController(self, didFinishWithAssets: assets)
+        //TODO: push vc with assets
     }
     
     private func adaptToParent() {
