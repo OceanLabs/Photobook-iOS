@@ -69,13 +69,15 @@ class ProductManager {
     /// - Parameter completion: Completion block with an optional error
     func initialise(completion:@escaping (Error?)->()) {
         apiManager.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, error) in
-            guard error != nil else {
+            guard error == nil else {
                 completion(error!)
                 return
             }
             
             welf?.products = photobooks
             welf?.layouts = layouts
+            
+            completion(nil)
         }
     }
     

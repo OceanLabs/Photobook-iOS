@@ -16,7 +16,6 @@ protocol LayoutSelectionViewControllerDelegate: class {
 
 class LayoutSelectionViewController: UIViewController {
 
-    private let reuseIdentifier = "LayoutSelectionCollectionViewCell"
     @IBOutlet private weak var collectionView: UICollectionView! {
         didSet {
             collectionView.backgroundView = nil
@@ -49,8 +48,9 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LayoutSelectionCollectionViewCell.reuseIdentifier, for: indexPath) as! LayoutSelectionCollectionViewCell
         cell.backgroundColor = .white
+        cell.layoutNumberLabel.text = "\(indexPath.row + 1)"
         return cell
     }
 }
@@ -62,3 +62,13 @@ extension LayoutSelectionViewController: UICollectionViewDelegate {
         delegate?.didSelectLayout(layout)
     }
 }
+
+class LayoutSelectionCollectionViewCell: UICollectionViewCell {
+    
+    static let reuseIdentifier = NSStringFromClass(LayoutSelectionCollectionViewCell.self).components(separatedBy: ".").last!
+    
+    @IBOutlet weak var layoutNumberLabel: UILabel!
+    @IBOutlet weak var imageView: UIImageView!
+}
+
+

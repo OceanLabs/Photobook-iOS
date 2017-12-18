@@ -13,6 +13,7 @@ class PageSetupViewController: UIViewController {
 
     private struct Constants {
         static let pageSideMargin: CGFloat = 20.0
+        static let textBoxFont = UIFont.systemFont(ofSize: 6.0)
     }
     
     // Constraints
@@ -46,16 +47,25 @@ class PageSetupViewController: UIViewController {
         return assets
     }()
     
-    var photobook: Photobook!
-    var asset: Asset! {
+    // Public settings
+    var pageSizeRatio: CGFloat! {
         didSet {
-            setupWithAsset()
+            let pageWidth = view.bounds.width - Constants.pageSideMargin
+            let pageHeight = pageWidth / pageSizeRatio
+            pageSize = CGSize(width: pageWidth, height: pageHeight)
         }
     }
+    var selectedAsset: Asset? {
+        didSet {
+            self.setupProductLayout()
+        }
+    }
+    var pageText: String? = "Fields of Athenry, County Galway, Ireland" // TEMP: Test code
     var productLayout: ProductLayout!
-    
-    var pageSize: CGSize!
+    var availableLayouts: [Layout]!
 
+    private var pageSize: CGSize = .zero
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -72,8 +82,13 @@ class PageSetupViewController: UIViewController {
                 return
             }
             
+            if let photobook = ProductManager.shared.products?.first {
+                ProductManager.shared.setPhotobook(photobook, withAssets: self.assets)
+                self.availableLayouts = ProductManager.shared.layouts(for: photobook)
+            }
+            
             // Assign a default asset
-            self.asset = self.assets.first!
+            self.selectedAsset = self.assets.first!
             
             self.setupPage()
             self.setupLayoutSelection()
@@ -84,61 +99,35 @@ class PageSetupViewController: UIViewController {
         }
     }
     
-    private func setupWithAsset() {
+    private func setupProductLayout() {
         guard productLayout == nil else { return }
         
-        if let photobook = ProductManager.shared.products?.first {
-            self.photobook = photobook
-            
-            ProductManager.shared.setPhotobook(photobook, withAssets: assets)
-            
-            let layout = ProductManager.shared.layouts!.first(where: { $0.imageLayoutBox != nil } )!
-            
-            let productLayoutAsset = ProductLayoutAsset()
-            productLayoutAsset.asset = self.asset
-            
-            self.productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset, productLayoutText: nil)
-        }
+        let layout = availableLayouts.first(where: { $0.imageLayoutBox != nil } )!
+        
+        let productLayoutAsset = ProductLayoutAsset()
+        productLayoutAsset.asset = self.selectedAsset
+        
+        self.productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset, productLayoutText: nil)
     }
     
     func setupPage() {
-        // TODO: Might be the cover
-        let pageWidth = view.bounds.width - Constants.pageSideMargin
-        let pageHeight = pageWidth / photobook.pageSizeRatio
-        pageSize = CGSize(width: pageWidth, height: pageHeight)
-        
-        pageHeightConstraint.constant = pageHeight
-        
-        if let imageBox = productLayout.layout.imageLayoutBox {
-            photoContainerView.frame = imageBox.rectContained(in: CGSize(width: pageWidth, height: pageHeight))
-            photoImageView.frame = CGRect(x: 0.0, y: 0.0, width: asset.size.width, height: asset.size.height)
-            photoImageView.center = CGPoint(x: photoContainerView.bounds.midX, y: photoContainerView.bounds.midY)
-            
-            productLayout.productLayoutAsset!.containerSize = photoContainerView.bounds.size
-            
-            let maxDimension = (imageBox.isLandscape() ? photoContainerView.bounds.width : photoContainerView.bounds.height) * UIScreen.main.scale
-            let imageSize = CGSize(width: maxDimension, height: maxDimension)
-            productLayout.productLayoutAsset!.asset!.image(size: imageSize, completionHandler: { (image, error) in
-                guard error == nil else {
-                    print("PageSetup: error retrieving image")
-                    return
-                }
-                self.photoImageView.image = image
-            })
-            photoImageView.transform = productLayout.productLayoutAsset!.transform
-        } else {
-            photoContainerView.alpha = 0.0
-        }
-        
-        if let textBox = productLayout.layout.textLayoutBox {
-            pageTextLabel.frame = textBox.rectContained(in: CGSize(width: pageWidth, height: pageHeight))
-        } else {
-            pageTextLabel.alpha = 0.0
+        // TEMP: Trigger didSet code
+        pageSizeRatio = 1.23
+        pageHeightConstraint.constant = pageSize.height
+
+        setupLayoutBoxes()
+    }
+    
+    func adjustLabelHeight() {
+        let textAttributes = [NSAttributedStringKey.font: Constants.textBoxFont]
+        let rect = pageTextLabel.text!.boundingRect(with: CGSize(width: pageTextLabel.bounds.width, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, attributes: textAttributes, context: nil)
+        if rect.size.height < pageTextLabel.bounds.height {
+            pageTextLabel.frame.size.height = rect.size.height
         }
     }
     
     func setupLayoutSelection() {
-        layoutSelectionViewController.layouts = ProductManager.shared.layouts(for: photobook)
+        layoutSelectionViewController.layouts = availableLayouts
     }
     
     // MARK: - Navigation
@@ -148,17 +137,29 @@ class PageSetupViewController: UIViewController {
             layoutSelectionViewController.delegate = self
         }
     }
-}
-
-extension PageSetupViewController: LayoutSelectionViewControllerDelegate {
     
-    func didSelectLayout(_ layout: Layout) {
-        productLayout.layout = layout
-        
-        if let imageBox = productLayout.layout.imageLayoutBox {
+    private func setupLayoutBoxes() {
+        if let imageBox = productLayout.layout.imageLayoutBox, let assetSize = productLayout.asset?.size {
+
+            // Set up the image the first time this method is called
+            if productLayout.asset != nil && photoImageView.image == nil {
+                let maxDimension = (imageBox.isLandscape() ? photoContainerView.bounds.width : photoContainerView.bounds.height) * UIScreen.main.scale
+                let imageSize = CGSize(width: maxDimension, height: maxDimension)
+                productLayout.asset!.image(size: imageSize, completionHandler: { (image, error) in
+                    guard error == nil else {
+                        print("PageSetup: error retrieving image")
+                        return
+                    }
+                    self.photoImageView.image = image
+                })
+                photoImageView.frame = CGRect(x: 0.0, y: 0.0, width: assetSize.width, height: assetSize.height)
+            }
+
+            // Lay out the image box
             photoContainerView.frame = imageBox.rectContained(in: pageSize)
             photoImageView.center = CGPoint(x: photoContainerView.bounds.midX, y: photoContainerView.bounds.midY)
             
+            // Apply the image box size so the transform can be re-calculated
             productLayout.productLayoutAsset!.containerSize = photoContainerView.bounds.size
             photoImageView.transform = productLayout.productLayoutAsset!.transform
             
@@ -167,13 +168,26 @@ extension PageSetupViewController: LayoutSelectionViewControllerDelegate {
             photoContainerView.alpha = 0.0
         }
         
-        if let textBox = productLayout.layout.textLayoutBox {
+        if let textBox = productLayout.layout.textLayoutBox, let text = pageText {
+            if pageTextLabel.text == nil {
+                pageTextLabel.font = Constants.textBoxFont
+                pageTextLabel.text = text
+            }
             pageTextLabel.frame = textBox.rectContained(in: pageSize)
+            adjustLabelHeight()
             
             pageTextLabel.alpha = 1.0
         } else {
             pageTextLabel.alpha = 0.0
         }
+    }
+}
+
+extension PageSetupViewController: LayoutSelectionViewControllerDelegate {
+    
+    func didSelectLayout(_ layout: Layout) {
+        productLayout.layout = layout
+        setupLayoutBoxes()
     }
     
 }
