@@ -207,8 +207,16 @@ class AssetPickerCollectionViewController: UICollectionViewController {
 }
 
 extension AssetPickerCollectionViewController: AssetCollectorViewControllerDelegate {
+    // MARK: AssetCollectorViewControllerDelegate
+    
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
         collectionView?.collectionViewLayout.invalidateLayout()
+    }
+    
+    func imageCollectorViewController(_ imageCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset]) {
+        guard let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotoBookViewController") as? PhotoBookViewController else { return }
+        photobookViewController.selectedAssetsManager = selectedAssetsManager
+        navigationController?.pushViewController(photobookViewController, animated: true)
     }
 }
 
@@ -362,21 +370,6 @@ extension AssetPickerCollectionViewController: FullScreenImageViewControllerDele
         return cell.imageView
         
     }
-}
-
-extension AssetPickerCollectionViewController: ImageCollectorViewControllerDelegate {
-    // MARK: - ImageCollectorViewControllerDelegate
-    
-    func imageCollectorViewController(_ imageCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset]) {
-        guard let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotoBookViewController") as? PhotoBookViewController else { return }
-        photobookViewController.selectedAssetsManager = selectedAssetsManager
-        navigationController?.pushViewController(photobookViewController, animated: true)
-    }
-    
-    func imageCollectorViewController(_ imageCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
-        
-    }
-    
 }
 
 private extension UICollectionView {

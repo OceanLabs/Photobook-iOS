@@ -11,6 +11,7 @@ import Photos
 
 protocol AssetCollectorViewControllerDelegate : class {
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool)
+    func imageCollectorViewController(_ imageCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset])
 }
 
 class AssetCollectorViewController: UIViewController {
@@ -172,7 +173,7 @@ class AssetCollectorViewController: UIViewController {
     }
     
     @IBAction public func useThese() {
-        //TODO: push vc with assets
+        self.delegate?.imageCollectorViewController(self, didFinishWithAssets: assets)
     }
     
     private func adaptToParent() {

@@ -43,6 +43,8 @@ class StoriesViewController: UIViewController {
         imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
         imageCollectorController?.delegate = self
         
+        self.tableView.tableFooterView = UIView(frame: CGRect())
+        
         //listen to asset manager
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
@@ -78,6 +80,8 @@ class StoriesViewController: UIViewController {
 }
 
 extension StoriesViewController: AssetCollectorViewControllerDelegate {
+    // MARK: - AssetCollectorViewControllerDelegate
+    
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
         var height:CGFloat = 0
         if let imageCollectorVC = imageCollectorController {
@@ -85,9 +89,16 @@ extension StoriesViewController: AssetCollectorViewControllerDelegate {
         }
         tableView.tableFooterView?.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: height)
     }
+    
+    func imageCollectorViewController(_ imageCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset]) {
+        guard let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotoBookViewController") as? PhotoBookViewController else { return }
+        photobookViewController.selectedAssetsManager = selectedAssetsManager
+        navigationController?.pushViewController(photobookViewController, animated: true)
+    }
 }
 
 extension StoriesViewController: UITableViewDataSource {
+    // MARK: UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
@@ -178,19 +189,4 @@ extension StoriesViewController: StoryTableViewCellDelegate {
     func didTapOnStory(index: Int, sourceView: UIView?) {
         performSegue(withIdentifier: Constants.viewStorySegueName, sender: (index: index, sourceView: sourceView))
     }
-}
-
-extension StoriesViewController: ImageCollectorViewControllerDelegate {
-    // MARK: - ImageCollectorViewControllerDelegate
-    
-    func imageCollectorViewController(_ imageCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset]) {
-        guard let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotoBookViewController") as? PhotoBookViewController else { return }
-        photobookViewController.selectedAssetsManager = selectedAssetsManager
-        navigationController?.pushViewController(photobookViewController, animated: true)
-    }
-    
-    func imageCollectorViewController(_ imageCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
-        
-    }
-    
 }
