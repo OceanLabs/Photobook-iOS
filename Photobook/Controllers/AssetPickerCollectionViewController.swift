@@ -16,6 +16,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     private let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
     private var previousPreheatRect = CGRect.zero
     var selectedAssetsManager: SelectedAssetsManager?
+    var imageCollectorController:AssetCollectorViewController?
     static let coverAspectRatio: CGFloat = 2.723684211
     
     var albumManager: AlbumManager?
@@ -51,6 +52,21 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         if traitCollection.forceTouchCapability == .available{
             registerForPreviewing(with: self, sourceView: collectionView!)
         }
+        
+        // Setup the Image Collector Controller
+        if let manager = selectedAssetsManager {
+            imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: manager)
+            imageCollectorController?.delegate = self
+        }
+        
+        //listen to asset manager
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameCleared, object: selectedAssetsManager)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -77,7 +93,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         activityIndicator.stopAnimating()
         
         // Hide "Select All" if current album has too many photos
-        if selectedAssetsManager?.willSelectingAllExceedTotalAllowed(for: album) ?? false{
+        if selectedAssetsManager?.willSelectingAllExceedTotalAllowed() ?? false {
             selectAllButton.title = nil
             return
         }
@@ -175,6 +191,22 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         }
     }
     
+    @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
+        guard let assets = notification.userInfo?[SelectedAssetsManager.notificationUserObjectKeyAssets] as? [Asset], let collectionView = collectionView else {
+            return
+        }
+        var indexPathsToReload = [IndexPath]()
+        for asset in assets {
+            if let index = album.assets.index(where: { (a) -> Bool in
+                return a == asset
+            }) {
+                indexPathsToReload.append(IndexPath(row: index, section: 0))
+            }
+        }
+        
+        collectionView.reloadItems(at: indexPathsToReload)
+    }
+    
 }
 
 extension AssetPickerCollectionViewController {
@@ -190,7 +222,7 @@ extension AssetPickerCollectionViewController {
         let asset = album.assets[indexPath.item]
         cell.assetId = asset.identifier
         
-        let selected = selectedAssetsManager?.isSelected(asset, for: album) ?? false
+        let selected = selectedAssetsManager?.isSelected(asset) ?? false
         cell.selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
         
         cell.imageView.image = nil
@@ -205,20 +237,28 @@ extension AssetPickerCollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        // We only show covers for Stories
-        guard let story = album as? Story,
-            let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "coverCell", for: indexPath) as? AssetPickerCoverCollectionViewCell
-            else { return UICollectionReusableView() }
-        
-        let size = self.collectionView(collectionView, layout: collectionView.collectionViewLayout, referenceSizeForHeaderInSection: indexPath.section)
-        story.coverImage(size: size, completionHandler: {(image, _) in
-            cell.cover = image
-        })
-        
-        cell.title = story.title
-        cell.dates = story.subtitle
-        
-        return cell
+        switch kind {
+        case UICollectionElementKindSectionHeader:
+            // We only show covers for Stories
+            guard let story = album as? Story,
+                let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "coverCell", for: indexPath) as? AssetPickerCoverCollectionViewCell
+                else { return UICollectionReusableView() }
+            
+            let size = self.collectionView(collectionView, layout: collectionView.collectionViewLayout, referenceSizeForHeaderInSection: indexPath.section)
+            story.coverImage(size: size, completionHandler: {(image, _) in
+                cell.cover = image
+            })
+            
+            cell.title = story.title
+            cell.dates = story.subtitle
+            
+            return cell
+        case UICollectionElementKindSectionFooter:
+            let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Footer", for: indexPath)
+            return cell
+        default:
+            return UICollectionReusableView(frame: CGRect())
+        }
     }
     
 }
@@ -232,6 +272,14 @@ extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayou
         
         return CGSize(width: view.bounds.size.width, height: view.bounds.size.width / AssetPickerCollectionViewController.coverAspectRatio)
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        var height:CGFloat = 0
+        if let imageCollectorVC = imageCollectorController {
+            height = imageCollectorVC.viewHeight
+        }
+        return CGSize(width: collectionView.frame.size.width, height: height)
+    }
 }
 
 extension AssetPickerCollectionViewController {
@@ -241,7 +289,7 @@ extension AssetPickerCollectionViewController {
         let asset = album.assets[indexPath.item]
         
         // TODO: Use result to present alert that we have selected the maximum amount of photos
-        _ = selectedAssetsManager?.toggleSelected(asset, for: album)
+        _ = selectedAssetsManager?.toggleSelected(asset)
         
         collectionView.reloadItems(at: [indexPath])
         
@@ -288,6 +336,8 @@ extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegat
 }
 
 extension AssetPickerCollectionViewController: FullScreenImageViewControllerDelegate{
+    // MARK: - FullScreenImageViewControllerDelegate
+    
     func previewDidUpdate(asset: Asset) {
         guard let index = album.assets.index(where: { (selectedAsset) in
             return selectedAsset.identifier == asset.identifier
@@ -309,6 +359,21 @@ extension AssetPickerCollectionViewController: FullScreenImageViewControllerDele
         return cell.imageView
         
     }
+}
+
+extension AssetPickerCollectionViewController: ImageCollectorViewControllerDelegate {
+    // MARK: - ImageCollectorViewControllerDelegate
+    
+    func imageCollectorViewController(_ imageCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset]) {
+        guard let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotoBookViewController") as? PhotoBookViewController else { return }
+        photobookViewController.selectedAssetsManager = selectedAssetsManager
+        navigationController?.pushViewController(photobookViewController, animated: true)
+    }
+    
+    func imageCollectorViewController(_ imageCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
+        
+    }
+    
 }
 
 private extension UICollectionView {

@@ -13,6 +13,7 @@ import UIKit
 class AlbumsCollectionViewController: UICollectionViewController {
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    var imageCollectorController:AssetCollectorViewController?
     
     /// The height between the bottom of the image and bottom of the cell where the labels sit
     private let albumCellLabelsHeight: CGFloat = 50
@@ -29,8 +30,19 @@ class AlbumsCollectionViewController: UICollectionViewController {
             welf?.collectionView?.reloadData()
         })
         
+        // Setup the Image Collector Controller
+        imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
+        
         calcAndSetCellSize()
         
+        //listen to asset manager
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameCleared, object: selectedAssetsManager)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -75,14 +87,20 @@ class AlbumsCollectionViewController: UICollectionViewController {
         self.navigationController?.pushViewController(assetPickerController, animated: true)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let segueName = segue.identifier else { return }
-        switch segueName {
-        case "TODORemoveMe":
-            (segue.destination as? PhotoBookViewController)?.selectedAssetsManager = selectedAssetsManager
-        default:
-            break
+    @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
+        guard let assets = notification.userInfo?[SelectedAssetsManager.notificationUserObjectKeyAssets] as? [Asset], let collectionView = collectionView else {
+            return
         }
+        var indexPathsToReload = [IndexPath]()
+        for asset in assets {
+            if let index = albumManager.albums.index(where: { (album) -> Bool in
+                return album.identifier == asset.albumIdentifier
+            }) {
+                indexPathsToReload.append(IndexPath(row: index, section: 0))
+            }
+        }
+        
+        collectionView.reloadItems(at: indexPathsToReload)
     }
     
 }
@@ -120,7 +138,33 @@ extension AlbumsCollectionViewController{
     
         return cell
     }
+    
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        switch kind {
+        case UICollectionElementKindSectionFooter:
+            let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Footer", for: indexPath)
+            footerView.backgroundColor = UIColor.clear
+            return footerView
+            
+        default:
+            assert(false, "Unexpected element kind")
+        }
+        
+        return UICollectionReusableView(frame: CGRect())
 
+    }
+    
+}
+
+extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        var height:CGFloat = 0
+        if let imageCollectorVC = imageCollectorController {
+            height = imageCollectorVC.viewHeight
+        }
+        return CGSize(width: collectionView.frame.size.width, height: height)
+    }
 }
 
 extension AlbumsCollectionViewController{

@@ -7,12 +7,13 @@
 //
 
 import XCTest
+import Photos
 @testable import Photobook
 
 class ProductManagerTests: XCTestCase {
 
     var productManager: ProductManager!
-    let photosAsset = TestPhotosAsset()
+    let photosAsset = TestPhotosAsset(PHAsset(), collection: PHAssetCollection())
     
     override func setUp() {
         super.setUp()

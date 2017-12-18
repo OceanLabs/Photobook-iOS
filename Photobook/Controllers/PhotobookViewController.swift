@@ -27,7 +27,7 @@ class PhotoBookViewController: UIViewController {
             navigationItem.largeTitleDisplayMode = .never
         }
         
-        guard let assets = selectedAssetsManager?.assets,
+        guard let assets = selectedAssetsManager?.selectedAssets,
             let photobook = ProductManager.shared.products?.first
             else { return }
         ProductManager.shared.setPhotobook(photobook, withAssets: assets)
