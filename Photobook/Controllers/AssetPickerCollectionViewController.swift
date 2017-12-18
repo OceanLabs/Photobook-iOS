@@ -232,20 +232,28 @@ extension AssetPickerCollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        // We only show covers for Stories
-        guard let story = album as? Story,
-            let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "coverCell", for: indexPath) as? AssetPickerCoverCollectionViewCell
-            else { return UICollectionReusableView() }
-        
-        let size = self.collectionView(collectionView, layout: collectionView.collectionViewLayout, referenceSizeForHeaderInSection: indexPath.section)
-        story.coverImage(size: size, completionHandler: {(image, _) in
-            cell.cover = image
-        })
-        
-        cell.title = story.title
-        cell.dates = story.subtitle
-        
-        return cell
+        switch kind {
+        case UICollectionElementKindSectionHeader:
+            // We only show covers for Stories
+            guard let story = album as? Story,
+                let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "coverCell", for: indexPath) as? AssetPickerCoverCollectionViewCell
+                else { return UICollectionReusableView() }
+            
+            let size = self.collectionView(collectionView, layout: collectionView.collectionViewLayout, referenceSizeForHeaderInSection: indexPath.section)
+            story.coverImage(size: size, completionHandler: {(image, _) in
+                cell.cover = image
+            })
+            
+            cell.title = story.title
+            cell.dates = story.subtitle
+            
+            return cell
+        case UICollectionElementKindSectionFooter:
+            let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Footer", for: indexPath)
+            return cell
+        default:
+            return UICollectionReusableView(frame: CGRect())
+        }
     }
     
 }
@@ -258,6 +266,14 @@ extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayou
         guard (album as? Story) != nil else { return .zero }
         
         return CGSize(width: view.bounds.size.width, height: view.bounds.size.width / AssetPickerCollectionViewController.coverAspectRatio)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        var height:CGFloat = 0
+        if let imageCollectorVC = imageCollectorController {
+            height = imageCollectorVC.viewHeight
+        }
+        return CGSize(width: collectionView.frame.size.width, height: height)
     }
 }
 
@@ -275,16 +291,6 @@ extension AssetPickerCollectionViewController {
         updateSelectAllButtonTitle()
     }
     
-}
-
-extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        var height:CGFloat = 0
-        if let imageCollectorVC = imageCollectorController {
-            height = imageCollectorVC.viewHeight
-        }
-        return CGSize(width: collectionView.frame.size.width, height: height)
-    }
 }
 
 extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegate{

@@ -12,8 +12,8 @@ import Photos
 // Photos asset subclass with stubs to be used in testing
 class TestPhotosAsset: PhotosAsset {
     override var size: CGSize { return CGSize(width: 10.0, height: 20.0) }
-    override init() {
-        super.init()
+    override init(_ asset: PHAsset, collection:PHAssetCollection) {
+        super.init(asset, collection: collection)
         self.identifier = "id"
     }
 }
@@ -23,7 +23,6 @@ class PhotosAsset: Asset {
     var assetType: String {
         return NSStringFromClass(PhotosAsset.self)
     }
-    var photosAsset: PHAsset
     var photosAssetCollection: PHAssetCollection
     
     var photosAsset: PHAsset! {
@@ -43,17 +42,16 @@ class PhotosAsset: Asset {
     var albumIdentifier: String {
         return photosAssetCollection.localIdentifier
     }
-    
-    init(_ asset: PHAsset, collection:PHAssetCollection){
+
     var size: CGSize { return CGSize(width: photosAsset.pixelWidth, height: photosAsset.pixelHeight) }
     var isLandscape: Bool {
         return self.size.width > self.size.height
     }
     var uploadUrl: String?
     
-    convenience init(_ asset: PHAsset) {
-        self.init()
+    init(_ asset: PHAsset, collection:PHAssetCollection) {
         photosAsset = asset
+        identifier = photosAsset.localIdentifier
         photosAssetCollection = collection
     }
     

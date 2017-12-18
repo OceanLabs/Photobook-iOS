@@ -133,7 +133,7 @@ class SelectedAssetsManager: NSObject {
     func deselectAllAssets(for album: Album){
         for asset in album.assets{
             if !isSelected(asset) {
-                select(asset)
+                deselect(asset)
             }
         }
     }

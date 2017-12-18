@@ -843,7 +843,7 @@
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="1" minimumInteritemSpacing="0.0" id="YiY-gd-MRu">
                             <size key="itemSize" width="134" height="131"/>
                             <size key="headerReferenceSize" width="50" height="210"/>
-                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="50" height="50"/>
                             <inset key="sectionInset" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <activityIndicatorView key="backgroundView" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" id="OvG-EI-bdv">
@@ -967,6 +967,10 @@
                                 <outlet property="datesLabel" destination="yUf-VW-H99" id="vCA-Cw-oJ3"/>
                                 <outlet property="titleLabel" destination="L2H-2t-uck" id="4Ax-ay-Rrm"/>
                             </connections>
+                        </collectionReusableView>
+                        <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="Footer" id="GKc-1G-1w9">
+                            <rect key="frame" x="0.0" y="342" width="414" height="50"/>
+                            <autoresizingMask key="autoresizingMask"/>
                         </collectionReusableView>
                         <connections>
                             <outlet property="dataSource" destination="Wt4-pd-wZe" id="LEH-x5-ysk"/>
