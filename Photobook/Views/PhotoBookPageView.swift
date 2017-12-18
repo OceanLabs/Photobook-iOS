@@ -18,27 +18,7 @@ class PhotoBookPageView: UIView {
     var index: Int?
     weak var delegate: PhotoBookPageViewDelegate?
     var tapGesture: UITapGestureRecognizer!
-    var productLayout: ProductLayout?{
-        didSet{
-            setupLayout()
-        }
-    }
-    
-    private func setupLayout() {
-        
-        // Clear previous constraints
-        removeConstraints(constraints)
-        imageView.removeConstraints(imageView.constraints)
-        
-        guard let imageFrame = productLayout?.layout.imageLayoutBox?.rect else { return }
-        imageView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: imageFrame.size.width).isActive = true
-        imageView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: imageFrame.size.height).isActive = true
-        addConstraint(NSLayoutConstraint(item: imageView, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: imageFrame.origin.x + imageFrame.size.width, constant: 0))
-        addConstraint(NSLayoutConstraint(item: imageView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: imageFrame.origin.y + imageFrame.size.height, constant: 0))
-        
-        setNeedsLayout()
-        layoutIfNeeded()
-    }
+    var productLayout: ProductLayout?
     
     func setImage (image: UIImage?, contentMode: UIViewContentMode? = nil) {
         if let contentMode = contentMode{
@@ -58,9 +38,18 @@ class PhotoBookPageView: UIView {
         setup()
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        guard let imageBox = productLayout?.layout.imageLayoutBox else { return }
+        imageView.frame = imageBox.rectContained(in: CGSize(width: frame.width, height: frame.height))
+    }
+    
     private func setup() {
         backgroundColor = .white
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         addSubview(imageView)
         imageView.backgroundColor = UIColor(red:0.92, green:0.92, blue:0.92, alpha:1)
         tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapOnPage(_:)))
