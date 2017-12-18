@@ -17,7 +17,6 @@ class PageSetupViewController: UIViewController {
     }
     
     // Constraints
-    @IBOutlet weak var pageWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var pageHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var pageHorizontalAlignmentConstraint: NSLayoutConstraint!
     
@@ -127,6 +126,8 @@ class PageSetupViewController: UIViewController {
     }
     
     func setupLayoutSelection() {
+        layoutSelectionViewController.pageSizeRatio = pageSizeRatio
+        layoutSelectionViewController.asset = selectedAsset
         layoutSelectionViewController.layouts = availableLayouts
     }
     
@@ -143,8 +144,10 @@ class PageSetupViewController: UIViewController {
 
             // Set up the image the first time this method is called
             if productLayout.asset != nil && photoImageView.image == nil {
+                // FIXME: container doesn't have the right size at this point
                 let maxDimension = (imageBox.isLandscape() ? photoContainerView.bounds.width : photoContainerView.bounds.height) * UIScreen.main.scale
                 let imageSize = CGSize(width: maxDimension, height: maxDimension)
+                // FIXME: Defaults to oportunistic whereas we would want a single request with the exact size returned here
                 productLayout.asset!.image(size: imageSize, completionHandler: { (image, error) in
                     guard error == nil else {
                         print("PageSetup: error retrieving image")
@@ -169,7 +172,7 @@ class PageSetupViewController: UIViewController {
         }
         
         if let textBox = productLayout.layout.textLayoutBox, let text = pageText {
-            if pageTextLabel.text == nil {
+            if (pageTextLabel.text ?? "").isEmpty {
                 pageTextLabel.font = Constants.textBoxFont
                 pageTextLabel.text = text
             }

@@ -45,7 +45,7 @@
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             </view>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Add your own text" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QoP-S5-WEn">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QoP-S5-WEn">
                                                 <rect key="frame" x="40" y="230" width="283" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="8"/>
@@ -97,7 +97,6 @@
                         <outlet property="pageHorizontalAlignmentConstraint" destination="nGa-Ns-PQ4" id="EJq-Tv-GMW"/>
                         <outlet property="pageTextLabel" destination="QoP-S5-WEn" id="Bc6-w6-LF0"/>
                         <outlet property="pageView" destination="7ay-JZ-NNl" id="HQI-i4-HR1"/>
-                        <outlet property="pageWidthConstraint" destination="Ueg-Wi-jk0" id="yDl-wq-kKi"/>
                         <outlet property="photoContainerView" destination="P8t-BC-XqP" id="N8r-dd-U72"/>
                         <outlet property="photoImageView" destination="Ex1-FQ-53l" id="WYg-LI-8JH"/>
                     </connections>
@@ -131,20 +130,38 @@
                                             <rect key="frame" x="0.0" y="0.0" width="70" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zwc-OU-2ho">
-                                                    <rect key="frame" x="30.333333333333329" y="13" width="10" height="24"/>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BeN-DA-vP5">
+                                                    <rect key="frame" x="10" y="7" width="50" height="37"/>
+                                                    <subviews>
+                                                        <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fNu-gg-LTr">
+                                                            <rect key="frame" x="4" y="4" width="46" height="33"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <subviews>
+                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Uc9-th-wBM">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="46" height="29"/>
+                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                </imageView>
+                                                            </subviews>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </view>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="37" id="9b7-VU-Blg"/>
+                                                    </constraints>
+                                                </view>
                                             </subviews>
                                         </view>
                                         <constraints>
-                                            <constraint firstItem="Zwc-OU-2ho" firstAttribute="centerX" secondItem="KYw-qp-QZm" secondAttribute="centerX" id="h30-u1-4uT"/>
-                                            <constraint firstItem="Zwc-OU-2ho" firstAttribute="centerY" secondItem="KYw-qp-QZm" secondAttribute="centerY" id="z9E-gS-hCY"/>
+                                            <constraint firstItem="BeN-DA-vP5" firstAttribute="width" secondItem="KYw-qp-QZm" secondAttribute="width" constant="-20" id="Kw5-gN-1T4"/>
+                                            <constraint firstItem="BeN-DA-vP5" firstAttribute="centerX" secondItem="KYw-qp-QZm" secondAttribute="centerX" id="Lwh-Qk-RFN"/>
+                                            <constraint firstItem="BeN-DA-vP5" firstAttribute="centerY" secondItem="KYw-qp-QZm" secondAttribute="centerY" id="qHd-Jf-4Mx"/>
                                         </constraints>
                                         <connections>
-                                            <outlet property="layoutNumberLabel" destination="Zwc-OU-2ho" id="JNa-dh-0dT"/>
+                                            <outlet property="pageHeightConstraint" destination="9b7-VU-Blg" id="bzJ-zC-utz"/>
+                                            <outlet property="pageHorizontalAlignmentConstraint" destination="Lwh-Qk-RFN" id="RRB-m2-wbq"/>
+                                            <outlet property="photoContainerView" destination="fNu-gg-LTr" id="XFu-CX-WPm"/>
+                                            <outlet property="thumbnailImageView" destination="Uc9-th-wBM" id="OGT-WM-K16"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -168,7 +185,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uX0-TK-al1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1026" y="-970"/>
+            <point key="canvasLocation" x="1024.6376811594205" y="-970.10869565217399"/>
         </scene>
         <!--Stories-->
         <scene sceneID="tne-QT-ifu">
