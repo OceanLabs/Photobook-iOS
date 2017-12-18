@@ -32,13 +32,13 @@ class AlbumsCollectionViewController: UICollectionViewController {
         
         // Setup the Image Collector Controller
         imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
+        imageCollectorController?.delegate = self
         
         calcAndSetCellSize()
         
         //listen to asset manager
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
-        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameCleared, object: selectedAssetsManager)
     }
     
     deinit {
@@ -96,13 +96,25 @@ class AlbumsCollectionViewController: UICollectionViewController {
             if let index = albumManager.albums.index(where: { (album) -> Bool in
                 return album.identifier == asset.albumIdentifier
             }) {
-                indexPathsToReload.append(IndexPath(row: index, section: 0))
+                //check if indexpath is already added
+                if indexPathsToReload.index(where: { (indexPath) -> Bool in
+                    return indexPath.row == index
+                }) == nil {
+                    //not added yet, add
+                    indexPathsToReload.append(IndexPath(row: index, section: 0))
+                }
             }
         }
         
         collectionView.reloadItems(at: indexPathsToReload)
     }
     
+}
+
+extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
+    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
+        collectionView?.collectionViewLayout.invalidateLayout()
+    }
 }
 
 extension AlbumsCollectionViewController{
