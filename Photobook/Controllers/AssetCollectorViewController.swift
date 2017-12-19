@@ -190,19 +190,15 @@ class AssetCollectorViewController: UIViewController {
         
         view.translatesAutoresizingMaskIntoConstraints = false
         
-        if let vConstraints = verticalConstraints {
-            view.superview?.removeConstraints(vConstraints)
-        }
-        if let hConstraints = horizontalConstraints {
-            view.superview?.removeConstraints(hConstraints)
-        }
-        
         let viewDictionary : [ String : UIView ] = [ "collectorView" : view ]
-        
-        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[collectorView]|", options: [], metrics: nil, views: viewDictionary)
-        verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[collectorView]|", options: [], metrics: nil, views: viewDictionary)
-        
-        view.superview?.addConstraints(horizontalConstraints! + verticalConstraints!)
+        if verticalConstraints == nil {
+            verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[collectorView]|", options: [], metrics: nil, views: viewDictionary)
+            view.superview?.addConstraints(verticalConstraints!)
+        }
+        if horizontalConstraints == nil {
+            horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[collectorView]|", options: [], metrics: nil, views: viewDictionary)
+            view.superview?.addConstraints(horizontalConstraints!)
+        }
         view.superview?.layoutIfNeeded()
         
         adaptHeight()
