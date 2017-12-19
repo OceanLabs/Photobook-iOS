@@ -116,8 +116,8 @@ class SelectedAssetsManager: NSObject {
         return selectedAssets(for: album).count
     }
     
-    func willSelectingAllExceedTotalAllowed() -> Bool {
-        return selectedAssets.count > Constants.maximumAllowedPhotosForSelectAll
+    func willSelectingAllExceedTotalAllowed(_ album:Album) -> Bool {
+        return selectedAssets.count - selectedAssets(for: album).count + album.assets.count > Constants.maximumAllowedPhotosForSelectAll
     }
     
     

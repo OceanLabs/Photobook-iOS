@@ -16,21 +16,30 @@ protocol AssetCollectorViewControllerDelegate : class {
 
 class AssetCollectorViewController: UIViewController {
     
-    private let requiredPhotosCount: Int = 15
+    private let requiredPhotosCount = 15
     
     public var delegate: AssetCollectorViewControllerDelegate?
     
-    @IBOutlet weak var topContainerView: UIView!
-    @IBOutlet weak var clearButton: UIButton!
-    @IBOutlet weak var pickMoreLabel: UILabel!
-    @IBOutlet weak var imageCollectionView: UICollectionView!
-    @IBOutlet weak var useTheseButtonContainer: UIView!
-    @IBOutlet weak var useTheseCountView: UILabel!
-    @IBOutlet weak var deleteDoneButton: UIButton!
+    @IBOutlet private weak var topContainerView: UIView!
+    @IBOutlet private weak var clearButton: UIButton!
+    @IBOutlet private weak var pickMoreLabel: UILabel!
+    @IBOutlet private weak var imageCollectionView: UICollectionView!
+    @IBOutlet private weak var useTheseButtonContainer: UIView!
+    @IBOutlet private weak var useTheseCountView: UILabel!
+    @IBOutlet private weak var deleteDoneButton: UIButton!
     
-    @IBOutlet var longPressGestureRecognizer: UILongPressGestureRecognizer!
+    @IBOutlet private var longPressGestureRecognizer: UILongPressGestureRecognizer!
     
-    private var selectedAssetsManager: SelectedAssetsManager!
+    private var selectedAssetsManager: SelectedAssetsManager! {
+        didSet {
+            if oldValue != nil {
+                NotificationCenter.default.removeObserver(self, name: SelectedAssetsManager.notificationNameSelected, object: oldValue)
+                NotificationCenter.default.removeObserver(self, name: SelectedAssetsManager.notificationNameDeselected, object: oldValue)
+            }
+            NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerAddedAsset(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
+            NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerDeletedAsset(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
+        }
+    }
     private var assets: [Asset] {
         get {
             if let manager = selectedAssetsManager {
@@ -43,7 +52,7 @@ class AssetCollectorViewController: UIViewController {
     private let viewHeightDefault: CGFloat = 125
     private(set) var viewHeight: CGFloat = 0
     
-    var isDeletingEnabled: Bool = false {
+    var isDeletingEnabled = false {
         didSet {
             if oldValue != isDeletingEnabled {
                 deleteDoneButton.isHidden = !isDeletingEnabled
@@ -53,6 +62,7 @@ class AssetCollectorViewController: UIViewController {
             }
         }
     }
+    
     private var isHideShowAnimated: Bool = false
     public var isHidden: Bool = false {
         didSet {
@@ -100,10 +110,6 @@ class AssetCollectorViewController: UIViewController {
         let vc = storyboard.instantiateViewController(withIdentifier: "ImageCollectorViewController") as! AssetCollectorViewController
         vc.parentController = parent
         vc.selectedAssetsManager = selectedAssetsManager
-        
-        //listen to asset manager
-        NotificationCenter.default.addObserver(vc, selector: #selector(selectedAssetManagerAddedAsset(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
-        NotificationCenter.default.addObserver(vc, selector: #selector(selectedAssetManagerDeletedAsset(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
         
         return vc
     }
@@ -191,19 +197,15 @@ class AssetCollectorViewController: UIViewController {
         
         view.translatesAutoresizingMaskIntoConstraints = false
         
-        if let vConstraints = verticalConstraints {
-            view.superview?.removeConstraints(vConstraints)
-        }
-        if let hConstraints = horizontalConstraints {
-            view.superview?.removeConstraints(hConstraints)
-        }
-        
         let viewDictionary : [ String : UIView ] = [ "collectorView" : view ]
-        
-        horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[collectorView]|", options: [], metrics: nil, views: viewDictionary)
-        verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[collectorView]|", options: [], metrics: nil, views: viewDictionary)
-        
-        view.superview?.addConstraints(horizontalConstraints! + verticalConstraints!)
+        if verticalConstraints == nil {
+            verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[collectorView]|", options: [], metrics: nil, views: viewDictionary)
+            view.superview?.addConstraints(verticalConstraints!)
+        }
+        if horizontalConstraints == nil {
+            horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[collectorView]|", options: [], metrics: nil, views: viewDictionary)
+            view.superview?.addConstraints(horizontalConstraints!)
+        }
         view.superview?.layoutIfNeeded()
         
         adaptHeight()
