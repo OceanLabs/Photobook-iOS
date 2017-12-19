@@ -94,6 +94,11 @@ class ProductManager {
 
         var unusedAssets = assets
         
+        // Duplicate the first photo to use as both the cover AND the first page 🙄
+        if let first = unusedAssets.first{
+            unusedAssets.insert(first, at: 0)
+        }
+        
         while unusedAssets.count < photobook.minimumPages {
             unusedAssets.append(PlaceholderAsset())
         }
