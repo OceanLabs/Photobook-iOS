@@ -140,11 +140,15 @@ class ProductManager {
         // Switching products
         product = photobook
         for pageLayout in productLayouts {
+            let availableLayouts = pageLayout === productLayouts.first ? coverLayouts : layouts
+            
             // Match layouts from the current product to the new one
-            var newLayout = layouts.first { $0.category == pageLayout.layout.category }
+            var newLayout = availableLayouts.first {
+                $0.category == pageLayout.layout.category
+            }
             if newLayout == nil {
                 // Should not happen but to be safe, pick the first layout
-                newLayout = layouts.first
+                newLayout = availableLayouts.first
             }
             pageLayout.layout = newLayout
         }
