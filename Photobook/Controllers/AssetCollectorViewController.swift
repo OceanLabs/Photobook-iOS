@@ -291,17 +291,6 @@ class AssetCollectorViewController: UIViewController {
                 indexPaths.append(IndexPath(row: index, section: 0))
             }
             imageCollectionView.insertItems(at: indexPaths)
-            indexPaths.removeAll()
-            var i = 0
-            while i<assets.count {
-                if indices.index(where: { (x) -> Bool in
-                    return x == i
-                }) == nil {
-                    indexPaths.append(IndexPath(item: i, section: 0))
-                }
-                i = i+1
-            }
-            imageCollectionView.reloadItems(at: indexPaths)
             adaptToNewAssetCount()
             moveToCollectionViewEnd()
         }
