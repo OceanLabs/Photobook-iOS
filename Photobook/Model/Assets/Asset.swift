@@ -17,6 +17,8 @@ protocol Asset {
     var uploadUrl: String? { get set }
     var assetType: String { get }
     
+    var albumIdentifier: String { get }
+    
     /// Request the original, unedited image that this asset represents. Avoid using this method directly, instead use image(size:applyEdits:contentMode:cacheResult:progressHandler:completionHandler:)
     ///
     /// - Parameters:
@@ -52,4 +54,8 @@ extension Asset {
             completionHandler(image, nil)
         })
     }
+}
+
+func ==(lhs: Asset, rhs: Asset) -> Bool{
+    return lhs.identifier == rhs.identifier && lhs.albumIdentifier == rhs.albumIdentifier
 }
