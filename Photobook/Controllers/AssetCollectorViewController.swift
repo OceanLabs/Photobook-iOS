@@ -29,7 +29,16 @@ class AssetCollectorViewController: UIViewController {
     
     @IBOutlet private var longPressGestureRecognizer: UILongPressGestureRecognizer!
     
-    private var selectedAssetsManager: SelectedAssetsManager!
+    private var selectedAssetsManager: SelectedAssetsManager! {
+        didSet {
+            if oldValue != nil {
+                NotificationCenter.default.removeObserver(self, name: SelectedAssetsManager.notificationNameSelected, object: oldValue)
+                NotificationCenter.default.removeObserver(self, name: SelectedAssetsManager.notificationNameDeselected, object: oldValue)
+            }
+            NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerAddedAsset(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
+            NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerDeletedAsset(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
+        }
+    }
     private var assets: [Asset] {
         get {
             if let manager = selectedAssetsManager {
@@ -52,6 +61,7 @@ class AssetCollectorViewController: UIViewController {
             }
         }
     }
+    
     private var isHideShowAnimated: Bool = false
     public var isHidden: Bool = false {
         didSet {
@@ -99,10 +109,6 @@ class AssetCollectorViewController: UIViewController {
         let vc = storyboard.instantiateViewController(withIdentifier: "ImageCollectorViewController") as! AssetCollectorViewController
         vc.parentController = parent
         vc.selectedAssetsManager = selectedAssetsManager
-        
-        //listen to asset manager. Don't move this to viewdidload or init as the selected asset manager wouldn't be initialised
-        NotificationCenter.default.addObserver(vc, selector: #selector(selectedAssetManagerAddedAsset(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
-        NotificationCenter.default.addObserver(vc, selector: #selector(selectedAssetManagerDeletedAsset(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
         
         return vc
     }
@@ -287,6 +293,17 @@ class AssetCollectorViewController: UIViewController {
                 indexPaths.append(IndexPath(row: index, section: 0))
             }
             imageCollectionView.insertItems(at: indexPaths)
+            indexPaths.removeAll()
+            var i = 0
+            while i<assets.count {
+                if indices.index(where: { (x) -> Bool in
+                    return x == i
+                }) == nil {
+                    indexPaths.append(IndexPath(item: i, section: 0))
+                }
+                i = i+1
+            }
+            imageCollectionView.reloadItems(at: indexPaths)
             adaptToNewAssetCount()
             moveToCollectionViewEnd()
         }
