@@ -15,10 +15,13 @@ protocol PhotoBookPageViewDelegate: class {
 class PhotoBookPageView: UIView {
     
     private var imageView: UIImageView = UIImageView()
-    var index: Int?
     weak var delegate: PhotoBookPageViewDelegate?
     var tapGesture: UITapGestureRecognizer!
     var productLayout: ProductLayout?
+    
+    var index: Int? {
+        return ProductManager.shared.productLayouts.index(where: { return $0 === self.productLayout })
+    }
     
     func setImage (image: UIImage?, contentMode: UIViewContentMode? = nil) {
         if let contentMode = contentMode{

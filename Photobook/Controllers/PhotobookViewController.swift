@@ -114,17 +114,15 @@ class PhotoBookViewController: UIViewController {
         }
         page.isHidden = false
         
-        let productLayout = ProductManager.shared.productLayouts[index]
-        if productLayout.layout.imageLayoutBox != nil {
+        if page.productLayout?.layout.imageLayoutBox != nil {
             let asset = ProductManager.shared.productLayouts[index].asset
-            productLayout.asset = asset
+            page.productLayout?.asset = asset
             asset?.image(size: size, completionHandler: { (image, _) in
                 guard page.index == index, let image = image else { return }
                 
                 page.setImage(image: image, contentMode: (asset as? PlaceholderAsset) == nil ? .scaleAspectFill : .center)
             })
         }
-        page.productLayout = productLayout
         
     }
     
@@ -161,7 +159,7 @@ extension PhotoBookViewController: UICollectionViewDataSource {
                 cell.configurePageAspectRatio(photobook.coverSizeRatio)
             }
             
-            cell.leftPageView.index = 0
+            cell.leftPageView.productLayout = nil
             cell.leftPageView.delegate = self
             load(page: cell.leftPageView, size: imageSize)
             
@@ -182,15 +180,15 @@ extension PhotoBookViewController: UICollectionViewDataSource {
             // First and last pages of the book are courtesy pages, no photos on them
             switch indexPath.item{
             case 0:
-                cell.leftPageView.index = nil
-                cell.rightPageView?.index = 1
+                cell.leftPageView.productLayout = nil
+                cell.rightPageView?.productLayout = ProductManager.shared.productLayouts[1]
             case collectionView.numberOfItems(inSection: 1) - 1: // Last page
-                cell.leftPageView.index = ProductManager.shared.productLayouts.count - 1
-                cell.rightPageView?.index = nil
+                cell.leftPageView.productLayout = ProductManager.shared.productLayouts[ProductManager.shared.productLayouts.count - 1]
+                cell.rightPageView?.productLayout = nil
             default:
                 //TODO: Get indexes from Photobook model, because full width layouts means that we can't rely on indexPaths
-                cell.leftPageView.index = indexPath.item * 2
-                cell.rightPageView?.index = indexPath.item * 2 + 1
+                cell.leftPageView.productLayout = ProductManager.shared.productLayouts[indexPath.item * 2]
+                cell.rightPageView?.productLayout = ProductManager.shared.productLayouts[indexPath.item * 2 + 1]
             }
 
             load(page: cell.leftPageView, size: imageSize)
