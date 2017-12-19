@@ -59,7 +59,7 @@ class LayoutSelectionViewController: UIViewController {
         }
     }
     
-    var selectedLayoutId: Int = 0
+    var selectedLayoutIndex = 0
     
     weak var delegate: LayoutSelectionViewControllerDelegate?
     
@@ -104,6 +104,14 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
             cell.photoContainerView.alpha = 0.0
         }
         
+        if indexPath.row == selectedLayoutIndex {
+            cell.contentView.borderColor = UIColor(red: 21.0/255.0, green: 96.0/255.0, blue: 244.0/255.0, alpha: 1.0)
+            cell.contentView.borderWidth = 4.0
+        } else {
+            cell.contentView.borderColor = .clear
+            cell.contentView.borderWidth = 0.0
+        }
+
         return cell
     }
 }
@@ -112,6 +120,8 @@ extension LayoutSelectionViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let layout = layouts[indexPath.row]
+        selectedLayoutIndex = indexPath.row
+        collectionView.reloadData()
         delegate?.didSelectLayout(layout)
     }
 }

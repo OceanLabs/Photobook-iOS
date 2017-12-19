@@ -17,8 +17,8 @@ class PageSetupViewController: UIViewController {
     }
     
     // Constraints
-    @IBOutlet weak var pageHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var pageHorizontalAlignmentConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var pageWidthConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var pageHeightConstraint: NSLayoutConstraint!
     
     // Outlets
     @IBOutlet private weak var pageView: UIView! {
@@ -52,6 +52,7 @@ class PageSetupViewController: UIViewController {
             let pageWidth = view.bounds.width - Constants.pageSideMargin
             let pageHeight = pageWidth / pageSizeRatio
             pageSize = CGSize(width: pageWidth, height: pageHeight)
+            pageWidthConstraint.constant = pageWidth
         }
     }
     var selectedAsset: Asset? {
@@ -140,8 +141,15 @@ class PageSetupViewController: UIViewController {
     }
     
     private func setupLayoutBoxes() {
+        UIView.animate(withDuration: 0.1) {
+            self.photoContainerView.alpha = 0.0
+            self.pageTextLabel.alpha = 0.0
+        }
+        
+        var showImageBox = false
+        var showTextBox = false
+        
         if let imageBox = productLayout.layout.imageLayoutBox, let assetSize = productLayout.asset?.size {
-
             // Set up the image the first time this method is called
             if productLayout.asset != nil && photoImageView.image == nil {
                 // FIXME: container doesn't have the right size at this point
@@ -166,9 +174,7 @@ class PageSetupViewController: UIViewController {
             productLayout.productLayoutAsset!.containerSize = photoContainerView.bounds.size
             photoImageView.transform = productLayout.productLayoutAsset!.transform
             
-            photoContainerView.alpha = 1.0
-        } else {
-            photoContainerView.alpha = 0.0
+            showImageBox = true
         }
         
         if let textBox = productLayout.layout.textLayoutBox, let text = pageText {
@@ -179,10 +185,14 @@ class PageSetupViewController: UIViewController {
             pageTextLabel.frame = textBox.rectContained(in: pageSize)
             adjustLabelHeight()
             
-            pageTextLabel.alpha = 1.0
-        } else {
-            pageTextLabel.alpha = 0.0
+            showTextBox = true
         }
+        
+        guard showImageBox || showTextBox else { return }
+        UIView.animate(withDuration: 0.3, delay: 0.1, options: [], animations: {
+            self.photoContainerView.alpha = showImageBox ? 1.0 : 0.0
+            self.pageTextLabel.alpha = showTextBox ? 1.0 : 0.0
+        }, completion: nil)
     }
 }
 
