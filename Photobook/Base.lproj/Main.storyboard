@@ -76,7 +76,7 @@
                                 </connections>
                             </containerView>
                         </subviews>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.8666666666666667" green="0.87450980392156863" blue="0.8784313725490196" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="p5s-6j-6B3" firstAttribute="trailing" secondItem="2K5-To-oFe" secondAttribute="trailing" id="2tO-Ej-mfK"/>
                             <constraint firstItem="3pJ-D7-Ell" firstAttribute="trailing" secondItem="2K5-To-oFe" secondAttribute="trailing" id="APJ-Kn-X1Y"/>
@@ -117,22 +117,26 @@
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="65P-Rb-rBt">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="4" minimumInteritemSpacing="4" id="cls-2Q-OPO">
-                                    <size key="itemSize" width="70" height="50"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="cls-2Q-OPO">
+                                    <size key="itemSize" width="85" height="64"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="LayoutSelectionCollectionViewCell" id="KYw-qp-QZm" customClass="LayoutSelectionCollectionViewCell" customModule="Photobook" customModuleProvider="target">
-                                        <rect key="frame" x="10" y="10" width="70" height="50"/>
+                                    <collectionViewCell multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="LayoutSelectionCollectionViewCell" id="KYw-qp-QZm" customClass="LayoutSelectionCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                                        <rect key="frame" x="10" y="3" width="85" height="64"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                            <rect key="frame" x="0.0" y="0.0" width="70" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="85" height="64"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="W2s-2e-gfi">
+                                                    <rect key="frame" x="1" y="1" width="83" height="62"/>
+                                                    <color key="backgroundColor" red="0.74901960784313726" green="0.75686274509803919" blue="0.75686274509803919" alpha="1" colorSpace="calibratedRGB"/>
+                                                </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BeN-DA-vP5">
-                                                    <rect key="frame" x="10" y="7" width="50" height="37"/>
+                                                    <rect key="frame" x="10" y="14" width="65" height="37"/>
                                                     <subviews>
                                                         <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fNu-gg-LTr">
                                                             <rect key="frame" x="4" y="4" width="46" height="33"/>
@@ -154,19 +158,19 @@
                                             </subviews>
                                         </view>
                                         <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="W2s-2e-gfi" secondAttribute="trailing" constant="1" id="7x6-2r-upU"/>
+                                            <constraint firstItem="W2s-2e-gfi" firstAttribute="leading" secondItem="KYw-qp-QZm" secondAttribute="leading" constant="1" id="G5s-dX-eL4"/>
                                             <constraint firstItem="BeN-DA-vP5" firstAttribute="width" secondItem="KYw-qp-QZm" secondAttribute="width" constant="-20" id="Kw5-gN-1T4"/>
                                             <constraint firstItem="BeN-DA-vP5" firstAttribute="centerX" secondItem="KYw-qp-QZm" secondAttribute="centerX" id="Lwh-Qk-RFN"/>
+                                            <constraint firstItem="W2s-2e-gfi" firstAttribute="top" secondItem="KYw-qp-QZm" secondAttribute="top" constant="1" id="acM-lv-5AE"/>
                                             <constraint firstItem="BeN-DA-vP5" firstAttribute="centerY" secondItem="KYw-qp-QZm" secondAttribute="centerY" id="qHd-Jf-4Mx"/>
+                                            <constraint firstAttribute="bottom" secondItem="W2s-2e-gfi" secondAttribute="bottom" constant="1" id="uUD-A6-xbU"/>
                                         </constraints>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="6"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
                                         <connections>
                                             <outlet property="pageHeightConstraint" destination="9b7-VU-Blg" id="bzJ-zC-utz"/>
                                             <outlet property="pageHorizontalAlignmentConstraint" destination="Lwh-Qk-RFN" id="RRB-m2-wbq"/>
                                             <outlet property="photoContainerView" destination="fNu-gg-LTr" id="XFu-CX-WPm"/>
+                                            <outlet property="roundedBackgroundView" destination="W2s-2e-gfi" id="hpc-Np-ebj"/>
                                             <outlet property="thumbnailImageView" destination="Uc9-th-wBM" id="OGT-WM-K16"/>
                                         </connections>
                                     </collectionViewCell>

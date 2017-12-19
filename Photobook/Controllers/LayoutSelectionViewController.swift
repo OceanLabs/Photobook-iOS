@@ -80,7 +80,7 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LayoutSelectionCollectionViewCell.reuseIdentifier, for: indexPath) as! LayoutSelectionCollectionViewCell
-        cell.backgroundColor = .lightGray
+        cell.backgroundColor = .clear
         cell.pageHeightConstraint.constant = pageSize.height
     
         let layout = layouts[indexPath.row]
@@ -104,13 +104,7 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
             cell.photoContainerView.alpha = 0.0
         }
         
-        if indexPath.row == selectedLayoutIndex {
-            cell.contentView.borderColor = UIColor(red: 21.0/255.0, green: 96.0/255.0, blue: 244.0/255.0, alpha: 1.0)
-            cell.contentView.borderWidth = 4.0
-        } else {
-            cell.contentView.borderColor = .clear
-            cell.contentView.borderWidth = 0.0
-        }
+        cell.isLayoutSelected = (indexPath.row == selectedLayoutIndex)
 
         return cell
     }
@@ -125,21 +119,3 @@ extension LayoutSelectionViewController: UICollectionViewDelegate {
         delegate?.didSelectLayout(layout)
     }
 }
-
-class LayoutSelectionCollectionViewCell: UICollectionViewCell {
-    
-    static let reuseIdentifier = NSStringFromClass(LayoutSelectionCollectionViewCell.self).components(separatedBy: ".").last!
-
-    private struct Constants {
-        static let pageSideMargin: CGFloat = 20.0
-    }
-    
-    // Constraints
-    @IBOutlet weak var pageHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var pageHorizontalAlignmentConstraint: NSLayoutConstraint!
-
-    @IBOutlet weak var photoContainerView: UIView!
-    @IBOutlet weak var thumbnailImageView: UIImageView!
-}
-
-
