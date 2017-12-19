@@ -24,6 +24,7 @@ class StoriesViewController: UIViewController {
     
     private var stories = [Story]()
     private let selectedAssetsManager = SelectedAssetsManager()
+    private var imageCollectorController:AssetCollectorViewController?
     
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
@@ -32,11 +33,12 @@ class StoriesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         loadStories()
+        setupImageCollector()
         addObservers()
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: .UIApplicationDidBecomeActive, object: nil)
+    @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
+        tableView.reloadData()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -61,6 +63,18 @@ class StoriesViewController: UIViewController {
     
     private func addObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(loadStories), name: .UIApplicationDidBecomeActive, object: nil)
+        
+        //listen to asset manager
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
+    }
+    
+    private func setupImageCollector() {
+        // Setup the Image Collector Controller
+        imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
+        imageCollectorController?.delegate = self
+        
+        self.tableView.tableFooterView = UIView(frame: CGRect())
     }
 
     @objc private func loadStories() {
@@ -90,6 +104,16 @@ class StoriesViewController: UIViewController {
             
             welf?.emptyScreenViewController.hide(animated: true)
         }
+    }
+}
+
+extension StoriesViewController: AssetCollectorViewControllerDelegate {
+    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
+        var height:CGFloat = 0
+        if let imageCollectorVC = imageCollectorController {
+            height = imageCollectorVC.viewHeight
+        }
+        tableView.tableFooterView?.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: height)
     }
 }
 
@@ -131,10 +155,10 @@ extension StoriesViewController: UITableViewDataSource {
             isDouble = (potentialDouble && storyIndex < stories.count - 1)
         }
         
-        if isDouble {
+        if isDouble && false { //TODO: fix crash for double cells if 3 stories
             // Double cell
             let story = stories[storyIndex]
-            let secondStory = stories[storyIndex + 1]
+            let secondStory = stories[storyIndex + 1] //TODO: crashes here because no +1 index story exists
             
             let doubleCell = tableView.dequeueReusableCell(withIdentifier: DoubleStoryTableViewCell.reuseIdentifier(), for: indexPath) as! DoubleStoryTableViewCell
             doubleCell.title = story.title
