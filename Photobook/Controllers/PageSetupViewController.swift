@@ -16,6 +16,10 @@ class PageSetupViewController: UIViewController {
         static let textBoxFont = UIFont.systemFont(ofSize: 6.0)
     }
     
+    private enum Tools: Int {
+        case selectPhoto, selectLayout, editLayout, editColor
+    }
+    
     // Constraints
     @IBOutlet private weak var pageWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var pageHeightConstraint: NSLayoutConstraint!
@@ -29,6 +33,9 @@ class PageSetupViewController: UIViewController {
     @IBOutlet private weak var photoContainerView: UIView!
     @IBOutlet private weak var photoImageView: UIImageView!
     @IBOutlet private weak var pageTextLabel: UILabel!
+    
+    @IBOutlet var toolbarButtons: [UIButton]!
+    @IBOutlet weak var toolbar: UIToolbar!
     
     private var layoutSelectionViewController: LayoutSelectionViewController!
     
@@ -70,6 +77,8 @@ class PageSetupViewController: UIViewController {
         super.viewDidLoad()
         
         pageView.alpha = 0.0
+        toolbar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
+        toolbarButtons[1].isSelected = true
         
         // TEMP: Remove when this is provided by the previous screen
         setupFakePhotobookData()
@@ -194,6 +203,34 @@ class PageSetupViewController: UIViewController {
             self.pageTextLabel.alpha = showTextBox ? 1.0 : 0.0
         }, completion: nil)
     }
+    
+    @IBAction func tappedCancelButton(_ sender: UIBarButtonItem) {
+    
+    }
+    
+    @IBAction func tappedDoneButton(_ sender: UIBarButtonItem) {
+        
+    }
+    
+    @IBAction func tappedToolButton(_ sender: UIButton) {
+        for button in toolbarButtons {
+            button.isSelected = (button === sender)
+        }
+        
+        guard let index = toolbarButtons.index(of: sender), let tool = Tools(rawValue: index) else { return }
+        
+        // TODO: action UI changes
+        switch tool {
+        case .selectPhoto:
+            break
+        case .selectLayout:
+            break
+        case .editLayout:
+            break
+        case .editColor:
+            break
+        }
+    }
 }
 
 extension PageSetupViewController: LayoutSelectionViewControllerDelegate {
@@ -202,5 +239,4 @@ extension PageSetupViewController: LayoutSelectionViewControllerDelegate {
         productLayout.layout = layout
         setupLayoutBoxes()
     }
-    
 }
