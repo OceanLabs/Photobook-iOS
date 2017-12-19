@@ -15,19 +15,19 @@ protocol AssetCollectorViewControllerDelegate : class {
 
 class AssetCollectorViewController: UIViewController {
     
-    private let requiredPhotosCount: Int = 15
+    private let requiredPhotosCount = 15
     
     public var delegate: AssetCollectorViewControllerDelegate?
     
-    @IBOutlet weak var topContainerView: UIView!
-    @IBOutlet weak var clearButton: UIButton!
-    @IBOutlet weak var pickMoreLabel: UILabel!
-    @IBOutlet weak var imageCollectionView: UICollectionView!
-    @IBOutlet weak var useTheseButtonContainer: UIView!
-    @IBOutlet weak var useTheseCountView: UILabel!
-    @IBOutlet weak var deleteDoneButton: UIButton!
+    @IBOutlet private weak var topContainerView: UIView!
+    @IBOutlet private weak var clearButton: UIButton!
+    @IBOutlet private weak var pickMoreLabel: UILabel!
+    @IBOutlet private weak var imageCollectionView: UICollectionView!
+    @IBOutlet private weak var useTheseButtonContainer: UIView!
+    @IBOutlet private weak var useTheseCountView: UILabel!
+    @IBOutlet private weak var deleteDoneButton: UIButton!
     
-    @IBOutlet var longPressGestureRecognizer: UILongPressGestureRecognizer!
+    @IBOutlet private var longPressGestureRecognizer: UILongPressGestureRecognizer!
     
     private var selectedAssetsManager: SelectedAssetsManager!
     private var assets: [Asset] {
@@ -42,7 +42,7 @@ class AssetCollectorViewController: UIViewController {
     private let viewHeightDefault: CGFloat = 125
     private(set) var viewHeight: CGFloat = 0
     
-    var isDeletingEnabled: Bool = false {
+    var isDeletingEnabled = false {
         didSet {
             if oldValue != isDeletingEnabled {
                 deleteDoneButton.isHidden = !isDeletingEnabled
@@ -100,7 +100,7 @@ class AssetCollectorViewController: UIViewController {
         vc.parentController = parent
         vc.selectedAssetsManager = selectedAssetsManager
         
-        //listen to asset manager
+        //listen to asset manager. Don't move this to viewdidload or init as the selected asset manager wouldn't be initialised
         NotificationCenter.default.addObserver(vc, selector: #selector(selectedAssetManagerAddedAsset(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
         NotificationCenter.default.addObserver(vc, selector: #selector(selectedAssetManagerDeletedAsset(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
         
