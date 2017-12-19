@@ -329,6 +329,8 @@ extension PhotoBookViewController: UIDragInteractionDelegate {
             let cell = collectionView.cellForItem(at: indexPath) as? PhotoBookCollectionViewCell
             else { return }
         
+        (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.estimatedItemSize = cell.frame.size
+        
         animator.addCompletion({(position) in
             if position == .end{
                 cell.obscuringView.isHidden = false
