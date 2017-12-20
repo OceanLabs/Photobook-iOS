@@ -323,7 +323,9 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Stories" id="IhD-78-udu"/>
+                    <navigationItem key="navigationItem" title="Stories" id="IhD-78-udu">
+                        <barButtonItem key="backBarButtonItem" title="Back" id="iqf-Zj-TMe"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="7F6-wM-saA" id="XPP-qk-iV9"/>
                         <segue destination="Wt4-pd-wZe" kind="custom" identifier="ViewStorySegue" customClass="ViewStorySegue" customModule="Photobook" customModuleProvider="target" id="3w8-4z-ZrQ"/>

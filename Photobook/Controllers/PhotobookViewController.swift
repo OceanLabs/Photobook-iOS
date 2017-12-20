@@ -31,8 +31,6 @@ class PhotoBookViewController: UIViewController {
             let photobook = ProductManager.shared.products?.first
             else { return }
         
-        // Reset any previous photobook
-        ProductManager.shared.product = nil
         ProductManager.shared.setPhotobook(photobook, withAssets: assets)
         
         setupTitleView()
