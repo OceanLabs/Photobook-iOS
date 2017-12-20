@@ -10,6 +10,7 @@ import UIKit
 import Photos
 
 struct Constants {
+    // TODO: get this from the photobook model. Move to collector class?
     static let maximumAllowedPhotosForSelectAll = 70
 }
 

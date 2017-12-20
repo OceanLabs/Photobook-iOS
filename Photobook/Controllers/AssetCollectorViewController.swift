@@ -16,7 +16,11 @@ protocol AssetCollectorViewControllerDelegate : class {
 
 class AssetCollectorViewController: UIViewController {
     
-    private let requiredPhotosCount = 15
+    private var requiredPhotosCount: Int {
+        // In case we haven't loaded the products yet, return a hardcoded number
+        // TODO: Change this number to something sensible
+        return ProductManager.shared.product?.minimumRequiredAssets ?? ProductManager.shared.products?.first?.minimumRequiredAssets ?? 20
+    }
     
     public var delegate: AssetCollectorViewControllerDelegate?
     

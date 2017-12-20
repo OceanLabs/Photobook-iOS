@@ -19,9 +19,11 @@ class Photobook: Codable {
     var costPerPage: Decimal!
     var coverLayouts: [Int]!
     var layouts: [Int]! // IDs of the permitted layouts
-    var minimumPages: Int! = 21 // TODO: Get this from somewhere
     
-    // TODO: Currencies?
+    // Does not include the cover asset
+    var minimumRequiredAssets: Int! = 20 // TODO: Get this from somewhere
+    
+    // TODO: Currencies? MaximumAllowedAssets?
     
     init() {
         fatalError("Use parse(_:) instead")

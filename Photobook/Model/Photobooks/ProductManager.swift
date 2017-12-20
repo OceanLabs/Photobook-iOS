@@ -107,7 +107,7 @@ class ProductManager {
             var tempLayouts = [ProductLayout]()
             
             // Fill minimum pages with Placeholder assets if needed
-            while addedAssets.count < photobook.minimumPages {
+            while addedAssets.count < photobook.minimumRequiredAssets + 1 { // +1 for cover which is not included in the minimum
                 addedAssets.append(PlaceholderAsset())
             }
 
@@ -165,7 +165,7 @@ class ProductManager {
         }
         
         // Fill minimum pages with Placeholder assets if needed
-        while productLayouts.count + addedAssets.count < photobook.minimumPages {
+        while productLayouts.count + addedAssets.count < photobook.minimumRequiredAssets + 1 { // +1 for cover which is not included in the minimum
             addedAssets.append(PlaceholderAsset())
         }
         
