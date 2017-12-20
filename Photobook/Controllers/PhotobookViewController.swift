@@ -162,7 +162,7 @@ extension PhotoBookViewController: UICollectionViewDataSource {
                 cell.configurePageAspectRatio(photobook.coverSizeRatio)
             }
             
-            cell.leftPageView.productLayout = nil
+            cell.leftPageView.productLayout = ProductManager.shared.productLayouts[0]
             cell.leftPageView.delegate = self
             load(page: cell.leftPageView, size: imageSize)
             
