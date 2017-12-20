@@ -10,6 +10,10 @@ import Photos
 
 class StoriesManager {
     
+    enum StoriesManagerError: Error {
+        case unauthorized
+    }
+    
     // Shared client
     static let shared = StoriesManager()
     
@@ -19,17 +23,17 @@ class StoriesManager {
         static let photosPerBook = 20
     }
     
-    func topStories(_ count: Int, completion: @escaping ([Story]?)->()) {
+    func topStories(_ count: Int, completion: @escaping ([Story]?, Error?)->()) {
         PHPhotoLibrary.requestAuthorization { (status) in
             guard status == .authorized else {
-                completion(nil)
+                completion(nil, StoriesManagerError.unauthorized)
                 return
             }
             
             // Do the ordering asynchronously
             DispatchQueue.main.async {
                 let memories = self.orderStories()
-                completion(Array<Story>(memories.prefix(count)))
+                completion(Array<Story>(memories.prefix(count)), nil)
             }
         }
     }

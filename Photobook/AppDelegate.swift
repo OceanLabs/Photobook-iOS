@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         if IntroViewController.userHasDismissed {
             //set initial view controller to tab bar vc
-            self.window?.rootViewController = tabBarController
+            window?.rootViewController = tabBarController
         }
         
         ProductManager.shared.initialise(completion: { _ in })
