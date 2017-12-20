@@ -118,7 +118,7 @@ extension StoriesViewController: AssetCollectorViewControllerDelegate {
         tableView.tableFooterView?.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: height)
     }
     
-    func imageCollectorViewController(_ imageCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset]) {
+    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset]) {
         guard let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotoBookViewController") as? PhotoBookViewController else { return }
         photobookViewController.selectedAssetsManager = selectedAssetsManager
         navigationController?.pushViewController(photobookViewController, animated: true)

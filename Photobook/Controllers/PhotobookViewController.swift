@@ -10,13 +10,13 @@ import UIKit
 
 class PhotoBookViewController: UIViewController {
 
-    @IBOutlet weak var collectionView: UICollectionView! {
+    @IBOutlet private weak var collectionView: UICollectionView! {
         didSet{
             (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize = UICollectionViewFlowLayoutAutomaticSize
             (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.estimatedItemSize = CGSize(width: 100, height: 100)
         }
     }
-    @IBOutlet weak var ctaButtonContainer: UIView!
+    @IBOutlet private weak var ctaButtonContainer: UIView!
     var selectedAssetsManager: SelectedAssetsManager?
     private var titleLabel: UILabel?
     
@@ -53,7 +53,7 @@ class PhotoBookViewController: UIViewController {
         let titleLabel = UILabel()
         self.titleLabel = titleLabel
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        titleLabel.textAlignment = .center;
+        titleLabel.textAlignment = .center
         titleLabel.text = ProductManager.shared.product?.name
         
         let chevronView = UIImageView(image: UIImage(named:"chevron-down"))
@@ -62,10 +62,10 @@ class PhotoBookViewController: UIViewController {
         let stackView = UIStackView(arrangedSubviews: [titleLabel, chevronView])
         stackView.spacing = 5
         
-        stackView.isUserInteractionEnabled = true;
+        stackView.isUserInteractionEnabled = true
         stackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOnTitle)))
         
-        navigationItem.titleView = stackView;
+        navigationItem.titleView = stackView
     }
     
     @objc private func didTapOnTitle() {
