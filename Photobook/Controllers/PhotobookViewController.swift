@@ -30,7 +30,6 @@ class PhotoBookViewController: UIViewController {
     }
     @IBOutlet weak var ctaButtonContainer: UIView!
     var selectedAssetsManager: SelectedAssetsManager?
-    var photobook: String = "210x210 mm" //TODO: Replace with photobook model
     var titleLabel: UILabel?
     private var interactingItemIndexPath: IndexPath?
     private var proposedDropIndexPath: IndexPath?
@@ -231,7 +230,6 @@ extension PhotoBookViewController: UICollectionViewDataSource {
                 else { return UICollectionViewCell() }
             
             cell.widthConstraint.constant = view.bounds.size.width - 20
-            cell.bookView.indexPath = indexPath
             cell.obscuringView.isHidden = indexPath != interactingItemIndexPath
             cell.delegate = self
             
@@ -254,7 +252,9 @@ extension PhotoBookViewController: UICollectionViewDataSource {
                 cell.plusButton.isHidden = false
             default:
                 cell.leftPageView.productLayout = ProductManager.shared.productLayouts[indexPath.item * 2]
-                cell.rightPageView?.productLayout = ProductManager.shared.productLayouts[indexPath.item * 2 + 1]
+                if indexPath.item * 2 + 1 < ProductManager.shared.productLayouts.count {
+                    cell.rightPageView?.productLayout = ProductManager.shared.productLayouts[indexPath.item * 2 + 1]
+                }
                 cell.plusButton.isHidden = false
                 
                 // Add drag interaction
@@ -311,10 +311,12 @@ extension PhotoBookViewController: UIDragInteractionDelegate {
     
     func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {
         guard let bookView = interaction.view as? PhotobookView,
-            let indexPath = bookView.indexPath
+            let productLayout = bookView.leftPageView.productLayout,
+            let foldIndex = ProductManager.shared.foldIndex(for: productLayout),
+            foldIndex != collectionView.numberOfItems(inSection: 1) - 1
             else { return [] }
         
-        interactingItemIndexPath = indexPath
+        interactingItemIndexPath = IndexPath(item: foldIndex, section: 1)
         
         let itemProvider = NSItemProvider()
         let dragItem = UIDragItem(itemProvider: itemProvider)
@@ -323,8 +325,9 @@ extension PhotoBookViewController: UIDragInteractionDelegate {
     
     func dragInteraction(_ interaction: UIDragInteraction, willAnimateLiftWith animator: UIDragAnimating, session: UIDragSession) {
         guard let bookView = interaction.view as? PhotobookView,
-            let indexPath = bookView.indexPath,
-            let cell = collectionView.cellForItem(at: indexPath) as? PhotoBookCollectionViewCell
+            let productLayout = bookView.leftPageView.productLayout,
+            let foldIndex = ProductManager.shared.foldIndex(for: productLayout),
+            let cell = collectionView.cellForItem(at: IndexPath(item: foldIndex, section: 1)) as? PhotoBookCollectionViewCell
             else { return }
         
         (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.estimatedItemSize = cell.frame.size
@@ -362,8 +365,9 @@ extension PhotoBookViewController: UIDragInteractionDelegate {
         interactingItemIndexPath = nil
 
         guard let bookView = interaction.view as? PhotobookView,
-            let indexPath = bookView.indexPath,
-            let cell = collectionView.cellForItem(at: indexPath) as? PhotoBookCollectionViewCell else { return }
+            let productLayout = bookView.leftPageView.productLayout,
+            let foldIndex = ProductManager.shared.foldIndex(for: productLayout),
+            let cell = collectionView.cellForItem(at: IndexPath(item: foldIndex, section: 1)) as? PhotoBookCollectionViewCell else { return }
         
         cell.obscuringView.isHidden = true
     }
@@ -383,11 +387,8 @@ extension PhotoBookViewController: UICollectionViewDropDelegate {
             draggingIndex + 1 != dropIndexPath.item,
             collectionView.cellForItem(at: dropIndexPath) as? PhotoBookCoverCollectionViewCell == nil,
             dropIndexPath.item != 0,
-            dropIndexPath.item != collectionView.numberOfItems(inSection: 1) - 1 // Last Page
+            dropIndexPath.item != collectionView.numberOfItems(inSection: 1) // Last Page
             else {
-                if proposedDropIndexPath != nil {
-                    return UICollectionViewDropProposal(operation:.move, intent: .unspecified)
-                }
                 return UICollectionViewDropProposal(operation: .cancel, intent: .unspecified)
         }
         
@@ -397,8 +398,32 @@ extension PhotoBookViewController: UICollectionViewDropDelegate {
     
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
         guard let sourceIndexPath = interactingItemIndexPath,
-            let destinationIndexPath = proposedDropIndexPath
+            var destinationIndexPath = proposedDropIndexPath,
+            let sourceProductLayout = (collectionView.cellForItem(at: sourceIndexPath) as? PhotoBookCollectionViewCell)?.bookView.leftPageView.productLayout,
+            let sourceProductLayoutIndex = ProductManager.shared.productLayouts.index(where: { $0 === sourceProductLayout })
             else { return }
+        
+        // Because we show a placeholder graphic where we picked the source cell up, the destination index is one less than what the system gives up
+        if destinationIndexPath.item > sourceIndexPath.item{
+            destinationIndexPath = IndexPath(item: destinationIndexPath.item - 1, section: destinationIndexPath.section)
+        }
+        
+        guard let destinationProductLayout = (collectionView.cellForItem(at: destinationIndexPath) as? PhotoBookCollectionViewCell)?.bookView.leftPageView.productLayout,
+            let destinationProductLayoutIndex = ProductManager.shared.productLayouts.index(where: { $0 === destinationProductLayout })
+            else { return }
+        
+        if sourceIndexPath.item < destinationIndexPath.item {
+            if !sourceProductLayout.layout.isDoubleLayout {
+                ProductManager.shared.productLayouts.move(sourceProductLayoutIndex + 1, destinationProductLayoutIndex + 1)
+            }
+            ProductManager.shared.productLayouts.move(sourceProductLayoutIndex, destinationProductLayoutIndex)
+        }
+        else {
+            ProductManager.shared.productLayouts.move(sourceProductLayoutIndex, destinationProductLayoutIndex)
+            if !sourceProductLayout.layout.isDoubleLayout {
+                ProductManager.shared.productLayouts.move(sourceProductLayoutIndex + 1, destinationProductLayoutIndex + 1)
+            }
+        }
         
         collectionView.performBatchUpdates({
             collectionView.deleteItems(at: [sourceIndexPath])
@@ -407,7 +432,18 @@ extension PhotoBookViewController: UICollectionViewDropDelegate {
             self.interactingItemIndexPath = nil
             self.proposedDropIndexPath = nil
         })
+        
+        for item in coordinator.items{
+            coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
+        }
     }
+    
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidEnd session: UIDropSession) {
+        collectionView.cancelInteractiveMovement()
+        interactingItemIndexPath = nil
+        proposedDropIndexPath = nil
+    }
+    
 }
 
 extension PhotoBookViewController: PhotoBookPageViewDelegate {
@@ -423,7 +459,7 @@ extension PhotoBookViewController: PhotoBookPageViewDelegate {
 extension PhotoBookViewController: PhotoBookCollectionViewCellDelegate {
     // MARK: - PhotoBookCollectionViewCellDelegate
     
-    func didTapOnPlusButton(at indexPath: IndexPath?) {
+    func didTapOnPlusButton(at foldIndex: Int) {
         //TODO: Add page
         print("Add page")
     }

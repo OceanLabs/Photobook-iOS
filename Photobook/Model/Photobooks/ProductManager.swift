@@ -309,6 +309,20 @@ class ProductManager {
             print("ProductManager: failed to archive product")
         }
     }
+    
+    func foldIndex(for productLayout: ProductLayout) -> Int? {
+        var index = 0.5 // The first page is on the right because of the courtesy page
+        for layout in productLayouts {
+            if layout === productLayout {
+                return Int(index)
+            }
+            
+            index += layout.layout.isDoubleLayout ? 1 : 0.5
+        }
+        
+        return nil
+    }
+    
 }
 
 extension ProductManager: PhotobookAPIManagerDelegate {

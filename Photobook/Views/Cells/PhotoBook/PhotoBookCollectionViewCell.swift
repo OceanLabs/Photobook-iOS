@@ -9,15 +9,23 @@
 import UIKit
 
 protocol PhotoBookCollectionViewCellDelegate: class {
-    func didTapOnPlusButton(at indexPath: IndexPath?)
+    func didTapOnPlusButton(at foldIndex: Int)
 }
 
 class PhotoBookCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var bookView: PhotobookView!
     @IBOutlet weak var backgroundImageView: UIImageView!
-    @IBOutlet weak var leftPageView: PhotoBookPageView!
-    @IBOutlet weak var rightPageView: PhotoBookPageView?
+    @IBOutlet weak var leftPageView: PhotoBookPageView! {
+        didSet {
+            bookView.leftPageView = leftPageView
+        }
+    }
+    @IBOutlet weak var rightPageView: PhotoBookPageView? {
+        didSet {
+            bookView.rightPageView = rightPageView
+        }
+    }
     @IBOutlet weak var widthConstraint: NSLayoutConstraint!
     @IBOutlet private var pageAspectRatioConstraint: NSLayoutConstraint!
     
@@ -32,7 +40,10 @@ class PhotoBookCollectionViewCell: UICollectionViewCell {
     weak var delegate: PhotoBookCollectionViewCellDelegate?
     
     @IBAction func didTapPlus(_ sender: UIButton) {
-        delegate?.didTapOnPlusButton(at: bookView.indexPath)
+        guard let productLayout = leftPageView.productLayout ?? rightPageView?.productLayout,
+            let foldIndex = ProductManager.shared.foldIndex(for: productLayout)
+            else { return }
+        delegate?.didTapOnPlusButton(at: foldIndex)
     }
     
     func configurePageAspectRatio(_ ratio: CGFloat) {
@@ -50,5 +61,6 @@ class PhotoBookCollectionViewCell: UICollectionViewCell {
 }
 
 class PhotobookView: UIView {
-    var indexPath: IndexPath?
+    weak var leftPageView: PhotoBookPageView!
+    weak var rightPageView: PhotoBookPageView?
 }
