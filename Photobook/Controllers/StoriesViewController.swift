@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 class StoriesViewController: UIViewController {
 
@@ -15,6 +16,7 @@ class StoriesViewController: UIViewController {
         static let rowsInHeader = 4
         static let storiesPerLayoutPattern = 3
         static let rowsPerLayoutPattern = 2
+        static let maxStoriesToDisplay = 16
         static let viewStorySegueName = "ViewStorySegue"
     }
     
@@ -24,34 +26,15 @@ class StoriesViewController: UIViewController {
     private let selectedAssetsManager = SelectedAssetsManager()
     private var imageCollectorController:AssetCollectorViewController?
     
+    private lazy var emptyScreenViewController: EmptyScreenViewController = {
+        return EmptyScreenViewController.emptyScreen(parent: self)
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        StoriesManager.shared.topStories(10) { [weak welf = self] (stories) in
-            // TODO: Handle permissions error
-            guard let stories = stories else { return }
-            welf?.stories = stories
-            welf?.tableView.reloadData()
-            
-            // Once we are done loading the things needed to show on this screen, load the assets from each story so that they are ready if the user taps on a story
-            for story in stories{
-                story.loadAssets(completionHandler: nil)
-            }
-        }
-        
-        // Setup the Image Collector Controller
-        imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
-        imageCollectorController?.delegate = self
-        
-        self.tableView.tableFooterView = UIView(frame: CGRect())
-        
-        //listen to asset manager
-        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
-        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+        loadStories()
+        setupImageCollector()
+        addObservers()
     }
     
     @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
@@ -75,6 +58,51 @@ class StoriesViewController: UIViewController {
             segue.sourceView = sourceView
         default:
             break
+        }
+    }
+    
+    private func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(loadStories), name: .UIApplicationDidBecomeActive, object: nil)
+        
+        //listen to asset manager
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
+    }
+    
+    private func setupImageCollector() {
+        // Setup the Image Collector Controller
+        imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
+        imageCollectorController?.delegate = self
+        
+        self.tableView.tableFooterView = UIView(frame: CGRect())
+    }
+
+    @objc private func loadStories() {
+        guard PHPhotoLibrary.authorizationStatus() == .authorized else {
+            emptyScreenViewController.showGalleryPermissionsScreen()
+            return
+        }
+        
+        StoriesManager.shared.topStories(Constants.maxStoriesToDisplay) { [weak welf = self] (stories, error) in
+            // Ignore error as we've already handled it before the call to the function
+            guard error == nil else { return }
+            
+            guard let stories = stories, stories.count > 0 else {
+                let title = NSLocalizedString("NoStoriesFound", value: "No Stories Found", comment: "Title shown to the user if the Photos app doesn't have any memory collections available")
+                let message = NSLocalizedString("YourPhotosApp", value: "You don't seem to have any stories yet!\nGet out there and take more photos.", comment: "Message shown to the user if the Photos app doesn't have any memory collections available")
+                welf?.emptyScreenViewController.show(message: message, title: title)
+                return
+            }
+            
+            welf?.stories = stories
+            welf?.tableView.reloadData()
+
+            // Once we are done loading the things needed to show on this screen, load the assets from each story so that they are ready if the user taps on a story
+            for story in stories {
+                story.loadAssets(completionHandler: nil)
+            }
+            
+            welf?.emptyScreenViewController.hide(animated: true)
         }
     }
 }
@@ -126,7 +154,7 @@ extension StoriesViewController: UITableViewDataSource {
             storyIndex = indexPath.row
         case 2, 3: // Double cells for the second and third rows
             storyIndex = indexPath.row == 2 ? 2 : 4 // Indexes corresponding to the first story of the third and fourth rows
-            isDouble = true
+            isDouble = stories.count >= (indexPath.row * 2) // Check if we have enought stories for a double cell
         default:
             let minusHeaderRows = indexPath.row - Constants.rowsInHeader
             let numberOfLayouts = minusHeaderRows / Constants.rowsPerLayoutPattern

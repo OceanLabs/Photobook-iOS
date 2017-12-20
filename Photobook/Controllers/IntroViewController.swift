@@ -112,9 +112,7 @@ class IntroViewController: UIViewController {
         let alert = UIAlertController(title: alertTitle, message: alertText, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: alertOpenSettings, style: UIAlertActionStyle.default, handler: { (action) in
             if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.open(appSettings, options: [:], completionHandler: { (success) in
-                    
-                })
+                UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
             }
         }))
         alert.addAction(UIAlertAction(title: alertOK, style: UIAlertActionStyle.cancel, handler: { (action) in

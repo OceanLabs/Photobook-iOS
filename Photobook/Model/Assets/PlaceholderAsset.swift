@@ -19,7 +19,7 @@ class PlaceholderAsset: Asset {
     
     var isLandscape = false
     
-    var identifier: String! = UUID().uuidString
+    var identifier: String! = ""
     
     func uneditedImage(size: CGSize, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
         DispatchQueue.global(qos: .background).async {

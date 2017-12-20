@@ -81,15 +81,19 @@ class AssetPickerCollectionViewController: UICollectionViewController {
             selectedAssetsManager?.selectAllAssets(for: album)
         }
         
-        updateSelectAllButtonTitle()
-        collectionView?.reloadSections(IndexSet(integer: 0))
+        updateSelectAllButton()
+        collectionView?.reloadData()
     }
     
     func postAlbumLoadSetup() {
         activityIndicator.stopAnimating()
         
+        updateSelectAllButton()
+    }
+    
+    func updateSelectAllButton() {
         // Hide "Select All" if current album has too many photos
-        if selectedAssetsManager?.willSelectingAllExceedTotalAllowed() ?? false {
+        if selectedAssetsManager?.willSelectingAllExceedTotalAllowed(album) ?? false {
             selectAllButton.title = nil
             return
         }
@@ -201,7 +205,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         }
         
         collectionView.reloadItems(at: indexPathsToReload)
-        updateSelectAllButtonTitle()
+        updateSelectAllButton()
     }
     
 }
@@ -304,7 +308,7 @@ extension AssetPickerCollectionViewController {
         
         collectionView.reloadItems(at: [indexPath])
         
-        updateSelectAllButtonTitle()
+        updateSelectAllButton()
     }
     
 }
