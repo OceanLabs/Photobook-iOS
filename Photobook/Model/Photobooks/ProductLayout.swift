@@ -66,7 +66,7 @@ class ProductLayout: Codable {
         
         layout = try values.decode(Layout.self, forKey: .layout)
         productLayoutAsset = try values.decode(ProductLayoutAsset.self, forKey: .productLayoutAsset)
-        productLayoutText = try values.decode(ProductLayoutText.self, forKey: .productLayoutText)
+        productLayoutText = try values.decodeIfPresent(ProductLayoutText.self, forKey: .productLayoutText)
     }
     
     private func fitItemsInLayout() {

@@ -10,7 +10,11 @@ import UIKit
 
 let assetMaximumSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
 
-protocol Asset {
+enum AssetLoadingException: Error {
+    case notFound
+}
+
+protocol Asset: Codable {
     var identifier: String! { get set }
     var size: CGSize { get }
     var isLandscape: Bool { get }

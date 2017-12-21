@@ -16,6 +16,11 @@ class TestPhotosAsset: PhotosAsset {
         super.init(asset, collection: collection)
         self.identifier = "id"
     }
+    
+    required init(from decoder: Decoder) throws {
+        super.init(PHAsset(), collection: PHAssetCollection())
+        self.identifier = "id"
+    }
 }
 
 class PhotosAsset: Asset {
@@ -70,4 +75,42 @@ class PhotosAsset: Asset {
             }
         }
     }
+    
+    enum CodingKeys: String, CodingKey {
+        case albumIdentifier, identifier, uploadUrl
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(albumIdentifier, forKey: .albumIdentifier)
+        try container.encode(identifier, forKey: .identifier)
+        try container.encode(uploadUrl, forKey: .uploadUrl)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        
+        uploadUrl = try values.decodeIfPresent(String.self, forKey: .uploadUrl)
+        let collectionId = try values.decode(String.self, forKey: .albumIdentifier)
+        
+        let assetId = try values.decode(String.self, forKey: .identifier)
+        if let asset = PHAsset.fetchAssets(withLocalIdentifiers: [assetId], options: nil).firstObject {
+            photosAsset = asset
+        }
+        else {
+            throw AssetLoadingException.notFound
+        }
+        
+        if let assetCollection = PHAssetCollection.fetchAssetCollections(withLocalIdentifiers: [collectionId], options: nil).firstObject {
+            photosAssetCollection = assetCollection
+        }
+        else if let assetCollection = PHAssetCollection.fetchAssetCollectionsContaining(photosAsset, with: .smartAlbum, options: nil).firstObject { // Not worth throwing an excpetion for a deleted album,  we'll just fall back to another one, probably "All Photos"/"Camera Roll"
+            photosAssetCollection = assetCollection
+        }
+        else { // Should never reach here, just keeping the compiler happy. If we do reach here, something has gone horribly wrong
+            throw AssetLoadingException.notFound
+        }
+        
+    }
+    
 }

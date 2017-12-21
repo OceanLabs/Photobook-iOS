@@ -131,6 +131,10 @@ class PhotoBookViewController: UIViewController {
     }
 
     @IBAction private func didTapRearrange(_ sender: UIBarButtonItem) {
+        if let size = collectionView.visibleCells.first?.frame.size {
+            (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.estimatedItemSize = size
+        }
+        
         isRearranging = !isRearranging
     }
     
@@ -172,11 +176,49 @@ class PhotoBookViewController: UIViewController {
     // MARK: - UIMenuController actions
     
     @objc func copyPages() {
-        // TODO: copy
+        guard let indexPath = interactingItemIndexPath,
+            let cell = (collectionView.cellForItem(at: indexPath) as? PhotoBookCollectionViewCell),
+            let leftProductLayout = cell.leftPageView.productLayout
+            else { return }
+        
+        let pasteBoard = UIPasteboard(name: UIPasteboardName("ly.kite.photobook.rearrange"), create: true)
+        
+        guard let leftData = try? PropertyListEncoder().encode(leftProductLayout) else {
+            fatalError("Photobook: encoding of product layout failed")
+        }
+        pasteBoard?.setItems([["ly.kite.photobook.productLayout" : leftData]])
+        
+        if let rightProductLayout = cell.rightPageView?.productLayout {
+            guard let rightData = try? PropertyListEncoder().encode(rightProductLayout) else {
+                fatalError("Photobook: encoding of product layout failed")
+            }
+            pasteBoard?.addItems([["ly.kite.photobook.productLayout" : rightData]])
+        }
     }
     
     @objc func pastePages() {
-        // TODO: paste
+        guard let indexPath = interactingItemIndexPath,
+            let pasteBoard = UIPasteboard(name: UIPasteboardName("ly.kite.photobook.rearrange"), create: true),
+            let leftData = pasteBoard.items.first?["ly.kite.photobook.productLayout"] as? Data,
+            let leftProductLayout = try? PropertyListDecoder().decode(ProductLayout.self, from: leftData)
+            else { return }
+        
+        var productLayouts = [leftProductLayout]
+        
+        if pasteBoard.items.count > 1,
+            let rightData = pasteBoard.items.last?["ly.kite.photobook.productLayout"] as? Data,
+            let rightProductLayout = try? PropertyListDecoder().decode(ProductLayout.self, from: rightData) {
+            productLayouts.append(rightProductLayout)
+        }
+        
+        guard let productLayout = (collectionView.cellForItem(at: indexPath) as? PhotoBookCollectionViewCell)?.leftPageView.productLayout else { return }
+        
+        // Need to clear the interacting index path before reloading or the pages will apear blank
+        interactingItemIndexPath = nil
+        
+        // Insert new page above the tapped one
+        ProductManager.shared.addPages(above: productLayout, pages: productLayouts)
+        collectionView.insertItems(at: [indexPath])
     }
     
     @objc func deletePages() {

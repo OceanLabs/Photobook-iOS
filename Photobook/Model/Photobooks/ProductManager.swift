@@ -323,12 +323,12 @@ class ProductManager {
         return nil
     }
     
-    func addPages(above productLayout: ProductLayout) {
+    func addPages(above productLayout: ProductLayout, pages: [ProductLayout]? = nil) {
         guard let product = product,
             let layouts = layouts(for: product),
             let index = productLayouts.index(where: { $0 === productLayout })
             else { return }
-        let newProductLayouts = createLayoutsForAssets(assets: [PlaceholderAsset(), PlaceholderAsset()], from: layouts)
+        let newProductLayouts = pages ?? createLayoutsForAssets(assets: [PlaceholderAsset(), PlaceholderAsset()], from: layouts)
         
         productLayouts.insert(contentsOf: newProductLayouts, at: index)
     }
