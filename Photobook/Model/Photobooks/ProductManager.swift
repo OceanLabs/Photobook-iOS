@@ -323,6 +323,16 @@ class ProductManager {
         return nil
     }
     
+    func addPages(above productLayout: ProductLayout) {
+        guard let product = product,
+            let layouts = layouts(for: product),
+            let index = productLayouts.index(where: { $0 === productLayout })
+            else { return }
+        let newProductLayouts = createLayoutsForAssets(assets: [PlaceholderAsset(), PlaceholderAsset()], from: layouts)
+        
+        productLayouts.insert(contentsOf: newProductLayouts, at: index)
+    }
+    
 }
 
 extension ProductManager: PhotobookAPIManagerDelegate {

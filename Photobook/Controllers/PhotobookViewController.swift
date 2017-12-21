@@ -460,7 +460,12 @@ extension PhotoBookViewController: PhotoBookCollectionViewCellDelegate {
     // MARK: - PhotoBookCollectionViewCellDelegate
     
     func didTapOnPlusButton(at foldIndex: Int) {
-        //TODO: Add page
-        print("Add page")
+        let indexPath = IndexPath(item: foldIndex, section: 1)
+        
+        guard let productLayout = (collectionView.cellForItem(at: indexPath) as? PhotoBookCollectionViewCell)?.leftPageView.productLayout else { return }
+        
+        // Insert new page above the tapped one
+        ProductManager.shared.addPages(above: productLayout)
+        collectionView.insertItems(at: [indexPath])
     }
 }
