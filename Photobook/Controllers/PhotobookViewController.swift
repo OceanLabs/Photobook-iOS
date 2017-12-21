@@ -180,7 +180,12 @@ class PhotoBookViewController: UIViewController {
     }
     
     @objc func deletePages() {
-        // TODO: delete
+        guard let indexPath = interactingItemIndexPath,
+            let productLayout = (collectionView.cellForItem(at: indexPath) as? PhotoBookCollectionViewCell)?.leftPageView.productLayout
+            else { return }
+        
+        ProductManager.shared.deletePage(at: productLayout)
+        collectionView.deleteItems(at: [indexPath])
     }
     
     @objc func menuDidHide() {

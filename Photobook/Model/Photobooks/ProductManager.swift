@@ -333,6 +333,15 @@ class ProductManager {
         productLayouts.insert(contentsOf: newProductLayouts, at: index)
     }
     
+    func deletePage(at productLayout: ProductLayout) {
+        guard let index = productLayouts.index(where: { $0 === productLayout }) else { return }
+        productLayouts.remove(at: index)
+        
+        if !productLayout.layout.isDoubleLayout {
+            productLayouts.remove(at: index)
+        }
+    }
+    
 }
 
 extension ProductManager: PhotobookAPIManagerDelegate {
