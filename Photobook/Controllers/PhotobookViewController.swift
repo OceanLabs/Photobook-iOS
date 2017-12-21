@@ -321,8 +321,6 @@ extension PhotoBookViewController: UIDragInteractionDelegate {
             foldIndex != collectionView.numberOfItems(inSection: 1) - 1
             else { return [] }
         
-        interactingItemIndexPath = IndexPath(item: foldIndex, section: 1)
-        
         let itemProvider = NSItemProvider()
         let dragItem = UIDragItem(itemProvider: itemProvider)
         return [dragItem]
@@ -375,6 +373,16 @@ extension PhotoBookViewController: UIDragInteractionDelegate {
             let cell = collectionView.cellForItem(at: IndexPath(item: foldIndex, section: 1)) as? PhotoBookCollectionViewCell else { return }
         
         cell.obscuringView.isHidden = true
+    }
+    
+    func dragInteraction(_ interaction: UIDragInteraction, sessionWillBegin session: UIDragSession) {
+        guard let bookView = interaction.view as? PhotobookView,
+            let productLayout = bookView.leftPageView.productLayout,
+            let foldIndex = ProductManager.shared.foldIndex(for: productLayout),
+            foldIndex != collectionView.numberOfItems(inSection: 1) - 1
+            else { return }
+        
+        interactingItemIndexPath = IndexPath(item: foldIndex, section: 1)
     }
     
 }
