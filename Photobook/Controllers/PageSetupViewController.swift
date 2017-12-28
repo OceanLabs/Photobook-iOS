@@ -159,12 +159,14 @@ class PageSetupViewController: UIViewController {
         var showTextBox = false
         
         if let imageBox = productLayout.layout.imageLayoutBox, let assetSize = productLayout.asset?.size {
+            // Lay out the image box
+            photoContainerView.frame = imageBox.rectContained(in: pageSize)
+
             // Set up the image the first time this method is called
             if productLayout.asset != nil && photoImageView.image == nil {
-                // FIXME: container doesn't have the right size at this point
                 let maxDimension = (imageBox.isLandscape() ? photoContainerView.bounds.width : photoContainerView.bounds.height) * UIScreen.main.scale
                 let imageSize = CGSize(width: maxDimension, height: maxDimension)
-                // FIXME: Defaults to oportunistic whereas we would want a single request with the exact size returned here
+
                 productLayout.asset!.image(size: imageSize, completionHandler: { (image, error) in
                     guard error == nil else {
                         print("PageSetup: error retrieving image")
@@ -175,8 +177,6 @@ class PageSetupViewController: UIViewController {
                 photoImageView.frame = CGRect(x: 0.0, y: 0.0, width: assetSize.width, height: assetSize.height)
             }
 
-            // Lay out the image box
-            photoContainerView.frame = imageBox.rectContained(in: pageSize)
             photoImageView.center = CGPoint(x: photoContainerView.bounds.midX, y: photoContainerView.bounds.midY)
             
             // Apply the image box size so the transform can be re-calculated
