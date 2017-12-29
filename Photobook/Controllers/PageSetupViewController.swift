@@ -17,7 +17,7 @@ class PageSetupViewController: UIViewController {
     }
     
     private enum Tools: Int {
-        case selectPhoto, selectLayout, editLayout, editColor
+        case selectPhoto, selectLayout, placeAsset, editColor
     }
     
     // Constraints
@@ -30,6 +30,7 @@ class PageSetupViewController: UIViewController {
             pageView.translatesAutoresizingMaskIntoConstraints = false
         }
     }
+    @IBOutlet private weak var placementContainerView: UIView!
     @IBOutlet private weak var photoContainerView: UIView!
     @IBOutlet private weak var photoImageView: UIImageView!
     @IBOutlet private weak var pageTextLabel: UILabel!
@@ -38,6 +39,7 @@ class PageSetupViewController: UIViewController {
     @IBOutlet weak var toolbar: UIToolbar!
     
     private var layoutSelectionViewController: LayoutSelectionViewController!
+    private var assetPlacementViewController: AssetPlacementViewController!
     
     // TEMP
     var assets: [Asset] = {
@@ -143,9 +145,15 @@ class PageSetupViewController: UIViewController {
     
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "LayoutSelectionSegue" {
+        guard let identifier = segue.identifier else { return }
+        switch identifier {
+        case "LayoutSelectionSegue":
             layoutSelectionViewController = segue.destination as! LayoutSelectionViewController
             layoutSelectionViewController.delegate = self
+        case "PlacementSegue":
+            assetPlacementViewController = segue.destination as! AssetPlacementViewController
+        default:
+            break
         }
     }
     
@@ -213,6 +221,8 @@ class PageSetupViewController: UIViewController {
     }
     
     @IBAction func tappedToolButton(_ sender: UIButton) {
+        let editLayoutWasSelected = toolbarButtons[Tools.placeAsset.rawValue].isSelected
+        
         for button in toolbarButtons {
             button.isSelected = (button === sender)
         }
@@ -224,8 +234,15 @@ class PageSetupViewController: UIViewController {
         case .selectPhoto:
             break
         case .selectLayout:
+            if editLayoutWasSelected {
+                placementContainerView.alpha = 0.0
+                view.sendSubview(toBack: placementContainerView)
+            }
             break
-        case .editLayout:
+        case .placeAsset:
+            assetPlacementViewController.productLayout = productLayout
+            placementContainerView.alpha = 1.0
+            view.bringSubview(toFront: placementContainerView)
             break
         case .editColor:
             break

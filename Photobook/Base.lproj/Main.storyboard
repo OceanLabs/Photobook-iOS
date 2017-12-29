@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="2XF-yO-9gv">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="2XF-yO-9gv">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -20,6 +21,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <containerView opaque="NO" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vdr-Ew-Ot6">
+                                <rect key="frame" x="0.0" y="20" width="414" height="672"/>
+                                <connections>
+                                    <segue destination="0tx-1H-1gY" kind="embed" identifier="PlacementSegue" id="MIB-0a-yTw"/>
+                                </connections>
+                            </containerView>
                             <toolbar opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3pJ-D7-Ell">
                                 <rect key="frame" x="0.0" y="692" width="414.66666666666669" height="44"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -32,7 +39,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Wgp-h3-X0h"/>
                                     <barButtonItem style="plain" id="zND-5J-8MF">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="IiS-nN-9sR">
-                                            <rect key="frame" x="119" y="7.6666666666666288" width="48" height="29"/>
+                                            <rect key="frame" x="119" y="7.6666666666666679" width="48" height="29.000000000000004"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="selectPhoto_off"/>
                                             <state key="selected" image="selectPhoto_on"/>
@@ -44,7 +51,7 @@
                                     </barButtonItem>
                                     <barButtonItem style="plain" id="Kvc-Ao-9jQ">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="B62-6k-8NO">
-                                            <rect key="frame" x="167" y="7.6666666666666288" width="48" height="29"/>
+                                            <rect key="frame" x="167" y="7.6666666666666679" width="48" height="29.000000000000004"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="editLayout_off"/>
                                             <state key="selected" image="editLayout_on"/>
@@ -56,7 +63,7 @@
                                     </barButtonItem>
                                     <barButtonItem style="plain" id="JLv-mV-icp">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0YB-mk-uec">
-                                            <rect key="frame" x="215" y="7.6666666666666288" width="48" height="29"/>
+                                            <rect key="frame" x="215" y="7.6666666666666679" width="48" height="29.000000000000004"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="editPhoto_off"/>
                                             <state key="selected" image="editPhoto_on"/>
@@ -68,7 +75,7 @@
                                     </barButtonItem>
                                     <barButtonItem style="plain" id="KIJ-ys-Kjd">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="z11-V0-D9v">
-                                            <rect key="frame" x="263" y="7.6666666666666288" width="48" height="29"/>
+                                            <rect key="frame" x="263" y="7.6666666666666679" width="48" height="29.000000000000004"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="editColor_off"/>
                                             <state key="selected" image="editColor_on"/>
@@ -137,9 +144,13 @@
                         <constraints>
                             <constraint firstItem="p5s-6j-6B3" firstAttribute="trailing" secondItem="2K5-To-oFe" secondAttribute="trailing" id="2tO-Ej-mfK"/>
                             <constraint firstItem="3pJ-D7-Ell" firstAttribute="trailing" secondItem="2K5-To-oFe" secondAttribute="trailing" id="APJ-Kn-X1Y"/>
+                            <constraint firstItem="Vdr-Ew-Ot6" firstAttribute="leading" secondItem="2K5-To-oFe" secondAttribute="leading" id="Ipt-jF-Jyd"/>
+                            <constraint firstItem="3pJ-D7-Ell" firstAttribute="top" secondItem="Vdr-Ew-Ot6" secondAttribute="bottom" id="Nuj-Ag-BVB"/>
                             <constraint firstItem="3pJ-D7-Ell" firstAttribute="leading" secondItem="2K5-To-oFe" secondAttribute="leading" id="O36-0S-lUD"/>
+                            <constraint firstAttribute="trailing" secondItem="Vdr-Ew-Ot6" secondAttribute="trailing" id="c3k-0O-ZG6"/>
                             <constraint firstItem="Q7V-q1-95p" firstAttribute="leading" secondItem="2K5-To-oFe" secondAttribute="leading" id="cAc-UJ-ioB"/>
                             <constraint firstItem="3pJ-D7-Ell" firstAttribute="bottom" secondItem="2K5-To-oFe" secondAttribute="bottom" id="ea1-bU-8Gw"/>
+                            <constraint firstItem="Vdr-Ew-Ot6" firstAttribute="top" secondItem="2K5-To-oFe" secondAttribute="top" id="hNQ-sc-rIs"/>
                             <constraint firstItem="Q7V-q1-95p" firstAttribute="top" secondItem="lbR-ma-Ckk" secondAttribute="top" id="ixT-m3-haa"/>
                             <constraint firstItem="3pJ-D7-Ell" firstAttribute="top" secondItem="Q7V-q1-95p" secondAttribute="bottom" id="jxV-v6-aaJ"/>
                             <constraint firstItem="Q7V-q1-95p" firstAttribute="trailing" secondItem="2K5-To-oFe" secondAttribute="trailing" id="uqf-p9-HAE"/>
@@ -157,6 +168,7 @@
                         <outlet property="pageWidthConstraint" destination="Ueg-Wi-jk0" id="NA5-qo-7ib"/>
                         <outlet property="photoContainerView" destination="P8t-BC-XqP" id="N8r-dd-U72"/>
                         <outlet property="photoImageView" destination="Ex1-FQ-53l" id="WYg-LI-8JH"/>
+                        <outlet property="placementContainerView" destination="Vdr-Ew-Ot6" id="scm-MS-QEr"/>
                         <outlet property="toolbar" destination="3pJ-D7-Ell" id="uQT-TA-1GG"/>
                         <outletCollection property="toolbarButtons" destination="IiS-nN-9sR" collectionClass="NSMutableArray" id="EM4-V5-3FP"/>
                         <outletCollection property="toolbarButtons" destination="B62-6k-8NO" collectionClass="NSMutableArray" id="CGJ-aW-s5j"/>
@@ -257,7 +269,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uX0-TK-al1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1024.6376811594205" y="-970.10869565217399"/>
+            <point key="canvasLocation" x="1040" y="-427"/>
         </scene>
         <!--Stories-->
         <scene sceneID="tne-QT-ifu">
@@ -1159,6 +1171,77 @@
                 </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1796" y="1458"/>
+        </scene>
+        <!--Asset Placement View Controller-->
+        <scene sceneID="Vjk-cy-rN4">
+            <objects>
+                <viewController id="0tx-1H-1gY" customClass="AssetPlacementViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="2ha-XX-PVN">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="672"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TET-AS-1ry">
+                                <rect key="frame" x="0.0" y="20" width="414" height="552"/>
+                                <subviews>
+                                    <view contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="Mss-Ro-X4n">
+                                        <rect key="frame" x="52.333333333333343" y="76" width="310" height="400"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yms-yt-a0G">
+                                                <rect key="frame" x="-23" y="-28" width="358" height="454"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            </imageView>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="400" id="FRi-t3-6ws"/>
+                                            <constraint firstAttribute="width" constant="310" id="feC-RB-tg8"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                <real key="value" value="2"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="Mss-Ro-X4n" firstAttribute="centerX" secondItem="TET-AS-1ry" secondAttribute="centerX" id="hl9-PG-uuH"/>
+                                    <constraint firstItem="Mss-Ro-X4n" firstAttribute="centerY" secondItem="TET-AS-1ry" secondAttribute="centerY" id="yqV-Up-OIa"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CeI-dF-0wW">
+                                <rect key="frame" x="184.66666666666666" y="602" width="45" height="30"/>
+                                <state key="normal" title="Rotate"/>
+                                <connections>
+                                    <action selector="tappedRotateButton:" destination="0tx-1H-1gY" eventType="touchUpInside" id="LyH-In-kFf"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="TET-AS-1ry" firstAttribute="top" secondItem="v7z-cU-uWS" secondAttribute="top" id="DEQ-KG-IVK"/>
+                            <constraint firstItem="CeI-dF-0wW" firstAttribute="top" secondItem="TET-AS-1ry" secondAttribute="bottom" constant="30" id="KHs-4c-lbu"/>
+                            <constraint firstItem="TET-AS-1ry" firstAttribute="leading" secondItem="2ha-XX-PVN" secondAttribute="leading" id="O68-PW-kWx"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="CeI-dF-0wW" secondAttribute="bottom" constant="40" id="Sde-fK-14T"/>
+                            <constraint firstItem="CeI-dF-0wW" firstAttribute="centerX" secondItem="2ha-XX-PVN" secondAttribute="centerX" id="gf6-ge-Qfh"/>
+                            <constraint firstAttribute="trailing" secondItem="TET-AS-1ry" secondAttribute="trailing" id="iea-8r-Edd"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="v7z-cU-uWS"/>
+                    </view>
+                    <connections>
+                        <outlet property="assetEditingAreaView" destination="TET-AS-1ry" id="76u-XM-jXk"/>
+                        <outlet property="assetImageView" destination="Yms-yt-a0G" id="vKb-Am-paF"/>
+                        <outlet property="imageBoxView" destination="Mss-Ro-X4n" id="urB-50-hbf"/>
+                        <outlet property="imageBoxViewHeightConstraint" destination="FRi-t3-6ws" id="fLS-0w-DTh"/>
+                        <outlet property="imageBoxViewWidthConstraint" destination="feC-RB-tg8" id="Dhf-KL-uYf"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hNl-7u-6dj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1039.8550724637682" y="-779.34782608695662"/>
         </scene>
     </scenes>
     <resources>
