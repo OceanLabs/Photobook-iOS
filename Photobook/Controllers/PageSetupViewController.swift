@@ -123,7 +123,7 @@ class PageSetupViewController: UIViewController {
     
     func setupPage() {
         // TEMP: Trigger didSet code
-        pageSizeRatio = 1.23
+        pageSizeRatio = 1.38157681
         pageHeightConstraint.constant = pageSize.height
 
         setupLayoutBoxes()

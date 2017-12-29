@@ -11,7 +11,7 @@ import UIKit
 class AssetPlacementViewController: UIViewController {
     
     private struct Constants {
-        static let sideMargins: CGFloat = 20.0
+        static let sideMargins: CGFloat = 40.0
     }
     
     @IBOutlet private weak var imageBoxView: UIView!
@@ -46,7 +46,7 @@ class AssetPlacementViewController: UIViewController {
         guard !hasDoneInitialSetup,
               assetImageView != nil,
               let productLayout = productLayout,
-              let containerSize = productLayout.layout.imageLayoutBox?.rect.size else { return }
+              let containerSize = productLayout.productLayoutAsset?.containerSize else { return }
         
         hasDoneInitialSetup = true
         
