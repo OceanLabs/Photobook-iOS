@@ -17,7 +17,7 @@ class PageSetupViewController: UIViewController {
     }
     
     private enum Tools: Int {
-        case selectPhoto, selectLayout, placeAsset, editColor
+        case selectAsset, selectLayout, placeAsset, editColor
     }
     
     // Constraints
@@ -31,8 +31,8 @@ class PageSetupViewController: UIViewController {
         }
     }
     @IBOutlet private weak var placementContainerView: UIView!
-    @IBOutlet private weak var photoContainerView: UIView!
-    @IBOutlet private weak var photoImageView: UIImageView!
+    @IBOutlet private weak var assetContainerView: UIView!
+    @IBOutlet private weak var assetImageView: UIImageView!
     @IBOutlet private weak var pageTextLabel: UILabel!
     
     @IBOutlet var toolbarButtons: [UIButton]!
@@ -159,7 +159,7 @@ class PageSetupViewController: UIViewController {
     
     private func setupLayoutBoxes() {
         UIView.animate(withDuration: 0.1) {
-            self.photoContainerView.alpha = 0.0
+            self.assetContainerView.alpha = 0.0
             self.pageTextLabel.alpha = 0.0
         }
         
@@ -168,11 +168,11 @@ class PageSetupViewController: UIViewController {
         
         if let imageBox = productLayout.layout.imageLayoutBox, let assetSize = productLayout.asset?.size {
             // Lay out the image box
-            photoContainerView.frame = imageBox.rectContained(in: pageSize)
+            assetContainerView.frame = imageBox.rectContained(in: pageSize)
 
             // Set up the image the first time this method is called
-            if productLayout.asset != nil && photoImageView.image == nil {
-                let maxDimension = (imageBox.isLandscape() ? photoContainerView.bounds.width : photoContainerView.bounds.height) * UIScreen.main.scale
+            if productLayout.asset != nil && assetImageView.image == nil {
+                let maxDimension = (imageBox.isLandscape() ? assetContainerView.bounds.width : assetContainerView.bounds.height) * UIScreen.main.scale
                 let imageSize = CGSize(width: maxDimension, height: maxDimension)
 
                 productLayout.asset!.image(size: imageSize, completionHandler: { (image, error) in
@@ -180,16 +180,16 @@ class PageSetupViewController: UIViewController {
                         print("PageSetup: error retrieving image")
                         return
                     }
-                    self.photoImageView.image = image
+                    self.assetImageView.image = image
                 })
-                photoImageView.frame = CGRect(x: 0.0, y: 0.0, width: assetSize.width, height: assetSize.height)
+                assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: assetSize.width, height: assetSize.height)
             }
 
-            photoImageView.center = CGPoint(x: photoContainerView.bounds.midX, y: photoContainerView.bounds.midY)
+            assetImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
             
             // Apply the image box size so the transform can be re-calculated
-            productLayout.productLayoutAsset!.containerSize = photoContainerView.bounds.size
-            photoImageView.transform = productLayout.productLayoutAsset!.transform
+            productLayout.productLayoutAsset!.containerSize = assetContainerView.bounds.size
+            assetImageView.transform = productLayout.productLayoutAsset!.transform
             
             showImageBox = true
         }
@@ -207,7 +207,7 @@ class PageSetupViewController: UIViewController {
         
         guard showImageBox || showTextBox else { return }
         UIView.animate(withDuration: 0.3, delay: 0.1, options: [], animations: {
-            self.photoContainerView.alpha = showImageBox ? 1.0 : 0.0
+            self.assetContainerView.alpha = showImageBox ? 1.0 : 0.0
             self.pageTextLabel.alpha = showTextBox ? 1.0 : 0.0
         }, completion: nil)
     }
@@ -230,7 +230,7 @@ class PageSetupViewController: UIViewController {
         guard let index = toolbarButtons.index(of: sender), let tool = Tools(rawValue: index) else { return }
         
         switch tool {
-        case .selectPhoto:
+        case .selectAsset:
             break
         case .selectLayout:
             if editLayoutWasSelected {

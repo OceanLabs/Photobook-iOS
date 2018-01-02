@@ -162,12 +162,12 @@
                     <tabBarItem key="tabBarItem" title="Item" id="O4n-MI-JUS"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="assetContainerView" destination="P8t-BC-XqP" id="N8r-dd-U72"/>
+                        <outlet property="assetImageView" destination="Ex1-FQ-53l" id="WYg-LI-8JH"/>
                         <outlet property="pageHeightConstraint" destination="QGH-DF-d32" id="59c-ku-qoE"/>
                         <outlet property="pageTextLabel" destination="QoP-S5-WEn" id="Bc6-w6-LF0"/>
                         <outlet property="pageView" destination="7ay-JZ-NNl" id="HQI-i4-HR1"/>
                         <outlet property="pageWidthConstraint" destination="Ueg-Wi-jk0" id="NA5-qo-7ib"/>
-                        <outlet property="photoContainerView" destination="P8t-BC-XqP" id="N8r-dd-U72"/>
-                        <outlet property="photoImageView" destination="Ex1-FQ-53l" id="WYg-LI-8JH"/>
                         <outlet property="placementContainerView" destination="Vdr-Ew-Ot6" id="scm-MS-QEr"/>
                         <outlet property="toolbar" destination="3pJ-D7-Ell" id="uQT-TA-1GG"/>
                         <outletCollection property="toolbarButtons" destination="IiS-nN-9sR" collectionClass="NSMutableArray" id="EM4-V5-3FP"/>
@@ -1262,11 +1262,11 @@
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="assetContainerView" destination="Mss-Ro-X4n" id="urB-50-hbf"/>
+                        <outlet property="assetContainerViewHeightConstraint" destination="FRi-t3-6ws" id="fLS-0w-DTh"/>
+                        <outlet property="assetContainerViewWidthConstraint" destination="feC-RB-tg8" id="Dhf-KL-uYf"/>
                         <outlet property="assetEditingAreaView" destination="TET-AS-1ry" id="76u-XM-jXk"/>
                         <outlet property="assetImageView" destination="Yms-yt-a0G" id="vKb-Am-paF"/>
-                        <outlet property="imageBoxView" destination="Mss-Ro-X4n" id="urB-50-hbf"/>
-                        <outlet property="imageBoxViewHeightConstraint" destination="FRi-t3-6ws" id="fLS-0w-DTh"/>
-                        <outlet property="imageBoxViewWidthConstraint" destination="feC-RB-tg8" id="Dhf-KL-uYf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hNl-7u-6dj" userLabel="First Responder" sceneMemberID="firstResponder"/>

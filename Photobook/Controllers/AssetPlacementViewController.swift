@@ -14,10 +14,10 @@ class AssetPlacementViewController: UIViewController {
         static let sideMargins: CGFloat = 40.0
     }
     
-    @IBOutlet private weak var imageBoxView: UIView!
+    @IBOutlet private weak var assetContainerView: UIView!
     @IBOutlet private weak var assetImageView: UIImageView!
-    @IBOutlet private weak var imageBoxViewWidthConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var imageBoxViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var assetContainerViewWidthConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var assetContainerViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var assetEditingAreaView: UIView!
     
     private var hasDoneInitialSetup = false
@@ -34,7 +34,7 @@ class AssetPlacementViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        imageBoxView.translatesAutoresizingMaskIntoConstraints = false
+        assetContainerView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     override func viewDidLayoutSubviews() {
@@ -72,8 +72,8 @@ class AssetPlacementViewController: UIViewController {
             }
         }
         
-        imageBoxViewWidthConstraint.constant = floor(width)
-        imageBoxViewHeightConstraint.constant = floor(height)
+        assetContainerViewWidthConstraint.constant = floor(width)
+        assetContainerViewHeightConstraint.constant = floor(height)
     }
     
     private func setUpImageView(withProductLayout productLayout: ProductLayout) {
@@ -89,10 +89,10 @@ class AssetPlacementViewController: UIViewController {
         assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: asset.size.width, height: asset.size.height)
 
         // Should trigger a transform recalculation
-        productLayout.productLayoutAsset?.containerSize = CGSize(width: imageBoxViewWidthConstraint.constant, height: imageBoxViewHeightConstraint.constant)
+        productLayout.productLayoutAsset?.containerSize = CGSize(width: assetContainerViewWidthConstraint.constant, height: assetContainerViewHeightConstraint.constant)
         assetImageView.transform = productLayout.productLayoutAsset!.transform
         
-        assetImageView.center = CGPoint(x: imageBoxViewWidthConstraint.constant * 0.5, y: imageBoxViewHeightConstraint.constant * 0.5)
+        assetImageView.center = CGPoint(x: assetContainerViewWidthConstraint.constant * 0.5, y: assetContainerViewHeightConstraint.constant * 0.5)
         
         productLayout.asset?.image(size: asset.size, completionHandler: { [weak welf = self] (image, error) in
             guard error == nil else {
@@ -110,7 +110,7 @@ class AssetPlacementViewController: UIViewController {
             let angle = atan2(transform.b, transform.a)
             let rotateTo = LayoutUtils.nextCCWCuadrantAngle(to: angle)
             
-            let scale = LayoutUtils.scaleToFill(containerSize: imageBoxView.bounds.size, withSize: productLayoutAsset.asset!.size, atAngle: rotateTo)
+            let scale = LayoutUtils.scaleToFill(containerSize: assetContainerView.bounds.size, withSize: productLayoutAsset.asset!.size, atAngle: rotateTo)
             productLayoutAsset.transform = CGAffineTransform.identity.rotated(by: rotateTo).scaledBy(x: scale, y: scale)
             UIView.animateKeyframes(withDuration: 0.3, delay: 0.0, options: [ .calculationModeCubicPaced ], animations: {
                 UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1.0, animations: {
@@ -151,7 +151,7 @@ class AssetPlacementViewController: UIViewController {
             }
         case .changed:
             if var initial = initialTransform {
-                gestures.forEach({ (gesture) in initial = LayoutUtils.adjustTransform(initial, withRecognizer: gesture, inParentView: imageBoxView) })
+                gestures.forEach({ (gesture) in initial = LayoutUtils.adjustTransform(initial, withRecognizer: gesture, inParentView: assetContainerView) })
                 assetImageView.transform = initial
             }
         case .ended:
@@ -159,8 +159,8 @@ class AssetPlacementViewController: UIViewController {
             if gestures.count == 0 {
                 setAnchorPoint(anchorPoint: CGPoint(x: 0.5, y: 0.5), view: assetImageView)
                 
-                assetImageView.transform = LayoutUtils.centerTransform(assetImageView.transform, inParentView: imageBoxView, fromPoint: assetImageView.center)
-                assetImageView.center = CGPoint(x: imageBoxView.bounds.midX, y: imageBoxView.bounds.midY)
+                assetImageView.transform = LayoutUtils.centerTransform(assetImageView.transform, inParentView: assetContainerView, fromPoint: assetImageView.center)
+                assetImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
                 
                 productLayoutAsset.transform = assetImageView.transform
                 productLayoutAsset.adjustTransform()
