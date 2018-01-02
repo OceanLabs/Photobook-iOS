@@ -89,7 +89,6 @@ class AssetPlacementViewController: UIViewController {
         assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: asset.size.width, height: asset.size.height)
 
         // Should trigger a transform recalculation
-        // FIXME: Resize container instead
         productLayout.productLayoutAsset?.containerSize = CGSize(width: imageBoxViewWidthConstraint.constant, height: imageBoxViewHeightConstraint.constant)
         assetImageView.transform = productLayout.productLayoutAsset!.transform
         
@@ -106,7 +105,19 @@ class AssetPlacementViewController: UIViewController {
     }
     
     @IBAction private func tappedRotateButton(_ sender: UIButton) {
-        
+        if let productLayoutAsset = productLayout?.productLayoutAsset {
+            let transform = productLayoutAsset.transform
+            let angle = atan2(transform.b, transform.a)
+            let rotateTo = LayoutUtils.nextCCWCuadrantAngle(to: angle)
+            
+            let scale = LayoutUtils.scaleToFill(containerSize: imageBoxView.bounds.size, withSize: productLayoutAsset.asset!.size, atAngle: rotateTo)
+            productLayoutAsset.transform = CGAffineTransform.identity.rotated(by: rotateTo).scaledBy(x: scale, y: scale)
+            UIView.animateKeyframes(withDuration: 0.3, delay: 0.0, options: [ .calculationModeCubicPaced ], animations: {
+                UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1.0, animations: {
+                    self.assetImageView.transform = productLayoutAsset.transform
+                })
+            }, completion: nil)
+        }
     }
     
     // MARK: User interaction

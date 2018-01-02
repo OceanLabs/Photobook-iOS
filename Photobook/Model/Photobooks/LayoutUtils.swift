@@ -145,6 +145,7 @@ class LayoutUtils {
     ///   - angle: The current rotation angle
     /// - Returns: The scale the View needs to be to fill the container
     static func scaleToFill(containerSize: CGSize, withSize size: CGSize, atAngle angle: CGFloat) -> CGFloat {
+        let angle = abs(angle)
         // FIXME: Is this angle correction necessary?
         var theta = abs(angle - 2.0 * .pi * trunc(angle / .pi / 2.0) - .pi)
         if theta > .pi / 2.0 {
@@ -158,6 +159,18 @@ class LayoutUtils {
         let scale2 = (H * sin(theta) + W * cos(theta)) / w
         let scaleFactor = max(scale1, scale2)
         return scaleFactor
+    }
+    
+    static func nextCCWCuadrantAngle(to angle: CGFloat) -> CGFloat {
+        var rotateTo = floor(angle / (.pi * 0.5)) * .pi * 0.5
+        
+        if angle ==~ rotateTo {
+            rotateTo = angle - .pi * 0.5
+        }
+        if abs(rotateTo) < CGFloat.minPrecision {
+            rotateTo = 0.0
+        }
+        return rotateTo
     }
 }
 
