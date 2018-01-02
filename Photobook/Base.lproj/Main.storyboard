@@ -1180,7 +1180,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="672"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TET-AS-1ry">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TET-AS-1ry">
                                 <rect key="frame" x="0.0" y="20" width="414" height="553"/>
                                 <subviews>
                                     <view contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="Mss-Ro-X4n">
@@ -1245,6 +1245,7 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="TET-AS-1ry" firstAttribute="top" secondItem="v7z-cU-uWS" secondAttribute="top" id="DEQ-KG-IVK"/>
                             <constraint firstItem="CeI-dF-0wW" firstAttribute="top" secondItem="TET-AS-1ry" secondAttribute="bottom" constant="30" id="KHs-4c-lbu"/>
@@ -1254,6 +1255,11 @@
                             <constraint firstAttribute="trailing" secondItem="TET-AS-1ry" secondAttribute="trailing" id="iea-8r-Edd"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="v7z-cU-uWS"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="0xH-QJ-keA" appends="YES" id="C6w-B3-XoW"/>
+                            <outletCollection property="gestureRecognizers" destination="beQ-a3-xVZ" appends="YES" id="07O-Ue-yWb"/>
+                            <outletCollection property="gestureRecognizers" destination="PCe-7K-ATW" appends="YES" id="jpF-X8-rFK"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="assetEditingAreaView" destination="TET-AS-1ry" id="76u-XM-jXk"/>
@@ -1264,6 +1270,24 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hNl-7u-6dj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <pinchGestureRecognizer id="0xH-QJ-keA">
+                    <connections>
+                        <action selector="processTransform:" destination="0tx-1H-1gY" id="oUg-4O-gtr"/>
+                        <outlet property="delegate" destination="0tx-1H-1gY" id="6o0-PC-93p"/>
+                    </connections>
+                </pinchGestureRecognizer>
+                <rotationGestureRecognizer id="beQ-a3-xVZ">
+                    <connections>
+                        <action selector="processTransform:" destination="0tx-1H-1gY" id="GLP-mn-K5Y"/>
+                        <outlet property="delegate" destination="0tx-1H-1gY" id="ye1-eP-w6p"/>
+                    </connections>
+                </rotationGestureRecognizer>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="PCe-7K-ATW">
+                    <connections>
+                        <action selector="processTransform:" destination="0tx-1H-1gY" id="8Av-vo-Ssm"/>
+                        <outlet property="delegate" destination="0tx-1H-1gY" id="rGA-dY-Xs7"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1039.1304347826087" y="-779.34782608695662"/>
         </scene>

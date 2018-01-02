@@ -229,12 +229,12 @@ class PageSetupViewController: UIViewController {
         
         guard let index = toolbarButtons.index(of: sender), let tool = Tools(rawValue: index) else { return }
         
-        // TODO: action UI changes
         switch tool {
         case .selectPhoto:
             break
         case .selectLayout:
             if editLayoutWasSelected {
+                setupLayoutBoxes()
                 placementContainerView.alpha = 0.0
                 view.sendSubview(toBack: placementContainerView)
             }

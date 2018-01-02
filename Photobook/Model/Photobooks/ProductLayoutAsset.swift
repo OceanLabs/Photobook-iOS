@@ -16,6 +16,20 @@ class ProductLayoutAsset: Codable {
 
     var containerSize: CGSize! {
         didSet {
+            if oldValue != nil {
+                let oldRatio = oldValue.width / oldValue.height
+                let newRatio = containerSize.width / containerSize.height
+            
+                // Check if we have the same layout
+                if abs(oldRatio - newRatio) < 0.001 {
+                    // Scales in both axes should be the same
+                    let relativeScale = containerSize.width / oldValue.width
+
+                    transform = LayoutUtils.adjustTransform(transform, byFactor: relativeScale)
+                    return
+                }
+            }
+            
             if transform == .identity {
                 fitAssetToContainer()
                 return
