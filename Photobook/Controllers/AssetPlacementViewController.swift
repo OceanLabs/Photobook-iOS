@@ -19,39 +19,84 @@ class AssetPlacementViewController: UIViewController {
     @IBOutlet private weak var assetContainerViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var assetContainerViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var assetEditingAreaView: UIView!
-    
-    private var hasDoneInitialSetup = false
+
+    private lazy var animatableAssetImageView = UIImageView()
     
     // Public vars
-    var productLayout: ProductLayout? {
-        didSet {
-            hasDoneInitialSetup = false
-            setupUI()
-        }
-    }
-    
+    var productLayout: ProductLayout?
+    var initialContainerRect: CGRect?
+    var assetImage: UIImage?
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-        assetContainerView.translatesAutoresizingMaskIntoConstraints = false
+        view.alpha = 0.0
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        setupUI()
-    }
-    
-    func setupUI() {
-        guard !hasDoneInitialSetup,
-              assetImageView != nil,
-              let productLayout = productLayout,
-              let containerSize = productLayout.productLayoutAsset?.containerSize else { return }
-        
-        hasDoneInitialSetup = true
+    func animateFromPhotobook() {
+        guard let productLayout = productLayout,
+            let containerSize = productLayout.productLayoutAsset?.containerSize else { return }
         
         setUpLayoutImageBox(withRatio: containerSize.height / containerSize.width)
         setUpImageView(withProductLayout: productLayout)
+
+        guard let initialContainerRect = initialContainerRect else {
+            view.alpha = 1.0
+            return
+        }
+        
+        assetEditingAreaView.layoutIfNeeded()
+        assetEditingAreaView.alpha = 0.0
+        
+        let targetRect = assetEditingAreaView.convert(assetContainerView.frame, to: view)
+        animatableAssetImageView.transform = .identity
+        animatableAssetImageView.frame = targetRect
+        animatableAssetImageView.image = assetContainerView.snapshot()
+        animatableAssetImageView.center = CGPoint(x: initialContainerRect.midX, y: initialContainerRect.midY)
+        
+        let initialScale = initialContainerRect.width / targetRect.width
+        animatableAssetImageView.transform = CGAffineTransform.identity.scaledBy(x: initialScale, y: initialScale)
+        
+        view.addSubview(animatableAssetImageView)
+        view.alpha = 1.0
+        
+        UIView.animate(withDuration: 0.1, delay: 0.2, options: [.curveEaseInOut], animations: {
+            self.assetEditingAreaView.alpha = 1.0
+        }, completion: { _ in
+            self.animatableAssetImageView.alpha = 0.0
+        })
+
+        UIView.animate(withDuration: 0.3, animations: {
+            self.animatableAssetImageView.frame = targetRect
+        })
+    }
+    
+    func animateBackToPhotobook(_ completion: @escaping (() -> Void)) {
+        guard let initialContainerRect = initialContainerRect,
+              let productLayoutAsset = productLayout?.productLayoutAsset else {
+            view.alpha = 0.0
+            return
+        }
+
+        // Re-calculate transform for the photobook's container size
+        productLayoutAsset.containerSize = CGSize(width: initialContainerRect.width, height: initialContainerRect.height)
+
+        // FIXME: Case where there's no asset
+        animatableAssetImageView.image = assetContainerView.snapshot()
+        animatableAssetImageView.alpha = 1.0
+        
+        UIView.animate(withDuration: 0.1, animations: {
+            self.assetEditingAreaView.alpha = 0.0
+        })
+
+        UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseInOut], animations: {
+            self.animatableAssetImageView.frame = self.initialContainerRect!
+        }, completion: { _ in
+            self.view.alpha = 0.0
+            completion()
+        })
+    }
+    
+    private func setupUI() {
     }
     
     private func setUpLayoutImageBox(withRatio ratio: CGFloat) {
@@ -91,17 +136,9 @@ class AssetPlacementViewController: UIViewController {
         // Should trigger a transform recalculation
         productLayout.productLayoutAsset?.containerSize = CGSize(width: assetContainerViewWidthConstraint.constant, height: assetContainerViewHeightConstraint.constant)
         assetImageView.transform = productLayout.productLayoutAsset!.transform
-        
         assetImageView.center = CGPoint(x: assetContainerViewWidthConstraint.constant * 0.5, y: assetContainerViewHeightConstraint.constant * 0.5)
         
-        productLayout.asset?.image(size: asset.size, completionHandler: { [weak welf = self] (image, error) in
-            guard error == nil else {
-                // TODO: Display error
-                return
-            }
-            
-            welf?.assetImageView.image = image
-        })
+        assetImageView.image = assetImage
     }
     
     @IBAction private func tappedRotateButton(_ sender: UIButton) {

@@ -21,7 +21,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vdr-Ew-Ot6">
+                            <containerView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vdr-Ew-Ot6">
                                 <rect key="frame" x="0.0" y="20" width="414" height="672"/>
                                 <connections>
                                     <segue destination="0tx-1H-1gY" kind="embed" identifier="PlacementSegue" id="MIB-0a-yTw"/>
@@ -150,7 +150,7 @@
                             <constraint firstAttribute="trailing" secondItem="Vdr-Ew-Ot6" secondAttribute="trailing" id="c3k-0O-ZG6"/>
                             <constraint firstItem="Q7V-q1-95p" firstAttribute="leading" secondItem="2K5-To-oFe" secondAttribute="leading" id="cAc-UJ-ioB"/>
                             <constraint firstItem="3pJ-D7-Ell" firstAttribute="bottom" secondItem="2K5-To-oFe" secondAttribute="bottom" id="ea1-bU-8Gw"/>
-                            <constraint firstItem="Vdr-Ew-Ot6" firstAttribute="top" secondItem="2K5-To-oFe" secondAttribute="top" id="hNQ-sc-rIs"/>
+                            <constraint firstItem="Vdr-Ew-Ot6" firstAttribute="top" secondItem="lbR-ma-Ckk" secondAttribute="top" constant="20" id="hNQ-sc-rIs"/>
                             <constraint firstItem="Q7V-q1-95p" firstAttribute="top" secondItem="lbR-ma-Ckk" secondAttribute="top" id="ixT-m3-haa"/>
                             <constraint firstItem="3pJ-D7-Ell" firstAttribute="top" secondItem="Q7V-q1-95p" secondAttribute="bottom" id="jxV-v6-aaJ"/>
                             <constraint firstItem="Q7V-q1-95p" firstAttribute="trailing" secondItem="2K5-To-oFe" secondAttribute="trailing" id="uqf-p9-HAE"/>
@@ -1181,10 +1181,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TET-AS-1ry">
-                                <rect key="frame" x="0.0" y="20" width="414" height="553"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="573"/>
                                 <subviews>
                                     <view contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="Mss-Ro-X4n">
-                                        <rect key="frame" x="52" y="77" width="310" height="400"/>
+                                        <rect key="frame" x="52" y="87" width="310" height="400"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yms-yt-a0G">
                                                 <rect key="frame" x="-23" y="-28" width="358" height="454"/>
@@ -1198,19 +1198,19 @@
                                         </constraints>
                                     </view>
                                     <view alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X2g-TJ-SgU">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="77"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="87"/>
                                         <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                                     </view>
                                     <view alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gin-ch-DcM">
-                                        <rect key="frame" x="0.0" y="77" width="52" height="400"/>
+                                        <rect key="frame" x="0.0" y="87" width="52" height="400"/>
                                         <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                                     </view>
                                     <view alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="deO-XL-e3u">
-                                        <rect key="frame" x="0.0" y="477" width="414" height="76"/>
+                                        <rect key="frame" x="0.0" y="487" width="414" height="86"/>
                                         <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                                     </view>
                                     <view alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qHB-a9-3hj">
-                                        <rect key="frame" x="362" y="77" width="52" height="400"/>
+                                        <rect key="frame" x="362" y="87" width="52" height="400"/>
                                         <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                                     </view>
                                 </subviews>
@@ -1247,7 +1247,7 @@
                         <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="TET-AS-1ry" firstAttribute="top" secondItem="v7z-cU-uWS" secondAttribute="top" id="DEQ-KG-IVK"/>
+                            <constraint firstItem="TET-AS-1ry" firstAttribute="top" secondItem="2ha-XX-PVN" secondAttribute="top" id="DEQ-KG-IVK"/>
                             <constraint firstItem="CeI-dF-0wW" firstAttribute="top" secondItem="TET-AS-1ry" secondAttribute="bottom" constant="30" id="KHs-4c-lbu"/>
                             <constraint firstItem="TET-AS-1ry" firstAttribute="leading" secondItem="2ha-XX-PVN" secondAttribute="leading" id="O68-PW-kWx"/>
                             <constraint firstAttribute="bottomMargin" secondItem="CeI-dF-0wW" secondAttribute="bottom" constant="40" id="Sde-fK-14T"/>

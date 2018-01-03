@@ -221,28 +221,36 @@ class PageSetupViewController: UIViewController {
     }
     
     @IBAction func tappedToolButton(_ sender: UIButton) {
+        
+        guard let index = toolbarButtons.index(of: sender),
+            !toolbarButtons[index].isSelected,
+            let tool = Tools(rawValue: index) else { return }
+
         let editLayoutWasSelected = toolbarButtons[Tools.placeAsset.rawValue].isSelected
         
         for button in toolbarButtons {
             button.isSelected = (button === sender)
         }
-        
-        guard let index = toolbarButtons.index(of: sender), let tool = Tools(rawValue: index) else { return }
-        
+
         switch tool {
         case .selectAsset:
             break
         case .selectLayout:
             if editLayoutWasSelected {
-                setupLayoutBoxes()
-                placementContainerView.alpha = 0.0
-                view.sendSubview(toBack: placementContainerView)
+                assetPlacementViewController.animateBackToPhotobook {
+                    self.assetImageView.transform = self.productLayout!.productLayoutAsset!.transform
+                    self.view.sendSubview(toBack: self.placementContainerView)
+                }
             }
             break
         case .placeAsset:
-            assetPlacementViewController.productLayout = productLayout
-            placementContainerView.alpha = 1.0
             view.bringSubview(toFront: placementContainerView)
+            
+            let containerRect = placementContainerView.convert(assetContainerView.frame, from: pageView)
+            assetPlacementViewController.productLayout = productLayout
+            assetPlacementViewController.initialContainerRect = containerRect
+            assetPlacementViewController.assetImage = assetImageView.image
+            assetPlacementViewController.animateFromPhotobook()
             break
         case .editColor:
             break
