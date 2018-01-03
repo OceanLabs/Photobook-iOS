@@ -191,7 +191,12 @@ class PageSetupViewController: UIViewController {
             productLayout.productLayoutAsset!.containerSize = assetContainerView.bounds.size
             assetImageView.transform = productLayout.productLayoutAsset!.transform
             
+            toolbarButtons[Tools.placeAsset.rawValue].isEnabled = true
+            
             showImageBox = true
+        } else {
+            // Disable the asset placement screen
+            toolbarButtons[Tools.placeAsset.rawValue].isEnabled = false
         }
         
         if let textBox = productLayout.layout.textLayoutBox, let text = pageText {

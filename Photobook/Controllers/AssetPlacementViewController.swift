@@ -80,7 +80,6 @@ class AssetPlacementViewController: UIViewController {
         // Re-calculate transform for the photobook's container size
         productLayoutAsset.containerSize = CGSize(width: initialContainerRect.width, height: initialContainerRect.height)
 
-        // FIXME: Case where there's no asset
         animatableAssetImageView.image = assetContainerView.snapshot()
         animatableAssetImageView.alpha = 1.0
         
