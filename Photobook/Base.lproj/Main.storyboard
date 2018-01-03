@@ -7,7 +7,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -1181,11 +1180,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="672"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TET-AS-1ry">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="573"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TET-AS-1ry">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="582"/>
                                 <subviews>
                                     <view contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="Mss-Ro-X4n">
-                                        <rect key="frame" x="52" y="87" width="310" height="400"/>
+                                        <rect key="frame" x="52" y="91.666666666666686" width="310" height="400"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yms-yt-a0G">
                                                 <rect key="frame" x="-23" y="-28" width="358" height="454"/>
@@ -1199,19 +1198,19 @@
                                         </constraints>
                                     </view>
                                     <view alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X2g-TJ-SgU">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="87"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="91.666666666666671"/>
                                         <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                                     </view>
                                     <view alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gin-ch-DcM">
-                                        <rect key="frame" x="0.0" y="87" width="52" height="400"/>
+                                        <rect key="frame" x="0.0" y="91.666666666666686" width="52" height="400"/>
                                         <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                                     </view>
                                     <view alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="deO-XL-e3u">
-                                        <rect key="frame" x="0.0" y="487" width="414" height="86"/>
+                                        <rect key="frame" x="0.0" y="491.66666666666669" width="414" height="90.333333333333314"/>
                                         <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                                     </view>
                                     <view alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qHB-a9-3hj">
-                                        <rect key="frame" x="362" y="87" width="52" height="400"/>
+                                        <rect key="frame" x="362" y="91.666666666666686" width="52" height="400"/>
                                         <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                                     </view>
                                 </subviews>
@@ -1237,23 +1236,41 @@
                                     <constraint firstItem="Gin-ch-DcM" firstAttribute="leading" secondItem="TET-AS-1ry" secondAttribute="leading" id="zsl-Wp-4qx"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CeI-dF-0wW">
-                                <rect key="frame" x="193" y="603" width="29" height="29"/>
-                                <state key="normal" image="Rotate"/>
-                                <connections>
-                                    <action selector="tappedRotateButton:" destination="0tx-1H-1gY" eventType="touchUpInside" id="LyH-In-kFf"/>
-                                </connections>
-                            </button>
+                            <view alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lRc-aT-yr6">
+                                <rect key="frame" x="0.0" y="582" width="414" height="90"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CeI-dF-0wW">
+                                        <rect key="frame" x="184.66666666666666" y="0.0" width="44" height="44"/>
+                                        <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="44" id="1Yf-6o-sSE"/>
+                                            <constraint firstAttribute="height" constant="44" id="6ej-kU-dqy"/>
+                                        </constraints>
+                                        <state key="normal" image="Rotate"/>
+                                        <connections>
+                                            <action selector="tappedRotateButton:" destination="0tx-1H-1gY" eventType="touchUpInside" id="LyH-In-kFf"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="90" id="Dym-9L-gSZ"/>
+                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="CeI-dF-0wW" secondAttribute="bottom" constant="30" id="F3m-9U-gtA"/>
+                                    <constraint firstItem="CeI-dF-0wW" firstAttribute="centerX" secondItem="lRc-aT-yr6" secondAttribute="centerX" id="dR7-f0-Kvu"/>
+                                    <constraint firstItem="CeI-dF-0wW" firstAttribute="top" secondItem="lRc-aT-yr6" secondAttribute="top" id="tz7-yv-rom"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="lRc-aT-yr6" firstAttribute="leading" secondItem="v7z-cU-uWS" secondAttribute="leading" id="1iD-bc-MOr"/>
                             <constraint firstItem="TET-AS-1ry" firstAttribute="top" secondItem="2ha-XX-PVN" secondAttribute="top" id="DEQ-KG-IVK"/>
-                            <constraint firstItem="CeI-dF-0wW" firstAttribute="top" secondItem="TET-AS-1ry" secondAttribute="bottom" constant="30" id="KHs-4c-lbu"/>
+                            <constraint firstItem="lRc-aT-yr6" firstAttribute="top" secondItem="TET-AS-1ry" secondAttribute="bottom" id="DfC-ba-PqD"/>
                             <constraint firstItem="TET-AS-1ry" firstAttribute="leading" secondItem="2ha-XX-PVN" secondAttribute="leading" id="O68-PW-kWx"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="CeI-dF-0wW" secondAttribute="bottom" constant="40" id="Sde-fK-14T"/>
-                            <constraint firstItem="CeI-dF-0wW" firstAttribute="centerX" secondItem="2ha-XX-PVN" secondAttribute="centerX" id="gf6-ge-Qfh"/>
+                            <constraint firstAttribute="bottom" secondItem="lRc-aT-yr6" secondAttribute="bottom" id="YIm-R2-qqj"/>
                             <constraint firstAttribute="trailing" secondItem="TET-AS-1ry" secondAttribute="trailing" id="iea-8r-Edd"/>
+                            <constraint firstItem="lRc-aT-yr6" firstAttribute="trailing" secondItem="v7z-cU-uWS" secondAttribute="trailing" id="joY-IV-k3r"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="v7z-cU-uWS"/>
                         <connections>
