@@ -32,6 +32,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <items>
                                     <barButtonItem systemItem="cancel" id="UOi-Bd-YtZ">
+                                        <color key="tintColor" red="0.34901960784313724" green="0.34901960784313724" blue="0.36862745098039218" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <action selector="tappedCancelButton:" destination="sIe-n5-8hl" id="uen-AU-d8P"/>
                                         </connections>
