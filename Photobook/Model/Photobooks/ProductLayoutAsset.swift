@@ -21,7 +21,7 @@ class ProductLayoutAsset: Codable {
                 let newRatio = containerSize.width / containerSize.height
             
                 // Check if we have the same layout
-                if abs(oldRatio - newRatio) < 0.001 {
+                if abs(oldRatio - newRatio) < CGFloat.minPrecision {
                     // Scales in both axes should be the same
                     let relativeScale = containerSize.width / oldValue.width
 
