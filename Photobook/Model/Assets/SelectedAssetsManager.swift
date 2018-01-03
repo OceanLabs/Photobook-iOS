@@ -7,45 +7,87 @@
 //
 
 import UIKit
+import Photos
 
 struct Constants {
     static let maximumAllowedPhotosForSelectAll = 70
 }
 
 class SelectedAssetsManager: NSObject {
+    
+    static let notificationUserObjectKeyAssets = "assets"
+    static let notificationUserObjectKeyIndices = "indices"
+    static let notificationNameSelected = Notification.Name("SelectedAssetsManager.Selected")
+    static let notificationNameDeselected = Notification.Name("SelectedAssetsManager.Deselected")
 
-    private var selectedAssets = [String:[Asset]]()
+    private(set) var selectedAssets = [Asset]()
+    
+    override init() {
+        super.init()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
     private func selectedAssets(for album: Album) -> [Asset] {
-        let assets = selectedAssets[album.identifier]
-        if assets == nil{
-            selectedAssets[album.identifier] = [Asset]()
+        return selectedAssets.filter { (a) -> Bool in
+            return a.albumIdentifier == album.identifier
+        }
+    }
+    
+    func select(_ asset:Asset) {
+        select([asset])
+    }
+    
+    func select(_ assets:[Asset]) {
+        var addedAssets = [Asset]()
+        var addedIndices = [Int]()
+        for asset in assets {
+            if selectedAssets.index(where: { (selectedAsset) in
+                return selectedAsset == asset
+            }) != nil {
+                //already added
+                continue
+            }
+            
+            selectedAssets.append(asset)
+            addedAssets.append(asset)
+            addedIndices.append(selectedAssets.count-1)
+        }
+
+        NotificationCenter.default.post(name: SelectedAssetsManager.notificationNameSelected, object: self, userInfo: [SelectedAssetsManager.notificationUserObjectKeyAssets:addedAssets, SelectedAssetsManager.notificationUserObjectKeyIndices:addedIndices])
+    }
+    
+    func deselect(_ asset:Asset) {
+        deselect([asset])
+    }
+    
+    func deselect(_ assets:[Asset]) {
+        var removedAssets = [Asset]()
+        var removedIndices = [Int]()
+        for asset in assets {
+            if let index = selectedAssets.index(where: { (selectedAsset) in
+                return selectedAsset == asset
+            }) {
+                removedAssets.append(asset)
+                removedIndices.append(index)
+            }
+        }
+        for a in removedAssets {
+            if let index = selectedAssets.index(where: { (asset) in
+                return a == asset
+            }) {
+                selectedAssets.remove(at: index)
+            }
         }
         
-        return selectedAssets[album.identifier]!
+        NotificationCenter.default.post(name: SelectedAssetsManager.notificationNameDeselected, object: self, userInfo: [SelectedAssetsManager.notificationUserObjectKeyAssets:removedAssets, SelectedAssetsManager.notificationUserObjectKeyIndices:removedIndices])
     }
     
-    private func select(_ asset:Asset, for album:Album) {
-        var selectedAssetsForAlbum = selectedAssets(for: album)
-        selectedAssetsForAlbum.append(asset)
-        selectedAssets[album.identifier] = selectedAssetsForAlbum
-    }
-    
-    private func deselect(_ asset:Asset, for album:Album) {
-        var selectedAssetsForAlbum = selectedAssets(for: album)
-        
-        if let index = selectedAssetsForAlbum.index(where: { (selectedAsset) in
-            return selectedAsset.identifier == asset.identifier
-        }){
-            selectedAssetsForAlbum.remove(at: index)
-        }
-        
-        selectedAssets[album.identifier] = selectedAssetsForAlbum
-    }
-    
-    func isSelected(_ asset:Asset, for album:Album) -> Bool {
-        let index = selectedAssets(for: album).index(where: { (selectedAsset) in
-            return selectedAsset.identifier == asset.identifier
+    func isSelected(_ asset:Asset) -> Bool {
+        let index = selectedAssets.index(where: { (selectedAsset) in
+            return selectedAsset == asset
         })
         
         return index != nil
@@ -58,12 +100,12 @@ class SelectedAssetsManager: NSObject {
     ///   - asset: The asset to toggle
     ///   - album: The album the asset is in
     /// - Returns: False if the asset is not able to be selected because of reaching the limit
-    func toggleSelected(_ asset:Asset, for album:Album) -> Bool {
-        if isSelected(asset, for: album){
-            deselect(asset, for: album)
+    func toggleSelected(_ asset:Asset) -> Bool {
+        if isSelected(asset){
+            deselect(asset)
         }
-        else{
-            select(asset, for: album)
+        else {
+            select(asset)
         }
         
         //TODO: Check if we've reached the limit
@@ -74,31 +116,21 @@ class SelectedAssetsManager: NSObject {
         return selectedAssets(for: album).count
     }
     
-    func willSelectingAllExceedTotalAllowed(for album: Album) -> Bool {
-        var count = 0
-        for selectedAssetsInAlbum in selectedAssets{
-            if selectedAssetsInAlbum.key == album.identifier { continue } //Skip counting selected in album
-            count += selectedAssetsInAlbum.value.count
-        }
-        
-        return count + album.assets.count > Constants.maximumAllowedPhotosForSelectAll
+    func willSelectingAllExceedTotalAllowed(_ album:Album) -> Bool {
+        return selectedAssets.count - selectedAssets(for: album).count + album.assets.count > Constants.maximumAllowedPhotosForSelectAll
     }
     
     
     func selectAllAssets(for album: Album){
-        for asset in album.assets{
-            if !isSelected(asset, for: album){
-                select(asset, for: album)
-            }
-        }
+        select(album.assets)
     }
     
     func deselectAllAssets(for album: Album){
-        for asset in album.assets{
-            if !isSelected(asset, for: album){
-                select(asset, for: album)
-            }
-        }
+        deselect(album.assets)
+    }
+    
+    func deselectAllAssets(){
+        deselect(selectedAssets)
     }
     
 }

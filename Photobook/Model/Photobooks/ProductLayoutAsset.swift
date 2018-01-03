@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Photos
 
 // A photo item in the user's photobook assigned to a layout box
 class ProductLayoutAsset: Codable {
@@ -76,9 +77,9 @@ class ProductLayoutAsset: Codable {
         if assetType == "Photobook.PhotosAsset" {
             // For tests, we use a subclass with some stubs
             if NSClassFromString("XCTest") != nil {
-                asset = TestPhotosAsset()
+                asset = TestPhotosAsset(PHAsset(), collection: PHAssetCollection())
             } else {
-                asset = PhotosAsset()
+                asset = PhotosAsset(PHAsset(), collection: PHAssetCollection())
                 asset!.identifier = assetIdentifier
                 asset!.uploadUrl = remoteUrl
             }

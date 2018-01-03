@@ -49,7 +49,7 @@ class PageSetupViewController: UIViewController {
         
         var assets = [PhotosAsset]()
         phAssets.enumerateObjects { (asset, _, _) in
-            let photoAsset = PhotosAsset(asset)
+            let photoAsset = PhotosAsset(asset, collection: PHAssetCollection())
             assets.append(photoAsset)
         }
         return assets
