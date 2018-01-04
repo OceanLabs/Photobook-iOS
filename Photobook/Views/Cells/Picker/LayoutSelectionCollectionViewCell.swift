@@ -12,7 +12,6 @@ class LayoutSelectionCollectionViewCell: UICollectionViewCell {
     
     static let reuseIdentifier = NSStringFromClass(LayoutSelectionCollectionViewCell.self).components(separatedBy: ".").last!
     
-    static let pageSideMargin: CGFloat = 20.0
     static let cornerRadius: CGFloat = 8.0
     static let borderWidth: CGFloat = 3.0
     static let borderInset: CGFloat = 1.0 // Inset of the background view in the storyboard
@@ -43,7 +42,7 @@ class LayoutSelectionCollectionViewCell: UICollectionViewCell {
             let maskLayer = CAShapeLayer()
             maskLayer.fillColor = UIColor.white.cgColor
             maskLayer.path = path
-            maskLayer.frame = roundedBackgroundView.bounds //self.bounds
+            maskLayer.frame = roundedBackgroundView.bounds
             
             roundedBackgroundView.layer.mask = maskLayer
         }

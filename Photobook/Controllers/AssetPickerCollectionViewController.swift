@@ -16,7 +16,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     private let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
     private var previousPreheatRect = CGRect.zero
     var selectedAssetsManager: SelectedAssetsManager?
-    var imageCollectorController:AssetCollectorViewController?
+    var imageCollectorController: AssetCollectorViewController?
     static let coverAspectRatio: CGFloat = 2.723684211
     
     var albumManager: AlbumManager?

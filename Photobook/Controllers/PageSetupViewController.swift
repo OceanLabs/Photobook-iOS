@@ -30,6 +30,8 @@ class PageSetupViewController: UIViewController {
             pageView.translatesAutoresizingMaskIntoConstraints = false
         }
     }
+    @IBOutlet private weak var assetSelectionContainerView: UIView!
+    @IBOutlet private weak var layoutSelectionContainerView: UIView!
     @IBOutlet private weak var placementContainerView: UIView!
     @IBOutlet private weak var assetContainerView: UIView!
     @IBOutlet private weak var assetImageView: UIImageView!
@@ -39,6 +41,7 @@ class PageSetupViewController: UIViewController {
     @IBOutlet var toolbarButtons: [UIButton]!
     @IBOutlet weak var toolbar: UIToolbar!
     
+    private var assetSelectorViewController: AssetSelectorViewController!
     private var layoutSelectionViewController: LayoutSelectionViewController!
     private var assetPlacementViewController: AssetPlacementViewController!
     
@@ -103,6 +106,7 @@ class PageSetupViewController: UIViewController {
             self.selectedAsset = self.assets.first!
             
             self.setupPage()
+            self.setupAssetSelection()
             self.setupLayoutSelection()
             
             UIView.animate(withDuration: 0.3) {
@@ -122,7 +126,7 @@ class PageSetupViewController: UIViewController {
         self.productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset, productLayoutText: nil)
     }
     
-    func setupPage() {
+    private func setupPage() {
         // TEMP: Trigger didSet code
         pageSizeRatio = 1.38157681
         pageHeightConstraint.constant = pageSize.height
@@ -130,7 +134,7 @@ class PageSetupViewController: UIViewController {
         setupLayoutBoxes()
     }
     
-    func adjustLabelHeight() {
+    private func adjustLabelHeight() {
         let textAttributes = [NSAttributedStringKey.font: Constants.textBoxFont]
         let rect = pageTextLabel.text!.boundingRect(with: CGSize(width: pageTextLabel.bounds.width, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, attributes: textAttributes, context: nil)
         if rect.size.height < pageTextLabel.bounds.height {
@@ -138,7 +142,11 @@ class PageSetupViewController: UIViewController {
         }
     }
     
-    func setupLayoutSelection() {
+    private func setupAssetSelection() {
+        assetSelectorViewController.selectedAsset = selectedAsset
+    }
+    
+    private func setupLayoutSelection() {
         layoutSelectionViewController.pageSizeRatio = pageSizeRatio
         layoutSelectionViewController.asset = selectedAsset
         layoutSelectionViewController.layouts = availableLayouts
@@ -148,6 +156,9 @@ class PageSetupViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier else { return }
         switch identifier {
+        case "AssetSelectionSegue":
+            assetSelectorViewController = segue.destination as! AssetSelectorViewController
+            assetSelectorViewController.delegate = self
         case "LayoutSelectionSegue":
             layoutSelectionViewController = segue.destination as! LayoutSelectionViewController
             layoutSelectionViewController.delegate = self
@@ -253,6 +264,8 @@ class PageSetupViewController: UIViewController {
 
         switch tool {
         case .selectAsset:
+            assetSelectionContainerView.alpha = 1.0
+            layoutSelectionContainerView.alpha = 0.0
             break
         case .selectLayout:
             if editLayoutWasSelected {
@@ -282,5 +295,12 @@ extension PageSetupViewController: LayoutSelectionViewControllerDelegate {
     func didSelectLayout(_ layout: Layout) {
         productLayout.layout = layout
         setupLayoutBoxes()
+    }
+}
+
+extension PageSetupViewController: AssetSelectorDelegate {
+    
+    func didSelect(asset: Asset) {
+        // TODO: Assign asset to page
     }
 }
