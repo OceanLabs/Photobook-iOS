@@ -23,8 +23,8 @@ class AssetSelectorViewController: UIViewController {
                 NotificationCenter.default.removeObserver(self, name: SelectedAssetsManager.notificationNameSelected, object: oldValue)
                 NotificationCenter.default.removeObserver(self, name: SelectedAssetsManager.notificationNameDeselected, object: oldValue)
             }
-            NotificationCenter.default.addObserver(self, selector: #selector(changedAssetSelection), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
-            NotificationCenter.default.addObserver(self, selector: #selector(changedAssetSelection), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
+            NotificationCenter.default.addObserver(self, selector: #selector(changedCollectedAssets), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
+            NotificationCenter.default.addObserver(self, selector: #selector(changedCollectedAssets), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
         }
     }
     
@@ -61,8 +61,8 @@ class AssetSelectorViewController: UIViewController {
             self.collectionView.reloadData()
         }
     }
-        
-    @objc private func changedAssetSelection() {
+    
+    @objc private func changedCollectedAssets() {
         
     }
 }
@@ -70,20 +70,20 @@ class AssetSelectorViewController: UIViewController {
 extension AssetSelectorViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        // Add one for the "add more" thumbnail
         return assets.count + 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        // "Add more" cell
+        // "Add more" thumbnail
         if indexPath.row == assets.count {
             return collectionView.dequeueReusableCell(withReuseIdentifier: AssetSelectorAddMoreCollectionViewCell.reuseIdentifier, for: indexPath) as! AssetSelectorAddMoreCollectionViewCell
         }
-        
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AssetSelectorAssetCollectionViewCell.reuseIdentifier, for: indexPath) as! AssetSelectorAssetCollectionViewCell
-        
+
         let asset = assets[indexPath.row]
         
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AssetSelectorAssetCollectionViewCell.reuseIdentifier, for: indexPath) as! AssetSelectorAssetCollectionViewCell
         cell.isAssetSelected = (selectedAssetIndex == indexPath.row)
         cell.assetIdentifier = asset.identifier
         let itemSize = (collectionView.collectionViewLayout as! UICollectionViewFlowLayout).itemSize
@@ -95,6 +95,9 @@ extension AssetSelectorViewController: UICollectionViewDataSource {
         
         return cell
     }
+}
+    
+extension AssetSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == assets.count {
@@ -109,7 +112,6 @@ extension AssetSelectorViewController: UICollectionViewDataSource {
         
         delegate?.didSelect(asset: assets[indexPath.row])
     }
-
 }
 
 class AssetSelectorAssetCollectionViewCell: UICollectionViewCell {
@@ -150,7 +152,11 @@ class AssetSelectorAssetCollectionViewCell: UICollectionViewCell {
     var isAssetSelected = false {
         willSet {
             guard isAssetSelected != newValue else { return }
-            borderLayer.isHidden = !newValue
+            if newValue {
+                layer.addSublayer(borderLayer)
+            } else {
+                borderLayer.removeFromSuperlayer()
+            }
         }
     }
 
@@ -174,8 +180,6 @@ class AssetSelectorAssetCollectionViewCell: UICollectionViewCell {
         borderLayer.frame = self.bounds
         borderLayer.strokeColor = AssetSelectorAssetCollectionViewCell.borderColor
         borderLayer.lineWidth = AssetSelectorAssetCollectionViewCell.borderWidth
-        borderLayer.isHidden = true
-        layer.addSublayer(borderLayer)
     }
 }
 

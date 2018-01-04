@@ -26,7 +26,7 @@ class ProductLayout: Codable {
                 return
             }
             if productLayoutAsset == nil { productLayoutAsset = ProductLayoutAsset() }
-            productLayoutAsset!.asset = asset
+            productLayoutAsset!.asset = newValue
         }
     }
     

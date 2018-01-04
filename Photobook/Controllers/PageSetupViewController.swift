@@ -182,8 +182,8 @@ class PageSetupViewController: UIViewController {
             // Lay out the image box
             assetContainerView.frame = imageBox.rectContained(in: pageSize)
 
-            // Set up the image the first time this method is called
-            if productLayout.asset != nil && assetImageView.image == nil {
+            // Set up the image if there is an asset
+            if productLayout.asset != nil {
                 let maxDimension = (imageBox.isLandscape() ? assetContainerView.bounds.width : assetContainerView.bounds.height) * UIScreen.main.scale
                 let imageSize = CGSize(width: maxDimension, height: maxDimension)
 
@@ -194,6 +194,7 @@ class PageSetupViewController: UIViewController {
                     }
                     self.assetImageView.image = image
                 })
+                assetImageView.transform = .identity
                 assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: assetSize.width, height: assetSize.height)
             }
 
@@ -262,18 +263,25 @@ class PageSetupViewController: UIViewController {
             button.isSelected = (button === sender)
         }
 
-        switch tool {
-        case .selectAsset:
-            assetSelectionContainerView.alpha = 1.0
-            layoutSelectionContainerView.alpha = 0.0
-            break
-        case .selectLayout:
+        let selectedPageSetupTool: (Int) -> Void = { index in
             if editLayoutWasSelected {
-                assetPlacementViewController.animateBackToPhotobook {
+                self.assetPlacementViewController.animateBackToPhotobook {
                     self.assetImageView.transform = self.productLayout!.productLayoutAsset!.transform
                     self.view.sendSubview(toBack: self.placementContainerView)
                 }
             }
+            UIView.animate(withDuration: 0.1, animations: {
+                self.assetSelectionContainerView.alpha = index == Tools.selectAsset.rawValue ? 1.0 : 0.0
+                self.layoutSelectionContainerView.alpha = index == Tools.selectLayout.rawValue ? 1.0 : 0.0
+            })
+        }
+        
+        switch tool {
+        case .selectAsset:
+            selectedPageSetupTool(Tools.selectAsset.rawValue)
+            break
+        case .selectLayout:
+            selectedPageSetupTool(Tools.selectLayout.rawValue)
             break
         case .placeAsset:
             view.bringSubview(toFront: placementContainerView)
@@ -301,6 +309,9 @@ extension PageSetupViewController: LayoutSelectionViewControllerDelegate {
 extension PageSetupViewController: AssetSelectorDelegate {
     
     func didSelect(asset: Asset) {
-        // TODO: Assign asset to page
+        selectedAsset = asset
+        productLayout.asset = asset
+        layoutSelectionViewController.asset = asset
+        setupLayoutBoxes()
     }
 }
