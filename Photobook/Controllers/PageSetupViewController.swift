@@ -33,6 +33,7 @@ class PageSetupViewController: UIViewController {
     @IBOutlet private weak var placementContainerView: UIView!
     @IBOutlet private weak var assetContainerView: UIView!
     @IBOutlet private weak var assetImageView: UIImageView!
+    @IBOutlet private weak var assetPlaceholderIconImageView: UIImageView!
     @IBOutlet private weak var pageTextLabel: UILabel!
     
     @IBOutlet var toolbarButtons: [UIButton]!
@@ -80,7 +81,7 @@ class PageSetupViewController: UIViewController {
         
         pageView.alpha = 0.0
         toolbar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
-        toolbarButtons[1].isSelected = true
+        toolbarButtons[Tools.selectAsset.rawValue].isSelected = true
         
         // TEMP: Remove when this is provided by the previous screen
         setupFakePhotobookData()
@@ -197,6 +198,7 @@ class PageSetupViewController: UIViewController {
         } else {
             // Disable the asset placement screen
             toolbarButtons[Tools.placeAsset.rawValue].isEnabled = false
+            setImagePlaceholder(visible: true)
         }
         
         if let textBox = productLayout.layout.textLayoutBox, let text = pageText {
@@ -215,6 +217,18 @@ class PageSetupViewController: UIViewController {
             self.assetContainerView.alpha = showImageBox ? 1.0 : 0.0
             self.pageTextLabel.alpha = showTextBox ? 1.0 : 0.0
         }, completion: nil)
+    }
+    
+    func setImagePlaceholder(visible: Bool) {
+        if visible {
+            assetImageView.image = nil
+            assetContainerView.backgroundColor = UIColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1.0)
+            assetPlaceholderIconImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
+            assetPlaceholderIconImageView.alpha = 1.0
+        } else {
+            assetContainerView.backgroundColor = .clear
+            assetPlaceholderIconImageView.alpha = 0.0
+        }
     }
     
     @IBAction func tappedCancelButton(_ sender: UIBarButtonItem) {

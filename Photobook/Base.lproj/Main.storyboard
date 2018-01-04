@@ -101,15 +101,18 @@
                                         <rect key="frame" x="10.666666666666657" y="189.66666666666663" width="394" height="313"/>
                                         <subviews>
                                             <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P8t-BC-XqP">
-                                                <rect key="frame" x="40" y="33" width="105" height="98"/>
+                                                <rect key="frame" x="40" y="33" width="120" height="120"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="assetPlaceholder" translatesAutoresizingMaskIntoConstraints="NO" id="GCv-FR-kRx">
+                                                        <rect key="frame" x="50" y="50" width="18" height="18"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    </imageView>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ex1-FQ-53l">
                                                         <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     </imageView>
                                                 </subviews>
-                                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QoP-S5-WEn">
                                                 <rect key="frame" x="40" y="230" width="283" height="21"/>
@@ -165,6 +168,7 @@
                     <connections>
                         <outlet property="assetContainerView" destination="P8t-BC-XqP" id="N8r-dd-U72"/>
                         <outlet property="assetImageView" destination="Ex1-FQ-53l" id="WYg-LI-8JH"/>
+                        <outlet property="assetPlaceholderIconImageView" destination="GCv-FR-kRx" id="bQ6-qF-Wig"/>
                         <outlet property="pageHeightConstraint" destination="QGH-DF-d32" id="59c-ku-qoE"/>
                         <outlet property="pageTextLabel" destination="QoP-S5-WEn" id="Bc6-w6-LF0"/>
                         <outlet property="pageView" destination="7ay-JZ-NNl" id="HQI-i4-HR1"/>
@@ -1744,6 +1748,7 @@
         <image name="Rotate" width="29" height="29"/>
         <image name="Stories" width="29" height="24"/>
         <image name="Tick-empty" width="26" height="26"/>
+        <image name="assetPlaceholder" width="18" height="18"/>
         <image name="editColor_off" width="29" height="29"/>
         <image name="editColor_on" width="29" height="29"/>
         <image name="editLayout_off" width="29" height="29"/>
