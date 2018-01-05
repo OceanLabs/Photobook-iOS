@@ -85,6 +85,7 @@ extension AssetSelectorViewController: UICollectionViewDataSource {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AssetSelectorAssetCollectionViewCell.reuseIdentifier, for: indexPath) as! AssetSelectorAssetCollectionViewCell
         cell.isAssetSelected = (selectedAssetIndex == indexPath.row)
+        cell.timesUsed = selectedAssetIndex == indexPath.row ? 1 : 0
         cell.assetIdentifier = asset.identifier
         let itemSize = (collectionView.collectionViewLayout as! UICollectionViewFlowLayout).itemSize
         
@@ -96,7 +97,7 @@ extension AssetSelectorViewController: UICollectionViewDataSource {
         return cell
     }
 }
-    
+
 extension AssetSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -120,7 +121,7 @@ class AssetSelectorAssetCollectionViewCell: UICollectionViewCell {
     
     static let cornerRadius: CGFloat = 8.0
     static let borderWidth: CGFloat = 3.0
-    static let borderInset: CGFloat = 2.0 // Inset of the image view in the storyboard
+    static let borderInset: CGFloat = 1.0
     // TEMP: Refactor common colours out into utility class
     static let borderColor = UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0).cgColor
     
@@ -159,6 +160,13 @@ class AssetSelectorAssetCollectionViewCell: UICollectionViewCell {
             }
         }
     }
+    var timesUsed = 0 {
+        didSet {
+            badgeBackgroundView.alpha = timesUsed > 0 ? 1.0 : 0.0
+            badgeLabel.alpha = timesUsed > 0 ? 1.0 : 0.0
+            badgeLabel.text = String(timesUsed)
+        }
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -172,7 +180,7 @@ class AssetSelectorAssetCollectionViewCell: UICollectionViewCell {
 
     func setup() {
         let inset = AssetSelectorAssetCollectionViewCell.borderInset
-        let rect = CGRect(x: inset, y: inset, width: self.bounds.maxX - inset * 2.0, height: self.bounds.maxY - inset * 2.0)
+        let rect = CGRect(x: -inset, y: -inset, width: self.bounds.width + 2.0 * inset, height: self.bounds.height + 2.0 * inset)
         let borderPath = UIBezierPath(roundedRect: rect, cornerRadius: AssetSelectorAssetCollectionViewCell.cornerRadius).cgPath
         borderLayer = CAShapeLayer()
         borderLayer.fillColor = nil
