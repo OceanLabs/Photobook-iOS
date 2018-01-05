@@ -99,7 +99,7 @@ class PageSetupViewController: UIViewController {
             
             if let photobook = ProductManager.shared.products?.first {
                 ProductManager.shared.setPhotobook(photobook, withAssets: self.assets)
-                self.availableLayouts = ProductManager.shared.layouts(for: photobook)
+                self.availableLayouts = ProductManager.shared.currentLayouts()
             }
             
             // Assign a default asset
@@ -301,6 +301,11 @@ extension PageSetupViewController: LayoutSelectionViewControllerDelegate {
     
     func didSelectLayout(_ layout: Layout) {
         productLayout.layout = layout
+        
+        // Deselect the asset if the layout does not have an image box
+        if productLayout.layout.imageLayoutBox == nil {
+            assetSelectorViewController.selectedAsset = nil
+        }
         setupLayoutBoxes()
     }
 }
@@ -311,6 +316,13 @@ extension PageSetupViewController: AssetSelectorDelegate {
         selectedAsset = asset
         productLayout.asset = asset
         layoutSelectionViewController.asset = asset
+        
+        // If the current layout does not have an image box, find the first layout that does and use it
+        if productLayout.layout.imageLayoutBox == nil {
+            let defaultLayout = ProductManager.shared.currentLayouts()?.first(where: { $0.imageLayoutBox != nil })
+            productLayout.layout = defaultLayout
+            setupTextBox()
+        }
         setupImageBox()
     }
 }

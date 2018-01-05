@@ -58,10 +58,11 @@ class AssetSelectorViewController: UIViewController {
         didSet {
             guard selectedAsset != nil else {
                 selectedAssetIndex = -1
+                reloadAndCenter()
                 return
             }
             selectedAssetIndex = assets.index { $0.identifier == selectedAsset!.identifier } ?? -1
-            self.reloadAndCenter()
+            reloadAndCenter()
         }
     }
     
@@ -71,7 +72,8 @@ class AssetSelectorViewController: UIViewController {
     
     private func reloadAndCenter() {
         collectionView.reloadData()
-        collectionView.scrollToItem(at: IndexPath(row: selectedAssetIndex, section: 0), at: .centeredHorizontally, animated: true)
+        let itemToScrollTo = selectedAssetIndex >= 0 ? selectedAssetIndex : 0
+        collectionView.scrollToItem(at: IndexPath(row: itemToScrollTo, section: 0), at: .centeredHorizontally, animated: true)
     }
     
     @objc private func changedCollectedAssets() {

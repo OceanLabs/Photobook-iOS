@@ -157,6 +157,16 @@ class ProductManager {
         return layouts.filter { photobook.layouts.contains($0.id) }
     }
     
+    func currentCoverLayouts() -> [Layout]? {
+        guard product != nil else { return nil }
+        return coverLayouts(for: product!)
+    }
+    
+    func currentLayouts() -> [Layout]? {
+        guard product != nil else { return nil }
+        return layouts(for: product!)
+    }
+    
     /// Sets one of the available layouts for a page number
     ///
     /// - Parameters:
