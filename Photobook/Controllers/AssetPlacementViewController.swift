@@ -44,6 +44,9 @@ class AssetPlacementViewController: UIViewController {
             return
         }
         
+        let backgroundColor = view.backgroundColor
+        view.backgroundColor = .clear
+        
         assetEditingAreaView.layoutIfNeeded()
         assetEditingAreaView.alpha = 0.0
         
@@ -66,6 +69,7 @@ class AssetPlacementViewController: UIViewController {
         })
 
         UIView.animate(withDuration: 0.3, animations: {
+            self.view.backgroundColor = backgroundColor
             self.animatableAssetImageView.frame = targetRect
         })
     }
@@ -83,14 +87,18 @@ class AssetPlacementViewController: UIViewController {
         animatableAssetImageView.image = assetContainerView.snapshot()
         animatableAssetImageView.alpha = 1.0
         
+        let backgroundColor = view.backgroundColor
+        
         UIView.animate(withDuration: 0.1, animations: {
             self.assetEditingAreaView.alpha = 0.0
         })
 
         UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseInOut], animations: {
+            self.view.backgroundColor = .clear
             self.animatableAssetImageView.frame = self.initialContainerRect!
         }, completion: { _ in
             self.view.alpha = 0.0
+            self.view.backgroundColor = backgroundColor
             completion()
         })
     }

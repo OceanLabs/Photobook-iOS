@@ -268,8 +268,9 @@ class PageSetupViewController: UIViewController {
         for button in toolbarButtons {
             button.isSelected = (button === sender)
         }
-
-        let selectedPageSetupTool: (Int) -> Void = { index in
+        
+        switch tool {
+        case .selectAsset, .selectLayout:
             if editLayoutWasSelected {
                 self.assetPlacementViewController.animateBackToPhotobook {
                     self.assetImageView.transform = self.productLayout!.productLayoutAsset!.transform
@@ -277,17 +278,9 @@ class PageSetupViewController: UIViewController {
                 }
             }
             UIView.animate(withDuration: 0.1, animations: {
-                self.assetSelectionContainerView.alpha = index == Tools.selectAsset.rawValue ? 1.0 : 0.0
-                self.layoutSelectionContainerView.alpha = index == Tools.selectLayout.rawValue ? 1.0 : 0.0
+                self.assetSelectionContainerView.alpha = tool.rawValue == Tools.selectAsset.rawValue ? 1.0 : 0.0
+                self.layoutSelectionContainerView.alpha = tool.rawValue == Tools.selectLayout.rawValue ? 1.0 : 0.0
             })
-        }
-        
-        switch tool {
-        case .selectAsset:
-            selectedPageSetupTool(Tools.selectAsset.rawValue)
-            break
-        case .selectLayout:
-            selectedPageSetupTool(Tools.selectLayout.rawValue)
             break
         case .placeAsset:
             view.bringSubview(toFront: placementContainerView)
