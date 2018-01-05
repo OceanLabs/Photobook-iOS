@@ -89,7 +89,7 @@ extension AssetSelectorViewController: UICollectionViewDataSource {
         let asset = assets[indexPath.row]
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AssetSelectorAssetCollectionViewCell.reuseIdentifier, for: indexPath) as! AssetSelectorAssetCollectionViewCell
-        cell.isAssetSelected = (selectedAssetIndex == indexPath.row)
+        cell.isBorderVisible = (selectedAssetIndex == indexPath.row)
         cell.timesUsed = selectedAssetIndex == indexPath.row ? 1 : 0
         cell.assetIdentifier = asset.identifier
         let itemSize = (collectionView.collectionViewLayout as! UICollectionViewFlowLayout).itemSize

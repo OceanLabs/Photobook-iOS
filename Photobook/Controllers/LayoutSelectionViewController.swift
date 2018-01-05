@@ -104,7 +104,7 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
             cell.photoContainerView.alpha = 0.0
         }
         
-        cell.isLayoutSelected = (indexPath.row == selectedLayoutIndex)
+        cell.isBorderVisible = (indexPath.row == selectedLayoutIndex)
 
         return cell
     }

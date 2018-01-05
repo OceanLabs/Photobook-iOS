@@ -9,14 +9,12 @@
 import UIKit
 
 class AssetSelectorAddMoreCollectionViewCell: UICollectionViewCell {
-    
+
     static let reuseIdentifier = NSStringFromClass(AssetSelectorAddMoreCollectionViewCell.self).components(separatedBy: ".").last!
-    
-    static let cornerRadius: CGFloat = 11.0
-    
+
     @IBOutlet weak var backgroundColorView: UIView! {
         didSet {
-            backgroundColorView.bezierRoundedCorners(withRadius: AssetSelectorAddMoreCollectionViewCell.cornerRadius)
+            backgroundColorView.bezierRoundedCorners(withRadius: BorderedCollectionViewCell.cornerRadius)
         }
     }
 }
