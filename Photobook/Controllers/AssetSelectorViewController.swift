@@ -41,9 +41,11 @@ class AssetSelectorViewController: UIViewController {
         let phAssets = PHAsset.fetchAssets(with: PHFetchOptions())
         
         var assets = [PhotosAsset]()
-        phAssets.enumerateObjects { (asset, _, _) in
-            let photoAsset = PhotosAsset(asset, collection: PHAssetCollection())
-            assets.append(photoAsset)
+        for _ in 0...5 {
+            phAssets.enumerateObjects { (asset, _, _) in
+                let photoAsset = PhotosAsset(asset, collection: PHAssetCollection())
+                assets.append(photoAsset)
+            }
         }
         return assets
     }()
@@ -59,12 +61,17 @@ class AssetSelectorViewController: UIViewController {
                 return
             }
             selectedAssetIndex = assets.index { $0.identifier == selectedAsset!.identifier } ?? -1
-            self.collectionView.reloadData()
+            self.reloadAndCenter()
         }
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    private func reloadAndCenter() {
+        collectionView.reloadData()
+        collectionView.scrollToItem(at: IndexPath(row: selectedAssetIndex, section: 0), at: .centeredHorizontally, animated: true)
     }
     
     @objc private func changedCollectedAssets() {
@@ -114,7 +121,7 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
         guard selectedAssetIndex != indexPath.row else { return }
         
         selectedAssetIndex = indexPath.row
-        collectionView.reloadData()
+        reloadAndCenter()
         
         delegate?.didSelect(asset: assets[indexPath.row])
     }
