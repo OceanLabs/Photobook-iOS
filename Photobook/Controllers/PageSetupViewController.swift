@@ -170,23 +170,24 @@ class PageSetupViewController: UIViewController {
     }
     
     private func setupLayoutBoxes() {
+        setupImageBox()
+        setupTextBox()
+    }
+    
+    private func setupImageBox() {
         UIView.animate(withDuration: 0.1) {
             self.assetContainerView.alpha = 0.0
-            self.pageTextLabel.alpha = 0.0
         }
-        
-        var showImageBox = false
-        var showTextBox = false
         
         if let imageBox = productLayout.layout.imageLayoutBox, let assetSize = productLayout.asset?.size {
             // Lay out the image box
             assetContainerView.frame = imageBox.rectContained(in: pageSize)
-
+            
             // Set up the image if there is an asset
             if productLayout.asset != nil {
                 let maxDimension = (imageBox.isLandscape() ? assetContainerView.bounds.width : assetContainerView.bounds.height) * UIScreen.main.scale
                 let imageSize = CGSize(width: maxDimension, height: maxDimension)
-
+                
                 productLayout.asset!.image(size: imageSize, completionHandler: { (image, error) in
                     guard error == nil else {
                         print("PageSetup: error retrieving image")
@@ -197,7 +198,7 @@ class PageSetupViewController: UIViewController {
                 assetImageView.transform = .identity
                 assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: assetSize.width, height: assetSize.height)
             }
-
+            
             assetImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
             
             // Apply the image box size so the transform can be re-calculated
@@ -206,13 +207,21 @@ class PageSetupViewController: UIViewController {
             
             toolbarButtons[Tools.placeAsset.rawValue].isEnabled = true
             
-            showImageBox = true
+            UIView.animate(withDuration: 0.2, delay: 0.1, options: [], animations: {
+                self.assetContainerView.alpha = 1.0
+            })
         } else {
             // Disable the asset placement screen
             toolbarButtons[Tools.placeAsset.rawValue].isEnabled = false
             setImagePlaceholder(visible: true)
         }
-        
+    }
+    
+    private func setupTextBox() {
+        UIView.animate(withDuration: 0.1) {
+            self.pageTextLabel.alpha = 0.0
+        }
+
         if let textBox = productLayout.layout.textLayoutBox, let text = pageText {
             if (pageTextLabel.text ?? "").isEmpty {
                 pageTextLabel.font = Constants.textBoxFont
@@ -221,14 +230,11 @@ class PageSetupViewController: UIViewController {
             pageTextLabel.frame = textBox.rectContained(in: pageSize)
             adjustLabelHeight()
             
-            showTextBox = true
+            UIView.animate(withDuration: 0.2, delay: 0.1, options: [], animations: {
+                self.pageTextLabel.alpha = 1.0
+            })
+
         }
-        
-        guard showImageBox || showTextBox else { return }
-        UIView.animate(withDuration: 0.3, delay: 0.1, options: [], animations: {
-            self.assetContainerView.alpha = showImageBox ? 1.0 : 0.0
-            self.pageTextLabel.alpha = showTextBox ? 1.0 : 0.0
-        }, completion: nil)
     }
     
     func setImagePlaceholder(visible: Bool) {
@@ -312,6 +318,6 @@ extension PageSetupViewController: AssetSelectorDelegate {
         selectedAsset = asset
         productLayout.asset = asset
         layoutSelectionViewController.asset = asset
-        setupLayoutBoxes()
+        setupImageBox()
     }
 }
