@@ -9,6 +9,7 @@
 import UIKit
 import Photos
 
+/// Protocol a delegate has to conform to to be notified about asset selection
 protocol AssetSelectorDelegate: class {
     func didSelect(asset: Asset)
 }
@@ -62,6 +63,10 @@ class AssetSelectorViewController: UIViewController {
         }
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     @objc private func changedCollectedAssets() {
         
     }
@@ -112,102 +117,5 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
         collectionView.reloadData()
         
         delegate?.didSelect(asset: assets[indexPath.row])
-    }
-}
-
-class AssetSelectorAssetCollectionViewCell: UICollectionViewCell {
-    
-    static let reuseIdentifier = NSStringFromClass(AssetSelectorAssetCollectionViewCell.self).components(separatedBy: ".").last!
-    
-    static let cornerRadius: CGFloat = 8.0
-    static let borderWidth: CGFloat = 3.0
-    static let borderInset: CGFloat = 1.0
-    // TEMP: Refactor common colours out into utility class
-    static let borderColor = UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0).cgColor
-    
-    @IBOutlet private weak var assetImageView: UIImageView! {
-        didSet {
-            let rect = assetImageView.bounds
-            let path = UIBezierPath(roundedRect: rect, cornerRadius: AssetSelectorAssetCollectionViewCell.cornerRadius).cgPath
-            
-            let maskLayer = CAShapeLayer()
-            maskLayer.fillColor = UIColor.white.cgColor
-            maskLayer.path = path
-            maskLayer.frame = assetImageView.bounds
-            
-            assetImageView.layer.mask = maskLayer
-        }
-    }
-    @IBOutlet private weak var badgeBackgroundView: UIView!
-    @IBOutlet private weak var badgeLabel: UILabel!
-    
-    private var borderLayer: CAShapeLayer!
-    
-    var assetIdentifier: String!
-    var assetImage: UIImage? {
-        didSet {
-            self.assetImageView.image = assetImage
-        }
-    }
-    
-    var isAssetSelected = false {
-        willSet {
-            guard isAssetSelected != newValue else { return }
-            if newValue {
-                layer.addSublayer(borderLayer)
-            } else {
-                borderLayer.removeFromSuperlayer()
-            }
-        }
-    }
-    var timesUsed = 0 {
-        didSet {
-            badgeBackgroundView.alpha = timesUsed > 0 ? 1.0 : 0.0
-            badgeLabel.alpha = timesUsed > 0 ? 1.0 : 0.0
-            badgeLabel.text = String(timesUsed)
-        }
-    }
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setup()
-    }
-
-    func setup() {
-        let inset = AssetSelectorAssetCollectionViewCell.borderInset
-        let rect = CGRect(x: -inset, y: -inset, width: self.bounds.width + 2.0 * inset, height: self.bounds.height + 2.0 * inset)
-        let borderPath = UIBezierPath(roundedRect: rect, cornerRadius: AssetSelectorAssetCollectionViewCell.cornerRadius).cgPath
-        borderLayer = CAShapeLayer()
-        borderLayer.fillColor = nil
-        borderLayer.path = borderPath
-        borderLayer.frame = self.bounds
-        borderLayer.strokeColor = AssetSelectorAssetCollectionViewCell.borderColor
-        borderLayer.lineWidth = AssetSelectorAssetCollectionViewCell.borderWidth
-    }
-}
-
-class AssetSelectorAddMoreCollectionViewCell: UICollectionViewCell {
-    
-    static let reuseIdentifier = NSStringFromClass(AssetSelectorAddMoreCollectionViewCell.self).components(separatedBy: ".").last!
-
-    static let cornerRadius: CGFloat = 8.0
-
-    @IBOutlet weak var backgroundColorView: UIView! {
-        didSet {
-            let rect = backgroundColorView.bounds
-            let path = UIBezierPath(roundedRect: rect, cornerRadius: AssetSelectorAddMoreCollectionViewCell.cornerRadius).cgPath
-            
-            let maskLayer = CAShapeLayer()
-            maskLayer.fillColor = UIColor.white.cgColor
-            maskLayer.path = path
-            maskLayer.frame = backgroundColorView.bounds
-            
-            backgroundColorView.layer.mask = maskLayer
-        }
     }
 }
