@@ -108,7 +108,7 @@ class StoriesViewController: UIViewController {
 }
 
 extension StoriesViewController: AssetCollectorViewControllerDelegate {
-    // MARK: - AssetCollectorViewControllerDelegate
+    // MARK: AssetCollectorViewControllerDelegate
     
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
         var height:CGFloat = 0
@@ -212,7 +212,7 @@ extension StoriesViewController: UITableViewDataSource {
 }
 
 extension StoriesViewController: StoryTableViewCellDelegate {
-    // MARK: - StoryTableViewCellDelegate
+    // MARK: StoryTableViewCellDelegate
     
     func didTapOnStory(index: Int, sourceView: UIView?) {
         performSegue(withIdentifier: Constants.viewStorySegueName, sender: (index: index, sourceView: sourceView))

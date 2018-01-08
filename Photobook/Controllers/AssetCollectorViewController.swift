@@ -327,9 +327,8 @@ class AssetCollectorViewController: UIViewController {
     }
 }
 
-//MARK: - Collection View
-
 extension AssetCollectorViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    //MARK: Collection View Delegate & DataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return assets.count

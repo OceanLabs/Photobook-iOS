@@ -130,7 +130,7 @@ class PhotobookViewController: UIViewController {
 }
 
 extension PhotobookViewController: UICollectionViewDataSource {
-    // MARK: - UICollectionViewDataSource
+    // MARK: UICollectionViewDataSource
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
@@ -203,7 +203,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
 }
 
 extension PhotobookViewController: UICollectionViewDelegate {
-    // MARK: - UICollectionViewDelegate
+    // MARK: UICollectionViewDelegate
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let navBar = navigationController?.navigationBar as? PhotobookNavigationBar else { return }
@@ -214,7 +214,7 @@ extension PhotobookViewController: UICollectionViewDelegate {
 }
 
 extension PhotobookViewController: PhotobookPageViewDelegate {
-    // MARK: - PhotobookViewDelegate
+    // MARK: PhotobookViewDelegate
 
     func didTapOnPage(index: Int) {
         print("Tapped on page:\(index)")

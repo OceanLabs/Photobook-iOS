@@ -112,7 +112,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
 }
 
 extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
-    // MARK: - AssetCollectorViewControllerDelegate
+    // MARK: AssetCollectorViewControllerDelegate
     
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
         collectionView?.collectionViewLayout.invalidateLayout()
@@ -126,7 +126,7 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
 }
 
 extension AlbumsCollectionViewController{
-    // MARK: - UICollectionViewDataSource
+    // MARK: UICollectionViewDataSource
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return albumManager.albums.count
@@ -188,7 +188,7 @@ extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension AlbumsCollectionViewController{
-    // MARK: - UICollectionViewDelegate
+    // MARK: UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         showAlbum(album: albumManager.albums[indexPath.item])

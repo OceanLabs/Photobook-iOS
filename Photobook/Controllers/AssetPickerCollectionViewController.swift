@@ -226,7 +226,7 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
 }
 
 extension AssetPickerCollectionViewController {
-    //MARK: - UICollectionViewDataSource
+    //MARK: UICollectionViewDataSource
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return album.assets.count
@@ -280,7 +280,7 @@ extension AssetPickerCollectionViewController {
 }
 
 extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayout {
-    //MARK: - UICollectionViewDelegateFlowLayout
+    //MARK: UICollectionViewDelegateFlowLayout
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         // We only show covers for Stories
@@ -299,7 +299,7 @@ extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayou
 }
 
 extension AssetPickerCollectionViewController {
-    //MARK: - UICollectionViewDelegate
+    //MARK: UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = album.assets[indexPath.item]
@@ -315,7 +315,7 @@ extension AssetPickerCollectionViewController {
 }
 
 extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegate{
-    // MARK: - UIViewControllerPreviewingDelegate
+    // MARK: UIViewControllerPreviewingDelegate
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let collectionView = collectionView,
@@ -352,7 +352,7 @@ extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegat
 }
 
 extension AssetPickerCollectionViewController: FullScreenImageViewControllerDelegate{
-    // MARK: - FullScreenImageViewControllerDelegate
+    // MARK: FullScreenImageViewControllerDelegate
     
     func previewDidUpdate(asset: Asset) {
         guard let index = album.assets.index(where: { (selectedAsset) in
