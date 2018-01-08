@@ -69,12 +69,7 @@ class PhotobookViewController: UIViewController {
             alertController.addAction(UIAlertAction(title: photobook.name, style: .default, handler: { [weak welf = self] (_) in
                 welf?.titleButton.setTitle(photobook.name, for: .normal)
                 
-                var assets = [Asset]()
-                for layout in ProductManager.shared.productLayouts{
-                    guard let asset = layout.asset else { continue }
-                    assets.append(asset)
-                }
-                ProductManager.shared.setPhotobook(photobook, withAssets: assets)
+                ProductManager.shared.setPhotobook(photobook)
                 self.collectionView.reloadData()
             }))
         }

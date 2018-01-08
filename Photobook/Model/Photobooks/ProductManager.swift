@@ -91,7 +91,7 @@ class ProductManager {
         }
     }
     
-    func setPhotobook(_ photobook: Photobook, withAssets assets: [Asset]) {
+    func setPhotobook(_ photobook: Photobook, withAssets assets: [Asset]? = nil) {
         guard
             let coverLayouts = coverLayouts(for: photobook),
             coverLayouts.count > 0,
@@ -102,7 +102,14 @@ class ProductManager {
             return
         }
 
-        var addedAssets = assets
+        var addedAssets = assets ?? {
+            var assets = [Asset]()
+            for layout in ProductManager.shared.productLayouts{
+                guard let asset = layout.asset else { continue }
+                assets.append(asset)
+            }
+            return assets
+        }()
         
         // Duplicate the first photo to use as both the cover AND the first page 🙄
         if let first = addedAssets.first{
