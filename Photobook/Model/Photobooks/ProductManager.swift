@@ -64,6 +64,13 @@ class ProductManager {
     var coverColor: ProductColor = .white
     var pageColor: ProductColor = .white
     var productLayouts = [ProductLayout]()
+    var minimumRequiredAssets: Int {
+        // In case we haven't loaded the products yet, return a hardcoded number
+        // TODO: Change this number to something sensible
+        let defaultMinimum = 20
+        
+        return product?.minimumRequiredAssets ?? products?.first?.minimumRequiredAssets ?? defaultMinimum
+    }
     
     // TODO: Spine
     

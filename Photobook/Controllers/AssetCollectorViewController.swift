@@ -16,12 +16,6 @@ protocol AssetCollectorViewControllerDelegate : class {
 
 class AssetCollectorViewController: UIViewController {
     
-    private var requiredPhotosCount: Int {
-        // In case we haven't loaded the products yet, return a hardcoded number
-        // TODO: Change this number to something sensible
-        return ProductManager.shared.product?.minimumRequiredAssets ?? ProductManager.shared.products?.first?.minimumRequiredAssets ?? 20
-    }
-    
     public var delegate: AssetCollectorViewControllerDelegate?
     
     @IBOutlet private weak var topContainerView: UIView!
@@ -243,7 +237,7 @@ class AssetCollectorViewController: UIViewController {
         isHidden = false
         
         if !isDeletingEnabled {
-            
+            let requiredPhotosCount = ProductManager.shared.minimumRequiredAssets
             let fadeDuration: TimeInterval = 0.25
             if assets.count >= requiredPhotosCount {
                 //use these
