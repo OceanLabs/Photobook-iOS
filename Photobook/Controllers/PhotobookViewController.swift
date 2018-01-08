@@ -9,6 +9,10 @@
 import UIKit
 
 class PhotobookViewController: UIViewController {
+    
+    private struct Constants {
+        static let cellSideMargin: CGFloat = 10.0
+    }
 
     @IBOutlet private weak var collectionView: UICollectionView! {
         didSet{
@@ -157,7 +161,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "doublePageCell", for: indexPath) as? PhotobookCollectionViewCell
                 else { return UICollectionViewCell() }
             
-            cell.widthConstraint.constant = view.bounds.size.width - 20
+            cell.widthConstraint.constant = view.bounds.size.width - Constants.cellSideMargin * 2.0
             
             if let photobook = ProductManager.shared.product{
                 cell.configurePageAspectRatio(photobook.pageSizeRatio)
