@@ -71,6 +71,10 @@ class ProductManager {
         
         return product?.minimumRequiredAssets ?? products?.first?.minimumRequiredAssets ?? defaultMinimum
     }
+    var maximumAllowedAssets: Int {
+        // TODO: get this from the photobook
+        return 70
+    }
     
     // TODO: Spine
     

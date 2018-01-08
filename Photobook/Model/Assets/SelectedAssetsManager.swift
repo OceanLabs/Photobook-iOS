@@ -9,11 +9,6 @@
 import UIKit
 import Photos
 
-struct Constants {
-    // TODO: get this from the photobook model. Move to collector class?
-    static let maximumAllowedPhotosForSelectAll = 70
-}
-
 class SelectedAssetsManager: NSObject {
     
     static let notificationUserObjectKeyAssets = "assets"
@@ -118,7 +113,7 @@ class SelectedAssetsManager: NSObject {
     }
     
     func willSelectingAllExceedTotalAllowed(_ album:Album) -> Bool {
-        return selectedAssets.count - selectedAssets(for: album).count + album.assets.count > Constants.maximumAllowedPhotosForSelectAll
+        return selectedAssets.count - selectedAssets(for: album).count + album.assets.count > ProductManager.shared.maximumAllowedAssets
     }
     
     
