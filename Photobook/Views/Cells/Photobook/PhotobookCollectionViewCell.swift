@@ -1,5 +1,5 @@
 //
-//  PhotoBookCollectionViewCell.swift
+//  PhotobookCollectionViewCell.swift
 //  Photobook
 //
 //  Created by Konstadinos Karayannis on 21/11/2017.
@@ -8,12 +8,12 @@
 
 import UIKit
 
-class PhotoBookCollectionViewCell: UICollectionViewCell {
+class PhotobookCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var bookView: UIView!
     @IBOutlet weak var backgroundImageView: UIImageView!
-    @IBOutlet weak var leftPageView: PhotoBookPageView!
-    @IBOutlet weak var rightPageView: PhotoBookPageView?
+    @IBOutlet weak var leftPageView: PhotobookPageView!
+    @IBOutlet weak var rightPageView: PhotobookPageView?
     @IBOutlet weak var widthConstraint: NSLayoutConstraint!
     @IBOutlet private var pageAspectRatioConstraint: NSLayoutConstraint!
     

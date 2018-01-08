@@ -97,7 +97,7 @@ class AssetCollectorViewController: UIViewController {
         }
     }
     
-    private var tabBar: PhotoBookTabBar? {
+    private var tabBar: PhotobookTabBar? {
         get {
             var tabBar: UITabBar?
             if let tab = tabBarController {
@@ -105,7 +105,7 @@ class AssetCollectorViewController: UIViewController {
             } else if let tab = self.navigationController?.tabBarController {
                 tabBar = tab.tabBar
             }
-            return tabBar as? PhotoBookTabBar
+            return tabBar as? PhotobookTabBar
         }
     }
     
