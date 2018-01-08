@@ -18,7 +18,7 @@ class PhotobookViewController: UIViewController {
     }
     @IBOutlet private weak var ctaButtonContainer: UIView!
     var selectedAssetsManager: SelectedAssetsManager?
-    private var titleLabel: UILabel?
+    private var titleButton = UIButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,22 +50,15 @@ class PhotobookViewController: UIViewController {
     }
     
     private func setupTitleView() {
-        let titleLabel = UILabel()
-        self.titleLabel = titleLabel
-        titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        titleLabel.textAlignment = .center
-        titleLabel.text = ProductManager.shared.product?.name
-        
-        let chevronView = UIImageView(image: UIImage(named:"chevron-down"))
-        chevronView.contentMode = .scaleAspectFit
-        
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, chevronView])
-        stackView.spacing = 5
-        
-        stackView.isUserInteractionEnabled = true
-        stackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOnTitle)))
-        
-        navigationItem.titleView = stackView
+        titleButton = UIButton()
+        titleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        titleButton.setTitleColor(.black, for: .normal)
+        titleButton.setTitle(ProductManager.shared.product?.name, for: .normal)
+        titleButton.setImage(UIImage(named:"chevron-down"), for: .normal)
+        titleButton.semanticContentAttribute = .forceRightToLeft
+        titleButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -5)
+        titleButton.addTarget(self, action: #selector(didTapOnTitle), for: .touchUpInside)
+        navigationItem.titleView = titleButton
     }
     
     @objc private func didTapOnTitle() {
@@ -74,7 +67,7 @@ class PhotobookViewController: UIViewController {
         let alertController = UIAlertController(title: nil, message: NSLocalizedString("Photobook/ChangeSizeTitle", value: "Changing the size keeps your layout intact", comment: "Information when the user wants to change the photo book's size"), preferredStyle: .actionSheet)
         for photobook in photobooks{
             alertController.addAction(UIAlertAction(title: photobook.name, style: .default, handler: { [weak welf = self] (_) in
-                welf?.titleLabel?.text = photobook.name
+                welf?.titleButton.setTitle(photobook.name, for: .normal)
                 
                 var assets = [Asset]()
                 for layout in ProductManager.shared.productLayouts{
