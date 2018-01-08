@@ -1,5 +1,5 @@
 //
-//  PhotoBookViewController.swift
+//  PhotobookViewController.swift
 //  Photobook
 //
 //  Created by Konstadinos Karayannis on 21/11/2017.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PhotoBookViewController: UIViewController {
+class PhotobookViewController: UIViewController {
 
     @IBOutlet private weak var collectionView: UICollectionView! {
         didSet{
@@ -104,7 +104,7 @@ class PhotoBookViewController: UIViewController {
         print("Tapped on spine")
     }
     
-    private func load(page: PhotoBookPageView?, size: CGSize) {
+    private func load(page: PhotobookPageView?, size: CGSize) {
         guard let page = page else { return }
         
         page.setImage(image: nil)
@@ -129,7 +129,7 @@ class PhotoBookViewController: UIViewController {
     
 }
 
-extension PhotoBookViewController: UICollectionViewDataSource {
+extension PhotobookViewController: UICollectionViewDataSource {
     // MARK: - UICollectionViewDataSource
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -153,7 +153,7 @@ extension PhotoBookViewController: UICollectionViewDataSource {
         
         switch indexPath.section{
         case 0:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "coverCell", for: indexPath) as? PhotoBookCoverCollectionViewCell
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "coverCell", for: indexPath) as? PhotobookCoverCollectionViewCell
                 else { return UICollectionViewCell() }
             
             if let photobook = ProductManager.shared.product{
@@ -166,7 +166,7 @@ extension PhotoBookViewController: UICollectionViewDataSource {
             
             return cell
         default:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "doublePageCell", for: indexPath) as? PhotoBookCollectionViewCell
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "doublePageCell", for: indexPath) as? PhotobookCollectionViewCell
                 else { return UICollectionViewCell() }
             
             cell.widthConstraint.constant = view.bounds.size.width - 20
@@ -202,19 +202,19 @@ extension PhotoBookViewController: UICollectionViewDataSource {
     
 }
 
-extension PhotoBookViewController: UICollectionViewDelegate {
+extension PhotobookViewController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard let navBar = navigationController?.navigationBar as? PhotoBookNavigationBar else { return }
+        guard let navBar = navigationController?.navigationBar as? PhotobookNavigationBar else { return }
         
         navBar.effectView.alpha = scrollView.contentOffset.y <= -(UIApplication.shared.statusBarFrame.height + (navigationController?.navigationBar.frame.height ?? 0)) ? 0 : 1
     }
     
 }
 
-extension PhotoBookViewController: PhotoBookPageViewDelegate {
-    // MARK: - PhotoBookViewDelegate
+extension PhotobookViewController: PhotobookPageViewDelegate {
+    // MARK: - PhotobookViewDelegate
 
     func didTapOnPage(index: Int) {
         print("Tapped on page:\(index)")

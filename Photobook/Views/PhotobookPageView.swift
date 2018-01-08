@@ -1,5 +1,5 @@
 //
-//  PhotoBookPageView.swift
+//  PhotobookPageView.swift
 //  Photobook
 //
 //  Created by Konstadinos Karayannis on 22/11/2017.
@@ -8,14 +8,14 @@
 
 import UIKit
 
-protocol PhotoBookPageViewDelegate: class {
+protocol PhotobookPageViewDelegate: class {
     func didTapOnPage(index: Int)
 }
 
-class PhotoBookPageView: UIView {
+class PhotobookPageView: UIView {
     
     private var imageView: UIImageView = UIImageView()
-    weak var delegate: PhotoBookPageViewDelegate?
+    weak var delegate: PhotobookPageViewDelegate?
     var tapGesture: UITapGestureRecognizer!
     var productLayout: ProductLayout?
     
