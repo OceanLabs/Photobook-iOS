@@ -29,7 +29,7 @@ protocol Asset: Codable {
     ///   - size: The requested image size in points. Depending on the asset type and source this size may just a guideline
     ///   - progressHandler: Handler that returns the progress, for a example of a download
     ///   - completionHandler: The completion handler that returns the image
-    func uneditedImage(size: CGSize, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)?, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void);
+    func uneditedImage(size: CGSize, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)?, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void)
 }
 
 extension Asset {

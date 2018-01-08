@@ -1,5 +1,5 @@
 //
-//  PhotoBookCoverCollectionViewCell.swift
+//  PhotobookCoverCollectionViewCell.swift
 //  Photobook
 //
 //  Created by Konstadinos Karayannis on 23/11/2017.
@@ -8,6 +8,6 @@
 
 import UIKit
 
-class PhotoBookCoverCollectionViewCell: PhotoBookCollectionViewCell {
+class PhotobookCoverCollectionViewCell: PhotobookCollectionViewCell {
     @IBOutlet weak var spineView: UIView!
 }

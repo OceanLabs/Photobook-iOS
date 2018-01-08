@@ -10,8 +10,8 @@ import UIKit
 
 class AssetPickerCollectionViewController: UICollectionViewController {
 
-    @IBOutlet weak var selectAllButton: UIBarButtonItem!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var selectAllButton: UIBarButtonItem!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     private let marginBetweenImages: CGFloat = 1
     private let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
     private var previousPreheatRect = CGRect.zero
@@ -101,9 +101,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         updateSelectAllButtonTitle()
     }
     
-    func updateSelectAllButtonTitle() {
-        guard selectAllButton.title != nil else { return }
-        
+    func updateSelectAllButtonTitle() {        
         if selectedAssetsManager?.count(for: album) == self.album.assets.count {
             selectAllButton.title = NSLocalizedString("ImagePicker/Button/DeselectAll", value: "Deselect All", comment: "Button title for de-selecting all selected photos")
         }
@@ -114,7 +112,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     
     func calcAndSetCellSize() {
         guard let collectionView = collectionView else { return }
-        var usableSpace = collectionView.frame.size.width;
+        var usableSpace = collectionView.frame.size.width
         usableSpace -= (numberOfCellsPerRow - 1.0) * marginBetweenImages
         let cellWidth = usableSpace / numberOfCellsPerRow
         (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize = CGSize(width: cellWidth, height: cellWidth)
@@ -217,8 +215,8 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
         collectionView?.collectionViewLayout.invalidateLayout()
     }
     
-    func imageCollectorViewController(_ imageCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset]) {
-        guard let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotoBookViewController") as? PhotoBookViewController else { return }
+    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset]) {
+        guard let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as? PhotobookViewController else { return }
         photobookViewController.selectedAssetsManager = selectedAssetsManager
         navigationController?.pushViewController(photobookViewController, animated: true)
     }

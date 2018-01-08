@@ -11,7 +11,7 @@ import Photos
 
 protocol AssetCollectorViewControllerDelegate : class {
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool)
-    func imageCollectorViewController(_ imageCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset])
+    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset])
 }
 
 class AssetCollectorViewController: UIViewController {
@@ -97,7 +97,7 @@ class AssetCollectorViewController: UIViewController {
         }
     }
     
-    private var tabBar: PhotoBookTabBar? {
+    private var tabBar: PhotobookTabBar? {
         get {
             var tabBar: UITabBar?
             if let tab = tabBarController {
@@ -105,7 +105,7 @@ class AssetCollectorViewController: UIViewController {
             } else if let tab = self.navigationController?.tabBarController {
                 tabBar = tab.tabBar
             }
-            return tabBar as? PhotoBookTabBar
+            return tabBar as? PhotobookTabBar
         }
     }
     
@@ -183,7 +183,7 @@ class AssetCollectorViewController: UIViewController {
     }
     
     @IBAction public func useThese() {
-        self.delegate?.imageCollectorViewController(self, didFinishWithAssets: assets)
+        self.delegate?.assetCollectorViewController(self, didFinishWithAssets: assets)
     }
     
     private func adaptToParent() {

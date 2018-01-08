@@ -1,5 +1,5 @@
 //
-//  PhotoBookNavigationBar.swift
+//  PhotobookNavigationBar.swift
 //  Photobook
 //
 //  Created by Jaime Landazuri on 09/11/2017.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PhotoBookNavigationBar: UINavigationBar {
+class PhotobookNavigationBar: UINavigationBar {
     
     private static let navigationBarHeight: CGFloat = 44.0
     
@@ -32,7 +32,7 @@ class PhotoBookNavigationBar: UINavigationBar {
             
             let statusBarHeight = UIApplication.shared.statusBarFrame.height
             effectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
-            effectView.frame = CGRect(x: 0.0, y: -statusBarHeight, width: bounds.width, height: PhotoBookNavigationBar.navigationBarHeight + statusBarHeight)
+            effectView.frame = CGRect(x: 0.0, y: -statusBarHeight, width: bounds.width, height: PhotobookNavigationBar.navigationBarHeight + statusBarHeight)
             effectView.backgroundColor = UIColor(white: 1.0, alpha: 0.75)
             insertSubview(effectView, at: 0)
         }
@@ -41,7 +41,10 @@ class PhotoBookNavigationBar: UINavigationBar {
     
     func setup() {
         barTintColor = .white
-        prefersLargeTitles = true
+        
+        if #available(iOS 11.0, *) {
+            prefersLargeTitles = true
+        }
         
         setBackgroundImage(UIImage(color: .clear), for: .default)
         shadowImage = UIImage()
@@ -49,10 +52,10 @@ class PhotoBookNavigationBar: UINavigationBar {
     
 }
 
-extension PhotoBookNavigationBar: UINavigationControllerDelegate{
+extension PhotobookNavigationBar: UINavigationControllerDelegate{
     
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool){
-        if viewController as? PhotoBookViewController != nil{
+        if viewController as? PhotobookViewController != nil{
             barTintColor = UIColor(red:0.89, green:0.9, blue:0.9, alpha:1)
             effectView.alpha = 0
         }

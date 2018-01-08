@@ -1,5 +1,5 @@
 //
-//  PhotoBookCollectionViewCell.swift
+//  PhotobookCollectionViewCell.swift
 //  Photobook
 //
 //  Created by Konstadinos Karayannis on 21/11/2017.
@@ -12,16 +12,16 @@ protocol PhotoBookCollectionViewCellDelegate: class {
     func didTapOnPlusButton(at foldIndex: Int)
 }
 
-class PhotoBookCollectionViewCell: UICollectionViewCell {
+class PhotobookCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var bookView: PhotobookView!
     @IBOutlet weak var backgroundImageView: UIImageView!
-    @IBOutlet weak var leftPageView: PhotoBookPageView! {
+    @IBOutlet weak var leftPageView: PhotobookPageView! {
         didSet {
             bookView.leftPageView = leftPageView
         }
     }
-    @IBOutlet weak var rightPageView: PhotoBookPageView? {
+    @IBOutlet weak var rightPageView: PhotobookPageView? {
         didSet {
             bookView.rightPageView = rightPageView
         }
@@ -61,6 +61,6 @@ class PhotoBookCollectionViewCell: UICollectionViewCell {
 }
 
 class PhotobookView: UIView {
-    weak var leftPageView: PhotoBookPageView!
-    weak var rightPageView: PhotoBookPageView?
+    weak var leftPageView: PhotobookPageView!
+    weak var rightPageView: PhotobookPageView?
 }
