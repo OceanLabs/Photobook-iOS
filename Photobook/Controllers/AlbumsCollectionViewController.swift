@@ -79,7 +79,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     }
     
     func showAlbum(album: Album){
-        guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }
+        let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
         assetPickerController.album = album
         assetPickerController.albumManager = albumManager
         assetPickerController.selectedAssetsManager = selectedAssetsManager
@@ -119,7 +119,7 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
     }
     
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset]) {
-        guard let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as? PhotobookViewController else { return }
+        let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.selectedAssetsManager = selectedAssetsManager
         navigationController?.pushViewController(photobookViewController, animated: true)
     }

@@ -219,7 +219,7 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
     }
     
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset]) {
-        guard let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as? PhotobookViewController else { return }
+        let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.selectedAssetsManager = selectedAssetsManager
         navigationController?.pushViewController(photobookViewController, animated: true)
     }
@@ -321,10 +321,10 @@ extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegat
         guard let collectionView = collectionView,
             let indexPath = collectionView.indexPathForItem(at: location),
             let cell = collectionView.cellForItem(at: indexPath) as? AssetPickerCollectionViewCell,
-            let thumbnailImage = cell.imageView.image,
-            let fullScreenImageViewController = storyboard?.instantiateViewController(withIdentifier: "FullScreenImageViewController") as? FullScreenImageViewController
+            let thumbnailImage = cell.imageView.image
             else { return nil }
         
+        let fullScreenImageViewController = storyboard?.instantiateViewController(withIdentifier: "FullScreenImageViewController") as! FullScreenImageViewController
         previewingContext.sourceRect = cell.convert(cell.contentView.frame, to: collectionView)
         
         fullScreenImageViewController.asset = album.assets[indexPath.item]

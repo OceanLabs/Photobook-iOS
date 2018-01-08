@@ -119,7 +119,7 @@ extension StoriesViewController: AssetCollectorViewControllerDelegate {
     }
     
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset]) {
-        guard let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as? PhotobookViewController else { return }
+        let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.selectedAssetsManager = selectedAssetsManager
         navigationController?.pushViewController(photobookViewController, animated: true)
     }
