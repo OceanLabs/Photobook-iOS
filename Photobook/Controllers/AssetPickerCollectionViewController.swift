@@ -218,7 +218,7 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
         collectionView?.collectionViewLayout.invalidateLayout()
     }
     
-    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset]) {
+    func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
         let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.selectedAssetsManager = selectedAssetsManager
         navigationController?.pushViewController(photobookViewController, animated: true)
