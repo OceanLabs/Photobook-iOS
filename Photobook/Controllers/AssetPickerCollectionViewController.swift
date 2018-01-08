@@ -241,8 +241,6 @@ extension AssetPickerCollectionViewController {
         let selected = selectedAssetsManager?.isSelected(asset) ?? false
         cell.selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
         
-        cell.imageView.image = nil
-        
         let size = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize ?? .zero
         asset.image(size: size, completionHandler: {(image, _) in
             guard cell.assetId == asset.identifier else { return }
