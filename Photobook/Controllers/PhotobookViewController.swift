@@ -96,29 +96,6 @@ class PhotobookViewController: UIViewController {
         print("Tapped on spine")
     }
     
-    private func load(page: PhotobookPageView?, size: CGSize) {
-        guard let page = page else { return }
-        
-        page.setImage(image: nil)
-        
-        guard let index = page.index else {
-            page.isHidden = true
-            return
-        }
-        page.isHidden = false
-        
-        if page.productLayout?.layout.imageLayoutBox != nil {
-            let asset = ProductManager.shared.productLayouts[index].asset
-            page.productLayout?.asset = asset
-            asset?.image(size: size, completionHandler: { (image, _) in
-                guard page.index == index, let image = image else { return }
-                
-                page.setImage(image: image, contentMode: (asset as? PlaceholderAsset) == nil ? .scaleAspectFill : .center)
-            })
-        }
-        
-    }
-    
 }
 
 extension PhotobookViewController: UICollectionViewDataSource {
@@ -154,7 +131,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             
             cell.leftPageView.productLayout = ProductManager.shared.productLayouts[0]
             cell.leftPageView.delegate = self
-            load(page: cell.leftPageView, size: imageSize)
+            cell.leftPageView.load(size: imageSize)
             
             return cell
         default:
@@ -184,8 +161,8 @@ extension PhotobookViewController: UICollectionViewDataSource {
                 cell.rightPageView?.productLayout = ProductManager.shared.productLayouts[indexPath.item * 2 + 1]
             }
 
-            load(page: cell.leftPageView, size: imageSize)
-            load(page: cell.rightPageView, size: imageSize)
+            cell.leftPageView.load(size: imageSize)
+            cell.rightPageView?.load(size: imageSize)
 
             return cell
         
