@@ -34,35 +34,12 @@ class PhotobookViewController: UIViewController {
             navigationItem.largeTitleDisplayMode = .never
         }
         
-        guard let assets = selectedAssetsManager?.selectedAssets else {
-            // Should never really reach here
-            emptyScreenViewController.show(message: NSLocalizedString("Photobook/NoPhotosSelected", value: "No photos selected", comment: "No photos selected error message"))
-            return
-        }
-        
         guard let photobook = ProductManager.shared.products?.first else {
-            emptyScreenViewController.show(message: NSLocalizedString("Photobook/Loading", value: "Loading products", comment: "Loading products screen message"), activity: true)
-            ProductManager.shared.initialise(completion: { [weak welf = self] (error: Error?) in
-                guard let photobook = ProductManager.shared.products?.first,
-                    error == nil
-                    else {
-                        welf?.emptyScreenViewController.show(message: error!.localizedDescription, buttonTitle: NSLocalizedString("Photobook/RetryLoading", value: "Retry", comment: "Retry loading products button"), buttonAction: {
-                            ProductManager.shared.initialise(completion: {  (error: Error?) in
-                                if let photobook = ProductManager.shared.products?.first, error == nil {
-                                    welf?.emptyScreenLoadSucceeded(photobook, assets)
-                                }
-                            })
-                        })
-                        return
-                }
-            
-                welf?.emptyScreenLoadSucceeded(photobook, assets)
-            })
+            loadProducts()
             return
         }
         
-        ProductManager.shared.setPhotobook(photobook, withAssets: assets)
-        setupTitleView()
+        setup(with: photobook)
         
     }
     
@@ -79,11 +56,36 @@ class PhotobookViewController: UIViewController {
         collectionView.scrollIndicatorInsets = collectionView.contentInset
     }
     
-    private func emptyScreenLoadSucceeded(_ photobook: Photobook, _ assets: [Asset]) {
+    private func setup(with photobook: Photobook) {
+        guard let assets = selectedAssetsManager?.selectedAssets else {
+            // Should never really reach here
+            emptyScreenViewController.show(message: NSLocalizedString("Photobook/NoPhotosSelected", value: "No photos selected", comment: "No photos selected error message"))
+            return
+        }
+        
         ProductManager.shared.setPhotobook(photobook, withAssets: assets)
-        self.setupTitleView()
-        self.collectionView.reloadData()
-        self.emptyScreenViewController.hide(animated: true)
+        setupTitleView()
+        
+        if emptyScreenViewController.parent != nil {
+            collectionView.reloadData()
+            emptyScreenViewController.hide(animated: true)
+        }
+    }
+    
+    private func loadProducts() {
+        emptyScreenViewController.show(message: NSLocalizedString("Photobook/Loading", value: "Loading products", comment: "Loading products screen message"), activity: true)
+        ProductManager.shared.initialise(completion: { [weak welf = self] (error: Error?) in
+            guard let photobook = ProductManager.shared.products?.first,
+                error == nil
+                else {
+                    welf?.emptyScreenViewController.show(message: error?.localizedDescription ?? "Error", buttonTitle: NSLocalizedString("Photobook/RetryLoading", value: "Retry", comment: "Retry loading products button"), buttonAction: {
+                        welf?.loadProducts()
+                    })
+                    return
+            }
+            
+            welf?.setup(with: photobook)
+        })
     }
     
     private func setupTitleView() {
