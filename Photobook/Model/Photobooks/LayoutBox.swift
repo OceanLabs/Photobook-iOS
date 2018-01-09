@@ -32,4 +32,12 @@ struct LayoutBox: Codable {
         
         return LayoutBox(id: id, rect: CGRect(x: x, y: y, width: width, height: height))
     }
+    
+    func rectContained(in size: CGSize) -> CGRect {
+        let x = rect.minX * size.width
+        let y = rect.minY * size.height
+        let width = rect.width * size.width
+        let height = rect.height * size.height
+        return CGRect(x: x, y: y, width: width, height: height)
+    }
 }

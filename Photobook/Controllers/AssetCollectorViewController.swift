@@ -11,11 +11,10 @@ import Photos
 
 protocol AssetCollectorViewControllerDelegate : class {
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool)
+    func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController)
 }
 
 class AssetCollectorViewController: UIViewController {
-    
-    private let requiredPhotosCount = 15
     
     public var delegate: AssetCollectorViewControllerDelegate?
     
@@ -92,7 +91,7 @@ class AssetCollectorViewController: UIViewController {
         }
     }
     
-    private var tabBar: PhotoBookTabBar? {
+    private var tabBar: PhotobookTabBar? {
         get {
             var tabBar: UITabBar?
             if let tab = tabBarController {
@@ -100,7 +99,7 @@ class AssetCollectorViewController: UIViewController {
             } else if let tab = self.navigationController?.tabBarController {
                 tabBar = tab.tabBar
             }
-            return tabBar as? PhotoBookTabBar
+            return tabBar as? PhotobookTabBar
         }
     }
     
@@ -178,7 +177,7 @@ class AssetCollectorViewController: UIViewController {
     }
     
     @IBAction public func useThese() {
-        //TODO: push vc with assets
+        self.delegate?.assetCollectorViewControllerDidFinish(self)
     }
     
     private func adaptToParent() {
@@ -238,7 +237,7 @@ class AssetCollectorViewController: UIViewController {
         isHidden = false
         
         if !isDeletingEnabled {
-            
+            let requiredPhotosCount = ProductManager.shared.minimumRequiredAssets
             let fadeDuration: TimeInterval = 0.25
             if assets.count >= requiredPhotosCount {
                 //use these
@@ -328,9 +327,8 @@ class AssetCollectorViewController: UIViewController {
     }
 }
 
-//MARK: - Collection View
-
 extension AssetCollectorViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    //MARK: Collection View Delegate & DataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return assets.count

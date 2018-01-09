@@ -1,5 +1,5 @@
 //
-//  PhotoBookTabBar.swift
+//  PhotobookTabBar.swift
 //  Photobook
 //
 //  Created by Jaime Landazuri on 10/11/2017.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PhotoBookTabBar: UITabBar {
+class PhotobookTabBar: UITabBar {
     
     var effectView: UIVisualEffectView?
     

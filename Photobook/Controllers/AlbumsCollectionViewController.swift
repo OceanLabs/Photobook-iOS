@@ -70,7 +70,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     func calcAndSetCellSize(){
         // Calc the cell size
         guard let collectionView = collectionView else { return }
-        var usableSpace = collectionView.frame.size.width - marginBetweenAlbums;
+        var usableSpace = collectionView.frame.size.width - marginBetweenAlbums
         if let insets = (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset{
             usableSpace -= insets.left + insets.right
         }
@@ -79,7 +79,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     }
     
     func showAlbum(album: Album){
-        guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }
+        let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
         assetPickerController.album = album
         assetPickerController.albumManager = albumManager
         assetPickerController.selectedAssetsManager = selectedAssetsManager
@@ -112,13 +112,21 @@ class AlbumsCollectionViewController: UICollectionViewController {
 }
 
 extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
+    // MARK: AssetCollectorViewControllerDelegate
+    
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
         collectionView?.collectionViewLayout.invalidateLayout()
+    }
+    
+    func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
+        let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
+        photobookViewController.selectedAssetsManager = selectedAssetsManager
+        navigationController?.pushViewController(photobookViewController, animated: true)
     }
 }
 
 extension AlbumsCollectionViewController{
-    // MARK: - UICollectionViewDataSource
+    // MARK: UICollectionViewDataSource
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return albumManager.albums.count
@@ -180,7 +188,7 @@ extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension AlbumsCollectionViewController{
-    // MARK: - UICollectionViewDelegate
+    // MARK: UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         showAlbum(album: albumManager.albums[indexPath.item])
