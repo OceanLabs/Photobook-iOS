@@ -79,6 +79,14 @@ class ProductManager {
         // TODO: get this from the photobook
         return 70
     }
+    var isAddingPagesAllowed: Bool {
+        // TODO: Use pages count instead of assets/layout count
+        return maximumAllowedAssets > productLayouts.count
+    }
+    var isRemovingPagesAllowed: Bool {
+        // TODO: Use pages count instead of assets/layout count
+        return minimumRequiredAssets < productLayouts.count
+    }
     
     // TODO: Spine
     
