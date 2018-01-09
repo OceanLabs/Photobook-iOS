@@ -164,7 +164,7 @@ extension StoriesViewController: UITableViewDataSource {
             isDouble = (potentialDouble && storyIndex < stories.count - 1)
         }
         
-        if isDouble && false { //TODO: fix crash for double cells if 3 stories
+        if isDouble {
             // Double cell
             let story = stories[storyIndex]
             let secondStory = stories[storyIndex + 1] //TODO: crashes here because no +1 index story exists
