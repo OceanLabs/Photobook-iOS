@@ -23,7 +23,7 @@ class Photobook: Codable {
     // Does not include the cover asset
     var minimumRequiredAssets: Int! = 20 // TODO: Get this from somewhere
     
-    // TODO: Currencies? MaximumAllowedAssets?
+    // TODO: Currencies? MaximumAllowed Pages/Assets?
     
     init() {
         fatalError("Use parse(_:) instead")

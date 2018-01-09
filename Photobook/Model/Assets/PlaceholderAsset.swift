@@ -24,12 +24,8 @@ class PlaceholderAsset: Asset {
     func uneditedImage(size: CGSize, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
         DispatchQueue.global(qos: .background).async {
             let image = UIImage(named: "placeholder")
-            DispatchQueue.main.async {
-                completionHandler(image, nil)
-            }
+            completionHandler(image, nil)
         }
-        
     }
     
-
 }

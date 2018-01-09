@@ -25,7 +25,7 @@ class AlbumSearchResultsTableViewController: UITableViewController {
 }
 
 extension AlbumSearchResultsTableViewController{
-    // MARK: - UITableViewDataSource
+    // MARK: UITableViewDataSource
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return filteredAlbums?.count ?? 0
@@ -61,7 +61,7 @@ extension AlbumSearchResultsTableViewController{
 }
 
 extension AlbumSearchResultsTableViewController{
-    // MARK: - UITableViewDelegate
+    // MARK: UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         guard let cell = cell as? AlbumSearchResultsTableViewCell else { return }
@@ -77,7 +77,7 @@ extension AlbumSearchResultsTableViewController{
 }
 
 extension AlbumSearchResultsTableViewController: UISearchResultsUpdating {
-    // MARK: - UISearchResultsUpdating Delegate
+    // MARK: UISearchResultsUpdating Delegate
     
     func updateSearchResults(for searchController: UISearchController) {
         filteredAlbums = albums?.filter({(album) -> Bool in

@@ -33,8 +33,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window?.rootViewController = tabBarController
         }
         
-        ProductManager.shared.initialise(completion: { _ in })
-        
         return true
     }
     

@@ -79,7 +79,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     }
     
     func showAlbum(album: Album){
-        guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }
+        let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
         assetPickerController.album = album
         assetPickerController.albumManager = albumManager
         assetPickerController.selectedAssetsManager = selectedAssetsManager
@@ -112,21 +112,21 @@ class AlbumsCollectionViewController: UICollectionViewController {
 }
 
 extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
-    // MARK: - AssetCollectorViewControllerDelegate
+    // MARK: AssetCollectorViewControllerDelegate
     
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
         collectionView?.collectionViewLayout.invalidateLayout()
     }
     
-    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset]) {
-        guard let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as? PhotobookViewController else { return }
+    func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
+        let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.selectedAssetsManager = selectedAssetsManager
         navigationController?.pushViewController(photobookViewController, animated: true)
     }
 }
 
 extension AlbumsCollectionViewController{
-    // MARK: - UICollectionViewDataSource
+    // MARK: UICollectionViewDataSource
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return albumManager.albums.count
@@ -188,7 +188,7 @@ extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension AlbumsCollectionViewController{
-    // MARK: - UICollectionViewDelegate
+    // MARK: UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         showAlbum(album: albumManager.albums[indexPath.item])

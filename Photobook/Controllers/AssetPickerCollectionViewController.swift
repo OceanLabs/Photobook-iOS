@@ -215,15 +215,15 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
         collectionView?.collectionViewLayout.invalidateLayout()
     }
     
-    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset]) {
-        guard let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as? PhotobookViewController else { return }
+    func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
+        let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.selectedAssetsManager = selectedAssetsManager
         navigationController?.pushViewController(photobookViewController, animated: true)
     }
 }
 
 extension AssetPickerCollectionViewController {
-    //MARK: - UICollectionViewDataSource
+    //MARK: UICollectionViewDataSource
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return album.assets.count
@@ -237,8 +237,6 @@ extension AssetPickerCollectionViewController {
         
         let selected = selectedAssetsManager?.isSelected(asset) ?? false
         cell.selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
-        
-        cell.imageView.image = nil
         
         let size = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize ?? .zero
         asset.image(size: size, completionHandler: {(image, _) in
@@ -277,7 +275,7 @@ extension AssetPickerCollectionViewController {
 }
 
 extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayout {
-    //MARK: - UICollectionViewDelegateFlowLayout
+    //MARK: UICollectionViewDelegateFlowLayout
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         // We only show covers for Stories
@@ -296,7 +294,7 @@ extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayou
 }
 
 extension AssetPickerCollectionViewController {
-    //MARK: - UICollectionViewDelegate
+    //MARK: UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = album.assets[indexPath.item]
@@ -312,16 +310,16 @@ extension AssetPickerCollectionViewController {
 }
 
 extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegate{
-    // MARK: - UIViewControllerPreviewingDelegate
+    // MARK: UIViewControllerPreviewingDelegate
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let collectionView = collectionView,
             let indexPath = collectionView.indexPathForItem(at: location),
             let cell = collectionView.cellForItem(at: indexPath) as? AssetPickerCollectionViewCell,
-            let thumbnailImage = cell.imageView.image,
-            let fullScreenImageViewController = storyboard?.instantiateViewController(withIdentifier: "FullScreenImageViewController") as? FullScreenImageViewController
+            let thumbnailImage = cell.imageView.image
             else { return nil }
         
+        let fullScreenImageViewController = storyboard?.instantiateViewController(withIdentifier: "FullScreenImageViewController") as! FullScreenImageViewController
         previewingContext.sourceRect = cell.convert(cell.contentView.frame, to: collectionView)
         
         fullScreenImageViewController.asset = album.assets[indexPath.item]
@@ -349,7 +347,7 @@ extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegat
 }
 
 extension AssetPickerCollectionViewController: FullScreenImageViewControllerDelegate{
-    // MARK: - FullScreenImageViewControllerDelegate
+    // MARK: FullScreenImageViewControllerDelegate
     
     func previewDidUpdate(asset: Asset) {
         guard let index = album.assets.index(where: { (selectedAsset) in

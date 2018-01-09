@@ -11,16 +11,10 @@ import Photos
 
 protocol AssetCollectorViewControllerDelegate : class {
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool)
-    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset])
+    func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController)
 }
 
 class AssetCollectorViewController: UIViewController {
-    
-    private var requiredPhotosCount: Int {
-        // In case we haven't loaded the products yet, return a hardcoded number
-        // TODO: Change this number to something sensible
-        return ProductManager.shared.product?.minimumRequiredAssets ?? ProductManager.shared.products?.first?.minimumRequiredAssets ?? 20
-    }
     
     public var delegate: AssetCollectorViewControllerDelegate?
     
@@ -183,7 +177,7 @@ class AssetCollectorViewController: UIViewController {
     }
     
     @IBAction public func useThese() {
-        self.delegate?.assetCollectorViewController(self, didFinishWithAssets: assets)
+        self.delegate?.assetCollectorViewControllerDidFinish(self)
     }
     
     private func adaptToParent() {
@@ -243,7 +237,7 @@ class AssetCollectorViewController: UIViewController {
         isHidden = false
         
         if !isDeletingEnabled {
-            
+            let requiredPhotosCount = ProductManager.shared.minimumRequiredAssets
             let fadeDuration: TimeInterval = 0.25
             if assets.count >= requiredPhotosCount {
                 //use these
@@ -333,9 +327,8 @@ class AssetCollectorViewController: UIViewController {
     }
 }
 
-//MARK: - Collection View
-
 extension AssetCollectorViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    //MARK: Collection View Delegate & DataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return assets.count

@@ -23,6 +23,26 @@ class PhotobookPageView: UIView {
         return ProductManager.shared.productLayouts.index(where: { return $0 === self.productLayout })
     }
     
+    func load(size: CGSize) {
+        setImage(image: nil)
+        
+        guard let index = index else {
+            isHidden = true
+            return
+        }
+        isHidden = false
+        
+        if productLayout?.layout.imageLayoutBox != nil {
+            let asset = ProductManager.shared.productLayouts[index].asset
+            productLayout?.asset = asset
+            asset?.image(size: size, completionHandler: { [weak welf = self] (image, _) in
+                guard welf?.index == index, let image = image else { return }
+                
+                welf?.setImage(image: image, contentMode: (asset as? PlaceholderAsset) == nil ? .scaleAspectFill : .center)
+            })
+        }
+    }
+    
     func setImage (image: UIImage?, contentMode: UIViewContentMode? = nil) {
         if let contentMode = contentMode{
             imageView.contentMode = contentMode

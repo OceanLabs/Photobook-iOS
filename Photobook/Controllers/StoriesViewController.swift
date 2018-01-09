@@ -108,7 +108,7 @@ class StoriesViewController: UIViewController {
 }
 
 extension StoriesViewController: AssetCollectorViewControllerDelegate {
-    // MARK: - AssetCollectorViewControllerDelegate
+    // MARK: AssetCollectorViewControllerDelegate
     
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
         var height:CGFloat = 0
@@ -118,8 +118,8 @@ extension StoriesViewController: AssetCollectorViewControllerDelegate {
         tableView.tableFooterView?.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: height)
     }
     
-    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didFinishWithAssets: [Asset]) {
-        guard let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as? PhotobookViewController else { return }
+    func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
+        let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.selectedAssetsManager = selectedAssetsManager
         navigationController?.pushViewController(photobookViewController, animated: true)
     }
@@ -164,7 +164,7 @@ extension StoriesViewController: UITableViewDataSource {
             isDouble = (potentialDouble && storyIndex < stories.count - 1)
         }
         
-        if isDouble && false { //TODO: fix crash for double cells if 3 stories
+        if isDouble {
             // Double cell
             let story = stories[storyIndex]
             let secondStory = stories[storyIndex + 1] //TODO: crashes here because no +1 index story exists
@@ -212,7 +212,7 @@ extension StoriesViewController: UITableViewDataSource {
 }
 
 extension StoriesViewController: StoryTableViewCellDelegate {
-    // MARK: - StoryTableViewCellDelegate
+    // MARK: StoryTableViewCellDelegate
     
     func didTapOnStory(index: Int, sourceView: UIView?) {
         performSegue(withIdentifier: Constants.viewStorySegueName, sender: (index: index, sourceView: sourceView))

@@ -36,7 +36,11 @@ class ProductManager {
         static let photobookBackUpFile = photobookDirectory.appending("Photobook.dat")
     }
     
-    static let shared = ProductManager()
+    static let shared: ProductManager = {
+        let productManager = ProductManager()
+        productManager.initialise(completion: { _ in })
+        return productManager
+    }()
     
     private lazy var apiManager: PhotobookAPIManager = {
         let manager = PhotobookAPIManager()
@@ -64,6 +68,17 @@ class ProductManager {
     var coverColor: ProductColor = .white
     var pageColor: ProductColor = .white
     var productLayouts = [ProductLayout]()
+    var minimumRequiredAssets: Int {
+        // In case we haven't loaded the products yet, return a hardcoded number
+        // TODO: Change this number to something sensible
+        let defaultMinimum = 20
+        
+        return product?.minimumRequiredAssets ?? products?.first?.minimumRequiredAssets ?? defaultMinimum
+    }
+    var maximumAllowedAssets: Int {
+        // TODO: get this from the photobook
+        return 70
+    }
     
     // TODO: Spine
     
@@ -84,7 +99,7 @@ class ProductManager {
         }
     }
     
-    func setPhotobook(_ photobook: Photobook, withAssets assets: [Asset]) {
+    func setPhotobook(_ photobook: Photobook, withAssets assets: [Asset]? = nil) {
         guard
             let coverLayouts = coverLayouts(for: photobook),
             coverLayouts.count > 0,
@@ -95,7 +110,14 @@ class ProductManager {
             return
         }
 
-        var addedAssets = assets
+        var addedAssets = assets ?? {
+            var assets = [Asset]()
+            for layout in ProductManager.shared.productLayouts{
+                guard let asset = layout.asset else { continue }
+                assets.append(asset)
+            }
+            return assets
+        }()
         
         // Duplicate the first photo to use as both the cover AND the first page 🙄
         if let first = addedAssets.first{

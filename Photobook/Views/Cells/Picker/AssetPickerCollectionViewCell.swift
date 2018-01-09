@@ -15,4 +15,8 @@ class AssetPickerCollectionViewCell: UICollectionViewCell {
     
     var assetId: String?
     
+    override func prepareForReuse() {
+        imageView.image = nil
+    }
+    
 }

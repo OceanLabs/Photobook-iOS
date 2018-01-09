@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol PhotoBookCollectionViewCellDelegate: class {
+protocol PhotobookCollectionViewCellDelegate: class {
     func didTapOnPlusButton(at foldIndex: Int)
 }
 
@@ -37,7 +37,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var aspectRatioHelperView: UIView!
     @IBOutlet weak var obscuringView: UIView!
     @IBOutlet weak var plusButton: UIButton!
-    weak var delegate: PhotoBookCollectionViewCellDelegate?
+    weak var delegate: PhotobookCollectionViewCellDelegate?
     
     @IBAction func didTapPlus(_ sender: UIButton) {
         guard let productLayout = leftPageView.productLayout ?? rightPageView?.productLayout,

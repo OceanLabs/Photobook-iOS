@@ -55,7 +55,9 @@ extension Asset {
             
             //TODO: apply edits here if needed
             
-            completionHandler(image, nil)
+            DispatchQueue.main.async {
+                completionHandler(image, nil)
+            }
         })
     }
 }
