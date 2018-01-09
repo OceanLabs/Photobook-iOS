@@ -23,6 +23,9 @@ class PhotobookViewController: UIViewController {
     @IBOutlet private weak var ctaButtonContainer: UIView!
     var selectedAssetsManager: SelectedAssetsManager?
     private var titleButton = UIButton()
+    private lazy var emptyScreenViewController: EmptyScreenViewController = {
+        return EmptyScreenViewController.emptyScreen(parent: self)
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,13 +34,32 @@ class PhotobookViewController: UIViewController {
             navigationItem.largeTitleDisplayMode = .never
         }
         
-        guard let assets = selectedAssetsManager?.selectedAssets,
-            let photobook = ProductManager.shared.products?.first
-            else { return }
+        guard let assets = selectedAssetsManager?.selectedAssets else {
+            // Should never really reach here
+            emptyScreenViewController.show(message: NSLocalizedString("Photobook/NoPhotosSelected", value: "No photos selected", comment: "No photos selected error message"))
+            return
+        }
+        
+        guard let photobook = ProductManager.shared.products?.first else {
+            emptyScreenViewController.show(message: NSLocalizedString("Photobook/Loading", value: "Loading products", comment: "Loading products screen message"), activity: true)
+            ProductManager.shared.initialise(completion: { [weak welf = self] (error: Error?) in
+                guard let photobook = ProductManager.shared.products?.first,
+                    error == nil else {
+                        // TODO: show emptyScreen with error and retry/back button
+                        return
+                }
+                
+                ProductManager.shared.setPhotobook(photobook, withAssets: assets)
+                welf?.setupTitleView()
+                welf?.collectionView.reloadData()
+                welf?.emptyScreenViewController.hide(animated: true)
+            })
+            return
+        }
         
         ProductManager.shared.setPhotobook(photobook, withAssets: assets)
-        
         setupTitleView()
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -102,6 +124,8 @@ extension PhotobookViewController: UICollectionViewDataSource {
     // MARK: UICollectionViewDataSource
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
+        guard ProductManager.shared.product != nil else { return 0 }
+        
         return 2
     }
     

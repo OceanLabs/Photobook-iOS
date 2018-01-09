@@ -36,7 +36,11 @@ class ProductManager {
         static let photobookBackUpFile = photobookDirectory.appending("Photobook.dat")
     }
     
-    static let shared = ProductManager()
+    static let shared: ProductManager = {
+        let productManager = ProductManager()
+        productManager.initialise(completion: { _ in })
+        return productManager
+    }()
     
     private lazy var apiManager: PhotobookAPIManager = {
         let manager = PhotobookAPIManager()
