@@ -38,31 +38,7 @@ class PhotobookViewController: UIViewController {
     var titleLabel: UILabel?
     private var interactingItemIndexPath: IndexPath?
     private var proposedDropIndexPath: IndexPath?
-    private var isRearranging = false {
-        didSet{
-            if isRearranging{
-                UIView.animate(withDuration: 0.3, animations: {
-                    self.collectionView.transform = CGAffineTransform(translationX: 0, y: -self.collectionView.frame.size.height * (1.0-Constants.rearrageScale)/2.0).scaledBy(x: 0.8, y: 0.8)
-                    
-                    self.view.setNeedsLayout()
-                    self.view.layoutIfNeeded()
-                })
-            }
-            else{
-                UIView.animate(withDuration: 0.3, animations: {
-                    self.collectionView.transform = .identity
-                    self.view.setNeedsLayout()
-                    self.view.layoutIfNeeded()
-                })
-            }
-            
-            // Update drag interaction enabled status
-            for cell in collectionView.visibleCells{
-                guard let photobookCell = cell as? PhotobookCollectionViewCell else { continue }
-                photobookCell.setIsRearranging(isRearranging)
-            }
-        }
-    }
+    private var isRearranging = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -150,6 +126,30 @@ class PhotobookViewController: UIViewController {
         }
         
         isRearranging = !isRearranging
+        
+        if isRearranging{
+            UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
+                self.collectionView.transform = CGAffineTransform(translationX: 0, y: -self.collectionView.frame.size.height * (1.0-Constants.rearrageScale)/2.0).scaledBy(x: 0.8, y: 0.8)
+                self.view.setNeedsLayout()
+                self.view.layoutIfNeeded()
+            }, completion: nil)
+            
+            sender.title = NSLocalizedString("Photobook/DoneButtonTitle", value: "Done", comment: "Done button title")
+        } else{
+            UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
+                self.collectionView.transform = .identity
+                self.view.setNeedsLayout()
+                self.view.layoutIfNeeded()
+            }, completion: nil)
+            
+            sender.title = NSLocalizedString("Photobook/RearrangeButtonTitle", value: "Rearrange", comment: "Rearrange button title")
+        }
+        
+        // Update drag interaction enabled status
+        for cell in collectionView.visibleCells{
+            guard let photobookCell = cell as? PhotobookCollectionViewCell else { continue }
+            photobookCell.setIsRearranging(isRearranging)
+        }
     }
     
     @IBAction private func didTapCheckout(_ sender: UIButton) {
