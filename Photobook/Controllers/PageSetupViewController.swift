@@ -47,19 +47,22 @@ class PageSetupViewController: UIViewController {
     
     // TEMP
     var assets: [Asset] = {
-        let options = PHFetchOptions()
-        options.fetchLimit = 1
-        let phAssets = PHAsset.fetchAssets(with: options)
+        let phAssets = PHAsset.fetchAssets(with: PHFetchOptions())
+        let collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: PHFetchOptions()).firstObject
         
         var assets = [PhotosAsset]()
-        phAssets.enumerateObjects { (asset, _, _) in
-            let photoAsset = PhotosAsset(asset, collection: PHAssetCollection())
+        phAssets.enumerateObjects { (asset, _, stop) in
+            let photoAsset = PhotosAsset(asset, collection: collection!)
             assets.append(photoAsset)
+            if assets.count == 5 {
+                stop.pointee = true
+            }
         }
         return assets
     }()
     
     // Public settings
+    var selectedAssetsManager: SelectedAssetsManager! = SelectedAssetsManager()
     var pageSizeRatio: CGFloat! {
         didSet {
             let pageWidth = view.bounds.width - Constants.pageSideMargin
@@ -91,6 +94,8 @@ class PageSetupViewController: UIViewController {
     }
     
     func setupFakePhotobookData() {
+        selectedAssetsManager!.select(assets)
+        
         ProductManager.shared.initialise { (error) in
             guard error == nil else {
                 print("Error initialising the product manager")
@@ -143,6 +148,7 @@ class PageSetupViewController: UIViewController {
     }
     
     private func setupAssetSelection() {
+        assetSelectorViewController.selectedAssetsManager = selectedAssetsManager
         assetSelectorViewController.selectedAsset = selectedAsset
     }
     
@@ -324,5 +330,5 @@ extension PageSetupViewController: AssetSelectorDelegate {
             setupTextBox()
         }
         setupImageBox()
-    }
+    }    
 }

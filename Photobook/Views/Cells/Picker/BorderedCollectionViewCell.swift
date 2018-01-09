@@ -41,7 +41,7 @@ class BorderedCollectionViewCell: UICollectionViewCell {
     
     func setup() {
         guard borderLayer == nil else { return }
-        self.clipsToBounds = false
+        clipsToBounds = false
         
         let inset = AssetSelectorAssetCollectionViewCell.borderInset
         let rect = CGRect(x: -inset, y: -inset, width: self.bounds.width + 2.0 * inset, height: self.bounds.height + 2.0 * inset)
@@ -49,7 +49,7 @@ class BorderedCollectionViewCell: UICollectionViewCell {
         borderLayer = CAShapeLayer()
         borderLayer.fillColor = nil
         borderLayer.path = borderPath
-        borderLayer.frame = self.bounds
+        borderLayer.frame = bounds
         borderLayer.strokeColor = BorderedCollectionViewCell.borderColor
         borderLayer.lineWidth = BorderedCollectionViewCell.borderWidth
     }

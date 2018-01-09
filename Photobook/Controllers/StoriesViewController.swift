@@ -108,6 +108,7 @@ class StoriesViewController: UIViewController {
 }
 
 extension StoriesViewController: AssetCollectorViewControllerDelegate {
+    
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
         var height:CGFloat = 0
         if let imageCollectorVC = imageCollectorController {
@@ -115,6 +116,8 @@ extension StoriesViewController: AssetCollectorViewControllerDelegate {
         }
         tableView.tableFooterView?.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: height)
     }
+    
+    func didFinishSelectingAssets() {}
 }
 
 extension StoriesViewController: UITableViewDataSource {

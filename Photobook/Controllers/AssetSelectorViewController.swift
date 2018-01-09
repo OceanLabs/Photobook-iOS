@@ -18,40 +18,18 @@ class AssetSelectorViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     
-    private var selectedAssetsManager: SelectedAssetsManager! {
-        didSet {
-            if oldValue != nil {
-                NotificationCenter.default.removeObserver(self, name: SelectedAssetsManager.notificationNameSelected, object: oldValue)
-                NotificationCenter.default.removeObserver(self, name: SelectedAssetsManager.notificationNameDeselected, object: oldValue)
+    private var addMoreSelectedAssetsManager = SelectedAssetsManager()
+    private var assets: [Asset] {
+        get {
+            if let manager = selectedAssetsManager {
+                return manager.selectedAssets
             }
-            NotificationCenter.default.addObserver(self, selector: #selector(changedCollectedAssets), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
-            NotificationCenter.default.addObserver(self, selector: #selector(changedCollectedAssets), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
+            return [Asset]()
         }
     }
-    
-//    private var assets: [Asset] {
-//        get {
-//            if let manager = selectedAssetsManager {
-//                return manager.selectedAssets
-//            }
-//            return [Asset]()
-//        }
-//    }
-    private lazy var assets: [Asset] = {
-        let phAssets = PHAsset.fetchAssets(with: PHFetchOptions())
-        
-        var assets = [PhotosAsset]()
-        for _ in 0...5 {
-            phAssets.enumerateObjects { (asset, _, _) in
-                let photoAsset = PhotosAsset(asset, collection: PHAssetCollection())
-                assets.append(photoAsset)
-            }
-        }
-        return assets
-    }()
-    
     private var selectedAssetIndex = -1
     
+    var selectedAssetsManager: SelectedAssetsManager!
     weak var delegate: AssetSelectorDelegate?
     
     var selectedAsset: Asset? {
@@ -65,6 +43,7 @@ class AssetSelectorViewController: UIViewController {
             reloadAndCenter()
         }
     }
+    var browseNavigationController: UINavigationController!
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -116,7 +95,11 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == assets.count {
-            // TODO: Present asset picker screen
+            let draggableModalViewController = storyboard?.instantiateViewController(withIdentifier: "DraggableModalViewController") as! ModalAlbumsCollectionViewController
+            draggableModalViewController.albumManager = PhotosAlbumManager() // FIXME: Could be a different source
+            draggableModalViewController.addingDelegate = self
+            
+            present(draggableModalViewController, animated: false, completion: nil)
             return
         }
         
@@ -127,4 +110,19 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
         
         delegate?.didSelect(asset: assets[indexPath.row])
     }
+}
+
+extension AssetSelectorViewController: AssetCollectorAddingDelegate {
+    
+    func didFinishAdding(assets: [Asset]?) {
+        guard let assets = assets, assets.count > 0 else {
+            self.dismiss(animated: false, completion: nil)
+            return
+        }
+        
+        selectedAssetsManager.select(assets)
+        collectionView.reloadData()
+        collectionView.scrollToItem(at: IndexPath(row: self.assets.count, section: 0), at: .centeredHorizontally, animated: true)
+        self.dismiss(animated: false, completion: nil)
+    }    
 }
