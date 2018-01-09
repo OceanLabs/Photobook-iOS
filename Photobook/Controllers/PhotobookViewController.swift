@@ -44,15 +44,19 @@ class PhotobookViewController: UIViewController {
             emptyScreenViewController.show(message: NSLocalizedString("Photobook/Loading", value: "Loading products", comment: "Loading products screen message"), activity: true)
             ProductManager.shared.initialise(completion: { [weak welf = self] (error: Error?) in
                 guard let photobook = ProductManager.shared.products?.first,
-                    error == nil else {
-                        // TODO: show emptyScreen with error and retry/back button
+                    error == nil
+                    else {
+                        welf?.emptyScreenViewController.show(message: error!.localizedDescription, buttonTitle: NSLocalizedString("Photobook/RetryLoading", value: "Retry", comment: "Retry loading products button"), buttonAction: {
+                            ProductManager.shared.initialise(completion: {  (error: Error?) in
+                                if let photobook = ProductManager.shared.products?.first, error == nil {
+                                    welf?.emptyScreenLoadSucceeded(photobook, assets)
+                                }
+                            })
+                        })
                         return
                 }
-                
-                ProductManager.shared.setPhotobook(photobook, withAssets: assets)
-                welf?.setupTitleView()
-                welf?.collectionView.reloadData()
-                welf?.emptyScreenViewController.hide(animated: true)
+            
+                welf?.emptyScreenLoadSucceeded(photobook, assets)
             })
             return
         }
@@ -73,6 +77,13 @@ class PhotobookViewController: UIViewController {
         
         collectionView.contentInset = UIEdgeInsets(top: collectionView.contentInset.top, left: collectionView.contentInset.left, bottom: bottomInset, right: collectionView.contentInset.right)
         collectionView.scrollIndicatorInsets = collectionView.contentInset
+    }
+    
+    private func emptyScreenLoadSucceeded(_ photobook: Photobook, _ assets: [Asset]) {
+        ProductManager.shared.setPhotobook(photobook, withAssets: assets)
+        self.setupTitleView()
+        self.collectionView.reloadData()
+        self.emptyScreenViewController.hide(animated: true)
     }
     
     private func setupTitleView() {
