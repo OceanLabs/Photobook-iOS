@@ -71,7 +71,7 @@ class ModalAlbumsCollectionViewController: UIViewController {
             rootNavigationController = segue.destination as! UINavigationController
             rootNavigationController.delegate = self
             
-            let navigationBar = rootNavigationController.navigationBar as! PhotoBookNavigationBar
+            let navigationBar = rootNavigationController.navigationBar as! PhotobookNavigationBar
             navigationBar.willShowPrompt = true
             
             downwardArrowButton = UIButton(type: .custom)

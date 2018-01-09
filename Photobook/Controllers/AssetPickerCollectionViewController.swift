@@ -10,8 +10,8 @@ import UIKit
 
 class AssetPickerCollectionViewController: UICollectionViewController {
 
-    @IBOutlet weak var selectAllButton: UIBarButtonItem!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var selectAllButton: UIBarButtonItem!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     private let marginBetweenImages: CGFloat = 1
     private let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
     private var previousPreheatRect = CGRect.zero
@@ -108,7 +108,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         updateSelectAllButtonTitle()
     }
     
-    func updateSelectAllButtonTitle() {
+    func updateSelectAllButtonTitle() {        
         if selectedAssetsManager?.count(for: album) == self.album.assets.count {
             selectAllButton.title = NSLocalizedString("ImagePicker/Button/DeselectAll", value: "Deselect All", comment: "Button title for de-selecting all selected photos")
         }
@@ -119,7 +119,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     
     func calcAndSetCellSize() {
         guard let collectionView = collectionView else { return }
-        var usableSpace = collectionView.frame.size.width;
+        var usableSpace = collectionView.frame.size.width
         usableSpace -= (numberOfCellsPerRow - 1.0) * marginBetweenImages
         let cellWidth = usableSpace / numberOfCellsPerRow
         (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize = CGSize(width: cellWidth, height: cellWidth)
@@ -216,17 +216,26 @@ class AssetPickerCollectionViewController: UICollectionViewController {
 }
 
 extension AssetPickerCollectionViewController: AssetCollectorViewControllerDelegate {
+    // MARK: AssetCollectorViewControllerDelegate
+    
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
         collectionView?.collectionViewLayout.invalidateLayout()
     }
     
-    func didFinishSelectingAssets() {
-        addingDelegate?.didFinishAdding(assets: selectedAssetsManager?.selectedAssets)
+    func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
+        switch collectorMode {
+        case .adding:
+            addingDelegate?.didFinishAdding(assets: selectedAssetsManager?.selectedAssets)
+        default:
+            let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
+            photobookViewController.selectedAssetsManager = selectedAssetsManager
+            navigationController?.pushViewController(photobookViewController, animated: true)
+        }
     }
 }
 
 extension AssetPickerCollectionViewController {
-    //MARK: - UICollectionViewDataSource
+    //MARK: UICollectionViewDataSource
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return album.assets.count
@@ -278,7 +287,7 @@ extension AssetPickerCollectionViewController {
 }
 
 extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayout {
-    //MARK: - UICollectionViewDelegateFlowLayout
+    //MARK: UICollectionViewDelegateFlowLayout
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         // We only show covers for Stories
@@ -297,7 +306,7 @@ extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayou
 }
 
 extension AssetPickerCollectionViewController {
-    //MARK: - UICollectionViewDelegate
+    //MARK: UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = album.assets[indexPath.item]
@@ -313,16 +322,16 @@ extension AssetPickerCollectionViewController {
 }
 
 extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegate{
-    // MARK: - UIViewControllerPreviewingDelegate
+    // MARK: UIViewControllerPreviewingDelegate
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let collectionView = collectionView,
             let indexPath = collectionView.indexPathForItem(at: location),
             let cell = collectionView.cellForItem(at: indexPath) as? AssetPickerCollectionViewCell,
-            let thumbnailImage = cell.imageView.image,
-            let fullScreenImageViewController = storyboard?.instantiateViewController(withIdentifier: "FullScreenImageViewController") as? FullScreenImageViewController
+            let thumbnailImage = cell.imageView.image
             else { return nil }
         
+        let fullScreenImageViewController = storyboard?.instantiateViewController(withIdentifier: "FullScreenImageViewController") as! FullScreenImageViewController
         previewingContext.sourceRect = cell.convert(cell.contentView.frame, to: collectionView)
         
         fullScreenImageViewController.asset = album.assets[indexPath.item]
@@ -350,6 +359,8 @@ extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegat
 }
 
 extension AssetPickerCollectionViewController: FullScreenImageViewControllerDelegate{
+    // MARK: FullScreenImageViewControllerDelegate
+    
     func previewDidUpdate(asset: Asset) {
         guard let index = album.assets.index(where: { (selectedAsset) in
             return selectedAsset.identifier == asset.identifier

@@ -28,12 +28,15 @@ class ProductManager {
     static let shouldRetryUploadingImages = Notification.Name("ProductManagerShouldRetryUploadingImages")
     static let finishedPhotobookCreation = Notification.Name("ProductManagerFinishedPhotobookCreation")
     
+    var currentPortraitLayout = 0
+    var currentLandscapeLayout = 0
+    
     private struct Storage {
         static let photobookDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!.appending("/Photobook/")
         static let photobookBackUpFile = photobookDirectory.appending("Photobook.dat")
     }
     
-    static let shared = ProductManager()
+    static let shared: ProductManager = ProductManager()
     
     private lazy var apiManager: PhotobookAPIManager = {
         let manager = PhotobookAPIManager()
@@ -61,6 +64,17 @@ class ProductManager {
     var coverColor: ProductColor = .white
     var pageColor: ProductColor = .white
     var productLayouts = [ProductLayout]()
+    var minimumRequiredAssets: Int {
+        // In case we haven't loaded the products yet, return a hardcoded number
+        // TODO: Change this number to something sensible
+        let defaultMinimum = 20
+        
+        return product?.minimumRequiredAssets ?? products?.first?.minimumRequiredAssets ?? defaultMinimum
+    }
+    var maximumAllowedAssets: Int {
+        // TODO: get this from the photobook
+        return 70
+    }
     
     // TODO: Spine
     
@@ -81,7 +95,7 @@ class ProductManager {
         }
     }
     
-    func setPhotobook(_ photobook: Photobook, withAssets assets: [Asset]) {
+    func setPhotobook(_ photobook: Photobook, withAssets assets: [Asset]? = nil) {
         guard
             let coverLayouts = coverLayouts(for: photobook),
             coverLayouts.count > 0,
@@ -92,59 +106,131 @@ class ProductManager {
             return
         }
 
-        var unusedAssets = assets
-
-        var portraitLayouts = layouts.filter { !$0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
-        var landscapeLayouts = layouts.filter { $0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
+        var addedAssets = assets ?? {
+            var assets = [Asset]()
+            for layout in ProductManager.shared.productLayouts{
+                guard let asset = layout.asset else { continue }
+                assets.append(asset)
+            }
+            return assets
+        }()
         
-        // First photobook
-        // TODO: Check if the minimum number of pages are met. Create empty pages that the user will have to assign
-        // assets to. Take into account that the first and last pages should be empty.
+        // Duplicate the first photo to use as both the cover AND the first page 🙄
+        if let first = addedAssets.first{
+            addedAssets.insert(first, at: 0)
+        }
+        
+        // First photobook only
         if product == nil {
             var tempLayouts = [ProductLayout]()
-
-            var currentPortraitLayout = 0
-            var currentLandscapeLayout = 0
+            
+            // Fill minimum pages with Placeholder assets if needed
+            while addedAssets.count < photobook.minimumRequiredAssets + 1 { // +1 for cover which is not included in the minimum
+                addedAssets.append(PlaceholderAsset())
+            }
 
             // Use first photo for the cover
             let productLayoutAsset = ProductLayoutAsset()
-            productLayoutAsset.asset = unusedAssets.remove(at: 0)
+            productLayoutAsset.asset = addedAssets.remove(at: 0)
             let productLayout = ProductLayout(layout: coverLayouts.first!, productLayoutAsset: productLayoutAsset)
             tempLayouts.append(productLayout)
             
-            // Loop through the remaining assets
-            for asset in unusedAssets {
-                // FIXME: Logic TBC
-                let productLayoutAsset = ProductLayoutAsset()
-                productLayoutAsset.asset = asset
-
-                var layout: Layout
-                if asset.isLandscape {
-                    layout = landscapeLayouts[currentLandscapeLayout]
-                    currentLandscapeLayout = currentLandscapeLayout < landscapeLayouts.count - 1 ? currentLandscapeLayout + 1 : 0
-                } else {
-                    layout = portraitLayouts[currentPortraitLayout]
-                    currentPortraitLayout = currentPortraitLayout < portraitLayouts.count - 1 ? currentPortraitLayout + 1 : 0
-                }
-                let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset)
-                tempLayouts.append(productLayout)
-            }
+            // Create layouts for the remaining assets
+            tempLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: layouts))
             
             productLayouts = tempLayouts
             product = photobook
             return
         }
         
+        // Find if any assets were removed or added since the last time
+        var removedAssets = [Asset]()
+        
+        for productLayout in productLayouts {
+            guard let asset = productLayout.asset else { continue }
+            var removed = true
+            
+            // Check if asset is still included in the new selections
+            if let addedIndex = addedAssets.index(where: { $0 == asset }) {
+                addedAssets.remove(at: addedIndex)
+                
+                // Mark asset as not removed
+                removed = false
+            }
+            
+            if removed {
+                removedAssets.append(asset)
+            }
+        }
+        
+        // Remove layouts of removed assets
+        for asset in removedAssets {
+            if let index = productLayouts.index(where: {
+                guard let existingAsset = $0.asset else { return false }
+                return existingAsset == asset
+            }) {
+                productLayouts.remove(at: index)
+                
+                // If we've removed the cover photo, create a new cover
+                if index == 0 {
+                    // Use first photo for the cover
+                    let productLayoutAsset = ProductLayoutAsset()
+                    productLayoutAsset.asset = addedAssets.remove(at: 0)
+                    let productLayout = ProductLayout(layout: coverLayouts.first!, productLayoutAsset: productLayoutAsset)
+                    productLayouts.insert(productLayout, at: 0)
+                }
+            }
+        }
+        
+        // Fill minimum pages with Placeholder assets if needed
+        while productLayouts.count + addedAssets.count < photobook.minimumRequiredAssets + 1 { // +1 for cover which is not included in the minimum
+            addedAssets.append(PlaceholderAsset())
+        }
+        
+        // Create new layouts for added assets
+        productLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: layouts))
+        
         // Switching products
+        product = photobook
         for pageLayout in productLayouts {
+            let availableLayouts = pageLayout === productLayouts.first ? coverLayouts : layouts
+            
             // Match layouts from the current product to the new one
-            var newLayout = layouts.first { $0.category == pageLayout.layout.category }
+            var newLayout = availableLayouts.first {
+                $0.category == pageLayout.layout.category
+            }
             if newLayout == nil {
                 // Should not happen but to be safe, pick the first layout
-                newLayout = layouts.first
+                newLayout = availableLayouts.first
             }
             pageLayout.layout = newLayout
         }
+    }
+    
+    func createLayoutsForAssets(assets: [Asset], from layouts:[Layout]) -> [ProductLayout]{
+        var portraitLayouts = layouts.filter { !$0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
+        var landscapeLayouts = layouts.filter { $0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
+    
+        var productLayouts = [ProductLayout]()
+        
+        for asset in assets {
+            // FIXME: Logic TBC
+            let productLayoutAsset = ProductLayoutAsset()
+            productLayoutAsset.asset = asset
+            
+            var layout: Layout
+            if asset.isLandscape {
+                layout = landscapeLayouts[currentLandscapeLayout]
+                currentLandscapeLayout = currentLandscapeLayout < landscapeLayouts.count - 1 ? currentLandscapeLayout + 1 : 0
+            } else {
+                layout = portraitLayouts[currentPortraitLayout]
+                currentPortraitLayout = currentPortraitLayout < portraitLayouts.count - 1 ? currentPortraitLayout + 1 : 0
+            }
+            let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset)
+            productLayouts.append(productLayout)
+        }
+        
+        return productLayouts
     }
     
     func coverLayouts(for photobook: Photobook) -> [Layout]? {

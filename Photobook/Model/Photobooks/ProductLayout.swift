@@ -79,5 +79,6 @@ class ProductLayout: Codable {
             productLayoutText!.containerSize = layout.textLayoutBox!.rect.size
         }
     }
+    
 }
 
