@@ -16,7 +16,7 @@
         <!--Item-->
         <scene sceneID="f9T-ty-1Xu">
             <objects>
-                <viewController id="sIe-n5-8hl" customClass="PageSetupViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PageSetupViewController" id="sIe-n5-8hl" customClass="PageSetupViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lbR-ma-Ckk">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -302,7 +302,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="StoryTableViewCell" rowHeight="210" id="htl-9v-aX7" customClass="StoryTableViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="StoryTableViewCell" rowHeight="210" id="htl-9v-aX7" customClass="StoryTableViewCell" customModule="Photobook" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="210"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="htl-9v-aX7" id="eJT-Z8-4Pn">
@@ -400,7 +400,7 @@
                                             <outlet property="titleLabel" destination="RjH-Ge-cK0" id="huB-q3-srx"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DoubleStoryTableViewCell" rowHeight="210" id="5UM-o8-BDz" customClass="DoubleStoryTableViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DoubleStoryTableViewCell" rowHeight="210" id="5UM-o8-BDz" customClass="DoubleStoryTableViewCell" customModule="Photobook" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="238" width="414" height="210"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="5UM-o8-BDz" id="5Nn-1m-uRn">
@@ -650,7 +650,6 @@
                     <connections>
                         <segue destination="hhS-Lc-qF3" kind="relationship" relationship="viewControllers" id="RNg-LV-Iuv"/>
                         <segue destination="mcv-na-BVN" kind="relationship" relationship="viewControllers" id="MX7-xb-oNn"/>
-                        <segue destination="sIe-n5-8hl" kind="relationship" relationship="viewControllers" id="TTC-4T-cXU"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KS4-Ss-yFr" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -981,7 +980,7 @@
             <objects>
                 <collectionViewController storyboardIdentifier="AlbumsCollectionViewController" id="dnn-z5-0C4" customClass="AlbumsCollectionViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" id="bn4-uC-JcP">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="706"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="eYK-0U-LrI">
@@ -991,12 +990,12 @@
                             <inset key="sectionInset" minX="20" minY="20" maxX="20" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <activityIndicatorView key="backgroundView" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" id="qvD-qJ-eaZ">
-                            <rect key="frame" x="0.0" y="-64" width="414" height="706"/>
+                            <rect key="frame" x="0.0" y="-64" width="414" height="736"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </activityIndicatorView>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" reuseIdentifier="AlbumCollectionViewCell" id="JMC-DK-Bi3" customClass="AlbumCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AlbumCollectionViewCell" id="JMC-DK-Bi3" customClass="AlbumCollectionViewCell" customModule="Photobook" customModuleProvider="target">
                                 <rect key="frame" x="20" y="20" width="177" height="227"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -1004,7 +1003,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="DRx-Ip-dVX">
-                                            <rect key="frame" x="0.0" y="0.0" width="177" height="157"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="177" height="177"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.040000000000000001" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -1013,7 +1012,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qS3-bO-f7J">
-                                            <rect key="frame" x="143" y="123" width="24" height="24"/>
+                                            <rect key="frame" x="143" y="143" width="24" height="24"/>
                                             <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="24" id="Av8-aO-OpE"/>
@@ -1024,13 +1023,13 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All Photos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lxg-eo-kS2">
-                                            <rect key="frame" x="0.0" y="162" width="69" height="18"/>
+                                            <rect key="frame" x="0.0" y="182" width="69" height="18"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10852" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9q5-oj-AEO">
-                                            <rect key="frame" x="0.0" y="180" width="44" height="18"/>
+                                            <rect key="frame" x="0.0" y="200" width="44" height="18"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
@@ -1360,7 +1359,28 @@
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Uu3-W1-pPd" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
                                                             <rect key="frame" x="10" y="10" width="170" height="187"/>
+                                                            <subviews>
+                                                                <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yRS-7n-et0">
+                                                                    <rect key="frame" x="24.333333333333329" y="33" width="120" height="120"/>
+                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                    <subviews>
+                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="assetPlaceholder" translatesAutoresizingMaskIntoConstraints="NO" id="doZ-hp-ivd">
+                                                                            <rect key="frame" x="50" y="50" width="18" height="18"/>
+                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                        </imageView>
+                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2iY-av-U76">
+                                                                            <rect key="frame" x="0.0" y="0.0" width="120" height="120"/>
+                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                        </imageView>
+                                                                    </subviews>
+                                                                </view>
+                                                            </subviews>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <connections>
+                                                                <outlet property="assetContainerView" destination="yRS-7n-et0" id="Z4F-v0-ROw"/>
+                                                                <outlet property="assetImageView" destination="2iY-av-U76" id="dtJ-a8-Ees"/>
+                                                                <outlet property="assetPlaceholderIconImageView" destination="doZ-hp-ivd" id="XIV-jr-U9H"/>
+                                                            </connections>
                                                         </view>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1437,11 +1457,53 @@
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5nh-cN-sLc" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
                                                             <rect key="frame" x="10" y="10" width="164.66666666666666" height="187"/>
+                                                            <subviews>
+                                                                <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PXQ-xI-A3s">
+                                                                    <rect key="frame" x="22.333333333333329" y="33" width="120" height="120"/>
+                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                    <subviews>
+                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="assetPlaceholder" translatesAutoresizingMaskIntoConstraints="NO" id="A2f-Xq-YB7">
+                                                                            <rect key="frame" x="50" y="50" width="18" height="18"/>
+                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                        </imageView>
+                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N6T-6V-leZ">
+                                                                            <rect key="frame" x="0.0" y="0.0" width="120" height="120"/>
+                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                        </imageView>
+                                                                    </subviews>
+                                                                </view>
+                                                            </subviews>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <connections>
+                                                                <outlet property="assetContainerView" destination="PXQ-xI-A3s" id="OVJ-br-2x8"/>
+                                                                <outlet property="assetImageView" destination="N6T-6V-leZ" id="fQn-M4-Jee"/>
+                                                                <outlet property="assetPlaceholderIconImageView" destination="A2f-Xq-YB7" id="sld-KS-WIe"/>
+                                                            </connections>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TAQ-xh-gqa" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
                                                             <rect key="frame" x="184.66666666666663" y="10" width="164.33333333333337" height="187"/>
+                                                            <subviews>
+                                                                <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="baM-6r-zQ4">
+                                                                    <rect key="frame" x="21.666666666666714" y="33" width="120" height="120"/>
+                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                    <subviews>
+                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="assetPlaceholder" translatesAutoresizingMaskIntoConstraints="NO" id="gHb-LU-vsH">
+                                                                            <rect key="frame" x="50" y="50" width="18" height="18"/>
+                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                        </imageView>
+                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dbz-7z-xV1">
+                                                                            <rect key="frame" x="0.0" y="0.0" width="120" height="120"/>
+                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                        </imageView>
+                                                                    </subviews>
+                                                                </view>
+                                                            </subviews>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <connections>
+                                                                <outlet property="assetContainerView" destination="baM-6r-zQ4" id="Aiz-n9-4Dg"/>
+                                                                <outlet property="assetImageView" destination="dbz-7z-xV1" id="iEP-0D-Jqj"/>
+                                                                <outlet property="assetPlaceholderIconImageView" destination="gHb-LU-vsH" id="jes-tV-0np"/>
+                                                            </connections>
                                                         </view>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -2178,6 +2240,6 @@
         <image name="selectPhoto_on" width="29" height="29"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="2oC-kh-DmB"/>
+        <segue reference="MX7-xb-oNn"/>
     </inferredMetricsTieBreakers>
 </document>

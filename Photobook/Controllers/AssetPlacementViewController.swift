@@ -103,9 +103,6 @@ class AssetPlacementViewController: UIViewController {
         })
     }
     
-    private func setupUI() {
-    }
-    
     private func setUpLayoutImageBox(withRatio ratio: CGFloat) {
         // Calculate new container size
         var width: CGFloat!

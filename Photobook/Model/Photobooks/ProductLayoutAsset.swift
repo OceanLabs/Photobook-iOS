@@ -99,5 +99,13 @@ class ProductLayoutAsset: Codable {
         let scale = LayoutUtils.scaleToFill(containerSize: containerSize, withSize: asset.size, atAngle: 0.0)
         transform = CGAffineTransform.identity.scaledBy(x: scale, y: scale)
     }
+    
+    func shallowCopy() -> ProductLayoutAsset {
+        let aLayoutAsset = ProductLayoutAsset()
+        aLayoutAsset.asset = asset
+        aLayoutAsset.transform = transform
+        aLayoutAsset.containerSize = containerSize
+        return aLayoutAsset
+    }
 }
 

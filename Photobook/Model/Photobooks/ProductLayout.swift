@@ -80,5 +80,8 @@ class ProductLayout: Codable {
         }
     }
     
+    func shallowCopy() -> ProductLayout {
+        return ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset?.shallowCopy(), productLayoutText: productLayoutText?.shallowCopy())
+    }
 }
 

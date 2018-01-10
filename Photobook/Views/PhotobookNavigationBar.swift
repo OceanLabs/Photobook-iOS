@@ -42,8 +42,9 @@ class PhotobookNavigationBar: UINavigationBar {
             
             let statusBarHeight = UIApplication.shared.statusBarFrame.height
             let effectViewHeight = willShowPrompt ? PhotobookNavigationBar.contentHeight + PhotobookNavigationBar.promptHeight : PhotobookNavigationBar.contentHeight + statusBarHeight
+            let effectViewY = willShowPrompt ? 0.0 : -statusBarHeight
             effectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
-            effectView.frame = CGRect(x: 0.0, y: 0.0, width: bounds.width, height: effectViewHeight)
+            effectView.frame = CGRect(x: 0.0, y: effectViewY, width: bounds.width, height: effectViewHeight)
             effectView.backgroundColor = UIColor(white: 1.0, alpha: 0.75)
             insertSubview(effectView, at: 0)
         }

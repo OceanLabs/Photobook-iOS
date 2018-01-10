@@ -9,6 +9,10 @@
 import UIKit
 import Photos
 
+protocol PageSetupDelegate: class {
+    func didFinishEditingPage(_ index: Int, productLayout: ProductLayout, saving: Bool)
+}
+
 class PageSetupViewController: UIViewController {
 
     private struct Constants {
@@ -45,35 +49,17 @@ class PageSetupViewController: UIViewController {
     private var layoutSelectionViewController: LayoutSelectionViewController!
     private var assetPlacementViewController: AssetPlacementViewController!
     
-    // TEMP
-    var assets: [Asset] = {
-        let phAssets = PHAsset.fetchAssets(with: PHFetchOptions())
-        let collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: PHFetchOptions()).firstObject
-        
-        var assets = [PhotosAsset]()
-        phAssets.enumerateObjects { (asset, _, stop) in
-            let photoAsset = PhotosAsset(asset, collection: collection!)
-            assets.append(photoAsset)
-            if assets.count == 5 {
-                stop.pointee = true
-            }
-        }
-        return assets
-    }()
-    
     // Public settings
-    var selectedAssetsManager: SelectedAssetsManager! = SelectedAssetsManager()
+    weak var delegate: PageSetupDelegate?
+    var selectedAssetsManager: SelectedAssetsManager!
+    var pageIndex: Int!
     var pageSizeRatio: CGFloat! {
         didSet {
             let pageWidth = view.bounds.width - Constants.pageSideMargin
             let pageHeight = pageWidth / pageSizeRatio
             pageSize = CGSize(width: pageWidth, height: pageHeight)
             pageWidthConstraint.constant = pageWidth
-        }
-    }
-    var selectedAsset: Asset? {
-        didSet {
-            self.setupProductLayout()
+            pageHeightConstraint.constant = pageSize.height
         }
     }
     var pageText: String? = "Fields of Athenry, County Galway, Ireland" // TEMP: Test code
@@ -81,6 +67,7 @@ class PageSetupViewController: UIViewController {
     var availableLayouts: [Layout]!
 
     private var pageSize: CGSize = .zero
+    private var hasDoneSetup = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,54 +76,20 @@ class PageSetupViewController: UIViewController {
         toolbar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
         toolbarButtons[Tools.selectAsset.rawValue].isSelected = true
         
-        // TEMP: Remove when this is provided by the previous screen
-        setupFakePhotobookData()
-    }
-    
-    func setupFakePhotobookData() {
-        selectedAssetsManager!.select(assets)
-        
-        ProductManager.shared.initialise { (error) in
-            guard error == nil else {
-                print("Error initialising the product manager")
-                return
-            }
-            
-            if let photobook = ProductManager.shared.products?.first {
-                ProductManager.shared.setPhotobook(photobook, withAssets: self.assets)
-                self.availableLayouts = ProductManager.shared.currentLayouts()
-            }
-            
-            // Assign a default asset
-            self.selectedAsset = self.assets.first!
-            
-            self.setupPage()
-            self.setupAssetSelection()
-            self.setupLayoutSelection()
-            
-            UIView.animate(withDuration: 0.3) {
-                self.pageView.alpha = 1.0
-            }
+        UIView.animate(withDuration: 0.3) {
+            self.pageView.alpha = 1.0
         }
     }
     
-    private func setupProductLayout() {
-        guard productLayout == nil else { return }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
-        let layout = availableLayouts.first(where: { $0.imageLayoutBox != nil } )!
-        
-        let productLayoutAsset = ProductLayoutAsset()
-        productLayoutAsset.asset = self.selectedAsset
-        
-        self.productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset, productLayoutText: nil)
-    }
-    
-    private func setupPage() {
-        // TEMP: Trigger didSet code
-        pageSizeRatio = 1.38157681
-        pageHeightConstraint.constant = pageSize.height
-
-        setupLayoutBoxes()
+        if !hasDoneSetup {
+            setupLayoutBoxes()
+            setupAssetSelection()
+            setupLayoutSelection()
+            hasDoneSetup = true
+        }
     }
     
     private func adjustLabelHeight() {
@@ -149,12 +102,12 @@ class PageSetupViewController: UIViewController {
     
     private func setupAssetSelection() {
         assetSelectorViewController.selectedAssetsManager = selectedAssetsManager
-        assetSelectorViewController.selectedAsset = selectedAsset
+        assetSelectorViewController.selectedAsset = productLayout.asset
     }
     
     private func setupLayoutSelection() {
         layoutSelectionViewController.pageSizeRatio = pageSizeRatio
-        layoutSelectionViewController.asset = selectedAsset
+        layoutSelectionViewController.asset = productLayout.asset
         layoutSelectionViewController.layouts = availableLayouts
     }
     
@@ -256,11 +209,11 @@ class PageSetupViewController: UIViewController {
     }
     
     @IBAction func tappedCancelButton(_ sender: UIBarButtonItem) {
-    
+        delegate?.didFinishEditingPage(pageIndex, productLayout: productLayout, saving: false)
     }
     
     @IBAction func tappedDoneButton(_ sender: UIBarButtonItem) {
-        
+        delegate?.didFinishEditingPage(pageIndex, productLayout: productLayout, saving: true)
     }
     
     @IBAction func tappedToolButton(_ sender: UIButton) {
@@ -319,7 +272,6 @@ extension PageSetupViewController: LayoutSelectionViewControllerDelegate {
 extension PageSetupViewController: AssetSelectorDelegate {
     
     func didSelect(asset: Asset) {
-        selectedAsset = asset
         productLayout.asset = asset
         layoutSelectionViewController.asset = asset
         

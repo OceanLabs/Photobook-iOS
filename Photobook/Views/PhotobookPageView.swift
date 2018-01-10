@@ -14,42 +14,18 @@ protocol PhotobookPageViewDelegate: class {
 
 class PhotobookPageView: UIView {
     
-    private var imageView: UIImageView = UIImageView()
     weak var delegate: PhotobookPageViewDelegate?
-    var tapGesture: UITapGestureRecognizer!
-    var productLayout: ProductLayout?
+    var index: Int?
     
-    var index: Int? {
-        return ProductManager.shared.productLayouts.index(where: { return $0 === self.productLayout })
+    private var tapGesture: UITapGestureRecognizer!
+    private var productLayout: ProductLayout? {
+        guard let index = index else { return nil }
+        return ProductManager.shared.productLayouts[index]
     }
     
-    func load(size: CGSize) {
-        setImage(image: nil)
-        
-        guard let index = index else {
-            isHidden = true
-            return
-        }
-        isHidden = false
-        
-        if productLayout?.layout.imageLayoutBox != nil {
-            let asset = ProductManager.shared.productLayouts[index].asset
-            productLayout?.asset = asset
-            asset?.image(size: size, completionHandler: { [weak welf = self] (image, _) in
-                guard welf?.index == index, let image = image else { return }
-                
-                welf?.setImage(image: image, contentMode: (asset as? PlaceholderAsset) == nil ? .scaleAspectFill : .center)
-            })
-        }
-    }
-    
-    func setImage (image: UIImage?, contentMode: UIViewContentMode? = nil) {
-        if let contentMode = contentMode{
-            imageView.contentMode = contentMode
-        }
-        imageView.isHidden = image == nil
-        imageView.image = image
-    }
+    @IBOutlet private weak var assetContainerView: UIView!
+    @IBOutlet private weak var assetPlaceholderIconImageView: UIImageView!
+    @IBOutlet private weak var assetImageView: UIImageView!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -64,24 +40,68 @@ class PhotobookPageView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        guard let imageBox = productLayout?.layout.imageLayoutBox else { return }
-        imageView.frame = imageBox.rectContained(in: CGSize(width: frame.width, height: frame.height))
+        guard let imageBox = productLayout?.layout.imageLayoutBox else {
+            assetContainerView.alpha = 0.0
+            return
+        }
+        assetContainerView.alpha = 1.0
+        assetContainerView.frame = imageBox.rectContained(in: CGSize(width: frame.width, height: frame.height))
     }
     
     private func setup() {
-        backgroundColor = .white
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        addSubview(imageView)
-        imageView.backgroundColor = UIColor(red:0.92, green:0.92, blue:0.92, alpha:1)
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOnPage(_:))))
+    }
+    
+    func load(size: CGSize) {
+        setImage(image: nil)
+        
+        guard let index = index else {
+            isHidden = true
+            return
+        }
+        isHidden = false
+        
+        guard productLayout?.layout.imageLayoutBox != nil,
+            let asset = productLayout?.productLayoutAsset?.asset else { return }
+        
+        asset.image(size: size, completionHandler: { [weak welf = self] (image, _) in
+            guard welf?.index == index, let image = image else { return }
+            welf?.setImage(image: image)
+        })
+    }
+    
+    func setImage(image: UIImage?) {
+        guard let image = image, let asset = productLayout?.productLayoutAsset?.asset else {
+            setImagePlaceholder(visible: true)
+            return
+        }
+        
+        setImagePlaceholder(visible: false)
+        
+        assetImageView.image = image
+        assetImageView.transform = .identity
+        assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: asset.size.width, height: asset.size.height)
+        assetImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
+        
+        productLayout!.productLayoutAsset!.containerSize = assetContainerView.bounds.size
+        assetImageView.transform = productLayout!.productLayoutAsset!.transform
+    }
+    
+    func setImagePlaceholder(visible: Bool) {
+        if visible {
+            assetImageView.image = nil
+            assetContainerView.backgroundColor = UIColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1.0)
+            assetPlaceholderIconImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
+            assetPlaceholderIconImageView.alpha = 1.0
+        } else {
+            assetContainerView.backgroundColor = .clear
+            assetPlaceholderIconImageView.alpha = 0.0
+        }
     }
     
     @objc private func didTapOnPage(_ sender: UITapGestureRecognizer) {
         guard let index = index else { return }
         delegate?.didTapOnPage(index: index)
     }
-    
 }
 
