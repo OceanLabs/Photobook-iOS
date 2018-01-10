@@ -63,4 +63,5 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
 class PhotobookView: UIView {
     weak var leftPageView: PhotobookPageView!
     weak var rightPageView: PhotobookPageView?
+    var dragging = false
 }

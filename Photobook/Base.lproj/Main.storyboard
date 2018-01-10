@@ -25,7 +25,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="StoryTableViewCell" rowHeight="210" id="htl-9v-aX7" customClass="StoryTableViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="StoryTableViewCell" rowHeight="210" id="htl-9v-aX7" customClass="StoryTableViewCell" customModule="Photobook" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="210"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="htl-9v-aX7" id="eJT-Z8-4Pn">
@@ -123,7 +123,7 @@
                                             <outlet property="titleLabel" destination="RjH-Ge-cK0" id="huB-q3-srx"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DoubleStoryTableViewCell" rowHeight="210" id="5UM-o8-BDz" customClass="DoubleStoryTableViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DoubleStoryTableViewCell" rowHeight="210" id="5UM-o8-BDz" customClass="DoubleStoryTableViewCell" customModule="Photobook" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="238" width="414" height="210"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="5UM-o8-BDz" id="5Nn-1m-uRn">
@@ -1132,6 +1132,7 @@
                                                         </view>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <gestureRecognizers/>
                                                     <constraints>
                                                         <constraint firstItem="ivR-tg-KJ8" firstAttribute="bottom" secondItem="5nh-cN-sLc" secondAttribute="bottom" id="0Ds-Wa-XBE"/>
                                                         <constraint firstItem="TAQ-xh-gqa" firstAttribute="leading" secondItem="5nh-cN-sLc" secondAttribute="trailing" constant="10" id="177-fK-cUF"/>
@@ -1177,6 +1178,7 @@
                                                 </button>
                                             </subviews>
                                         </view>
+                                        <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstItem="xma-jv-CAu" firstAttribute="top" secondItem="ALE-3X-DVw" secondAttribute="centerY" id="3bs-bX-Xpb"/>
                                             <constraint firstItem="xma-jv-CAu" firstAttribute="leading" secondItem="IdR-Q3-Knr" secondAttribute="leading" id="GNX-DA-QDp"/>
@@ -1205,6 +1207,30 @@
                                             <outlet property="rightPageView" destination="TAQ-xh-gqa" id="Qv3-fX-ojI"/>
                                             <outlet property="widthConstraint" destination="J5z-18-SkC" id="5mH-cd-Ua4"/>
                                         </connections>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="proposalCell" id="4Gb-tJ-8Rv">
+                                        <rect key="frame" x="27.666666666666668" y="444" width="359" height="77"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="359" height="77"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VLx-Iw-bp8">
+                                                    <rect key="frame" x="0.0" y="0.0" width="359" height="77"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="VLx-Iw-bp8" secondAttribute="height" multiplier="406:32" priority="750" id="Li1-LO-kth"/>
+                                                    </constraints>
+                                                </view>
+                                            </subviews>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="VLx-Iw-bp8" secondAttribute="bottom" id="10O-HJ-N7q"/>
+                                            <constraint firstItem="VLx-Iw-bp8" firstAttribute="leading" secondItem="4Gb-tJ-8Rv" secondAttribute="leading" id="9pf-ZP-am6"/>
+                                            <constraint firstAttribute="trailing" secondItem="VLx-Iw-bp8" secondAttribute="trailing" id="He1-23-FjT"/>
+                                            <constraint firstItem="VLx-Iw-bp8" firstAttribute="top" secondItem="4Gb-tJ-8Rv" secondAttribute="top" id="nAQ-4b-pe1"/>
+                                        </constraints>
+                                        <size key="customSize" width="359" height="77"/>
                                     </collectionViewCell>
                                 </cells>
                                 <connections>
