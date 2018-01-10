@@ -231,7 +231,7 @@ class PageSetupViewController: UIViewController {
         switch tool {
         case .selectAsset, .selectLayout:
             if editLayoutWasSelected {
-                self.assetPlacementViewController.animateBackToPhotobook {
+                assetPlacementViewController.animateBackToPhotobook {
                     self.assetImageView.transform = self.productLayout!.productLayoutAsset!.transform
                     self.view.sendSubview(toBack: self.placementContainerView)
                 }

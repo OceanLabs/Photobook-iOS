@@ -103,8 +103,8 @@ class ProductLayoutAsset: Codable {
     func shallowCopy() -> ProductLayoutAsset {
         let aLayoutAsset = ProductLayoutAsset()
         aLayoutAsset.asset = asset
-        aLayoutAsset.transform = transform
         aLayoutAsset.containerSize = containerSize
+        aLayoutAsset.transform = transform
         return aLayoutAsset
     }
 }
