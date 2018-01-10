@@ -226,8 +226,13 @@ extension PhotobookViewController: PhotobookPageViewDelegate {
         pageSetupViewController.selectedAssetsManager = selectedAssetsManager
         pageSetupViewController.productLayout = ProductManager.shared.productLayouts[index].shallowCopy()
         pageSetupViewController.pageIndex = index
-        pageSetupViewController.pageSizeRatio = ProductManager.shared.product!.pageSizeRatio
-        pageSetupViewController.availableLayouts = ProductManager.shared.currentLayouts()
+        if index == 0 { // Cover
+            pageSetupViewController.pageSizeRatio = ProductManager.shared.product!.coverSizeRatio
+            pageSetupViewController.availableLayouts = ProductManager.shared.currentCoverLayouts()
+        } else {
+            pageSetupViewController.pageSizeRatio = ProductManager.shared.product!.pageSizeRatio
+            pageSetupViewController.availableLayouts = ProductManager.shared.currentLayouts()
+        }
         pageSetupViewController.delegate = self
         present(pageSetupViewController, animated: true, completion: nil)
     }
