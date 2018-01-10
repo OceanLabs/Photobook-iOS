@@ -17,7 +17,7 @@ class AssetSelectorAssetCollectionViewCell: BorderedCollectionViewCell {
             assetImageView.bezierRoundedCorners(withRadius: BorderedCollectionViewCell.cornerRadius)
         }
     }
-    @IBOutlet private weak var badgeBackgroundView: UIView!
+    @IBOutlet private weak var badgeBackgroundView: UIVisualEffectView!
     @IBOutlet private weak var badgeLabel: UILabel!
     
     var assetIdentifier: String!

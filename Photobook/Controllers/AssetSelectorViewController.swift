@@ -27,6 +27,13 @@ class AssetSelectorViewController: UIViewController {
             return [Asset]()
         }
     }
+    private lazy var timesUsed: [String: Int] = {
+        var temp = [String: Int]()
+        for asset in self.assets {
+            temp[asset.identifier] = temp[asset.identifier] != nil ? temp[asset.identifier]! + 1 : 1
+        }
+        return temp
+    }()
     private var selectedAssetIndex = -1
     
     var selectedAssetsManager: SelectedAssetsManager!
@@ -78,7 +85,7 @@ extension AssetSelectorViewController: UICollectionViewDataSource {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AssetSelectorAssetCollectionViewCell.reuseIdentifier, for: indexPath) as! AssetSelectorAssetCollectionViewCell
         cell.isBorderVisible = (selectedAssetIndex == indexPath.row)
-        cell.timesUsed = selectedAssetIndex == indexPath.row ? 1 : 0
+        cell.timesUsed = timesUsed[asset.identifier] ?? 0
         cell.assetIdentifier = asset.identifier
         let itemSize = (collectionView.collectionViewLayout as! UICollectionViewFlowLayout).itemSize
         
@@ -105,8 +112,17 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
         
         guard selectedAssetIndex != indexPath.row else { return }
         
-        selectedAssetIndex = indexPath.row
-        reloadAndCenter()
+        var indicesToReload = [ IndexPath(row: indexPath.row, section: 0) ]
+        
+        if let selectedAsset = selectedAsset {
+            indicesToReload.append(IndexPath(row: selectedAssetIndex, section: 0))
+            timesUsed[selectedAsset.identifier] = timesUsed[selectedAsset.identifier]! - 1
+        }
+        selectedAsset = selectedAssetsManager.selectedAssets[indexPath.row]
+        timesUsed[selectedAsset!.identifier] = timesUsed[selectedAsset!.identifier]! + 1
+        
+        collectionView.reloadItems(at: indicesToReload)
+        collectionView.scrollToItem(at: IndexPath(row: indexPath.row, section: 0), at: .centeredHorizontally, animated: true)
         
         delegate?.didSelect(asset: assets[indexPath.row])
     }
