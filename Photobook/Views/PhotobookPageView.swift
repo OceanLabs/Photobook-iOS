@@ -42,6 +42,7 @@ class PhotobookPageView: UIView {
         
         guard let imageBox = productLayout?.layout.imageLayoutBox else { return }
         assetContainerView.frame = imageBox.rectContained(in: CGSize(width: frame.width, height: frame.height))
+        assetPlaceholderIconImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
     }
     
     private func setup() {
@@ -63,6 +64,7 @@ class PhotobookPageView: UIView {
         }
         assetContainerView.alpha = 1.0
         assetContainerView.frame = imageBox.rectContained(in: CGSize(width: frame.width, height: frame.height))
+        
         guard let asset = productLayout?.productLayoutAsset?.asset else {
             setImagePlaceholder(visible: true)
             return
