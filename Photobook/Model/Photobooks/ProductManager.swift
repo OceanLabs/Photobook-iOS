@@ -132,7 +132,8 @@ class ProductManager {
             // Use first photo for the cover
             let productLayoutAsset = ProductLayoutAsset()
             productLayoutAsset.asset = addedAssets.remove(at: 0)
-            let productLayout = ProductLayout(layout: coverLayouts.first!, productLayoutAsset: productLayoutAsset)
+            let coverLayout = coverLayouts.first(where: { $0.imageLayoutBox != nil } )
+            let productLayout = ProductLayout(layout: coverLayout!, productLayoutAsset: productLayoutAsset)
             tempLayouts.append(productLayout)
             
             // Create layouts for the remaining assets

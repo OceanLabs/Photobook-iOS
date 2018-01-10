@@ -277,7 +277,7 @@ extension PageSetupViewController: AssetSelectorDelegate {
         
         // If the current layout does not have an image box, find the first layout that does and use it
         if productLayout.layout.imageLayoutBox == nil {
-            let defaultLayout = ProductManager.shared.currentLayouts()?.first(where: { $0.imageLayoutBox != nil })
+            let defaultLayout = availableLayouts.first(where: { $0.imageLayoutBox != nil })
             productLayout.layout = defaultLayout
             setupTextBox()
         }

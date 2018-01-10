@@ -40,11 +40,7 @@ class PhotobookPageView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        guard let imageBox = productLayout?.layout.imageLayoutBox else {
-            assetContainerView.alpha = 0.0
-            return
-        }
-        assetContainerView.alpha = 1.0
+        guard let imageBox = productLayout?.layout.imageLayoutBox else { return }
         assetContainerView.frame = imageBox.rectContained(in: CGSize(width: frame.width, height: frame.height))
     }
     
@@ -61,8 +57,16 @@ class PhotobookPageView: UIView {
         }
         isHidden = false
         
-        guard productLayout?.layout.imageLayoutBox != nil,
-            let asset = productLayout?.productLayoutAsset?.asset else { return }
+        guard let imageBox = productLayout?.layout.imageLayoutBox else {
+            assetContainerView.alpha = 0.0
+            return
+        }
+        assetContainerView.alpha = 1.0
+        assetContainerView.frame = imageBox.rectContained(in: CGSize(width: frame.width, height: frame.height))
+        guard let asset = productLayout?.productLayoutAsset?.asset else {
+            setImagePlaceholder(visible: true)
+            return
+        }
         
         asset.image(size: size, completionHandler: { [weak welf = self] (image, _) in
             guard welf?.index == index, let image = image else { return }
