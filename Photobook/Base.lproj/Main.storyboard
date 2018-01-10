@@ -922,7 +922,7 @@
         <!--Modal Albums Collection View Controller-->
         <scene sceneID="B0s-Zk-nrB">
             <objects>
-                <viewController storyboardIdentifier="DraggableModalViewController" modalPresentationStyle="overFullScreen" id="aEA-H0-Uj3" customClass="ModalAlbumsCollectionViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ModalAlbumsCollectionViewController" modalPresentationStyle="overFullScreen" id="aEA-H0-Uj3" customClass="ModalAlbumsCollectionViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="fMB-DX-WcM">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -980,7 +980,7 @@
             <objects>
                 <collectionViewController storyboardIdentifier="AlbumsCollectionViewController" id="dnn-z5-0C4" customClass="AlbumsCollectionViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" id="bn4-uC-JcP">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="706"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="eYK-0U-LrI">
@@ -990,7 +990,7 @@
                             <inset key="sectionInset" minX="20" minY="20" maxX="20" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <activityIndicatorView key="backgroundView" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" id="qvD-qJ-eaZ">
-                            <rect key="frame" x="0.0" y="-64" width="414" height="736"/>
+                            <rect key="frame" x="0.0" y="-64" width="414" height="706"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </activityIndicatorView>
@@ -2143,6 +2143,15 @@
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
                                                 </visualEffectView>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dsP-mR-hcL">
+                                                    <rect key="frame" x="40" y="40" width="18" height="18"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.25132042253521125" colorSpace="calibratedWhite"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                            <real key="value" value="9"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ln9-RM-QIh">
                                                     <rect key="frame" x="40" y="40.333333333333336" width="18" height="18"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="11"/>
@@ -2152,6 +2161,7 @@
                                             </subviews>
                                         </view>
                                         <constraints>
+                                            <constraint firstItem="dsP-mR-hcL" firstAttribute="centerY" secondItem="QBc-eT-zFV" secondAttribute="centerY" id="0Ok-nf-8Nu"/>
                                             <constraint firstAttribute="bottom" secondItem="QBc-eT-zFV" secondAttribute="bottom" constant="6" id="9Uv-9M-dtq"/>
                                             <constraint firstItem="kEv-tO-tiv" firstAttribute="leading" secondItem="Zem-6s-gPy" secondAttribute="leading" id="CNh-M0-tBj"/>
                                             <constraint firstItem="ln9-RM-QIh" firstAttribute="trailing" secondItem="QBc-eT-zFV" secondAttribute="trailing" id="CX5-Jy-P1Z"/>
@@ -2161,7 +2171,10 @@
                                             <constraint firstItem="QBc-eT-zFV" firstAttribute="height" secondItem="ln9-RM-QIh" secondAttribute="height" id="OkQ-Xq-UXl"/>
                                             <constraint firstItem="kEv-tO-tiv" firstAttribute="top" secondItem="Zem-6s-gPy" secondAttribute="top" id="TTu-r1-HjJ"/>
                                             <constraint firstItem="QBc-eT-zFV" firstAttribute="width" secondItem="ln9-RM-QIh" secondAttribute="width" id="Ubh-z4-NZo"/>
+                                            <constraint firstItem="dsP-mR-hcL" firstAttribute="width" secondItem="QBc-eT-zFV" secondAttribute="width" id="a5K-BT-ZOQ"/>
                                             <constraint firstAttribute="trailing" secondItem="kEv-tO-tiv" secondAttribute="trailing" id="aUV-51-p3i"/>
+                                            <constraint firstItem="dsP-mR-hcL" firstAttribute="centerX" secondItem="QBc-eT-zFV" secondAttribute="centerX" id="iTb-3o-5jA"/>
+                                            <constraint firstItem="dsP-mR-hcL" firstAttribute="height" secondItem="QBc-eT-zFV" secondAttribute="height" id="l0y-MF-EAb"/>
                                             <constraint firstItem="ln9-RM-QIh" firstAttribute="bottom" secondItem="QBc-eT-zFV" secondAttribute="bottom" id="vfd-9b-MXY"/>
                                         </constraints>
                                         <connections>
@@ -2245,6 +2258,6 @@
         <image name="selectPhoto_on" width="29" height="29"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="MX7-xb-oNn"/>
+        <segue reference="2oC-kh-DmB"/>
     </inferredMetricsTieBreakers>
 </document>

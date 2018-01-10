@@ -59,11 +59,7 @@ class AssetSelectorViewController: UIViewController {
     private func reloadAndCenter() {
         collectionView.reloadData()
         let itemToScrollTo = selectedAssetIndex >= 0 ? selectedAssetIndex : 0
-        collectionView.scrollToItem(at: IndexPath(row: itemToScrollTo, section: 0), at: .centeredHorizontally, animated: true)
-    }
-    
-    @objc private func changedCollectedAssets() {
-        
+        collectionView.scrollToItem(at: IndexPath(row: itemToScrollTo, section: 0), at: .centeredHorizontally, animated: false)
     }
 }
 
@@ -102,11 +98,11 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == assets.count {
-            let draggableModalViewController = storyboard?.instantiateViewController(withIdentifier: "DraggableModalViewController") as! ModalAlbumsCollectionViewController
-            draggableModalViewController.albumManager = PhotosAlbumManager() // FIXME: Could be a different source
-            draggableModalViewController.addingDelegate = self
+            let modalAlbumsCollectionViewController = storyboard?.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
+            modalAlbumsCollectionViewController.albumManager = PhotosAlbumManager() // FIXME: Could be a different source
+            modalAlbumsCollectionViewController.addingDelegate = self
             
-            present(draggableModalViewController, animated: false, completion: nil)
+            present(modalAlbumsCollectionViewController, animated: false, completion: nil)
             return
         }
         
