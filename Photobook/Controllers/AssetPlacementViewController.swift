@@ -105,8 +105,8 @@ class AssetPlacementViewController: UIViewController {
     
     private func setUpLayoutImageBox(withRatio ratio: CGFloat) {
         // Calculate new container size
-        var width: CGFloat!
-        var height: CGFloat!
+        var width: CGFloat
+        var height: CGFloat
         let maxWidth = assetEditingAreaView.bounds.width - Constants.sideMargins * 2.0
 
         if ratio < 1.0 { // Landscape
