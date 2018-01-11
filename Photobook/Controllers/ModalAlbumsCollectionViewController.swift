@@ -82,7 +82,6 @@ class ModalAlbumsCollectionViewController: UIViewController {
             navigationBar.addSubview(downwardArrowButton)
             
             let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didPanOnNavigationBar(_:)))
-            panGestureRecognizer.cancelsTouchesInView = false
             navigationBar.addGestureRecognizer(panGestureRecognizer)
 
             let albumsCollectionViewController = rootNavigationController.viewControllers.first as! AlbumsCollectionViewController
