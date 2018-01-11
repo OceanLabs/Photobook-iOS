@@ -162,8 +162,8 @@ class AssetPlacementViewController: UIViewController {
     }
     
     // MARK: User interaction
-    var initialTransform: CGAffineTransform?
-    var gestures = Set<UIGestureRecognizer>(minimumCapacity: 3)
+    private var initialTransform: CGAffineTransform?
+    private var gestures = Set<UIGestureRecognizer>(minimumCapacity: 3)
 
     private func startedRotationGesture(_ gesture: UIRotationGestureRecognizer, inView view: UIView) {
         let location = gesture.location(in: view)
