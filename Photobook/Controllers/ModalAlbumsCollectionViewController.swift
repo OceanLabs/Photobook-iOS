@@ -91,11 +91,11 @@ class ModalAlbumsCollectionViewController: UIViewController {
         }
     }
     
-    @IBAction func didSwipeOnNavigationBar(_ gesture: UISwipeGestureRecognizer) {
+    @IBAction private func didSwipeOnNavigationBar(_ gesture: UISwipeGestureRecognizer) {
         animateContainerViewOffScreen()
     }
     
-    @IBAction func didPanOnNavigationBar(_ gesture: UIPanGestureRecognizer) {
+    @IBAction private func didPanOnNavigationBar(_ gesture: UIPanGestureRecognizer) {
         switch gesture.state {
         case .began:
             previousOffset = 0.0
@@ -145,7 +145,7 @@ class ModalAlbumsCollectionViewController: UIViewController {
         })
     }
     
-    @IBAction func didTapOnArrowButton(_ sender: UIButton) {
+    @IBAction private func didTapOnArrowButton(_ sender: UIButton) {
         animateContainerViewOffScreen()
     }
 }
