@@ -43,23 +43,19 @@ class AssetSelectorViewController: UIViewController {
         didSet {
             guard selectedAsset != nil else {
                 selectedAssetIndex = -1
-                reloadAndCenter()
+                collectionView.reloadData()
+                collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
                 return
             }
             selectedAssetIndex = assets.index { $0.identifier == selectedAsset!.identifier } ?? -1
-            reloadAndCenter()
+            if oldValue == nil { collectionView.reloadData() }
+            collectionView.scrollToItem(at: IndexPath(row: selectedAssetIndex, section: 0), at: .centeredHorizontally, animated: true)
         }
     }
     var browseNavigationController: UINavigationController!
     
     deinit {
         NotificationCenter.default.removeObserver(self)
-    }
-    
-    private func reloadAndCenter() {
-        collectionView.reloadData()
-        let itemToScrollTo = selectedAssetIndex >= 0 ? selectedAssetIndex : 0
-        collectionView.scrollToItem(at: IndexPath(row: itemToScrollTo, section: 0), at: .centeredHorizontally, animated: false)
     }
 }
 
@@ -114,12 +110,12 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
             indicesToReload.append(IndexPath(row: selectedAssetIndex, section: 0))
             timesUsed[selectedAsset.identifier] = timesUsed[selectedAsset.identifier]! - 1
         }
+
         selectedAsset = selectedAssetsManager.selectedAssets[indexPath.row]
         timesUsed[selectedAsset!.identifier] = timesUsed[selectedAsset!.identifier]! + 1
-        
+
         collectionView.reloadItems(at: indicesToReload)
-        collectionView.scrollToItem(at: IndexPath(row: indexPath.row, section: 0), at: .centeredHorizontally, animated: true)
-        
+
         delegate?.didSelect(asset: assets[indexPath.row])
     }
 }
