@@ -22,12 +22,7 @@ class PhotobookViewController: UIViewController {
     @IBOutlet weak var collectionViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var collectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var collectionViewBottomConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var collectionView: UICollectionView! {
-        didSet{
-            (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize = UICollectionViewFlowLayoutAutomaticSize
-            (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.estimatedItemSize = CGSize(width: 100, height: 100)
-        }
-    }
+    @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var ctaButtonContainer: UIView!
     var selectedAssetsManager: SelectedAssetsManager?
     private var titleButton = UIButton()
@@ -293,18 +288,11 @@ class PhotobookViewController: UIViewController {
                 return
         }
         
-        // Update the estimated item size so that the inserted cell has the right size during the insert animation
-        guard let size = collectionView.visibleCells.first?.frame.size else { return }
-        (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.estimatedItemSize = CGSize(width: size.width, height: size.width * (32.0/406.0))
-        
         // Delete any existing proposal and insert the new one
         collectionView.performBatchUpdates({
             deleteProposalCell(enableFeedback: false)
             insertProposalCell(proposedIndexPath)
-        }, completion: { _ in
-            // Restore the proper estimated size
-            (self.collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.estimatedItemSize = size
-        })
+        }, completion: nil)
         
         
     }
@@ -403,10 +391,6 @@ extension PhotobookViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "coverCell", for: indexPath) as? PhotobookCoverCollectionViewCell
                 else { return UICollectionViewCell() }
             
-            if let photobook = ProductManager.shared.product{
-                cell.configurePageAspectRatio(photobook.coverSizeRatio)
-            }
-            
             cell.leftPageView.productLayout = ProductManager.shared.productLayouts[0]
             cell.leftPageView.delegate = self
             cell.leftPageView.load(size: imageSize)
@@ -419,13 +403,8 @@ extension PhotobookViewController: UICollectionViewDataSource {
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "doublePageCell", for: indexPath) as! PhotobookCollectionViewCell
             
-            cell.widthConstraint.constant = view.bounds.size.width - Constants.cellSideMargin * 2.0
             cell.obscuringView.isHidden = indexPath != interactingItemIndexPath
             cell.delegate = self
-            
-            if let photobook = ProductManager.shared.product{
-                cell.configurePageAspectRatio(photobook.pageSizeRatio)
-            }
 
             cell.rightPageView?.delegate = self
             cell.leftPageView.delegate = self
@@ -472,7 +451,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
     
 }
 
-extension PhotobookViewController: UICollectionViewDelegate {
+extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     // MARK: UICollectionViewDelegate
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -506,6 +485,19 @@ extension PhotobookViewController: UICollectionViewDelegate {
         
         UIMenuController.shared.menuItems = menuItems
         UIMenuController.shared.setMenuVisible(true, animated: true)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        guard let product = ProductManager.shared.product else { return .zero }
+        
+        if indexPath == proposedDropIndexPath, let size = collectionView.visibleCells.first?.frame.size {
+            return CGSize(width: size.width, height: size.width * (32.0/406.0))
+        } else {
+            // TODO: Change this when we have a way to generate the book backgrounds.
+            // ie, use the proper margins if it's dynamic or if we're using images, use the image dimensions
+            let width = view.frame.size.width - 20
+            return CGSize(width: width, height: width / (product.pageSizeRatio * 2.0))
+        }
     }
     
 }
