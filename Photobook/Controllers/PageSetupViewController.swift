@@ -109,6 +109,7 @@ class PageSetupViewController: UIViewController {
         layoutSelectionViewController.pageSizeRatio = pageSizeRatio
         layoutSelectionViewController.asset = productLayout.asset
         layoutSelectionViewController.layouts = availableLayouts
+        layoutSelectionViewController.selectedLayout = productLayout!.layout
     }
     
     // MARK: - Navigation

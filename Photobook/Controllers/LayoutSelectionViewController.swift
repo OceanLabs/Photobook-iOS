@@ -60,12 +60,14 @@ class LayoutSelectionViewController: UIViewController {
     }
     
     var selectedLayoutIndex = 0
+    var selectedLayout: Layout! {
+        didSet {
+            self.selectedLayoutIndex = self.layouts.index(of: selectedLayout) ?? 0
+            self.collectionView.scrollToItem(at: IndexPath(row: selectedLayoutIndex, section: 0), at: .centeredHorizontally, animated: true)
+        }
+    }
     
     weak var delegate: LayoutSelectionViewControllerDelegate?
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
 }
 
 extension LayoutSelectionViewController: UICollectionViewDataSource {
@@ -116,6 +118,7 @@ extension LayoutSelectionViewController: UICollectionViewDelegate {
         let layout = layouts[indexPath.row]
         selectedLayoutIndex = indexPath.row
         collectionView.reloadData()
+        collectionView.scrollToItem(at: IndexPath(row: selectedLayoutIndex, section: 0), at: .centeredHorizontally, animated: true)
         delegate?.didSelectLayout(layout)
     }
 }
