@@ -257,14 +257,14 @@ class PhotobookViewController: UIViewController {
         guard let draggingView = draggingView, sender.state == .changed else { return }
         
         let translation = sender.translation(in: view)
-        draggingView.transform = CGAffineTransform(translationX: translation.x, y: translation.y).scaledBy(x: 1.1, y: 1.1)
+        draggingView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1).translatedBy(x: translation.x, y: translation.y)
         
-        let dragPointOnCollectionView = CGPoint(x: collectionView.frame.size.width / 2.0, y: sender.location(in: view).y)
+        let dragPointOnCollectionView = CGPoint(x: collectionView.frame.size.width / 2.0, y: sender.location(in: collectionView).y)
         guard let indexPathForDragPoint = collectionView.indexPathForItem(at: dragPointOnCollectionView),
             let cell = collectionView.cellForItem(at: indexPathForDragPoint),
             let interactingItemIndexPath = interactingItemIndexPath
             else { return }
-        let dragPointOnCell = view.convert(dragPointOnCollectionView, to: cell)
+        let dragPointOnCell = collectionView.convert(dragPointOnCollectionView, to: cell)
         
         let proposedIndexPath: IndexPath
         if dragPointOnCell.y > cell.frame.size.height / 2.0 {
@@ -282,7 +282,8 @@ class PhotobookViewController: UIViewController {
         guard proposedIndexPath != interactingItemIndexPath, // back to the where we picked it up
             proposedIndexPath.item != 0, // at the first page or cover
             proposedIndexPath.section != 0, // at the cover
-            proposedIndexPath.item != interactingItemIndexPath.item + 1 // just below of where we picked up
+            proposedIndexPath.item != interactingItemIndexPath.item + 1, // just below of where we picked up
+            proposedIndexPath.item < collectionView.numberOfItems(inSection: proposedIndexPath.section) // out of bounds
             else {
                 deleteProposalCell(enableFeedback: true)
                 return
@@ -313,28 +314,68 @@ class PhotobookViewController: UIViewController {
         collectionView.insertItems(at: [indexPath])
         
         let generator = UIImpactFeedbackGenerator(style: .medium)
-        generator.impactOccurred()
-        
-        print(proposedDropIndexPath!)
+        generator.impactOccurred()        
     }
     
     func dropView() {
-        guard let indexPath = proposedDropIndexPath ?? interactingItemIndexPath,
+        guard let sourceIndexPath = interactingItemIndexPath,
             let draggingView = self.draggingView
             else { return }
         
-        let cell = collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell
+        let sourceCell = (collectionView.cellForItem(at: sourceIndexPath) as? PhotobookCollectionViewCell)
+        
+        let destinationIndexPath = proposedDropIndexPath ?? sourceIndexPath
+        let movingDown = sourceIndexPath.item < destinationIndexPath.item
+        guard let destinationCell = collectionView.cellForItem(at: IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 0), section: destinationIndexPath.section)) else { return }
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
             draggingView.transform = CGAffineTransform(translationX: draggingView.transform.tx, y: draggingView.transform.ty)
-            draggingView.frame.origin = self.collectionView.convert(cell!.frame, to: self.view).origin
+            draggingView.frame.origin = self.collectionView.convert(destinationCell.frame, to: self.view).origin
             draggingView.layer.shadowRadius = 0
             draggingView.layer.shadowOpacity = 0
         }, completion: { _ in
-            cell?.obscuringView.isHidden = true
+            // Unhide the book if we're returning to the original position
+            sourceCell?.obscuringView.isHidden = true
+            
             draggingView.removeFromSuperview()
             self.draggingView = nil
-            self.proposedDropIndexPath = nil
+            self.interactingItemIndexPath = nil
         })
+        
+        if destinationIndexPath != sourceIndexPath,
+            let sourceProductLayout = sourceCell?.bookView.leftPageView.productLayout,
+            var sourceProductLayoutIndex = ProductManager.shared.productLayouts.index(where: { $0 === sourceProductLayout }){
+            
+            // Because we show a placeholder graphic where the drop proposal is, we get the destination index from the previous page
+            let previousIndexPath = IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 1), section: destinationIndexPath.section)
+            let previousCell = (collectionView.cellForItem(at: previousIndexPath) as? PhotobookCollectionViewCell)
+            
+            guard let destinationProductLayoutIndex = previousCell?.leftPageView?.index ?? previousCell?.rightPageView?.index else { return }
+            
+            // Depending of if we're moving up or down, we will have to move either the left layout first or the second so that we don't mess up the indexes
+            if  movingDown{
+                if !sourceProductLayout.layout.isDoubleLayout {
+                    ProductManager.shared.productLayouts.move(sourceProductLayoutIndex + 1, destinationProductLayoutIndex + 1)
+                }
+                ProductManager.shared.productLayouts.move(sourceProductLayoutIndex, destinationProductLayoutIndex)
+            }
+            else {
+                sourceProductLayoutIndex += movingDown ? 0 : (previousCell?.leftPageView.productLayout?.layout.isDoubleLayout ?? false) ? 1 : 2
+                ProductManager.shared.productLayouts.move(sourceProductLayoutIndex, destinationProductLayoutIndex)
+                if !sourceProductLayout.layout.isDoubleLayout {
+                    ProductManager.shared.productLayouts.move(sourceProductLayoutIndex + 1, destinationProductLayoutIndex + 1)
+                }
+            }
+            
+            self.interactingItemIndexPath = nil
+            
+            collectionView.performBatchUpdates({
+                collectionView.insertItems(at: [IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 0), section: destinationIndexPath.section)])
+                deleteProposalCell(enableFeedback: false)
+                if sourceCell != nil, let indexPath = collectionView.indexPath(for: sourceCell!){
+                    collectionView.deleteItems(at: [IndexPath(item: indexPath.item + (movingDown ? 0 : 1), section: indexPath.section)])
+                }
+            }, completion: nil)
+        }
     }
     
     func liftView(_ bookView: PhotobookView) {
