@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Photos
 
 protocol PageSetupDelegate: class {
     func didFinishEditingPage(_ index: Int, productLayout: ProductLayout, saving: Bool)
