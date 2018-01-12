@@ -17,7 +17,8 @@ class ModalAlbumsCollectionViewController: UIViewController {
     private struct Constants {
         static let topMargin: CGFloat = 10.0
         static let borderCornerRadius: CGFloat = 10.0
-        static let distanceToTriggerSwipe: CGFloat = 20.0
+        static let velocityToTriggerSwipe: CGFloat = 50.0
+        static let velocityForFastDismissal: CGFloat = 1000.0
         static let screenThresholdToDismiss: CGFloat = 3.0 // A third of the height
     }
     @IBOutlet private weak var containerView: UIView!
@@ -26,7 +27,6 @@ class ModalAlbumsCollectionViewController: UIViewController {
     private var rootNavigationController: UINavigationController!
     private var downwardArrowButton: UIButton!
     private var hasAppliedMask = false
-    private var previousOffset: CGFloat = 0.0
     
     var collectorMode: AssetCollectorMode = .adding
     var albumManager: AlbumManager?
@@ -39,7 +39,7 @@ class ModalAlbumsCollectionViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
+        super.viewDidAppear(animated)
         
         containerViewTopMarginConstraint.constant = Constants.topMargin
         UIView.animate(withDuration: 0.3) {
@@ -97,47 +97,35 @@ class ModalAlbumsCollectionViewController: UIViewController {
     
     @IBAction private func didPanOnNavigationBar(_ gesture: UIPanGestureRecognizer) {
         switch gesture.state {
-        case .began:
-            previousOffset = 0.0
-            break
         case .changed:
             let deltaY = gesture.translation(in: view).y
-            
-            if deltaY - previousOffset > Constants.distanceToTriggerSwipe {
-                gesture.isEnabled = false
-                animateContainerViewOffScreen()
-                return
-            }
-
             if deltaY <= 0.0 {
                 containerViewTopMarginConstraint.constant = Constants.topMargin
                 return
-            } else if deltaY >= view.bounds.height / Constants.screenThresholdToDismiss {
-                gesture.isEnabled = false
-                animateContainerViewOffScreen()
-                return
             }
             containerViewTopMarginConstraint.constant = Constants.topMargin + deltaY
-            previousOffset = deltaY
         case .ended:
             let deltaY = gesture.translation(in: view).y
-            gesture.setTranslation(.zero, in: view)
+            let velocityY = gesture.velocity(in: view).y
             
-            if deltaY > 0.0 {
-                containerViewTopMarginConstraint.constant = Constants.topMargin
-                UIView.animate(withDuration: 0.1, animations: {
-                    self.view.layoutIfNeeded()
-                })
+            let belowThreshold = deltaY >= view.bounds.height / Constants.screenThresholdToDismiss
+            if  belowThreshold || velocityY > Constants.velocityToTriggerSwipe {
+                let duration = belowThreshold || velocityY > Constants.velocityForFastDismissal ? 0.2 : 0.4
+                animateContainerViewOffScreen(duration: duration)
+                return
             }
-            gesture.isEnabled = true
+            containerViewTopMarginConstraint.constant = Constants.topMargin
+            UIView.animate(withDuration: 0.1, delay: 0.0, options: [.beginFromCurrentState, .curveEaseOut], animations: {
+                self.view.layoutIfNeeded()
+            }, completion: nil)
         default:
             break
         }
     }
     
-    private func animateContainerViewOffScreen(adding assets: [Asset]? = nil) {
+    private func animateContainerViewOffScreen(duration: TimeInterval = 0.4, adding assets: [Asset]? = nil) {
         containerViewTopMarginConstraint.constant = view.bounds.height
-        UIView.animate(withDuration: 0.3, animations: {
+        UIView.animate(withDuration: duration, delay: 0.0, options: [.beginFromCurrentState, .curveEaseOut], animations: {
             self.view.backgroundColor = .clear
             self.view.layoutIfNeeded()
         }, completion: { _ in
