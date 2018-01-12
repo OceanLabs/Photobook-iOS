@@ -1,5 +1,5 @@
 //
-//  PhotoBookNavigationBar.swift
+//  PhotobookNavigationBar.swift
 //  Photobook
 //
 //  Created by Jaime Landazuri on 09/11/2017.
