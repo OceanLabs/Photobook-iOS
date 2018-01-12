@@ -29,7 +29,9 @@ class AssetSelectorViewController: UIViewController {
     }
     private lazy var timesUsed: [String: Int] = {
         var temp = [String: Int]()
-        for asset in self.assets {
+        
+        for layout in ProductManager.shared.productLayouts {
+            guard let asset = layout.asset else { continue }
             temp[asset.identifier] = temp[asset.identifier] != nil ? temp[asset.identifier]! + 1 : 1
         }
         return temp
@@ -42,6 +44,9 @@ class AssetSelectorViewController: UIViewController {
     var selectedAsset: Asset? {
         didSet {
             guard selectedAsset != nil else {
+                if let previousAsset = oldValue, timesUsed[previousAsset.identifier] != nil {
+                    timesUsed[previousAsset.identifier] = timesUsed[previousAsset.identifier]! - 1
+                }
                 selectedAssetIndex = -1
                 collectionView.reloadData()
                 collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
@@ -76,8 +81,8 @@ extension AssetSelectorViewController: UICollectionViewDataSource {
         let asset = assets[indexPath.row]
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AssetSelectorAssetCollectionViewCell.reuseIdentifier, for: indexPath) as! AssetSelectorAssetCollectionViewCell
-        cell.isBorderVisible = (selectedAssetIndex == indexPath.row)
-        cell.timesUsed = timesUsed[asset.identifier] ?? 0
+        cell.isBorderVisible = selectedAssetIndex == indexPath.row
+        cell.timesUsed = (timesUsed[asset.identifier] ?? 0)
         cell.assetIdentifier = asset.identifier
         let itemSize = (collectionView.collectionViewLayout as! UICollectionViewFlowLayout).itemSize
         

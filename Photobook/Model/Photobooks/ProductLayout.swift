@@ -21,7 +21,7 @@ class ProductLayout: Codable {
             return productLayoutAsset?.asset
         }
         set {
-            guard layout.imageLayoutBox != nil else {
+            guard layout.imageLayoutBox != nil || newValue == nil else {
                 print("ProductLayout: Trying to assign asset to unavailable container")
                 return
             }

@@ -213,6 +213,10 @@ class PageSetupViewController: UIViewController {
     }
     
     @IBAction func tappedDoneButton(_ sender: UIBarButtonItem) {
+        if productLayout.layout.imageLayoutBox == nil {
+            // Remove the asset if the layout doesn't have an image box
+            productLayout.asset = nil
+        }
         delegate?.didFinishEditingPage(pageIndex, productLayout: productLayout, saving: true)
     }
     
@@ -280,6 +284,7 @@ extension PageSetupViewController: AssetSelectorDelegate {
             let defaultLayout = availableLayouts.first(where: { $0.imageLayoutBox != nil })
             productLayout.layout = defaultLayout
             setupTextBox()
+            layoutSelectionViewController.selectedLayout = productLayout.layout
         }
         setupImageBox()
     }    
