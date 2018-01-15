@@ -54,7 +54,9 @@ class AssetSelectorViewController: UIViewController {
             }
             selectedAssetIndex = assets.index { $0.identifier == selectedAsset!.identifier } ?? -1
             if oldValue == nil { collectionView.reloadData() }
-            collectionView.scrollToItem(at: IndexPath(row: selectedAssetIndex, section: 0), at: .centeredHorizontally, animated: true)
+            if collectionView.numberOfItems(inSection: 0) > selectedAssetIndex && selectedAssetIndex >= 0 {
+                collectionView.scrollToItem(at: IndexPath(row: selectedAssetIndex, section: 0), at: .centeredHorizontally, animated: true)
+            }
         }
     }
     var browseNavigationController: UINavigationController!

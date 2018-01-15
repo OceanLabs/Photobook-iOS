@@ -46,12 +46,6 @@ class PhotobookPageView: UIView {
     }
     
     private func setup() {
-        backgroundColor = .white
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        addSubview(imageView)
-        imageView.backgroundColor = UIColor(red:0.92, green:0.92, blue:0.92, alpha:1)
         tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapOnPage(_:)))
         addGestureRecognizer(tapGesture)
     }
@@ -84,8 +78,11 @@ class PhotobookPageView: UIView {
     }
     
     func setImage(image: UIImage?) {
-        guard let image = image, let asset = productLayout?.productLayoutAsset?.asset else {
-            setImagePlaceholder(visible: true)
+        guard let image = image,
+            let asset = productLayout?.productLayoutAsset?.asset,
+            (asset as? PlaceholderAsset) == nil
+            else {
+                setImagePlaceholder(visible: true)
             return
         }
         

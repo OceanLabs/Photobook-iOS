@@ -38,15 +38,15 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
     weak var delegate: PhotobookCollectionViewCellDelegate?
     
     @IBAction func didTapPlus(_ sender: UIButton) {
-        guard let productLayout = leftPageView.productLayout ?? rightPageView?.productLayout,
-            let foldIndex = ProductManager.shared.foldIndex(for: productLayout)
+        guard let layoutIndex = leftPageView.index ?? rightPageView?.index,
+            let foldIndex = ProductManager.shared.foldIndex(for: layoutIndex)
             else { return }
         delegate?.didTapOnPlusButton(at: foldIndex)
     }
     
     func setIsRearranging(_ isRearranging: Bool) {
-        leftPageView.tapGesture.isEnabled = !isRearranging
-        rightPageView?.tapGesture.isEnabled = !isRearranging
+        leftPageView.isUserInteractionEnabled = !isRearranging
+        rightPageView?.isUserInteractionEnabled = !isRearranging
     }
 }
 

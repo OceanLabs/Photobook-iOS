@@ -345,23 +345,39 @@ class ProductManager {
         }
     }
     
-    func foldIndex(for productLayout: ProductLayout) -> Int? {
-        var index = 0.5 // The first page is on the right because of the courtesy page
-        for layout in productLayouts {
-            if layout === productLayout {
-                return Int(index)
+    func foldIndex(for productLayoutIndex: Int) -> Int? {
+        var foldIndex = 0.5 // The first page is on the right because of the courtesy page
+        
+        var i = 0
+        while i < productLayouts.count {
+            if i == productLayoutIndex {
+                return Int(foldIndex)
             }
             
-            index += layout.layout.isDoubleLayout ? 1 : 0.5
+            foldIndex += productLayouts[i].layout.isDoubleLayout ? 1 : 0.5
+            i += 1
         }
         
         return nil
     }
     
-    func addPages(above productLayout: ProductLayout, pages: [ProductLayout]? = nil) {
+    func productLayoutIndex(for foldIndex: Int) -> Int? {
+        var foldIndexCount = 1 // Skip the first fold which includes the courtesy page
+        var i = 2 // Skip the cover and the page on the first fold
+        while i < productLayouts.count {
+            if foldIndex == foldIndexCount {
+                return i
+            }
+            i += productLayouts[i].layout.isDoubleLayout ? 1 : 2
+            foldIndexCount += 1
+        }
+        
+        return nil
+    }
+    
+    func addPages(at index: Int, pages: [ProductLayout]? = nil) {
         guard let product = product,
-            let layouts = layouts(for: product),
-            let index = productLayouts.index(where: { $0 === productLayout })
+            let layouts = layouts(for: product)
             else { return }
         let newProductLayouts = pages ?? createLayoutsForAssets(assets: [PlaceholderAsset(), PlaceholderAsset()], from: layouts)
         

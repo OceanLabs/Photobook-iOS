@@ -196,8 +196,10 @@ class PhotobookViewController: UIViewController {
     @objc func copyPages() {
         guard let indexPath = interactingItemIndexPath,
             let cell = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell),
-            let leftProductLayout = cell.leftPageView.productLayout
+            let leftIndex = cell.leftPageView.index
             else { return }
+        
+        let leftProductLayout = ProductManager.shared.productLayouts[leftIndex]
         
         let pasteBoard = UIPasteboard(name: UIPasteboardName("ly.kite.photobook.rearrange"), create: true)
         
@@ -206,7 +208,8 @@ class PhotobookViewController: UIViewController {
         }
         pasteBoard?.setItems([["ly.kite.photobook.productLayout" : leftData]])
         
-        if let rightProductLayout = cell.rightPageView?.productLayout {
+        if let rightIndex = cell.rightPageView?.index {
+            let rightProductLayout = rightIndex
             guard let rightData = try? PropertyListEncoder().encode(rightProductLayout) else {
                 fatalError("Photobook: encoding of product layout failed")
             }
@@ -229,21 +232,23 @@ class PhotobookViewController: UIViewController {
             productLayouts.append(rightProductLayout)
         }
         
-        guard let productLayout = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftPageView.productLayout else { return }
-        
+        guard let index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftPageView.index else { return }
+                
         // Need to clear the interacting index path before reloading or the pages will apear blank
         interactingItemIndexPath = nil
         
         // Insert new page above the tapped one
-        ProductManager.shared.addPages(above: productLayout, pages: productLayouts)
+        ProductManager.shared.addPages(at: index, pages: productLayouts)
         collectionView.insertItems(at: [indexPath])
         updateVisibleCells()
     }
     
     @objc func deletePages() {
         guard let indexPath = interactingItemIndexPath,
-            let productLayout = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftPageView.productLayout
+            let index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftPageView.index
             else { return }
+        
+        let productLayout = ProductManager.shared.productLayouts[index]
         
         ProductManager.shared.deletePage(at: productLayout)
         collectionView.deleteItems(at: [indexPath])
@@ -357,8 +362,9 @@ class PhotobookViewController: UIViewController {
         })
         
         if destinationIndexPath != sourceIndexPath,
-            let sourceProductLayout = sourceCell?.bookView.leftPageView.productLayout,
-            var sourceProductLayoutIndex = ProductManager.shared.productLayouts.index(where: { $0 === sourceProductLayout }){
+            var sourceProductLayoutIndex = sourceCell?.bookView.leftPageView.index{
+            
+            let sourceProductLayout = ProductManager.shared.productLayouts[sourceProductLayoutIndex]
             
             // Because we show a placeholder graphic where the drop proposal is, we get the destination index from the previous page
             let previousIndexPath = IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 1), section: destinationIndexPath.section)
@@ -374,7 +380,13 @@ class PhotobookViewController: UIViewController {
                 ProductManager.shared.productLayouts.move(sourceProductLayoutIndex, destinationProductLayoutIndex)
             }
             else {
-                sourceProductLayoutIndex += movingDown ? 0 : (previousCell?.leftPageView.productLayout?.layout.isDoubleLayout ?? false) ? 1 : 2
+                if let previousCellIndex = previousCell?.leftPageView.index, ProductManager.shared.productLayouts[previousCellIndex].layout.isDoubleLayout {
+                    sourceProductLayoutIndex += 1
+                }
+                else {
+                    sourceProductLayoutIndex += 2
+                }
+                
                 ProductManager.shared.productLayouts.move(sourceProductLayoutIndex, destinationProductLayoutIndex)
                 if !sourceProductLayout.layout.isDoubleLayout {
                     ProductManager.shared.productLayouts.move(sourceProductLayoutIndex + 1, destinationProductLayoutIndex + 1)
@@ -389,13 +401,15 @@ class PhotobookViewController: UIViewController {
                 if sourceCell != nil, let indexPath = collectionView.indexPath(for: sourceCell!){
                     collectionView.deleteItems(at: [IndexPath(item: indexPath.item + (movingDown ? 0 : 1), section: indexPath.section)])
                 }
-            }, completion: nil)
+            }, completion: { _ in
+                self.updateVisibleCellIndexes()
+            })
         }
     }
     
     func liftView(_ bookView: PhotobookView) {
-        guard let productLayout = bookView.leftPageView.productLayout,
-            let foldIndex = ProductManager.shared.foldIndex(for: productLayout),
+        guard let productLayoutIndex = bookView.leftPageView.index,
+            let foldIndex = ProductManager.shared.foldIndex(for: productLayoutIndex),
             foldIndex != collectionView.numberOfItems(inSection: 1) - 1
             else { return }
         
@@ -414,6 +428,18 @@ class PhotobookViewController: UIViewController {
         }, completion: { _ in
             (self.collectionView.cellForItem(at: IndexPath(item: foldIndex, section: 1)) as? PhotobookCollectionViewCell)?.obscuringView.isHidden = false
         })
+    }
+    
+    func updateVisibleCellIndexes() {
+        for cell in collectionView.visibleCells {
+            guard let indexPath = collectionView.indexPath(for: cell),
+                let productLayoutIndex = ProductManager.shared.productLayoutIndex(for: indexPath.item),
+                let cell = cell as? PhotobookCollectionViewCell
+                else { continue }
+            
+            cell.leftPageView.index = productLayoutIndex
+            cell.rightPageView?.index = productLayoutIndex + 1
+        }
     }
 }
 
@@ -447,10 +473,6 @@ extension PhotobookViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "coverCell", for: indexPath) as? PhotobookCoverCollectionViewCell
                 else { return UICollectionViewCell() }
             
-            if let photobook = ProductManager.shared.product{
-                cell.configurePageAspectRatio(photobook.coverSizeRatio)
-            }
-            
             cell.leftPageView.index = 0
             cell.leftPageView.delegate = self
             cell.leftPageView.load(size: imageSize)
@@ -480,9 +502,10 @@ extension PhotobookViewController: UICollectionViewDataSource {
                 cell.rightPageView?.index = nil
                 cell.plusButton.isHidden = false
             default:
-                cell.leftPageView.productLayout = ProductManager.shared.productLayouts[indexPath.item * 2]
+                guard let index = ProductManager.shared.productLayoutIndex(for: indexPath.item) else { return cell }
+                cell.leftPageView.index = index
                 if indexPath.item * 2 + 1 < ProductManager.shared.productLayouts.count {
-                    cell.rightPageView?.productLayout = ProductManager.shared.productLayouts[indexPath.item * 2 + 1]
+                    cell.rightPageView?.index = index + 1
                 }
                 cell.plusButton.isHidden = false
                 
@@ -600,10 +623,10 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
     func didTapOnPlusButton(at foldIndex: Int) {
         let indexPath = IndexPath(item: foldIndex, section: 1)
         
-        guard let productLayout = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftPageView.productLayout else { return }
+        guard let index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftPageView.index else { return }
         
         // Insert new page above the tapped one
-        ProductManager.shared.addPages(above: productLayout)
+        ProductManager.shared.addPages(at: index)
         collectionView.insertItems(at: [indexPath])
     }
 }
