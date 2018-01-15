@@ -38,7 +38,9 @@ class PhotobookViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.largeTitleDisplayMode = .never
+        if #available(iOS 11.0, *) {
+            navigationItem.largeTitleDisplayMode = .never
+        }
         
         // Remove pasteboard so that we avoid edge-cases with stale or inconsistent data
         UIPasteboard.remove(withName: UIPasteboardName("ly.kite.photobook.rearrange"))
@@ -58,7 +60,14 @@ class PhotobookViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        let bottomInset = isRearranging ? (ctaButtonContainer.frame.size.height - view.safeAreaInsets.bottom) * reverseRearrageScale : ctaButtonContainer.frame.size.height - view.safeAreaInsets.bottom - collectionViewBottomConstraint.constant
+        let insets: UIEdgeInsets
+        if #available(iOS 11.0, *) {
+            insets = view.safeAreaInsets
+        } else {
+            insets = .zero
+        }
+        
+        let bottomInset = isRearranging ? (ctaButtonContainer.frame.size.height - insets.bottom) * reverseRearrageScale : ctaButtonContainer.frame.size.height - insets.bottom - collectionViewBottomConstraint.constant
         
         let topInset = isRearranging ? (navigationController?.navigationBar.frame.maxY ?? 0) * (1 - Constants.rearrageScale) : 0
                 

@@ -45,7 +45,6 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
     }
     
     func setIsRearranging(_ isRearranging: Bool) {
-        (bookView.interactions.first as? UIDragInteraction)?.isEnabled = isRearranging
         leftPageView.tapGesture.isEnabled = !isRearranging
         rightPageView?.tapGesture.isEnabled = !isRearranging
     }
