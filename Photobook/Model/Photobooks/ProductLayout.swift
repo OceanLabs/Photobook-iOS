@@ -21,12 +21,12 @@ class ProductLayout: Codable {
             return productLayoutAsset?.asset
         }
         set {
-            guard layout.imageLayoutBox != nil else {
+            guard layout.imageLayoutBox != nil || newValue == nil else {
                 print("ProductLayout: Trying to assign asset to unavailable container")
                 return
             }
             if productLayoutAsset == nil { productLayoutAsset = ProductLayoutAsset() }
-            productLayoutAsset!.asset = asset
+            productLayoutAsset!.asset = newValue
         }
     }
     
@@ -80,5 +80,8 @@ class ProductLayout: Codable {
         }
     }
     
+    func shallowCopy() -> ProductLayout {
+        return ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset?.shallowCopy(), productLayoutText: productLayoutText?.deepCopy())
+    }
 }
 

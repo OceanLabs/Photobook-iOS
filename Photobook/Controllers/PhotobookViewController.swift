@@ -166,7 +166,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
                 cell.configurePageAspectRatio(photobook.coverSizeRatio)
             }
             
-            cell.leftPageView.productLayout = ProductManager.shared.productLayouts[0]
+            cell.leftPageView.index = 0
             cell.leftPageView.delegate = self
             cell.leftPageView.load(size: imageSize)
             
@@ -187,15 +187,15 @@ extension PhotobookViewController: UICollectionViewDataSource {
             // First and last pages of the book are courtesy pages, no photos on them
             switch indexPath.item{
             case 0:
-                cell.leftPageView.productLayout = nil
-                cell.rightPageView?.productLayout = ProductManager.shared.productLayouts[1]
+                cell.leftPageView.index = nil
+                cell.rightPageView?.index = 1
             case collectionView.numberOfItems(inSection: 1) - 1: // Last page
-                cell.leftPageView.productLayout = ProductManager.shared.productLayouts[ProductManager.shared.productLayouts.count - 1]
-                cell.rightPageView?.productLayout = nil
+                cell.leftPageView.index = ProductManager.shared.productLayouts.count - 1
+                cell.rightPageView?.index = nil
             default:
                 //TODO: Get indexes from Photobook model, because full width layouts means that we can't rely on indexPaths
-                cell.leftPageView.productLayout = ProductManager.shared.productLayouts[indexPath.item * 2]
-                cell.rightPageView?.productLayout = ProductManager.shared.productLayouts[indexPath.item * 2 + 1]
+                cell.leftPageView.index = indexPath.item * 2
+                cell.rightPageView?.index = indexPath.item * 2 + 1
             }
 
             cell.leftPageView.load(size: imageSize)
@@ -205,7 +205,6 @@ extension PhotobookViewController: UICollectionViewDataSource {
         
         }
     }
-    
 }
 
 extension PhotobookViewController: UICollectionViewDelegate {
@@ -223,8 +222,30 @@ extension PhotobookViewController: PhotobookPageViewDelegate {
     // MARK: PhotobookViewDelegate
 
     func didTapOnPage(index: Int) {
-        print("Tapped on page:\(index)")
+        let pageSetupViewController = storyboard?.instantiateViewController(withIdentifier: "PageSetupViewController") as! PageSetupViewController
+        pageSetupViewController.selectedAssetsManager = selectedAssetsManager
+        pageSetupViewController.productLayout = ProductManager.shared.productLayouts[index].shallowCopy()
+        pageSetupViewController.pageIndex = index
+        if index == 0 { // Cover
+            pageSetupViewController.pageSizeRatio = ProductManager.shared.product!.coverSizeRatio
+            pageSetupViewController.availableLayouts = ProductManager.shared.currentCoverLayouts()
+        } else {
+            pageSetupViewController.pageSizeRatio = ProductManager.shared.product!.pageSizeRatio
+            pageSetupViewController.availableLayouts = ProductManager.shared.currentLayouts()
+        }
+        pageSetupViewController.delegate = self
+        present(pageSetupViewController, animated: true, completion: nil)
     }
-
 }
 
+extension PhotobookViewController: PageSetupDelegate {
+    // MARK: PageSetupDelegate
+    
+    func didFinishEditingPage(_ index: Int, productLayout: ProductLayout, saving: Bool) {
+        if saving {
+            ProductManager.shared.productLayouts[index] = productLayout
+            collectionView.reloadData()
+        }
+        dismiss(animated: true, completion: nil)
+    }
+}

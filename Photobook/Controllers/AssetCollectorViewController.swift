@@ -9,14 +9,32 @@
 import UIKit
 import Photos
 
-protocol AssetCollectorViewControllerDelegate : class {
+protocol AssetCollectorViewControllerDelegate: class {
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool)
     func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController)
 }
 
+enum AssetCollectorMode {
+    case selecting, adding
+}
+
 class AssetCollectorViewController: UIViewController {
-    
-    public var delegate: AssetCollectorViewControllerDelegate?
+
+    weak var delegate: AssetCollectorViewControllerDelegate?
+    var mode: AssetCollectorMode = .selecting {
+        didSet {
+            switch mode {
+            case .adding:
+                useTheseLabel.text = NSLocalizedString("Controllers/ImageCollectionViewController/AddTheseLabel",
+                                                       value: "ADD THESE",
+                                                       comment: "Blue button shown to the user when adding more photos to the original selection")
+            default:
+                useTheseLabel.text = NSLocalizedString("Controllers/ImageCollectionViewController/UseTheseLabel",
+                                                       value: "USE THESE",
+                                                       comment: "Blue button shown to the user when selecting photos")
+            }
+        }
+    }
     
     @IBOutlet private weak var topContainerView: UIView!
     @IBOutlet private weak var clearButton: UIButton!
@@ -24,6 +42,7 @@ class AssetCollectorViewController: UIViewController {
     @IBOutlet private weak var imageCollectionView: UICollectionView!
     @IBOutlet private weak var useTheseButtonContainer: UIView!
     @IBOutlet private weak var useTheseCountView: UILabel!
+    @IBOutlet private weak var useTheseLabel: UILabel!
     @IBOutlet private weak var deleteDoneButton: UIButton!
     
     @IBOutlet private var longPressGestureRecognizer: UILongPressGestureRecognizer!
@@ -177,7 +196,7 @@ class AssetCollectorViewController: UIViewController {
     }
     
     @IBAction public func useThese() {
-        self.delegate?.assetCollectorViewControllerDidFinish(self)
+        delegate?.assetCollectorViewControllerDidFinish(self)
     }
     
     private func adaptToParent() {
@@ -239,7 +258,7 @@ class AssetCollectorViewController: UIViewController {
         if !isDeletingEnabled {
             let requiredPhotosCount = ProductManager.shared.minimumRequiredAssets
             let fadeDuration: TimeInterval = 0.25
-            if assets.count >= requiredPhotosCount {
+            if mode == .adding || (mode == .selecting && assets.count >= requiredPhotosCount) {
                 //use these
                 let changesState = useTheseButtonContainer.isHidden == true || pickMoreLabel.isHidden == false
                 useTheseButtonContainer.isHidden = false
@@ -354,9 +373,4 @@ extension AssetCollectorViewController: UICollectionViewDataSource, UICollection
             selectedAssetsManager?.deselect(assets[indexPath.row])
         }
     }
-    
-}
-
-extension AssetCollectorViewController : UIGestureRecognizerDelegate {
-    
 }

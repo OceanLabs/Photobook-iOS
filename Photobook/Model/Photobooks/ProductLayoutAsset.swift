@@ -17,12 +17,27 @@ class ProductLayoutAsset: Codable {
 
     var containerSize: CGSize! {
         didSet {
+            if oldValue != nil {
+                let oldRatio = oldValue.width / oldValue.height
+                let newRatio = containerSize.width / containerSize.height
+            
+                // Check if we have the same layout
+                if abs(oldRatio - newRatio) < CGFloat.minPrecision {
+                    // Scales in both axes should be the same
+                    let relativeScale = containerSize.width / oldValue.width
+
+                    transform = LayoutUtils.adjustTransform(transform, byFactor: relativeScale)
+                    return
+                }
+            }
+            
             if transform == .identity {
                 fitAssetToContainer()
                 return
             }
             
-            // The asset was assigned a different layout. Fit the asset keeping the user's edits.
+            // The asset was assigned a different layout. Scale the image down to force a fit to container effect.
+            transform = transform.scaledBy(x: 0.001, y: 0.001)
             adjustTransform()
         }
     }
@@ -83,6 +98,14 @@ class ProductLayoutAsset: Codable {
         // Calculate scale. Ignore any previous translation or rotation
         let scale = LayoutUtils.scaleToFill(containerSize: containerSize, withSize: asset.size, atAngle: 0.0)
         transform = CGAffineTransform.identity.scaledBy(x: scale, y: scale)
+    }
+    
+    func shallowCopy() -> ProductLayoutAsset {
+        let aLayoutAsset = ProductLayoutAsset()
+        aLayoutAsset.asset = asset
+        aLayoutAsset.containerSize = containerSize
+        aLayoutAsset.transform = transform
+        return aLayoutAsset
     }
 }
 

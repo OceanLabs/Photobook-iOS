@@ -108,8 +108,7 @@ class StoriesViewController: UIViewController {
 }
 
 extension StoriesViewController: AssetCollectorViewControllerDelegate {
-    // MARK: AssetCollectorViewControllerDelegate
-    
+
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
         var height:CGFloat = 0
         if let imageCollectorVC = imageCollectorController {
