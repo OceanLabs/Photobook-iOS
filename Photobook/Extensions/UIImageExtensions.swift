@@ -21,5 +21,28 @@ extension UIImage {
         guard let cgImage = image?.cgImage else { return nil }
         self.init(cgImage: cgImage)
     }
+    
+    public static func async(_ url:String, completion:@escaping (_ success:Bool, _ image:UIImage?) -> Void) {
+        guard let url = URL(string: url) else {
+            completion(false, nil)
+            return
+        }
+        UIImage.async(url, completion: completion)
+    }
+    
+    public static func async(_ url:URL, completion:@escaping (_ success:Bool, _ image:UIImage?) -> Void) {
+        URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) -> Void in
+            DispatchQueue.main.async(execute: { () -> Void in
+                if error != nil {
+                    completion(false, nil)
+                    print(error)
+                    return
+                }
+                let image = UIImage(data: data!)
+                completion(true, image)
+            })
+            
+        }).resume()
+    }
 }
 

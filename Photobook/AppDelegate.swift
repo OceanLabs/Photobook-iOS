@@ -32,6 +32,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             //set initial view controller to tab bar vc
             window?.rootViewController = tabBarController
         }
+        let orderSummaryVC = storyboard.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
+        let nav = UINavigationController(rootViewController: orderSummaryVC)
+        window?.rootViewController = nav
         
         return true
     }
