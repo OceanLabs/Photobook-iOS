@@ -20,6 +20,14 @@ struct LayoutBox: Codable {
         return rect.height > rect.width
     }
     
+    func rectContained(in size: CGSize) -> CGRect {
+        let x = ceil(rect.minX * size.width)
+        let y = ceil(rect.minY * size.height)
+        let width = ceil(rect.width * size.width)
+        let height = ceil(rect.height * size.height)
+        return CGRect(x: x, y: y, width: width, height: height)
+    }
+    
     static func parse(_ layoutBoxDictionary: [String: AnyObject]) -> LayoutBox? {
         guard
             let id = layoutBoxDictionary["id"] as? Int,
@@ -31,13 +39,5 @@ struct LayoutBox: Codable {
             else { return nil }
         
         return LayoutBox(id: id, rect: CGRect(x: x, y: y, width: width, height: height))
-    }
-    
-    func rectContained(in size: CGSize) -> CGRect {
-        let x = rect.minX * size.width
-        let y = rect.minY * size.height
-        let width = rect.width * size.width
-        let height = rect.height * size.height
-        return CGRect(x: x, y: y, width: width, height: height)
     }
 }

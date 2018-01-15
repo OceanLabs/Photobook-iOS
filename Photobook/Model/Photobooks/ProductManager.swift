@@ -138,7 +138,8 @@ class ProductManager {
             // Use first photo for the cover
             let productLayoutAsset = ProductLayoutAsset()
             productLayoutAsset.asset = addedAssets.remove(at: 0)
-            let productLayout = ProductLayout(layout: coverLayouts.first!, productLayoutAsset: productLayoutAsset)
+            let coverLayout = coverLayouts.first(where: { $0.imageLayoutBox != nil } )
+            let productLayout = ProductLayout(layout: coverLayout!, productLayoutAsset: productLayoutAsset)
             tempLayouts.append(productLayout)
             
             // Create layouts for the remaining assets
@@ -239,14 +240,24 @@ class ProductManager {
         return productLayouts
     }
     
-    private func coverLayouts(for photobook: Photobook) -> [Layout]? {
+    func coverLayouts(for photobook: Photobook) -> [Layout]? {
         guard let layouts = layouts else { return nil }
         return layouts.filter { photobook.coverLayouts.contains($0.id) }
     }
     
-    private func layouts(for photobook: Photobook) -> [Layout]? {
+    func layouts(for photobook: Photobook) -> [Layout]? {
         guard let layouts = layouts else { return nil }
         return layouts.filter { photobook.layouts.contains($0.id) }
+    }
+    
+    func currentCoverLayouts() -> [Layout]? {
+        guard product != nil else { return nil }
+        return coverLayouts(for: product!)
+    }
+    
+    func currentLayouts() -> [Layout]? {
+        guard product != nil else { return nil }
+        return layouts(for: product!)
     }
     
     /// Sets one of the available layouts for a page number

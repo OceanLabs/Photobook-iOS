@@ -8,12 +8,11 @@
 
 import UIKit
 
-
 /// View Controller to show albums. It doesn't care about the source of those albums as long as they conform to the Album protocol.
 class AlbumsCollectionViewController: UICollectionViewController {
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    var imageCollectorController:AssetCollectorViewController?
+    var imageCollectorController: AssetCollectorViewController!
     
     /// The height between the bottom of the image and bottom of the cell where the labels sit
     private let albumCellLabelsHeight: CGFloat = 50
@@ -21,10 +20,11 @@ class AlbumsCollectionViewController: UICollectionViewController {
     
     var albumManager: AlbumManager!
     private let selectedAssetsManager = SelectedAssetsManager()
-
+    var collectorMode: AssetCollectorMode = .selecting
+    weak var addingDelegate: AssetCollectorAddingDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         albumManager.loadAlbums(completionHandler: { [weak welf = self] (error) in
             welf?.activityIndicator.stopAnimating()
             welf?.collectionView?.reloadData()
@@ -32,7 +32,8 @@ class AlbumsCollectionViewController: UICollectionViewController {
         
         // Setup the Image Collector Controller
         imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
-        imageCollectorController?.delegate = self
+        imageCollectorController.mode = collectorMode
+        imageCollectorController.delegate = self
         
         calcAndSetCellSize()
         
@@ -83,6 +84,8 @@ class AlbumsCollectionViewController: UICollectionViewController {
         assetPickerController.album = album
         assetPickerController.albumManager = albumManager
         assetPickerController.selectedAssetsManager = selectedAssetsManager
+        assetPickerController.collectorMode = collectorMode
+        assetPickerController.addingDelegate = addingDelegate
         
         self.navigationController?.pushViewController(assetPickerController, animated: true)
     }
@@ -119,9 +122,14 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
     }
     
     func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
-        let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
-        photobookViewController.selectedAssetsManager = selectedAssetsManager
-        navigationController?.pushViewController(photobookViewController, animated: true)
+        switch collectorMode {
+        case .adding:
+            addingDelegate?.didFinishAdding(assets: selectedAssetsManager.selectedAssets)
+        default:
+            let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
+            photobookViewController.selectedAssetsManager = selectedAssetsManager
+            navigationController?.pushViewController(photobookViewController, animated: true)
+        }
     }
 }
 
@@ -195,7 +203,7 @@ extension AlbumsCollectionViewController{
     }
 }
 
-extension AlbumsCollectionViewController: AlbumSearchResultsTableViewControllerDelegate{
+extension AlbumsCollectionViewController: AlbumSearchResultsTableViewControllerDelegate {
     func searchDidSelect(_ album: Album) {
         showAlbum(album: album)
     }

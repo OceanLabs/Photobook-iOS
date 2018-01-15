@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension UIView{
+extension UIView {
     
     @IBInspectable var cornerRadius: CGFloat {
         get {
@@ -38,4 +38,28 @@ extension UIView{
         }
     }
     
+    /// Takes a snapshot image of the contents of the view
+    ///
+    /// - Returns: The snapshot image
+    func snapshot() -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(bounds.size, false, UIScreen.main.scale)
+        let context = UIGraphicsGetCurrentContext()
+        layer.render(in: context!)
+        let image = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        return image
+    }
+    
+    /// Applies a rounded corner mask to the view using a bezier path
+    ///
+    /// - Parameter radius: The radius
+    func bezierRoundedCorners(withRadius radius: CGFloat) {
+        let maskLayer = CAShapeLayer()
+        maskLayer.fillColor = UIColor.white.cgColor
+        maskLayer.path = UIBezierPath(roundedRect: self.bounds, cornerRadius: radius).cgPath
+        maskLayer.frame = self.bounds
+        
+        layer.mask = maskLayer
+    }
 }

@@ -16,7 +16,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     private let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
     private var previousPreheatRect = CGRect.zero
     var selectedAssetsManager: SelectedAssetsManager?
-    var imageCollectorController:AssetCollectorViewController?
+    var imageCollectorController: AssetCollectorViewController!
     static let coverAspectRatio: CGFloat = 2.723684211
     
     var albumManager: AlbumManager?
@@ -27,6 +27,9 @@ class AssetPickerCollectionViewController: UICollectionViewController {
             self.title = album.localizedName
         }
     }
+    
+    var collectorMode: AssetCollectorMode = .selecting
+    weak var addingDelegate: AssetCollectorAddingDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,7 +59,8 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         // Setup the Image Collector Controller
         if let manager = selectedAssetsManager {
             imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: manager)
-            imageCollectorController?.delegate = self
+            imageCollectorController.mode = collectorMode
+            imageCollectorController.delegate = self
         }
         
         //listen to asset manager
@@ -219,9 +223,14 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
     }
     
     func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
-        let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
-        photobookViewController.selectedAssetsManager = selectedAssetsManager
-        navigationController?.pushViewController(photobookViewController, animated: true)
+        switch collectorMode {
+        case .adding:
+            addingDelegate?.didFinishAdding(assets: selectedAssetsManager?.selectedAssets)
+        default:
+            let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
+            photobookViewController.selectedAssetsManager = selectedAssetsManager
+            navigationController?.pushViewController(photobookViewController, animated: true)
+        }
     }
 }
 

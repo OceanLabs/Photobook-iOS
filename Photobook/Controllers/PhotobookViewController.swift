@@ -447,7 +447,11 @@ extension PhotobookViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "coverCell", for: indexPath) as? PhotobookCoverCollectionViewCell
                 else { return UICollectionViewCell() }
             
-            cell.leftPageView.productLayout = ProductManager.shared.productLayouts[0]
+            if let photobook = ProductManager.shared.product{
+                cell.configurePageAspectRatio(photobook.coverSizeRatio)
+            }
+            
+            cell.leftPageView.index = 0
             cell.leftPageView.delegate = self
             cell.leftPageView.load(size: imageSize)
             
@@ -468,12 +472,12 @@ extension PhotobookViewController: UICollectionViewDataSource {
             // First and last pages of the book are courtesy pages, no photos on them
             switch indexPath.item{
             case 0:
-                cell.leftPageView.productLayout = nil
-                cell.rightPageView?.productLayout = ProductManager.shared.productLayouts[1]
+                cell.leftPageView.index = nil
+                cell.rightPageView?.index = 1
                 cell.plusButton.isHidden = true
             case collectionView.numberOfItems(inSection: 1) - 1: // Last page
-                cell.leftPageView.productLayout = ProductManager.shared.productLayouts[ProductManager.shared.productLayouts.count - 1]
-                cell.rightPageView?.productLayout = nil
+                cell.leftPageView.index = ProductManager.shared.productLayouts.count - 1
+                cell.rightPageView?.index = nil
                 cell.plusButton.isHidden = false
             default:
                 cell.leftPageView.productLayout = ProductManager.shared.productLayouts[indexPath.item * 2]
@@ -505,7 +509,6 @@ extension PhotobookViewController: UICollectionViewDataSource {
         
         }
     }
-    
 }
 
 extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
@@ -563,10 +566,32 @@ extension PhotobookViewController: PhotobookPageViewDelegate {
     // MARK: PhotobookViewDelegate
 
     func didTapOnPage(index: Int) {
-        // TODO: Edit page
-        print("Tapped on page:\(index)")
+        let pageSetupViewController = storyboard?.instantiateViewController(withIdentifier: "PageSetupViewController") as! PageSetupViewController
+        pageSetupViewController.selectedAssetsManager = selectedAssetsManager
+        pageSetupViewController.productLayout = ProductManager.shared.productLayouts[index].shallowCopy()
+        pageSetupViewController.pageIndex = index
+        if index == 0 { // Cover
+            pageSetupViewController.pageSizeRatio = ProductManager.shared.product!.coverSizeRatio
+            pageSetupViewController.availableLayouts = ProductManager.shared.currentCoverLayouts()
+        } else {
+            pageSetupViewController.pageSizeRatio = ProductManager.shared.product!.pageSizeRatio
+            pageSetupViewController.availableLayouts = ProductManager.shared.currentLayouts()
+        }
+        pageSetupViewController.delegate = self
+        present(pageSetupViewController, animated: true, completion: nil)
     }
+}
 
+extension PhotobookViewController: PageSetupDelegate {
+    // MARK: PageSetupDelegate
+    
+    func didFinishEditingPage(_ index: Int, productLayout: ProductLayout, saving: Bool) {
+        if saving {
+            ProductManager.shared.productLayouts[index] = productLayout
+            collectionView.reloadData()
+        }
+        dismiss(animated: true, completion: nil)
+    }
 }
 
 extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
