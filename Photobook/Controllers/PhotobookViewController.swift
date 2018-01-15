@@ -34,6 +34,7 @@ class PhotobookViewController: UIViewController {
     private var proposedDropIndexPath: IndexPath?
     private var isRearranging = false
     private var draggingView: UIView?
+    private var isDragging = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -263,6 +264,11 @@ class PhotobookViewController: UIViewController {
     }
     
     @objc func handlePanGesture(_ sender: UIPanGestureRecognizer) {
+        if sender.state == .began {
+            isDragging = true
+        } else if sender.state == .ended {
+            isDragging = false
+        }
         guard let draggingView = draggingView, sender.state == .changed else { return }
         
         let translation = sender.translation(in: view)
@@ -476,7 +482,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
                 }
                 cell.plusButton.isHidden = false
                 
-                // Add long press gesture
+                // Add gestures required for drag and drop
                 if cell.bookView.gestureRecognizers?.count ?? 0 == 0{
                     let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGesture(_:)))
                     longPressGesture.delegate = self
@@ -484,6 +490,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
                     
                     let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
                     panGesture.delegate = self
+                    panGesture.maximumNumberOfTouches = 1
                     cell.bookView.addGestureRecognizer(panGesture)
                 }
                 cell.setIsRearranging(isRearranging)
@@ -580,7 +587,7 @@ extension PhotobookViewController: UIGestureRecognizerDelegate {
     // MARK: UIGestureRecognizerDelegate
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return isRearranging
+        return isRearranging && !isDragging
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
