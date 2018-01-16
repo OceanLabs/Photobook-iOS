@@ -35,6 +35,7 @@ class PhotobookViewController: UIViewController {
     private var isRearranging = false
     private var draggingView: UIView?
     private var isDragging = false
+    private var scrollingTimer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -265,6 +266,7 @@ class PhotobookViewController: UIViewController {
             liftView(bookView)
         } else if sender.state == .ended {
             dropView()
+            stopTimer()
         }
     }
     
@@ -315,7 +317,42 @@ class PhotobookViewController: UIViewController {
             insertProposalCell(proposedIndexPath)
         }, completion: nil)
         
+        // Auto-scroll the collectionView if you drag to the top or bottom
+        if draggingView.frame.origin.y + draggingView.frame.size.height / 2.0 > view.frame.size.height * 0.9 {
+            guard scrollingTimer == nil else { return }
+            scrollingTimer = Timer(timeInterval: 1.0/60.0, repeats: true, block: { [weak welf = self] timer in
+                guard welf != nil else { return }
+                if welf!.collectionView.contentOffset.y - welf!.collectionView.contentInset.bottom + welf!.collectionView.frame.size.height + 6 < welf!.collectionView.contentSize.height {
+                    welf!.collectionView.contentOffset = CGPoint(x: welf!.collectionView.contentOffset.x, y: welf!.collectionView.contentOffset.y + 6);
+                }
+            })
+        }
+        else if (draggingView.frame.origin.y + draggingView.frame.size.height / 2.0 < view.frame.size.height * 0.2) {
+            guard scrollingTimer == nil else { return }
+            scrollingTimer = Timer(timeInterval: 1.0/60.0, repeats: true, block: { [weak welf = self] _ in
+                guard welf != nil else { return }
+                if (welf!.collectionView.contentOffset.y + welf!.collectionView.contentInset.top - 6 > 0){
+                    welf!.collectionView.contentOffset = CGPoint(x: welf!.collectionView.contentOffset.x, y: welf!.collectionView.contentOffset.y - 6);
+                }
+            })
+        }
+        else {
+            stopTimer()
+        }
         
+        if let timer = scrollingTimer {
+            RunLoop.current.add(timer, forMode: .defaultRunLoopMode)
+        }
+        
+    }
+    
+    func stopTimer() {
+        scrollingTimer?.invalidate()
+        scrollingTimer = nil
+    }
+    
+    deinit {
+        stopTimer()
     }
     
     func deleteProposalCell(enableFeedback: Bool) {
