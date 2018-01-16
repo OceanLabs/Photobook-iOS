@@ -65,7 +65,7 @@ extension OrderSummaryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == sectionOptions {
             //handle changed upsell selection
-            orderManager.order?.selectedUpsellOptions.insert(orderManager.upsellOptions[indexPath.row].identifier)
+            orderManager.selectedUpsellOptions.insert(orderManager.upsellOptions[indexPath.row].identifier)
             tableView.reloadSections(IndexSet(integersIn: 0...1), with: .none)
         } else {
             tableView.deselectRow(at: indexPath, animated: false)
@@ -75,7 +75,7 @@ extension OrderSummaryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         if indexPath.section == sectionOptions {
             //handle changed upsell selection
-            orderManager.order?.selectedUpsellOptions.remove(orderManager.upsellOptions[indexPath.row].identifier)
+            orderManager.selectedUpsellOptions.remove(orderManager.upsellOptions[indexPath.row].identifier)
             tableView.reloadSections(IndexSet(integersIn: 0...1), with: .none)
         }
     }
@@ -88,7 +88,7 @@ extension OrderSummaryViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.orderManager.order == nil {
+        if orderManager.initialProduct == nil {
             return 0
         }
         
@@ -124,7 +124,7 @@ extension OrderSummaryViewController: UITableViewDataSource {
         case sectionOptions:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrderSummaryUpsellTableViewCell", for: indexPath) as! OrderSummaryUpsellTableViewCell
             cell.titleLabel?.text = "Upgrade to " + orderManager.upsellOptions[indexPath.row].title
-            if let order = orderManager.order, order.selectedUpsellOptions.contains(orderManager.upsellOptions[indexPath.row].identifier) {
+            if orderManager.selectedUpsellOptions.contains(orderManager.upsellOptions[indexPath.row].identifier) {
                 cell.setSelected(true, animated: false)
             } else {
                 cell.setSelected(false, animated: false)

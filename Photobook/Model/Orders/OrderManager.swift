@@ -17,9 +17,16 @@ class OrderManager {
     public var upsellOptions:[UpsellOption] = []
     
     public var initialProduct:Photobook! //original product provided by previous UX
-    public var selectedUpsellOptions:[UpsellOption] = []
+    public var selectedUpsellOptions:Set<String> = []
     
     public var product:Photobook? //product to place the order with. Reflects user's selected upsell options.
+    
+    init() {
+        initialProduct = getMockPhotobook()
+        upsellOptions = getMockUpsellOptions()
+        priceDetails = getMockPricelist()
+        refreshProduct()
+    }
     
     init(withProduct product:Photobook) {
         initialProduct = getMockPhotobook()
