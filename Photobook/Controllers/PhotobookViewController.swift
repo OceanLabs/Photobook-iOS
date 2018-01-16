@@ -84,7 +84,7 @@ class PhotobookViewController: UIViewController {
             insets = .zero
         }
         
-        let bottomInset = isRearranging ? (ctaButtonContainer.frame.size.height - insets.bottom) * reverseRearrageScale : ctaButtonContainer.frame.size.height - insets.bottom - collectionViewBottomConstraint.constant
+        let bottomInset = isRearranging ? ctaButtonContainer.frame.size.height * reverseRearrageScale - insets.bottom : ctaButtonContainer.frame.size.height - insets.bottom - collectionViewBottomConstraint.constant
         
         let topInset = isRearranging ? (navigationController?.navigationBar.frame.maxY ?? 0) * (1 - Constants.rearrageScale) : 0
                 
