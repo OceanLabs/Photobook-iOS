@@ -1496,15 +1496,14 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="359" height="207"/>
                                                     <color key="backgroundColor" red="0.85504835840000004" green="0.86273437740000003" blue="0.86274617909999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 </view>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ALE-3X-DVw">
-                                                    <rect key="frame" x="369" y="-13" width="26" height="26"/>
-                                                    <color key="backgroundColor" red="0.85115176439285278" green="0.85870474576950073" blue="0.86666971445083618" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ALE-3X-DVw">
+                                                    <rect key="frame" x="361" y="-31" width="44" height="44"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="26" id="aEu-55-kVa"/>
-                                                        <constraint firstAttribute="height" constant="26" id="dNC-mm-lYJ"/>
+                                                        <constraint firstAttribute="width" constant="44" id="aEu-55-kVa"/>
+                                                        <constraint firstAttribute="height" constant="44" id="dNC-mm-lYJ"/>
                                                     </constraints>
-                                                    <state key="normal" title="+">
-                                                        <color key="titleColor" red="0.42745983600616455" green="0.42319035530090332" blue="0.44706451892852783" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    <state key="normal" image="plusButton">
+                                                        <color key="titleColor" red="0.42745098039215684" green="0.42352941176470588" blue="0.44705882352941173" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     </state>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -1519,14 +1518,14 @@
                                         </view>
                                         <gestureRecognizers/>
                                         <constraints>
-                                            <constraint firstItem="xma-jv-CAu" firstAttribute="top" secondItem="ALE-3X-DVw" secondAttribute="centerY" id="3bs-bX-Xpb"/>
+                                            <constraint firstItem="xma-jv-CAu" firstAttribute="top" secondItem="ALE-3X-DVw" secondAttribute="centerY" constant="9" id="3bs-bX-Xpb"/>
                                             <constraint firstItem="xma-jv-CAu" firstAttribute="leading" secondItem="IdR-Q3-Knr" secondAttribute="leading" id="GNX-DA-QDp"/>
                                             <constraint firstAttribute="trailing" secondItem="3BP-mf-zJk" secondAttribute="trailing" id="HoZ-mJ-jIz"/>
                                             <constraint firstAttribute="bottom" secondItem="xma-jv-CAu" secondAttribute="bottom" id="Yhb-C9-0PC"/>
                                             <constraint firstItem="xma-jv-CAu" firstAttribute="top" secondItem="IdR-Q3-Knr" secondAttribute="top" id="aPw-1a-Yeq"/>
                                             <constraint firstAttribute="bottom" secondItem="3BP-mf-zJk" secondAttribute="bottom" id="eTX-4U-tVl"/>
                                             <constraint firstItem="3BP-mf-zJk" firstAttribute="leading" secondItem="IdR-Q3-Knr" secondAttribute="leading" id="lJU-Ri-phV"/>
-                                            <constraint firstItem="ALE-3X-DVw" firstAttribute="leading" secondItem="xma-jv-CAu" secondAttribute="trailing" constant="10" id="lU6-hw-bcH"/>
+                                            <constraint firstItem="ALE-3X-DVw" firstAttribute="leading" secondItem="xma-jv-CAu" secondAttribute="trailing" constant="2" id="lU6-hw-bcH"/>
                                             <constraint firstItem="3BP-mf-zJk" firstAttribute="top" secondItem="IdR-Q3-Knr" secondAttribute="top" id="q1x-A4-c8n"/>
                                             <constraint firstAttribute="trailing" secondItem="xma-jv-CAu" secondAttribute="trailing" id="s6j-u8-K3l"/>
                                         </constraints>
@@ -2281,6 +2280,7 @@
         <image name="editLayout_on" width="29" height="29"/>
         <image name="editPhoto_off" width="29" height="29"/>
         <image name="editPhoto_on" width="29" height="29"/>
+        <image name="plusButton" width="26" height="26"/>
         <image name="selectPhoto_off" width="29" height="29"/>
         <image name="selectPhoto_on" width="29" height="29"/>
     </resources>
