@@ -32,8 +32,6 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
      the automatic sizing of the cells doesn't work. I don't know why, it might be a bug
      in autolayout.
      */
-    @IBOutlet private weak var aspectRatioHelperView: UIView!
-    @IBOutlet weak var obscuringView: UIView!
     @IBOutlet weak var plusButton: UIButton!
     weak var delegate: PhotobookCollectionViewCellDelegate?
     
@@ -53,5 +51,4 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
 class PhotobookView: UIView {
     weak var leftPageView: PhotobookPageView!
     weak var rightPageView: PhotobookPageView?
-    var dragging = false
 }

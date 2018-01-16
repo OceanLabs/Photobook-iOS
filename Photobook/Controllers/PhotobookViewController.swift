@@ -192,7 +192,17 @@ class PhotobookViewController: UIViewController {
         }
     }
     
-    // MARK: UIMenuController actions
+    func stopTimer() {
+        scrollingTimer?.invalidate()
+        scrollingTimer = nil
+    }
+    
+    deinit {
+        stopTimer()
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    // MARK: - UIMenuController actions
     
     @objc func copyPages() {
         guard let indexPath = interactingItemIndexPath,
@@ -269,6 +279,34 @@ class PhotobookViewController: UIViewController {
     @objc func menuDidHide() {
         interactingItemIndexPath = nil
     }
+    
+    private func showMenu(at indexPath: IndexPath) {
+        // Don't show the menu for the cover, fist and last page, when not rearranging and when we are already showing it
+        guard isRearranging,
+            interactingItemIndexPath == nil,
+            let cell = collectionView.cellForItem(at: indexPath),
+            indexPath.item != 0,
+            indexPath.item != collectionView.numberOfItems(inSection: 1) - 1 // Last Page
+            else { return }
+        UIMenuController.shared.setTargetRect(cell.frame, in: collectionView)
+        interactingItemIndexPath = indexPath
+        
+        let pasteBoard = UIPasteboard(name: UIPasteboardName("ly.kite.photobook.rearrange"), create: true)
+        
+        var menuItems = [UIMenuItem]()
+        menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemCopyTitle", value: "Copy", comment: "Copy/Paste interaction"), action: #selector(copyPages)))
+        if ProductManager.shared.isAddingPagesAllowed && (pasteBoard?.items.count ?? 0) > 0 {
+            menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemPasteTitle", value: "Paste", comment: "Copy/Paste interaction"), action: #selector(pastePages)))
+        }
+        if ProductManager.shared.isRemovingPagesAllowed {
+            menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemDeleteTitle", value: "Delete", comment: "Delete a page from the photobook"), action: #selector(deletePages)))
+        }
+        
+        UIMenuController.shared.menuItems = menuItems
+        UIMenuController.shared.setMenuVisible(true, animated: true)
+    }
+    
+    // MARK: - Gesture Handlers
     
     @objc func handleLongPressGesture(_ sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
@@ -356,15 +394,7 @@ class PhotobookViewController: UIViewController {
         
     }
     
-    func stopTimer() {
-        scrollingTimer?.invalidate()
-        scrollingTimer = nil
-    }
-    
-    deinit {
-        stopTimer()
-        NotificationCenter.default.removeObserver(self)
-    }
+    // MARK: - Drag and Drop
     
     func deleteProposalCell(enableFeedback: Bool) {
         guard let indexPath = proposedDropIndexPath else { return }
@@ -402,7 +432,7 @@ class PhotobookViewController: UIViewController {
             draggingView.layer.shadowOpacity = 0
         }, completion: { _ in
             // Unhide the book if we're returning to the original position
-            sourceCell?.obscuringView.isHidden = true
+            sourceCell?.bookView.isHidden = false
             
             draggingView.removeFromSuperview()
             self.draggingView = nil
@@ -474,7 +504,7 @@ class PhotobookViewController: UIViewController {
             snapshot.layer.shadowRadius = 10
             snapshot.layer.shadowOpacity = 0.5
         }, completion: { _ in
-            (self.collectionView.cellForItem(at: IndexPath(item: foldIndex, section: 1)) as? PhotobookCollectionViewCell)?.obscuringView.isHidden = false
+            (self.collectionView.cellForItem(at: IndexPath(item: foldIndex, section: 1)) as? PhotobookCollectionViewCell)?.bookView.isHidden = true
         })
     }
     
@@ -533,7 +563,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "doublePageCell", for: indexPath) as! PhotobookCollectionViewCell
             
-            cell.obscuringView.isHidden = indexPath != interactingItemIndexPath
+            cell.bookView.isHidden = indexPath == interactingItemIndexPath
             cell.delegate = self
 
             cell.rightPageView?.delegate = self
@@ -591,30 +621,7 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        // Don't show the menu for the cover, fist and last page, when not rearranging and when we are already showing it
-        guard isRearranging,
-            interactingItemIndexPath == nil,
-            let cell = collectionView.cellForItem(at: indexPath),
-            indexPath.item != 0,
-            indexPath.item != collectionView.numberOfItems(inSection: 1) - 1 // Last Page
-            else { return }
-        UIMenuController.shared.setTargetRect(cell.frame, in: collectionView)
-        interactingItemIndexPath = indexPath
-        
-        let pasteBoard = UIPasteboard(name: UIPasteboardName("ly.kite.photobook.rearrange"), create: true)
-        
-        var menuItems = [UIMenuItem]()
-        menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemCopyTitle", value: "Copy", comment: "Copy/Paste interaction"), action: #selector(copyPages)))
-        if ProductManager.shared.isAddingPagesAllowed && (pasteBoard?.items.count ?? 0) > 0 {
-            menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemPasteTitle", value: "Paste", comment: "Copy/Paste interaction"), action: #selector(pastePages)))
-        }
-        if ProductManager.shared.isRemovingPagesAllowed {
-            menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemDeleteTitle", value: "Delete", comment: "Delete a page from the photobook"), action: #selector(deletePages)))
-        }
-        
-        UIMenuController.shared.menuItems = menuItems
-        UIMenuController.shared.setMenuVisible(true, animated: true)
+        showMenu(at: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
