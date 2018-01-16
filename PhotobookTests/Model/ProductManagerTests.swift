@@ -13,7 +13,7 @@ import Photos
 class ProductManagerTests: XCTestCase {
 
     var productManager: ProductManager!
-    let photosAsset = TestPhotosAsset(PHAsset(), collection: PHAssetCollection())
+    let photosAsset = TestPhotosAsset(PHAsset(), albumIdentifier: "")
     
     override func setUp() {
         super.setUp()

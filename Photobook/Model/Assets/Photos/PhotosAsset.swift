@@ -12,13 +12,13 @@ import Photos
 // Photos asset subclass with stubs to be used in testing
 class TestPhotosAsset: PhotosAsset {
     override var size: CGSize { return CGSize(width: 10.0, height: 20.0) }
-    override init(_ asset: PHAsset, collection:PHAssetCollection) {
-        super.init(asset, collection: collection)
+    override init(_ asset: PHAsset, albumIdentifier: String) {
+        super.init(asset, albumIdentifier: albumIdentifier)
         self.identifier = "id"
     }
     
     required init(from decoder: Decoder) throws {
-        super.init(PHAsset(), collection: PHAssetCollection())
+        super.init(PHAsset(), albumIdentifier: "")
         self.identifier = "id"
     }
 }
@@ -28,7 +28,6 @@ class PhotosAsset: Asset {
     var assetType: String {
         return NSStringFromClass(PhotosAsset.self)
     }
-    var photosAssetCollection: PHAssetCollection
     
     var photosAsset: PHAsset! {
         didSet {
@@ -44,9 +43,7 @@ class PhotosAsset: Asset {
         }
     }
     
-    var albumIdentifier: String {
-        return photosAssetCollection.localIdentifier
-    }
+    var albumIdentifier: String
 
     var size: CGSize { return CGSize(width: photosAsset.pixelWidth, height: photosAsset.pixelHeight) }
     var isLandscape: Bool {
@@ -54,10 +51,10 @@ class PhotosAsset: Asset {
     }
     var uploadUrl: String?
     
-    init(_ asset: PHAsset, collection:PHAssetCollection) {
+    init(_ asset: PHAsset, albumIdentifier: String) {
         photosAsset = asset
         identifier = photosAsset.localIdentifier
-        photosAssetCollection = collection
+        self.albumIdentifier = albumIdentifier
     }
     
     func uneditedImage(size: CGSize, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
@@ -89,23 +86,13 @@ class PhotosAsset: Asset {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         
         uploadUrl = try values.decodeIfPresent(String.self, forKey: .uploadUrl)
-        let collectionId = try values.decode(String.self, forKey: .albumIdentifier)
+        albumIdentifier = try values.decode(String.self, forKey: .albumIdentifier)
         
         let assetId = try values.decode(String.self, forKey: .identifier)
         if let asset = PHAsset.fetchAssets(withLocalIdentifiers: [assetId], options: nil).firstObject {
             photosAsset = asset
         }
         else {
-            throw AssetLoadingException.notFound
-        }
-        
-        if let assetCollection = PHAssetCollection.fetchAssetCollections(withLocalIdentifiers: [collectionId], options: nil).firstObject {
-            photosAssetCollection = assetCollection
-        }
-        else if let assetCollection = PHAssetCollection.fetchAssetCollectionsContaining(photosAsset, with: .smartAlbum, options: nil).firstObject { // Not worth throwing an excpetion for a deleted album,  we'll just fall back to another one, probably "All Photos"/"Camera Roll"
-            photosAssetCollection = assetCollection
-        }
-        else { // Should never reach here, just keeping the compiler happy. If we do reach here, something has gone horribly wrong
             throw AssetLoadingException.notFound
         }
         
