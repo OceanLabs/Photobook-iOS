@@ -11,27 +11,38 @@ import UIKit
 /// Represents a photobook spine as seen from the side
 class SpineFrameView: UIView {
     
+    static let spineTextPadding: CGFloat = 5.0
+    
+    @IBOutlet private weak var textLabel: UILabel! { didSet { textLabel.transform = CGAffineTransform(rotationAngle: -.pi / 2.0) } }
+    @IBOutlet private weak var textLabelWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var spineBackgroundView: SpineBackgroundView!
     
     var pageSide = PageSide.left
     var color: ProductColor = .white
+    var spineText: String? { didSet { textLabel.text = spineText } }
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        spineBackgroundView.color = color
+        textLabelWidthConstraint.constant = bounds.height - 2.0 * SpineFrameView.spineTextPadding
         
         layer.shadowOffset = PhotobookConstants.shadowOffset
         layer.shadowOpacity = 1.0
         layer.shadowRadius = PhotobookConstants.shadowRadius
         layer.masksToBounds = false
-        
+        layer.shadowPath = UIBezierPath(rect: bounds).cgPath
+        layer.shouldRasterize = true
+        layer.rasterizationScale = UIScreen.main.scale
+
         switch color {
         case .white:
             layer.shadowColor = PhotobookConstants.whiteShadowColor
+            textLabel.textColor = .black
         case .black:
             layer.shadowColor = PhotobookConstants.blackShadowColor
+            textLabel.textColor = .white
         }
-        
-        spineBackgroundView.color = color
     }
 }
 

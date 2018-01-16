@@ -162,10 +162,11 @@ extension PhotobookViewController: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotobookCoverCollectionViewCell.reuseIdentifier, for: indexPath) as! PhotobookCoverCollectionViewCell
             cell.delegate = self
             
-            cell.color = ProductManager.shared.coverColor
             cell.imageSize = imageSize
             cell.width = (view.bounds.size.width - Constants.cellSideMargin * 2.0) / 2.0
             cell.aspectRatio = ProductManager.shared.product!.coverSizeRatio
+            cell.color = ProductManager.shared.coverColor
+            cell.spineText = ProductManager.shared.spineText
             cell.loadCover()
             
             return cell
