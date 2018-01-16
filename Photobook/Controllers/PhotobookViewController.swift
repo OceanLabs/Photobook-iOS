@@ -549,8 +549,8 @@ extension PhotobookViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section{
         case 1:
-            // TODO: division by 2 problematic with full-width pages
-            return (ProductManager.shared.productLayouts.count + 1) / 2 + (proposedDropIndexPath != nil ? 1 : 0)
+            guard let lastFoldIndex = ProductManager.shared.foldIndex(for: ProductManager.shared.productLayouts.count - 1) else { return 0 }
+            return lastFoldIndex + 1 + (proposedDropIndexPath != nil ? 1 : 0)
         default:
             return 1
         }
@@ -559,8 +559,8 @@ extension PhotobookViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         //Don't bother calculating the exact size, request a slightly larger size
-        //TODO: Full width pages shouldn't divide by 2
-        let imageSize = CGSize(width: collectionView.frame.size.width / 2.0, height: collectionView.frame.size.width / 2.0)
+        let cellSize = self.collectionView(collectionView, layout: collectionView.collectionViewLayout, sizeForItemAt: indexPath)
+        var imageSize = CGSize(width: cellSize.width / 2.0, height: cellSize.height)
         
         switch indexPath.section{
         case 0:
@@ -596,7 +596,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             default:
                 guard let index = ProductManager.shared.productLayoutIndex(for: indexPath.item) else { return cell }
                 cell.leftPageView.index = index
-                if indexPath.item * 2 + 1 < ProductManager.shared.productLayouts.count {
+                if index + 1 < ProductManager.shared.productLayouts.count {
                     cell.rightPageView?.index = index + 1
                 }
                 cell.plusButton.isHidden = false
@@ -614,6 +614,11 @@ extension PhotobookViewController: UICollectionViewDataSource {
                     cell.bookView.addGestureRecognizer(panGesture)
                 }
                 cell.setIsRearranging(isRearranging)
+                
+                // Get a larger image if the layout is double width
+                if ProductManager.shared.productLayouts[index].layout.isDoubleLayout {
+                    imageSize = cellSize
+                }
             }
 
             cell.leftPageView.load(size: imageSize)
