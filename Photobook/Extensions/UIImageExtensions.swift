@@ -33,7 +33,7 @@ extension UIImage {
     public static func async(_ url:URL, completion:@escaping (_ success:Bool, _ image:UIImage?) -> Void) {
         URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) -> Void in
             DispatchQueue.main.async(execute: { () -> Void in
-                if error != nil {
+                if let error = error {
                     completion(false, nil)
                     print(error)
                     return

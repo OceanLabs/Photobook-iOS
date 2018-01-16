@@ -17,30 +17,12 @@ class OrderSummaryViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var previewImageView: UIImageView!
     
-    public var order:Order?
-    public var priceDetails:[(title:String, price:Price)] = []
-    public var upsellOptions:[(title:String, identifier:String)] = []
+    var orderManager:OrderManager!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let validDictionary = ([
-            "id": 10,
-            "name": "210 x 210",
-            "pageWidth": 1000,
-            "pageHeight": 400,
-            "coverWidth": 1030,
-            "coverHeight": 415,
-            "cost": [ "EUR": 10.00 as Decimal, "USD": 12.00 as Decimal, "GBP": 9.00 as Decimal ],
-            "costPerPage": [ "EUR": 1.00 as Decimal, "USD": 1.20 as Decimal, "GBP": 0.85 as Decimal ],
-            "coverLayouts": [ 9, 10 ],
-            "layouts": [ 10, 11, 12, 13 ]
-            ]) as [String: AnyObject]
-        order = Order(photobook: Photobook.parse(validDictionary)!, selectedUpsellOptions: [])
-        upsellOptions = [("larger size", "size"), ("gloss finish", "finish")]
-        priceDetails = [("Square 210x210", Price(value: 30, currencyCode: "GBP", currencySymbol: "£")),
-                        ("2 extra pages", Price(value: 3, currencyCode: "GBP", currencySymbol: "£")),
-                        ("Gloss finish", Price(value: 5, currencyCode: "GBP", currencySymbol: "£"))]
+        orderManager = OrderManager()
         
         tableView.reloadData()
     }
@@ -83,7 +65,7 @@ extension OrderSummaryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == sectionOptions {
             //handle changed upsell selection
-            order?.selectedUpsellOptions.insert(upsellOptions[indexPath.row].identifier)
+            orderManager.order?.selectedUpsellOptions.insert(orderManager.upsellOptions[indexPath.row].identifier)
             tableView.reloadSections(IndexSet(integersIn: 0...1), with: .none)
         } else {
             tableView.deselectRow(at: indexPath, animated: false)
@@ -93,7 +75,7 @@ extension OrderSummaryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         if indexPath.section == sectionOptions {
             //handle changed upsell selection
-            order?.selectedUpsellOptions.remove(upsellOptions[indexPath.row].identifier)
+            orderManager.order?.selectedUpsellOptions.remove(orderManager.upsellOptions[indexPath.row].identifier)
             tableView.reloadSections(IndexSet(integersIn: 0...1), with: .none)
         }
     }
@@ -106,17 +88,17 @@ extension OrderSummaryViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.order == nil {
+        if self.orderManager.order == nil {
             return 0
         }
         
         switch section {
         case sectionDetails:
-            return priceDetails.count
+            return orderManager.priceDetails.count
         case sectionTotal:
-            return priceDetails.count>0 ? 1 : 0
+            return orderManager.priceDetails.count>0 ? 1 : 0
         case sectionOptions:
-            return upsellOptions.count
+            return orderManager.upsellOptions.count
         default:
             return 0
         }
@@ -126,23 +108,23 @@ extension OrderSummaryViewController: UITableViewDataSource {
         switch indexPath.section {
         case sectionDetails:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrderSummaryDetailTableViewCell", for: indexPath) as! OrderSummaryDetailTableViewCell
-            cell.titleLabel.text = priceDetails[indexPath.row].title
-            cell.priceLabel.text = priceDetails[indexPath.row].price.formatted
+            cell.titleLabel.text = orderManager.priceDetails[indexPath.row].title
+            cell.priceLabel.text = orderManager.priceDetails[indexPath.row].price.formatted
             return cell
         case sectionTotal:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrderSummaryTotalTableViewCell", for: indexPath) as! OrderSummaryTotalTableViewCell
-            if priceDetails.count > 0 {
+            if orderManager.priceDetails.count > 0 {
                 var v:Float = 0
-                for x in priceDetails {
+                for x in orderManager.priceDetails {
                     v = v + x.price.value
                 }
-                cell.priceLabel.text = Price(value: v, currencyCode: priceDetails[0].price.currencyCode, currencySymbol: priceDetails[0].price.currencySymbol).formatted
+                cell.priceLabel.text = Price(value: v, currencyCode: orderManager.priceDetails[0].price.currencyCode, currencySymbol: orderManager.priceDetails[0].price.currencySymbol).formatted
             }
             return cell
         case sectionOptions:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrderSummaryUpsellTableViewCell", for: indexPath) as! OrderSummaryUpsellTableViewCell
-            cell.titleLabel?.text = "Upgrade to " + upsellOptions[indexPath.row].title
-            if let order = self.order, order.selectedUpsellOptions.contains(upsellOptions[indexPath.row].identifier) {
+            cell.titleLabel?.text = "Upgrade to " + orderManager.upsellOptions[indexPath.row].title
+            if let order = orderManager.order, order.selectedUpsellOptions.contains(orderManager.upsellOptions[indexPath.row].identifier) {
                 cell.setSelected(true, animated: false)
             } else {
                 cell.setSelected(false, animated: false)
