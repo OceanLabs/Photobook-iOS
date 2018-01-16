@@ -47,16 +47,16 @@ class PhotobookViewController: UIViewController {
         // Remove pasteboard so that we avoid edge-cases with stale or inconsistent data
         UIPasteboard.remove(withName: UIPasteboardName("ly.kite.photobook.rearrange"))
         
+        collectionViewBottomConstraint.constant = -self.view.frame.height * (reverseRearrageScale - 1)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(menuDidHide), name: NSNotification.Name.UIMenuControllerDidHideMenu, object: nil)
+        
         guard let photobook = ProductManager.shared.products?.first else {
             loadProducts()
             return
         }
         
         setup(with: photobook)
-        
-        collectionViewBottomConstraint.constant = -self.view.frame.height * (reverseRearrageScale - 1)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(menuDidHide), name: NSNotification.Name.UIMenuControllerDidHideMenu, object: nil)
     }
     
     override func viewDidLayoutSubviews() {
@@ -210,7 +210,7 @@ class PhotobookViewController: UIViewController {
         pasteBoard?.setItems([["ly.kite.photobook.productLayout" : leftData]])
         
         if let rightIndex = cell.rightPageView?.index {
-            let rightProductLayout = rightIndex
+            let rightProductLayout = ProductManager.shared.productLayouts[rightIndex]
             guard let rightData = try? PropertyListEncoder().encode(rightProductLayout) else {
                 fatalError("Photobook: encoding of product layout failed")
             }
@@ -240,7 +240,12 @@ class PhotobookViewController: UIViewController {
         
         // Insert new page above the tapped one
         ProductManager.shared.addPages(at: index, pages: productLayouts)
-        collectionView.insertItems(at: [indexPath])
+        collectionView.performBatchUpdates({
+            collectionView.insertItems(at: [indexPath])
+        }, completion: { _ in
+            self.updateVisibleCellIndexes()
+        })
+        
         updateVisibleCells()
     }
     
@@ -252,12 +257,17 @@ class PhotobookViewController: UIViewController {
         let productLayout = ProductManager.shared.productLayouts[index]
         
         ProductManager.shared.deletePage(at: productLayout)
-        collectionView.deleteItems(at: [indexPath])
-        updateVisibleCells()
+        collectionView.performBatchUpdates({
+            collectionView.deleteItems(at: [indexPath])
+        }, completion: { _ in
+            self.updateVisibleCellIndexes()
+        })
+        
+        self.updateVisibleCells()
     }
     
     @objc func menuDidHide() {
-            interactingItemIndexPath = nil
+        interactingItemIndexPath = nil
     }
     
     @objc func handleLongPressGesture(_ sender: UILongPressGestureRecognizer) {
@@ -353,6 +363,7 @@ class PhotobookViewController: UIViewController {
     
     deinit {
         stopTimer()
+        NotificationCenter.default.removeObserver(self)
     }
     
     func deleteProposalCell(enableFeedback: Bool) {
@@ -533,11 +544,9 @@ extension PhotobookViewController: UICollectionViewDataSource {
             case 0:
                 cell.leftPageView.index = nil
                 cell.rightPageView?.index = 1
-                cell.plusButton.isHidden = true
             case collectionView.numberOfItems(inSection: 1) - 1: // Last page
                 cell.leftPageView.index = ProductManager.shared.productLayouts.count - 1
                 cell.rightPageView?.index = nil
-                cell.plusButton.isHidden = false
             default:
                 guard let index = ProductManager.shared.productLayoutIndex(for: indexPath.item) else { return cell }
                 cell.leftPageView.index = index
@@ -545,6 +554,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
                     cell.rightPageView?.index = index + 1
                 }
                 cell.plusButton.isHidden = false
+                cell.clipsToBounds = false
                 
                 // Add gestures required for drag and drop
                 if cell.bookView.gestureRecognizers?.count ?? 0 == 0{
@@ -563,7 +573,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             cell.leftPageView.load(size: imageSize)
             cell.rightPageView?.load(size: imageSize)
             
-            cell.plusButton.isHidden = !ProductManager.shared.isAddingPagesAllowed
+            cell.plusButton.isHidden = !ProductManager.shared.isAddingPagesAllowed || indexPath.item == 0
 
             return cell
         
@@ -664,7 +674,13 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
         
         // Insert new page above the tapped one
         ProductManager.shared.addPages(at: index)
-        collectionView.insertItems(at: [indexPath])
+        collectionView.performBatchUpdates({
+            collectionView.insertItems(at: [indexPath])
+        }, completion: { _ in
+            self.updateVisibleCellIndexes()
+        })
+        
+        self.updateVisibleCells()
     }
 }
 
