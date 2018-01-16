@@ -67,7 +67,9 @@ class ProductManager {
     var minimumRequiredAssets: Int {
         // In case we haven't loaded the products yet, return a hardcoded number
         // TODO: Change this number to something sensible
-        return 5
+        let defaultMinimum = 20
+        
+        return product?.minimumRequiredAssets ?? products?.first?.minimumRequiredAssets ?? defaultMinimum
     }
     var maximumAllowedAssets: Int {
         // TODO: get this from the photobook
