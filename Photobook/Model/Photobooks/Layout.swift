@@ -9,7 +9,7 @@
 import Foundation
 
 // Information about a page layout
-struct Layout: Codable {
+struct Layout: Equatable, Codable {
     let id: Int!
     let category: String!
     let imageUrl: String!
@@ -49,5 +49,9 @@ struct Layout: Codable {
         }
         
         return layout
+    }
+    
+    static func ==(lhs: Layout, rhs: Layout) -> Bool {
+        return lhs.id == rhs.id && lhs.category == rhs.category
     }
 }

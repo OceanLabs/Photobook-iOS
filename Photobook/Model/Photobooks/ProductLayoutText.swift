@@ -18,7 +18,7 @@ class ProductLayoutText: Codable {
     }
     var text: String?
     
-    func shallowCopy() -> ProductLayoutText {
+    func deepCopy() -> ProductLayoutText {
         let aLayoutText = ProductLayoutText()
         aLayoutText.text = text?.copy() as? String
         aLayoutText.containerSize = containerSize

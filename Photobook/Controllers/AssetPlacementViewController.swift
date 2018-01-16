@@ -105,8 +105,8 @@ class AssetPlacementViewController: UIViewController {
     
     private func setUpLayoutImageBox(withRatio ratio: CGFloat) {
         // Calculate new container size
-        var width: CGFloat!
-        var height: CGFloat!
+        var width: CGFloat
+        var height: CGFloat
         let maxWidth = assetEditingAreaView.bounds.width - Constants.sideMargins * 2.0
 
         if ratio < 1.0 { // Landscape
@@ -162,8 +162,8 @@ class AssetPlacementViewController: UIViewController {
     }
     
     // MARK: User interaction
-    var initialTransform: CGAffineTransform?
-    var gestures = Set<UIGestureRecognizer>(minimumCapacity: 3)
+    private var initialTransform: CGAffineTransform?
+    private var gestures = Set<UIGestureRecognizer>(minimumCapacity: 3)
 
     private func startedRotationGesture(_ gesture: UIRotationGestureRecognizer, inView view: UIView) {
         let location = gesture.location(in: view)

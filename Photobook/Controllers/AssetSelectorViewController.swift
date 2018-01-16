@@ -29,7 +29,9 @@ class AssetSelectorViewController: UIViewController {
     }
     private lazy var timesUsed: [String: Int] = {
         var temp = [String: Int]()
-        for asset in self.assets {
+        
+        for layout in ProductManager.shared.productLayouts {
+            guard let asset = layout.asset else { continue }
             temp[asset.identifier] = temp[asset.identifier] != nil ? temp[asset.identifier]! + 1 : 1
         }
         return temp
@@ -42,24 +44,23 @@ class AssetSelectorViewController: UIViewController {
     var selectedAsset: Asset? {
         didSet {
             guard selectedAsset != nil else {
+                if let previousAsset = oldValue, timesUsed[previousAsset.identifier] != nil {
+                    timesUsed[previousAsset.identifier] = timesUsed[previousAsset.identifier]! - 1
+                }
                 selectedAssetIndex = -1
-                reloadAndCenter()
+                collectionView.reloadData()
+                collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
                 return
             }
             selectedAssetIndex = assets.index { $0.identifier == selectedAsset!.identifier } ?? -1
-            reloadAndCenter()
+            if oldValue == nil { collectionView.reloadData() }
+            collectionView.scrollToItem(at: IndexPath(row: selectedAssetIndex, section: 0), at: .centeredHorizontally, animated: true)
         }
     }
     var browseNavigationController: UINavigationController!
     
     deinit {
         NotificationCenter.default.removeObserver(self)
-    }
-    
-    private func reloadAndCenter() {
-        collectionView.reloadData()
-        let itemToScrollTo = selectedAssetIndex >= 0 ? selectedAssetIndex : 0
-        collectionView.scrollToItem(at: IndexPath(row: itemToScrollTo, section: 0), at: .centeredHorizontally, animated: false)
     }
 }
 
@@ -80,8 +81,8 @@ extension AssetSelectorViewController: UICollectionViewDataSource {
         let asset = assets[indexPath.row]
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AssetSelectorAssetCollectionViewCell.reuseIdentifier, for: indexPath) as! AssetSelectorAssetCollectionViewCell
-        cell.isBorderVisible = (selectedAssetIndex == indexPath.row)
-        cell.timesUsed = timesUsed[asset.identifier] ?? 0
+        cell.isBorderVisible = selectedAssetIndex == indexPath.row
+        cell.timesUsed = (timesUsed[asset.identifier] ?? 0)
         cell.assetIdentifier = asset.identifier
         let itemSize = (collectionView.collectionViewLayout as! UICollectionViewFlowLayout).itemSize
         
@@ -114,12 +115,12 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
             indicesToReload.append(IndexPath(row: selectedAssetIndex, section: 0))
             timesUsed[selectedAsset.identifier] = timesUsed[selectedAsset.identifier]! - 1
         }
+
         selectedAsset = selectedAssetsManager.selectedAssets[indexPath.row]
         timesUsed[selectedAsset!.identifier] = timesUsed[selectedAsset!.identifier]! + 1
-        
+
         collectionView.reloadItems(at: indicesToReload)
-        collectionView.scrollToItem(at: IndexPath(row: indexPath.row, section: 0), at: .centeredHorizontally, animated: true)
-        
+
         delegate?.didSelect(asset: assets[indexPath.row])
     }
 }
