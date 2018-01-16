@@ -13,6 +13,14 @@ class PhotobookViewController: UIViewController {
     private struct Constants {
         static let rearrageScale: CGFloat = 0.8
         static let cellSideMargin: CGFloat = 10.0
+        static let rearrangeAnimationDuration: TimeInterval = 0.25
+        static let dragLiftScale: CGFloat = 1.1
+        static let autoScrollTopScreenThreshold: CGFloat = 0.2
+        static let autoScrollBottomScreenThreshold: CGFloat = 0.9
+        static let autoScrollInset: CGFloat = 10
+        static let dragLiftAnimationDuration: TimeInterval = 0.15
+        static let dropAnimationDuration: TimeInterval = 0.3
+        static let proposalCellAspectRatio: CGFloat = 32.0/406.0
     }
     private var reverseRearrageScale: CGFloat {
         return 1 + (1 - Constants.rearrageScale) / Constants.rearrageScale
@@ -36,6 +44,13 @@ class PhotobookViewController: UIViewController {
     private var draggingView: UIView?
     private var isDragging = false
     private var scrollingTimer: Timer?
+    private lazy var screenRefreshRate: Double = {
+        if #available(iOS 10.3, *) {
+            return 1.0/Double(UIScreen.main.maximumFramesPerSecond)
+        } else {
+            return 1.0/60.0
+        }
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -147,15 +162,15 @@ class PhotobookViewController: UIViewController {
         isRearranging = !isRearranging
         
         if isRearranging{
-            UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
-                self.collectionView.transform = CGAffineTransform(translationX: 0, y: -self.collectionView.frame.size.height * (1.0-Constants.rearrageScale)/2.0).scaledBy(x: 0.8, y: 0.8)
+            UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
+                self.collectionView.transform = CGAffineTransform(translationX: 0, y: -self.collectionView.frame.size.height * (1.0-Constants.rearrageScale)/2.0).scaledBy(x: Constants.rearrageScale, y: Constants.rearrageScale)
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
             }, completion: nil)
             
             sender.title = NSLocalizedString("Photobook/DoneButtonTitle", value: "Done", comment: "Done button title")
         } else{
-            UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
+            UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
                 self.collectionView.transform = .identity
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
@@ -327,7 +342,7 @@ class PhotobookViewController: UIViewController {
         guard let draggingView = draggingView, sender.state == .changed else { return }
         
         let translation = sender.translation(in: view)
-        draggingView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1).translatedBy(x: translation.x, y: translation.y)
+        draggingView.transform = CGAffineTransform(scaleX: Constants.dragLiftScale, y: Constants.dragLiftScale).translatedBy(x: translation.x, y: translation.y)
         
         let dragPointOnCollectionView = CGPoint(x: collectionView.frame.size.width / 2.0, y: sender.location(in: collectionView).y)
         guard let indexPathForDragPoint = collectionView.indexPathForItem(at: dragPointOnCollectionView),
@@ -366,21 +381,22 @@ class PhotobookViewController: UIViewController {
         }, completion: nil)
         
         // Auto-scroll the collectionView if you drag to the top or bottom
-        if draggingView.frame.origin.y + draggingView.frame.size.height / 2.0 > view.frame.size.height * 0.9 {
+        if draggingView.frame.origin.y + draggingView.frame.size.height / 2.0 > view.frame.size.height * Constants.autoScrollBottomScreenThreshold {
             guard scrollingTimer == nil else { return }
-            scrollingTimer = Timer(timeInterval: 1.0/60.0, repeats: true, block: { [weak welf = self] timer in
+            
+            scrollingTimer = Timer(timeInterval: screenRefreshRate, repeats: true, block: { [weak welf = self] timer in
                 guard welf != nil else { return }
-                if welf!.collectionView.contentOffset.y - welf!.collectionView.contentInset.bottom + welf!.collectionView.frame.size.height + 6 < welf!.collectionView.contentSize.height {
-                    welf!.collectionView.contentOffset = CGPoint(x: welf!.collectionView.contentOffset.x, y: welf!.collectionView.contentOffset.y + 6);
+                if welf!.collectionView.contentOffset.y - welf!.collectionView.contentInset.bottom + welf!.collectionView.frame.size.height + Constants.autoScrollInset < welf!.collectionView.contentSize.height {
+                    welf!.collectionView.contentOffset = CGPoint(x: welf!.collectionView.contentOffset.x, y: welf!.collectionView.contentOffset.y + Constants.autoScrollInset);
                 }
             })
         }
-        else if (draggingView.frame.origin.y + draggingView.frame.size.height / 2.0 < view.frame.size.height * 0.2) {
+        else if (draggingView.frame.origin.y + draggingView.frame.size.height / 2.0 < view.frame.size.height * Constants.autoScrollTopScreenThreshold) {
             guard scrollingTimer == nil else { return }
-            scrollingTimer = Timer(timeInterval: 1.0/60.0, repeats: true, block: { [weak welf = self] _ in
+            scrollingTimer = Timer(timeInterval: screenRefreshRate, repeats: true, block: { [weak welf = self] _ in
                 guard welf != nil else { return }
-                if (welf!.collectionView.contentOffset.y + welf!.collectionView.contentInset.top - 6 > 0){
-                    welf!.collectionView.contentOffset = CGPoint(x: welf!.collectionView.contentOffset.x, y: welf!.collectionView.contentOffset.y - 6);
+                if (welf!.collectionView.contentOffset.y + welf!.collectionView.contentInset.top - Constants.autoScrollInset > 0){
+                    welf!.collectionView.contentOffset = CGPoint(x: welf!.collectionView.contentOffset.x, y: welf!.collectionView.contentOffset.y - Constants.autoScrollInset);
                 }
             })
         }
@@ -425,7 +441,7 @@ class PhotobookViewController: UIViewController {
         let destinationIndexPath = proposedDropIndexPath ?? sourceIndexPath
         let movingDown = sourceIndexPath.item < destinationIndexPath.item
         guard let destinationCell = collectionView.cellForItem(at: IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 0), section: destinationIndexPath.section)) else { return }
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
+        UIView.animate(withDuration: Constants.dropAnimationDuration, delay: 0, options: .curveEaseInOut, animations: {
             draggingView.transform = CGAffineTransform(translationX: draggingView.transform.tx, y: draggingView.transform.ty)
             draggingView.frame.origin = self.collectionView.convert(destinationCell.frame, to: self.view).origin
             draggingView.layer.shadowRadius = 0
@@ -499,8 +515,8 @@ class PhotobookViewController: UIViewController {
         view.addSubview(snapshot)
         snapshot.frame = bookSuperview.convert(bookView.frame, to: view)
         
-        UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseInOut, animations: {
-            snapshot.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+        UIView.animate(withDuration: Constants.dragLiftAnimationDuration, delay: 0, options: .curveEaseInOut, animations: {
+            snapshot.transform = CGAffineTransform(scaleX: Constants.dragLiftScale, y: Constants.dragLiftScale)
             snapshot.layer.shadowRadius = 10
             snapshot.layer.shadowOpacity = 0.5
         }, completion: { _ in
@@ -628,7 +644,7 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
         guard let product = ProductManager.shared.product else { return .zero }
         
         if indexPath == proposedDropIndexPath, let size = collectionView.visibleCells.first?.frame.size {
-            return CGSize(width: size.width, height: size.width * (32.0/406.0))
+            return CGSize(width: size.width, height: size.width * Constants.proposalCellAspectRatio)
         } else {
             // TODO: Change this when we have a way to generate the book backgrounds.
             // ie, use the proper margins if it's dynamic or if we're using images, use the image dimensions
