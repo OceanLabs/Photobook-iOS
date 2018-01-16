@@ -16,6 +16,15 @@ class PhotobookPageView: UIView {
     
     weak var delegate: PhotobookPageViewDelegate?
     var index: Int?
+    var aspectRatio: CGFloat? {
+        didSet {
+            guard let aspectRatio = aspectRatio else { return }
+            self.removeConstraint(self.aspectRatioConstraint)
+            aspectRatioConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: self, attribute: .height, multiplier: aspectRatio, constant: 0)
+            aspectRatioConstraint.priority = UILayoutPriority(750)
+            self.addConstraint(aspectRatioConstraint)
+        }
+    }
     
     private var tapGesture: UITapGestureRecognizer!
     private var productLayout: ProductLayout? {
@@ -26,6 +35,8 @@ class PhotobookPageView: UIView {
     @IBOutlet private weak var assetContainerView: UIView!
     @IBOutlet private weak var assetPlaceholderIconImageView: UIImageView!
     @IBOutlet private weak var assetImageView: UIImageView!
+    
+    @IBOutlet private var aspectRatioConstraint: NSLayoutConstraint!
     
     override init(frame: CGRect) {
         super.init(frame: frame)

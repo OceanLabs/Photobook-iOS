@@ -2,12 +2,27 @@
 //  PhotobookCoverCollectionViewCell.swift
 //  Photobook
 //
-//  Created by Konstadinos Karayannis on 23/11/2017.
-//  Copyright © 2017 Kite.ly. All rights reserved.
+//  Created by Jaime Landazuri on 16/01/2018.
+//  Copyright © 2018 Kite.ly. All rights reserved.
 //
 
 import UIKit
 
-class PhotobookCoverCollectionViewCell: PhotobookCollectionViewCell {
-    @IBOutlet weak var spineView: UIView!
+class PhotobookCoverCollectionViewCell: UICollectionViewCell {
+    
+    @IBOutlet private weak var coverFrameView: CoverFrameView!
+    
+    static let reuseIdentifier = NSStringFromClass(PhotobookCoverCollectionViewCell.self).components(separatedBy: ".").last!
+    
+    var imageSize = CGSize.zero
+    var aspectRatio: CGFloat = 1.0 { didSet { coverFrameView.aspectRatio = aspectRatio } }
+    var width: CGFloat! { didSet { coverFrameView.width = width } }
+    var color: ProductColor! { didSet { coverFrameView.color = color } }
+    
+    weak var delegate: PhotobookPageViewDelegate? { didSet { coverFrameView.pageView.delegate = delegate } }
+    
+    func loadCover() {
+        coverFrameView.pageView.load(size: imageSize)
+    }
 }
+

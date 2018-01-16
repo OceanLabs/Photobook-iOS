@@ -143,7 +143,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch section{
+        switch section {
         case 1:
             return (ProductManager.shared.productLayouts.count + 1) / 2
         default:
@@ -157,52 +157,46 @@ extension PhotobookViewController: UICollectionViewDataSource {
         //TODO: Full width pages shouldn't divide by 2
         let imageSize = CGSize(width: collectionView.frame.size.width / 2.0, height: collectionView.frame.size.width / 2.0)
         
-        switch indexPath.section{
+        switch indexPath.section {
         case 0:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "coverCell", for: indexPath) as? PhotobookCollectionViewCell
-                else { return UICollectionViewCell() }
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotobookCoverCollectionViewCell.reuseIdentifier, for: indexPath) as! PhotobookCoverCollectionViewCell
+            cell.delegate = self
             
-            if let photobook = ProductManager.shared.product{
-                cell.configurePageAspectRatio(photobook.coverSizeRatio)
-            }
-            
-            cell.leftPageView.index = 0
-            cell.leftPageView.delegate = self
-            cell.leftPageView.load(size: imageSize)
+            cell.color = ProductManager.shared.coverColor
+            cell.imageSize = imageSize
+            cell.width = (view.bounds.size.width - Constants.cellSideMargin * 2.0) / 2.0
+            cell.aspectRatio = ProductManager.shared.product!.coverSizeRatio
+            cell.loadCover()
             
             return cell
         default:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "doublePageCell", for: indexPath) as? PhotobookCollectionViewCell
-                else { return UICollectionViewCell() }
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OpenPhotobookCollectionViewCell.reuseIdentifier, for: indexPath) as! OpenPhotobookCollectionViewCell
+            cell.delegate = self
             
-            cell.widthConstraint.constant = view.bounds.size.width - Constants.cellSideMargin * 2.0
+            cell.coverColor = ProductManager.shared.coverColor
+            cell.pageColor = ProductManager.shared.pageColor
+            cell.imageSize = imageSize
+            cell.width = view.bounds.size.width - Constants.cellSideMargin * 2.0
+            cell.aspectRatio = ProductManager.shared.product!.pageSizeRatio
             
-            if let photobook = ProductManager.shared.product{
-                cell.configurePageAspectRatio(photobook.pageSizeRatio)
-            }
-
-            cell.rightPageView?.delegate = self
-            cell.leftPageView.delegate = self
-
             // First and last pages of the book are courtesy pages, no photos on them
-            switch indexPath.item{
+            var leftIndex: Int? = nil
+            var rightIndex: Int? = nil
+            switch indexPath.item {
             case 0:
-                cell.leftPageView.index = nil
-                cell.rightPageView?.index = 1
+                rightIndex = 1
             case collectionView.numberOfItems(inSection: 1) - 1: // Last page
-                cell.leftPageView.index = ProductManager.shared.productLayouts.count - 1
-                cell.rightPageView?.index = nil
+                leftIndex = ProductManager.shared.productLayouts.count - 1
             default:
                 //TODO: Get indexes from Photobook model, because full width layouts means that we can't rely on indexPaths
-                cell.leftPageView.index = indexPath.item * 2
-                cell.rightPageView?.index = indexPath.item * 2 + 1
+                leftIndex = indexPath.item * 2
+                rightIndex = indexPath.item * 2 + 1
             }
-
-            cell.leftPageView.load(size: imageSize)
-            cell.rightPageView?.load(size: imageSize)
-
+            
+            cell.loadPage(.left, index: leftIndex)
+            cell.loadPage(.right, index: rightIndex)
+            
             return cell
-        
         }
     }
 }
