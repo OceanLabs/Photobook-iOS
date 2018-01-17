@@ -97,22 +97,86 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Q7V-q1-95p">
                                 <rect key="frame" x="0.0" y="0.0" width="414.66666666666669" height="692"/>
                                 <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qHd-uS-3Hd" customClass="CoverFrameView" customModule="Photobook" customModuleProvider="target">
+                                        <rect key="frame" x="30" y="78.333333333333329" width="354.66666666666669" height="255.66666666666669"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Shv-7M-ANA" customClass="CoverBackgroundView" customModule="Photobook" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="354.66666666666669" height="255.66666666666666"/>
+                                                <subviews>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o9p-sQ-fNU" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
+                                                        <rect key="frame" x="17.666666666666657" y="0.0" width="337" height="255.66666666666666"/>
+                                                        <subviews>
+                                                            <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gqm-5A-oWZ">
+                                                                <rect key="frame" x="27.666666666666814" y="36" width="120" height="120"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <subviews>
+                                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="assetPlaceholder" translatesAutoresizingMaskIntoConstraints="NO" id="tho-p9-ghB">
+                                                                        <rect key="frame" x="50" y="50" width="18" height="18"/>
+                                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                    </imageView>
+                                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="u2H-X3-aav">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="120" height="120"/>
+                                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                    </imageView>
+                                                                </subviews>
+                                                            </view>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CLX-rE-8ac">
+                                                                <rect key="frame" x="29" y="163" width="116" height="21"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="8"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" secondItem="o9p-sQ-fNU" secondAttribute="height" multiplier="158:120" priority="750" id="pWB-wt-o55"/>
+                                                        </constraints>
+                                                        <connections>
+                                                            <outlet property="aspectRatioConstraint" destination="pWB-wt-o55" id="Gzb-Lh-jgg"/>
+                                                            <outlet property="assetContainerView" destination="gqm-5A-oWZ" id="CDs-lw-BZe"/>
+                                                            <outlet property="assetImageView" destination="u2H-X3-aav" id="dz4-lF-ipf"/>
+                                                            <outlet property="assetPlaceholderIconImageView" destination="tho-p9-ghB" id="yKp-3N-OSG"/>
+                                                            <outlet property="pageTextLabel" destination="CLX-rE-8ac" id="BGs-1Z-7G4"/>
+                                                        </connections>
+                                                    </view>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="o9p-sQ-fNU" secondAttribute="trailing" id="6EE-Bn-6cm"/>
+                                                    <constraint firstItem="o9p-sQ-fNU" firstAttribute="width" secondItem="Shv-7M-ANA" secondAttribute="width" multiplier="0.95" id="CTa-dA-Zlg"/>
+                                                    <constraint firstItem="o9p-sQ-fNU" firstAttribute="top" secondItem="Shv-7M-ANA" secondAttribute="top" id="Eap-yW-iwR"/>
+                                                    <constraint firstAttribute="bottom" secondItem="o9p-sQ-fNU" secondAttribute="bottom" id="M3R-vu-ENX"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="Shv-7M-ANA" firstAttribute="leading" secondItem="qHd-uS-3Hd" secondAttribute="leading" id="HE4-vd-ng9"/>
+                                            <constraint firstItem="Shv-7M-ANA" firstAttribute="top" secondItem="qHd-uS-3Hd" secondAttribute="top" id="dih-Xn-mjN"/>
+                                            <constraint firstAttribute="bottom" secondItem="Shv-7M-ANA" secondAttribute="bottom" id="w0o-Ax-hgL"/>
+                                            <constraint firstAttribute="trailing" secondItem="Shv-7M-ANA" secondAttribute="trailing" id="wWN-QP-ZsF"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="coverBackgroundView" destination="Shv-7M-ANA" id="pOL-dY-FyA"/>
+                                            <outlet property="pageView" destination="o9p-sQ-fNU" id="PvU-Ju-Pcf"/>
+                                        </connections>
+                                    </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="csF-Mk-Hwo" customClass="PhotobookFrameView" customModule="Photobook" customModuleProvider="target">
-                                        <rect key="frame" x="30" y="242" width="354.66666666666669" height="207.33333333333337"/>
+                                        <rect key="frame" x="30" y="372.33333333333331" width="354.66666666666669" height="207.33333333333331"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U7g-y9-MvK" userLabel="Cover View" customClass="PhotobookFrameCoverView" customModule="Photobook" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.33333333333334281" width="354.66666666666669" height="207.33333333333334"/>
+                                                <rect key="frame" x="0.0" y="0.33333333333337123" width="354.66666666666669" height="207.33333333333334"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bGO-kU-WeJ" userLabel="Cover Inside Image View">
-                                                <rect key="frame" x="5" y="5.3333333333333428" width="344.66666666666669" height="197.33333333333334"/>
+                                                <rect key="frame" x="5" y="5.3333333333333712" width="344.66666666666669" height="197.33333333333334"/>
                                             </imageView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bay-q7-TDN" userLabel="Left Page Background View" customClass="PhotobookFramePageBackgroundView" customModule="Photobook" customModuleProvider="target">
-                                                <rect key="frame" x="13" y="5.3333333333333428" width="164.66666666666666" height="197.33333333333334"/>
+                                                <rect key="frame" x="13" y="5.3333333333333712" width="164.66666666666666" height="197.33333333333334"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p9B-RY-VIR" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="5.3333333333333428" width="157.66666666666666" height="197.33333333333334"/>
+                                                <rect key="frame" x="20" y="5.3333333333333712" width="157.66666666666666" height="197.33333333333334"/>
                                                 <subviews>
                                                     <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oUB-ce-Ekb">
                                                         <rect key="frame" x="19.333333333333329" y="39" width="120" height="120"/>
@@ -148,11 +212,11 @@
                                                 </connections>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lbu-Sg-r0c" userLabel="Right Page Background View" customClass="PhotobookFramePageBackgroundView" customModule="Photobook" customModuleProvider="target">
-                                                <rect key="frame" x="178.66666666666663" y="5.3333333333333428" width="163" height="197.33333333333334"/>
+                                                <rect key="frame" x="178.66666666666663" y="5.3333333333333712" width="163" height="197.33333333333334"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gbo-1E-As8" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
-                                                <rect key="frame" x="178.66666666666663" y="5.3333333333333428" width="156" height="197.33333333333334"/>
+                                                <rect key="frame" x="178.66666666666663" y="5.3333333333333712" width="156" height="197.33333333333334"/>
                                                 <subviews>
                                                     <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7Wi-sf-fnl">
                                                         <rect key="frame" x="18.666666666666714" y="39" width="120" height="120"/>
@@ -188,7 +252,7 @@
                                                 </connections>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wm2-kM-bKA" userLabel="Page Divider View" customClass="PhotobookFramePageDividerView" customModule="Photobook" customModuleProvider="target">
-                                                <rect key="frame" x="177.66666666666666" y="5.3333333333333428" width="1" height="197.33333333333334"/>
+                                                <rect key="frame" x="177.66666666666666" y="5.3333333333333712" width="1" height="197.33333333333334"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="1" id="BIL-Gd-nbL"/>
@@ -244,8 +308,14 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="csF-Mk-Hwo" secondAttribute="trailing" constant="30" id="2eh-Kp-ieW"/>
-                                    <constraint firstItem="csF-Mk-Hwo" firstAttribute="centerY" secondItem="Q7V-q1-95p" secondAttribute="centerY" id="6Tl-d9-Qcl"/>
+                                    <constraint firstAttribute="trailing" secondItem="qHd-uS-3Hd" secondAttribute="trailing" constant="30" id="5as-bT-221"/>
+                                    <constraint firstItem="csF-Mk-Hwo" firstAttribute="centerY" secondItem="Q7V-q1-95p" secondAttribute="centerY" priority="750" id="6Tl-d9-Qcl"/>
+                                    <constraint firstItem="qHd-uS-3Hd" firstAttribute="centerX" secondItem="Q7V-q1-95p" secondAttribute="centerX" id="JzH-Bt-dZA"/>
+                                    <constraint firstItem="csF-Mk-Hwo" firstAttribute="centerY" secondItem="Q7V-q1-95p" secondAttribute="centerY" constant="130" placeholder="YES" id="aZe-3C-fAz"/>
                                     <constraint firstItem="csF-Mk-Hwo" firstAttribute="leading" secondItem="Q7V-q1-95p" secondAttribute="leading" constant="30" id="nK4-fT-x2O"/>
+                                    <constraint firstItem="qHd-uS-3Hd" firstAttribute="centerY" secondItem="Q7V-q1-95p" secondAttribute="centerY" priority="750" id="ncU-is-NHA"/>
+                                    <constraint firstItem="qHd-uS-3Hd" firstAttribute="leading" secondItem="Q7V-q1-95p" secondAttribute="leading" constant="30" id="rCG-nI-adZ"/>
+                                    <constraint firstItem="qHd-uS-3Hd" firstAttribute="centerY" secondItem="Q7V-q1-95p" secondAttribute="centerY" constant="-140" placeholder="YES" id="vdR-k0-hxP"/>
                                 </constraints>
                             </view>
                             <containerView opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p5s-6j-6B3" userLabel="Layout Selection Container View">
@@ -293,6 +363,9 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="assetSelectionContainerView" destination="rjg-CR-QNN" id="90F-4o-IBf"/>
+                        <outlet property="coverAssetContainerView" destination="gqm-5A-oWZ" id="mMN-4G-cs6"/>
+                        <outlet property="coverAssetImageView" destination="u2H-X3-aav" id="wq8-dd-lC4"/>
+                        <outlet property="coverFrameView" destination="qHd-uS-3Hd" id="8ZW-7N-zmq"/>
                         <outlet property="layoutSelectionContainerView" destination="p5s-6j-6B3" id="LlI-bQ-DR1"/>
                         <outlet property="leftAssetContainerView" destination="oUB-ce-Ekb" id="OCl-rx-42x"/>
                         <outlet property="leftAssetImageView" destination="Ig2-ua-7Ht" id="tOY-Ys-Dx0"/>
@@ -1453,14 +1526,14 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aKo-Fy-w8j" customClass="SpineFrameView" customModule="Photobook" customModuleProvider="target">
-                                                    <rect key="frame" x="82.333333333333329" y="0.0" width="10" height="207"/>
+                                                    <rect key="frame" x="83" y="0.0" width="10" height="207"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Md-3g-kuo" customClass="SpineBackgroundView" customModule="Photobook" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="10" height="207"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ORz-yc-dFH">
-                                                            <rect key="frame" x="-27.999999999999993" y="104.33333333333333" width="66" height="0.0"/>
+                                                            <rect key="frame" x="-28" y="104.33333333333333" width="66" height="0.0"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="66" id="qsC-jx-jNX"/>
                                                             </constraints>
@@ -1486,13 +1559,13 @@
                                                     </connections>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7hj-ms-TMa" customClass="CoverFrameView" customModule="Photobook" customModuleProvider="target">
-                                                    <rect key="frame" x="122.33333333333333" y="0.0" width="174.33333333333337" height="207"/>
+                                                    <rect key="frame" x="123" y="0.0" width="173" height="207"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NBy-2O-xiC" customClass="CoverBackgroundView" customModule="Photobook" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="174.33333333333334" height="207"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="173" height="207"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SIc-aM-s7t" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="10.000000000000014" y="0.0" width="164.33333333333337" height="207"/>
+                                                                    <rect key="frame" x="8.6666666666666572" y="0.0" width="164.33333333333334" height="207"/>
                                                                     <subviews>
                                                                         <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wv5-To-CaO">
                                                                             <rect key="frame" x="27.666666666666814" y="36" width="120" height="120"/>
@@ -1530,8 +1603,8 @@
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
-                                                                <constraint firstItem="SIc-aM-s7t" firstAttribute="leading" secondItem="NBy-2O-xiC" secondAttribute="leading" constant="10" id="Cx1-mw-eaf"/>
                                                                 <constraint firstItem="SIc-aM-s7t" firstAttribute="top" secondItem="NBy-2O-xiC" secondAttribute="top" id="LTm-1u-tw4"/>
+                                                                <constraint firstItem="SIc-aM-s7t" firstAttribute="width" secondItem="NBy-2O-xiC" secondAttribute="width" multiplier="0.95" id="PxU-su-L7b"/>
                                                                 <constraint firstAttribute="trailing" secondItem="SIc-aM-s7t" secondAttribute="trailing" id="eb8-uy-ooR"/>
                                                                 <constraint firstAttribute="bottom" secondItem="SIc-aM-s7t" secondAttribute="bottom" id="yKn-Tb-ytd"/>
                                                             </constraints>

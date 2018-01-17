@@ -39,12 +39,19 @@ class PageSetupViewController: UIViewController {
     private var layoutSelectionViewController: LayoutSelectionViewController!
     private var assetPlacementViewController: AssetPlacementViewController!
     
-    @IBOutlet private weak var photobookFrameView: PhotobookFrameView!
+    @IBOutlet private weak var coverFrameView: CoverFrameView! {
+        didSet { coverFrameView.isHidden = pageType != .cover }
+    }
+    @IBOutlet private weak var photobookFrameView: PhotobookFrameView!  {
+        didSet { photobookFrameView.isHidden = pageType == .cover }
+    }
     
     @IBOutlet private weak var photobookWidthConstraint: NSLayoutConstraint!
     @IBOutlet private var photobookLeadingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var photobookTrailingConstraint: NSLayoutConstraint!
     
+    @IBOutlet private weak var coverAssetContainerView: UIView!
+    @IBOutlet private weak var coverAssetImageView: UIImageView!
     @IBOutlet private weak var leftAssetContainerView: UIView!
     @IBOutlet private weak var leftAssetImageView: UIImageView!
     @IBOutlet private weak var rightAssetContainerView: UIView!
@@ -59,8 +66,7 @@ class PageSetupViewController: UIViewController {
         case .right:
             return rightAssetContainerView
         case .cover:
-            // TODO
-            return nil
+            return coverAssetContainerView
         }
     }
 
@@ -73,8 +79,7 @@ class PageSetupViewController: UIViewController {
         case .right:
             return rightAssetImageView
         case .cover:
-            // TODO
-            return nil
+            return coverAssetImageView
         }
     }
     
@@ -105,8 +110,7 @@ class PageSetupViewController: UIViewController {
         case .right:
             return photobookFrameView.rightPageView
         case .cover:
-            // TODO
-            return nil
+            return coverFrameView.pageView
         }
     }
     
@@ -121,11 +125,15 @@ class PageSetupViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         if !hasDoneSetup {
+            coverFrameView.color = ProductManager.shared.coverColor
+            coverFrameView.aspectRatio = pageSizeRatio
+
             photobookFrameView.pageColor = ProductManager.shared.pageColor
             photobookFrameView.coverColor = ProductManager.shared.coverColor
             
             photobookFrameView.leftPageView.aspectRatio = pageSizeRatio
             photobookFrameView.rightPageView.aspectRatio = pageSizeRatio
+
             photobookWidthConstraint.constant = (view.bounds.width - 2.0 * Constants.photobookSideMargin) * 2.0
             
             pageView.index = pageIndex
@@ -247,11 +255,11 @@ class PageSetupViewController: UIViewController {
 extension PageSetupViewController: LayoutSelectionViewControllerDelegate {
     
     func didSelectLayout(_ layout: Layout) {
-        pageView.productLayout!.layout = layout
+        productLayout.layout = layout
         pageView.setupLayoutBoxes()
         
         // Deselect the asset if the layout does not have an image box
-        if pageView.productLayout!.layout.imageLayoutBox == nil {
+        if productLayout.layout.imageLayoutBox == nil {
             assetSelectorViewController.selectedAsset = nil
         }
         
@@ -263,13 +271,13 @@ extension PageSetupViewController: AssetSelectorDelegate {
     
     func didSelect(asset: Asset) {
         layoutSelectionViewController.asset = asset
-        pageView.productLayout!.asset = asset
+        productLayout.asset = asset
 
         // If the current layout does not have an image box, find the first layout that does and use it
-        if pageView.productLayout!.layout.imageLayoutBox == nil {
+        if productLayout.layout.imageLayoutBox == nil {
             let defaultLayout = availableLayouts.first(where: { $0.imageLayoutBox != nil })
 
-            pageView.productLayout!.layout = defaultLayout
+            productLayout.layout = defaultLayout
             pageView.setupTextBox()
             
             layoutSelectionViewController.selectedLayout = productLayout.layout

@@ -29,6 +29,7 @@ class CoverFrameView: UIView {
     @IBOutlet weak var pageView: PhotobookPageView! {
         didSet {
             pageView.index = 0
+            pageView.productLayout = ProductManager.shared.productLayouts.first
         }
     }
     
@@ -73,7 +74,7 @@ class CoverFrameView: UIView {
 class CoverBackgroundView: UIView {
     
     private struct Constants {
-        static let spineWidth: CGFloat = 10.0
+        static let spineWidthRatio: CGFloat = 0.05
     }
 
     var color: ProductColor = .white
@@ -125,10 +126,10 @@ class CoverBackgroundView: UIView {
         let spineLocations: [CGFloat] = [ 0.0, 0.22, 0.3, 0.8, 0.81, 1.0 ]
         let spineGradientColors = [ firstSpineColor, secondSpineColor, secondSpineColor, firstSpineColor, firstSpineColor, secondSpineColor ]
         
-        context.clip(to: CGRect(x: 0.0, y: 0.0, width: Constants.spineWidth, height: rect.height))
+        context.clip(to: CGRect(x: 0.0, y: 0.0, width: rect.maxX * Constants.spineWidthRatio, height: rect.height))
         
         // Spine gradient
         let spineGradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: spineGradientColors as CFArray, locations: spineLocations)
-        context.drawLinearGradient(spineGradient!, start: .zero, end: CGPoint(x: Constants.spineWidth, y: 0.0), options: CGGradientDrawingOptions(rawValue: 0))
+        context.drawLinearGradient(spineGradient!, start: .zero, end: CGPoint(x: rect.maxX * Constants.spineWidthRatio, y: 0.0), options: CGGradientDrawingOptions(rawValue: 0))
     }
 }
