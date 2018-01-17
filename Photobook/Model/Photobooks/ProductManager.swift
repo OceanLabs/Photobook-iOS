@@ -65,11 +65,7 @@ class ProductManager {
     var pageColor: ProductColor = .white
     var productLayouts = [ProductLayout]()
     var minimumRequiredAssets: Int {
-        // In case we haven't loaded the products yet, return a hardcoded number
-        // TODO: Change this number to something sensible
-        let defaultMinimum = 20
-        
-        return product?.minimumRequiredAssets ?? products?.first?.minimumRequiredAssets ?? defaultMinimum
+        return 5
     }
     var maximumAllowedAssets: Int {
         // TODO: get this from the photobook
@@ -123,13 +119,13 @@ class ProductManager {
             return assets
         }()
         
-        // Duplicate the first photo to use as both the cover AND the first page 🙄
-        if let first = addedAssets.first{
-            addedAssets.insert(first, at: 0)
-        }
-        
         // First photobook only
         if product == nil {
+            // Duplicate the first photo to use as both the cover AND the first page 🙄
+            if let first = addedAssets.first{
+                addedAssets.insert(first, at: 0)
+            }
+            
             var tempLayouts = [ProductLayout]()
 
             // Use first photo for the cover
@@ -151,22 +147,26 @@ class ProductManager {
             return
         }
         
+        // Reset the current layout since we are changing products
+        currentLandscapeLayout = 0
+        currentPortraitLayout = 0
+        
         // Find if any assets were removed or added since the last time
         var removedAssets = [Asset]()
+        var keptAssets = [Asset]()
         
         for productLayout in productLayouts {
             guard let asset = productLayout.asset else { continue }
-            var removed = true
             
             // Check if asset is still included in the new selections
             if let addedIndex = addedAssets.index(where: { $0 == asset }) {
                 addedAssets.remove(at: addedIndex)
                 
-                // Mark asset as not removed
-                removed = false
+                // Mark asset as kept
+                keptAssets.append(asset)
             }
             
-            if removed {
+            if keptAssets.index(where: { $0 == asset }) == nil {
                 removedAssets.append(asset)
             }
         }
