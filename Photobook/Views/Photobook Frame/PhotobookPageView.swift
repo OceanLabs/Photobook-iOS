@@ -14,6 +14,10 @@ protocol PhotobookPageViewDelegate: class {
 
 class PhotobookPageView: UIView {
     
+    private struct Constants {
+        static let textBoxFont = UIFont.systemFont(ofSize: 6.0)
+    }
+
     weak var delegate: PhotobookPageViewDelegate?
     var index: Int?
     var aspectRatio: CGFloat? {
@@ -25,16 +29,15 @@ class PhotobookPageView: UIView {
             self.addConstraint(aspectRatioConstraint)
         }
     }
+    var imageSize = CGSize(width: Int.max, height: Int.max)
     
     private var tapGesture: UITapGestureRecognizer!
-    private var productLayout: ProductLayout? {
-        guard let index = index else { return nil }
-        return ProductManager.shared.productLayouts[index]
-    }
+    var productLayout: ProductLayout?
     
     @IBOutlet private weak var assetContainerView: UIView!
     @IBOutlet private weak var assetPlaceholderIconImageView: UIImageView!
     @IBOutlet private weak var assetImageView: UIImageView!
+    @IBOutlet private weak var pageTextLabel: UILabel!
     
     @IBOutlet private var aspectRatioConstraint: NSLayoutConstraint!
     
@@ -53,48 +56,47 @@ class PhotobookPageView: UIView {
         
         guard let imageBox = productLayout?.layout.imageLayoutBox else { return }
         assetContainerView.frame = imageBox.rectContained(in: CGSize(width: frame.width, height: frame.height))
+        
         assetPlaceholderIconImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
+        
+        guard let textBox = productLayout?.layout.textLayoutBox else { return }
+        pageTextLabel.frame = textBox.rectContained(in: bounds.size)
+        pageTextLabel.font = Constants.textBoxFont
+        adjustLabelHeight()
     }
     
     private func setup() {
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOnPage(_:))))
     }
     
-    func load(size: CGSize) {
-        setImage(image: nil)
-        
-        guard let index = index else {
-            isHidden = true
-            return
-        }
-        isHidden = false
-        
+    func setupImageBox() {
         guard let imageBox = productLayout?.layout.imageLayoutBox else {
             assetContainerView.alpha = 0.0
             return
         }
-        assetContainerView.alpha = 1.0
-        assetContainerView.frame = imageBox.rectContained(in: CGSize(width: frame.width, height: frame.height))
         
-        guard let asset = productLayout?.productLayoutAsset?.asset else {
+        guard let index = index, let asset = productLayout?.productLayoutAsset?.asset else {
             setImagePlaceholder(visible: true)
             return
         }
         
-        asset.image(size: size, completionHandler: { [weak welf = self] (image, _) in
+        assetContainerView.frame = imageBox.rectContained(in: bounds.size)
+        
+        asset.image(size: imageSize, completionHandler: { [weak welf = self] (image, _) in
             guard welf?.index == index, let image = image else { return }
             welf?.setImage(image: image)
         })
     }
     
-    func setImage(image: UIImage?) {
-        guard let image = image, let asset = productLayout?.productLayoutAsset?.asset else {
+    func setImage(image: UIImage) {
+        guard let asset = productLayout?.productLayoutAsset?.asset else {
             setImagePlaceholder(visible: true)
             return
         }
         
         setImagePlaceholder(visible: false)
         
+        assetContainerView.alpha = 1.0
         assetImageView.image = image
         assetImageView.transform = .identity
         assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: asset.size.width, height: asset.size.height)
@@ -102,6 +104,32 @@ class PhotobookPageView: UIView {
         
         productLayout!.productLayoutAsset!.containerSize = assetContainerView.bounds.size
         assetImageView.transform = productLayout!.productLayoutAsset!.transform
+    }
+
+    func setupLayoutBoxes() {
+        setupImageBox()
+        setupTextBox()
+    }
+    
+    func setupTextBox() {
+        guard let textBox = productLayout?.layout.textLayoutBox else {
+            pageTextLabel.alpha = 0.0
+            return
+        }
+        
+        var text = productLayout?.productLayoutText?.text
+        if (text ?? "").isEmpty {
+            text = NSLocalizedString("Views/Photobook Frame/PhotobookPageView/pageTextLabel/placeholder",
+                                     value: "Add your own text",
+                                     comment: "Placeholder text to show on a cover / page")
+        }
+        
+        pageTextLabel.alpha = 1.0
+        pageTextLabel.text = text
+        
+        pageTextLabel.frame = textBox.rectContained(in: bounds.size)
+        pageTextLabel.font = Constants.textBoxFont
+        adjustLabelHeight()
     }
     
     func setImagePlaceholder(visible: Bool) {
@@ -119,6 +147,14 @@ class PhotobookPageView: UIView {
     @objc private func didTapOnPage(_ sender: UITapGestureRecognizer) {
         guard let index = index else { return }
         delegate?.didTapOnPage(index: index)
+    }
+    
+    private func adjustLabelHeight() {
+        let textAttributes = [NSAttributedStringKey.font: Constants.textBoxFont]
+        let rect = pageTextLabel.text!.boundingRect(with: CGSize(width: pageTextLabel.bounds.width, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, attributes: textAttributes, context: nil)
+        if rect.size.height < pageTextLabel.bounds.height {
+            pageTextLabel.frame.size.height = rect.size.height
+        }
     }
 }
 

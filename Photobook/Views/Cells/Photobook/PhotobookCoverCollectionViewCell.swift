@@ -15,7 +15,11 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell {
     
     static let reuseIdentifier = NSStringFromClass(PhotobookCoverCollectionViewCell.self).components(separatedBy: ".").last!
     
-    var imageSize = CGSize.zero
+    var imageSize = CGSize(width: Int.max, height: Int.max) {
+        didSet {
+            coverFrameView.pageView.imageSize = imageSize
+        }
+    }
     var aspectRatio: CGFloat = 1.0 { didSet { coverFrameView.aspectRatio = aspectRatio } }
     var width: CGFloat! { didSet { coverFrameView.width = width } }
     var color: ProductColor! {
@@ -29,7 +33,7 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell {
     weak var delegate: PhotobookPageViewDelegate? { didSet { coverFrameView.pageView.delegate = delegate } }
     
     func loadCover() {
-        coverFrameView.pageView.load(size: imageSize)
+        coverFrameView.pageView.setupImageBox()
     }
 }
 

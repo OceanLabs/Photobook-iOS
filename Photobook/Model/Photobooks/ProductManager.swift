@@ -228,7 +228,8 @@ class ProductManager {
                 layout = portraitLayouts[currentPortraitLayout]
                 currentPortraitLayout = currentPortraitLayout < portraitLayouts.count - 1 ? currentPortraitLayout + 1 : 0
             }
-            let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset)
+            let productLayoutText = layout.textLayoutBox != nil ? ProductLayoutText() : nil
+            let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset, productLayoutText: productLayoutText)
             productLayouts.append(productLayout)
         }
         

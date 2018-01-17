@@ -14,7 +14,12 @@ class OpenPhotobookCollectionViewCell: UICollectionViewCell {
     
     static let reuseIdentifier = NSStringFromClass(OpenPhotobookCollectionViewCell.self).components(separatedBy: ".").last!
     
-    var imageSize = CGSize.zero
+    var imageSize = CGSize(width: Int.max, height: Int.max) {
+        didSet {
+            photobookFrameView.leftPageView.imageSize = imageSize
+            photobookFrameView.rightPageView.imageSize = imageSize
+        }
+    }
     var aspectRatio: CGFloat = 1.0 {
         didSet {
             photobookFrameView.leftPageView.aspectRatio = aspectRatio
@@ -33,7 +38,7 @@ class OpenPhotobookCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func loadPage(_ page: PageSide, index: Int?) {
+    func loadPage(_ page: PageSide, index: Int?, layout: ProductLayout?) {
         switch page {
         case .left:
             guard let index = index else {
@@ -43,7 +48,8 @@ class OpenPhotobookCollectionViewCell: UICollectionViewCell {
             }
             photobookFrameView.isLeftPageVisible = true
             photobookFrameView.leftPageView.index = index
-            photobookFrameView.leftPageView.load(size: imageSize)
+            photobookFrameView.leftPageView.productLayout = layout
+            photobookFrameView.leftPageView.setupImageBox()
         case .right:
             guard let index = index else {
                 photobookFrameView.isRightPageVisible = false
@@ -52,7 +58,8 @@ class OpenPhotobookCollectionViewCell: UICollectionViewCell {
             }
             photobookFrameView.isRightPageVisible = true
             photobookFrameView.rightPageView.index = index
-            photobookFrameView.rightPageView.load(size: imageSize)
+            photobookFrameView.rightPageView.productLayout = layout
+            photobookFrameView.rightPageView.setupImageBox()
         }
     }
 }

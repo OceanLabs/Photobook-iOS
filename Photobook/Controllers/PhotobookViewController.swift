@@ -194,8 +194,11 @@ extension PhotobookViewController: UICollectionViewDataSource {
                 rightIndex = indexPath.item * 2 + 1
             }
             
-            cell.loadPage(.left, index: leftIndex)
-            cell.loadPage(.right, index: rightIndex)
+            let leftLayout: ProductLayout? = leftIndex != nil ? ProductManager.shared.productLayouts[leftIndex!] : nil
+            let rightLayout: ProductLayout? = rightIndex != nil ? ProductManager.shared.productLayouts[rightIndex!] : nil
+
+            cell.loadPage(.left, index: leftIndex, layout: leftLayout)
+            cell.loadPage(.right, index: rightIndex, layout: rightLayout)
             
             return cell
         }
