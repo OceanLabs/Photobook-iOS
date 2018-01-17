@@ -441,10 +441,14 @@ class PhotobookViewController: UIViewController {
         
         let destinationIndexPath = proposedDropIndexPath ?? sourceIndexPath
         let movingDown = sourceIndexPath.item < destinationIndexPath.item
+        
         guard let destinationCell = collectionView.cellForItem(at: IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 0), section: destinationIndexPath.section)) else { return }
+        
+        let destinationY = self.collectionView.convert(destinationCell.frame, to: self.view).origin.y
+        
         UIView.animate(withDuration: Constants.dropAnimationDuration, delay: 0, options: .curveEaseInOut, animations: {
             draggingView.transform = CGAffineTransform(translationX: draggingView.transform.tx, y: draggingView.transform.ty)
-            draggingView.frame.origin = self.collectionView.convert(destinationCell.frame, to: self.view).origin
+            draggingView.frame.origin = CGPoint(x: self.collectionView.frame.origin.x + Constants.cellSideMargin * Constants.rearrageScale, y: destinationY)
             draggingView.layer.shadowRadius = 0
             draggingView.layer.shadowOpacity = 0
         }, completion: { _ in
@@ -455,8 +459,9 @@ class PhotobookViewController: UIViewController {
             self.draggingView = nil
             self.interactingItemIndexPath = nil
             
-            if let insertingIndexPath = self.insertingIndexPath {
-                (self.collectionView.cellForItem(at: insertingIndexPath) as? PhotobookCollectionViewCell)?.bookView.isHidden = false
+            if let insertingIndexPath = self.insertingIndexPath, let cell = self.collectionView.cellForItem(at: insertingIndexPath) as? PhotobookCollectionViewCell {
+                cell.bookView.isHidden = false
+                cell.backgroundColor = UIColor(red:0.85, green:0.86, blue:0.86, alpha:1)
                 self.insertingIndexPath = nil
             }
         })
@@ -589,6 +594,9 @@ extension PhotobookViewController: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "doublePageCell", for: indexPath) as! PhotobookCollectionViewCell
             
             cell.bookView.isHidden = indexPath == interactingItemIndexPath || indexPath == insertingIndexPath
+            if cell.bookView.isHidden {
+                cell.backgroundColor = .clear
+            }
             cell.delegate = self
 
             cell.rightPageView?.delegate = self
@@ -634,6 +642,8 @@ extension PhotobookViewController: UICollectionViewDataSource {
             cell.rightPageView?.load(size: imageSize)
             
             cell.plusButton.isHidden = !ProductManager.shared.isAddingPagesAllowed || indexPath.item == 0
+            
+            cell.layoutIfNeeded()
 
             return cell
         
