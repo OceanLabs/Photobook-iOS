@@ -79,9 +79,6 @@ class ProductLayoutAsset: Codable {
         else if let loadedAsset = try? values.decodeIfPresent(TestPhotosAsset.self, forKey: .asset) {
             asset = loadedAsset
         }
-        else {
-            asset = PlaceholderAsset()
-        }
     }
     
     func adjustTransform() {

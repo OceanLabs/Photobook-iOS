@@ -131,11 +131,6 @@ class ProductManager {
         // First photobook only
         if product == nil {
             var tempLayouts = [ProductLayout]()
-            
-            // Fill minimum pages with Placeholder assets if needed
-            while addedAssets.count < photobook.minimumRequiredAssets + 1 { // +1 for cover which is not included in the minimum
-                addedAssets.append(PlaceholderAsset())
-            }
 
             // Use first photo for the cover
             let productLayoutAsset = ProductLayoutAsset()
@@ -146,6 +141,10 @@ class ProductManager {
             
             // Create layouts for the remaining assets
             tempLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: layouts))
+            
+            // Fill minimum pages with Placeholder assets if needed
+            let numberOfPlaceholderLayoutsNeeded = photobook.minimumRequiredAssets + 1 - tempLayouts.count // +1 for cover which is not included in the minimum
+            tempLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: layouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
             
             productLayouts = tempLayouts
             product = photobook
@@ -191,13 +190,12 @@ class ProductManager {
             }
         }
         
-        // Fill minimum pages with Placeholder assets if needed
-        while productLayouts.count + addedAssets.count < photobook.minimumRequiredAssets + 1 { // +1 for cover which is not included in the minimum
-            addedAssets.append(PlaceholderAsset())
-        }
-        
         // Create new layouts for added assets
         productLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: layouts))
+        
+        // Fill minimum pages with Placeholder assets if needed
+        let numberOfPlaceholderLayoutsNeeded = photobook.minimumRequiredAssets + 1 - productLayouts.count - addedAssets.count // +1 for cover which is not included in the minimum
+        productLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: layouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
         
         // Switching products
         product = photobook
@@ -216,7 +214,7 @@ class ProductManager {
         }
     }
     
-    func createLayoutsForAssets(assets: [Asset], from layouts:[Layout]) -> [ProductLayout]{
+    func createLayoutsForAssets(assets: [Asset], from layouts:[Layout], placeholderLayouts: Int = 0) -> [ProductLayout] {
         var portraitLayouts = layouts.filter { !$0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
         var landscapeLayouts = layouts.filter { $0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
     
@@ -237,6 +235,15 @@ class ProductManager {
             }
             let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset)
             productLayouts.append(productLayout)
+        }
+        
+        var placeholderLayouts = placeholderLayouts
+        while placeholderLayouts > 0 {
+            let layout = landscapeLayouts[currentLandscapeLayout]
+            currentLandscapeLayout = currentLandscapeLayout < landscapeLayouts.count - 1 ? currentLandscapeLayout + 1 : 0
+            let productLayout = ProductLayout(layout: layout, productLayoutAsset: nil)
+            productLayouts.append(productLayout)
+            placeholderLayouts -= 1
         }
         
         return productLayouts
@@ -381,7 +388,7 @@ class ProductManager {
         guard let product = product,
             let layouts = layouts(for: product)
             else { return }
-        let newProductLayouts = pages ?? createLayoutsForAssets(assets: [PlaceholderAsset(), PlaceholderAsset()], from: layouts)
+        let newProductLayouts = pages ?? createLayoutsForAssets(assets: [], from: layouts, placeholderLayouts: 2)
         
         productLayouts.insert(contentsOf: newProductLayouts, at: index)
     }

@@ -78,11 +78,8 @@ class PhotobookPageView: UIView {
     }
     
     func setImage(image: UIImage?) {
-        guard let image = image,
-            let asset = productLayout?.productLayoutAsset?.asset,
-            (asset as? PlaceholderAsset) == nil
-            else {
-                setImagePlaceholder(visible: true)
+        guard let image = image, let asset = productLayout?.productLayoutAsset?.asset else {
+            setImagePlaceholder(visible: true)
             return
         }
         
