@@ -8,26 +8,47 @@
 
 import UIKit
 
+protocol PhotobookCollectionViewCellDelegate: class {
+    func didTapOnPlusButton(at foldIndex: Int)
+}
+
 class PhotobookCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var bookView: UIView!
+    @IBOutlet weak var bookView: PhotobookView!
     @IBOutlet weak var backgroundImageView: UIImageView!
-    @IBOutlet weak var leftPageView: PhotobookPageView!
-    @IBOutlet weak var rightPageView: PhotobookPageView?
-    @IBOutlet weak var widthConstraint: NSLayoutConstraint!
-    @IBOutlet private var pageAspectRatioConstraint: NSLayoutConstraint!
+    @IBOutlet weak var leftPageView: PhotobookPageView! {
+        didSet {
+            bookView.leftPageView = leftPageView
+        }
+    }
+    @IBOutlet weak var rightPageView: PhotobookPageView? {
+        didSet {
+            bookView.rightPageView = rightPageView
+        }
+    }
     
     /* This hidden view is here only to set the aspect ratio of the page,
      because if the aspect ratio constraint is set to one of the non-hidden views,
      the automatic sizing of the cells doesn't work. I don't know why, it might be a bug
      in autolayout.
      */
-    @IBOutlet private weak var aspectRatioHelperView: UIView!
+    @IBOutlet weak var plusButton: UIButton!
+    weak var delegate: PhotobookCollectionViewCellDelegate?
     
-    func configurePageAspectRatio(_ ratio: CGFloat) {
-        aspectRatioHelperView.removeConstraint(pageAspectRatioConstraint)
-        pageAspectRatioConstraint = NSLayoutConstraint(item: aspectRatioHelperView, attribute: .width, relatedBy: .equal, toItem: aspectRatioHelperView, attribute: .height, multiplier: ratio, constant: 0)
-        pageAspectRatioConstraint.priority = UILayoutPriority(750)
-        aspectRatioHelperView.addConstraint(pageAspectRatioConstraint)
+    @IBAction func didTapPlus(_ sender: UIButton) {
+        guard let layoutIndex = leftPageView.index ?? rightPageView?.index,
+            let foldIndex = ProductManager.shared.foldIndex(for: layoutIndex)
+            else { return }
+        delegate?.didTapOnPlusButton(at: foldIndex)
     }
+    
+    func setIsRearranging(_ isRearranging: Bool) {
+        leftPageView.isUserInteractionEnabled = !isRearranging
+        rightPageView?.isUserInteractionEnabled = !isRearranging
+    }
+}
+
+class PhotobookView: UIView {
+    weak var leftPageView: PhotobookPageView!
+    weak var rightPageView: PhotobookPageView?
 }
