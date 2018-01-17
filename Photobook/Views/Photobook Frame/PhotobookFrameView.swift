@@ -140,9 +140,10 @@ class PhotobookFramePageBackgroundView: UIView {
     
     private struct Constants {
         struct White {
-            static let color1 = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
-            static let color2 = UIColor(red: 0.87, green: 0.87, blue: 0.87, alpha: 1.0).cgColor
-            static let color3 = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0).cgColor
+            static let color1 = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0).cgColor
+            static let color2 = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
+            static let color3 = UIColor(red: 0.87, green: 0.87, blue: 0.87, alpha: 1.0).cgColor
+            static let color4 = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0).cgColor
         }
         struct Black {
             static let color1 = UIColor(red: 0.19, green: 0.19, blue: 0.19, alpha: 1.0)
@@ -173,10 +174,10 @@ class PhotobookFramePageBackgroundView: UIView {
         case .white:
             UIColor.white.setFill()
             
-            gradientColors = [ UIColor.white.cgColor, UIColor.white.cgColor, UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0).cgColor ]
+            gradientColors = [ UIColor.white.cgColor, UIColor.white.cgColor, Constants.White.color1 ]
             
-            topLineColor = Constants.White.color1
-            pagesEffectColor = pageSide == .left ? Constants.White.color2 : Constants.White.color3
+            topLineColor = Constants.White.color2
+            pagesEffectColor = pageSide == .left ? Constants.White.color3 : Constants.White.color4
         case .black:
             Constants.Black.color1.setFill()
             
@@ -197,7 +198,7 @@ class PhotobookFramePageBackgroundView: UIView {
         // Top line
         context.setStrokeColor(topLineColor)
         context.setLineWidth(0.5)
-        context.move(to: CGPoint(x: 0.0, y: 0.0))
+        context.move(to: .zero)
         context.addLine(to: CGPoint(x: rect.maxX, y: 0.0))
         context.strokePath()
         
