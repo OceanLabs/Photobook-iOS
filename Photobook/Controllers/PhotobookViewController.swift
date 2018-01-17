@@ -40,6 +40,7 @@ class PhotobookViewController: UIViewController {
     var titleLabel: UILabel?
     private var interactingItemIndexPath: IndexPath?
     private var proposedDropIndexPath: IndexPath?
+    private var insertingIndexPath: IndexPath?
     private var isRearranging = false
     private var draggingView: UIView?
     private var isDragging = false
@@ -453,6 +454,11 @@ class PhotobookViewController: UIViewController {
             draggingView.removeFromSuperview()
             self.draggingView = nil
             self.interactingItemIndexPath = nil
+            
+            if let insertingIndexPath = self.insertingIndexPath {
+                (self.collectionView.cellForItem(at: insertingIndexPath) as? PhotobookCollectionViewCell)?.bookView.isHidden = false
+                self.insertingIndexPath = nil
+            }
         })
         
         if destinationIndexPath != sourceIndexPath,
@@ -489,8 +495,11 @@ class PhotobookViewController: UIViewController {
             
             self.interactingItemIndexPath = nil
             
+            let insertingIndexPath = IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 0), section: destinationIndexPath.section)
+            self.insertingIndexPath = insertingIndexPath
+            
             collectionView.performBatchUpdates({
-                collectionView.insertItems(at: [IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 0), section: destinationIndexPath.section)])
+                collectionView.insertItems(at: [insertingIndexPath])
                 deleteProposalCell(enableFeedback: false)
                 if sourceCell != nil, let indexPath = collectionView.indexPath(for: sourceCell!){
                     collectionView.deleteItems(at: [IndexPath(item: indexPath.item + (movingDown ? 0 : 1), section: indexPath.section)])
@@ -579,7 +588,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "doublePageCell", for: indexPath) as! PhotobookCollectionViewCell
             
-            cell.bookView.isHidden = indexPath == interactingItemIndexPath
+            cell.bookView.isHidden = indexPath == interactingItemIndexPath || indexPath == insertingIndexPath
             cell.delegate = self
 
             cell.rightPageView?.delegate = self
