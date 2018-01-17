@@ -88,6 +88,19 @@ class PhotobookPageView: UIView {
         })
     }
     
+    func setupLayoutBoxes() {
+        UIView.animate(withDuration: 0.1, animations: {
+            self.assetContainerView.alpha = 0.0
+        }, completion: { _ in
+            self.setupImageBox()
+            self.setupTextBox()
+            
+            UIView.animate(withDuration: 0.3) {
+                self.assetContainerView.alpha = 1.0
+            }
+        })
+    }
+
     func setImage(image: UIImage) {
         guard let asset = productLayout?.productLayoutAsset?.asset else {
             setImagePlaceholder(visible: true)
@@ -104,11 +117,6 @@ class PhotobookPageView: UIView {
         
         productLayout!.productLayoutAsset!.containerSize = assetContainerView.bounds.size
         assetImageView.transform = productLayout!.productLayoutAsset!.transform
-    }
-
-    func setupLayoutBoxes() {
-        setupImageBox()
-        setupTextBox()
     }
     
     func setupTextBox() {
