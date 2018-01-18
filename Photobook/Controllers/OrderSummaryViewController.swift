@@ -35,6 +35,11 @@ class OrderSummaryViewController: UIViewController {
         }
     }
     
+    private func getProductPreviewImages(_ completion:(_ success:Bool, _ images:[UIImage]) -> Void) {
+        //APIClient.shared.uploadFile(UIImage(named:"chevron-right")., reference: <#T##String?#>, context: <#T##APIContext#>, endpoint: <#T##String#>)
+    }
+    
+    //deprecated
     private func getProductPreviewImage(_ completion:(_ success:Bool) -> Void) {
         let imageUrlString = "https://i.pinimg.com/564x/6c/77/e1/6c77e17a9f9e889f8d971258dddd0a54--radiohead-logo-ide-bagus.jpg"
         let imageWidth = Int(previewImageView.frame.size.width * UIScreen.main.scale)

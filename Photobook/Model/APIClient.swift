@@ -16,9 +16,8 @@ enum APIClientError: Error {
 }
 
 enum APIContext {
-    case photobookApp
-    case pdfGenerator
-    case pdfUploader
+    case photobook
+    case pig
 }
 
 /// Network client for all interaction with the API
@@ -48,9 +47,8 @@ class APIClient: NSObject {
     
     private func baseURLString(for context: APIContext) -> String {
         switch context {
-        case .photobookApp: return "" // TBC
-        case .pdfGenerator: return "https://photobook-builder.herokuapp.com/"
-        case .pdfUploader: return "https://piglet.kite.ly/"
+        case .photobook: return "https://photobook-builder.herokuapp.com/"
+        case .pig: return "https://piglet.kite.ly/"
         }
     }
 

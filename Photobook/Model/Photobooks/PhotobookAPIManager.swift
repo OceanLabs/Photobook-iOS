@@ -64,7 +64,7 @@ class PhotobookAPIManager {
     /// - Parameter completionHandler: Closure to be called when the request completes
     func requestPhotobookInfo(_ completionHandler:@escaping ([Photobook]?, [Layout]?, Error?) -> ()) {
         
-        apiClient.get(context: .pdfGenerator, endpoint: EndPoints.products, parameters: nil) { (jsonData, error) in
+        apiClient.get(context: .photobook, endpoint: EndPoints.products, parameters: nil) { (jsonData, error) in
             
             // TEMP: Fake api response. Don't run for tests.
             var jsonData = jsonData
@@ -155,7 +155,7 @@ class PhotobookAPIManager {
                 }
                 
                 if let fileUrl = welf?.saveImageToCache(image: image!, name: "\(asset.identifier).jpg") {
-                    welf?.apiClient.uploadFile(fileUrl, reference: asset.identifier, context: .pdfUploader, endpoint: EndPoints.imageUpload)
+                    welf?.apiClient.uploadFile(fileUrl, reference: asset.identifier, context: .pig, endpoint: EndPoints.imageUpload)
                 } else {
                     welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImage)
                 }
@@ -225,7 +225,7 @@ class PhotobookAPIManager {
             return
         }
         
-        apiClient.post(context: .pdfUploader, endpoint: EndPoints.pdfCreation, parameters: parameters) { ( jsonData, error) in
+        apiClient.post(context: .pig, endpoint: EndPoints.pdfCreation, parameters: parameters) { ( jsonData, error) in
             completionHandler(error)
         }
     }
