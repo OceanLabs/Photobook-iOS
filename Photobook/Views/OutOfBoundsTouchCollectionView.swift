@@ -13,7 +13,7 @@ class OutOfBoundsTouchCollectionView: UICollectionView {
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         for cell in visibleCells{
-            for view in cell.contentView.subviews{
+            for view in cell.contentView.subviews.reversed(){
                 if !view.isHidden, let hitView = view.hitTest(view.convert(point, from: self), with: event){
                     return hitView
                 }
