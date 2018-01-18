@@ -82,6 +82,12 @@ class ProductManager {
         return minimumRequiredAssets < productLayouts.count
     }
     
+    // Ordering
+    var shippingMethod: Int?
+    var currencyCode: String? // TODO: Get this from somewhere
+    var address: Address?
+    var paymentMethod: PaymentMethod?
+    
     // TODO: Spine
     
     /// Requests the photobook details so the user can start building their photobook
