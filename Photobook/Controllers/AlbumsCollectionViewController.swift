@@ -8,12 +8,11 @@
 
 import UIKit
 
-
 /// View Controller to show albums. It doesn't care about the source of those albums as long as they conform to the Album protocol.
 class AlbumsCollectionViewController: UICollectionViewController {
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    var imageCollectorController:AssetCollectorViewController?
+    var imageCollectorController: AssetCollectorViewController!
     
     /// The height between the bottom of the image and bottom of the cell where the labels sit
     private let albumCellLabelsHeight: CGFloat = 50
@@ -21,10 +20,11 @@ class AlbumsCollectionViewController: UICollectionViewController {
     
     var albumManager: AlbumManager!
     private let selectedAssetsManager = SelectedAssetsManager()
-
+    var collectorMode: AssetCollectorMode = .selecting
+    weak var addingDelegate: AssetCollectorAddingDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         albumManager.loadAlbums(completionHandler: { [weak welf = self] (error) in
             welf?.activityIndicator.stopAnimating()
             welf?.collectionView?.reloadData()
@@ -32,7 +32,8 @@ class AlbumsCollectionViewController: UICollectionViewController {
         
         // Setup the Image Collector Controller
         imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
-        imageCollectorController?.delegate = self
+        imageCollectorController.mode = collectorMode
+        imageCollectorController.delegate = self
         
         calcAndSetCellSize()
         
@@ -70,7 +71,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     func calcAndSetCellSize(){
         // Calc the cell size
         guard let collectionView = collectionView else { return }
-        var usableSpace = collectionView.frame.size.width - marginBetweenAlbums;
+        var usableSpace = collectionView.frame.size.width - marginBetweenAlbums
         if let insets = (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset{
             usableSpace -= insets.left + insets.right
         }
@@ -79,10 +80,12 @@ class AlbumsCollectionViewController: UICollectionViewController {
     }
     
     func showAlbum(album: Album){
-        guard let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as? AssetPickerCollectionViewController else { return }
+        let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
         assetPickerController.album = album
         assetPickerController.albumManager = albumManager
         assetPickerController.selectedAssetsManager = selectedAssetsManager
+        assetPickerController.collectorMode = collectorMode
+        assetPickerController.addingDelegate = addingDelegate
         
         self.navigationController?.pushViewController(assetPickerController, animated: true)
     }
@@ -112,13 +115,26 @@ class AlbumsCollectionViewController: UICollectionViewController {
 }
 
 extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
+    // MARK: AssetCollectorViewControllerDelegate
+    
     func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
         collectionView?.collectionViewLayout.invalidateLayout()
+    }
+    
+    func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
+        switch collectorMode {
+        case .adding:
+            addingDelegate?.didFinishAdding(assets: selectedAssetsManager.selectedAssets)
+        default:
+            let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
+            photobookViewController.selectedAssetsManager = selectedAssetsManager
+            navigationController?.pushViewController(photobookViewController, animated: true)
+        }
     }
 }
 
 extension AlbumsCollectionViewController{
-    // MARK: - UICollectionViewDataSource
+    // MARK: UICollectionViewDataSource
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return albumManager.albums.count
@@ -180,14 +196,14 @@ extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension AlbumsCollectionViewController{
-    // MARK: - UICollectionViewDelegate
+    // MARK: UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         showAlbum(album: albumManager.albums[indexPath.item])
     }
 }
 
-extension AlbumsCollectionViewController: AlbumSearchResultsTableViewControllerDelegate{
+extension AlbumsCollectionViewController: AlbumSearchResultsTableViewControllerDelegate {
     func searchDidSelect(_ album: Album) {
         showAlbum(album: album)
     }

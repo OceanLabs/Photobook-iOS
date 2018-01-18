@@ -15,10 +15,10 @@ protocol FullScreenImageViewControllerDelegate: class {
 
 class FullScreenImageViewController: UIViewController {
     
-    @IBOutlet weak var swipeDownIndicator: UIImageView!
-    @IBOutlet weak var selectedStatusImageView: UIImageView!
+    @IBOutlet private weak var swipeDownIndicator: UIImageView!
+    @IBOutlet private weak var selectedStatusImageView: UIImageView!
     @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     var asset: Asset!
     var album: Album!

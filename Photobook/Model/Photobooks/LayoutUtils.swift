@@ -103,6 +103,23 @@ class LayoutUtils {
         return transform
     }
     
+    /// Amends a transform by a scale factor. This is useful when we want to scale the user effects to a smaller or larger scope and keep the same visual results.
+    ///
+    /// - Parameters:
+    ///   - transform: The current transform
+    ///   - factor: The factor to apply
+    /// - Returns: A new scaled transform
+    static func adjustTransform(_ transform: CGAffineTransform, byFactor factor: CGFloat) -> CGAffineTransform {
+        let angle = atan2(transform.b, transform.a)
+        let scale = sqrt(transform.a * transform.a + transform.c * transform.c)
+        
+        var newTransform = CGAffineTransform(scaleX: scale * factor, y: scale * factor)
+        newTransform = newTransform.rotated(by: angle)
+        newTransform.tx = transform.tx * factor
+        newTransform.ty = transform.ty * factor
+        
+        return newTransform
+    }
     
     /// Amends a view's transform to use the centre of the parentView as reference.
     /// This can be used after rotating the view around an arbitrary anchor point to take the transform back to a valid state.
@@ -128,6 +145,7 @@ class LayoutUtils {
     ///   - angle: The current rotation angle
     /// - Returns: The scale the View needs to be to fill the container
     static func scaleToFill(containerSize: CGSize, withSize size: CGSize, atAngle angle: CGFloat) -> CGFloat {
+        let angle = abs(angle)
         // FIXME: Is this angle correction necessary?
         var theta = abs(angle - 2.0 * .pi * trunc(angle / .pi / 2.0) - .pi)
         if theta > .pi / 2.0 {
@@ -141,6 +159,18 @@ class LayoutUtils {
         let scale2 = (H * sin(theta) + W * cos(theta)) / w
         let scaleFactor = max(scale1, scale2)
         return scaleFactor
+    }
+    
+    static func nextCCWCuadrantAngle(to angle: CGFloat) -> CGFloat {
+        var rotateTo = floor(angle / (.pi * 0.5)) * .pi * 0.5
+        
+        if angle ==~ rotateTo {
+            rotateTo = angle - .pi * 0.5
+        }
+        if abs(rotateTo) < CGFloat.minPrecision {
+            rotateTo = 0.0
+        }
+        return rotateTo
     }
 }
 

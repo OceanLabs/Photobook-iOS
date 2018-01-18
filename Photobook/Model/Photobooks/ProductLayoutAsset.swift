@@ -17,12 +17,27 @@ class ProductLayoutAsset: Codable {
 
     var containerSize: CGSize! {
         didSet {
+            if oldValue != nil {
+                let oldRatio = oldValue.width / oldValue.height
+                let newRatio = containerSize.width / containerSize.height
+            
+                // Check if we have the same layout
+                if abs(oldRatio - newRatio) < CGFloat.minPrecision {
+                    // Scales in both axes should be the same
+                    let relativeScale = containerSize.width / oldValue.width
+
+                    transform = LayoutUtils.adjustTransform(transform, byFactor: relativeScale)
+                    return
+                }
+            }
+            
             if transform == .identity {
                 fitAssetToContainer()
                 return
             }
             
-            // The asset was assigned a different layout. Fit the asset keeping the user's edits.
+            // The asset was assigned a different layout. Scale the image down to force a fit to container effect.
+            transform = transform.scaledBy(x: 0.001, y: 0.001)
             adjustTransform()
         }
     }
@@ -34,17 +49,20 @@ class ProductLayoutAsset: Codable {
     }
     
     enum CodingKeys: String, CodingKey {
-        case transform, containerSize
-        case assetIdentifier, remoteUrl, assetType
+        case transform, containerSize, asset
     }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(transform, forKey: .transform)
         try container.encode(containerSize, forKey: .containerSize)
-        try container.encode(asset?.identifier, forKey: .assetIdentifier)
-        try container.encode(asset?.uploadUrl, forKey: .remoteUrl)
-        try container.encode(asset?.assetType, forKey: .assetType)
+        
+        if let asset = asset as? PhotosAsset {
+            try container.encode(asset, forKey: .asset)
+        }
+        else if let asset = asset as? TestPhotosAsset {
+            try container.encode(asset, forKey: .asset)
+        }
     }
     
     required convenience init(from decoder: Decoder) throws {
@@ -53,21 +71,13 @@ class ProductLayoutAsset: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         
         transform = try values.decode(CGAffineTransform.self, forKey: .transform)
-        containerSize = try values.decode(CGSize.self, forKey: .containerSize)
+        containerSize = try values.decodeIfPresent(CGSize.self, forKey: .containerSize)
         
-        let assetType = try values.decode(String.self, forKey: .assetType)
-        let assetIdentifier = try values.decode(String.self, forKey: .assetIdentifier)
-        let remoteUrl = try? values.decode(String.self, forKey: .remoteUrl)
-        
-        if assetType == "Photobook.PhotosAsset" {
-            // For tests, we use a subclass with some stubs
-            if NSClassFromString("XCTest") != nil {
-                asset = TestPhotosAsset(PHAsset(), collection: PHAssetCollection())
-            } else {
-                asset = PhotosAsset(PHAsset(), collection: PHAssetCollection())
-                asset!.identifier = assetIdentifier
-                asset!.uploadUrl = remoteUrl
-            }
+        if let loadedAsset = try? values.decodeIfPresent(PhotosAsset.self, forKey: .asset) {
+            asset = loadedAsset
+        }
+        else if let loadedAsset = try? values.decodeIfPresent(TestPhotosAsset.self, forKey: .asset) {
+            asset = loadedAsset
         }
     }
     
@@ -83,6 +93,14 @@ class ProductLayoutAsset: Codable {
         // Calculate scale. Ignore any previous translation or rotation
         let scale = LayoutUtils.scaleToFill(containerSize: containerSize, withSize: asset.size, atAngle: 0.0)
         transform = CGAffineTransform.identity.scaledBy(x: scale, y: scale)
+    }
+    
+    func shallowCopy() -> ProductLayoutAsset {
+        let aLayoutAsset = ProductLayoutAsset()
+        aLayoutAsset.asset = asset
+        aLayoutAsset.containerSize = containerSize
+        aLayoutAsset.transform = transform
+        return aLayoutAsset
     }
 }
 

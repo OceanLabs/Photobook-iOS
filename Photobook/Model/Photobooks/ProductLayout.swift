@@ -21,12 +21,12 @@ class ProductLayout: Codable {
             return productLayoutAsset?.asset
         }
         set {
-            guard layout.imageLayoutBox != nil else {
+            guard layout.imageLayoutBox != nil || newValue == nil else {
                 print("ProductLayout: Trying to assign asset to unavailable container")
                 return
             }
             if productLayoutAsset == nil { productLayoutAsset = ProductLayoutAsset() }
-            productLayoutAsset!.asset = asset
+            productLayoutAsset!.asset = newValue
         }
     }
     
@@ -66,7 +66,7 @@ class ProductLayout: Codable {
         
         layout = try values.decode(Layout.self, forKey: .layout)
         productLayoutAsset = try values.decode(ProductLayoutAsset.self, forKey: .productLayoutAsset)
-        productLayoutText = try values.decode(ProductLayoutText.self, forKey: .productLayoutText)
+        productLayoutText = try values.decodeIfPresent(ProductLayoutText.self, forKey: .productLayoutText)
     }
     
     private func fitItemsInLayout() {
@@ -78,6 +78,10 @@ class ProductLayout: Codable {
         if productLayoutText != nil && layout.textLayoutBox != nil {
             productLayoutText!.containerSize = layout.textLayoutBox!.rect.size
         }
+    }
+    
+    func shallowCopy() -> ProductLayout {
+        return ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset?.shallowCopy(), productLayoutText: productLayoutText?.deepCopy())
     }
 }
 
