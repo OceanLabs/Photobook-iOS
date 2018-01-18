@@ -2254,7 +2254,7 @@
             </objects>
             <point key="canvasLocation" x="1074" y="-428"/>
         </scene>
-        <!--PAYMENT METHOD-->
+        <!--Payment Methods-->
         <scene sceneID="jPW-8E-fek">
             <objects>
                 <viewController id="eiW-1f-aeo" customClass="PaymentMethodsViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
@@ -2266,46 +2266,51 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="672"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="62" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="D3f-X6-Wbe">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="D3f-X6-Wbe">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="672"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.97255557780000002" green="0.97253733870000003" blue="0.97254973649999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <view key="tableFooterView" contentMode="scaleToFill" id="Xew-UJ-y1h">
+                                    <rect key="frame" x="0.0" y="161.33333333333334" width="414" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="PaymentMethodTableViewCell" rowHeight="62" id="ffQ-6w-9af" customClass="PaymentMethodTableViewCell" customModule="Photobook" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="62"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="PaymentMethodTableViewCell" id="ffQ-6w-9af" customClass="PaymentMethodTableViewCell" customModule="Photobook" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="55.333333333333336" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ffQ-6w-9af" id="0ZH-eq-sN5">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="62"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add Credit / Debit Card" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MRq-gJ-qjX">
-                                                    <rect key="frame" x="84" y="22" width="163" height="18"/>
-                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apple Pay" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MRq-gJ-qjX">
+                                                    <rect key="frame" x="78" y="11.999999999999998" width="76.333333333333314" height="20.333333333333329"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="apple-pay-method" translatesAutoresizingMaskIntoConstraints="NO" id="Tf1-0c-5kY">
-                                                    <rect key="frame" x="23" y="16.666666666666668" width="45" height="29.000000000000004"/>
+                                                    <rect key="frame" x="17" y="7.3333333333333321" width="45" height="28.999999999999996"/>
                                                 </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tick-plain" translatesAutoresizingMaskIntoConstraints="NO" id="Tbh-Fr-A3E">
-                                                    <rect key="frame" x="372" y="24" width="19" height="14"/>
+                                                    <rect key="frame" x="379" y="15" width="19" height="14"/>
                                                 </imageView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IG4-ka-zkS" userLabel="Separator">
-                                                    <rect key="frame" x="16" y="61" width="398" height="1"/>
-                                                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                                    <rect key="frame" x="0.0" y="42.666666666666664" width="414" height="1"/>
+                                                    <color key="backgroundColor" red="0.78051763772964478" green="0.78408628702163696" blue="0.80000466108322144" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="1" id="ikl-m5-TfO"/>
+                                                        <constraint firstAttribute="height" constant="0.5" id="ikl-m5-TfO"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="Tf1-0c-5kY" firstAttribute="centerY" secondItem="0ZH-eq-sN5" secondAttribute="centerY" id="6cK-Cd-16a"/>
                                                 <constraint firstItem="Tbh-Fr-A3E" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="MRq-gJ-qjX" secondAttribute="trailing" constant="16" id="Nf7-r4-WSu"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="Tbh-Fr-A3E" secondAttribute="trailing" constant="8" id="Q3w-di-PnQ"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="Tbh-Fr-A3E" secondAttribute="trailing" constant="1" id="Q3w-di-PnQ"/>
                                                 <constraint firstItem="MRq-gJ-qjX" firstAttribute="leading" secondItem="Tf1-0c-5kY" secondAttribute="trailing" constant="16" id="QVl-Hm-eMJ"/>
-                                                <constraint firstItem="Tf1-0c-5kY" firstAttribute="leading" secondItem="0ZH-eq-sN5" secondAttribute="leadingMargin" constant="8" id="S4t-0c-ZwN"/>
+                                                <constraint firstItem="Tf1-0c-5kY" firstAttribute="leading" secondItem="0ZH-eq-sN5" secondAttribute="leadingMargin" constant="2" id="S4t-0c-ZwN"/>
                                                 <constraint firstItem="MRq-gJ-qjX" firstAttribute="centerY" secondItem="0ZH-eq-sN5" secondAttribute="centerY" id="YK0-EV-gfz"/>
-                                                <constraint firstAttribute="bottom" secondItem="IG4-ka-zkS" secondAttribute="bottom" id="kXg-z9-0kp"/>
-                                                <constraint firstItem="IG4-ka-zkS" firstAttribute="leading" secondItem="0ZH-eq-sN5" secondAttribute="leading" constant="16" id="qRb-T0-SpN"/>
+                                                <constraint firstAttribute="bottom" secondItem="IG4-ka-zkS" secondAttribute="bottom" constant="-0.5" id="kXg-z9-0kp"/>
+                                                <constraint firstItem="IG4-ka-zkS" firstAttribute="leading" secondItem="0ZH-eq-sN5" secondAttribute="leading" id="qRb-T0-SpN"/>
                                                 <constraint firstItem="Tbh-Fr-A3E" firstAttribute="centerY" secondItem="0ZH-eq-sN5" secondAttribute="centerY" id="ufn-QM-4Jy"/>
                                                 <constraint firstAttribute="trailing" secondItem="IG4-ka-zkS" secondAttribute="trailing" id="uu3-ak-ik9"/>
                                             </constraints>
@@ -2313,9 +2318,31 @@
                                         <connections>
                                             <outlet property="methodIcon" destination="Tf1-0c-5kY" id="MYx-h7-EFY"/>
                                             <outlet property="methodLabel" destination="MRq-gJ-qjX" id="hyy-Is-9qn"/>
-                                            <outlet property="separator" destination="IG4-ka-zkS" id="00A-c1-3Ld"/>
+                                            <outlet property="separator" destination="IG4-ka-zkS" id="Bg7-Qq-JQ6"/>
                                             <outlet property="tickImageView" destination="Tbh-Fr-A3E" id="17N-e9-P4E"/>
                                         </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="AddPaymentMethodCell" id="QKZ-tw-CMz">
+                                        <rect key="frame" x="0.0" y="99.333333333333343" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QKZ-tw-CMz" id="lcN-zV-epN">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TZW-eX-Xow">
+                                                    <rect key="frame" x="16" y="5.3333333333333321" width="166" height="33"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <state key="normal" title="Add Payment Method"/>
+                                                    <connections>
+                                                        <segue destination="KxV-LF-cPn" kind="show" id="Po6-eq-Ys9"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="TZW-eX-Xow" firstAttribute="centerY" secondItem="lcN-zV-epN" secondAttribute="centerY" id="TP8-w2-USr"/>
+                                                <constraint firstItem="TZW-eX-Xow" firstAttribute="leading" secondItem="lcN-zV-epN" secondAttribute="leading" constant="16" id="aEv-KM-MS5"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
@@ -2324,7 +2351,7 @@
                                 </connections>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.97255557775497437" green="0.9725373387336731" blue="0.97254973649978638" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstItem="7aS-Kd-9up" firstAttribute="top" secondItem="D3f-X6-Wbe" secondAttribute="bottom" id="Qb1-9L-eTG"/>
                             <constraint firstItem="D3f-X6-Wbe" firstAttribute="leading" secondItem="fmd-R8-H4g" secondAttribute="leading" id="SW7-oF-EKt"/>
@@ -2333,15 +2360,12 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="kUJ-ce-tjQ"/>
                     </view>
-                    <navigationItem key="navigationItem" title="PAYMENT METHOD" id="vav-b1-Mv0">
+                    <navigationItem key="navigationItem" title="Payment Methods" id="vav-b1-Mv0">
                         <barButtonItem key="backBarButtonItem" title=" " id="VMo-4k-rjk"/>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <connections>
                         <outlet property="tableView" destination="D3f-X6-Wbe" id="jDv-kO-t8o"/>
-                        <segue destination="KxV-LF-cPn" kind="show" identifier="CreditCardSegue" id="Rep-SJ-DUJ">
-                            <nil key="action"/>
-                        </segue>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BKJ-3a-TpP" userLabel="First Responder" sceneMemberID="firstResponder"/>

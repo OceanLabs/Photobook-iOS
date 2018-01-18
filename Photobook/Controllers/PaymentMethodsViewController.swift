@@ -29,7 +29,7 @@ class PaymentMethodsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = NSLocalizedString("PaymentMethodsTitle", value: "PAYMENT METHODS", comment: "Title for the payment methods screen")
+        title = NSLocalizedString("PaymentMethods/Title", value: "Payment Methods", comment: "Title for the payment methods screen")
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -50,85 +50,76 @@ class PaymentMethodsViewController: UIViewController {
 
 extension PaymentMethodsViewController: UITableViewDataSource {
 
-    fileprivate enum Section: Int {
-        case card, thirdParty
-    }
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
-    }
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let section = Section(rawValue: section) else { return 0 }
+        var numberOfPayments = 2 // PayPal + Add new card
+        
+        // Existing card
+        if Card.currentCard != nil { numberOfPayments += 1 }
 
-        // Add card
-        if section == Section.card {
-            return Card.currentCard != nil ? 2 : 1
-        }
-
-        // Third party payments
-        var numberOfPayments = 1 // PayPal
+        // Apple Pay
         if Stripe.deviceSupportsApplePay() { numberOfPayments += 1 }
         return numberOfPayments
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: PaymentMethodTableViewCell.reuseIdentifier, for: indexPath) as! PaymentMethodTableViewCell
-
-        switch Section(rawValue: indexPath.section)! {
-        case Section.card:
-            if indexPath.row == 0, let card = Card.currentCard {
-                cell.method = card.isAmex ? "•••• •••••• •\(card.numberMasked)" : "•••• •••• •••• \(card.numberMasked)"
-                cell.icon = card.cardIcon
-                cell.separator.alpha = 1.0
-                cell.ticked = selectedPaymentMethod == .creditCard
-            } else {
-                cell.method = "Add Credit / Debit Card"
-                cell.icon = UIImage(named:"add-payment")
-                cell.separator.alpha = 0.0
-                cell.ticked = false
-            }
-        case Section.thirdParty:
-            if indexPath.row == 0, Stripe.deviceSupportsApplePay() {
-                cell.method = "ApplePay"
-                cell.icon = UIImage(named:"apple-pay-method")
-                cell.ticked = selectedPaymentMethod == .applePay
-            } else {
-                cell.method = "PayPal"
-                cell.icon = UIImage(named:"paypal-method")
-                cell.ticked = selectedPaymentMethod == .payPal
-            }
-
-            cell.separator.alpha = indexPath.row == tableView.numberOfRows(inSection: Section.thirdParty.rawValue) - 1 ? 0.0 : 1.0
+        let supportsApplePay = Stripe.deviceSupportsApplePay() ? 1 : 0
+        
+        switch indexPath.item {
+        case -1 + supportsApplePay: // Apple Pay
+            let cell = tableView.dequeueReusableCell(withIdentifier: PaymentMethodTableViewCell.reuseIdentifier, for: indexPath) as! PaymentMethodTableViewCell
+            cell.method = "ApplePay"
+            cell.icon = UIImage(named:"apple-pay-method")
+            cell.ticked = selectedPaymentMethod == .applePay
+            cell.separator.isHidden = true
+            return cell
+        case 0 + supportsApplePay: // PayPal
+            let cell = tableView.dequeueReusableCell(withIdentifier: PaymentMethodTableViewCell.reuseIdentifier, for: indexPath) as! PaymentMethodTableViewCell
+            cell.method = "PayPal"
+            cell.icon = UIImage(named:"paypal-method")
+            cell.ticked = selectedPaymentMethod == .payPal
+            cell.separator.isHidden = false
+            return cell
+        case 1 + supportsApplePay: // Saved card
+            guard let card = Card.currentCard else { fallthrough }
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: PaymentMethodTableViewCell.reuseIdentifier, for: indexPath) as! PaymentMethodTableViewCell
+            cell.method = card.isAmex ? "•••• •••••• •\(card.numberMasked)" : "•••• •••• •••• \(card.numberMasked)"
+            cell.icon = card.cardIcon
+            cell.ticked = selectedPaymentMethod == .creditCard
+            cell.separator.isHidden = true
+            return cell
+        default:
+            return tableView.dequeueReusableCell(withIdentifier: "AddPaymentMethodCell", for: indexPath)
         }
-
-        return cell
     }
 }
 
 extension PaymentMethodsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return section == Section.card.rawValue ? 0.0 : 16.0
+        return section == 0 ? 44 : 1
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return section == 0 ? NSLocalizedString("PaymentMethods/Header", value: "Your Methods", comment: "Payment method selection screen header") : nil
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch Section(rawValue: indexPath.section)! {
-        case Section.card:
-            if indexPath.row == 0, Card.currentCard != nil {
-               selectedPaymentMethod = .creditCard
-            } else {
-                performSegue(withIdentifier: "CreditCardSegue", sender: nil)
-                return
-            }
-        case Section.thirdParty:
-            if indexPath.row == 0, Stripe.deviceSupportsApplePay() {
-                selectedPaymentMethod = .applePay
-            } else {
-                selectedPaymentMethod = .payPal
-            }
+        let supportsApplePay = Stripe.deviceSupportsApplePay() ? 1 : 0
+        
+        switch indexPath.item {
+        case -1 + supportsApplePay: // Apple Pay
+            selectedPaymentMethod = .applePay
+        case 0 + supportsApplePay: // PayPal
+            selectedPaymentMethod = .payPal
+        case 1 + supportsApplePay: // Saved card
+            guard Card.currentCard != nil else { fallthrough }
+            
+            selectedPaymentMethod = .creditCard
+        default:
+            break
         }
-
+        
         tableView.reloadData()
         ProductManager.shared.paymentMethod = selectedPaymentMethod
     }
