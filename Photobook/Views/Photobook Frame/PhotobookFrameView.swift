@@ -15,6 +15,9 @@ struct PhotobookConstants {
     static let shadowRadius: CGFloat = 4.0
     static let cornerRadius: CGFloat = 1.0
     static let borderWidth: CGFloat = 0.5
+    
+    static let horizontalPageToCoverMargin: CGFloat = 11.0
+    static let verticalPageToCoverMargin: CGFloat = 5.0
 }
 
 /// Graphical representation of an open photobook

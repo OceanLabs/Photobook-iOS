@@ -160,7 +160,6 @@ class PageSetupViewController: UIViewController {
             photobookLeadingConstraint.isActive = false
             photobookFrameView.isLeftPageVisible = false
         case .cover:
-            // TODO
             break
         }
     }

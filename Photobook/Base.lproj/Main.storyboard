@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -1504,17 +1505,17 @@
         <scene sceneID="suS-5G-9Zz">
             <objects>
                 <viewController storyboardIdentifier="PhotobookViewController" hidesBottomBarWhenPushed="YES" id="l0p-H6-Aqd" customClass="PhotobookViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="hYx-pR-ckZ">
+                    <view key="view" contentMode="scaleToFill" id="hYx-pR-ckZ" customClass="OutOfBoundsTouchView" customModule="Photobook" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TBG-9p-ivA">
+                            <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TBG-9p-ivA" customClass="OutOfBoundsTouchCollectionView" customModule="Photobook" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <color key="backgroundColor" red="0.89019607840000003" green="0.8980392157" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="14" minimumInteritemSpacing="0.0" id="MEd-aD-PzO">
                                     <size key="itemSize" width="359" height="207"/>
                                     <size key="headerReferenceSize" width="0.0" height="15"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="15"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
@@ -1639,7 +1640,7 @@
                                             <outlet property="spineFrameView" destination="aKo-Fy-w8j" id="tb1-tQ-r4s"/>
                                         </connections>
                                     </collectionViewCell>
-                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="OpenPhotobookCollectionViewCell" id="0j2-2Y-biD" userLabel="Open Photobook Cell" customClass="OpenPhotobookCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotobookCollectionViewCell" id="0j2-2Y-biD" userLabel="Photobook Cell" customClass="PhotobookCollectionViewCell" customModule="Photobook" customModuleProvider="target">
                                         <rect key="frame" x="27.666666666666668" y="236" width="359" height="207"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -1790,22 +1791,61 @@
                                                         <outlet property="widthConstraint" destination="fqc-hK-T8q" id="6mf-Kt-PUJ"/>
                                                     </connections>
                                                 </view>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ALE-3X-DVw">
+                                                    <rect key="frame" x="359" y="-22" width="44" height="44"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="44" id="aEu-55-kVa"/>
+                                                        <constraint firstAttribute="height" constant="44" id="dNC-mm-lYJ"/>
+                                                    </constraints>
+                                                    <state key="normal" image="plusButton">
+                                                        <color key="titleColor" red="0.42745098039215684" green="0.42352941176470588" blue="0.44705882352941173" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    </state>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                            <real key="value" value="13"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="didTapPlus:" destination="0j2-2Y-biD" eventType="touchUpInside" id="mVW-Hr-VIG"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                         </view>
-                                        <color key="backgroundColor" red="0.89019607840000003" green="0.8980392157" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" white="0.85858224630355839" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstItem="6xD-kt-9Fc" firstAttribute="leading" secondItem="0j2-2Y-biD" secondAttribute="leading" id="EDM-aH-yiB"/>
                                             <constraint firstAttribute="trailing" secondItem="6xD-kt-9Fc" secondAttribute="trailing" id="GFg-jI-voX"/>
                                             <constraint firstAttribute="bottom" secondItem="6xD-kt-9Fc" secondAttribute="bottom" id="YkA-2y-h3q"/>
                                             <constraint firstItem="6xD-kt-9Fc" firstAttribute="top" secondItem="0j2-2Y-biD" secondAttribute="top" id="YxV-PM-apM"/>
+                                            <constraint firstItem="ALE-3X-DVw" firstAttribute="centerY" secondItem="6xD-kt-9Fc" secondAttribute="top" id="j9w-SC-CDO"/>
+                                            <constraint firstItem="ALE-3X-DVw" firstAttribute="leading" secondItem="6xD-kt-9Fc" secondAttribute="trailing" id="jii-Iz-rBP"/>
                                         </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                         <connections>
                                             <outlet property="photobookFrameView" destination="6xD-kt-9Fc" id="5rs-Ob-0aa"/>
+                                            <outlet property="plusButton" destination="ALE-3X-DVw" id="GCc-WA-cIG"/>
                                         </connections>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ProposalCollectionViewCell" id="FhU-tU-2dl" userLabel="Proposal Collection View Cell">
+                                        <rect key="frame" x="27.666666666666668" y="457" width="359" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="359" height="30"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </view>
+                                        <size key="customSize" width="359" height="30"/>
                                     </collectionViewCell>
                                 </cells>
                                 <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="6Z2-2z-LxZ">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="15"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </collectionReusableView>
+                                <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="UHe-CC-ypz">
+                                    <rect key="frame" x="0.0" y="487" width="414" height="15"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </collectionReusableView>
                                 <connections>
@@ -1866,6 +1906,10 @@
                     </navigationItem>
                     <connections>
                         <outlet property="collectionView" destination="TBG-9p-ivA" id="kYP-Tq-eWB"/>
+                        <outlet property="collectionViewBottomConstraint" destination="NOb-rL-Lvt" id="4ZO-T9-d17"/>
+                        <outlet property="collectionViewLeadingConstraint" destination="XjE-e5-L0D" id="Q5L-TT-Oq7"/>
+                        <outlet property="collectionViewTopConstraint" destination="gZc-W1-xMM" id="BiB-dw-zEN"/>
+                        <outlet property="collectionViewTrailingConstraint" destination="Hji-0y-uul" id="JI1-Tf-r5q"/>
                         <outlet property="ctaButtonContainer" destination="9PF-H7-3d7" id="hMk-Zi-KJ0"/>
                     </connections>
                 </viewController>
@@ -2516,6 +2560,7 @@
         <image name="editLayout_on" width="29" height="29"/>
         <image name="editPhoto_off" width="29" height="29"/>
         <image name="editPhoto_on" width="29" height="29"/>
+        <image name="plusButton" width="26" height="26"/>
         <image name="selectPhoto_off" width="29" height="29"/>
         <image name="selectPhoto_on" width="29" height="29"/>
     </resources>

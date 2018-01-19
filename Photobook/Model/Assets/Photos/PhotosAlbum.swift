@@ -47,7 +47,7 @@ class PhotosAlbum: Album {
         fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
         let fetchedAssets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
         fetchedAssets.enumerateObjects({ (asset, _, _) in
-            self.assets.append(PhotosAsset(asset, collection: self.assetCollection))
+            self.assets.append(PhotosAsset(asset, albumIdentifier: self.identifier))
         })
     }
     

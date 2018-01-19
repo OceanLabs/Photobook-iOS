@@ -66,7 +66,8 @@ class PhotobookPageView: UIView {
     }
     
     private func setup() {
-        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOnPage(_:))))
+        tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapOnPage(_:)))
+        addGestureRecognizer(tapGesture)
     }
     
     func setupImageBox() {
