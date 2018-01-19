@@ -67,7 +67,7 @@ extension Card {
         case .mastercard:
             return UIImage(named: "mastercard-logo")!
         default:
-            return UIImage(named: "credit-card-method")!
+            return UIImage(named: "add-payment")!
         }
     }
     

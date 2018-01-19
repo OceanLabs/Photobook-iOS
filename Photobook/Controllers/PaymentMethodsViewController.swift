@@ -13,6 +13,10 @@ protocol PaymentMethodsDelegate: class {
 }
 
 class PaymentMethodsViewController: UIViewController {
+    
+    private struct Constants {
+        static let creditCardSegueName = "CreditCardSegue"
+    }
 
     @IBOutlet weak var tableView: UITableView!
 
@@ -38,7 +42,7 @@ class PaymentMethodsViewController: UIViewController {
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "CreditCardSegue", let destination = segue.destination as? CreditCardTableViewController {
+        if segue.identifier == Constants.creditCardSegueName, let destination = segue.destination as? CreditCardTableViewController {
             destination.delegate = self
         }
     }
@@ -116,8 +120,8 @@ extension PaymentMethodsViewController: UITableViewDelegate {
             guard Card.currentCard != nil else { fallthrough }
             
             selectedPaymentMethod = .creditCard
-        default:
-            break
+        default: // Add Payment Method
+            performSegue(withIdentifier: Constants.creditCardSegueName, sender: nil)
         }
         
         tableView.reloadData()

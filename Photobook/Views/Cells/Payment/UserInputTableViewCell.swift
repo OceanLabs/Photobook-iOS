@@ -9,7 +9,14 @@
 import UIKit
 
 class UserInputTableViewCell: UITableViewCell {
+    
+    struct Constants {
+        static let errorColor = UIColor(red:1, green:0.23, blue:0.19, alpha:1)
+    }
 
+    @IBOutlet weak var separatorLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var topSeparator: UIView!
+    @IBOutlet weak var messageBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var separator: UIView!
@@ -21,6 +28,12 @@ class UserInputTableViewCell: UITableViewCell {
                 messageLabel.alpha = 0
                 messageLabel.text = message
             }
+            
+            guard message != nil else{
+                self.messageBottomConstraint.constant = 0
+                return
+            }
+            
             UIView.animate(withDuration: 0.3, animations: {
                 self.messageLabel.alpha = 1
                 self.messageLabel.textColor = UIColor.black
@@ -33,9 +46,9 @@ class UserInputTableViewCell: UITableViewCell {
                 messageLabel.alpha = 0
                 messageLabel.text = errorMessage
             }
-            UIView.animate(withDuration: 0.3, animations: {
-                self.messageLabel.alpha = 1
-            })
+            self.messageLabel.alpha = 1
+            self.messageLabel.textColor = Constants.errorColor
+            self.messageBottomConstraint.constant = 17
         }
     }
 }
