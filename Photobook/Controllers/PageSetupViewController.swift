@@ -13,7 +13,7 @@ protocol PageSetupDelegate: class {
 }
 
 fileprivate enum PageType {
-    case cover, left, right
+    case cover, first, last, left, right
 }
 
 class PageSetupViewController: UIViewController {
@@ -61,9 +61,9 @@ class PageSetupViewController: UIViewController {
         guard let pageType = pageType else { return nil }
         
         switch pageType {
-        case .left:
+        case .left, .last:
             return leftAssetContainerView
-        case .right:
+        case .right, .first:
             return rightAssetContainerView
         case .cover:
             return coverAssetContainerView
@@ -74,9 +74,9 @@ class PageSetupViewController: UIViewController {
         guard let pageType = pageType else { return nil }
         
         switch pageType {
-        case .left:
+        case .left, .last:
             return leftAssetImageView
-        case .right:
+        case .right, .first:
             return rightAssetImageView
         case .cover:
             return coverAssetImageView
@@ -88,8 +88,13 @@ class PageSetupViewController: UIViewController {
     var selectedAssetsManager: SelectedAssetsManager!
     var pageIndex: Int! {
         didSet {
-            if pageIndex! == 0 { pageType = .cover }
-            else if pageIndex! % 2 == 0 { pageType = .left }
+            guard let pageIndex = pageIndex else {
+                fatalError("Page editing started without a layout index")
+            }
+            if pageIndex == 0 { pageType = .cover }
+            else if pageIndex == 1 { pageType = .first }
+            else if pageIndex == ProductManager.shared.productLayouts.count - 1 { pageType = .last }
+            else if pageIndex % 2 == 0 { pageType = .left }
             else { pageType = .right }
         }
     }
@@ -105,9 +110,9 @@ class PageSetupViewController: UIViewController {
         guard let pageType = pageType else { return nil }
         
         switch pageType {
-        case .left:
+        case .left, .last:
             return photobookFrameView.leftPageView
-        case .right:
+        case .right, .first:
             return photobookFrameView.rightPageView
         case .cover:
             return coverFrameView.pageView
@@ -153,12 +158,16 @@ class PageSetupViewController: UIViewController {
     
     private func setupPhotobookFrame() {
         switch pageType! {
+        case .last:
+            photobookFrameView.isRightPageVisible = false
+            fallthrough
         case .left:
             photobookTrailingConstraint.isActive = false
-            photobookFrameView.isRightPageVisible = false
+        case .first:
+            photobookFrameView.isLeftPageVisible = false
+            fallthrough
         case .right:
             photobookLeadingConstraint.isActive = false
-            photobookFrameView.isLeftPageVisible = false
         case .cover:
             break
         }

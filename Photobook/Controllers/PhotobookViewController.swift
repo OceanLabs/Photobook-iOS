@@ -17,9 +17,10 @@ class PhotobookViewController: UIViewController {
         static let dragLiftScale: CGFloat = 1.1
         static let autoScrollTopScreenThreshold: CGFloat = 0.2
         static let autoScrollBottomScreenThreshold: CGFloat = 0.9
-        static let autoScrollInset: CGFloat = 10
+        static let autoScrollInset: CGFloat = 10.0
         static let dragLiftAnimationDuration: TimeInterval = 0.15
         static let dropAnimationDuration: TimeInterval = 0.3
+        static let proposalCellHeight: CGFloat = 30.0
     }
     private var reverseRearrageScale: CGFloat {
         return 1 + (1 - Constants.rearrageScale) / Constants.rearrageScale
@@ -568,13 +569,23 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
         guard let product = ProductManager.shared.product else { return .zero }
 
         if indexPath == proposedDropIndexPath {
-            return CGSize(width: collectionView.bounds.width, height: 30.0)
+            return CGSize(width: collectionView.bounds.width, height: Constants.proposalCellHeight)
         }
 
         let pageWidth = (view.bounds.width - Constants.cellSideMargin * 2.0 - PhotobookConstants.horizontalPageToCoverMargin * 2.0) / 2.0
         let pageHeight = pageWidth / product.pageSizeRatio
 
+        // PhotoboookCollectionViewCell works when the collectionView uses dynamic heights by setting up the aspect ratio of its pages.
+        // This however, causes problems with the drag & drop functionality and that is why the cell height is calculated by using the measurements set on the storyboard.
         return CGSize(width: view.bounds.width - Constants.cellSideMargin * 2.0, height: pageHeight + PhotobookConstants.verticalPageToCoverMargin)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        // Reduces the space between cover and first page to match the one between pages
+        if section == 0 {
+            return UIEdgeInsetsMake(0.0, 0.0, -18.0, 0.0)
+        }
+        return .zero
     }
 }
 
