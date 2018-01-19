@@ -38,9 +38,9 @@ class PaymentMethodsViewController: UIViewController {
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "CreditCardSegue", let destination = segue.destination as? CreditCardTableViewController {
-//            destination.delegate = self
-//        }
+        if segue.identifier == "CreditCardSegue", let destination = segue.destination as? CreditCardTableViewController {
+            destination.delegate = self
+        }
     }
 
     @IBAction func tappedCloseButton(_ sender: UIBarButtonItem) {
@@ -133,39 +133,10 @@ extension PaymentMethodsViewController: UITableViewDelegate {
         tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
     }
 }
-//
-//extension PaymentMethodsViewController: CreditCardTableViewControllerDelegate {
-//
-//    func didAddCreditCard(on viewController: CreditCardTableViewController) {
-//        delegate?.didTapToDismissPayments()
-//    }
-//}
-//
-//
-//class PaymentMethodTableViewCell: UITableViewCell {
-//
-//    static let reuseIdentifier = NSStringFromClass(PaymentMethodTableViewCell.self).components(separatedBy: ".").last!
-//
-//    @IBOutlet private weak var tickImageView: UIImageView! {
-//        didSet {
-//            tickImageView.tintColor = Theme.colorForKey("tick")
-//        }
-//    }
-//    @IBOutlet private weak var methodLabel: UILabel!
-//    @IBOutlet private weak var methodIcon: UIImageView!
-//    @IBOutlet weak var separator: UIView!
-//
-//    var method: String? {
-//        didSet { methodLabel.text = method }
-//    }
-//
-//    var icon: UIImage? {
-//        didSet { methodIcon.image = icon }
-//    }
-//
-//    var ticked: Bool = false {
-//        didSet { tickImageView.alpha = ticked ? 1.0 : 0.0 }
-//    }
-//}
 
+extension PaymentMethodsViewController: CreditCardTableViewControllerDelegate {
 
+    func didAddCreditCard(on viewController: CreditCardTableViewController) {
+        delegate?.didTapToDismissPayments()
+    }
+}

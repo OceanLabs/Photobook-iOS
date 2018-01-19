@@ -45,6 +45,8 @@
 		2ECB5A971FDFE01100FF39A5 /* OutOfBoundsTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECB5A961FDFE01100FF39A5 /* OutOfBoundsTouchView.swift */; };
 		2ECB5A991FDFE71200FF39A5 /* OutOfBoundsTouchCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECB5A981FDFE71200FF39A5 /* OutOfBoundsTouchCollectionView.swift */; };
 		2ECF57BC2010D0830047094C /* PaymentMethodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECF57BB2010D0830047094C /* PaymentMethodTableViewCell.swift */; };
+		2ECF57C320120D2A0047094C /* CreditCardTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECF57C220120D2A0047094C /* CreditCardTableViewController.swift */; };
+		2ECF57C520120DF60047094C /* UserInputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECF57C420120DF60047094C /* UserInputTableViewCell.swift */; };
 		2ED5B3811FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */; };
 		2ED5B3831FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3821FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift */; };
 		2ED79FE91FBAEDE90046B96C /* AssetPickerCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */; };
@@ -151,6 +153,8 @@
 		2ECF57BB2010D0830047094C /* PaymentMethodTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodTableViewCell.swift; sourceTree = "<group>"; };
 		2ECF57BD2010D99B0047094C /* Photobook.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Photobook.entitlements; sourceTree = "<group>"; };
 		2ECF57BE201206FA0047094C /* Photobook-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Photobook-Bridging-Header.h"; sourceTree = "<group>"; };
+		2ECF57C220120D2A0047094C /* CreditCardTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreditCardTableViewController.swift; sourceTree = "<group>"; };
+		2ECF57C420120DF60047094C /* UserInputTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInputTableViewCell.swift; sourceTree = "<group>"; };
 		2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSearchResultsTableViewController.swift; sourceTree = "<group>"; };
 		2ED5B3821FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSearchResultsTableViewCell.swift; sourceTree = "<group>"; };
 		2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerCollectionViewController.swift; sourceTree = "<group>"; };
@@ -332,6 +336,7 @@
 			isa = PBXGroup;
 			children = (
 				2ECF57BB2010D0830047094C /* PaymentMethodTableViewCell.swift */,
+				2ECF57C420120DF60047094C /* UserInputTableViewCell.swift */,
 			);
 			path = Payment;
 			sourceTree = "<group>";
@@ -397,6 +402,7 @@
 				6F92BD011FFE3B8100460466 /* AssetSelectorViewController.swift */,
 				2E8B3E431FD191AC00FB8878 /* PhotobookViewController.swift */,
 				2E17337E200F4E0B00F0D718 /* PaymentMethodsViewController.swift */,
+				2ECF57C220120D2A0047094C /* CreditCardTableViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -725,8 +731,10 @@
 				6F4DE6551FB4522A0099A97E /* StoryTableViewCell.swift in Sources */,
 				6FCE959D1FF555EE0023FC14 /* AssetPlacementViewController.swift in Sources */,
 				6FC7E87B1FBEF7FC00D2BCDA /* PhotobookAPIManager.swift in Sources */,
+				2ECF57C520120DF60047094C /* UserInputTableViewCell.swift in Sources */,
 				6F0A68361FE16D1200B7E56C /* LayoutSelectionViewController.swift in Sources */,
 				2E1733932010CD0B00F0D718 /* Country.swift in Sources */,
+				2ECF57C320120D2A0047094C /* CreditCardTableViewController.swift in Sources */,
 				6FDF25E71FB6052A00F46BB0 /* UIImageExtensions.swift in Sources */,
 				6FA189371FFFA07500E6D0AB /* BorderedCollectionViewCell.swift in Sources */,
 				6F3C4ACF1FC8811C00DA0196 /* ProductLayoutText.swift in Sources */,
