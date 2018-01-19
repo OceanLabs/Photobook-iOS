@@ -96,51 +96,52 @@ class PaymentAuthorizationManager: NSObject {
     ///
     /// - Parameter cost: The total cost of the order
     private func authorizePayPal(cost: Cost){
-//        let address = OrderManager.shared.basket.address
-//
-//        guard let totalCost = cost.shippingMethod(id: OrderManager.shared.shippingMethod)?.totalCost,
-//            let currencyCode = OrderManager.shared.basket.currencyCode,
-//            let firstName = address?.firstName,
-//            let lastName = address?.lastName,
-//            let line1 = address?.line1,
-//            let city = address?.city,
-//            let postalCode = address?.zipOrPostcode,
-//            let country = address?.country
-//            else { return }
-//
-//        let paypalAddress = PayPalShippingAddress(recipientName: String(format: "%@ %@", firstName, lastName), withLine1: line1, withLine2: address?.line2 ?? "", withCity: city, withState: address?.stateOrCounty ?? "", withPostalCode: postalCode, withCountryCode: country.codeAlpha2)
-//        let payment = PayPalPayment(amount: totalCost as NSDecimalNumber, currencyCode: currencyCode, shortDescription: OrderManager.shared.basket.orderDescription(), intent: .authorize)
-//        payment.shippingAddress = paypalAddress
-//
-//        let config = PayPalConfiguration()
-//        config.acceptCreditCards = false
-//        config.payPalShippingAddressOption = .provided
-//
-//        guard let paymentController = PayPalPaymentViewController(payment: payment, configuration: config, delegate: self) else { return }
-//        guard let delegate = delegate as? UIViewController else { return }
-//        delegate.present(paymentController, animated: true, completion: nil)
+        let address = ProductManager.shared.address
+
+        guard let totalCost = cost.shippingMethod(id: ProductManager.shared.shippingMethod)?.totalCost,
+            let currencyCode = ProductManager.shared.currencyCode,
+            let firstName = address?.firstName,
+            let lastName = address?.lastName,
+            let line1 = address?.line1,
+            let city = address?.city,
+            let postalCode = address?.zipOrPostcode,
+            let country = address?.country,
+            let product = ProductManager.shared.product
+            else { return }
+
+        let paypalAddress = PayPalShippingAddress(recipientName: String(format: "%@ %@", firstName, lastName), withLine1: line1, withLine2: address?.line2 ?? "", withCity: city, withState: address?.stateOrCounty ?? "", withPostalCode: postalCode, withCountryCode: country.codeAlpha2)
+        let payment = PayPalPayment(amount: totalCost as NSDecimalNumber, currencyCode: currencyCode, shortDescription: product.name, intent: .authorize)
+        payment.shippingAddress = paypalAddress
+
+        let config = PayPalConfiguration()
+        config.acceptCreditCards = false
+        config.payPalShippingAddressOption = .provided
+
+        guard let paymentController = PayPalPaymentViewController(payment: payment, configuration: config, delegate: self) else { return }
+        guard let delegate = delegate as? UIViewController else { return }
+        delegate.present(paymentController, animated: true, completion: nil)
     }
 }
 
 //// MARK: - PayPalPaymentDelegate
 //
-//extension PaymentAuthorizationManager: PayPalPaymentDelegate{
-//
-//    func payPalPaymentDidCancel(_ paymentViewController: PayPalPaymentViewController) {
-//        paymentViewController.dismiss(animated: true, completion: nil)
-//    }
-//
-//    func payPalPaymentViewController(_ paymentViewController: PayPalPaymentViewController, didComplete completedPayment: PayPalPayment) {
-//        paymentViewController.dismiss(animated: true, completion: {
-//            guard let confirmation = completedPayment.confirmation as? [String: Any] else { return }
-//            guard let response = confirmation["response"] as? [String: Any] else { return }
-//            guard let token = response["id"] as? String else { return }
-//
-//            let index = token.index(token.startIndex, offsetBy: 3)
-//            self.delegate?.paymentAuthorizationDidFinish(token: "PAUTH\(token[index...])", error: nil, completionHandler: nil)
-//        })
-//    }
-//}
+extension PaymentAuthorizationManager: PayPalPaymentDelegate{
+
+    func payPalPaymentDidCancel(_ paymentViewController: PayPalPaymentViewController) {
+        paymentViewController.dismiss(animated: true, completion: nil)
+    }
+
+    func payPalPaymentViewController(_ paymentViewController: PayPalPaymentViewController, didComplete completedPayment: PayPalPayment) {
+        paymentViewController.dismiss(animated: true, completion: {
+            guard let confirmation = completedPayment.confirmation as? [String: Any] else { return }
+            guard let response = confirmation["response"] as? [String: Any] else { return }
+            guard let token = response["id"] as? String else { return }
+
+            let index = token.index(token.startIndex, offsetBy: 3)
+            self.delegate?.paymentAuthorizationDidFinish(token: "PAUTH\(token[index...])", error: nil, completionHandler: nil)
+        })
+    }
+}
 
 extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDelegate{
     
@@ -203,22 +204,22 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
         
         ProductManager.shared.address = shippingAddress
         
-//        ProductManager.shared.updateCost { [weak welf = self] (error: Error?) in
-//            
-//            guard let cachedCost = OrderManager.shared.basket.cachedCost else {
-//                completion(.failure, [PKShippingMethod](), [PKPaymentSummaryItem]())
-//                return
-//            }
-//
-//            guard error == nil else {
-//                completion(.failure, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: welf!.applePayPayTo, shippingMethodId: OrderManager.shared.shippingMethod!))
-//                return
-//            }
-//
-//            //Cost is expected to change here so update views
-//            welf?.delegate?.costUpdated()
-//            
-//            completion(.success, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: welf!.applePayPayTo, shippingMethodId: OrderManager.shared.shippingMethod!))
-//        }
+        ProductManager.shared.updateCost { [weak welf = self] (error: Error?) in
+            
+            guard let cachedCost = ProductManager.shared.cachedCost else {
+                completion(.failure, [PKShippingMethod](), [PKPaymentSummaryItem]())
+                return
+            }
+
+            guard error == nil else {
+                completion(.failure, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: welf!.applePayPayTo, shippingMethodId: ProductManager.shared.shippingMethod!))
+                return
+            }
+
+            //Cost is expected to change here so update views
+            welf?.delegate?.costUpdated()
+            
+            completion(.success, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: welf!.applePayPayTo, shippingMethodId: ProductManager.shared.shippingMethod!))
+        }
     }
 }

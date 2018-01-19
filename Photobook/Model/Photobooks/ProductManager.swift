@@ -87,6 +87,12 @@ class ProductManager {
     var currencyCode: String? // TODO: Get this from somewhere
     var address: Address?
     var paymentMethod: PaymentMethod?
+    var cachedCost: Cost?
+    
+    // TODO: this probably doesn't belong here
+    func updateCost (completionHandler: (_ error: Error?) -> Void) {
+        
+    }
     
     // TODO: Spine
     
