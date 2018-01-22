@@ -8,3 +8,6 @@ pod 'PayPal-iOS-SDK/Core', '~> 2.18.0'
 
 target 'Photobook' do
 end
+
+target 'PhotobookTests' do
+end
