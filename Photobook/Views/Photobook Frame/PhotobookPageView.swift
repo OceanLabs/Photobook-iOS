@@ -161,6 +161,7 @@ class PhotobookPageView: UIView {
 
         if !shouldBeLegible {
             pageTextLabel.text = ""
+            pageTextLabel.frame = textBox.rectContained(in: bounds.size)
             pageTextLabel.backgroundColor = Constants.textPlaceholderColor
             return
         }

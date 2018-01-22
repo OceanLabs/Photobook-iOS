@@ -20,6 +20,26 @@ struct PhotobookConstants {
     static let verticalPageToCoverMargin: CGFloat = 5.0
 }
 
+fileprivate struct ColorConstants {
+    struct White {
+        static let color1 = UIColor(red: 0.87, green: 0.87, blue: 0.87, alpha: 1.0).cgColor
+        static let color2 = UIColor(red: 0.96, green: 0.96, blue: 0.96, alpha: 1.0)
+        static let color3 = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
+        static let color4 = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0).cgColor
+        static let color5 = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0).cgColor
+        static let color6 = UIColor(red: 0.82, green: 0.82, blue: 0.82, alpha: 1.0)
+    }
+    struct Black {
+        static let color1 = UIColor(red: 0.17, green: 0.17, blue: 0.17, alpha: 1.0)
+        static let color2 = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 1.0).cgColor
+        static let color3 = UIColor(red: 0.14, green: 0.14, blue: 0.14, alpha: 1.0).cgColor
+        static let color4 = UIColor(red: 0.19, green: 0.19, blue: 0.19, alpha: 1.0)
+        static let color5 = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.0).cgColor
+        static let color6 = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0).cgColor
+        static let color7 = UIColor(red: 0.22, green: 0.22, blue: 0.22, alpha: 1.0)
+    }
+}
+
 /// Graphical representation of an open photobook
 class PhotobookFrameView: UIView {
     
@@ -102,17 +122,6 @@ class PhotobookFrameCoverView: UIView {
 
     var color: ProductColor = .white
     
-    private struct Constants {
-        struct White {
-            static let color1 = UIColor(red: 0.87, green: 0.87, blue: 0.87, alpha: 1.0).cgColor
-            static let color2 = UIColor(red: 0.96, green: 0.96, blue: 0.96, alpha: 1.0)
-        }
-        struct Black {
-            static let color1 = UIColor(red: 0.17, green: 0.17, blue: 0.17, alpha: 1.0)
-            static let color2 = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 1.0).cgColor
-        }
-    }
-    
     override init(frame: CGRect) {
         fatalError("Not to be used programmatically. Please use PhotobookFrameView instead.")
     }
@@ -134,15 +143,15 @@ class PhotobookFrameCoverView: UIView {
         switch color {
         case .white:
             layer.borderWidth = PhotobookConstants.borderWidth
-            layer.borderColor = Constants.White.color1
+            layer.borderColor = ColorConstants.White.color1
 
-            Constants.White.color2.setFill()
+            ColorConstants.White.color2.setFill()
             shineColor = UIColor.white.cgColor
         case .black:
             layer.borderWidth = 0.0
             
-            Constants.Black.color1.setFill()
-            shineColor = Constants.Black.color2
+            ColorConstants.Black.color1.setFill()
+            shineColor = ColorConstants.Black.color2
         }
         context.fill(rect)
         
@@ -159,23 +168,9 @@ enum PageSide {
     case left, right
 }
 
+/// Internal class adding the top and bottom shadow effect for a spread
 class PhotobookFrameSpreadBackgroundView: UIView {
     var color: ProductColor = .white
-    
-    private struct Constants {
-        struct White {
-            static let color1 = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0).cgColor
-            static let color2 = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
-            static let color3 = UIColor(red: 0.87, green: 0.87, blue: 0.87, alpha: 1.0).cgColor
-            static let color4 = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0).cgColor
-        }
-        struct Black {
-            static let color1 = UIColor(red: 0.19, green: 0.19, blue: 0.19, alpha: 1.0)
-            static let color2 = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.0).cgColor
-            static let color3 = UIColor(red: 0.14, green: 0.14, blue: 0.14, alpha: 1.0).cgColor
-            static let color4 = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0).cgColor
-        }
-    }
     
     override init(frame: CGRect) {
         fatalError("Not to be used programmatically. Please use PhotobookFrameView instead.")
@@ -194,9 +189,9 @@ class PhotobookFrameSpreadBackgroundView: UIView {
         
         switch color {
         case .white:
-            topLineColor = Constants.White.color2
+            topLineColor = ColorConstants.White.color3
         case .black:
-            topLineColor = Constants.Black.color3
+            topLineColor = ColorConstants.Black.color3
         }
         context.fill(rect)
         
@@ -222,21 +217,6 @@ class PhotobookFramePageBackgroundView: UIView {
     var pageSide = PageSide.left
     var color: ProductColor = .white
     
-    private struct Constants {
-        struct White {
-            static let color1 = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0).cgColor
-            static let color2 = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
-            static let color3 = UIColor(red: 0.87, green: 0.87, blue: 0.87, alpha: 1.0).cgColor
-            static let color4 = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0).cgColor
-        }
-        struct Black {
-            static let color1 = UIColor(red: 0.19, green: 0.19, blue: 0.19, alpha: 1.0)
-            static let color2 = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.0).cgColor
-            static let color3 = UIColor(red: 0.14, green: 0.14, blue: 0.14, alpha: 1.0).cgColor
-            static let color4 = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0).cgColor
-        }
-    }
-    
     override init(frame: CGRect) {
         fatalError("Not to be used programmatically. Please use PhotobookFrameView instead.")
     }
@@ -256,12 +236,12 @@ class PhotobookFramePageBackgroundView: UIView {
         switch color {
         case .white:
             UIColor.white.setFill()
-            gradientColors = [ UIColor.white.cgColor, UIColor.white.cgColor, Constants.White.color1 ]
-            topLineColor = Constants.White.color2
+            gradientColors = [ UIColor.white.cgColor, UIColor.white.cgColor, ColorConstants.White.color4 ]
+            topLineColor = ColorConstants.White.color3
         case .black:
-            Constants.Black.color1.setFill()
-            gradientColors = [ Constants.Black.color1.cgColor, Constants.Black.color1.cgColor, Constants.Black.color2 ]
-            topLineColor = Constants.Black.color3
+            ColorConstants.Black.color4.setFill()
+            gradientColors = [ ColorConstants.Black.color4.cgColor, ColorConstants.Black.color4.cgColor, ColorConstants.Black.color5 ]
+            topLineColor = ColorConstants.Black.color3
         }
         context.fill(rect)
         
@@ -278,25 +258,11 @@ class PhotobookFramePageBackgroundView: UIView {
     }
 }
 
+/// Internal class representing the hint of page edges behind
 class PhotobookFramePagesBehindView: UIView {
     
     var pageSide = PageSide.left
     var color: ProductColor = .white
-    
-    private struct Constants {
-        struct White {
-            static let color1 = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0).cgColor
-            static let color2 = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
-            static let color3 = UIColor(red: 0.87, green: 0.87, blue: 0.87, alpha: 1.0).cgColor
-            static let color4 = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0).cgColor
-        }
-        struct Black {
-            static let color1 = UIColor(red: 0.19, green: 0.19, blue: 0.19, alpha: 1.0)
-            static let color2 = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.0).cgColor
-            static let color3 = UIColor(red: 0.14, green: 0.14, blue: 0.14, alpha: 1.0).cgColor
-            static let color4 = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0).cgColor
-        }
-    }
     
     override init(frame: CGRect) {
         fatalError("Not to be used programmatically. Please use PhotobookFrameView instead.")
@@ -316,10 +282,10 @@ class PhotobookFramePagesBehindView: UIView {
         switch color {
         case .white:
             UIColor.white.setFill()
-            pagesEffectColor = pageSide == .left ? Constants.White.color3 : Constants.White.color4
+            pagesEffectColor = pageSide == .left ? ColorConstants.White.color1 : ColorConstants.White.color5
         case .black:
-            Constants.Black.color1.setFill()
-            pagesEffectColor = pageSide == .left ? Constants.Black.color3 : Constants.Black.color4
+            ColorConstants.Black.color4.setFill()
+            pagesEffectColor = pageSide == .left ? ColorConstants.Black.color3 : ColorConstants.Black.color6
         }
         context.fill(rect)
         
@@ -340,20 +306,15 @@ class PhotobookFramePagesBehindView: UIView {
 // Internal class representing the fold between two pages of an open photobook. Please user PhotobookFrameView instead.
 class PhotobookFramePageDividerView: UIView {
  
-    private struct Constants {
-        static let white = UIColor(red: 0.82, green: 0.82, blue: 0.82, alpha: 1.0)
-        static let black = UIColor(red: 0.22, green: 0.22, blue: 0.22, alpha: 1.0)
-    }
-
     @IBOutlet private weak var widthConstraint: NSLayoutConstraint!
     
     var color: ProductColor = .white {
         didSet {
             switch color {
             case .white:
-                backgroundColor = Constants.white
+                backgroundColor = ColorConstants.White.color6
             case .black:
-                backgroundColor = Constants.black
+                backgroundColor = ColorConstants.Black.color7
             }
         }
     }
