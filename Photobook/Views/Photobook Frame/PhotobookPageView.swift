@@ -16,6 +16,7 @@ class PhotobookPageView: UIView {
     
     private struct Constants {
         static let textBoxFont = UIFont.systemFont(ofSize: 6.0)
+        static let textPlaceholderColor = UIColor(white: 0.9, alpha: 1.0)
     }
 
     weak var delegate: PhotobookPageViewDelegate?
@@ -143,7 +144,7 @@ class PhotobookPageView: UIView {
         assetImageView.transform = productLayout!.productLayoutAsset!.transform
     }
     
-    func setupTextBox() {
+    func setupTextBox(shouldBeLegible: Bool = true) {
         guard let textBox = productLayout?.layout.textLayoutBox else {
             pageTextLabel.alpha = 0.0
             return
@@ -157,10 +158,17 @@ class PhotobookPageView: UIView {
         }
         
         pageTextLabel.alpha = 1.0
-        pageTextLabel.text = text
+
+        if !shouldBeLegible {
+            pageTextLabel.text = ""
+            pageTextLabel.backgroundColor = Constants.textPlaceholderColor
+            return
+        }
         
+        pageTextLabel.text = text
         pageTextLabel.frame = textBox.rectContained(in: bounds.size)
         pageTextLabel.font = Constants.textBoxFont
+        pageTextLabel.backgroundColor = .clear
         adjustLabelHeight()
     }
     

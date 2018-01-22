@@ -46,9 +46,7 @@ class PageSetupViewController: UIViewController {
         didSet { photobookFrameView.isHidden = pageType == .cover }
     }
     
-    @IBOutlet private weak var photobookWidthConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var photobookLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var photobookTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var photobookHorizontalAlignmentConstraint: NSLayoutConstraint!
     
     @IBOutlet private weak var coverAssetContainerView: UIView!
     @IBOutlet private weak var coverAssetImageView: UIImageView!
@@ -139,7 +137,7 @@ class PageSetupViewController: UIViewController {
             photobookFrameView.leftPageView.aspectRatio = pageSizeRatio
             photobookFrameView.rightPageView.aspectRatio = pageSizeRatio
 
-            photobookWidthConstraint.constant = (view.bounds.width - 2.0 * Constants.photobookSideMargin) * 2.0
+            photobookFrameView.width = (view.bounds.width - 2.0 * Constants.photobookSideMargin) * 2.0
             
             pageView.index = pageIndex
             pageView.productLayout = productLayout
@@ -162,12 +160,12 @@ class PageSetupViewController: UIViewController {
             photobookFrameView.isRightPageVisible = false
             fallthrough
         case .left:
-            photobookTrailingConstraint.isActive = false
+            photobookHorizontalAlignmentConstraint.constant = view.bounds.width - Constants.photobookSideMargin
         case .first:
             photobookFrameView.isLeftPageVisible = false
             fallthrough
         case .right:
-            photobookLeadingConstraint.isActive = false
+            photobookHorizontalAlignmentConstraint.constant = Constants.photobookSideMargin
         case .cover:
             break
         }

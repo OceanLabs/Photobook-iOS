@@ -13,7 +13,8 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     static let reuseIdentifier = NSStringFromClass(LayoutSelectionCollectionViewCell.self).components(separatedBy: ".").last!
     
     private struct Constants {
-        static let photobookSideMargin: CGFloat = 5.0
+        static let photobookAlignmentMargin: CGFloat = 6.0
+        static let photobookVerticalMargin: CGFloat = 6.0
     }
     
     // Constraints
@@ -74,7 +75,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         photobookFrameView.leftPageView.isTapGestureEnabled = false
         photobookFrameView.rightPageView.isTapGestureEnabled = false
 
-        photobookWidthConstraint.constant = (bounds.width - 2.0 * Constants.photobookSideMargin) * 2.0
+        photobookFrameView.width = (bounds.height - 2.0 * Constants.photobookVerticalMargin) * aspectRatio * 2.0
         
         let productLayoutAsset = ProductLayoutAsset()
         productLayoutAsset.asset = asset
@@ -86,11 +87,12 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
             photobookFrameView.isRightPageVisible = false
             fallthrough
         case .left:
-            photobookLeftAligmentConstraint.constant = bounds.width - Constants.photobookSideMargin
+            photobookLeftAligmentConstraint.constant = bounds.width - Constants.photobookAlignmentMargin
             
             photobookFrameView.leftPageView.index = pageIndex
             photobookFrameView.leftPageView.productLayout = productLayout
             photobookFrameView.leftPageView.setupImageBox(with: image)
+            photobookFrameView.leftPageView.setupTextBox(shouldBeLegible: false)
         case .first:
             photobookFrameView.isLeftPageVisible = false
             fallthrough
@@ -98,6 +100,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
             photobookFrameView.rightPageView.index = pageIndex
             photobookFrameView.rightPageView.productLayout = productLayout
             photobookFrameView.rightPageView.setupImageBox(with: image)
+            photobookFrameView.rightPageView.setupTextBox(shouldBeLegible: false)
         default:
             break
         }

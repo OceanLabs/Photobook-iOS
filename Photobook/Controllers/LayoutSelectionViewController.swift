@@ -83,6 +83,19 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if pageType == .cover {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CoverLayoutSelectionCollectionViewCell.reuseIdentifier, for: indexPath) as! CoverLayoutSelectionCollectionViewCell
+            
+            cell.layout = layouts[indexPath.row]
+            cell.aspectRatio = pageSizeRatio
+            cell.image = image // Pass the image to avoid reloading
+            cell.asset = asset
+            cell.isBorderVisible = (indexPath.row == selectedLayoutIndex)
+            cell.setupLayout()
+            
+            return cell
+        }
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LayoutSelectionCollectionViewCell.reuseIdentifier, for: indexPath) as! LayoutSelectionCollectionViewCell
 
         cell.pageIndex = pageIndex
