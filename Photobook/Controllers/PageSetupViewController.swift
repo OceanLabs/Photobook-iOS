@@ -12,7 +12,7 @@ protocol PageSetupDelegate: class {
     func didFinishEditingPage(_ index: Int, productLayout: ProductLayout, saving: Bool)
 }
 
-fileprivate enum PageType {
+enum PageType {
     case cover, first, last, left, right
 }
 
@@ -47,7 +47,7 @@ class PageSetupViewController: UIViewController {
     }
     
     @IBOutlet private weak var photobookWidthConstraint: NSLayoutConstraint!
-    @IBOutlet private var photobookLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var photobookLeadingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var photobookTrailingConstraint: NSLayoutConstraint!
     
     @IBOutlet private weak var coverAssetContainerView: UIView!
@@ -179,6 +179,8 @@ class PageSetupViewController: UIViewController {
     }
     
     private func setupLayoutSelection() {
+        layoutSelectionViewController.pageIndex = pageIndex
+        layoutSelectionViewController.pageType = pageType
         layoutSelectionViewController.pageSizeRatio = pageSizeRatio
         layoutSelectionViewController.asset = productLayout.asset
         layoutSelectionViewController.layouts = availableLayouts
@@ -247,7 +249,6 @@ class PageSetupViewController: UIViewController {
         case .placeAsset:
             view.bringSubview(toFront: placementContainerView)
             
-            //let containerRect = placementContainerView.convert(assetContainerView.frame, from: pageView)
             let containerRect = placementContainerView.convert(assetContainerView.frame, from: pageView)
             assetPlacementViewController.productLayout = productLayout
             assetPlacementViewController.initialContainerRect = containerRect

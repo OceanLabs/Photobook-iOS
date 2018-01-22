@@ -27,10 +27,16 @@ class PhotobookFrameView: UIView {
     
     @IBOutlet private weak var coverView: PhotobookFrameCoverView!
     @IBOutlet private weak var coverInsideImageView: UIImageView! { didSet { coverInsideImageView.backgroundColor = PhotobookFrameView.insideColor } }
+    @IBOutlet private weak var spreadBackgroundView: PhotobookFrameSpreadBackgroundView!
+    @IBOutlet private weak var leftPagesBehindView: PhotobookFramePagesBehindView? { didSet { leftPagesBehindView!.pageSide = .left } }
+    @IBOutlet private weak var rightPagesBehindView: PhotobookFramePagesBehindView? { didSet { rightPagesBehindView!.pageSide = .left } }
     @IBOutlet private weak var leftPageBackgroundView: PhotobookFramePageBackgroundView! { didSet { leftPageBackgroundView.pageSide = .left } }
     @IBOutlet private weak var rightPageBackgroundView: PhotobookFramePageBackgroundView! { didSet { rightPageBackgroundView.pageSide = .right } }
     @IBOutlet private weak var pageDividerView: PhotobookFramePageDividerView!
     @IBOutlet private weak var widthConstraint: NSLayoutConstraint!
+    
+    @IBOutlet private var spreadBackgroundLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private var spreadBackgroundTrailingConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var leftPageView: PhotobookPageView!
     @IBOutlet weak var rightPageView: PhotobookPageView!
@@ -38,8 +44,22 @@ class PhotobookFrameView: UIView {
     var coverColor: ProductColor = .white
     var pageColor: ProductColor = .white
     
-    var isLeftPageVisible = true { didSet { leftPageBackgroundView.isHidden = !isLeftPageVisible } }
-    var isRightPageVisible = true { didSet { rightPageBackgroundView.isHidden = !isRightPageVisible } }
+    var isLeftPageVisible = true {
+        didSet {
+            leftPageBackgroundView.isHidden = !isLeftPageVisible
+            leftPagesBehindView?.isHidden = !isLeftPageVisible
+            leftPageView.isVisible = isLeftPageVisible
+            spreadBackgroundLeadingConstraint.isActive = isLeftPageVisible
+        }
+    }
+    var isRightPageVisible = true {
+        didSet {
+            rightPageBackgroundView.isHidden = !isRightPageVisible
+            rightPagesBehindView?.isHidden = !isRightPageVisible
+            rightPageView.isVisible = isRightPageVisible
+            spreadBackgroundTrailingConstraint.isActive = isRightPageVisible
+        }
+    }
     
     var width: CGFloat! {
         didSet {
@@ -66,6 +86,10 @@ class PhotobookFrameView: UIView {
         }
         
         coverView.color = coverColor
+        spreadBackgroundView.color = pageColor
+        if leftPagesBehindView != nil { leftPagesBehindView!.color = pageColor }
+        if rightPagesBehindView != nil { rightPagesBehindView!.color = pageColor }
+        rightPageBackgroundView.color = pageColor
         leftPageBackgroundView.color = pageColor
         rightPageBackgroundView.color = pageColor
         pageDividerView.setVisible(isLeftPageVisible && isRightPageVisible)
@@ -135,6 +159,63 @@ enum PageSide {
     case left, right
 }
 
+class PhotobookFrameSpreadBackgroundView: UIView {
+    var color: ProductColor = .white
+    
+    private struct Constants {
+        struct White {
+            static let color1 = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0).cgColor
+            static let color2 = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
+            static let color3 = UIColor(red: 0.87, green: 0.87, blue: 0.87, alpha: 1.0).cgColor
+            static let color4 = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0).cgColor
+        }
+        struct Black {
+            static let color1 = UIColor(red: 0.19, green: 0.19, blue: 0.19, alpha: 1.0)
+            static let color2 = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.0).cgColor
+            static let color3 = UIColor(red: 0.14, green: 0.14, blue: 0.14, alpha: 1.0).cgColor
+            static let color4 = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0).cgColor
+        }
+    }
+    
+    override init(frame: CGRect) {
+        fatalError("Not to be used programmatically. Please use PhotobookFrameView instead.")
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        layer.shouldRasterize = true
+        layer.rasterizationScale = UIScreen.main.scale
+    }
+    
+    override func draw(_ rect: CGRect) {
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        
+        let topLineColor: CGColor
+        
+        switch color {
+        case .white:
+            topLineColor = Constants.White.color2
+        case .black:
+            topLineColor = Constants.Black.color3
+        }
+        context.fill(rect)
+        
+        // Top line
+        context.setStrokeColor(topLineColor)
+        context.setLineWidth(0.5)
+        context.move(to: .zero)
+        context.addLine(to: CGPoint(x: rect.maxX, y: 0.0))
+        context.strokePath()
+    }
+    
+    override func layoutSubviews() {
+        layer.shadowOpacity = 0.2
+        layer.shadowRadius = 1.0
+        layer.shadowOffset = CGSize(width: 0.0, height: 1.0)
+        super.layoutSubviews()
+    }
+}
+
 // Internal class representing a stack of pages in an open photobook. Please user PhotobookFrameView instead.
 class PhotobookFramePageBackgroundView: UIView {
 
@@ -170,29 +251,19 @@ class PhotobookFramePageBackgroundView: UIView {
         guard let context = UIGraphicsGetCurrentContext() else { return }
         
         let gradientColors: [CGColor]
-        let pagesEffectColor: CGColor
         let topLineColor: CGColor
         
         switch color {
         case .white:
             UIColor.white.setFill()
-            
             gradientColors = [ UIColor.white.cgColor, UIColor.white.cgColor, Constants.White.color1 ]
-            
             topLineColor = Constants.White.color2
-            pagesEffectColor = pageSide == .left ? Constants.White.color3 : Constants.White.color4
         case .black:
             Constants.Black.color1.setFill()
-            
             gradientColors = [ Constants.Black.color1.cgColor, Constants.Black.color1.cgColor, Constants.Black.color2 ]
-
             topLineColor = Constants.Black.color3
-            pagesEffectColor = pageSide == .left ? Constants.Black.color3 : Constants.Black.color4
         }
         context.fill(rect)
-        
-        // Gradient
-        let coordX: CGFloat! = pageSide == .left ? 0.0 : rect.maxX - 7.0
         
         let locations: [CGFloat] = [ 0.0, 0.5, 1.0 ]
         let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: gradientColors as CFArray, locations: locations)
@@ -204,26 +275,65 @@ class PhotobookFramePageBackgroundView: UIView {
         context.move(to: .zero)
         context.addLine(to: CGPoint(x: rect.maxX, y: 0.0))
         context.strokePath()
+    }
+}
+
+class PhotobookFramePagesBehindView: UIView {
+    
+    var pageSide = PageSide.left
+    var color: ProductColor = .white
+    
+    private struct Constants {
+        struct White {
+            static let color1 = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0).cgColor
+            static let color2 = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0).cgColor
+            static let color3 = UIColor(red: 0.87, green: 0.87, blue: 0.87, alpha: 1.0).cgColor
+            static let color4 = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0).cgColor
+        }
+        struct Black {
+            static let color1 = UIColor(red: 0.19, green: 0.19, blue: 0.19, alpha: 1.0)
+            static let color2 = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.0).cgColor
+            static let color3 = UIColor(red: 0.14, green: 0.14, blue: 0.14, alpha: 1.0).cgColor
+            static let color4 = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0).cgColor
+        }
+    }
+    
+    override init(frame: CGRect) {
+        fatalError("Not to be used programmatically. Please use PhotobookFrameView instead.")
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        layer.shouldRasterize = true
+        layer.rasterizationScale = UIScreen.main.scale
+    }
+    
+    override func draw(_ rect: CGRect) {
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        
+        let pagesEffectColor: CGColor
+        
+        switch color {
+        case .white:
+            UIColor.white.setFill()
+            pagesEffectColor = pageSide == .left ? Constants.White.color3 : Constants.White.color4
+        case .black:
+            Constants.Black.color1.setFill()
+            pagesEffectColor = pageSide == .left ? Constants.Black.color3 : Constants.Black.color4
+        }
+        context.fill(rect)
+        
+        var coordX: CGFloat = 0.5
         
         // Pages behind
         context.setStrokeColor(pagesEffectColor)
         context.setLineWidth(1.0)
-        context.move(to: CGPoint(x: coordX + 0.5, y: 0.0))
-        context.addLine(to: CGPoint(x: coordX + 0.5, y: rect.maxY))
-        context.move(to: CGPoint(x: coordX + 2.5, y: 0.0))
-        context.addLine(to: CGPoint(x: coordX + 2.5, y: rect.maxY))
-        context.move(to: CGPoint(x: coordX + 4.5, y: 0.0))
-        context.addLine(to: CGPoint(x: coordX + 4.5, y: rect.maxY))
-        context.move(to: CGPoint(x: coordX + 6.5, y: 0.0))
-        context.addLine(to: CGPoint(x: coordX + 6.5, y: rect.maxY))
-        context.strokePath()
-    }
-    
-    override func layoutSubviews() {
-        layer.shadowOpacity = 0.2
-        layer.shadowRadius = 1.0
-        layer.shadowOffset = CGSize(width: 0.0, height: 1.0)
-        super.layoutSubviews()
+        while coordX < rect.maxX {
+            context.move(to: CGPoint(x: coordX, y: 0.0))
+            context.addLine(to: CGPoint(x: coordX, y: rect.maxY))
+            coordX = coordX + 2.5
+        }
+        context.strokePath()        
     }
 }
 

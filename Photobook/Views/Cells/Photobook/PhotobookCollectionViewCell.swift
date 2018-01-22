@@ -61,7 +61,6 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
         case .left:
             guard let index = index else {
                 photobookFrameView.isLeftPageVisible = false
-                photobookFrameView.leftPageView.isHidden = true
                 return
             }
             photobookFrameView.isLeftPageVisible = true
@@ -72,7 +71,6 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
         case .right:
             guard let index = index else {
                 photobookFrameView.isRightPageVisible = false
-                photobookFrameView.rightPageView.isHidden = true
                 return
             }
             photobookFrameView.isRightPageVisible = true

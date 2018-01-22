@@ -12,16 +12,95 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     
     static let reuseIdentifier = NSStringFromClass(LayoutSelectionCollectionViewCell.self).components(separatedBy: ".").last!
     
+    private struct Constants {
+        static let photobookSideMargin: CGFloat = 5.0
+    }
+    
     // Constraints
-    @IBOutlet weak var pageHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var pageHorizontalAlignmentConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var photobookFrameView: PhotobookFrameView!
+    @IBOutlet private weak var leftAssetContainerView: UIView!
+    @IBOutlet private weak var leftAssetImageView: UIImageView!
+    @IBOutlet private weak var rightAssetContainerView: UIView!
+    @IBOutlet private weak var rightAssetImageView: UIImageView!
+    @IBOutlet private weak var photobookWidthConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var photobookLeftAligmentConstraint: NSLayoutConstraint!
+
+    var pageType: PageType!
+    var aspectRatio: CGFloat!
+    var layout: Layout?
+    var asset: Asset!
+    var image: UIImage!
+    var pageIndex: Int?
+    
+    private weak var assetContainerView: UIView! {
+        guard let pageType = pageType else { return nil }
+        
+        switch pageType {
+        case .left, .last:
+            return leftAssetContainerView
+        case .right, .first:
+            return rightAssetContainerView
+        default:
+            return nil
+        }
+    }
+    
+    private weak var assetImageView: UIImageView! {
+        guard let pageType = pageType else { return nil }
+        
+        switch pageType {
+        case .left, .last:
+            return leftAssetImageView
+        case .right, .first:
+            return rightAssetImageView
+        default:
+            return nil
+        }
+    }
     
     @IBOutlet weak var roundedBackgroundView: UIView! {
         didSet {
             roundedBackgroundView.bezierRoundedCorners(withRadius: BorderedCollectionViewCell.cornerRadius)
         }
     }
-    @IBOutlet weak var photoContainerView: UIView!
-    @IBOutlet weak var thumbnailImageView: UIImageView!    
+    
+    func setupLayout() {
+        guard let pageIndex = pageIndex, let layout = layout else { return }
+
+        backgroundColor = .clear
+        
+        photobookFrameView.leftPageView.aspectRatio = aspectRatio
+        photobookFrameView.rightPageView.aspectRatio = aspectRatio
+        photobookFrameView.leftPageView.isTapGestureEnabled = false
+        photobookFrameView.rightPageView.isTapGestureEnabled = false
+
+        photobookWidthConstraint.constant = (bounds.width - 2.0 * Constants.photobookSideMargin) * 2.0
+        
+        let productLayoutAsset = ProductLayoutAsset()
+        productLayoutAsset.asset = asset
+
+        let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset)
+        
+        switch pageType! {
+        case .last:
+            photobookFrameView.isRightPageVisible = false
+            fallthrough
+        case .left:
+            photobookLeftAligmentConstraint.constant = bounds.width - Constants.photobookSideMargin
+            
+            photobookFrameView.leftPageView.index = pageIndex
+            photobookFrameView.leftPageView.productLayout = productLayout
+            photobookFrameView.leftPageView.setupImageBox(with: image)
+        case .first:
+            photobookFrameView.isLeftPageVisible = false
+            fallthrough
+        case .right:
+            photobookFrameView.rightPageView.index = pageIndex
+            photobookFrameView.rightPageView.productLayout = productLayout
+            photobookFrameView.rightPageView.setupImageBox(with: image)
+        default:
+            break
+        }
+    }
 }
 

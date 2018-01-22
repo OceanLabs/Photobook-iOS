@@ -30,9 +30,22 @@ class PhotobookPageView: UIView {
         }
     }
     var imageSize = CGSize(width: Int.max, height: Int.max)
+    var isVisible: Bool = true {
+        didSet {
+            for subview in subviews {
+                subview.isHidden = !isVisible
+            }
+        }
+    }
     
     private var tapGesture: UITapGestureRecognizer!
     var productLayout: ProductLayout?
+    
+    var isTapGestureEnabled = true {
+        didSet {
+            tapGesture.isEnabled = isTapGestureEnabled
+        }
+    }
     
     @IBOutlet private weak var assetContainerView: UIView!
     @IBOutlet private weak var assetPlaceholderIconImageView: UIImageView!
@@ -70,7 +83,7 @@ class PhotobookPageView: UIView {
         addGestureRecognizer(tapGesture)
     }
     
-    func setupImageBox() {
+    func setupImageBox(with assetImage: UIImage? = nil) {
         guard let imageBox = productLayout?.layout.imageLayoutBox else {
             assetContainerView.alpha = 0.0
             return
@@ -83,9 +96,23 @@ class PhotobookPageView: UIView {
         
         assetContainerView.frame = imageBox.rectContained(in: bounds.size)
         
+        let imageCompletion: ((UIImage) -> Void) = { [weak welf = self] (image) in
+            welf?.setImage(image: image)
+            
+            UIView.animate(withDuration: 0.3) {
+                welf?.assetContainerView.alpha = 1.0
+            }
+        }
+        
+        // Avoid reloading image if not necessary
+        if assetImage != nil {
+            imageCompletion(assetImage!)
+            return
+        }
+        
         asset.image(size: imageSize, completionHandler: { [weak welf = self] (image, _) in
             guard welf?.index == index, let image = image else { return }
-            welf?.setImage(image: image)
+            imageCompletion(image)
         })
     }
     
@@ -95,10 +122,6 @@ class PhotobookPageView: UIView {
         }, completion: { _ in
             self.setupImageBox()
             self.setupTextBox()
-            
-            UIView.animate(withDuration: 0.3) {
-                self.assetContainerView.alpha = 1.0
-            }
         })
     }
 
