@@ -16,7 +16,13 @@ import UIKit
 
 class PhotobookCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet private weak var photobookFrameView: PhotobookFrameView!
+    @IBOutlet private weak var photobookFrameView: PhotobookFrameView! {
+        didSet {
+            photobookFrameView.coverColor = ProductManager.shared.coverColor
+            photobookFrameView.pageColor = ProductManager.shared.pageColor
+            photobookFrameView.leftPageView.aspectRatio = ProductManager.shared.product!.pageSizeRatio
+        }
+    }
     @IBOutlet private weak var plusButton: UIButton!
 
     static let reuseIdentifier = NSStringFromClass(PhotobookCollectionViewCell.self).components(separatedBy: ".").last!
@@ -27,18 +33,10 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
             photobookFrameView.rightPageView.imageSize = imageSize
         }
     }
-    var aspectRatio: CGFloat = 1.0 {
-        didSet {
-            photobookFrameView.leftPageView.aspectRatio = aspectRatio
-            photobookFrameView.rightPageView.aspectRatio = aspectRatio
-        }
-    }
     
     var leftIndex: Int? { return photobookFrameView.leftPageView.index }
     var rightIndex: Int? { return photobookFrameView.rightPageView.index }
     var width: CGFloat! { didSet { photobookFrameView.width = width } }
-    var coverColor: ProductColor! { didSet { photobookFrameView.coverColor = coverColor } }
-    var pageColor: ProductColor! { didSet { photobookFrameView.pageColor = pageColor } }
     var isVisible: Bool {
         get { return !photobookFrameView.isHidden }
         set { photobookFrameView.isHidden = !newValue }
@@ -67,7 +65,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
             photobookFrameView.leftPageView.index = index
             if layout != nil { photobookFrameView.leftPageView.productLayout = layout }
             
-            photobookFrameView.leftPageView.setupLayoutBoxes()
+            photobookFrameView.leftPageView.setupImageBox()
         case .right:
             guard let index = index else {
                 photobookFrameView.isRightPageVisible = false
@@ -77,7 +75,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
             photobookFrameView.rightPageView.index = index
             if layout != nil { photobookFrameView.rightPageView.productLayout = layout }
             
-            photobookFrameView.rightPageView.setupLayoutBoxes()
+            photobookFrameView.rightPageView.setupImageBox()
         }
     }
     

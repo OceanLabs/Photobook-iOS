@@ -128,7 +128,6 @@ class PageSetupViewController: UIViewController {
         
         if !hasDoneSetup {
             coverFrameView.color = ProductManager.shared.coverColor
-            coverFrameView.aspectRatio = pageSizeRatio
 
             photobookFrameView.pageColor = ProductManager.shared.pageColor
             photobookFrameView.coverColor = ProductManager.shared.coverColor

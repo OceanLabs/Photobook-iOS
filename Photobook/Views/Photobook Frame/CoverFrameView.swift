@@ -29,15 +29,12 @@ class CoverFrameView: UIView {
     @IBOutlet weak var pageView: PhotobookPageView! {
         didSet {
             pageView.index = 0
+            pageView.color = color
             pageView.productLayout = ProductManager.shared.productLayouts.first
+            pageView.aspectRatio = ProductManager.shared.product!.coverSizeRatio
         }
     }
     
-    var aspectRatio: CGFloat = 1.0 {
-        didSet {
-            pageView.aspectRatio = aspectRatio
-        }
-    }
     var width: CGFloat! {
         didSet {
             guard let width = width else { return }

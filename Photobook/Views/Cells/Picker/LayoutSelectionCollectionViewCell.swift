@@ -23,7 +23,6 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     @IBOutlet private weak var leftAssetImageView: UIImageView!
     @IBOutlet private weak var rightAssetContainerView: UIView!
     @IBOutlet private weak var rightAssetImageView: UIImageView!
-    @IBOutlet private weak var photobookWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var photobookLeftAligmentConstraint: NSLayoutConstraint!
 
     var pageType: PageType!
@@ -70,6 +69,8 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
 
         backgroundColor = .clear
         
+        photobookFrameView.coverColor = ProductManager.shared.coverColor
+        photobookFrameView.pageColor = ProductManager.shared.pageColor
         photobookFrameView.leftPageView.aspectRatio = aspectRatio
         photobookFrameView.rightPageView.aspectRatio = aspectRatio
         photobookFrameView.leftPageView.isTapGestureEnabled = false

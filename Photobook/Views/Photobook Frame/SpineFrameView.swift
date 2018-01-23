@@ -13,17 +13,23 @@ class SpineFrameView: UIView {
     
     static let spineTextPadding: CGFloat = 5.0
     
-    @IBOutlet private weak var textLabel: UILabel! { didSet { textLabel.transform = CGAffineTransform(rotationAngle: -.pi / 2.0) } }
+    @IBOutlet private weak var textLabel: UILabel! {
+        didSet {
+            textLabel.transform = CGAffineTransform(rotationAngle: -.pi / 2.0)
+        }
+    }
     @IBOutlet private weak var textLabelWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var spineBackgroundView: SpineBackgroundView!
     
     var pageSide = PageSide.left
     var color: ProductColor = .white
-    var spineText: String? { didSet { textLabel.text = spineText } }
+    var spineText: String?
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        textLabel.text = spineText
+
         spineBackgroundView.color = color
         textLabelWidthConstraint.constant = bounds.height - 2.0 * SpineFrameView.spineTextPadding
         

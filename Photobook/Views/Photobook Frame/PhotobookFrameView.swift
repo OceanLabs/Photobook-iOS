@@ -107,6 +107,8 @@ class PhotobookFrameView: UIView {
         
         coverView.color = coverColor
         spreadBackgroundView.color = pageColor
+        leftPageView.color = pageColor
+        rightPageView.color = pageColor
         if leftPagesBehindView != nil { leftPagesBehindView!.color = pageColor }
         if rightPagesBehindView != nil { rightPagesBehindView!.color = pageColor }
         rightPageBackgroundView.color = pageColor

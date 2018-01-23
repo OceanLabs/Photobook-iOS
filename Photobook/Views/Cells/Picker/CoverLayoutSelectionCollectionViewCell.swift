@@ -34,7 +34,7 @@ class CoverLayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         
         backgroundColor = .clear
         
-        coverFrameView.aspectRatio = aspectRatio
+        coverFrameView.color = ProductManager.shared.coverColor
         coverFrameView.pageView.isTapGestureEnabled = false
         coverFrameView.width = (bounds.height - 2.0 * Constants.photobookVerticalMargin) * aspectRatio
         

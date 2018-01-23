@@ -10,8 +10,17 @@ import UIKit
 
 class PhotobookCoverCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet private weak var spineFrameView: SpineFrameView!
-    @IBOutlet private weak var coverFrameView: CoverFrameView!
+    @IBOutlet private weak var spineFrameView: SpineFrameView! {
+        didSet {
+            spineFrameView.color = ProductManager.shared.coverColor
+            spineFrameView.spineText = ProductManager.shared.spineText
+        }
+    }
+    @IBOutlet private weak var coverFrameView: CoverFrameView! {
+        didSet {
+            coverFrameView.color = ProductManager.shared.coverColor
+        }
+    }
     
     static let reuseIdentifier = NSStringFromClass(PhotobookCoverCollectionViewCell.self).components(separatedBy: ".").last!
     
@@ -20,20 +29,12 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell {
             coverFrameView.pageView.imageSize = imageSize
         }
     }
-    var aspectRatio: CGFloat = 1.0 { didSet { coverFrameView.aspectRatio = aspectRatio } }
     var width: CGFloat! { didSet { coverFrameView.width = width } }
-    var color: ProductColor! {
-        didSet {
-            spineFrameView.color = color
-            coverFrameView.color = color
-        }
-    }
-    var spineText: String? { didSet { spineFrameView.spineText = spineText } }
     
     weak var delegate: PhotobookPageViewDelegate? { didSet { coverFrameView.pageView.delegate = delegate } }
     
     func loadCover() {
-        coverFrameView.pageView.setupLayoutBoxes()
+        coverFrameView.pageView.setupImageBox()
     }
 }
 

@@ -486,13 +486,10 @@ extension PhotobookViewController: UICollectionViewDataSource {
         switch indexPath.section {
         case 0:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotobookCoverCollectionViewCell.reuseIdentifier, for: indexPath) as! PhotobookCoverCollectionViewCell
-            cell.delegate = self
-            
             cell.imageSize = imageSize
             cell.width = (view.bounds.size.width - Constants.cellSideMargin * 2.0) / 2.0
-            cell.aspectRatio = ProductManager.shared.product!.coverSizeRatio
-            cell.color = ProductManager.shared.coverColor
-            cell.spineText = ProductManager.shared.spineText
+            cell.delegate = self
+
             cell.loadCover()
             
             return cell
@@ -502,18 +499,13 @@ extension PhotobookViewController: UICollectionViewDataSource {
             }
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotobookCollectionViewCell.reuseIdentifier, for: indexPath) as! PhotobookCollectionViewCell
-
             cell.isVisible = indexPath != interactingItemIndexPath && indexPath != insertingIndexPath
-
-            cell.delegate = self
-            cell.pageDelegate = self
-            
-            cell.coverColor = ProductManager.shared.coverColor
-            cell.pageColor = ProductManager.shared.pageColor
             cell.imageSize = imageSize
             cell.width = view.bounds.size.width - Constants.cellSideMargin * 2.0
-            cell.aspectRatio = ProductManager.shared.product!.pageSizeRatio
             cell.clipsToBounds = false
+            
+            cell.delegate = self
+            cell.pageDelegate = self
             
             // First and last pages of the book are courtesy pages, no photos on them
             var leftIndex: Int? = nil
