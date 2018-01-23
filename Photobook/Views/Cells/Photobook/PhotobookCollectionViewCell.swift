@@ -67,7 +67,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
             photobookFrameView.leftPageView.index = index
             if layout != nil { photobookFrameView.leftPageView.productLayout = layout }
             
-            photobookFrameView.leftPageView.setupImageBox()
+            photobookFrameView.leftPageView.setupLayoutBoxes()
         case .right:
             guard let index = index else {
                 photobookFrameView.isRightPageVisible = false
@@ -77,7 +77,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
             photobookFrameView.rightPageView.index = index
             if layout != nil { photobookFrameView.rightPageView.productLayout = layout }
             
-            photobookFrameView.rightPageView.setupImageBox()
+            photobookFrameView.rightPageView.setupLayoutBoxes()
         }
     }
     

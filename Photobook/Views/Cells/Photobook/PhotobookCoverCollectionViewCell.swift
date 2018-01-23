@@ -33,7 +33,7 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell {
     weak var delegate: PhotobookPageViewDelegate? { didSet { coverFrameView.pageView.delegate = delegate } }
     
     func loadCover() {
-        coverFrameView.pageView.setupImageBox()
+        coverFrameView.pageView.setupLayoutBoxes()
     }
 }
 

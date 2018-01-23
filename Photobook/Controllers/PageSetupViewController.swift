@@ -97,7 +97,6 @@ class PageSetupViewController: UIViewController {
         }
     }
     var pageSizeRatio: CGFloat!
-    var pageText: String? = "Fields of Athenry, County Galway, Ireland" // TEMP: Test code
     var productLayout: ProductLayout!
     var availableLayouts: [Layout]!
 
@@ -140,10 +139,7 @@ class PageSetupViewController: UIViewController {
             photobookFrameView.width = (view.bounds.width - 2.0 * Constants.photobookSideMargin) * 2.0
             
             pageView.index = pageIndex
-            pageView.productLayout = productLayout
-            
-            // TEMP
-            pageView.productLayout?.productLayoutText?.text = "Fields of Athenry, County Galway, Ireland"
+            pageView.productLayout = productLayout            
             pageView.setupLayoutBoxes()
 
             setupPhotobookFrame()
