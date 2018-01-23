@@ -146,11 +146,12 @@ class ProductManager {
             tempLayouts.append(productLayout)
             
             // Create layouts for the remaining assets
-            tempLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: layouts))
+            let imageOnlyLayouts = layouts.filter({ $0.imageLayoutBox != nil })
+            tempLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: imageOnlyLayouts))
             
             // Fill minimum pages with Placeholder assets if needed
             let numberOfPlaceholderLayoutsNeeded = photobook.minimumRequiredAssets - tempLayouts.count
-            tempLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: layouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
+            tempLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: imageOnlyLayouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
             
             productLayouts = tempLayouts
             product = photobook
