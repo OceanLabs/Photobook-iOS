@@ -529,7 +529,6 @@ extension PhotobookViewController: UICollectionViewDataSource {
                 if index + 1 < ProductManager.shared.productLayouts.count {
                     rightIndex = index + 1
                 }
-                cell.isPlusButtonVisible = true
                 cell.setupGestures()
                 cell.setIsRearranging(isRearranging)
                 

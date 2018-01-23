@@ -118,6 +118,12 @@ class PhotobookPageView: UIView {
     }
     
     func setupLayoutBoxes() {
+        guard assetImageView.image != nil else {
+            self.setupImageBox()
+            self.setupTextBox()
+            return
+        }
+        
         UIView.animate(withDuration: 0.1, animations: {
             self.assetContainerView.alpha = 0.0
         }, completion: { _ in
