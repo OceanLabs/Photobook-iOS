@@ -136,11 +136,6 @@ class ProductManager {
         
         // First photobook only
         if product == nil {
-            // Duplicate the first photo to use as both the cover AND the first page 🙄
-            if let first = addedAssets.first{
-                addedAssets.insert(first, at: 0)
-            }
-            
             var tempLayouts = [ProductLayout]()
 
             // Use first photo for the cover
@@ -154,7 +149,7 @@ class ProductManager {
             tempLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: layouts))
             
             // Fill minimum pages with Placeholder assets if needed
-            let numberOfPlaceholderLayoutsNeeded = photobook.minimumRequiredAssets + 1 - tempLayouts.count // +1 for cover which is not included in the minimum
+            let numberOfPlaceholderLayoutsNeeded = photobook.minimumRequiredAssets - tempLayouts.count
             tempLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: layouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
             
             productLayouts = tempLayouts
