@@ -117,7 +117,7 @@ class PhotobookFrameView: UIView {
     }
 }
 
-// Internal class representing the inside of a cover in an open photobook. Please user PhotobookFrameView instead.
+// Internal class representing the inside of a cover in an open photobook. Please use PhotobookFrameView instead.
 class PhotobookFrameCoverView: UIView {
 
     var color: ProductColor = .white
@@ -168,7 +168,7 @@ enum PageSide {
     case left, right
 }
 
-/// Internal class adding the top and bottom shadow effect for a spread
+/// Internal class adding the top and bottom shadow effect for a spread.
 class PhotobookFrameSpreadBackgroundView: UIView {
     var color: ProductColor = .white
     
@@ -211,7 +211,7 @@ class PhotobookFrameSpreadBackgroundView: UIView {
     }
 }
 
-// Internal class representing a stack of pages in an open photobook. Please user PhotobookFrameView instead.
+// Internal class representing a stack of pages in an open photobook. Please use PhotobookFrameView instead.
 class PhotobookFramePageBackgroundView: UIView {
 
     var pageSide = PageSide.left
@@ -258,7 +258,7 @@ class PhotobookFramePageBackgroundView: UIView {
     }
 }
 
-/// Internal class representing the hint of page edges behind
+/// Internal class representing the hint of page edges behind. Please use PhotobookFrameView instead.
 class PhotobookFramePagesBehindView: UIView {
     
     var pageSide = PageSide.left
@@ -303,7 +303,7 @@ class PhotobookFramePagesBehindView: UIView {
     }
 }
 
-// Internal class representing the fold between two pages of an open photobook. Please user PhotobookFrameView instead.
+// Internal class representing the fold between two pages of an open photobook. Please use PhotobookFrameView instead.
 class PhotobookFramePageDividerView: UIView {
  
     @IBOutlet private weak var widthConstraint: NSLayoutConstraint!
