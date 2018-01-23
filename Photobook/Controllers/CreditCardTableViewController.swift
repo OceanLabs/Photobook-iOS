@@ -62,7 +62,6 @@ class CreditCardTableViewController: UITableViewController {
         static let creditCardRow = 0
         static let expiryDateRow = 1
         static let cvvRow = 2
-        static let requiredText = NSLocalizedString("UserInputRequired", value: "Required", comment: "User input required")
         static let leadingSeparatorInset: CGFloat = 16
     }
     
@@ -108,9 +107,9 @@ class CreditCardTableViewController: UITableViewController {
         view.endEditing(false)
         
         
-        if cardNumberTextField.text == nil || cardNumberTextField.text == "" || cardNumberTextField.text == Constants.requiredText {
+        if cardNumberTextField.text?.isEmpty ?? true || cardNumberTextField.text == UserInputTableViewCell.Constants.requiredText {
             let cell = (tableView.cellForRow(at: IndexPath(row: Constants.creditCardRow, section: 0)) as! UserInputTableViewCell)
-            cell.textField.text = Constants.requiredText
+            cell.textField.text = UserInputTableViewCell.Constants.requiredText
             cell.textField.textColor = UserInputTableViewCell.Constants.errorColor
         }
         else if !cardNumberTextField.text!.isValidCreditCardNumber() || cardNumberTextField.text!.creditCardType() == .invalid {
@@ -120,9 +119,9 @@ class CreditCardTableViewController: UITableViewController {
             tableView.endUpdates()
         }
         
-        if cvvTextField.text == nil || cvvTextField.text == ""{
+        if cvvTextField.text?.isEmpty ?? true {
             let cell = (tableView.cellForRow(at: IndexPath(row: Constants.cvvRow, section: 0)) as! UserInputTableViewCell)
-            cell.textField.text = Constants.requiredText
+            cell.textField.text = UserInputTableViewCell.Constants.requiredText
             cell.textField.textColor = UserInputTableViewCell.Constants.errorColor
             cell.textField.isSecureTextEntry = false
         }
@@ -137,7 +136,7 @@ class CreditCardTableViewController: UITableViewController {
 
         if selectedExpiryMonth == nil || selectedExpiryYear == nil {
             let cell = (tableView.cellForRow(at: IndexPath(row: Constants.expiryDateRow, section: 0)) as! UserInputTableViewCell)
-            cell.textField.text = Constants.requiredText
+            cell.textField.text = UserInputTableViewCell.Constants.requiredText
             cell.textField.textColor = UserInputTableViewCell.Constants.errorColor
         }
         
@@ -199,8 +198,9 @@ extension CreditCardTableViewController{
             cell.label.text = NSLocalizedString("CardNumber", value: "Card Number", comment: "")
             cell.message = nil
             cell.textField.returnKeyType = .next
-            cell.textField.placeholder = "4312 7593 5381 7454"
+            cell.textField.placeholder = "Required"
             cell.textField.isSecureTextEntry = false
+            cell.textField.textContentType = .creditCardNumber
             cell.topSeparator.isHidden = false
             cell.separatorLeadingConstraint.constant = Constants.leadingSeparatorInset
         case Constants.expiryDateRow:
@@ -209,7 +209,7 @@ extension CreditCardTableViewController{
             cell.textField.inputView = datePickerView
             cell.message = nil
             cell.textField.isSecureTextEntry = false
-            cell.textField.placeholder = "12 / 2016"
+            cell.textField.placeholder = "Required"
             cell.topSeparator.isHidden = true
             cell.separatorLeadingConstraint.constant = Constants.leadingSeparatorInset
         case Constants.cvvRow:
@@ -217,9 +217,10 @@ extension CreditCardTableViewController{
             cell.label.text = NSLocalizedString("CVV", comment: "Credit card security number")
             cell.message = nil
             cell.textField.returnKeyType = .done
-            cell.textField.placeholder = "•••"
+            cell.textField.placeholder = "Required"
             cell.topSeparator.isHidden = true
             cell.separatorLeadingConstraint.constant = 0
+            cell.textField.keyboardType = .numberPad
         default:
             break
         }
@@ -306,7 +307,7 @@ extension CreditCardTableViewController: UITextFieldDelegate {
             cell.textField.isSecureTextEntry = true
         }
         
-        if textField.text == Constants.requiredText {
+        if textField.text == UserInputTableViewCell.Constants.requiredText {
             textField.text = nil
         }
     }

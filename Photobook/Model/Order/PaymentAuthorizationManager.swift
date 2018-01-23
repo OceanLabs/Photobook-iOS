@@ -96,12 +96,13 @@ class PaymentAuthorizationManager: NSObject {
     ///
     /// - Parameter cost: The total cost of the order
     private func authorizePayPal(cost: Cost){
-        let address = ProductManager.shared.address
+        let details = ProductManager.shared.deliveryDetails
+        let address = details?.address
 
         guard let totalCost = cost.shippingMethod(id: ProductManager.shared.shippingMethod)?.totalCost,
             let currencyCode = ProductManager.shared.currencyCode,
-            let firstName = address?.firstName,
-            let lastName = address?.lastName,
+            let firstName = details?.firstName,
+            let lastName = details?.lastName,
             let line1 = address?.line1,
             let city = address?.city,
             let postalCode = address?.zipOrPostcode,
@@ -147,8 +148,10 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: @escaping (PKPaymentAuthorizationStatus) -> Void) {
         let shippingAddress = Address()
-        shippingAddress.firstName = payment.shippingContact?.name?.givenName
-        shippingAddress.lastName = payment.shippingContact?.name?.familyName
+        let deliveryDetails = DeliveryDetails()
+        deliveryDetails.address = shippingAddress
+        deliveryDetails.firstName = payment.shippingContact?.name?.givenName
+        deliveryDetails.lastName = payment.shippingContact?.name?.familyName
         shippingAddress.line1 = payment.shippingContact?.postalAddress?.street
         shippingAddress.city = payment.shippingContact?.postalAddress?.city
         shippingAddress.stateOrCounty = payment.shippingContact?.postalAddress?.state
@@ -160,8 +163,8 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
             shippingAddress.country = country
         }
         
-        shippingAddress.email = payment.shippingContact?.emailAddress
-        shippingAddress.phone = payment.shippingContact?.phoneNumber?.stringValue
+        deliveryDetails.email = payment.shippingContact?.emailAddress
+        deliveryDetails.phone = payment.shippingContact?.phoneNumber?.stringValue
         
         guard shippingAddress.isValid else{
             completion(.invalidShippingPostalAddress)
@@ -173,9 +176,9 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
             return
         }
         
-        ProductManager.shared.address?.email = payment.shippingContact?.emailAddress
-        ProductManager.shared.address?.phone = payment.shippingContact?.phoneNumber?.stringValue
-        ProductManager.shared.address = shippingAddress
+        deliveryDetails.email = payment.shippingContact?.emailAddress
+        deliveryDetails.phone = payment.shippingContact?.phoneNumber?.stringValue
+        ProductManager.shared.deliveryDetails = deliveryDetails
         
         let client = STPAPIClient(publishableKey: Config.Constants.stripePublicKey)
         client.createToken(with: payment, completion: {(token: STPToken?, error: Error?) in
@@ -202,7 +205,9 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
             shippingAddress.country = country
         }
         
-        ProductManager.shared.address = shippingAddress
+        let deliveryDetails = DeliveryDetails()
+        deliveryDetails.address = shippingAddress
+        ProductManager.shared.deliveryDetails = deliveryDetails
         
         ProductManager.shared.updateCost { [weak welf = self] (error: Error?) in
             

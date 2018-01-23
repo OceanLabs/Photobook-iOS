@@ -9,7 +9,11 @@
 import UIKit
 
 class DeliveryAddressTableViewCell: UITableViewCell {
+    
+    static let reuseIdentifier = NSStringFromClass(DeliveryAddressTableViewCell.self).components(separatedBy: ".").last!
 
+    @IBOutlet weak var topSeparator: UIView!
+    @IBOutlet weak var separator: UIView!
     @IBOutlet weak var topLabel: UILabel!
     @IBOutlet weak var bottomLabel: UILabel!
     

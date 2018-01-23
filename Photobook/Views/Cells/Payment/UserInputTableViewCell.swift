@@ -12,6 +12,8 @@ class UserInputTableViewCell: UITableViewCell {
     
     struct Constants {
         static let errorColor = UIColor(red:1, green:0.23, blue:0.19, alpha:1)
+        static let messageColor = UIColor(red:0.43, green:0.43, blue:0.45, alpha:1)
+        static let requiredText = NSLocalizedString("UserInputRequired", value: "Required", comment: "User input required")
     }
 
     @IBOutlet weak var separatorLeadingConstraint: NSLayoutConstraint!
@@ -27,6 +29,7 @@ class UserInputTableViewCell: UITableViewCell {
             if messageLabel.text != message{
                 messageLabel.alpha = 0
                 messageLabel.text = message
+                messageLabel.textAlignment = .left
             }
             
             guard message != nil else{
@@ -36,7 +39,7 @@ class UserInputTableViewCell: UITableViewCell {
             
             UIView.animate(withDuration: 0.3, animations: {
                 self.messageLabel.alpha = 1
-                self.messageLabel.textColor = UIColor.black
+                self.messageLabel.textColor = Constants.messageColor
             })
         }
     }
@@ -45,6 +48,7 @@ class UserInputTableViewCell: UITableViewCell {
             if messageLabel.text != errorMessage{
                 messageLabel.alpha = 0
                 messageLabel.text = errorMessage
+                messageLabel.textAlignment = .right
             }
             self.messageLabel.alpha = 1
             self.messageLabel.textColor = Constants.errorColor

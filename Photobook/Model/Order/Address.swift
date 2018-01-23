@@ -8,41 +8,30 @@
 
 import Foundation
 
-let minPhoneNumberLength = 5
-
 enum AddressFieldType: String {
-    case firstName
-    case lastName
     case line1
     case line2
     case city
     case stateOrCounty
     case zipOrPostcode
-    case email
-    case phone
-}
-
-fileprivate struct Constants {
-    static let savedAddressKey = "savedAddressKey"
 }
 
 class Address: NSObject, NSCopying, NSSecureCoding {
     static var supportsSecureCoding = true
     
-    static let requiredFieldTypes : [AddressFieldType] = [.firstName, .lastName, .line1, .city, .zipOrPostcode, .email, .phone]
+    private struct Constants {
+        static let savedAddressKey = "savedAddressKey"
+    }
+    
+    static let requiredFieldTypes : [AddressFieldType] = [.line1, .city, .zipOrPostcode]
     
     var fields = [String : String]()
     lazy var country: Country = Country.countryForCurrentLocale()
     var isValid: Bool {
-        get{
-            guard let firstName = firstName, let lastName = lastName, !firstName.isEmpty, !lastName.isEmpty else { return false }
-            
+        get{            
             guard let line1 = line1, !line1.isEmpty else { return false }
             guard let city = city, !city.isEmpty else { return false }
             guard let zipOrPostcode = zipOrPostcode, !zipOrPostcode.isEmpty else { return false }
-            
-            guard let email = email, email.isValidEmailAddress() else { return false }
-            guard let phone = phone, phone.count >= 5 else { return false }
             
             return true
         }
@@ -59,15 +48,10 @@ class Address: NSObject, NSCopying, NSSecureCoding {
         aCoder.encode(country, forKey:"country")
     }
     
-    func fullName() -> String?{
-        guard !(firstName == nil && lastName == nil) else { return nil }
-        return String(format: "%@ %@", firstName ?? "", lastName ?? "").trimmingCharacters(in: CharacterSet.whitespaces)
-    }
-    
-    func descriptionWithoutRecipient() -> String{
+    func descriptionWithoutLine1() -> String{
         var s = ""
         
-        for part in [line1, line2, city, stateOrCounty, zipOrPostcode, country.name]{
+        for part in [line2, city, stateOrCounty, zipOrPostcode, country.name]{
             if let part = part, !part.isEmpty{
                 if !s.isEmpty{
                     s = s.appending(", ")
@@ -83,8 +67,8 @@ class Address: NSObject, NSCopying, NSSecureCoding {
     func jsonRepresentation() -> [String : String]{
         var json = [String : String]()
         
-        json["recipient_first_name"] = firstName
-        json["recipient_last_name"] = lastName
+//        json["recipient_first_name"] = firstName
+//        json["recipient_last_name"] = lastName
         json["address_line_1"] = line1
         json["address_line_2"] = line2
         json["city"] = city
@@ -110,22 +94,18 @@ class Address: NSObject, NSCopying, NSSecureCoding {
     
     func copy(with zone: NSZone? = nil) -> Any{
         let copy = Address()
-        copy.firstName = firstName
-        copy.lastName = lastName
         copy.line1 = line1
         copy.line2 = line2
         copy.city = city
         copy.zipOrPostcode = zipOrPostcode
         copy.stateOrCounty = stateOrCounty
         copy.country = country.copy() as! Country
-        copy.email = email
-        copy.phone = phone
         
         return copy
     }
     
     func saveAddressAsLatest(){
-        guard let address = ProductManager.shared.address else { return }
+        guard let address = ProductManager.shared.deliveryDetails?.address else { return }
         let addressData = NSKeyedArchiver.archivedData(withRootObject: address)
         UserDefaults.standard.set(addressData, forKey: Constants.savedAddressKey)
         UserDefaults.standard.synchronize()
@@ -138,37 +118,17 @@ class Address: NSObject, NSCopying, NSSecureCoding {
 }
 
 func ==(lhs: Address, rhs: Address) -> Bool{
-    return lhs.firstName == rhs.firstName
-        && lhs.lastName == rhs.lastName
-        && lhs.line1 == rhs.line1
+    return lhs.line1 == rhs.line1
         && lhs.line2 == rhs.line2
         && lhs.city == rhs.city
         && lhs.stateOrCounty == rhs.stateOrCounty
         && lhs.zipOrPostcode == rhs.zipOrPostcode
         && lhs.country.codeAlpha3 == rhs.country.codeAlpha3
-        && lhs.email == rhs.email
-        && lhs.phone == rhs.phone
 }
 
     // MARK: - Convenience getters and setters
 
 extension Address{
-    var firstName: String? {
-        get{
-            return fields[AddressFieldType.firstName.rawValue]
-        }
-        set(newValue){
-            fields[AddressFieldType.firstName.rawValue] = newValue
-        }
-    }
-    var lastName: String? {
-        get{
-            return fields[AddressFieldType.lastName.rawValue]
-        }
-        set(newValue){
-            fields[AddressFieldType.lastName.rawValue] = newValue
-        }
-    }
     var line1: String? {
         get{
             return fields[AddressFieldType.line1.rawValue]
@@ -209,20 +169,5 @@ extension Address{
             fields[AddressFieldType.zipOrPostcode.rawValue] = newValue
         }
     }
-    var email: String? {
-        get{
-            return fields[AddressFieldType.email.rawValue]
-        }
-        set(newValue){
-            fields[AddressFieldType.email.rawValue] = newValue
-        }
-    }
-    var phone: String? {
-        get{
-            return fields[AddressFieldType.phone.rawValue]
-        }
-        set(newValue){
-            fields[AddressFieldType.phone.rawValue] = newValue
-        }
-    }
+    
 }

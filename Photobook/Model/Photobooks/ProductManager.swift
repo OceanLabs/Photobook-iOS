@@ -86,7 +86,7 @@ class ProductManager {
     // Ordering
     var shippingMethod: Int?
     var currencyCode: String? // TODO: Get this from somewhere
-    var address: Address?
+    var deliveryDetails: DeliveryDetails?
     var paymentMethod: PaymentMethod?
     var cachedCost: Cost?
     
