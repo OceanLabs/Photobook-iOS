@@ -82,6 +82,18 @@ class ProductManager {
         return minimumRequiredAssets < productLayouts.count
     }
     
+    // Ordering
+    var shippingMethod: Int?
+    var currencyCode: String? // TODO: Get this from somewhere
+    var address: Address?
+    var paymentMethod: PaymentMethod?
+    var cachedCost: Cost?
+    
+    // TODO: this probably doesn't belong here
+    func updateCost (completionHandler: (_ error: Error?) -> Void) {
+        
+    }
+    
     // TODO: Spine
     
     /// Requests the photobook details so the user can start building their photobook

@@ -13,7 +13,7 @@ import UIKit
 class OutOfBoundsTouchView: UIView {
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        for view in subviews{
+        for view in subviews.reversed(){
             if !view.isHidden, !view.clipsToBounds, let hitView = view.hitTest(view.convert(point, from: self), with: event){
                 return hitView
             }

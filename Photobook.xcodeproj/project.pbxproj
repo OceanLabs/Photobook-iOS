@@ -20,6 +20,19 @@
 		2E0B58A21FB32AC100F31A9E /* PhotosAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58A11FB32AC100F31A9E /* PhotosAlbum.swift */; };
 		2E0B58A41FB32ADD00F31A9E /* PhotosAlbumManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58A31FB32ADD00F31A9E /* PhotosAlbumManager.swift */; };
 		2E0B58A91FB3508B00F31A9E /* SelectedAssetsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58A81FB3508B00F31A9E /* SelectedAssetsManager.swift */; };
+		2E17337F200F4E0B00F0D718 /* PaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E17337E200F4E0B00F0D718 /* PaymentMethodsViewController.swift */; };
+		2E1733812010B50400F0D718 /* PaymentAuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733802010B50400F0D718 /* PaymentAuthorizationManager.swift */; };
+		2E1733832010B5A500F0D718 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733822010B5A500F0D718 /* Config.swift */; };
+		2E1733862010B6BA00F0D718 /* Cost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733852010B6BA00F0D718 /* Cost.swift */; };
+		2E1733882010B83100F0D718 /* ShippingMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733872010B83100F0D718 /* ShippingMethod.swift */; };
+		2E17338A2010B85F00F0D718 /* DecimalExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733892010B85F00F0D718 /* DecimalExtensions.swift */; };
+		2E17338C2010B9EE00F0D718 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E17338B2010B9EE00F0D718 /* Card.swift */; };
+		2E17338E2010BA3600F0D718 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E17338D2010BA3600F0D718 /* StringExtensions.swift */; };
+		2E1733932010CD0B00F0D718 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733912010CD0A00F0D718 /* Country.swift */; };
+		2E1733942010CD0B00F0D718 /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733922010CD0B00F0D718 /* Address.swift */; };
+		2E1733962010CDC400F0D718 /* LuhnStringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733952010CDC400F0D718 /* LuhnStringExtensions.swift */; };
+		2E25272C2015EDA9004C12AF /* CreditCardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E25272B2015EDA9004C12AF /* CreditCardTests.swift */; };
+		2E25272E2015EDB1004C12AF /* CountryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E25272D2015EDB1004C12AF /* CountryTests.swift */; };
 		2E3E6A5320036FB60044EDFC /* PhotobookCoverCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3E6A5120036FB60044EDFC /* PhotobookCoverCollectionViewCell.swift */; };
 		2E3E6A5420036FB60044EDFC /* PhotobookCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3E6A5220036FB60044EDFC /* PhotobookCollectionViewCell.swift */; };
 		2E6B9EDA1FBDEEF500F28C00 /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9ED91FBDEEF400F28C00 /* UIViewExtensions.swift */; };
@@ -33,11 +46,15 @@
 		2EBBC0CD1FEBB72E00A4EF45 /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBBC0CC1FEBB72D00A4EF45 /* ArrayExtensions.swift */; };
 		2ECB5A971FDFE01100FF39A5 /* OutOfBoundsTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECB5A961FDFE01100FF39A5 /* OutOfBoundsTouchView.swift */; };
 		2ECB5A991FDFE71200FF39A5 /* OutOfBoundsTouchCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECB5A981FDFE71200FF39A5 /* OutOfBoundsTouchCollectionView.swift */; };
+		2ECF57BC2010D0830047094C /* PaymentMethodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECF57BB2010D0830047094C /* PaymentMethodTableViewCell.swift */; };
+		2ECF57C320120D2A0047094C /* CreditCardTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECF57C220120D2A0047094C /* CreditCardTableViewController.swift */; };
+		2ECF57C520120DF60047094C /* UserInputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECF57C420120DF60047094C /* UserInputTableViewCell.swift */; };
 		2ED5B3811FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */; };
 		2ED5B3831FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3821FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift */; };
 		2ED79FE91FBAEDE90046B96C /* AssetPickerCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */; };
 		2ED79FEB1FBAEDFA0046B96C /* UIScreenExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED79FEA1FBAEDFA0046B96C /* UIScreenExtensions.swift */; };
 		2ED79FEE1FBAEE630046B96C /* AssetPickerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED79FED1FBAEE630046B96C /* AssetPickerCollectionViewCell.swift */; };
+		3D046AAB9F5CFA5F5150C0DF /* Pods_PhotobookTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1561A4A2B130A5F1A92351A0 /* Pods_PhotobookTests.framework */; };
 		6F0A682E1FE0243400B7E56C /* EmptyScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0A682D1FE0243400B7E56C /* EmptyScreenViewController.swift */; };
 		6F0A68301FE03C2100B7E56C /* EmptyScreenViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0A682F1FE03C2100B7E56C /* EmptyScreenViewControllerExtensions.swift */; };
 		6F0A68321FE1291200B7E56C /* PageSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0A68311FE1291200B7E56C /* PageSetupViewController.swift */; };
@@ -79,6 +96,7 @@
 		6FCE959D1FF555EE0023FC14 /* AssetPlacementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE959C1FF555EE0023FC14 /* AssetPlacementViewController.swift */; };
 		6FDF25E51FB604E100F46BB0 /* PhotobookTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF25E41FB604E100F46BB0 /* PhotobookTabBar.swift */; };
 		6FDF25E71FB6052A00F46BB0 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF25E61FB6052A00F46BB0 /* UIImageExtensions.swift */; };
+		7CBF1FFD216E73D9ACD8E2EF /* Pods_Photobook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35185092CEAA07251E4FD67C /* Pods_Photobook.framework */; };
 		B9A1433B1FDAD278000EFE0D /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A1433A1FDAD278000EFE0D /* Random.swift */; };
 		B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */; };
 		B9BC2E271FBF195200F4AA56 /* AssetCollectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BC2E261FBF195200F4AA56 /* AssetCollectorViewController.swift */; };
@@ -96,6 +114,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1561A4A2B130A5F1A92351A0 /* Pods_PhotobookTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PhotobookTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E0B587C1FB30F2100F31A9E /* Photobook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Photobook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E0B587F1FB30F2100F31A9E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2E0B58841FB30F2100F31A9E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -111,6 +130,19 @@
 		2E0B58A11FB32AC100F31A9E /* PhotosAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosAlbum.swift; sourceTree = "<group>"; };
 		2E0B58A31FB32ADD00F31A9E /* PhotosAlbumManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosAlbumManager.swift; sourceTree = "<group>"; };
 		2E0B58A81FB3508B00F31A9E /* SelectedAssetsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedAssetsManager.swift; sourceTree = "<group>"; };
+		2E17337E200F4E0B00F0D718 /* PaymentMethodsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentMethodsViewController.swift; sourceTree = "<group>"; };
+		2E1733802010B50400F0D718 /* PaymentAuthorizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentAuthorizationManager.swift; sourceTree = "<group>"; };
+		2E1733822010B5A500F0D718 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		2E1733852010B6BA00F0D718 /* Cost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cost.swift; sourceTree = "<group>"; };
+		2E1733872010B83100F0D718 /* ShippingMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShippingMethod.swift; sourceTree = "<group>"; };
+		2E1733892010B85F00F0D718 /* DecimalExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecimalExtensions.swift; sourceTree = "<group>"; };
+		2E17338B2010B9EE00F0D718 /* Card.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		2E17338D2010BA3600F0D718 /* StringExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
+		2E1733912010CD0A00F0D718 /* Country.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
+		2E1733922010CD0B00F0D718 /* Address.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
+		2E1733952010CDC400F0D718 /* LuhnStringExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LuhnStringExtensions.swift; sourceTree = "<group>"; };
+		2E25272B2015EDA9004C12AF /* CreditCardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditCardTests.swift; sourceTree = "<group>"; };
+		2E25272D2015EDB1004C12AF /* CountryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryTests.swift; sourceTree = "<group>"; };
 		2E3E6A5120036FB60044EDFC /* PhotobookCoverCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotobookCoverCollectionViewCell.swift; sourceTree = "<group>"; };
 		2E3E6A5220036FB60044EDFC /* PhotobookCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotobookCollectionViewCell.swift; sourceTree = "<group>"; };
 		2E6B9ED91FBDEEF400F28C00 /* UIViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
@@ -124,11 +156,19 @@
 		2EBBC0CC1FEBB72D00A4EF45 /* ArrayExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
 		2ECB5A961FDFE01100FF39A5 /* OutOfBoundsTouchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutOfBoundsTouchView.swift; sourceTree = "<group>"; };
 		2ECB5A981FDFE71200FF39A5 /* OutOfBoundsTouchCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutOfBoundsTouchCollectionView.swift; sourceTree = "<group>"; };
+		2ECF57BB2010D0830047094C /* PaymentMethodTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodTableViewCell.swift; sourceTree = "<group>"; };
+		2ECF57BD2010D99B0047094C /* Photobook.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Photobook.entitlements; sourceTree = "<group>"; };
+		2ECF57BE201206FA0047094C /* Photobook-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Photobook-Bridging-Header.h"; sourceTree = "<group>"; };
+		2ECF57C220120D2A0047094C /* CreditCardTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreditCardTableViewController.swift; sourceTree = "<group>"; };
+		2ECF57C420120DF60047094C /* UserInputTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInputTableViewCell.swift; sourceTree = "<group>"; };
 		2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSearchResultsTableViewController.swift; sourceTree = "<group>"; };
 		2ED5B3821FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSearchResultsTableViewCell.swift; sourceTree = "<group>"; };
 		2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerCollectionViewController.swift; sourceTree = "<group>"; };
 		2ED79FEA1FBAEDFA0046B96C /* UIScreenExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIScreenExtensions.swift; sourceTree = "<group>"; };
 		2ED79FED1FBAEE630046B96C /* AssetPickerCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerCollectionViewCell.swift; sourceTree = "<group>"; };
+		35185092CEAA07251E4FD67C /* Pods_Photobook.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Photobook.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		405456FD88C003A4C2B2B699 /* Pods-Photobook.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.debug.xcconfig"; sourceTree = "<group>"; };
+		547A4E0B82B81A32EC456DDF /* Pods-Photobook.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.release.xcconfig"; sourceTree = "<group>"; };
 		6F0A682D1FE0243400B7E56C /* EmptyScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyScreenViewController.swift; sourceTree = "<group>"; };
 		6F0A682F1FE03C2100B7E56C /* EmptyScreenViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyScreenViewControllerExtensions.swift; sourceTree = "<group>"; };
 		6F0A68311FE1291200B7E56C /* PageSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSetupViewController.swift; sourceTree = "<group>"; };
@@ -171,10 +211,12 @@
 		6FCE959C1FF555EE0023FC14 /* AssetPlacementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPlacementViewController.swift; sourceTree = "<group>"; };
 		6FDF25E41FB604E100F46BB0 /* PhotobookTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookTabBar.swift; sourceTree = "<group>"; };
 		6FDF25E61FB6052A00F46BB0 /* UIImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
+		A9A9A5996008D1B40B2E10F9 /* Pods-PhotobookTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.release.xcconfig"; sourceTree = "<group>"; };
 		B9A1433A1FDAD278000EFE0D /* Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Random.swift; sourceTree = "<group>"; };
 		B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
 		B9BC2E261FBF195200F4AA56 /* AssetCollectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCollectorViewController.swift; sourceTree = "<group>"; };
 		B9BE9F931FBF33320002C459 /* AssetCollectorCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCollectorCollectionViewCell.swift; sourceTree = "<group>"; };
+		FF99346143FA805B3676D912 /* Pods-PhotobookTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,6 +224,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CBF1FFD216E73D9ACD8E2EF /* Pods_Photobook.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,6 +232,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D046AAB9F5CFA5F5150C0DF /* Pods_PhotobookTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,6 +245,8 @@
 				2E0B587E1FB30F2100F31A9E /* Photobook */,
 				6FB670681FB5BAD40062D630 /* PhotobookTests */,
 				2E0B587D1FB30F2100F31A9E /* Products */,
+				41442346D0981CD5E8F4B2CA /* Pods */,
+				3BAD030253756D88DE562AFF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -216,6 +262,7 @@
 		2E0B587E1FB30F2100F31A9E /* Photobook */ = {
 			isa = PBXGroup;
 			children = (
+				2ECF57BD2010D99B0047094C /* Photobook.entitlements */,
 				6F4DE64C1FB323280099A97E /* Controllers */,
 				6F4DE6521FB451F20099A97E /* Views */,
 				6F139E0D1FB45E67005B937E /* Model */,
@@ -226,6 +273,7 @@
 				2E0B587F1FB30F2100F31A9E /* AppDelegate.swift */,
 				2E0B58831FB30F2100F31A9E /* Main.storyboard */,
 				2E0B58881FB30F2100F31A9E /* LaunchScreen.storyboard */,
+				2ECF57BE201206FA0047094C /* Photobook-Bridging-Header.h */,
 				2E0B588B1FB30F2100F31A9E /* Info.plist */,
 			);
 			path = Photobook;
@@ -262,6 +310,19 @@
 			path = Photos;
 			sourceTree = "<group>";
 		};
+		2E1733842010B5AA00F0D718 /* Order */ = {
+			isa = PBXGroup;
+			children = (
+				2E17338B2010B9EE00F0D718 /* Card.swift */,
+				2E1733852010B6BA00F0D718 /* Cost.swift */,
+				2E1733872010B83100F0D718 /* ShippingMethod.swift */,
+				2E1733802010B50400F0D718 /* PaymentAuthorizationManager.swift */,
+				2E1733922010CD0B00F0D718 /* Address.swift */,
+				2E1733912010CD0A00F0D718 /* Country.swift */,
+			);
+			path = Order;
+			sourceTree = "<group>";
+		};
 		2E3E6A5520036FC20044EDFC /* Photobook */ = {
 			isa = PBXGroup;
 			children = (
@@ -280,6 +341,15 @@
 			path = Segues;
 			sourceTree = "<group>";
 		};
+		2ECF57BA2010D0590047094C /* Payment */ = {
+			isa = PBXGroup;
+			children = (
+				2ECF57BB2010D0830047094C /* PaymentMethodTableViewCell.swift */,
+				2ECF57C420120DF60047094C /* UserInputTableViewCell.swift */,
+			);
+			path = Payment;
+			sourceTree = "<group>";
+		};
 		2ED79FEC1FBAEE290046B96C /* Picker */ = {
 			isa = PBXGroup;
 			children = (
@@ -293,13 +363,35 @@
 			path = Picker;
 			sourceTree = "<group>";
 		};
+		3BAD030253756D88DE562AFF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				35185092CEAA07251E4FD67C /* Pods_Photobook.framework */,
+				1561A4A2B130A5F1A92351A0 /* Pods_PhotobookTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		41442346D0981CD5E8F4B2CA /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				405456FD88C003A4C2B2B699 /* Pods-Photobook.debug.xcconfig */,
+				547A4E0B82B81A32EC456DDF /* Pods-Photobook.release.xcconfig */,
+				FF99346143FA805B3676D912 /* Pods-PhotobookTests.debug.xcconfig */,
+				A9A9A5996008D1B40B2E10F9 /* Pods-PhotobookTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		6F139E0D1FB45E67005B937E /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				6FC7E8771FBEF49E00D2BCDA /* Photobooks */,
 				6FDF25E91FB9A07800F46BB0 /* Stories */,
 				2E0B58A51FB32B2300F31A9E /* Assets */,
+				2E1733842010B5AA00F0D718 /* Order */,
 				6FC7E8751FBD985900D2BCDA /* APIClient.swift */,
+				2E1733822010B5A500F0D718 /* Config.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -321,6 +413,8 @@
 				B9BC2E261FBF195200F4AA56 /* AssetCollectorViewController.swift */,
 				6F92BD011FFE3B8100460466 /* AssetSelectorViewController.swift */,
 				2E8B3E431FD191AC00FB8878 /* PhotobookViewController.swift */,
+				2E17337E200F4E0B00F0D718 /* PaymentMethodsViewController.swift */,
+				2ECF57C220120D2A0047094C /* CreditCardTableViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -355,6 +449,7 @@
 				6FDF25E81FB9A05D00F46BB0 /* Stories */,
 				2ED79FEC1FBAEE290046B96C /* Picker */,
 				2E3E6A5520036FC20044EDFC /* Photobook */,
+				2ECF57BA2010D0590047094C /* Payment */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -362,6 +457,9 @@
 		6FB670601FB49FDB0062D630 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				2E17338D2010BA3600F0D718 /* StringExtensions.swift */,
+				2E1733952010CDC400F0D718 /* LuhnStringExtensions.swift */,
+				2E1733892010B85F00F0D718 /* DecimalExtensions.swift */,
 				2E6B9ED91FBDEEF400F28C00 /* UIViewExtensions.swift */,
 				6FB670611FB49FF90062D630 /* UILabelExtensions.swift */,
 				6FDF25E61FB6052A00F46BB0 /* UIImageExtensions.swift */,
@@ -393,6 +491,8 @@
 				6FC7E8821FC4458100D2BCDA /* PhotobookAPIManagerTests.swift */,
 				6F2F30071FDE9EA3003543E2 /* ProductLayoutAssetTests.swift */,
 				6F4F02EA1FDEDC4C009D562A /* ProductManagerTests.swift */,
+				2E25272B2015EDA9004C12AF /* CreditCardTests.swift */,
+				2E25272D2015EDB1004C12AF /* CountryTests.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -455,9 +555,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2E0B588E1FB30F2100F31A9E /* Build configuration list for PBXNativeTarget "Photobook" */;
 			buildPhases = (
+				9DBC4FA5FA30E14A33727097 /* [CP] Check Pods Manifest.lock */,
 				2E0B58781FB30F2100F31A9E /* Sources */,
 				2E0B58791FB30F2100F31A9E /* Frameworks */,
 				2E0B587A1FB30F2100F31A9E /* Resources */,
+				F8D52F1350FCC9B4F21842B0 /* [CP] Embed Pods Frameworks */,
+				E0028CA487AFF9685C343BFC /* [CP] Copy Pods Resources */,
+				2E2527302015F3A5004C12AF /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -472,9 +576,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6FB670701FB5BAD40062D630 /* Build configuration list for PBXNativeTarget "PhotobookTests" */;
 			buildPhases = (
+				3ECB6CA75DDC06D5F75791BD /* [CP] Check Pods Manifest.lock */,
 				6FB670631FB5BAD40062D630 /* Sources */,
 				6FB670641FB5BAD40062D630 /* Frameworks */,
 				6FB670651FB5BAD40062D630 /* Resources */,
+				A50D0095660DE177EBF2A510 /* [CP] Embed Pods Frameworks */,
+				74535CCE0C6681FB9D16106B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -498,7 +605,13 @@
 				TargetAttributes = {
 					2E0B587B1FB30F2100F31A9E = {
 						CreatedOnToolsVersion = 9.1;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.ApplePay = {
+								enabled = 1;
+							};
+						};
 					};
 					6FB670661FB5BAD40062D630 = {
 						CreatedOnToolsVersion = 9.1;
@@ -549,6 +662,124 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		2E2527302015F3A5004C12AF /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" ebb34c1747d3ac14c598164178b666e2b9363b7f c3688b33fe4fc3d7339ad1c284d6834ee293e9f2e06bcd37a56b75e2333ca818";
+		};
+		3ECB6CA75DDC06D5F75791BD /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-PhotobookTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		74535CCE0C6681FB9D16106B /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9DBC4FA5FA30E14A33727097 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Photobook-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A50D0095660DE177EBF2A510 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Stripe/Stripe.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E0028CA487AFF9685C343BFC /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Photobook/Pods-Photobook-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F8D52F1350FCC9B4F21842B0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Photobook/Pods-Photobook-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Stripe/Stripe.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Photobook/Pods-Photobook-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		2E0B58781FB30F2100F31A9E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -561,12 +792,15 @@
 				6F139E0F1FB45EFC005B937E /* Story.swift in Sources */,
 				2E6B9EE51FBF1CFB00F28C00 /* FullScreenImageUnwindSegue.swift in Sources */,
 				2E6B9EDC1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift in Sources */,
+				2E1733812010B50400F0D718 /* PaymentAuthorizationManager.swift in Sources */,
 				6FA189331FFF976200E6D0AB /* AssetSelectorAddMoreCollectionViewCell.swift in Sources */,
 				2E876E091FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift in Sources */,
+				2E1733882010B83100F0D718 /* ShippingMethod.swift in Sources */,
 				6F4DE6571FB452390099A97E /* DoubleStoryTableViewCell.swift in Sources */,
 				6F3C4ACD1FC880F100DA0196 /* ProductLayoutAsset.swift in Sources */,
 				6F4DE64E1FB323540099A97E /* StoriesViewController.swift in Sources */,
 				6FDF25E51FB604E100F46BB0 /* PhotobookTabBar.swift in Sources */,
+				2E1733962010CDC400F0D718 /* LuhnStringExtensions.swift in Sources */,
 				6F0A682E1FE0243400B7E56C /* EmptyScreenViewController.swift in Sources */,
 				6FC7E87F1FC3329400D2BCDA /* Layout.swift in Sources */,
 				6F34855C1FC5A52900961B32 /* CGFloatExtensions.swift in Sources */,
@@ -579,7 +813,10 @@
 				6F4DE6551FB4522A0099A97E /* StoryTableViewCell.swift in Sources */,
 				6FCE959D1FF555EE0023FC14 /* AssetPlacementViewController.swift in Sources */,
 				6FC7E87B1FBEF7FC00D2BCDA /* PhotobookAPIManager.swift in Sources */,
+				2ECF57C520120DF60047094C /* UserInputTableViewCell.swift in Sources */,
 				6F0A68361FE16D1200B7E56C /* LayoutSelectionViewController.swift in Sources */,
+				2E1733932010CD0B00F0D718 /* Country.swift in Sources */,
+				2ECF57C320120D2A0047094C /* CreditCardTableViewController.swift in Sources */,
 				6FDF25E71FB6052A00F46BB0 /* UIImageExtensions.swift in Sources */,
 				6FA189371FFFA07500E6D0AB /* BorderedCollectionViewCell.swift in Sources */,
 				6F3C4ACF1FC8811C00DA0196 /* ProductLayoutText.swift in Sources */,
@@ -587,9 +824,12 @@
 				6F4DE6591FB453090099A97E /* PhotobookNavigationBar.swift in Sources */,
 				2E8B3E441FD191AC00FB8878 /* PhotobookViewController.swift in Sources */,
 				6F139E0C1FB45DD8005B937E /* StoriesManager.swift in Sources */,
+				2E17338A2010B85F00F0D718 /* DecimalExtensions.swift in Sources */,
 				6F92BD021FFE3B8100460466 /* AssetSelectorViewController.swift in Sources */,
+				2E17338C2010B9EE00F0D718 /* Card.swift in Sources */,
 				2ED79FEE1FBAEE630046B96C /* AssetPickerCollectionViewCell.swift in Sources */,
 				2E0B58A41FB32ADD00F31A9E /* PhotosAlbumManager.swift in Sources */,
+				2ECF57BC2010D0830047094C /* PaymentMethodTableViewCell.swift in Sources */,
 				2ECB5A991FDFE71200FF39A5 /* OutOfBoundsTouchCollectionView.swift in Sources */,
 				2E876E0B1FC2FA15007CCFA2 /* ViewStorySegue.swift in Sources */,
 				2E3E6A5320036FB60044EDFC /* PhotobookCoverCollectionViewCell.swift in Sources */,
@@ -597,20 +837,25 @@
 				B9BE9F941FBF33320002C459 /* AssetCollectorCollectionViewCell.swift in Sources */,
 				2E0B58A01FB3297300F31A9E /* AlbumCollectionViewCell.swift in Sources */,
 				2E0B58991FB328B800F31A9E /* Asset.swift in Sources */,
+				2E17338E2010BA3600F0D718 /* StringExtensions.swift in Sources */,
 				2E6B9EDF1FBF1B0D00F28C00 /* FullScreenImageViewController.swift in Sources */,
 				2E0B58951FB3280000F31A9E /* AlbumManager.swift in Sources */,
 				B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */,
+				2E17337F200F4E0B00F0D718 /* PaymentMethodsViewController.swift in Sources */,
 				2E0B58A21FB32AC100F31A9E /* PhotosAlbum.swift in Sources */,
 				6FA1893B2004B9C700E6D0AB /* ModalAlbumsCollectionViewController.swift in Sources */,
 				2E0B58A91FB3508B00F31A9E /* SelectedAssetsManager.swift in Sources */,
 				2E0B589D1FB3293100F31A9E /* PhotosAsset.swift in Sources */,
 				6FA189311FFF96E500E6D0AB /* AssetSelectorAssetCollectionViewCell.swift in Sources */,
+				2E1733862010B6BA00F0D718 /* Cost.swift in Sources */,
 				6F0A68321FE1291200B7E56C /* PageSetupViewController.swift in Sources */,
 				B9BC2E271FBF195200F4AA56 /* AssetCollectorViewController.swift in Sources */,
+				2E1733942010CD0B00F0D718 /* Address.swift in Sources */,
 				2ED5B3831FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift in Sources */,
 				2E6B9EDA1FBDEEF500F28C00 /* UIViewExtensions.swift in Sources */,
 				2E3E6A5420036FB60044EDFC /* PhotobookCollectionViewCell.swift in Sources */,
 				6F0A68301FE03C2100B7E56C /* EmptyScreenViewControllerExtensions.swift in Sources */,
+				2E1733832010B5A500F0D718 /* Config.swift in Sources */,
 				2ED5B3811FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift in Sources */,
 				6FC7E8811FC332A500D2BCDA /* LayoutBox.swift in Sources */,
 				2E0B58921FB325FF00F31A9E /* AlbumsCollectionViewController.swift in Sources */,
@@ -624,11 +869,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E25272C2015EDA9004C12AF /* CreditCardTests.swift in Sources */,
 				6FC7E8831FC4458100D2BCDA /* PhotobookAPIManagerTests.swift in Sources */,
 				6FC7E8891FC47B4500D2BCDA /* PhotobookTests.swift in Sources */,
 				6FC7E8871FC4719300D2BCDA /* LayoutTests.swift in Sources */,
 				6F4F02EB1FDEDC4C009D562A /* ProductManagerTests.swift in Sources */,
 				6FC7E8851FC469E600D2BCDA /* LayoutBoxTests.swift in Sources */,
+				2E25272E2015EDB1004C12AF /* CountryTests.swift in Sources */,
 				6F2F30081FDE9EA3003543E2 /* ProductLayoutAssetTests.swift in Sources */,
 				6FB670731FB5BB1A0062D630 /* StoryTests.swift in Sources */,
 			);
@@ -773,8 +1020,11 @@
 		};
 		2E0B588F1FB30F2100F31A9E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 405456FD88C003A4C2B2B699 /* Pods-Photobook.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Photobook/Photobook.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = L78L4U72YJ;
 				INFOPLIST_FILE = Photobook/Info.plist;
@@ -782,6 +1032,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Photobook/Photobook-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -789,8 +1041,11 @@
 		};
 		2E0B58901FB30F2100F31A9E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 547A4E0B82B81A32EC456DDF /* Pods-Photobook.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Photobook/Photobook.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = L78L4U72YJ;
 				INFOPLIST_FILE = Photobook/Info.plist;
@@ -798,6 +1053,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Photobook/Photobook-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -805,11 +1061,13 @@
 		};
 		6FB6706E1FB5BAD40062D630 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FF99346143FA805B3676D912 /* Pods-PhotobookTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = L78L4U72YJ;
 				INFOPLIST_FILE = PhotobookTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Kite.PhotobookTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -821,11 +1079,13 @@
 		};
 		6FB6706F1FB5BAD40062D630 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A9A9A5996008D1B40B2E10F9 /* Pods-PhotobookTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = L78L4U72YJ;
 				INFOPLIST_FILE = PhotobookTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Kite.PhotobookTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
