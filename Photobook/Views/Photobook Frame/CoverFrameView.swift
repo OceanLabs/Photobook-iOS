@@ -31,7 +31,7 @@ class CoverFrameView: UIView {
             pageView.index = 0
             pageView.color = color
             pageView.productLayout = ProductManager.shared.productLayouts.first
-            pageView.aspectRatio = ProductManager.shared.product!.coverSizeRatio
+            pageView.aspectRatio = ProductManager.shared.product!.aspectRatio
         }
     }
     
