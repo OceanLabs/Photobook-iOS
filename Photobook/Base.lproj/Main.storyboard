@@ -1908,7 +1908,7 @@
                                                     </constraints>
                                                     <connections>
                                                         <outlet property="coverBackgroundView" destination="NBy-2O-xiC" id="pOB-Ou-CpA"/>
-                                                        <outlet property="pageView" destination="SIc-aM-s7t" id="FXu-6V-8rs"/>
+                                                        <outlet property="pageView" destination="SIc-aM-s7t" id="Xv4-2k-cnZ"/>
                                                         <outlet property="widthConstraint" destination="gmY-27-NEE" id="1Ie-xO-bPU"/>
                                                     </connections>
                                                 </view>

@@ -586,14 +586,7 @@ extension PhotobookViewController: PhotobookPageViewDelegate {
     func didTapOnPage(index: Int) {
         let pageSetupViewController = storyboard?.instantiateViewController(withIdentifier: "PageSetupViewController") as! PageSetupViewController
         pageSetupViewController.selectedAssetsManager = selectedAssetsManager
-        pageSetupViewController.productLayout = ProductManager.shared.productLayouts[index].shallowCopy()
         pageSetupViewController.pageIndex = index
-        pageSetupViewController.pageSizeRatio = ProductManager.shared.product!.aspectRatio
-        if index == 0 { // Cover
-            pageSetupViewController.availableLayouts = ProductManager.shared.currentCoverLayouts()
-        } else {
-            pageSetupViewController.availableLayouts = ProductManager.shared.currentLayouts()
-        }
         pageSetupViewController.delegate = self
         present(pageSetupViewController, animated: true, completion: nil)
     }

@@ -26,7 +26,6 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     @IBOutlet private weak var photobookLeftAligmentConstraint: NSLayoutConstraint!
 
     var pageType: PageType!
-    var aspectRatio: CGFloat!
     var layout: Layout?
     var asset: Asset!
     var image: UIImage!
@@ -68,6 +67,8 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         guard let pageIndex = pageIndex, let layout = layout else { return }
 
         backgroundColor = .clear
+        
+        let aspectRatio = ProductManager.shared.product!.aspectRatio!
         
         photobookFrameView.coverColor = ProductManager.shared.coverColor
         photobookFrameView.pageColor = ProductManager.shared.pageColor
