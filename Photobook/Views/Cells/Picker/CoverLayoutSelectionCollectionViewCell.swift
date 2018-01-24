@@ -17,13 +17,7 @@ class CoverLayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     }
     
     @IBOutlet private weak var coverFrameView: CoverFrameView!
-    
-    @IBOutlet weak var roundedBackgroundView: UIView! {
-        didSet {
-            roundedBackgroundView.bezierRoundedCorners(withRadius: BorderedCollectionViewCell.cornerRadius)
-        }
-    }
-    
+        
     var aspectRatio: CGFloat!
     var layout: Layout?
     var asset: Asset!

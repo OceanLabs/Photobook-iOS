@@ -68,9 +68,12 @@
 		6F34855C1FC5A52900961B32 /* CGFloatExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F34855B1FC5A52900961B32 /* CGFloatExtensions.swift */; };
 		6F34855E1FC5A9F900961B32 /* ProductManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F34855D1FC5A9F900961B32 /* ProductManager.swift */; };
 		6F3920F320175D7300D6C30B /* TextLabelPlaceholderBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3920F220175D7300D6C30B /* TextLabelPlaceholderBoxView.swift */; };
+		6F3920F720177FCA00D6C30B /* ColorSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3920F620177FC900D6C30B /* ColorSelectionViewController.swift */; };
+		6F3920F9201881AE00D6C30B /* BorderedViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3920F8201881AE00D6C30B /* BorderedViewProtocol.swift */; };
 		6F3C4AC91FC8804300DA0196 /* ProductLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3C4AC81FC8804300DA0196 /* ProductLayout.swift */; };
 		6F3C4ACD1FC880F100DA0196 /* ProductLayoutAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3C4ACC1FC880F100DA0196 /* ProductLayoutAsset.swift */; };
 		6F3C4ACF1FC8811C00DA0196 /* ProductLayoutText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3C4ACE1FC8811C00DA0196 /* ProductLayoutText.swift */; };
+		6F4606DC201886BD00C7583E /* BorderedRoundedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4606DB201886BD00C7583E /* BorderedRoundedView.swift */; };
 		6F4DE64E1FB323540099A97E /* StoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DE64D1FB323540099A97E /* StoriesViewController.swift */; };
 		6F4DE6511FB35B010099A97E /* LeagueGothic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6F4DE6501FB35B000099A97E /* LeagueGothic-Regular.otf */; };
 		6F4DE6551FB4522A0099A97E /* StoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DE6541FB4522A0099A97E /* StoryTableViewCell.swift */; };
@@ -187,9 +190,12 @@
 		6F34855B1FC5A52900961B32 /* CGFloatExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGFloatExtensions.swift; sourceTree = "<group>"; };
 		6F34855D1FC5A9F900961B32 /* ProductManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductManager.swift; sourceTree = "<group>"; };
 		6F3920F220175D7300D6C30B /* TextLabelPlaceholderBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextLabelPlaceholderBoxView.swift; sourceTree = "<group>"; };
+		6F3920F620177FC900D6C30B /* ColorSelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorSelectionViewController.swift; sourceTree = "<group>"; };
+		6F3920F8201881AE00D6C30B /* BorderedViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedViewProtocol.swift; sourceTree = "<group>"; };
 		6F3C4AC81FC8804300DA0196 /* ProductLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductLayout.swift; sourceTree = "<group>"; };
 		6F3C4ACC1FC880F100DA0196 /* ProductLayoutAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductLayoutAsset.swift; sourceTree = "<group>"; };
 		6F3C4ACE1FC8811C00DA0196 /* ProductLayoutText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductLayoutText.swift; sourceTree = "<group>"; };
+		6F4606DB201886BD00C7583E /* BorderedRoundedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedRoundedView.swift; sourceTree = "<group>"; };
 		6F4DE64D1FB323540099A97E /* StoriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesViewController.swift; sourceTree = "<group>"; };
 		6F4DE6501FB35B000099A97E /* LeagueGothic-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LeagueGothic-Regular.otf"; sourceTree = "<group>"; };
 		6F4DE6541FB4522A0099A97E /* StoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryTableViewCell.swift; sourceTree = "<group>"; };
@@ -370,6 +376,8 @@
 				6FA189301FFF96E500E6D0AB /* AssetSelectorAssetCollectionViewCell.swift */,
 				6FA189321FFF976200E6D0AB /* AssetSelectorAddMoreCollectionViewCell.swift */,
 				6FA189361FFFA07500E6D0AB /* BorderedCollectionViewCell.swift */,
+				6F4606DB201886BD00C7583E /* BorderedRoundedView.swift */,
+				6F3920F8201881AE00D6C30B /* BorderedViewProtocol.swift */,
 			);
 			path = Picker;
 			sourceTree = "<group>";
@@ -419,6 +427,7 @@
 				6F0A68311FE1291200B7E56C /* PageSetupViewController.swift */,
 				6FCE959C1FF555EE0023FC14 /* AssetPlacementViewController.swift */,
 				6F0A68351FE16D1200B7E56C /* LayoutSelectionViewController.swift */,
+				6F3920F620177FC900D6C30B /* ColorSelectionViewController.swift */,
 				6F0A682D1FE0243400B7E56C /* EmptyScreenViewController.swift */,
 				2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */,
 				B9BC2E261FBF195200F4AA56 /* AssetCollectorViewController.swift */,
@@ -825,6 +834,7 @@
 				6FDF25E51FB604E100F46BB0 /* PhotobookTabBar.swift in Sources */,
 				2E1733962010CDC400F0D718 /* LuhnStringExtensions.swift in Sources */,
 				6F0A682E1FE0243400B7E56C /* EmptyScreenViewController.swift in Sources */,
+				6F3920F9201881AE00D6C30B /* BorderedViewProtocol.swift in Sources */,
 				6FC7E87F1FC3329400D2BCDA /* Layout.swift in Sources */,
 				6F6B7A77200E137B002E2FC2 /* PhotobookCoverCollectionViewCell.swift in Sources */,
 				6F1DB8DB201617B7001BECC8 /* CoverLayoutSelectionCollectionViewCell.swift in Sources */,
@@ -866,6 +876,7 @@
 				2E17338E2010BA3600F0D718 /* StringExtensions.swift in Sources */,
 				2E6B9EDF1FBF1B0D00F28C00 /* FullScreenImageViewController.swift in Sources */,
 				2E0B58951FB3280000F31A9E /* AlbumManager.swift in Sources */,
+				6F4606DC201886BD00C7583E /* BorderedRoundedView.swift in Sources */,
 				B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */,
 				2E17337F200F4E0B00F0D718 /* PaymentMethodsViewController.swift in Sources */,
 				2E0B58A21FB32AC100F31A9E /* PhotosAlbum.swift in Sources */,
@@ -890,6 +901,7 @@
 				2EB39DD51FC5AE0F009EC5B2 /* PhotobookPageView.swift in Sources */,
 				2E0B58971FB3287900F31A9E /* Album.swift in Sources */,
 				B9A1433B1FDAD278000EFE0D /* Random.swift in Sources */,
+				6F3920F720177FCA00D6C30B /* ColorSelectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
