@@ -8,13 +8,14 @@
 
 import UIKit
 
-protocol CountryPickerTableViewControllerDelegate : class {
+protocol CountryPickerTableViewControllerDelegate: class {
     func countryPickerDidPick(country: Country)
 }
 
 class CountryPickerTableViewController: UITableViewController {
     
     weak var delegate: CountryPickerTableViewControllerDelegate?
+    var selectedCountry: Country?
     var sections = [[Country]]()
     
     override func viewDidLoad() {
@@ -57,7 +58,7 @@ class CountryPickerTableViewController: UITableViewController {
 
         let countryName = sections[indexPath.section][indexPath.row].name
         cell.textLabel?.text = countryName
-        cell.accessoryType = ProductManager.shared.deliveryDetails?.address?.country.name == countryName ? .checkmark : .none
+        cell.accessoryType = selectedCountry?.name == countryName ? .checkmark : .none
 
         return cell
     }

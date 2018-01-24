@@ -10,7 +10,7 @@ import UIKit
 
 class DeliveryDetailsTableViewController: UITableViewController {
     
-    var details: DeliveryDetails?
+    lazy var details = DeliveryDetails()
     
     weak var firstNameTextField: UITextField!
     weak var lastNameTextField: UITextField!
@@ -39,8 +39,8 @@ class DeliveryDetailsTableViewController: UITableViewController {
         var detailsAreValid = true
         
         tableView.beginUpdates()
-        detailsAreValid = checkFirstName() && detailsAreValid
-        detailsAreValid = checkLastName() && detailsAreValid
+        detailsAreValid = check(firstNameTextField) && detailsAreValid
+        detailsAreValid = check(lastNameTextField) && detailsAreValid
         detailsAreValid = checkEmail() && detailsAreValid
         detailsAreValid = checkPhone() && detailsAreValid
         tableView.endUpdates()
@@ -50,28 +50,14 @@ class DeliveryDetailsTableViewController: UITableViewController {
             //TODO: set details
             
             details.saveDetailsAsLatest()
-            //TODO: dismiss
+            navigationController?.popViewController(animated: true)
         }
     }
     
-    func checkFirstName() -> Bool {
-        let firstNameCell = (tableView.cellForRow(at: IndexPath(row: DetailsRow.name.rawValue, section: 0)) as? UserInputTableViewCell)
-        let firstName = firstNameCell?.textField.text
-        if firstName?.isEmpty ?? true {
-            firstNameCell?.textField.text = UserInputTableViewCell.Constants.requiredText
-            firstNameCell?.textField.textColor = UserInputTableViewCell.Constants.errorColor
-            return false
-        }
-        
-        return true
-    }
-    
-    func checkLastName() -> Bool {
-        let lastNameCell = (tableView.cellForRow(at: IndexPath(row: DetailsRow.lastName.rawValue, section: 0)) as? UserInputTableViewCell)
-        let lastName = lastNameCell?.textField.text
-        if lastName?.isEmpty ?? true {
-            lastNameCell?.textField.text = UserInputTableViewCell.Constants.requiredText
-            lastNameCell?.textField.textColor = UserInputTableViewCell.Constants.errorColor
+    func check(_ textField: UITextField) -> Bool {
+        if textField.text?.isEmpty ?? true {
+            textField.text = UserInputTableViewCell.Constants.requiredText
+            textField.textColor = UserInputTableViewCell.Constants.errorColor
             return false
         }
         
@@ -79,13 +65,11 @@ class DeliveryDetailsTableViewController: UITableViewController {
     }
     
     func checkEmail() -> Bool {
+        guard check(emailTextField) else { return false }
+        
         let emailCell = (tableView.cellForRow(at: IndexPath(row: DetailsRow.email.rawValue, section: 0)) as? UserInputTableViewCell)
-        let email = emailCell?.textField.text
-        if email?.isEmpty ?? true {
-            emailCell?.textField.text = UserInputTableViewCell.Constants.requiredText
-            emailCell?.textField.textColor = UserInputTableViewCell.Constants.errorColor
-            return false
-        } else if !email!.isValidEmailAddress() {
+        if let email = emailCell?.textField.text,
+            !email.isValidEmailAddress() {
             emailCell?.errorMessage = NSLocalizedString("DeliveryDetails/Email is invalid", value: "Email is invalid", comment: "Error message saying that the email address is invalid")
             return false
         }
@@ -94,13 +78,11 @@ class DeliveryDetailsTableViewController: UITableViewController {
     }
     
     func checkPhone() -> Bool {
+        guard check(phoneTextField) else { return false }
+        
         let phoneCell = (tableView.cellForRow(at: IndexPath(row: DetailsRow.phone.rawValue, section: 0)) as? UserInputTableViewCell)
-        let phone = phoneCell?.textField.text
-        if phone?.isEmpty ?? true {
-            phoneCell?.textField.text = UserInputTableViewCell.Constants.requiredText
-            phoneCell?.textField.textColor = UserInputTableViewCell.Constants.errorColor
-            return false
-        } else if phone!.count < DeliveryDetails.minPhoneNumberLength {
+        if let phone = phoneCell?.textField.text,
+            phone.count < DeliveryDetails.minPhoneNumberLength {
             phoneCell?.errorMessage = NSLocalizedString("DeliveryDetails/Phone is invalid", value: "Phone is invalid", comment: "Error message saying that the phone number is invalid")
             return false
         }
@@ -119,6 +101,19 @@ class DeliveryDetailsTableViewController: UITableViewController {
         }
         
         return nil
+    }
+    
+    @IBAction func addAddress() {
+        edit(address: Address())
+    }
+    
+    func edit(address: Address) {
+        guard let storyboard = storyboard,
+            let addressVc = storyboard.instantiateViewController(withIdentifier: "AddressTableViewController") as? AddressTableViewController
+            else { return }
+        addressVc.delegate = self
+        addressVc.address = address
+        navigationController?.pushViewController(addressVc, animated: true)
     }
     
 }
@@ -203,7 +198,7 @@ extension DeliveryDetailsTableViewController {
         case .deliveryAddress:
             if ProductManager.shared.deliveryDetails != nil && indexPath.item == 0 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: DeliveryAddressTableViewCell.reuseIdentifier, for: indexPath) as! DeliveryAddressTableViewCell
-                if let address = details?.address, address.isValid {
+                if let address = details.address, address.isValid {
                     cell.topLabel.text = address.line1
                     cell.bottomLabel.text = address.descriptionWithoutLine1()
                 }
@@ -259,9 +254,9 @@ extension DeliveryDetailsTableViewController: UITextFieldDelegate {
         textField.text = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         tableView.beginUpdates()
         if textField === firstNameTextField {
-            _ = checkFirstName()
+            _ = check(textField)
         } else if textField === lastNameTextField {
-            _ = checkLastName()
+            _ = check(textField)
         } else if textField === emailTextField {
             _ = checkEmail()
         } else if textField == phoneTextField {
@@ -279,4 +274,12 @@ extension DeliveryDetailsTableViewController: UITextFieldDelegate {
         
         return false
     }
+}
+
+extension DeliveryDetailsTableViewController: AddressTableViewControllerDelegate {
+    
+    func addressTableViewControllerDidSave(address: Address) {
+        details.address = address
+    }
+    
 }
