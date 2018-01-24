@@ -59,11 +59,7 @@ class AssetSelectorViewController: UIViewController {
             }
         }
     }
-    var browseNavigationController: UINavigationController!
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
+    var browseNavigationController: UINavigationController!    
 }
 
 extension AssetSelectorViewController: UICollectionViewDataSource {

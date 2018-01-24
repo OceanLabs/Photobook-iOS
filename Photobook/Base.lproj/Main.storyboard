@@ -1404,7 +1404,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tm6-rH-30X">
-                                <rect key="frame" x="0.0" y="30" width="414" height="726"/>
+                                <rect key="frame" x="0.0" y="30" width="414" height="706"/>
                                 <connections>
                                     <segue destination="mcv-na-BVN" kind="embed" identifier="AlbumsCollectionSegue" id="2oC-kh-DmB"/>
                                 </connections>
@@ -1413,7 +1413,7 @@
                         <color key="backgroundColor" white="0.0" alpha="0.59765625" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="tm6-rH-30X" firstAttribute="top" secondItem="8jz-Ja-FKn" secondAttribute="top" constant="10" id="7t1-Ra-ch0"/>
-                            <constraint firstItem="tm6-rH-30X" firstAttribute="height" secondItem="fMB-DX-WcM" secondAttribute="height" constant="-10" id="AJO-Z6-ay2"/>
+                            <constraint firstItem="tm6-rH-30X" firstAttribute="height" secondItem="8jz-Ja-FKn" secondAttribute="height" constant="-10" id="AJO-Z6-ay2"/>
                             <constraint firstItem="tm6-rH-30X" firstAttribute="leading" secondItem="8jz-Ja-FKn" secondAttribute="leading" id="Q6S-qW-BiM"/>
                             <constraint firstItem="tm6-rH-30X" firstAttribute="trailing" secondItem="8jz-Ja-FKn" secondAttribute="trailing" id="U5m-qD-nlA"/>
                         </constraints>
@@ -1456,7 +1456,7 @@
             <objects>
                 <collectionViewController storyboardIdentifier="AlbumsCollectionViewController" id="dnn-z5-0C4" customClass="AlbumsCollectionViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" id="bn4-uC-JcP">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="706"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="eYK-0U-LrI">
@@ -1466,7 +1466,7 @@
                             <inset key="sectionInset" minX="20" minY="20" maxX="20" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <activityIndicatorView key="backgroundView" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" id="qvD-qJ-eaZ">
-                            <rect key="frame" x="0.0" y="-64" width="414" height="736"/>
+                            <rect key="frame" x="0.0" y="-64" width="414" height="706"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </activityIndicatorView>
@@ -3133,6 +3133,6 @@
         <image name="selectPhoto_on" width="29" height="29"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="MX7-xb-oNn"/>
+        <segue reference="2oC-kh-DmB"/>
     </inferredMetricsTieBreakers>
 </document>
