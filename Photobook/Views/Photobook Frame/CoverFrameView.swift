@@ -49,7 +49,10 @@ class CoverFrameView: UIView {
         layer.shadowPath = UIBezierPath(rect: bounds).cgPath
         layer.shouldRasterize = true
         layer.rasterizationScale = UIScreen.main.scale
-
+        setCoverColor()
+    }
+    
+    private func setCoverColor() {
         switch color {
         case .white:
             layer.shadowColor = PhotobookConstants.whiteShadowColor
@@ -59,8 +62,13 @@ class CoverFrameView: UIView {
 
         pageView.color = color
         pageView.aspectRatio = aspectRatio
-        
         coverBackgroundView.color = color
+    }
+    
+    func resetCoverColor() {
+        setCoverColor()
+        pageView.setTextColor()
+        coverBackgroundView.setNeedsDisplay()
     }
 }
 

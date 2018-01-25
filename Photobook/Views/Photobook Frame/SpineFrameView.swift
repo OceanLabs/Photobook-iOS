@@ -29,8 +29,6 @@ class SpineFrameView: UIView {
         super.layoutSubviews()
         
         textLabel.text = spineText
-
-        spineBackgroundView.color = color
         textLabelWidthConstraint.constant = bounds.height - 2.0 * SpineFrameView.spineTextPadding
         
         layer.shadowOffset = PhotobookConstants.shadowOffset
@@ -40,7 +38,11 @@ class SpineFrameView: UIView {
         layer.shadowPath = UIBezierPath(rect: bounds).cgPath
         layer.shouldRasterize = true
         layer.rasterizationScale = UIScreen.main.scale
-
+        setSpineColor()
+    }
+    
+    private func setSpineColor() {
+        spineBackgroundView.color = color
         switch color {
         case .white:
             layer.shadowColor = PhotobookConstants.whiteShadowColor
@@ -49,6 +51,11 @@ class SpineFrameView: UIView {
             layer.shadowColor = PhotobookConstants.blackShadowColor
             textLabel.textColor = .white
         }
+    }
+    
+    func resetSpineColor() {
+        setSpineColor()
+        spineBackgroundView.setNeedsDisplay()
     }
 }
 
@@ -83,6 +90,8 @@ class SpineBackgroundView: UIView {
             firstSpineColor = CoverColors.White.color4
             secondSpineColor = CoverColors.White.color2
         case .black:
+            layer.borderWidth = 0.0
+            
             firstSpineColor = CoverColors.Black.color3
             secondSpineColor = CoverColors.Black.color1
         }

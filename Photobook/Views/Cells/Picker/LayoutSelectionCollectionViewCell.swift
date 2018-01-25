@@ -56,13 +56,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
             return nil
         }
     }
-    
-    @IBOutlet weak var roundedBackgroundView: UIView! {
-        didSet {
-            roundedBackgroundView.bezierRoundedCorners(withRadius: BorderedCollectionViewCell.cornerRadius)
-        }
-    }
-    
+        
     func setupLayout() {
         guard let pageIndex = pageIndex, let layout = layout else { return }
 

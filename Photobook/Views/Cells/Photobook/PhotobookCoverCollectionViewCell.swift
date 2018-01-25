@@ -23,20 +23,24 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell {
     var width: CGFloat! { didSet { coverFrameView.width = width } }
     
     weak var delegate: PhotobookPageViewDelegate? { didSet { coverFrameView.pageView.delegate = delegate } }
-    
+
     override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        spineFrameView.color = ProductManager.shared.coverColor
+        super.layoutSubviews()        
         spineFrameView.spineText = ProductManager.shared.spineText
-        coverFrameView.color = ProductManager.shared.coverColor
         coverFrameView.aspectRatio = ProductManager.shared.product!.aspectRatio
     }
-    
-    func loadCover() {
+
+    func loadCover(redrawing: Bool = false) {
         coverFrameView.pageView.index = 0
         coverFrameView.pageView.productLayout = ProductManager.shared.productLayouts.first
         coverFrameView.pageView.setupImageBox()
+        
+        if redrawing {
+            coverFrameView.color = ProductManager.shared.coverColor
+            spineFrameView.color = ProductManager.shared.coverColor
+            coverFrameView.resetCoverColor()
+            spineFrameView.resetSpineColor()
+        }
     }
 }
 
