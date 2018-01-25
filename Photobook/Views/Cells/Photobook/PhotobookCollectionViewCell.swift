@@ -54,31 +54,34 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    func loadPage(_ page: PageSide, index: Int?, layout: ProductLayout? = nil) {
-        switch page {
-        case .left:
-            guard let index = index else {
-                photobookFrameView.isLeftPageVisible = false
-                return
-            }
+    func loadPages(leftIndex: Int?, rightIndex: Int?, leftLayout: ProductLayout? = nil, rightLayout: ProductLayout? = nil, redrawing: Bool = false) {
+        if let leftIndex = leftIndex {
             photobookFrameView.isLeftPageVisible = true
-            photobookFrameView.leftPageView.index = index
-            if layout != nil { photobookFrameView.leftPageView.productLayout = layout }
+            photobookFrameView.leftPageView.index = leftIndex
+            if leftLayout != nil { photobookFrameView.leftPageView.productLayout = leftLayout }
             
             photobookFrameView.leftPageView.setupImageBox()
-        case .right:
-            guard let index = index else {
-                photobookFrameView.isRightPageVisible = false
-                return
-            }
+        } else {
+            photobookFrameView.isLeftPageVisible = false
+        }
+        
+        if let rightIndex = rightIndex {
             photobookFrameView.isRightPageVisible = true
-            photobookFrameView.rightPageView.index = index
-            if layout != nil { photobookFrameView.rightPageView.productLayout = layout }
+            photobookFrameView.rightPageView.index = rightIndex
+            if rightLayout != nil { photobookFrameView.rightPageView.productLayout = rightLayout }
             
             photobookFrameView.rightPageView.setupImageBox()
+        } else {
+            photobookFrameView.isRightPageVisible = false
+        }
+        
+        if redrawing {
+            photobookFrameView.coverColor = ProductManager.shared.coverColor
+            photobookFrameView.pageColor = ProductManager.shared.pageColor
+            photobookFrameView.resetPageColor()
         }
     }
-    
+        
     @IBAction func didTapPlus(_ sender: UIButton) {
         guard let layoutIndex = photobookFrameView.leftPageView.index ?? photobookFrameView.rightPageView.index,
             let foldIndex = ProductManager.shared.foldIndex(for: layoutIndex)

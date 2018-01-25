@@ -105,17 +105,32 @@ class PhotobookFrameView: UIView {
             layer.shadowColor = PhotobookConstants.blackShadowColor
         }
         
+        pageDividerView.setVisible(isLeftPageVisible && isRightPageVisible)
+        setPageColor()
+    }
+    
+    private func setPageColor() {
         coverView.color = coverColor
         spreadBackgroundView.color = pageColor
         leftPageView.color = pageColor
+        leftPageView.setTextColor()
         rightPageView.color = pageColor
+        rightPageView.setTextColor()
         if leftPagesBehindView != nil { leftPagesBehindView!.color = pageColor }
         if rightPagesBehindView != nil { rightPagesBehindView!.color = pageColor }
         rightPageBackgroundView.color = pageColor
         leftPageBackgroundView.color = pageColor
-        rightPageBackgroundView.color = pageColor
-        pageDividerView.setVisible(isLeftPageVisible && isRightPageVisible)
         pageDividerView.color = pageColor
+    }
+    
+    func resetPageColor() {
+        setPageColor()
+        coverView.setNeedsDisplay()
+        spreadBackgroundView.setNeedsDisplay()
+        if leftPagesBehindView != nil { leftPagesBehindView!.setNeedsDisplay() }
+        if rightPagesBehindView != nil { rightPagesBehindView!.setNeedsDisplay() }
+        leftPageBackgroundView.setNeedsDisplay()
+        rightPageBackgroundView.setNeedsDisplay()
     }
 }
 

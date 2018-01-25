@@ -180,15 +180,12 @@ class PhotobookPageView: UIView {
 
         pageTextLabel.alpha = 1.0
         pageTextLabel.text = text
-        switch color {
-        case .white: pageTextLabel.textColor = .darkText
-        case .black: pageTextLabel.textColor = .white
-        }
         pageTextLabel.frame = textBox.rectContained(in: bounds.size)
+        setTextColor()
         adjustLabelHeight()
     }
     
-    func setImagePlaceholder(visible: Bool) {
+    private func setImagePlaceholder(visible: Bool) {
         if visible {
             assetImageView.image = nil
             assetContainerView.backgroundColor = UIColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1.0)
@@ -197,6 +194,13 @@ class PhotobookPageView: UIView {
         } else {
             assetContainerView.backgroundColor = .clear
             assetPlaceholderIconImageView.alpha = 0.0
+        }
+    }
+    
+    func setTextColor() {
+        switch color {
+        case .white: pageTextLabel.textColor = .darkText
+        case .black: pageTextLabel.textColor = .white
         }
     }
     

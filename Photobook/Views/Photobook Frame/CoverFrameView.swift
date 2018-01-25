@@ -29,7 +29,6 @@ class CoverFrameView: UIView {
     @IBOutlet weak var pageView: PhotobookPageView! {
         didSet {
             pageView.index = 0
-            pageView.color = color
             pageView.productLayout = ProductManager.shared.productLayouts.first
             pageView.aspectRatio = ProductManager.shared.product!.coverSizeRatio
         }
@@ -55,15 +54,25 @@ class CoverFrameView: UIView {
         layer.shadowPath = UIBezierPath(rect: bounds).cgPath
         layer.shouldRasterize = true
         layer.rasterizationScale = UIScreen.main.scale
-
+        setCoverColor()
+    }
+    
+    private func setCoverColor() {
         switch color {
         case .white:
             layer.shadowColor = PhotobookConstants.whiteShadowColor
         case .black:
             layer.shadowColor = PhotobookConstants.blackShadowColor
         }
-        
+
+        pageView.color = color
         coverBackgroundView.color = color
+    }
+    
+    func resetCoverColor() {
+        setCoverColor()
+        pageView.setTextColor()
+        coverBackgroundView.setNeedsDisplay()
     }
 }
 

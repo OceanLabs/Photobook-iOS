@@ -33,8 +33,15 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell {
     
     weak var delegate: PhotobookPageViewDelegate? { didSet { coverFrameView.pageView.delegate = delegate } }
     
-    func loadCover() {
+    func loadCover(redrawing: Bool = false) {
         coverFrameView.pageView.setupImageBox()
+        
+        if redrawing {
+            coverFrameView.color = ProductManager.shared.coverColor
+            spineFrameView.color = ProductManager.shared.coverColor
+            coverFrameView.resetCoverColor()
+            spineFrameView.resetSpineColor()
+        }
     }
 }
 

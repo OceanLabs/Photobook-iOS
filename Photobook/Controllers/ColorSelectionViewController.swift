@@ -12,8 +12,18 @@ protocol ColorSelectorDelegate: class {
     func didSelect(_ color: ProductColor)
 }
 
-
 class ColorSelectionViewController: UIViewController {
+
+    weak var delegate: ColorSelectorDelegate?
+    var selectedColor: ProductColor! {
+        didSet {
+            guard productColorButtons != nil else { return }
+            let index = productColors.index(of: selectedColor)
+            for (i, productColorButton) in productColorButtons.enumerated() {
+                productColorButton.isBorderVisible = (i == index)
+            }
+        }
+    }
     
     private var productColors: [ProductColor] = [ .white, .black ]
 
@@ -21,18 +31,30 @@ class ColorSelectionViewController: UIViewController {
         didSet {
             for (i, productColorButton) in productColorButtons.enumerated() {
                 productColorButton.productColor = productColors[i]
-                productColorButton.isBorderVisible = true
             }
         }
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    }    
+}
 
+extension ColorSelectionViewController: ProductColorButtonViewDelegate {
+    
+    func didTap(on button: ProductColorButtonView) {
+        guard let index = productColorButtons.index(of: button),
+            index < productColors.count
+            else { fatalError("Tapped button with no product color equivalent") }
+        
+        selectedColor = productColors[index]
+        delegate?.didSelect(selectedColor)
     }
 }
 
+@objc protocol ProductColorButtonViewDelegate: class {
+    func didTap(on button: ProductColorButtonView)
+}
+
 class ProductColorButtonView: BorderedRoundedView {
+    
+    @IBOutlet weak var delegate: ProductColorButtonViewDelegate?
     
     var productColor: ProductColor! {
         didSet {
@@ -56,5 +78,12 @@ class ProductColorButtonView: BorderedRoundedView {
     
     func setup() {
         roundedBorderWidth = 4.0
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tappedButton(_:)))
+        addGestureRecognizer(tapGesture)
+    }
+    
+    @IBAction func tappedButton(_ sender: UIGestureRecognizer) {
+        delegate?.didTap(on: self)
     }
 }

@@ -353,6 +353,15 @@
                                     <constraint firstItem="qHd-uS-3Hd" firstAttribute="centerY" secondItem="Q7V-q1-95p" secondAttribute="centerY" constant="-140" placeholder="YES" id="vdR-k0-hxP"/>
                                 </constraints>
                             </view>
+                            <containerView opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KHP-IW-R1o" userLabel="Color Selection Container View">
+                                <rect key="frame" x="0.0" y="572" width="414" height="120"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="120" id="1W5-sL-3kE"/>
+                                </constraints>
+                                <connections>
+                                    <segue destination="DGE-Ds-4at" kind="embed" identifier="ColorSelectionSegue" id="Bge-hG-vcu"/>
+                                </connections>
+                            </containerView>
                             <containerView opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p5s-6j-6B3" userLabel="Layout Selection Container View">
                                 <rect key="frame" x="0.0" y="618" width="414.66666666666669" height="74"/>
                                 <constraints>
@@ -369,16 +378,6 @@
                                 </constraints>
                                 <connections>
                                     <segue destination="GA7-mj-nMv" kind="embed" identifier="AssetSelectionSegue" id="eRt-QW-nPD"/>
-                                </connections>
-                            </containerView>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KHP-IW-R1o" userLabel="Color Selection Container View">
-                                <rect key="frame" x="0.0" y="572" width="414" height="120"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="120" id="1W5-sL-3kE"/>
-                                </constraints>
-                                <connections>
-                                    <segue destination="DGE-Ds-4at" kind="embed" id="Bge-hG-vcu"/>
                                 </connections>
                             </containerView>
                         </subviews>
@@ -411,6 +410,7 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="assetSelectionContainerView" destination="rjg-CR-QNN" id="90F-4o-IBf"/>
+                        <outlet property="colorSelectionContainerView" destination="KHP-IW-R1o" id="aVB-IM-8bg"/>
                         <outlet property="coverAssetContainerView" destination="gqm-5A-oWZ" id="mMN-4G-cs6"/>
                         <outlet property="coverAssetImageView" destination="u2H-X3-aav" id="wq8-dd-lC4"/>
                         <outlet property="coverFrameView" destination="qHd-uS-3Hd" id="8ZW-7N-zmq"/>
@@ -3123,7 +3123,7 @@
         <!--Color Selection View Controller-->
         <scene sceneID="6eA-VW-ovM">
             <objects>
-                <viewController id="DGE-Ds-4at" customClass="ColorSelectionViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="DGE-Ds-4at" userLabel="Color Selection View Controller" customClass="ColorSelectionViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2s3-XS-AhA">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="120"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3139,7 +3139,7 @@
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                         </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="46" id="BZF-Ch-DoA"/>
                                             <constraint firstItem="aa4-Lu-6kd" firstAttribute="centerX" secondItem="05M-fh-sfo" secondAttribute="centerX" id="KgZ-55-7eo"/>
@@ -3149,6 +3149,7 @@
                                             <constraint firstItem="aa4-Lu-6kd" firstAttribute="width" secondItem="05M-fh-sfo" secondAttribute="width" id="j2f-Tj-gcg"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="delegate" destination="DGE-Ds-4at" id="UzC-3u-U6q"/>
                                             <outlet property="roundedBackgroundView" destination="aa4-Lu-6kd" id="mgZ-jX-7mE"/>
                                         </connections>
                                     </view>
@@ -3160,7 +3161,7 @@
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                         </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstItem="Eu9-Lf-Rdk" firstAttribute="width" secondItem="9Ur-zt-sYJ" secondAttribute="width" id="6kJ-QG-TK5"/>
                                             <constraint firstItem="Eu9-Lf-Rdk" firstAttribute="centerY" secondItem="9Ur-zt-sYJ" secondAttribute="centerY" id="HKP-Ej-3qv"/>
@@ -3170,13 +3171,14 @@
                                             <constraint firstAttribute="height" constant="46" id="jy9-Pl-d6z"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="delegate" destination="DGE-Ds-4at" id="JQs-F3-dGP"/>
                                             <outlet property="roundedBackgroundView" destination="Eu9-Lf-Rdk" id="jE3-zK-pws"/>
                                         </connections>
                                     </view>
                                 </subviews>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="tlX-MW-gCq" firstAttribute="centerY" secondItem="2s3-XS-AhA" secondAttribute="centerY" id="MGP-bN-Yn7"/>
                             <constraint firstItem="tlX-MW-gCq" firstAttribute="centerX" secondItem="2s3-XS-AhA" secondAttribute="centerX" id="bpY-83-pmS"/>
