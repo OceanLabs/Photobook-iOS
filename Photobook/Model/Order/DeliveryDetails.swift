@@ -8,8 +8,7 @@
 
 import UIKit
 
-class DeliveryDetails: NSObject, NSCopying, NSSecureCoding {
-    static var supportsSecureCoding = true
+class DeliveryDetails: NSCopying, Codable {
     
     private struct Constants {
         static let savedDetailsKey = "savedDetailsKey"
@@ -35,23 +34,6 @@ class DeliveryDetails: NSObject, NSCopying, NSSecureCoding {
         }
     }
     
-    required convenience init?(coder aDecoder: NSCoder){
-        self.init()
-        self.firstName = aDecoder.decodeObject(forKey: "firstName") as? String
-        self.lastName = aDecoder.decodeObject(forKey: "lastName") as? String
-        self.email = aDecoder.decodeObject(forKey: "email") as? String
-        self.phone = aDecoder.decodeObject(forKey: "phone") as? String
-        self.address = aDecoder.decodeObject(forKey: "address") as? Address
-    }
-    
-    func encode(with aCoder: NSCoder) {
-        aCoder.encode(firstName, forKey: "firstName")
-        aCoder.encode(lastName, forKey: "lastName")
-        aCoder.encode(email, forKey: "email")
-        aCoder.encode(phone, forKey: "phone")
-        aCoder.encode(address, forKey: "address")
-    }
-    
     func copy(with zone: NSZone? = nil) -> Any {
         let copy = DeliveryDetails()
         copy.firstName = firstName
@@ -64,15 +46,15 @@ class DeliveryDetails: NSObject, NSCopying, NSSecureCoding {
     }
     
     func saveDetailsAsLatest() {
-        guard let details = ProductManager.shared.deliveryDetails else { return }
-        let detailsData = NSKeyedArchiver.archivedData(withRootObject: details)
+        guard let detailsData = try? PropertyListEncoder().encode(self) else { return }
+        
         UserDefaults.standard.set(detailsData, forKey: Constants.savedDetailsKey)
         UserDefaults.standard.synchronize()
     }
     
     static func loadLatestDetails() -> DeliveryDetails? {
         guard let detailsData = UserDefaults.standard.object(forKey: Constants.savedDetailsKey) as? Data else { return nil }
-        return NSKeyedUnarchiver.unarchiveObject(with: detailsData) as? DeliveryDetails
+        return try? PropertyListDecoder().decode(DeliveryDetails.self, from: detailsData)
     }
     
     func fullName() -> String?{

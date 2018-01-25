@@ -16,6 +16,7 @@ class DeliveryAddressTableViewCell: UITableViewCell {
     @IBOutlet weak var separator: UIView!
     @IBOutlet weak var topLabel: UILabel!
     @IBOutlet weak var bottomLabel: UILabel!
+    @IBOutlet weak var checkmark: UIImageView!
     
 
 }

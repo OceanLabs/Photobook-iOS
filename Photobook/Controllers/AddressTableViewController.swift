@@ -18,14 +18,14 @@ class AddressTableViewController: UITableViewController {
     
     weak var delegate: AddressTableViewControllerDelegate?
     
-    weak var line1TextField: UITextField!
-    weak var line2TextField: UITextField!
-    weak var cityTextField: UITextField!
-    weak var countyOrStateTextField: UITextField!
-    weak var zipOrPostcodeTextField: UITextField!
+    private weak var line1TextField: UITextField!
+    private weak var line2TextField: UITextField!
+    private weak var cityTextField: UITextField!
+    private weak var stateOrCountyTextField: UITextField!
+    private weak var zipOrPostcodeTextField: UITextField!
 
     private enum Row: Int {
-        case line1, line2, city, countyOrState, zipOrPostcode, country
+        case line1, line2, city, stateOrCounty, zipOrPostcode, country
     }
     
     override func viewDidLoad() {
@@ -34,7 +34,7 @@ class AddressTableViewController: UITableViewController {
         title = NSLocalizedString("AddressEdit/Title", value: "Address", comment: "Address entry screen title")
     }
     
-    @IBAction func saveTapped(_ sender: Any) {
+    @IBAction private func saveTapped(_ sender: Any) {
         var detailsAreValid = true
         
         detailsAreValid = check(line1TextField) && detailsAreValid
@@ -42,14 +42,18 @@ class AddressTableViewController: UITableViewController {
         detailsAreValid = check(zipOrPostcodeTextField) && detailsAreValid
         
         if detailsAreValid {
-            //TODO: set details to adrees
+            address.line1 = line1TextField.text
+            address.line2 = line2TextField.text
+            address.city = cityTextField.text
+            address.stateOrCounty = stateOrCountyTextField.text
+            address.zipOrPostcode = zipOrPostcodeTextField.text
             
             self.delegate?.addressTableViewControllerDidSave(address: address)
             navigationController?.popViewController(animated: true)
         }
     }
     
-    func check(_ textField: UITextField) -> Bool {
+    private func check(_ textField: UITextField) -> Bool {
         if textField.text?.isEmpty ?? true {
             textField.text = UserInputTableViewCell.Constants.requiredText
             textField.textColor = UserInputTableViewCell.Constants.errorColor
@@ -59,14 +63,14 @@ class AddressTableViewController: UITableViewController {
         return true
     }
     
-    func textField(after textField: UITextField) -> UITextField? {
+    private func textField(after textField: UITextField) -> UITextField? {
         if textField === line1TextField {
             return line2TextField
         } else if textField === line2TextField {
             return cityTextField
         } else if textField === cityTextField {
-            return countyOrStateTextField
-        } else if textField === countyOrStateTextField {
+            return stateOrCountyTextField
+        } else if textField === stateOrCountyTextField {
             return zipOrPostcodeTextField
         }
         
@@ -98,6 +102,7 @@ extension AddressTableViewController {
             cell.textField.autocapitalizationType = .words
             cell.textField.isUserInteractionEnabled = true
             cell.textField.placeholder = UserInputTableViewCell.Constants.requiredText
+            cell.textField.text = address.line1
             line1TextField = cell.textField
         case .line2:
             cell.label.text = NSLocalizedString("AddressEntry/Line2", value: "Line2", comment: "Address Entry screen line2 textfield title")
@@ -107,6 +112,7 @@ extension AddressTableViewController {
             cell.textField.autocapitalizationType = .words
             cell.textField.isUserInteractionEnabled = true
             cell.textField.placeholder = nil
+            cell.textField.text = address.line2
             line2TextField = cell.textField
         case .city:
             cell.label.text = NSLocalizedString("AddressEntry/City", value: "City", comment: "Address Entry screen City textfield title")
@@ -116,8 +122,9 @@ extension AddressTableViewController {
             cell.textField.autocapitalizationType = .words
             cell.textField.isUserInteractionEnabled = true
             cell.textField.placeholder = UserInputTableViewCell.Constants.requiredText
+            cell.textField.text = address.city
             cityTextField = cell.textField
-        case .countyOrState:
+        case .stateOrCounty:
             cell.label.text = NSLocalizedString("AddressEntry/County", value: "County", comment: "Address Entry screen County textfield title")
             cell.textField.textContentType = .addressState
             cell.textField.keyboardType = .default
@@ -125,7 +132,8 @@ extension AddressTableViewController {
             cell.textField.autocapitalizationType = .words
             cell.textField.isUserInteractionEnabled = true
             cell.textField.placeholder = nil
-            countyOrStateTextField = cell.textField
+            cell.textField.text = address.stateOrCounty
+            stateOrCountyTextField = cell.textField
         case .zipOrPostcode:
             cell.label.text = NSLocalizedString("AddressEntry/Postcode", value: "Postcode", comment: "Address Entry screen Postcode textfield title")
             cell.textField.textContentType = .postalCode
@@ -134,10 +142,12 @@ extension AddressTableViewController {
             cell.textField.autocapitalizationType = .allCharacters
             cell.textField.isUserInteractionEnabled = true
             cell.textField.placeholder = UserInputTableViewCell.Constants.requiredText
+            cell.textField.text = address.zipOrPostcode
             zipOrPostcodeTextField = cell.textField
         case .country:
             cell.label.text = NSLocalizedString("AddressEntry/Country", value: "Country", comment: "Address Entry screen Country textfield title")
             cell.textField.isUserInteractionEnabled = false
+            cell.textField.text = address.country.name
         }
         
         return cell
@@ -175,8 +185,23 @@ extension AddressTableViewController: UITextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         textField.text = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        if textField === line1TextField || textField === cityTextField || textField === zipOrPostcodeTextField {
+        
+        switch textField {
+        case line1TextField:
             _ = check(textField)
+            address.line1 = line1TextField.text
+        case line2TextField:
+            address.line2 = line2TextField.text
+        case cityTextField:
+            _ = check(textField)
+            address.city = cityTextField.text
+        case stateOrCountyTextField:
+            address.stateOrCounty = stateOrCountyTextField.text
+        case zipOrPostcodeTextField:
+            _ = check(textField)
+            address.zipOrPostcode = zipOrPostcodeTextField.text
+        default:
+            break
         }
     }
     
@@ -195,6 +220,7 @@ extension AddressTableViewController: CountryPickerTableViewControllerDelegate {
     
     func countryPickerDidPick(country: Country) {
         address.country = country
+        tableView.reloadRows(at: [IndexPath(row: Row.country.rawValue, section: 0)], with: .none)
     }
     
 }

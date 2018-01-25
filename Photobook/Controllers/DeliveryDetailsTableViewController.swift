@@ -10,12 +10,14 @@ import UIKit
 
 class DeliveryDetailsTableViewController: UITableViewController {
     
-    lazy var details = DeliveryDetails()
+    private var details = (ProductManager.shared.deliveryDetails?.copy() as? DeliveryDetails ?? DeliveryDetails.loadLatestDetails()) ?? DeliveryDetails()
     
-    weak var firstNameTextField: UITextField!
-    weak var lastNameTextField: UITextField!
-    weak var emailTextField: UITextField!
-    weak var phoneTextField: UITextField!
+    private weak var firstNameTextField: UITextField!
+    private weak var lastNameTextField: UITextField!
+    private weak var emailTextField: UITextField!
+    private weak var phoneTextField: UITextField!
+    
+    private var editingAddress: Address?
 
     private enum Section: Int {
         case details, deliveryAddress
@@ -33,9 +35,13 @@ class DeliveryDetailsTableViewController: UITableViewController {
         super.viewDidLoad()
         
         title = NSLocalizedString("DeliveryDetails/Title", value: "Delivery Details", comment: "Delivery Details screen title")
+        
+        if details.address == nil {
+            details.address = Address.savedAddresses.first
+        }
     }
     
-    @IBAction func saveTapped(_ sender: Any) {
+    @IBAction private func saveTapped(_ sender: Any) {
         var detailsAreValid = true
         
         tableView.beginUpdates()
@@ -43,18 +49,19 @@ class DeliveryDetailsTableViewController: UITableViewController {
         detailsAreValid = check(lastNameTextField) && detailsAreValid
         detailsAreValid = checkEmail() && detailsAreValid
         detailsAreValid = checkPhone() && detailsAreValid
+        detailsAreValid = checkAddress() && detailsAreValid
         tableView.endUpdates()
         
         if detailsAreValid {
-            let details = DeliveryDetails()
-            //TODO: set details
-            
             details.saveDetailsAsLatest()
+            ProductManager.shared.deliveryDetails = details
             navigationController?.popViewController(animated: true)
         }
     }
     
-    func check(_ textField: UITextField) -> Bool {
+    private func check(_ textField: UITextField) -> Bool {
+        textField.text = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        
         if textField.text?.isEmpty ?? true {
             textField.text = UserInputTableViewCell.Constants.requiredText
             textField.textColor = UserInputTableViewCell.Constants.errorColor
@@ -64,7 +71,7 @@ class DeliveryDetailsTableViewController: UITableViewController {
         return true
     }
     
-    func checkEmail() -> Bool {
+    private func checkEmail() -> Bool {
         guard check(emailTextField) else { return false }
         
         let emailCell = (tableView.cellForRow(at: IndexPath(row: DetailsRow.email.rawValue, section: 0)) as? UserInputTableViewCell)
@@ -77,7 +84,7 @@ class DeliveryDetailsTableViewController: UITableViewController {
         return true
     }
     
-    func checkPhone() -> Bool {
+    private func checkPhone() -> Bool {
         guard check(phoneTextField) else { return false }
         
         let phoneCell = (tableView.cellForRow(at: IndexPath(row: DetailsRow.phone.rawValue, section: 0)) as? UserInputTableViewCell)
@@ -90,7 +97,17 @@ class DeliveryDetailsTableViewController: UITableViewController {
         return true
     }
     
-    func textField(after textField: UITextField) -> UITextField? {
+    private func checkAddress() -> Bool {
+        if !(details.address?.isValid ?? false) {
+            let cell = tableView.cellForRow(at: IndexPath(row: 0, section: Section.deliveryAddress.rawValue)) as? UserInputTableViewCell
+            cell?.errorMessage = UserInputTableViewCell.Constants.requiredText
+            return false
+        }
+        
+        return true
+    }
+    
+    private func textField(after textField: UITextField) -> UITextField? {
         if textField === firstNameTextField {
             return lastNameTextField
             
@@ -103,11 +120,11 @@ class DeliveryDetailsTableViewController: UITableViewController {
         return nil
     }
     
-    @IBAction func addAddress() {
+    @IBAction private func addAddress() {
         edit(address: Address())
     }
     
-    func edit(address: Address) {
+    private func edit(address: Address) {
         guard let storyboard = storyboard,
             let addressVc = storyboard.instantiateViewController(withIdentifier: "AddressTableViewController") as? AddressTableViewController
             else { return }
@@ -131,7 +148,7 @@ extension DeliveryDetailsTableViewController {
         case .details:
             return 4
         case .deliveryAddress:
-            return ProductManager.shared.deliveryDetails?.address == nil ? 1 : 2
+            return Address.savedAddresses.count + 1
         }
     }
     
@@ -155,53 +172,59 @@ extension DeliveryDetailsTableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: "userInput", for: indexPath) as! UserInputTableViewCell
             switch row {
             case .name:
-                cell.label.text = NSLocalizedString("DeliveryDetails/Name", value: "Name", comment: "Delivery Details screen first name textfield title")
+                cell.label?.text = NSLocalizedString("DeliveryDetails/Name", value: "Name", comment: "Delivery Details screen first name textfield title")
                 cell.message = nil
                 cell.textField.textContentType = .givenName
                 cell.textField.keyboardType = .default
                 cell.textField.returnKeyType = .next
                 cell.textField.autocapitalizationType = .words
+                cell.textField.text = details.firstName
                 cell.topSeparator.isHidden = false
                 cell.separatorLeadingConstraint.constant = Constants.leadingSeparatorInset
                 firstNameTextField = cell.textField
             case .lastName:
-                cell.label.text = NSLocalizedString("DeliveryDetails/LastName", value: "Last Name", comment: "Delivery Details screen last name textfield title")
+                cell.label?.text = NSLocalizedString("DeliveryDetails/LastName", value: "Last Name", comment: "Delivery Details screen last name textfield title")
                 cell.message = nil
                 cell.textField.textContentType = .familyName
                 cell.textField.keyboardType = .default
                 cell.textField.returnKeyType = .next
                 cell.textField.autocapitalizationType = .words
+                cell.textField.text = details.lastName
                 cell.topSeparator.isHidden = true
                 cell.separatorLeadingConstraint.constant = Constants.leadingSeparatorInset
                 lastNameTextField = cell.textField
             case .email:
-                cell.label.text = NSLocalizedString("DeliveryDetails/Email", value: "Email", comment: "Delivery Details screen Email textfield title")
+                cell.label?.text = NSLocalizedString("DeliveryDetails/Email", value: "Email", comment: "Delivery Details screen Email textfield title")
                 cell.message = nil
                 cell.textField.textContentType = .emailAddress
                 cell.textField.keyboardType = .emailAddress
                 cell.textField.returnKeyType = .next
                 cell.textField.autocapitalizationType = .none
+                cell.textField.text = details.email
                 cell.topSeparator.isHidden = true
                 cell.separatorLeadingConstraint.constant = Constants.leadingSeparatorInset
                 emailTextField = cell.textField
             case .phone:
-                cell.label.text = NSLocalizedString("DeliveryDetails/Phone", value: "Phone", comment: "Delivery Details screen Phone textfield title")
+                cell.label?.text = NSLocalizedString("DeliveryDetails/Phone", value: "Phone", comment: "Delivery Details screen Phone textfield title")
                 cell.message = Constants.phoneExplanation
                 cell.textField.textContentType = .telephoneNumber
                 cell.textField.keyboardType = .phonePad
                 cell.textField.returnKeyType = .done
+                cell.textField.text = details.phone
                 cell.topSeparator.isHidden = true
                 cell.separatorLeadingConstraint.constant = 0
                 phoneTextField = cell.textField
             }
             return cell
         case .deliveryAddress:
-            if ProductManager.shared.deliveryDetails != nil && indexPath.item == 0 {
+            if indexPath.item < Address.savedAddresses.count {
                 let cell = tableView.dequeueReusableCell(withIdentifier: DeliveryAddressTableViewCell.reuseIdentifier, for: indexPath) as! DeliveryAddressTableViewCell
-                if let address = details.address, address.isValid {
-                    cell.topLabel.text = address.line1
-                    cell.bottomLabel.text = address.descriptionWithoutLine1()
-                }
+                let address = Address.savedAddresses[indexPath.item]
+                cell.topLabel.text = address.line1
+                cell.bottomLabel.text = address.descriptionWithoutLine1()
+                cell.checkmark.isHidden = address != details.address
+                cell.topSeparator.isHidden = indexPath.row != 0
+                
                 return cell
             }
             else {
@@ -217,14 +240,40 @@ extension DeliveryDetailsTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == Section.deliveryAddress.rawValue && (indexPath.item == 1 || (indexPath.item == 0 && ProductManager.shared.deliveryDetails?.address == nil)) {
-            performSegue(withIdentifier: "AddressSegue", sender: nil)
-            return
-        }
-        
-        if let cell = tableView.cellForRow(at: indexPath) as? UserInputTableViewCell {
+        if indexPath.section == Section.deliveryAddress.rawValue && indexPath.item < Address.savedAddresses.count {
+            details.address = Address.savedAddresses[indexPath.item]
+            tableView.reloadData()
+        } else if indexPath.section == Section.deliveryAddress.rawValue {
+            edit(address: Address())
+        } else if let cell = tableView.cellForRow(at: indexPath) as? UserInputTableViewCell {
             cell.textField.becomeFirstResponder()
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        editingAddress = Address.savedAddresses[indexPath.item]
+        edit(address: editingAddress?.copy() as? Address ?? Address())
+    }
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        guard indexPath.section == Section.deliveryAddress.rawValue,
+            indexPath.row < Address.savedAddresses.count
+            else { return false }
+        
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        guard editingStyle == .delete else { return }
+        
+        let address = Address.savedAddresses[indexPath.item]
+        address.removeFromSavedAddresses()
+        
+        if details.address == address {
+            details.address = Address.savedAddresses.first
+        }
+        
+        tableView.reloadSections(IndexSet(integer: Section.deliveryAddress.rawValue), with: .automatic)
     }
     
 }
@@ -251,16 +300,19 @@ extension DeliveryDetailsTableViewController: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        textField.text = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         tableView.beginUpdates()
         if textField === firstNameTextField {
             _ = check(textField)
+            details.firstName = textField.text
         } else if textField === lastNameTextField {
             _ = check(textField)
+            details.lastName = textField.text
         } else if textField === emailTextField {
             _ = checkEmail()
+            details.email = textField.text
         } else if textField == phoneTextField {
             _ = checkPhone()
+            details.phone = textField.text
         }
         tableView.endUpdates()
     }
@@ -280,6 +332,17 @@ extension DeliveryDetailsTableViewController: AddressTableViewControllerDelegate
     
     func addressTableViewControllerDidSave(address: Address) {
         details.address = address
+        
+        if let index = Address.savedAddresses.index(where: { $0 == editingAddress }) {
+            Address.savedAddresses.remove(at: index)
+            Address.savedAddresses.insert(address, at: index)
+            Address.saveAddresses()
+        }
+        else {
+            address.addToSavedAddresses()
+        }
+        
+        tableView.reloadSections(IndexSet(integer: Section.deliveryAddress.rawValue), with: .none)
     }
     
 }

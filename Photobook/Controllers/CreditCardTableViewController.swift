@@ -71,7 +71,7 @@ class CreditCardTableViewController: UITableViewController {
         title = NSLocalizedString("CreditCardTitle", value: "Card Details", comment: "Title for the credit card screen")
     }
     
-    @objc func nextTextField() {
+    @objc private func nextTextField() {
         if cardNumberTextField.isFirstResponder {
             expiryDateTextField.becomeFirstResponder()
         } else if expiryDateTextField.isFirstResponder {
@@ -99,11 +99,11 @@ class CreditCardTableViewController: UITableViewController {
         super.viewDidLayoutSubviews()
     }
 
-    @IBAction func tappedSaveButton(_ sender: UIBarButtonItem) {
+    @IBAction private func tappedSaveButton(_ sender: UIBarButtonItem) {
         saveCardDetails()
     }
 
-    func saveCardDetails() {
+    private func saveCardDetails() {
         view.endEditing(false)
         
         
@@ -195,7 +195,7 @@ extension CreditCardTableViewController{
         switch indexPath.row{
         case Constants.creditCardRow:
             cardNumberTextField = cell.textField
-            cell.label.text = NSLocalizedString("CardNumber", value: "Card Number", comment: "")
+            cell.label?.text = NSLocalizedString("CardNumber", value: "Card Number", comment: "")
             cell.message = nil
             cell.textField.returnKeyType = .next
             cell.textField.placeholder = "Required"
@@ -205,7 +205,7 @@ extension CreditCardTableViewController{
             cell.separatorLeadingConstraint.constant = Constants.leadingSeparatorInset
         case Constants.expiryDateRow:
             expiryDateTextField = cell.textField
-            cell.label.text = NSLocalizedString("ExpiryDate", value: "Expiry Date", comment: "")
+            cell.label?.text = NSLocalizedString("ExpiryDate", value: "Expiry Date", comment: "")
             cell.textField.inputView = datePickerView
             cell.message = nil
             cell.textField.isSecureTextEntry = false
@@ -214,7 +214,7 @@ extension CreditCardTableViewController{
             cell.separatorLeadingConstraint.constant = Constants.leadingSeparatorInset
         case Constants.cvvRow:
             cvvTextField = cell.textField
-            cell.label.text = NSLocalizedString("CVV", comment: "Credit card security number")
+            cell.label?.text = NSLocalizedString("CVV", comment: "Credit card security number")
             cell.message = nil
             cell.textField.returnKeyType = .done
             cell.textField.placeholder = "Required"

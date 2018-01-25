@@ -16,17 +16,25 @@ enum AddressFieldType: String {
     case zipOrPostcode
 }
 
-class Address: NSObject, NSCopying, NSSecureCoding {
-    static var supportsSecureCoding = true
+class Address: NSCopying, Codable, Hashable {
+    
+    var line1: String?
+    var line2: String?
+    var city: String?
+    var stateOrCounty: String?
+    var zipOrPostcode: String?
+    var country: Country
+    
+    static var savedAddresses = Address.loadSavedAddresses()
     
     private struct Constants {
-        static let savedAddressKey = "savedAddressKey"
+        static let savedAddressesKey = "savedAddressesKey"
     }
     
-    static let requiredFieldTypes : [AddressFieldType] = [.line1, .city, .zipOrPostcode]
+    init() {
+         country = Country.countryForCurrentLocale()
+    }
     
-    var fields = [String : String]()
-    lazy var country: Country = Country.countryForCurrentLocale()
     var isValid: Bool {
         get{            
             guard let line1 = line1, !line1.isEmpty else { return false }
@@ -37,18 +45,7 @@ class Address: NSObject, NSCopying, NSSecureCoding {
         }
     }
     
-    required convenience init?(coder aDecoder: NSCoder){
-        self.init()
-        self.fields = aDecoder.decodeObject(forKey: "fields") as! [String : String]
-        self.country = aDecoder.decodeObject(forKey: "country") as! Country
-    }
-    
-    func encode(with aCoder: NSCoder) {
-        aCoder.encode(fields, forKey:"fields")
-        aCoder.encode(country, forKey:"country")
-    }
-    
-    func descriptionWithoutLine1() -> String{
+    func descriptionWithoutLine1() -> String {
         var s = ""
         
         for part in [line2, city, stateOrCounty, zipOrPostcode, country.name]{
@@ -64,11 +61,9 @@ class Address: NSObject, NSCopying, NSSecureCoding {
         return s
     }
     
-    func jsonRepresentation() -> [String : String]{
+    func jsonRepresentation() -> [String : String] {
         var json = [String : String]()
         
-//        json["recipient_first_name"] = firstName
-//        json["recipient_last_name"] = lastName
         json["address_line_1"] = line1
         json["address_line_2"] = line2
         json["city"] = city
@@ -82,7 +77,7 @@ class Address: NSObject, NSCopying, NSSecureCoding {
     
     /// Only calculate hash value with fields that could matter in the delivery costs, 
     /// i.e. the fields that if changed necessitate a delivery cost recalc
-    override var hashValue: Int{
+    var hashValue: Int {
         var stringHash = ""
         if let city = city { stringHash += "ct:\(city.hashValue)," }
         if let zipOrPostcode = zipOrPostcode { stringHash += "zp:\(zipOrPostcode.hashValue)," }
@@ -92,7 +87,7 @@ class Address: NSObject, NSCopying, NSSecureCoding {
         return stringHash.hashValue
     }
     
-    func copy(with zone: NSZone? = nil) -> Any{
+    func copy(with zone: NSZone? = nil) -> Any {
         let copy = Address()
         copy.line1 = line1
         copy.line2 = line2
@@ -104,20 +99,9 @@ class Address: NSObject, NSCopying, NSSecureCoding {
         return copy
     }
     
-    func saveAddressAsLatest(){
-        guard let address = ProductManager.shared.deliveryDetails?.address else { return }
-        let addressData = NSKeyedArchiver.archivedData(withRootObject: address)
-        UserDefaults.standard.set(addressData, forKey: Constants.savedAddressKey)
-        UserDefaults.standard.synchronize()
-    }
-    
-    static func loadLatestAddress() -> Address?{
-        guard let addressData = UserDefaults.standard.object(forKey: Constants.savedAddressKey) as? Data else { return nil }
-        return NSKeyedUnarchiver.unarchiveObject(with: addressData) as? Address
-    }
 }
 
-func ==(lhs: Address, rhs: Address) -> Bool{
+func ==(lhs: Address, rhs: Address) -> Bool {
     return lhs.line1 == rhs.line1
         && lhs.line2 == rhs.line2
         && lhs.city == rhs.city
@@ -126,48 +110,33 @@ func ==(lhs: Address, rhs: Address) -> Bool{
         && lhs.country.codeAlpha3 == rhs.country.codeAlpha3
 }
 
-    // MARK: - Convenience getters and setters
-
-extension Address{
-    var line1: String? {
-        get{
-            return fields[AddressFieldType.line1.rawValue]
-        }
-        set(newValue){
-            fields[AddressFieldType.line1.rawValue] = newValue
+extension Address {
+    // MARK: - Saved Addresses
+    
+    func addToSavedAddresses() {
+        Address.savedAddresses.append(self)
+        Address.saveAddresses()
+    }
+    
+    func removeFromSavedAddresses() {
+        if let index = Address.savedAddresses.index(where: { $0 == self }) {
+            Address.savedAddresses.remove(at: index)
+            Address.saveAddresses()
         }
     }
-    var line2: String? {
-        get{
-            return fields[AddressFieldType.line2.rawValue]
-        }
-        set(newValue){
-            fields[AddressFieldType.line2.rawValue] = newValue
-        }
+    
+    private static func loadSavedAddresses() -> [Address] {
+        guard let addressesData = UserDefaults.standard.object(forKey: Constants.savedAddressesKey) as? Data,
+        let addresses = try? PropertyListDecoder().decode([Address].self, from: addressesData)
+            else { return [Address]() }
+        return addresses
     }
-    var city: String? {
-        get{
-            return fields[AddressFieldType.city.rawValue]
-        }
-        set(newValue){
-            fields[AddressFieldType.city.rawValue] = newValue
-        }
-    }
-    var stateOrCounty: String? {
-        get{
-            return fields[AddressFieldType.stateOrCounty.rawValue]
-        }
-        set(newValue){
-            fields[AddressFieldType.stateOrCounty.rawValue] = newValue
-        }
-    }
-    var zipOrPostcode: String? {
-        get{
-            return fields[AddressFieldType.zipOrPostcode.rawValue]
-        }
-        set(newValue){
-            fields[AddressFieldType.zipOrPostcode.rawValue] = newValue
-        }
+    
+    static func saveAddresses() {
+        
+        let addressesData = try? PropertyListEncoder().encode(savedAddresses)
+        UserDefaults.standard.set(addressesData, forKey: Constants.savedAddressesKey)
+        UserDefaults.standard.synchronize()
     }
     
 }

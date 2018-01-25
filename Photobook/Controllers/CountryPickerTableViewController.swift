@@ -16,16 +16,38 @@ class CountryPickerTableViewController: UITableViewController {
     
     weak var delegate: CountryPickerTableViewControllerDelegate?
     var selectedCountry: Country?
-    var sections = [[Country]]()
+    private var sections = [[Country]]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = NSLocalizedString("CountryPickerTitle", value: "CHOOSE COUNTRY", comment: "Title for the country picker screen")
+        title = NSLocalizedString("CountryPicker/Title", value: "Choose Country", comment: "Title for the country picker screen")
         prepareSections()
     }
     
-    func prepareSections(){
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // Find the indexPath of the currently selected country
+        var sectionCount = 0
+        var found = false
+        for section in sections {
+            var rowCount = 0
+            for country in section {
+                if country.name == selectedCountry?.name {
+                    found = true
+                    tableView.scrollToRow(at: IndexPath(row: rowCount, section: sectionCount), at: .middle, animated: false)
+                }
+                if found { break }
+                rowCount += 1
+            }
+            if found { break }
+            sectionCount += 1
+        }
+        
+    }
+    
+    private func prepareSections(){
         var lastSectionIndexChar : Character = " "
         var countriesInSection = [Country]()
         for country in Country.countries{
