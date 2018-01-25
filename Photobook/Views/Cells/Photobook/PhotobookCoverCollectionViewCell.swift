@@ -34,6 +34,8 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell {
     }
     
     func loadCover() {
+        coverFrameView.pageView.index = 0
+        coverFrameView.pageView.productLayout = ProductManager.shared.productLayouts.first
         coverFrameView.pageView.setupImageBox()
     }
 }

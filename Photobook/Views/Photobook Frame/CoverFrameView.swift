@@ -57,9 +57,7 @@ class CoverFrameView: UIView {
             layer.shadowColor = PhotobookConstants.blackShadowColor
         }
 
-        pageView.index = 0
         pageView.color = color
-        pageView.productLayout = ProductManager.shared.productLayouts.first
         pageView.aspectRatio = aspectRatio
         
         coverBackgroundView.color = color
