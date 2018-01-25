@@ -564,7 +564,7 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
         }
 
         let pageWidth = (view.bounds.width - Constants.cellSideMargin * 2.0 - PhotobookConstants.horizontalPageToCoverMargin * 2.0) / 2.0
-        let pageHeight = pageWidth / product.pageSizeRatio
+        let pageHeight = pageWidth / product.aspectRatio
 
         // PhotoboookCollectionViewCell works when the collectionView uses dynamic heights by setting up the aspect ratio of its pages.
         // This however, causes problems with the drag & drop functionality and that is why the cell height is calculated by using the measurements set on the storyboard.
@@ -586,15 +586,7 @@ extension PhotobookViewController: PhotobookPageViewDelegate {
     func didTapOnPage(index: Int) {
         let pageSetupViewController = storyboard?.instantiateViewController(withIdentifier: "PageSetupViewController") as! PageSetupViewController
         pageSetupViewController.selectedAssetsManager = selectedAssetsManager
-        pageSetupViewController.productLayout = ProductManager.shared.productLayouts[index].shallowCopy()
         pageSetupViewController.pageIndex = index
-        if index == 0 { // Cover
-            pageSetupViewController.pageSizeRatio = ProductManager.shared.product!.coverSizeRatio
-            pageSetupViewController.availableLayouts = ProductManager.shared.currentCoverLayouts()
-        } else {
-            pageSetupViewController.pageSizeRatio = ProductManager.shared.product!.pageSizeRatio
-            pageSetupViewController.availableLayouts = ProductManager.shared.currentLayouts()
-        }
         pageSetupViewController.delegate = self
         present(pageSetupViewController, animated: true, completion: nil)
     }
