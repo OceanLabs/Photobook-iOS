@@ -90,6 +90,21 @@ class PhotobookPageView: UIView {
         addGestureRecognizer(tapGesture)
     }
     
+    func setupLayoutBoxes() {
+        guard assetImageView.image != nil && productLayout?.layout.imageLayoutBox != nil else {
+            setupImageBox()
+            setupTextBox()
+            return
+        }
+        
+        UIView.animate(withDuration: 0.1, animations: {
+            self.assetContainerView.alpha = 0.0
+        }, completion: { _ in
+            self.setupImageBox()
+            self.setupTextBox()
+        })
+    }
+    
     func setupImageBox(with assetImage: UIImage? = nil) {
         guard let imageBox = productLayout?.layout.imageLayoutBox else {
             assetContainerView.alpha = 0.0
@@ -123,21 +138,6 @@ class PhotobookPageView: UIView {
         })
     }
     
-    func setupLayoutBoxes() {
-        guard assetImageView.image != nil else {
-            self.setupImageBox()
-            self.setupTextBox()
-            return
-        }
-        
-        UIView.animate(withDuration: 0.1, animations: {
-            self.assetContainerView.alpha = 0.0
-        }, completion: { _ in
-            self.setupImageBox()
-            self.setupTextBox()
-        })
-    }
-
     func setImage(image: UIImage) {
         guard let asset = productLayout?.productLayoutAsset?.asset else {
             setImagePlaceholder(visible: true)

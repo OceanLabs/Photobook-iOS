@@ -20,7 +20,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
         didSet {
             photobookFrameView.coverColor = ProductManager.shared.coverColor
             photobookFrameView.pageColor = ProductManager.shared.pageColor
-            photobookFrameView.leftPageView.aspectRatio = ProductManager.shared.product!.pageSizeRatio
+            photobookFrameView.leftPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
         }
     }
     @IBOutlet private weak var plusButton: UIButton!

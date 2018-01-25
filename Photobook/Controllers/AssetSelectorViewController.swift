@@ -59,11 +59,7 @@ class AssetSelectorViewController: UIViewController {
             }
         }
     }
-    var browseNavigationController: UINavigationController!
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
+    var browseNavigationController: UINavigationController!    
 }
 
 extension AssetSelectorViewController: UICollectionViewDataSource {
@@ -119,7 +115,7 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
         }
 
         selectedAsset = selectedAssetsManager.selectedAssets[indexPath.row]
-        timesUsed[selectedAsset!.identifier] = timesUsed[selectedAsset!.identifier]! + 1
+        timesUsed[selectedAsset!.identifier] = (timesUsed[selectedAsset!.identifier] ?? 0) + 1
 
         collectionView.reloadItems(at: indicesToReload)
 

@@ -102,12 +102,18 @@ class PageSetupViewController: UIViewController {
             else if pageIndex == ProductManager.shared.productLayouts.count - 1 { pageType = .last }
             else if pageIndex % 2 == 0 { pageType = .left }
             else { pageType = .right }
+            
+            productLayout = ProductManager.shared.productLayouts[pageIndex].shallowCopy()
+            
+            if pageIndex == 0 { // Cover
+                availableLayouts = ProductManager.shared.currentCoverLayouts()
+            } else {
+                availableLayouts = ProductManager.shared.currentLayouts()
+            }
         }
     }
-    var pageSizeRatio: CGFloat!
-    var productLayout: ProductLayout!
-    var availableLayouts: [Layout]!
-
+    private var productLayout: ProductLayout!
+    private var availableLayouts: [Layout]!
     private var pageSize: CGSize = .zero
     private var hasDoneSetup = false
     private var pageType: PageType! {
@@ -146,12 +152,13 @@ class PageSetupViewController: UIViewController {
         
         if !hasDoneSetup {
             coverFrameView.color = ProductManager.shared.coverColor
+            coverFrameView.pageView.aspectRatio = ProductManager.shared.product!.aspectRatio
 
             photobookFrameView.pageColor = ProductManager.shared.pageColor
             photobookFrameView.coverColor = ProductManager.shared.coverColor
             
-            photobookFrameView.leftPageView.aspectRatio = pageSizeRatio
-            photobookFrameView.rightPageView.aspectRatio = pageSizeRatio
+            photobookFrameView.leftPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
+            photobookFrameView.rightPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
 
             photobookFrameView.width = (view.bounds.width - 2.0 * Constants.photobookSideMargin) * 2.0
             
@@ -193,7 +200,6 @@ class PageSetupViewController: UIViewController {
     private func setupLayoutSelection() {
         layoutSelectionViewController.pageIndex = pageIndex
         layoutSelectionViewController.pageType = pageType
-        layoutSelectionViewController.pageSizeRatio = pageSizeRatio
         layoutSelectionViewController.asset = productLayout.asset
         layoutSelectionViewController.layouts = availableLayouts
         layoutSelectionViewController.selectedLayout = productLayout!.layout

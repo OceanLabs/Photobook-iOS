@@ -17,8 +17,6 @@ class CoverLayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     }
     
     @IBOutlet private weak var coverFrameView: CoverFrameView!
-        
-    var aspectRatio: CGFloat!
     var layout: Layout?
     var asset: Asset!
     var image: UIImage!
@@ -28,6 +26,8 @@ class CoverLayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         
         backgroundColor = .clear
         
+        let aspectRatio = ProductManager.shared.product!.aspectRatio!
+        
         coverFrameView.color = ProductManager.shared.coverColor
         coverFrameView.pageView.isTapGestureEnabled = false
         coverFrameView.width = (bounds.height - 2.0 * Constants.photobookVerticalMargin) * aspectRatio
@@ -36,6 +36,7 @@ class CoverLayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         productLayoutAsset.asset = asset
         
         let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset)
+        coverFrameView.pageView.index = 0
         coverFrameView.pageView.productLayout = productLayout
         coverFrameView.pageView.setupImageBox(with: image)
         coverFrameView.pageView.setupTextBox(shouldBeLegible: false)

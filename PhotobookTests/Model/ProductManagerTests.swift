@@ -23,12 +23,7 @@ class ProductManagerTests: XCTestCase {
         let validDictionary = ([
             "id": 10,
             "name": "210 x 210",
-            "pageWidth": 1000,
-            "pageHeight": 400,
-            "coverWidth": 1030,
-            "coverHeight": 415,
-            "cost": [ "EUR": 10.00 as Decimal, "USD": 12.00 as Decimal, "GBP": 9.00 as Decimal ],
-            "costPerPage": [ "EUR": 1.00 as Decimal, "USD": 1.20 as Decimal, "GBP": 0.85 as Decimal ],
+            "aspectRatio": 1.38,
             "coverLayouts": [ 9, 10 ],
             "layouts": [ 10, 11, 12, 13 ]
             ]) as [String: AnyObject]
@@ -66,10 +61,7 @@ class ProductManagerTests: XCTestCase {
         
         XCTAssertEqual(unarchivedProduct.product.id, productManager.product!.id)
         XCTAssertEqual(unarchivedProduct.product.name, productManager.product!.name)
-        XCTAssertEqual(unarchivedProduct.product.pageSizeRatio, productManager.product!.pageSizeRatio)
-        XCTAssertEqual(unarchivedProduct.product.coverSizeRatio, productManager.product!.coverSizeRatio)
-        XCTAssertEqual(unarchivedProduct.product.costPerPage, productManager.product!.costPerPage)
-        XCTAssertEqual(unarchivedProduct.product.baseCost, productManager.product!.baseCost)
+        XCTAssertEqual(unarchivedProduct.product.aspectRatio, productManager.product!.aspectRatio)
         XCTAssertEqual(unarchivedProduct.product.layouts, productManager.product!.layouts)
         XCTAssertEqual(unarchivedProduct.product.coverLayouts, productManager.product!.coverLayouts)
 

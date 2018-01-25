@@ -3,26 +3,30 @@
 	{
 		"id": 1,
 		"name": "Landscape 210x152",
-		"pageWidth": 59528,
-		"pageHeight": 43087,
-		"coverWidth": 59528,
-		"coverHeight": 43087,
-		"cost": { "EUR": 50.00, "USD": 54.99, "GBP": 51.99 },
-		"costPerPage": { "EUR": 1.00, "USD": 1.99, "GBP": 1.25 },
+		"aspectRatio": 1.38157681,
         "coverLayouts": [ 1, 2, 3, 4, 5 ],
 		"layouts": [ 6, 7, 8, 9, 10, 11, 12, 13 ]
 	},
 	{
 		"id": 2,
 		"name": "Square 127x127",
-		"pageWidth": 36001,
-		"pageHeight": 36000,
-		"coverWidth": 36001,
-		"coverHeight": 36000,
-		"cost": { "EUR": 40.00, "USD": 44.99, "GBP": 41.99 },
-		"costPerPage": { "EUR": 0.96, "USD": 1.94, "GBP": 1.20 },
+		"aspectRatio": 1.0,
         "coverLayouts": [ 14, 15, 16, 17, 18 ],
 		"layouts": [ 19, 20, 21, 22, 23, 24, 25, 26 ]
+	},
+	{
+		"id": 3,
+		"name": "Landscape 297x210",
+		"aspectRatio": 1.41427563,
+        "coverLayouts": [ 27, 28, 29, 30, 31 ],
+		"layouts": [ 32, 33, 34, 35, 36, 37, 38, 39 ]
+	},
+	{
+		"id": 4,
+		"name": "Square 210x210",
+		"aspectRatio": 1.0,
+        "coverLayouts": [ 40, 41, 42, 43, 44 ],
+		"layouts": [ 45, 46, 47, 48, 49, 50, 51, 52 ]
 	}
 ],
 "layouts": [
@@ -479,6 +483,460 @@
 					"height": 1.0
 				}
 		}
+	},
+	{
+		"id": 27,
+        "category": "empty",
+		"imageUrl": "/images/layout27.png"
+	},	
+	{
+		"id": 28,
+        "category": "centredSquarePhotoText",
+		"imageUrl": "/images/layout28.png",
+        "imageLayoutBox": {
+                "id": 137,
+				"rect": {
+					"x": 0.349998218294552,
+					"y": 0.282858486762532,
+					"width": 0.300003563410897, 
+					"height": 0.424287730143798
+				}
+			},
+        "textLayoutBox": {
+                "id": 138,
+				"rect": {
+					"x": 0.349998218294552,
+					"y": 0.742490928638624,
+					"width": 0.300003563410897, 
+					"height": 0.190481790081978
+				}
+			}			
+	},
+	{
+		"id": 29,
+        "category": "centredLandscapePhotoText",
+		"imageUrl": "/images/layout29.png",
+        "imageLayoutBox": {
+                "id": 139,
+				"rect": {
+					"x": 0.225005642067253,
+					"y": 0.247496976212875,
+					"width": 0.524997327441827, 
+					"height": 0.494993952425749
+				}
+			},
+        "textLayoutBox": {
+                "id": 140,
+				"rect": {
+					"x": 0.225005642067253,
+					"y": 0.777852439188281,
+					"width": 0.269358229697466, 
+					"height": 0.190481790081978
+				}
+			}						
+	},
+	{
+		"id": 30,
+        "category": "centredPortraitPhotoText",
+		"imageUrl": "/images/layout30.png",
+        "imageLayoutBox": {
+                "id": 141,
+				"rect": {
+					"x": 0.333333333333333,
+					"y": 0.141429243381266,
+					"width": 0.33281069973512, 
+					"height": 0.70714621690633
+				}
+			},
+        "textLayoutBox": {
+                "id": 142,
+				"rect": {
+					"x": 0.333333333333333,
+					"y": 0.88392017201989,
+					"width": 0.333333333333333, 
+					"height": 0.106067732831609
+				}
+			}						
+	},
+	{
+		"id": 31,
+        "category": "textOnly",
+		"imageUrl": "/images/layout31.png",
+        "textLayoutBox": {
+                "id": 143,
+				"rect": {
+					"x": 0.0749979213436435,
+					"y": 0.742490928638624,
+					"width": 0.300003563410897, 
+					"height": 0.190481790081978
+				}
+			}		
+	},	
+	{
+		"id": 32,
+        "category": "centredSquarePhotoText",
+		"imageUrl": "/images/layout32.png",
+        "imageLayoutBox": {
+                "id": 144,
+				"rect": {
+					"x": 0.349998218294552,
+					"y": 0.282858486762532,
+					"width": 0.300003563410897, 
+					"height": 0.424287730143798
+				}
+			},
+        "textLayoutBox": {
+                "id": 145,
+				"rect": {
+					"x": 0.349998218294552,
+					"y": 0.742490928638624,
+					"width": 0.299326515340484, 
+					"height": 0.190481790081978
+				}
+			}						
+	},
+	{
+		"id": 33,
+        "category": "centredPortraitPhotoText",
+		"imageUrl": "/images/layout33.png",
+        "imageLayoutBox": {
+                "id": 146,
+				"rect": {
+					"x": 0.333333333333333,
+					"y": 0.141429243381266,
+					"width": 0.333333333333333, 
+					"height": 0.70714621690633
+				}
+			},
+        "textLayoutBox": {
+                "id": 147,
+				"rect": {
+					"x": 0.333333333333333,
+					"y": 0.88392017201989,
+					"width": 0.333333333333333, 
+					"height": 0.106067732831609
+				}
+			}						
+	},
+	{
+		"id": 34,
+        "category": "centredLandscapePhotoText",
+		"imageUrl": "/images/layout34.png",
+        "imageLayoutBox": {
+                "id": 148,
+				"rect": {
+					"x": 0.225005642067253,
+					"y": 0.247496976212875,
+					"width": 0.524997327441827, 
+					"height": 0.494993952425749
+				}
+			},
+        "textLayoutBox": {
+                "id": 149,
+				"rect": {
+					"x": 0.225005642067253,
+					"y": 0.777852439188281,
+					"width": 0.269358229697466, 
+					"height": 0.190481790081978
+				}
+			}						
+	},
+	{
+		"id": 35,
+        "category": "textOnly",
+		"imageUrl": "/images/layout35.png",
+        "textLayoutBox": {
+                "id": 149,
+				"rect": {
+					"x": 0.349998218294552,
+					"y": 0.399761456793442,
+					"width": 0.300003563410897, 
+					"height": 0.191489719123774
+				}
+			}						
+	},
+	{
+		"id": 36,
+        "category": "fullPagePhoto",
+		"imageUrl": "/images/layout36.png",
+		"imageLayoutBox": {
+                "id": 150,
+				"rect": {
+					"x": 0.0,
+					"y": 0.0,
+					"width": 1.0,
+					"height": 1.0					
+				}
+		}
+	},
+	{
+		"id": 37,
+        "category": "squarePhotoCentred",
+		"imageUrl": "/images/layout37.png",
+		"imageLayoutBox": {
+                "id": 150,
+				"rect": {
+					"x": 0.236871800353965,
+					"y": 0.122866550194866,
+					"width": 0.526244521255746,
+					"height": 0.744254804461766					
+				}
+		}
+	},	
+	{
+		"id": 38,
+        "category": "portraitTopBottom",
+		"imageUrl": "/images/layout38.png",
+		"imageLayoutBox": {
+                "id": 151,
+				"rect": {
+					"x": 0.281141241729917,
+					"y": 0.0476246472248354,
+					"width": 0.437705638503843,
+					"height": 0.904750705550329
+				}
+		}
+	},	
+	{
+		"id": 39,
+        "category": "portraitLeftRight",
+		"imageUrl": "/images/layout39.png",
+		"imageLayoutBox": {
+                "id": 152,
+				"rect": {
+					"x": 0.0,
+					"y": 0.185475742507727,
+					"width": 1.0,
+					"height": 0.619036419836044
+				}
+		}
+	},	
+	{
+		"id": 40,
+        "category": "empty",
+		"imageUrl": "/images/layout40.png"
+	},	
+	{
+		"id": 41,
+        "category": "centredSquarePhotoText",
+		"imageUrl": "/images/layout41.png",
+        "imageLayoutBox": {
+                "id": 153,
+				"rect": {
+					"x": 0.25,
+					"y": 0.25,
+					"width": 0.5, 
+					"height": 0.5
+				}
+			},
+        "textLayoutBox": {
+                "id": 154,
+				"rect": {
+					"x": 0.25,
+					"y": 0.781245800295659,
+					"width": 0.380946781346593, 
+					"height": 0.156245800295659
+				}
+			}			
+	},
+	{
+		"id": 42,
+        "category": "centredLandscapePhotoText",
+		"imageUrl": "/images/layout42.png",
+        "imageLayoutBox": {
+                "id": 153,
+				"rect": {
+					"x": 0.156245800295659,
+					"y": 0.299472517134794,
+					"width": 0.687491600591318, 
+					"height": 0.401038166913049
+				}
+			},
+        "textLayoutBox": {
+                "id": 154,
+				"rect": {
+					"x": 0.156245800295659,
+					"y": 0.731890874882408,
+					"width": 0.380946781346593, 
+					"height": 0.190481790081978
+				}
+			}			
+	},
+	{
+		"id": 43,
+        "category": "centredPortraitPhotoText",
+		"imageUrl": "/images/layout43.png",
+        "imageLayoutBox": {
+                "id": 155,
+				"rect": {
+					"x": 0.281245800295659,
+					"y": 0.218754199704341,
+					"width": 0.437491600591318, 
+					"height": 0.562491600591318
+				}
+			},
+        "textLayoutBox": {
+                "id": 156,
+				"rect": {
+					"x": 0.281245800295659,
+					"y": 0.812491600591318,
+					"width": 0.437491600591318, 
+					"height": 0.125
+				}
+			}			
+	},
+	{
+		"id": 44,
+        "category": "textOnly",
+		"imageUrl": "/images/layout44.png",
+        "textLayoutBox": {
+                "id": 157,
+				"rect": {
+					"x": 0.0937541997043408,
+					"y": 0.781245800295659,
+					"width": 0.437491600591318, 
+					"height": 0.156245800295659
+				}
+			}		
+	},
+	{
+		"id": 45,
+        "category": "centredSquarePhotoText",
+		"imageUrl": "/images/layout45.png",
+        "imageLayoutBox": {
+                "id": 158,
+				"rect": {
+					"x": 0.25,
+					"y": 0.25,
+					"width": 0.5, 
+					"height": 0.5
+				}
+			},
+        "textLayoutBox": {
+                "id": 159,
+				"rect": {
+					"x": 0.25,
+					"y": 0.781245800295659,
+					"width": 0.380946781346593, 
+					"height": 0.156245800295659
+				}
+			}			
+	},
+	{
+		"id": 46,
+        "category": "centredLandscapePhotoText",
+		"imageUrl": "/images/layout46.png",
+        "imageLayoutBox": {
+                "id": 160,
+				"rect": {
+					"x": 0.156245800295659,
+					"y": 0.299472517134794,
+					"width": 0.687491600591318, 
+					"height": 0.401038166913049
+				}
+			},
+        "textLayoutBox": {
+                "id": 161,
+				"rect": {
+					"x": 0.156245800295659,
+					"y": 0.731890874882408,
+					"width": 0.380946781346593, 
+					"height": 0.190481790081978
+				}
+			}			
+	},
+	{
+		"id": 47,
+        "category": "centredPortraitPhotoText",
+		"imageUrl": "/images/layout47.png",
+        "imageLayoutBox": {
+                "id": 162,
+				"rect": {
+					"x": 0.281245800295659,
+					"y": 0.218754199704341,
+					"width": 0.437491600591318, 
+					"height": 0.562491600591318
+				}
+			},
+        "textLayoutBox": {
+                "id": 163,
+				"rect": {
+					"x": 0.281245800295659,
+					"y": 0.812491600591318,
+					"width": 0.437491600591318, 
+					"height": 0.125
+				}
+			}			
+	},
+	{
+		"id": 48,
+        "category": "textOnly",
+		"imageUrl": "/images/layout48.png",
+        "textLayoutBox": {
+                "id": 164,
+				"rect": {
+					"x": 0.281245800295659,
+					"y": 0.421868700443489,
+					"width": 0.437491600591318, 
+					"height": 0.156245800295659
+				}
+			}			
+	},
+	{
+		"id": 49,
+        "category": "fullPagePhoto",
+		"imageUrl": "/images/layout49.png",
+        "imageLayoutBox": {
+                "id": 165,
+				"rect": {
+					"x": 0.0,
+					"y": 0.0,
+					"width": 1.0, 
+					"height": 1.0
+				}
+			}
+	},
+	{
+		"id": 50,
+        "category": "squarePhotoCentred",
+		"imageUrl": "/images/layout50.png",
+        "imageLayoutBox": {
+                "id": 166,
+				"rect": {
+					"x": 0.15382677059535,
+					"y": 0.15382677059535,
+					"width": 0.6923464588093, 
+					"height": 0.6923464588093
+				}
+			}
+	},
+	{
+		"id": 51,
+        "category": "portraitLeftRight",
+		"imageUrl": "/images/layout51.png",
+        "imageLayoutBox": {
+                "id": 167,
+				"rect": {
+					"x": 0.0476246472248354,
+					"y": 0.191960086009945,
+					"width": 0.904750705550329, 
+					"height": 0.616063029162747
+				}
+			}
+	},
+	{
+		"id": 52,
+        "category": "portraitTopBottom",
+		"imageUrl": "/images/layout52.png",
+        "imageLayoutBox": {
+                "id": 168,
+				"rect": {
+					"x": 0.191960086009945,
+					"y": 0.0476246472248354,
+					"width": 0.616063029162747, 
+					"height": 0.904750705550329
+				}
+			}
 	}
 ]
 }
