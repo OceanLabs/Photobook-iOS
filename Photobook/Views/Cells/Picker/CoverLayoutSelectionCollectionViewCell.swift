@@ -17,13 +17,6 @@ class CoverLayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     }
     
     @IBOutlet private weak var coverFrameView: CoverFrameView!
-    
-    @IBOutlet weak var roundedBackgroundView: UIView! {
-        didSet {
-            roundedBackgroundView.bezierRoundedCorners(withRadius: BorderedCollectionViewCell.cornerRadius)
-        }
-    }
-    
     var layout: Layout?
     var asset: Asset!
     var image: UIImage!
@@ -43,6 +36,7 @@ class CoverLayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         productLayoutAsset.asset = asset
         
         let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset)
+        coverFrameView.pageView.index = 0
         coverFrameView.pageView.productLayout = productLayout
         coverFrameView.pageView.setupImageBox(with: image)
         coverFrameView.pageView.setupTextBox(shouldBeLegible: false)

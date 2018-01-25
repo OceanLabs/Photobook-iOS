@@ -9,26 +9,19 @@
 import UIKit
 
 /// A collectionView cell that can have rounded border around it
-class BorderedCollectionViewCell: UICollectionViewCell {
-    
+class BorderedCollectionViewCell: UICollectionViewCell, BorderedViewProtocol {
     static let cornerRadius: CGFloat = 11.0
-    static let borderWidth: CGFloat = 3.0
-    static let borderInset: CGFloat = 1.0
-    static let borderColor = UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0).cgColor
     
-    private var borderLayer: CAShapeLayer!
+    @IBOutlet weak var roundedBackgroundView: UIView! { didSet { setupRoundedBackgroundView() } }
     
-    var isBorderVisible = false {
-        willSet {
-            guard isBorderVisible != newValue else { return }
-            if newValue {
-                layer.addSublayer(borderLayer)
-            } else {
-                borderLayer.removeFromSuperlayer()
-            }
-        }
-    }
-    
+    var borderLayer: CAShapeLayer!
+    var isBorderVisible = false { willSet { setBorderVisible(newValue) } }
+
+    var roundedBorderColor: UIColor? { didSet { setup(reset: true) } }
+    var roundedBorderWidth: CGFloat? = 4.0 { didSet { setup(reset: true) } }
+    var roundedCornerRadius: CGFloat? = BorderedCollectionViewCell.cornerRadius { didSet { setup(reset: true) } }
+    var color: UIColor! = .white
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -38,20 +31,4 @@ class BorderedCollectionViewCell: UICollectionViewCell {
         super.init(coder: aDecoder)
         setup()
     }
-    
-    func setup() {
-        guard borderLayer == nil else { return }
-        clipsToBounds = false
-        
-        let inset = AssetSelectorAssetCollectionViewCell.borderInset
-        let rect = CGRect(x: -inset, y: -inset, width: self.bounds.width + 2.0 * inset, height: self.bounds.height + 2.0 * inset)
-        let borderPath = UIBezierPath(roundedRect: rect, cornerRadius: BorderedCollectionViewCell.cornerRadius).cgPath
-        borderLayer = CAShapeLayer()
-        borderLayer.fillColor = nil
-        borderLayer.path = borderPath
-        borderLayer.frame = bounds
-        borderLayer.strokeColor = BorderedCollectionViewCell.borderColor
-        borderLayer.lineWidth = BorderedCollectionViewCell.borderWidth
-    }
-    
 }

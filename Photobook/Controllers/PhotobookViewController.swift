@@ -54,6 +54,8 @@ class PhotobookViewController: UIViewController {
         }
     }()
     
+    private var photobookNeedsRedrawing = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -453,8 +455,7 @@ class PhotobookViewController: UIViewController {
                 let cell = cell as? PhotobookCollectionViewCell
                 else { continue }
 
-            cell.loadPage(.left, index: productLayoutIndex)
-            cell.loadPage(.right, index: productLayoutIndex + 1)
+            cell.loadPages(leftIndex: productLayoutIndex, rightIndex: productLayoutIndex + 1)
         }
     }
 }
@@ -489,8 +490,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             cell.imageSize = imageSize
             cell.width = (view.bounds.size.width - Constants.cellSideMargin * 2.0) / 2.0
             cell.delegate = self
-
-            cell.loadCover()
+            cell.loadCover(redrawing: photobookNeedsRedrawing)
             
             return cell
         default:
@@ -533,8 +533,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             let leftLayout: ProductLayout? = leftIndex != nil ? ProductManager.shared.productLayouts[leftIndex!] : nil
             let rightLayout: ProductLayout? = rightIndex != nil ? ProductManager.shared.productLayouts[rightIndex!] : nil
 
-            cell.loadPage(.left, index: leftIndex, layout: leftLayout)
-            cell.loadPage(.right, index: rightIndex, layout: rightLayout)
+            cell.loadPages(leftIndex: leftIndex, rightIndex: rightIndex, leftLayout: leftLayout, rightLayout: rightLayout, redrawing: photobookNeedsRedrawing)
             
             cell.isPlusButtonVisible = ProductManager.shared.isAddingPagesAllowed && indexPath.item > 0
             
@@ -595,12 +594,25 @@ extension PhotobookViewController: PhotobookPageViewDelegate {
 extension PhotobookViewController: PageSetupDelegate {
     // MARK: PageSetupDelegate
     
-    func didFinishEditingPage(_ index: Int, productLayout: ProductLayout, saving: Bool) {
-        if saving {
-            ProductManager.shared.productLayouts[index] = productLayout
+    func didFinishEditingPage(_ index: Int?, productLayout: ProductLayout?, color: ProductColor?) {
+        if let index = index {
+            if let productLayout = productLayout {
+                ProductManager.shared.productLayouts[index] = productLayout
+            }
+            if let color = color {
+                if index == 0 { // Cover
+                    photobookNeedsRedrawing = ProductManager.shared.coverColor != color
+                    ProductManager.shared.coverColor = color
+                } else {
+                    photobookNeedsRedrawing = ProductManager.shared.pageColor != color
+                    ProductManager.shared.pageColor = color
+                }
+            }
             collectionView.reloadData()
         }
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: {
+            self.photobookNeedsRedrawing = false
+        })
     }
 }
 

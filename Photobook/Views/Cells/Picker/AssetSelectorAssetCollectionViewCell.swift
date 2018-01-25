@@ -18,6 +18,7 @@ class AssetSelectorAssetCollectionViewCell: BorderedCollectionViewCell {
         }
     }
     @IBOutlet private weak var badgeBackgroundView: UIVisualEffectView!
+    @IBOutlet private weak var greyOverlayView: UIView!
     @IBOutlet private weak var badgeLabel: UILabel!
     
     var assetIdentifier: String!
@@ -29,9 +30,12 @@ class AssetSelectorAssetCollectionViewCell: BorderedCollectionViewCell {
     
     var timesUsed = 0 {
         didSet {
-            badgeBackgroundView.alpha = timesUsed > 0 ? 1.0 : 0.0
-            badgeLabel.alpha = timesUsed > 0 ? 1.0 : 0.0
             badgeLabel.text = String(timesUsed)
+            
+            let alpha: CGFloat = timesUsed > 0 ? 1.0 : 0.0
+            badgeBackgroundView.alpha = alpha
+            greyOverlayView.alpha = alpha
+            badgeLabel.alpha = alpha
         }
     }
 }

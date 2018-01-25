@@ -9,7 +9,13 @@
 import UIKit
 
 protocol PageSetupDelegate: class {
-    func didFinishEditingPage(_ index: Int, productLayout: ProductLayout, saving: Bool)
+    func didFinishEditingPage(_ index: Int?, productLayout: ProductLayout?, color: ProductColor?)
+}
+
+extension PageSetupDelegate {
+    func didFinishEditingPage(_ index: Int? = nil, productLayout: ProductLayout? = nil, color: ProductColor? = nil) {
+        didFinishEditingPage(index, productLayout: productLayout, color: color)
+    }
 }
 
 enum PageType {
@@ -25,12 +31,13 @@ class PageSetupViewController: UIViewController {
     }
     
     private enum Tools: Int {
-        case selectAsset, selectLayout, placeAsset, editColor
+        case selectAsset, selectLayout, placeAsset, selectColor
     }
     
     @IBOutlet private weak var assetSelectionContainerView: UIView!
     @IBOutlet private weak var layoutSelectionContainerView: UIView!
     @IBOutlet private weak var placementContainerView: UIView!
+    @IBOutlet private weak var colorSelectionContainerView: UIView!
     
     @IBOutlet var toolbarButtons: [UIButton]!
     @IBOutlet weak var toolbar: UIToolbar!
@@ -38,6 +45,7 @@ class PageSetupViewController: UIViewController {
     private var assetSelectorViewController: AssetSelectorViewController!
     private var layoutSelectionViewController: LayoutSelectionViewController!
     private var assetPlacementViewController: AssetPlacementViewController!
+    private var colorSelectionViewController: ColorSelectionViewController!
     
     @IBOutlet private weak var coverFrameView: CoverFrameView! {
         didSet { coverFrameView.isHidden = pageType != .cover }
@@ -108,7 +116,15 @@ class PageSetupViewController: UIViewController {
     private var availableLayouts: [Layout]!
     private var pageSize: CGSize = .zero
     private var hasDoneSetup = false
-    private var pageType: PageType!
+    private var pageType: PageType! {
+        didSet {
+            if pageType == .cover {
+                selectedColor = ProductManager.shared.coverColor
+            } else {
+                selectedColor = ProductManager.shared.pageColor
+            }
+        }
+    }
     private var pageView: PhotobookPageView! {
         guard let pageType = pageType else { return nil }
         
@@ -121,6 +137,8 @@ class PageSetupViewController: UIViewController {
             return coverFrameView.pageView
         }
     }
+    private var selectedColor: ProductColor!
+    private var pageColor = ProductManager.shared.pageColor
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -152,6 +170,7 @@ class PageSetupViewController: UIViewController {
             setupAssetPlacement()
             setupAssetSelection()
             setupLayoutSelection()
+            setupColorSelection()
             hasDoneSetup = true
         }
     }
@@ -186,6 +205,10 @@ class PageSetupViewController: UIViewController {
         layoutSelectionViewController.selectedLayout = productLayout!.layout
     }
     
+    private func setupColorSelection() {
+        colorSelectionViewController.selectedColor = selectedColor
+    }
+    
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier else { return }
@@ -198,6 +221,9 @@ class PageSetupViewController: UIViewController {
             layoutSelectionViewController.delegate = self
         case "PlacementSegue":
             assetPlacementViewController = segue.destination as! AssetPlacementViewController
+        case "ColorSelectionSegue":
+            colorSelectionViewController = segue.destination as! ColorSelectionViewController
+            colorSelectionViewController.delegate = self
         default:
             break
         }
@@ -209,7 +235,7 @@ class PageSetupViewController: UIViewController {
     }
     
     @IBAction func tappedCancelButton(_ sender: UIBarButtonItem) {
-        delegate?.didFinishEditingPage(pageIndex, productLayout: productLayout, saving: false)
+        delegate?.didFinishEditingPage()
     }
     
     @IBAction func tappedDoneButton(_ sender: UIBarButtonItem) {
@@ -217,7 +243,7 @@ class PageSetupViewController: UIViewController {
             // Remove the asset if the layout doesn't have an image box
             productLayout.asset = nil
         }
-        delegate?.didFinishEditingPage(pageIndex, productLayout: productLayout, saving: true)
+        delegate?.didFinishEditingPage(pageIndex, productLayout: productLayout, color: selectedColor)
     }
     
     @IBAction func tappedToolButton(_ sender: UIButton) {
@@ -233,7 +259,7 @@ class PageSetupViewController: UIViewController {
         }
         
         switch tool {
-        case .selectAsset, .selectLayout:
+        case .selectAsset, .selectLayout, .selectColor:
             if editLayoutWasSelected {
                 assetPlacementViewController.animateBackToPhotobook {
                     self.assetImageView.transform = self.productLayout!.productLayoutAsset!.transform
@@ -243,6 +269,7 @@ class PageSetupViewController: UIViewController {
             UIView.animate(withDuration: 0.1, animations: {
                 self.assetSelectionContainerView.alpha = tool.rawValue == Tools.selectAsset.rawValue ? 1.0 : 0.0
                 self.layoutSelectionContainerView.alpha = tool.rawValue == Tools.selectLayout.rawValue ? 1.0 : 0.0
+                self.colorSelectionContainerView.alpha = tool.rawValue == Tools.selectColor.rawValue ? 1.0 : 0.0
             })
             break
         case .placeAsset:
@@ -253,8 +280,6 @@ class PageSetupViewController: UIViewController {
             assetPlacementViewController.initialContainerRect = containerRect
             assetPlacementViewController.assetImage = assetImageView.image
             assetPlacementViewController.animateFromPhotobook()
-            break
-        case .editColor:
             break
         }
     }
@@ -293,5 +318,20 @@ extension PageSetupViewController: AssetSelectorDelegate {
 
         pageView.setupImageBox()
         setupAssetPlacement()
+    }
+}
+
+extension PageSetupViewController: ColorSelectorDelegate {
+    
+    func didSelect(_ color: ProductColor) {
+        selectedColor = color
+        
+        if pageType == .cover {
+            coverFrameView.color = color
+            coverFrameView.resetCoverColor()
+        } else {
+            photobookFrameView.pageColor = color
+            photobookFrameView.resetPageColor()
+        }
     }
 }
