@@ -24,7 +24,6 @@ class CoverLayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         }
     }
     
-    var aspectRatio: CGFloat!
     var layout: Layout?
     var asset: Asset!
     var image: UIImage!
@@ -33,6 +32,8 @@ class CoverLayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         guard let layout = layout else { return }
         
         backgroundColor = .clear
+        
+        let aspectRatio = ProductManager.shared.product!.aspectRatio!
         
         coverFrameView.color = ProductManager.shared.coverColor
         coverFrameView.pageView.isTapGestureEnabled = false

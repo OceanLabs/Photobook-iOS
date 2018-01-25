@@ -27,19 +27,10 @@ class LayoutSelectionViewController: UIViewController {
         }
     }
     
-    private var pageSize: CGSize = .zero
     private var image: UIImage?
     
     var pageIndex: Int!
     var pageType: PageType!
-    var pageSizeRatio: CGFloat! {
-        didSet {
-            let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-            let pageWidth = flowLayout.itemSize.width - Constants.pageSideMargin
-            let pageHeight = pageWidth / pageSizeRatio
-            pageSize = CGSize(width: pageWidth, height: pageHeight)
-        }
-    }
     var asset: Asset? {
         didSet {
             guard let asset = asset else { return }
@@ -87,7 +78,6 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CoverLayoutSelectionCollectionViewCell.reuseIdentifier, for: indexPath) as! CoverLayoutSelectionCollectionViewCell
             
             cell.layout = layouts[indexPath.row]
-            cell.aspectRatio = pageSizeRatio
             cell.image = image // Pass the image to avoid reloading
             cell.asset = asset
             cell.isBorderVisible = (indexPath.row == selectedLayoutIndex)
@@ -100,7 +90,6 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
 
         cell.pageIndex = pageIndex
         cell.layout = layouts[indexPath.row]
-        cell.aspectRatio = pageSizeRatio
         cell.image = image // Pass the image to avoid reloading
         cell.asset = asset
         cell.pageType = pageType

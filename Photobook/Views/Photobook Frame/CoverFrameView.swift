@@ -26,14 +26,7 @@ class CoverFrameView: UIView {
     
     @IBOutlet private weak var coverBackgroundView: CoverBackgroundView!
     @IBOutlet private weak var widthConstraint: NSLayoutConstraint!
-    @IBOutlet weak var pageView: PhotobookPageView! {
-        didSet {
-            pageView.index = 0
-            pageView.color = color
-            pageView.productLayout = ProductManager.shared.productLayouts.first
-            pageView.aspectRatio = ProductManager.shared.product!.coverSizeRatio
-        }
-    }
+    @IBOutlet weak var pageView: PhotobookPageView!
     
     var width: CGFloat! {
         didSet {
@@ -41,9 +34,10 @@ class CoverFrameView: UIView {
             widthConstraint.constant = width
         }
     }
-
+    
     var pageSide = PageSide.left
     var color: ProductColor = .white
+    var aspectRatio: CGFloat!
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -62,6 +56,11 @@ class CoverFrameView: UIView {
         case .black:
             layer.shadowColor = PhotobookConstants.blackShadowColor
         }
+
+        pageView.index = 0
+        pageView.color = color
+        pageView.productLayout = ProductManager.shared.productLayouts.first
+        pageView.aspectRatio = aspectRatio
         
         coverBackgroundView.color = color
     }

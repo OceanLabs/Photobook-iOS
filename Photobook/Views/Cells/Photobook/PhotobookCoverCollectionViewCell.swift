@@ -10,19 +10,10 @@ import UIKit
 
 class PhotobookCoverCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet private weak var spineFrameView: SpineFrameView! {
-        didSet {
-            spineFrameView.color = ProductManager.shared.coverColor
-            spineFrameView.spineText = ProductManager.shared.spineText
-        }
-    }
-    @IBOutlet private weak var coverFrameView: CoverFrameView! {
-        didSet {
-            coverFrameView.color = ProductManager.shared.coverColor
-        }
-    }
-    
     static let reuseIdentifier = NSStringFromClass(PhotobookCoverCollectionViewCell.self).components(separatedBy: ".").last!
+    
+    @IBOutlet private weak var spineFrameView: SpineFrameView!
+    @IBOutlet private weak var coverFrameView: CoverFrameView!
     
     var imageSize = CGSize(width: Int.max, height: Int.max) {
         didSet {
@@ -32,6 +23,15 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell {
     var width: CGFloat! { didSet { coverFrameView.width = width } }
     
     weak var delegate: PhotobookPageViewDelegate? { didSet { coverFrameView.pageView.delegate = delegate } }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        spineFrameView.color = ProductManager.shared.coverColor
+        spineFrameView.spineText = ProductManager.shared.spineText
+        coverFrameView.color = ProductManager.shared.coverColor
+        coverFrameView.aspectRatio = ProductManager.shared.product!.aspectRatio
+    }
     
     func loadCover() {
         coverFrameView.pageView.setupImageBox()
