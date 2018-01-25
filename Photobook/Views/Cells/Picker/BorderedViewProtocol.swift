@@ -9,7 +9,7 @@
 import UIKit
 
 /// Protocol a view can conform to in order to become a rounded cornered view with a border.
-protocol BorderedViewProtocol: AnyObject where Self: UIView {
+protocol BorderedViewProtocol: AnyObject  {
     /// The layer drawing the border
     var borderLayer: CAShapeLayer! { get set }
 
@@ -32,7 +32,7 @@ protocol BorderedViewProtocol: AnyObject where Self: UIView {
     var color: UIColor! { get set }
 }
 
-extension BorderedViewProtocol {
+extension BorderedViewProtocol where Self: UIView {
     func radius() -> CGFloat {
         return roundedCornerRadius ?? bounds.maxX * 0.5 // Draw circle if nil
     }
