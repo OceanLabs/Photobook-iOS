@@ -3142,7 +3142,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Delivery Details" id="SLk-cx-f50">
                         <barButtonItem key="backBarButtonItem" title="Back" id="E4H-5W-Jlq"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="WHF-gL-6N4">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="save" id="WHF-gL-6N4">
                             <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="saveTapped:" destination="cGc-cG-abp" id="7Of-uX-Unp"/>
@@ -3368,7 +3368,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="CREDIT CARD" id="tCL-gZ-PM9">
-                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="EVH-EF-Udv">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="save" id="EVH-EF-Udv">
                             <connections>
                                 <action selector="tappedSaveButton:" destination="KxV-LF-cPn" id="42q-bn-vJm"/>
                             </connections>
@@ -3479,7 +3479,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Address" id="OUM-C0-Ach">
                         <barButtonItem key="backBarButtonItem" title=" " id="uIV-zv-SIg"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="Rw1-bd-cAh">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="save" id="Rw1-bd-cAh">
                             <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="saveTapped:" destination="pRm-3l-Qzk" id="jcM-DJ-HaM"/>
