@@ -676,6 +676,11 @@
                                                                                         </imageView>
                                                                                     </subviews>
                                                                                 </view>
+                                                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5kk-bD-AYQ" customClass="TextLabelPlaceholderBoxView" customModule="Photobook" customModuleProvider="target">
+                                                                                    <rect key="frame" x="24.333333333333336" y="16" width="20" height="20"/>
+                                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                </view>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="cZK-bN-3JP">
                                                                                     <rect key="frame" x="0.0" y="0.0" width="116" height="21"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -693,6 +698,7 @@
                                                                                 <outlet property="assetImageView" destination="93e-sj-uJD" id="2tq-n0-1ll"/>
                                                                                 <outlet property="assetPlaceholderIconImageView" destination="mM3-hB-ILN" id="Mr3-93-hFd"/>
                                                                                 <outlet property="pageTextLabel" destination="cZK-bN-3JP" id="Txd-Df-3nf"/>
+                                                                                <outlet property="textLabelPlaceholderBoxView" destination="5kk-bD-AYQ" id="5p7-QX-lgd"/>
                                                                             </connections>
                                                                         </view>
                                                                     </subviews>
