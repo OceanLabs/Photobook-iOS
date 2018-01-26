@@ -16,8 +16,9 @@ struct PhotobookConstants {
     static let cornerRadius: CGFloat = 1.0
     static let borderWidth: CGFloat = 0.5
     
-    static let horizontalPageToCoverMargin: CGFloat = 11.0
+    static let horizontalPageToCoverMargin: CGFloat = 20.0
     static let verticalPageToCoverMargin: CGFloat = 5.0
+    static let pageDividerWidth: CGFloat = 1.0
 }
 
 fileprivate struct ColorConstants {
@@ -322,8 +323,6 @@ class PhotobookFramePagesBehindView: UIView {
 
 // Internal class representing the fold between two pages of an open photobook. Please use PhotobookFrameView instead.
 class PhotobookFramePageDividerView: UIView {
- 
-    @IBOutlet private weak var widthConstraint: NSLayoutConstraint!
     
     var color: ProductColor = .white {
         didSet {
@@ -348,6 +347,6 @@ class PhotobookFramePageDividerView: UIView {
     ///
     /// - Parameter visible: Shows the divider if true, hides it otherwise
     func setVisible(_ visible: Bool) {
-        widthConstraint.constant = visible ? 1.0 : 0.0
+        alpha = visible ? 1.0 : 0.0
     }
 }

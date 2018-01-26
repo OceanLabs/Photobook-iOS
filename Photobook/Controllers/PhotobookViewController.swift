@@ -562,12 +562,12 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
             return CGSize(width: collectionView.bounds.width, height: Constants.proposalCellHeight)
         }
 
-        let pageWidth = (view.bounds.width - Constants.cellSideMargin * 2.0 - PhotobookConstants.horizontalPageToCoverMargin * 2.0) / 2.0
-        let pageHeight = pageWidth / product.aspectRatio
+        let pageWidth = ceil((view.bounds.width - Constants.cellSideMargin * 2.0 - PhotobookConstants.horizontalPageToCoverMargin * 2.0 - PhotobookConstants.pageDividerWidth) / 2.0)
+        let pageHeight = ceil(pageWidth / product.aspectRatio)
 
         // PhotoboookCollectionViewCell works when the collectionView uses dynamic heights by setting up the aspect ratio of its pages.
         // This however, causes problems with the drag & drop functionality and that is why the cell height is calculated by using the measurements set on the storyboard.
-        return CGSize(width: view.bounds.width - Constants.cellSideMargin * 2.0, height: pageHeight + PhotobookConstants.verticalPageToCoverMargin)
+        return CGSize(width: view.bounds.width - Constants.cellSideMargin * 2.0, height: pageHeight + PhotobookConstants.verticalPageToCoverMargin * 2.0)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
