@@ -25,6 +25,9 @@ class DeliveryDetailsTableViewController: UITableViewController {
     private enum DetailsRow: Int {
         case name, lastName, email, phone
     }
+    private enum EntryType {
+        case generic, email, phone
+    }
     
     private struct Constants {
         static let leadingSeparatorInset: CGFloat = 16
@@ -41,14 +44,23 @@ class DeliveryDetailsTableViewController: UITableViewController {
         }
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let identifier = segue.identifier else { return }
+        if identifier == "addressSegue", let addressVc = segue.destination as? AddressTableViewController {
+            addressVc.delegate = self
+            addressVc.address = sender as? Address ?? Address()
+        }
+        
+    }
+    
     @IBAction private func saveTapped(_ sender: Any) {
         var detailsAreValid = true
         
         tableView.beginUpdates()
         detailsAreValid = check(firstNameTextField) && detailsAreValid
         detailsAreValid = check(lastNameTextField) && detailsAreValid
-        detailsAreValid = checkEmail() && detailsAreValid
-        detailsAreValid = checkPhone() && detailsAreValid
+        detailsAreValid = check(emailTextField, type: .email) && detailsAreValid
+        detailsAreValid = check(phoneTextField, type: .phone) && detailsAreValid
         detailsAreValid = checkAddress() && detailsAreValid
         tableView.endUpdates()
         
@@ -59,39 +71,34 @@ class DeliveryDetailsTableViewController: UITableViewController {
         }
     }
     
-    private func check(_ textField: UITextField) -> Bool {
+    private func check(_ textField: UITextField, type: EntryType? = nil) -> Bool {
         textField.text = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         
         if textField.text?.isEmpty ?? true {
-            textField.text = UserInputTableViewCell.Constants.requiredText
-            textField.textColor = UserInputTableViewCell.Constants.errorColor
+            textField.text = Global.Constants.requiredText
+            textField.textColor = Global.Constants.errorColor
             return false
         }
         
-        return true
-    }
-    
-    private func checkEmail() -> Bool {
-        guard check(emailTextField) else { return false }
-        
-        let emailCell = (tableView.cellForRow(at: IndexPath(row: DetailsRow.email.rawValue, section: 0)) as? UserInputTableViewCell)
-        if let email = emailCell?.textField.text,
-            !email.isValidEmailAddress() {
-            emailCell?.errorMessage = NSLocalizedString("DeliveryDetails/Email is invalid", value: "Email is invalid", comment: "Error message saying that the email address is invalid")
-            return false
-        }
-        
-        return true
-    }
-    
-    private func checkPhone() -> Bool {
-        guard check(phoneTextField) else { return false }
-        
-        let phoneCell = (tableView.cellForRow(at: IndexPath(row: DetailsRow.phone.rawValue, section: 0)) as? UserInputTableViewCell)
-        if let phone = phoneCell?.textField.text,
-            phone.count < DeliveryDetails.minPhoneNumberLength {
-            phoneCell?.errorMessage = NSLocalizedString("DeliveryDetails/Phone is invalid", value: "Phone is invalid", comment: "Error message saying that the phone number is invalid")
-            return false
+        switch type ?? .generic {
+        case .email:
+            let cell = (tableView.cellForRow(at: IndexPath(row: DetailsRow.email.rawValue, section: 0)) as? UserInputTableViewCell)
+            if let text = cell?.textField.text,
+                !text.isValidEmailAddress() {
+                cell?.errorMessage = NSLocalizedString("DeliveryDetails/Email is invalid", value: "Email is invalid", comment: "Error message saying that the email address is invalid")
+                cell?.textField.textColor = Global.Constants.errorColor
+                return false
+            }
+        case .phone:
+            let cell = (tableView.cellForRow(at: IndexPath(row: DetailsRow.phone.rawValue, section: 0)) as? UserInputTableViewCell)
+            if let text = cell?.textField.text,
+                text.count < DeliveryDetails.minPhoneNumberLength {
+                cell?.errorMessage = NSLocalizedString("DeliveryDetails/Phone is invalid", value: "Phone is invalid", comment: "Error message saying that the phone number is invalid")
+                cell?.textField.textColor = Global.Constants.errorColor
+                return false
+            }
+        default:
+            break
         }
         
         return true
@@ -100,7 +107,7 @@ class DeliveryDetailsTableViewController: UITableViewController {
     private func checkAddress() -> Bool {
         if !(details.address?.isValid ?? false) {
             let cell = tableView.cellForRow(at: IndexPath(row: 0, section: Section.deliveryAddress.rawValue)) as? UserInputTableViewCell
-            cell?.errorMessage = UserInputTableViewCell.Constants.requiredText
+            cell?.errorMessage = Global.Constants.requiredText
             return false
         }
         
@@ -118,19 +125,6 @@ class DeliveryDetailsTableViewController: UITableViewController {
         }
         
         return nil
-    }
-    
-    @IBAction private func addAddress() {
-        edit(address: Address())
-    }
-    
-    private func edit(address: Address) {
-        guard let storyboard = storyboard,
-            let addressVc = storyboard.instantiateViewController(withIdentifier: "AddressTableViewController") as? AddressTableViewController
-            else { return }
-        addressVc.delegate = self
-        addressVc.address = address
-        navigationController?.pushViewController(addressVc, animated: true)
     }
     
 }
@@ -244,7 +238,7 @@ extension DeliveryDetailsTableViewController {
             details.address = Address.savedAddresses[indexPath.item]
             tableView.reloadData()
         } else if indexPath.section == Section.deliveryAddress.rawValue {
-            edit(address: Address())
+            performSegue(withIdentifier: "addressSegue", sender: nil)
         } else if let cell = tableView.cellForRow(at: indexPath) as? UserInputTableViewCell {
             cell.textField.becomeFirstResponder()
         }
@@ -252,7 +246,7 @@ extension DeliveryDetailsTableViewController {
     
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         editingAddress = Address.savedAddresses[indexPath.item]
-        edit(address: editingAddress?.copy() as? Address ?? Address())
+        performSegue(withIdentifier: "addressSegue", sender: editingAddress?.copy())
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -281,7 +275,7 @@ extension DeliveryDetailsTableViewController {
 extension DeliveryDetailsTableViewController: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        if textField.text == UserInputTableViewCell.Constants.requiredText {
+        if textField.text == Global.Constants.requiredText {
             textField.text = nil
         }
         
@@ -308,10 +302,10 @@ extension DeliveryDetailsTableViewController: UITextFieldDelegate {
             _ = check(textField)
             details.lastName = textField.text
         } else if textField === emailTextField {
-            _ = checkEmail()
+            _ = check(emailTextField, type: .email)
             details.email = textField.text
         } else if textField == phoneTextField {
-            _ = checkPhone()
+            _ = check(phoneTextField, type: .phone)
             details.phone = textField.text
         }
         tableView.endUpdates()

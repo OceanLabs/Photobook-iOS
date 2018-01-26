@@ -34,6 +34,15 @@ class AddressTableViewController: UITableViewController {
         title = NSLocalizedString("AddressEdit/Title", value: "Address", comment: "Address entry screen title")
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let identifier = segue.identifier else { return }
+        if identifier == "countryPickerSegue", let countryPicker = segue.destination as? CountryPickerTableViewController {
+            countryPicker.delegate = self
+            countryPicker.selectedCountry = sender as? Country
+        }
+        
+    }
+    
     @IBAction private func saveTapped(_ sender: Any) {
         var detailsAreValid = true
         
@@ -55,8 +64,8 @@ class AddressTableViewController: UITableViewController {
     
     private func check(_ textField: UITextField) -> Bool {
         if textField.text?.isEmpty ?? true {
-            textField.text = UserInputTableViewCell.Constants.requiredText
-            textField.textColor = UserInputTableViewCell.Constants.errorColor
+            textField.text = Global.Constants.requiredText
+            textField.textColor = Global.Constants.errorColor
             return false
         }
         
@@ -77,10 +86,58 @@ class AddressTableViewController: UITableViewController {
         return nil
     }
     
+    private func configure(cell: AddressFieldTableViewCell, for row:Row) {
+        
+        cell.textField.keyboardType = .default
+        cell.textField.isUserInteractionEnabled = true
+        cell.textField.placeholder = nil
+        cell.textField.autocapitalizationType = .words
+        
+        switch row {
+        case .line1:
+            cell.label.text = NSLocalizedString("AddressEntry/Line1", value: "Line1", comment: "Address Entry screen line1 textfield title")
+            cell.textField.textContentType = .streetAddressLine1
+            cell.textField.returnKeyType = .next
+            cell.textField.placeholder = Global.Constants.requiredText
+            cell.textField.text = address.line1
+            line1TextField = cell.textField
+        case .line2:
+            cell.label.text = NSLocalizedString("AddressEntry/Line2", value: "Line2", comment: "Address Entry screen line2 textfield title")
+            cell.textField.textContentType = .streetAddressLine1
+            cell.textField.returnKeyType = .next
+            cell.textField.text = address.line2
+            line2TextField = cell.textField
+        case .city:
+            cell.label.text = NSLocalizedString("AddressEntry/City", value: "City", comment: "Address Entry screen City textfield title")
+            cell.textField.textContentType = .addressCity
+            cell.textField.returnKeyType = .next
+            cell.textField.placeholder = Global.Constants.requiredText
+            cell.textField.text = address.city
+            cityTextField = cell.textField
+        case .stateOrCounty:
+            cell.label.text = NSLocalizedString("AddressEntry/County", value: "County", comment: "Address Entry screen County textfield title")
+            cell.textField.textContentType = .addressState
+            cell.textField.returnKeyType = .next
+            cell.textField.text = address.stateOrCounty
+            stateOrCountyTextField = cell.textField
+        case .zipOrPostcode:
+            cell.label.text = NSLocalizedString("AddressEntry/Postcode", value: "Postcode", comment: "Address Entry screen Postcode textfield title")
+            cell.textField.textContentType = .postalCode
+            cell.textField.returnKeyType = .done
+            cell.textField.autocapitalizationType = .allCharacters
+            cell.textField.placeholder = Global.Constants.requiredText
+            cell.textField.text = address.zipOrPostcode
+            zipOrPostcodeTextField = cell.textField
+        case .country:
+            cell.label.text = NSLocalizedString("AddressEntry/Country", value: "Country", comment: "Address Entry screen Country textfield title")
+            cell.textField.isUserInteractionEnabled = false
+            cell.textField.text = address.country.name
+        }
+    }
+    
 }
 
 extension AddressTableViewController {
-    
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 6
@@ -93,62 +150,7 @@ extension AddressTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let row = Row(rawValue: indexPath.row) else { return UITableViewCell() }
         let cell = tableView.dequeueReusableCell(withIdentifier: "userInput", for: indexPath) as! AddressFieldTableViewCell
-        switch row {
-        case .line1:
-            cell.label.text = NSLocalizedString("AddressEntry/Line1", value: "Line1", comment: "Address Entry screen line1 textfield title")
-            cell.textField.textContentType = .streetAddressLine1
-            cell.textField.keyboardType = .default
-            cell.textField.returnKeyType = .next
-            cell.textField.autocapitalizationType = .words
-            cell.textField.isUserInteractionEnabled = true
-            cell.textField.placeholder = UserInputTableViewCell.Constants.requiredText
-            cell.textField.text = address.line1
-            line1TextField = cell.textField
-        case .line2:
-            cell.label.text = NSLocalizedString("AddressEntry/Line2", value: "Line2", comment: "Address Entry screen line2 textfield title")
-            cell.textField.textContentType = .streetAddressLine1
-            cell.textField.keyboardType = .default
-            cell.textField.returnKeyType = .next
-            cell.textField.autocapitalizationType = .words
-            cell.textField.isUserInteractionEnabled = true
-            cell.textField.placeholder = nil
-            cell.textField.text = address.line2
-            line2TextField = cell.textField
-        case .city:
-            cell.label.text = NSLocalizedString("AddressEntry/City", value: "City", comment: "Address Entry screen City textfield title")
-            cell.textField.textContentType = .addressCity
-            cell.textField.keyboardType = .default
-            cell.textField.returnKeyType = .next
-            cell.textField.autocapitalizationType = .words
-            cell.textField.isUserInteractionEnabled = true
-            cell.textField.placeholder = UserInputTableViewCell.Constants.requiredText
-            cell.textField.text = address.city
-            cityTextField = cell.textField
-        case .stateOrCounty:
-            cell.label.text = NSLocalizedString("AddressEntry/County", value: "County", comment: "Address Entry screen County textfield title")
-            cell.textField.textContentType = .addressState
-            cell.textField.keyboardType = .default
-            cell.textField.returnKeyType = .next
-            cell.textField.autocapitalizationType = .words
-            cell.textField.isUserInteractionEnabled = true
-            cell.textField.placeholder = nil
-            cell.textField.text = address.stateOrCounty
-            stateOrCountyTextField = cell.textField
-        case .zipOrPostcode:
-            cell.label.text = NSLocalizedString("AddressEntry/Postcode", value: "Postcode", comment: "Address Entry screen Postcode textfield title")
-            cell.textField.textContentType = .postalCode
-            cell.textField.keyboardType = .default
-            cell.textField.returnKeyType = .done
-            cell.textField.autocapitalizationType = .allCharacters
-            cell.textField.isUserInteractionEnabled = true
-            cell.textField.placeholder = UserInputTableViewCell.Constants.requiredText
-            cell.textField.text = address.zipOrPostcode
-            zipOrPostcodeTextField = cell.textField
-        case .country:
-            cell.label.text = NSLocalizedString("AddressEntry/Country", value: "Country", comment: "Address Entry screen Country textfield title")
-            cell.textField.isUserInteractionEnabled = false
-            cell.textField.text = address.country.name
-        }
+        configure(cell: cell, for: row)
         
         return cell
     }
@@ -160,12 +162,7 @@ extension AddressTableViewController {
             cell.textField.becomeFirstResponder()
         }
         else {
-            guard let storyboard = storyboard,
-                let countryVc = storyboard.instantiateViewController(withIdentifier: "CountryPickerTableViewController") as? CountryPickerTableViewController
-                else { return }
-            countryVc.delegate = self
-            countryVc.selectedCountry = address.country
-            navigationController?.pushViewController(countryVc, animated: true)
+            performSegue(withIdentifier: "countryPickerSegue", sender: address.country)
         }
         
         
@@ -176,7 +173,7 @@ extension AddressTableViewController {
 extension AddressTableViewController: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        if textField.text == UserInputTableViewCell.Constants.requiredText {
+        if textField.text == Global.Constants.requiredText {
             textField.text = nil
         }
         

@@ -2213,7 +2213,6 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="didTapCheckout:" destination="l0p-H6-Aqd" eventType="touchUpInside" id="8mD-kA-KkC"/>
                                             <segue destination="bDf-a2-yFE" kind="show" id="3Zg-mY-2ol"/>
                                         </connections>
                                     </button>
@@ -3035,7 +3034,7 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <state key="normal" title="Add delivery address"/>
                                             <connections>
-                                                <action selector="addAddress" destination="cGc-cG-abp" eventType="touchUpInside" id="HS2-aY-qZj"/>
+                                                <segue destination="pRm-3l-Qzk" kind="show" identifier="addressSegue" id="aiu-5L-PJL"/>
                                             </connections>
                                         </button>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Vf-Xw-x5i">
@@ -3497,7 +3496,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Address" id="OUM-C0-Ach">
-                        <barButtonItem key="backBarButtonItem" title=" " id="uIV-zv-SIg"/>
+                        <barButtonItem key="backBarButtonItem" title="Back" id="uIV-zv-SIg"/>
                         <barButtonItem key="rightBarButtonItem" style="done" systemItem="save" id="Rw1-bd-cAh">
                             <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
@@ -3506,6 +3505,9 @@
                         </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <segue destination="EWS-lF-JO7" kind="show" identifier="countryPickerSegue" id="alz-fe-XOW"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1L0-cN-oSb" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="AHd-VG-9SB"/>

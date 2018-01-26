@@ -28,20 +28,17 @@ class CountryPickerTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // Find the indexPath of the currently selected country
+        // Find the indexPath of the currently selected country and scroll to it
         var sectionCount = 0
-        var found = false
-        for section in sections {
+        sectionLoop: for section in sections {
             var rowCount = 0
             for country in section {
                 if country.name == selectedCountry?.name {
-                    found = true
                     tableView.scrollToRow(at: IndexPath(row: rowCount, section: sectionCount), at: .middle, animated: false)
+                    break sectionLoop
                 }
-                if found { break }
                 rowCount += 1
             }
-            if found { break }
             sectionCount += 1
         }
         

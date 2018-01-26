@@ -10,10 +10,8 @@ import UIKit
 
 class UserInputTableViewCell: UITableViewCell {
     
-    struct Constants {
-        static let errorColor = UIColor(red:1, green:0.23, blue:0.19, alpha:1)
+    private struct Constants {
         static let messageColor = UIColor(red:0.43, green:0.43, blue:0.45, alpha:1)
-        static let requiredText = NSLocalizedString("UserInputRequired", value: "Required", comment: "User input required")
         static let messageTopMargin: CGFloat = 6.0
         static let messageBottomMargin: CGFloat = 17.0
     }
@@ -35,11 +33,14 @@ class UserInputTableViewCell: UITableViewCell {
                 messageLabel.textAlignment = .left
             }
             
-            guard message != nil else{
+            guard message != nil else {
                 messageBottomConstraint.constant = 0
                 messageTopConstraint?.constant = 0
                 return
             }
+            
+            messageBottomConstraint.constant = Constants.messageBottomMargin
+            messageTopConstraint?.constant = Constants.messageTopMargin
             
             UIView.animate(withDuration: 0.3, animations: {
                 self.messageLabel.alpha = 1
@@ -55,12 +56,16 @@ class UserInputTableViewCell: UITableViewCell {
                 messageLabel.textAlignment = .right
             }
             messageLabel.alpha = 1
-            messageLabel.textColor = Constants.errorColor
+            messageLabel.textColor = Global.Constants.errorColor
             
-            if errorMessage != nil {
-                messageBottomConstraint.constant = Constants.messageBottomMargin
-                messageTopConstraint?.constant = Constants.messageTopMargin
+            guard message != nil else {
+                messageBottomConstraint.constant = 0
+                messageTopConstraint?.constant = 0
+                return
             }
+            
+            messageBottomConstraint.constant = Constants.messageBottomMargin
+            messageTopConstraint?.constant = Constants.messageTopMargin
         }
     }
 }
