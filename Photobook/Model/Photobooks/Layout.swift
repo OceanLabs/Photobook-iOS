@@ -12,7 +12,6 @@ import Foundation
 struct Layout: Equatable, Codable {
     let id: Int!
     let category: String!
-    let imageUrl: String!
     var imageLayoutBox: LayoutBox?
     var textLayoutBox: LayoutBox?
     var isDoubleLayout: Bool = false
@@ -28,15 +27,10 @@ struct Layout: Equatable, Codable {
     static func parse(_ layoutDictionary: [String: AnyObject]) -> Layout? {
         guard
             let id = layoutDictionary["id"] as? Int,
-            let category = layoutDictionary["category"] as? String,
-            let imageUrlString = layoutDictionary["imageUrl"] as? String,
-            !imageUrlString.isEmpty,
-            !imageUrlString.lowercased().hasPrefix("http"),
-            let escapedImageUrlString = imageUrlString.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
-            let _ = URL(string: "https://test.com" + escapedImageUrlString) // Check if creating a URL from this string is possible
+            let category = layoutDictionary["category"] as? String
             else { return nil }
         
-        var layout = Layout(id: id, category: category, imageUrl: imageUrlString, imageLayoutBox: nil, textLayoutBox: nil, isDoubleLayout: false)
+        var layout = Layout(id: id, category: category, imageLayoutBox: nil, textLayoutBox: nil, isDoubleLayout: false)
         
         if let imageLayoutBoxDictionary = layoutDictionary["imageLayoutBox"] as? [String: AnyObject] {
             layout.imageLayoutBox = LayoutBox.parse(imageLayoutBoxDictionary)
