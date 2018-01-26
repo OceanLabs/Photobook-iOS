@@ -13,7 +13,6 @@ class DeliveryDetails: NSCopying, Codable {
     private struct Constants {
         static let savedDetailsKey = "savedDetailsKey"
     }
-    static let minPhoneNumberLength = 5
     
     var firstName: String?
     var lastName: String?
@@ -27,7 +26,7 @@ class DeliveryDetails: NSCopying, Codable {
                 let lastName = lastName, !lastName.isEmpty,
                 let address = address, address.isValid,
                 let email = email, email.isValidEmailAddress(),
-                let phone = phone, phone.count >= DeliveryDetails.minPhoneNumberLength
+                let phone = phone, phone.count >= Global.Constants.minPhoneNumberLength
                 else { return false }
             
             return true

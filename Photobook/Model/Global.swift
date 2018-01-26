@@ -25,5 +25,6 @@ struct Global {
     struct Constants {
         static let errorColor = UIColor(red:1, green:0.23, blue:0.19, alpha:1)
         static let requiredText = NSLocalizedString("UserInputRequired", value: "Required", comment: "User input required")
+        static let minPhoneNumberLength = 5
     }
 }

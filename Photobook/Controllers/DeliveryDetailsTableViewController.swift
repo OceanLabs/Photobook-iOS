@@ -92,7 +92,7 @@ class DeliveryDetailsTableViewController: UITableViewController {
         case .phone:
             let cell = (tableView.cellForRow(at: IndexPath(row: DetailsRow.phone.rawValue, section: 0)) as? UserInputTableViewCell)
             if let text = cell?.textField.text,
-                text.count < DeliveryDetails.minPhoneNumberLength {
+                text.count < Global.Constants.minPhoneNumberLength {
                 cell?.errorMessage = NSLocalizedString("DeliveryDetails/Phone is invalid", value: "Phone is invalid", comment: "Error message saying that the phone number is invalid")
                 cell?.textField.textColor = Global.Constants.errorColor
                 return false
