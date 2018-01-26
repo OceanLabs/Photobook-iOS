@@ -14,6 +14,8 @@ class ShippingMethodTableViewCell: UITableViewCell {
     @IBOutlet private weak var methodLabel: UILabel!
     @IBOutlet private weak var deliveryTimeLabel: UILabel!
     @IBOutlet private weak var costLabel: UILabel!
+    @IBOutlet weak var topSeparator: UIView!
+    @IBOutlet weak var separatorLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var separator: UIView!
     
     var method: String? {

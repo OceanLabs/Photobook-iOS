@@ -12,9 +12,10 @@ protocol ShippingMethodsDelegate: class {
 
 class ShippingMethodsViewController: UIViewController {
     
-    fileprivate struct Constants {
+    private struct Constants {
         static let titleHeight: CGFloat = 50.0
         static let methodHeight: CGFloat = 52.0
+        static let leadingSeparatorInset: CGFloat = 16
     }
     
     weak var delegate: ShippingMethodsDelegate!
@@ -23,9 +24,13 @@ class ShippingMethodsViewController: UIViewController {
         super.viewDidLoad()
         
         self.title = NSLocalizedString("ShippingMethods/Title", value: "Shipping Method", comment: "Shipping method selection screen title")
+        
+        if ProductManager.shared.shippingMethod == nil {
+            ProductManager.shared.shippingMethod = ProductManager.shared.cachedCost?.shippingMethods?.first?.id
+        }
     }
     
-    @IBOutlet fileprivate weak var tableView: UITableView! {
+    @IBOutlet private weak var tableView: UITableView! {
         didSet {
             tableView.rowHeight = Constants.methodHeight
             tableView.sectionHeaderHeight = Constants.titleHeight
@@ -33,7 +38,7 @@ class ShippingMethodsViewController: UIViewController {
         }
     }
     
-    @IBAction func tappedCloseButton(_ sender: UIBarButtonItem) {
+    @IBAction private func tappedCloseButton(_ sender: UIBarButtonItem) {
         delegate?.didTapToDismissShippingMethods()
     }
 }
@@ -57,9 +62,28 @@ extension ShippingMethodsViewController: UITableViewDataSource {
         cell.deliveryTime = shippingMethod.deliveryTime
         cell.cost = shippingMethod.shippingCostFormatted
         cell.ticked = ProductManager.shared.shippingMethod == shippingMethod.id
-        cell.separator.alpha = indexPath.row == shippingMethods.count - 1 ? 0.0 : 1.0
+        cell.separatorLeadingConstraint.constant = indexPath.row == shippingMethods.count - 1 ? 0.0 : Constants.leadingSeparatorInset
+        cell.topSeparator.isHidden = indexPath.row != 0
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UIView()
+        view.backgroundColor = .clear
+        
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        label.text = ProductManager.shared.cachedCost?.lineItems?[section].name
+        
+        view.addSubview(label)
+        
+        var constraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[label]-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["label": label])
+        constraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:[label]-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["label": label]))
+        view.addConstraints(constraints)
+        
+        return view
     }
     
 }
@@ -67,8 +91,6 @@ extension ShippingMethodsViewController: UITableViewDataSource {
 extension ShippingMethodsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-
         let shippingMethods = ProductManager.shared.cachedCost!.shippingMethods!
         ProductManager.shared.shippingMethod = shippingMethods[indexPath.row].id
         
