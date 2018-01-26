@@ -129,7 +129,8 @@ extension PaymentMethodsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return indexPath.row == 0 && Card.currentCard != nil
+        let cardIndex = Stripe.deviceSupportsApplePay() ? 2 : 1
+        return indexPath.row == cardIndex && Card.currentCard != nil
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
@@ -141,6 +142,6 @@ extension PaymentMethodsViewController: UITableViewDelegate {
 extension PaymentMethodsViewController: CreditCardTableViewControllerDelegate {
 
     func didAddCreditCard(on viewController: CreditCardTableViewController) {
-        delegate?.didTapToDismissPayments()
+        navigationController?.popViewController(animated: true)
     }
 }
