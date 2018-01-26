@@ -32,7 +32,7 @@ class ProductManagerTests: XCTestCase {
         productManager.productLayouts = [ProductLayout]()
         
         let layoutBox = LayoutBox(id: 1, rect: CGRect(x: 0.01, y: 0.01, width: 0.5, height: 0.1))
-        let layout = Layout(id: 1, category: "portrait", imageUrl: "/image/layout1.png", imageLayoutBox: layoutBox, textLayoutBox: layoutBox, isDoubleLayout: false)
+        let layout = Layout(id: 1, category: "portrait", imageLayoutBox: layoutBox, textLayoutBox: layoutBox, isDoubleLayout: false)
         
         let productLayoutAsset = ProductLayoutAsset()
         productLayoutAsset.asset = photosAsset

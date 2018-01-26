@@ -33,12 +33,10 @@
 	{
 		"id": 1,
         "category": "empty",
-		"imageUrl": "/images/layout1.png"
 	},	
 	{
 		"id": 2,
         "category": "bottomLeftText",
-		"imageUrl": "/images/layout2.png",
         "textLayoutBox": {
                 "id": 101,
 				"rect": {
@@ -52,7 +50,6 @@
 	{
 		"id": 3,
         "category": "centredSquarePhotoText",
-		"imageUrl": "/images/layout3.png",
 		"imageLayoutBox": {
                 "id": 102,
 				"rect": {
@@ -75,7 +72,6 @@
 	{
 		"id": 4,
         "category": "centredLandscapePhotoText",
-		"imageUrl": "/images/layout4.png",
 		"imageLayoutBox": {
                 "id": 104,
 				"rect": {
@@ -98,7 +94,6 @@
 	{
 		"id": 5,
         "category": "centredPortraitPhotoText",
-		"imageUrl": "/images/layout5.png",
 		"imageLayoutBox": {
                 "id": 106,
 				"rect": {
@@ -121,7 +116,6 @@
 	{
 		"id": 6,
         "category": "centredSquarePhotoText",
-		"imageUrl": "/images/layout6.png",
 		"imageLayoutBox": {
                 "id": 108,
 				"rect": {
@@ -144,7 +138,6 @@
 	{
 		"id": 7,
         "category": "centredLandscapePhotoText",
-		"imageUrl": "/images/layout7.png",
 		"imageLayoutBox": {
                 "id": 110,
 				"rect": {
@@ -167,7 +160,6 @@
 	{
 		"id": 8,
         "category": "centredPortraitPhotoText",
-		"imageUrl": "/images/layout8.png",
 		"imageLayoutBox": {
                 "id": 112,
 				"rect": {
@@ -190,7 +182,6 @@
 	{
 		"id": 9,
         "category": "textOnly",
-		"imageUrl": "/images/layout9.png",
         "textLayoutBox": {
                 "id": 114,
 				"rect": {
@@ -204,7 +195,6 @@
 	{
 		"id": 10,
         "category": "fullPagePhoto",
-		"imageUrl": "/images/layout10.png",
 		"imageLayoutBox": {
                 "id": 115,
 				"rect": {
@@ -218,7 +208,6 @@
 	{
 		"id": 11,
         "category": "squarePhotoCentred",
-		"imageUrl": "/images/layout11.png",
 		"imageLayoutBox": {
                 "id": 116,
 				"rect": {
@@ -232,7 +221,6 @@
 	{
 		"id": 12,
         "category": "portraitLeftRight",
-		"imageUrl": "/images/layout12.png",
 		"imageLayoutBox": {
                 "id": 117,
 				"rect": {
@@ -246,7 +234,6 @@
 	{
 		"id": 13,
         "category": "portraitTopBottom",
-		"imageUrl": "/images/layout13.png",
 		"imageLayoutBox": {
                 "id": 118,
 				"rect": {
@@ -260,12 +247,10 @@
 	{
 		"id": 14,
         "category": "empty",
-		"imageUrl": "/images/layout14.png"
 	},
 	{
 		"id": 15,
         "category": "centredSquarePhotoText",
-		"imageUrl": "/images/layout15.png",
 		"imageLayoutBox": {
                 "id": 119,
 				"rect": {
@@ -288,7 +273,6 @@
 	{
 		"id": 16,
         "category": "centredLandscapePhotoText",
-		"imageUrl": "/images/layout16.png",
 		"imageLayoutBox": {
                 "id": 121,
 				"rect": {
@@ -311,7 +295,6 @@
 	{
 		"id": 17,
         "category": "centredPortraitPhotoText",
-		"imageUrl": "/images/layout17.png",
 		"imageLayoutBox": {
                 "id": 123,
 				"rect": {
@@ -334,7 +317,6 @@
 	{
 		"id": 18,
         "category": "bottomLeftText",
-		"imageUrl": "/images/layout18.png",
 		"textLayoutBox": {
                 "id": 125,
 				"rect": {
@@ -348,7 +330,6 @@
 	{
 		"id": 19,
         "category": "centredSquarePhotoText",
-		"imageUrl": "/images/layout19.png",
 		"imageLayoutBox": {
                 "id": 126,
 				"rect": {
@@ -371,7 +352,6 @@
 	{
 		"id": 20,
         "category": "centredLandscapePhotoText",
-		"imageUrl": "/images/layout20.png",
 		"imageLayoutBox": {
                 "id": 128,
 				"rect": {
@@ -394,7 +374,6 @@
 	{
 		"id": 21,
         "category": "centredPortraitPhotoText",
-		"imageUrl": "/images/layout21.png",
 		"imageLayoutBox": {
                 "id": 130,
 				"rect": {
@@ -417,7 +396,6 @@
 	{
 		"id": 22,
         "category": "textOnly",
-		"imageUrl": "/images/layout22.png",
 		"textLayoutBox": {
                 "id": 132,
 				"rect": {
@@ -431,7 +409,6 @@
 	{
 		"id": 23,
         "category": "fullPagePhoto",
-		"imageUrl": "/images/layout23.png",
 		"imageLayoutBox": {
                 "id": 133,
 				"rect": {
@@ -445,7 +422,6 @@
 	{
 		"id": 24,
         "category": "squarePhotoCentred",
-		"imageUrl": "/images/layout24.png",
 		"imageLayoutBox": {
                 "id": 134,
 				"rect": {
@@ -459,7 +435,6 @@
 	{
 		"id": 25,
         "category": "portraitLeftRight",
-		"imageUrl": "/images/layout25.png",
 		"imageLayoutBox": {
                 "id": 135,
 				"rect": {
@@ -473,7 +448,6 @@
 	{
 		"id": 26,
         "category": "portraitTopBottom",
-		"imageUrl": "/images/layout26.png",
 		"imageLayoutBox": {
                 "id": 136,
 				"rect": {
@@ -487,12 +461,10 @@
 	{
 		"id": 27,
         "category": "empty",
-		"imageUrl": "/images/layout27.png"
 	},	
 	{
 		"id": 28,
         "category": "centredSquarePhotoText",
-		"imageUrl": "/images/layout28.png",
         "imageLayoutBox": {
                 "id": 137,
 				"rect": {
@@ -515,7 +487,6 @@
 	{
 		"id": 29,
         "category": "centredLandscapePhotoText",
-		"imageUrl": "/images/layout29.png",
         "imageLayoutBox": {
                 "id": 139,
 				"rect": {
@@ -538,7 +509,6 @@
 	{
 		"id": 30,
         "category": "centredPortraitPhotoText",
-		"imageUrl": "/images/layout30.png",
         "imageLayoutBox": {
                 "id": 141,
 				"rect": {
@@ -561,7 +531,6 @@
 	{
 		"id": 31,
         "category": "textOnly",
-		"imageUrl": "/images/layout31.png",
         "textLayoutBox": {
                 "id": 143,
 				"rect": {
@@ -575,7 +544,6 @@
 	{
 		"id": 32,
         "category": "centredSquarePhotoText",
-		"imageUrl": "/images/layout32.png",
         "imageLayoutBox": {
                 "id": 144,
 				"rect": {
@@ -598,7 +566,6 @@
 	{
 		"id": 33,
         "category": "centredPortraitPhotoText",
-		"imageUrl": "/images/layout33.png",
         "imageLayoutBox": {
                 "id": 146,
 				"rect": {
@@ -621,7 +588,6 @@
 	{
 		"id": 34,
         "category": "centredLandscapePhotoText",
-		"imageUrl": "/images/layout34.png",
         "imageLayoutBox": {
                 "id": 148,
 				"rect": {
@@ -644,7 +610,6 @@
 	{
 		"id": 35,
         "category": "textOnly",
-		"imageUrl": "/images/layout35.png",
         "textLayoutBox": {
                 "id": 149,
 				"rect": {
@@ -658,7 +623,6 @@
 	{
 		"id": 36,
         "category": "fullPagePhoto",
-		"imageUrl": "/images/layout36.png",
 		"imageLayoutBox": {
                 "id": 150,
 				"rect": {
@@ -672,7 +636,6 @@
 	{
 		"id": 37,
         "category": "squarePhotoCentred",
-		"imageUrl": "/images/layout37.png",
 		"imageLayoutBox": {
                 "id": 150,
 				"rect": {
@@ -686,7 +649,6 @@
 	{
 		"id": 38,
         "category": "portraitTopBottom",
-		"imageUrl": "/images/layout38.png",
 		"imageLayoutBox": {
                 "id": 151,
 				"rect": {
@@ -700,7 +662,6 @@
 	{
 		"id": 39,
         "category": "portraitLeftRight",
-		"imageUrl": "/images/layout39.png",
 		"imageLayoutBox": {
                 "id": 152,
 				"rect": {
@@ -714,12 +675,10 @@
 	{
 		"id": 40,
         "category": "empty",
-		"imageUrl": "/images/layout40.png"
 	},	
 	{
 		"id": 41,
         "category": "centredSquarePhotoText",
-		"imageUrl": "/images/layout41.png",
         "imageLayoutBox": {
                 "id": 153,
 				"rect": {
@@ -742,7 +701,6 @@
 	{
 		"id": 42,
         "category": "centredLandscapePhotoText",
-		"imageUrl": "/images/layout42.png",
         "imageLayoutBox": {
                 "id": 153,
 				"rect": {
@@ -765,7 +723,6 @@
 	{
 		"id": 43,
         "category": "centredPortraitPhotoText",
-		"imageUrl": "/images/layout43.png",
         "imageLayoutBox": {
                 "id": 155,
 				"rect": {
@@ -788,7 +745,6 @@
 	{
 		"id": 44,
         "category": "textOnly",
-		"imageUrl": "/images/layout44.png",
         "textLayoutBox": {
                 "id": 157,
 				"rect": {
@@ -802,7 +758,6 @@
 	{
 		"id": 45,
         "category": "centredSquarePhotoText",
-		"imageUrl": "/images/layout45.png",
         "imageLayoutBox": {
                 "id": 158,
 				"rect": {
@@ -825,7 +780,6 @@
 	{
 		"id": 46,
         "category": "centredLandscapePhotoText",
-		"imageUrl": "/images/layout46.png",
         "imageLayoutBox": {
                 "id": 160,
 				"rect": {
@@ -848,7 +802,6 @@
 	{
 		"id": 47,
         "category": "centredPortraitPhotoText",
-		"imageUrl": "/images/layout47.png",
         "imageLayoutBox": {
                 "id": 162,
 				"rect": {
@@ -871,7 +824,6 @@
 	{
 		"id": 48,
         "category": "textOnly",
-		"imageUrl": "/images/layout48.png",
         "textLayoutBox": {
                 "id": 164,
 				"rect": {
@@ -885,7 +837,6 @@
 	{
 		"id": 49,
         "category": "fullPagePhoto",
-		"imageUrl": "/images/layout49.png",
         "imageLayoutBox": {
                 "id": 165,
 				"rect": {
@@ -899,7 +850,6 @@
 	{
 		"id": 50,
         "category": "squarePhotoCentred",
-		"imageUrl": "/images/layout50.png",
         "imageLayoutBox": {
                 "id": 166,
 				"rect": {
@@ -913,7 +863,6 @@
 	{
 		"id": 51,
         "category": "portraitLeftRight",
-		"imageUrl": "/images/layout51.png",
         "imageLayoutBox": {
                 "id": 167,
 				"rect": {
@@ -927,7 +876,6 @@
 	{
 		"id": 52,
         "category": "portraitTopBottom",
-		"imageUrl": "/images/layout52.png",
         "imageLayoutBox": {
                 "id": 168,
 				"rect": {
