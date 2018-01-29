@@ -59,11 +59,7 @@ class AssetSelectorViewController: UIViewController {
             }
         }
     }
-    var browseNavigationController: UINavigationController!
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
+    var browseNavigationController: UINavigationController!    
 }
 
 extension AssetSelectorViewController: UICollectionViewDataSource {
@@ -85,6 +81,9 @@ extension AssetSelectorViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AssetSelectorAssetCollectionViewCell.reuseIdentifier, for: indexPath) as! AssetSelectorAssetCollectionViewCell
         cell.isBorderVisible = selectedAssetIndex == indexPath.row
         cell.timesUsed = (timesUsed[asset.identifier] ?? 0)
+        
+        guard cell.assetIdentifier != asset.identifier || cell.assetImage == nil else { return cell }
+        
         cell.assetIdentifier = asset.identifier
         let itemSize = (collectionView.collectionViewLayout as! UICollectionViewFlowLayout).itemSize
         
@@ -110,18 +109,19 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
         }
         
         guard selectedAssetIndex != indexPath.row else { return }
-        
-        var indicesToReload = [ IndexPath(row: indexPath.row, section: 0) ]
-        
+
         if let selectedAsset = selectedAsset {
-            indicesToReload.append(IndexPath(row: selectedAssetIndex, section: 0))
+            let currentSelectedCell = collectionView.cellForItem(at: IndexPath(row: selectedAssetIndex, section: 0)) as! AssetSelectorAssetCollectionViewCell
             timesUsed[selectedAsset.identifier] = timesUsed[selectedAsset.identifier]! - 1
+            currentSelectedCell.timesUsed = timesUsed[selectedAsset.identifier]!
+            currentSelectedCell.isBorderVisible = false
         }
-
+        
         selectedAsset = selectedAssetsManager.selectedAssets[indexPath.row]
-        timesUsed[selectedAsset!.identifier] = timesUsed[selectedAsset!.identifier]! + 1
-
-        collectionView.reloadItems(at: indicesToReload)
+        let newSelectedCell = collectionView.cellForItem(at: indexPath) as! AssetSelectorAssetCollectionViewCell
+        timesUsed[selectedAsset!.identifier] = (timesUsed[selectedAsset!.identifier] ?? 0) + 1
+        newSelectedCell.timesUsed = timesUsed[selectedAsset!.identifier]!
+        newSelectedCell.isBorderVisible = true
 
         delegate?.didSelect(asset: assets[indexPath.row])
     }

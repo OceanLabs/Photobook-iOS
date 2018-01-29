@@ -27,17 +27,10 @@ class LayoutSelectionViewController: UIViewController {
         }
     }
     
-    private var pageSize: CGSize = .zero
     private var image: UIImage?
     
-    var pageSizeRatio: CGFloat! {
-        didSet {
-            let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-            let pageWidth = flowLayout.itemSize.width - Constants.pageSideMargin
-            let pageHeight = pageWidth / pageSizeRatio
-            pageSize = CGSize(width: pageWidth, height: pageHeight)
-        }
-    }
+    var pageIndex: Int!
+    var pageType: PageType!
     var asset: Asset? {
         didSet {
             guard let asset = asset else { return }
@@ -81,32 +74,27 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LayoutSelectionCollectionViewCell.reuseIdentifier, for: indexPath) as! LayoutSelectionCollectionViewCell
-        cell.backgroundColor = .clear
-        cell.pageHeightConstraint.constant = pageSize.height
-    
-        let layout = layouts[indexPath.row]
-        
-        if let imageBox = layout.imageLayoutBox, let asset = asset, image != nil {
-            cell.thumbnailImageView.image = image
-            cell.thumbnailImageView.transform = .identity
-            cell.thumbnailImageView.frame = CGRect(x: 0.0, y: 0.0, width: asset.size.width, height: asset.size.height)
+        if pageType == .cover {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CoverLayoutSelectionCollectionViewCell.reuseIdentifier, for: indexPath) as! CoverLayoutSelectionCollectionViewCell
             
-            // Lay out the image box
-            cell.photoContainerView.frame = imageBox.rectContained(in: pageSize)
-            cell.thumbnailImageView.center = CGPoint(x: cell.photoContainerView.bounds.midX, y: cell.photoContainerView.bounds.midY)
+            cell.layout = layouts[indexPath.row]
+            cell.image = image // Pass the image to avoid reloading
+            cell.asset = asset
+            cell.isBorderVisible = (indexPath.row == selectedLayoutIndex)
+            cell.setupLayout()
             
-            let productLayoutAsset = ProductLayoutAsset()
-            productLayoutAsset.containerSize = cell.photoContainerView.bounds.size
-            productLayoutAsset.asset = asset
-            cell.thumbnailImageView.transform = productLayoutAsset.transform
-            
-            cell.photoContainerView.alpha = 1.0
-        } else {
-            cell.photoContainerView.alpha = 0.0
+            return cell
         }
         
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LayoutSelectionCollectionViewCell.reuseIdentifier, for: indexPath) as! LayoutSelectionCollectionViewCell
+
+        cell.pageIndex = pageIndex
+        cell.layout = layouts[indexPath.row]
+        cell.image = image // Pass the image to avoid reloading
+        cell.asset = asset
+        cell.pageType = pageType
         cell.isBorderVisible = (indexPath.row == selectedLayoutIndex)
+        cell.setupLayout()
 
         return cell
     }
