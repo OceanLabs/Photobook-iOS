@@ -22,7 +22,6 @@
 		2E0B58A91FB3508B00F31A9E /* SelectedAssetsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58A81FB3508B00F31A9E /* SelectedAssetsManager.swift */; };
 		2E17337F200F4E0B00F0D718 /* PaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E17337E200F4E0B00F0D718 /* PaymentMethodsViewController.swift */; };
 		2E1733812010B50400F0D718 /* PaymentAuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733802010B50400F0D718 /* PaymentAuthorizationManager.swift */; };
-		2E1733832010B5A500F0D718 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733822010B5A500F0D718 /* Config.swift */; };
 		2E1733862010B6BA00F0D718 /* Cost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733852010B6BA00F0D718 /* Cost.swift */; };
 		2E1733882010B83100F0D718 /* ShippingMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733872010B83100F0D718 /* ShippingMethod.swift */; };
 		2E17338A2010B85F00F0D718 /* DecimalExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733892010B85F00F0D718 /* DecimalExtensions.swift */; };
@@ -148,7 +147,6 @@
 		2E0B58A81FB3508B00F31A9E /* SelectedAssetsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedAssetsManager.swift; sourceTree = "<group>"; };
 		2E17337E200F4E0B00F0D718 /* PaymentMethodsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentMethodsViewController.swift; sourceTree = "<group>"; };
 		2E1733802010B50400F0D718 /* PaymentAuthorizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentAuthorizationManager.swift; sourceTree = "<group>"; };
-		2E1733822010B5A500F0D718 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		2E1733852010B6BA00F0D718 /* Cost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cost.swift; sourceTree = "<group>"; };
 		2E1733872010B83100F0D718 /* ShippingMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShippingMethod.swift; sourceTree = "<group>"; };
 		2E1733892010B85F00F0D718 /* DecimalExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecimalExtensions.swift; sourceTree = "<group>"; };
@@ -430,7 +428,6 @@
 				2E0B58A51FB32B2300F31A9E /* Assets */,
 				2E1733842010B5AA00F0D718 /* Order */,
 				6FC7E8751FBD985900D2BCDA /* APIClient.swift */,
-				2E1733822010B5A500F0D718 /* Config.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -926,7 +923,6 @@
 				2E6B9EDA1FBDEEF500F28C00 /* UIViewExtensions.swift in Sources */,
 				2E3E6A5420036FB60044EDFC /* PhotobookCollectionViewCell.swift in Sources */,
 				6F0A68301FE03C2100B7E56C /* EmptyScreenViewControllerExtensions.swift in Sources */,
-				2E1733832010B5A500F0D718 /* Config.swift in Sources */,
 				2ED5B3811FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift in Sources */,
 				6FC7E8811FC332A500D2BCDA /* LayoutBox.swift in Sources */,
 				2E0B58921FB325FF00F31A9E /* AlbumsCollectionViewController.swift in Sources */,
@@ -1098,6 +1094,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Photobook/Photobook.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = L78L4U72YJ;
 				INFOPLIST_FILE = Photobook/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;

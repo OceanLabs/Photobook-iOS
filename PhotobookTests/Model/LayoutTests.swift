@@ -13,8 +13,7 @@ class LayoutTests: XCTestCase {
     
     let validDictionary = ([
         "id": 10,
-        "category": "squareCentred",
-        "imageUrl": "/images/layout10.png",
+        "category": "squareCentred"
         ]) as [String: AnyObject]
     
     func testParse_ShouldSucceedWithAValidDictionary() {
@@ -34,26 +33,5 @@ class LayoutTests: XCTestCase {
         layoutDictionary["category"] = nil
         let layoutBox = Layout.parse(layoutDictionary)
         XCTAssertNil(layoutBox, "Parse: Should return nil if category is missing")
-    }
-
-    func testParse_ShouldReturnNilIfTheImageUrlIsNil() {
-        var layoutDictionary = validDictionary
-        layoutDictionary["imageUrl"] = nil
-        let layoutBox = Layout.parse(layoutDictionary)
-        XCTAssertNil(layoutBox, "Parse: Should return nil if imageUrl is missing")
-    }
-    
-    func testParse_ShouldReturnNilIfTheImageUrlIsNotRelative() {
-        var layoutDictionary = validDictionary
-        layoutDictionary["imageUrl"] = "http://whatever.com/" as AnyObject
-        let layoutBox = Layout.parse(layoutDictionary)
-        XCTAssertNil(layoutBox, "Parse: Should return nil if imageUrl is not relative")
-    }
-
-    func testParse_ShouldAcceptWhitespaces() {
-        var layoutDictionary = validDictionary
-        layoutDictionary["imageUrl"] = "/whatever here/and there.png" as AnyObject
-        let layoutBox = Layout.parse(layoutDictionary)
-        XCTAssertNotNil(layoutBox, "Parse: Should succeed if imageUrl contains whitespaces")
     }
 }
