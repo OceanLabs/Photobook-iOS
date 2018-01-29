@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PhotobookViewController: UIViewController {
+class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate {
     
     private struct Constants {
         static let rearrageScale: CGFloat = 0.8
@@ -33,6 +33,9 @@ class PhotobookViewController: UIViewController {
     
     @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var ctaButtonContainer: UIView!
+    
+    var photobokNavigationBarType: PhotobookNavigationBarType = .clear
+    
     var selectedAssetsManager: SelectedAssetsManager?
     private var titleButton = UIButton()
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
@@ -546,9 +549,10 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
     // MARK: UICollectionViewDelegate
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard let navBar = navigationController?.navigationBar as? PhotobookNavigationBar else { return }
+        guard let navigationBar = navigationController?.navigationBar as? PhotobookNavigationBar else { return }
         
-        navBar.effectView.alpha = scrollView.contentOffset.y <= -(navigationController?.navigationBar.frame.maxY ?? 0)  ? 0 : 1
+        let showBlur = scrollView.contentOffset.y > -(navigationController?.navigationBar.frame.maxY ?? 0)
+        navigationBar.setBlur(showBlur)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -587,7 +591,7 @@ extension PhotobookViewController: PhotobookPageViewDelegate {
         pageSetupViewController.selectedAssetsManager = selectedAssetsManager
         pageSetupViewController.pageIndex = index
         pageSetupViewController.delegate = self
-        present(pageSetupViewController, animated: true, completion: nil)
+        navigationController?.pushViewController(pageSetupViewController, animated: true)
     }
 }
 

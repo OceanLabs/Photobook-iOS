@@ -22,7 +22,7 @@ enum PageType {
     case cover, first, last, left, right
 }
 
-class PageSetupViewController: UIViewController {
+class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate {
 
     private struct Constants {
         static let pageSideMargin: CGFloat = 20.0
@@ -41,6 +41,8 @@ class PageSetupViewController: UIViewController {
     
     @IBOutlet var toolbarButtons: [UIButton]!
     @IBOutlet weak var toolbar: UIToolbar!
+    
+    var photobokNavigationBarType: PhotobookNavigationBarType = .clear
     
     private var assetSelectorViewController: AssetSelectorViewController!
     private var layoutSelectionViewController: LayoutSelectionViewController!
