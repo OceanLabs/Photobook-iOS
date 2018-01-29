@@ -155,7 +155,7 @@ class PhotobookAPIManager {
                 }
                 
                 if let fileUrl = welf?.saveImageToCache(image: image!, name: "\(asset.identifier).jpg") {
-                    welf?.apiClient.uploadFile(fileUrl, reference: asset.identifier, context: .pig, endpoint: EndPoints.imageUpload)
+                    welf?.apiClient.uploadImage(fileUrl, reference: asset.identifier, context: .pig, endpoint: EndPoints.imageUpload)
                 } else {
                     welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImage)
                 }

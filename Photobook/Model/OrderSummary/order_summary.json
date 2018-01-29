@@ -1,0 +1,17 @@
+{
+    "summary":[
+                    {
+                    "name":"Square 210x210 mm",
+                    "price":{ "EUR": 30.00, "USD": 38.00, "GBP": 27.00 }
+                    },
+                    {
+                    "name":"Gloss finish",
+                    "price":{ "EUR": 5.00, "USD": 8.00, "GBP": 4.00 }
+                    },
+                    {
+                    "name":"+ 2 extra pages",
+                    "price":{ "EUR": 4.00, "USD": 5.00, "GBP": 3.00 }
+                    }
+                    ],
+    "imagePreviewUrl":"http://image.kite.ly/render/?product_id=twill_tote_bag&variant=back2_melange_black&format=jpeg&debug=false&background=efefef"
+}

@@ -218,16 +218,9 @@ class APIClient: NSObject {
         dataTask(context: context, endpoint: endpoint, parameters: parameters, method: .put, completion: completion)
     }
     
-    func uploadFile(_ file: URL, reference: String?, context: APIContext, endpoint: String) {
-        guard let fileData = try? Data(contentsOf: file) else {
-            print("File Upload: cannot read file data")
-            return
-        }
-
-        let imageName = file.lastPathComponent
-        
+    func uploadImage(_ data: Data, imageName: String, reference: String?, context: APIContext, endpoint: String) {
         let boundary = "Boundary-\(NSUUID().uuidString)"
-
+        
         let directoryUrl = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
         let fileUrl = directoryUrl.appendingPathComponent(NSUUID().uuidString)
         let filePath = fileUrl.path
@@ -245,7 +238,7 @@ class APIClient: NSObject {
         let footerData = footer.data(using: .utf8, allowLossyConversion: false)!
         
         fileHandle.write(headerData)
-        fileHandle.write(fileData)
+        fileHandle.write(data)
         fileHandle.write(footerData)
         fileHandle.closeFile()
         
@@ -255,13 +248,33 @@ class APIClient: NSObject {
         request.httpMethod = HTTPMethod.post.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField:"content-type")
-
+        
         let dataTask = backgroundUrlSession.uploadTask(with: request, fromFile: fileUrl)
         if reference != nil {
             taskReferences[dataTask.taskIdentifier] = reference
         }
         
         dataTask.resume()
+    }
+    
+    func uploadImage(_ image: UIImage, imageName: String, reference: String?, context: APIContext, endpoint: String) {
+        guard let fileData = UIImageJPEGRepresentation(image, 1) else {
+            print("File Upload: cannot read file data")
+            return
+        }
+        
+        uploadImage(fileData, imageName:imageName, reference: reference, context: context, endpoint: endpoint)
+    }
+    
+    func uploadImage(_ file: URL, reference: String?, context: APIContext, endpoint: String) {
+        guard let fileData = try? Data(contentsOf: file) else {
+            print("File Upload: cannot read file data")
+            return
+        }
+
+        let imageName = file.lastPathComponent
+        
+        uploadImage(fileData, imageName: imageName, reference: reference, context: context, endpoint: endpoint)
     }
     
     func pendingBackgroundTaskCount(_ completion: @escaping ((Int)->Void)) {

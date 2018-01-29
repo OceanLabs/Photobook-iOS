@@ -17,39 +17,28 @@ class OrderSummaryViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var previewImageView: UIImageView!
     
-    var orderManager:OrderManager!
+    var orderSummaryManager:OrderSummaryManager!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        orderManager = OrderManager()
-        
+        orderSummaryManager = OrderSummaryManager()
+        orderSummaryManager.delegate = self
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+}
+
+extension OrderSummaryViewController: OrderSummaryManagerDelegate {
+    func orderSummaryManagerDidUpdate(_ manager: OrderSummaryManager) {
         tableView.reloadData()
+        previewImageView.image = orderSummaryManager.previewImage
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        getProductPreviewImage { (success) in
-            
-        }
-    }
-    
-    private func getProductPreviewImages(_ completion:(_ success:Bool, _ images:[UIImage]) -> Void) {
-        //APIClient.shared.uploadFile(UIImage(named:"chevron-right")., reference: <#T##String?#>, context: <#T##APIContext#>, endpoint: <#T##String#>)
-    }
-    
-    //deprecated
-    private func getProductPreviewImage(_ completion:(_ success:Bool) -> Void) {
-        let imageUrlString = "https://i.pinimg.com/564x/6c/77/e1/6c77e17a9f9e889f8d971258dddd0a54--radiohead-logo-ide-bagus.jpg"
-        let imageWidth = Int(previewImageView.frame.size.width * UIScreen.main.scale)
-        let imageHeight = Int(previewImageView.frame.size.height * UIScreen.main.scale)
-        let urlString = "http://image.kite.ly/render/?image=" + imageUrlString + "&product_id=twill_tote_bag&variant=back2_melange_black&format=jpeg&debug=false&background=efefef" +
-            "&size=\(imageWidth)x\(imageHeight)" +
-            "&fill_mode=fit"
-        UIImage.async(urlString) { (success, image) in
-            self.previewImageView.image = image
-        }
+    func orderSummaryManagerPreviewImageSize(_ manager: OrderSummaryManager) -> CGSize {
+        return previewImageView.frame.size
     }
 }
 
@@ -70,7 +59,7 @@ extension OrderSummaryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == sectionOptions {
             //handle changed upsell selection
-            orderManager.selectedUpsellOptions.insert(orderManager.upsellOptions[indexPath.row].identifier)
+            orderSummaryManager.selectedUpsellOptions.insert(orderSummaryManager.upsellOptions[indexPath.row].type)
             tableView.reloadSections(IndexSet(integersIn: 0...1), with: .none)
         } else {
             tableView.deselectRow(at: indexPath, animated: false)
@@ -80,7 +69,7 @@ extension OrderSummaryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         if indexPath.section == sectionOptions {
             //handle changed upsell selection
-            orderManager.selectedUpsellOptions.remove(orderManager.upsellOptions[indexPath.row].identifier)
+            orderSummaryManager.selectedUpsellOptions.remove(orderSummaryManager.upsellOptions[indexPath.row].type)
             tableView.reloadSections(IndexSet(integersIn: 0...1), with: .none)
         }
     }
@@ -93,17 +82,17 @@ extension OrderSummaryViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if orderManager.initialProduct == nil {
+        if orderSummaryManager.product == nil {
             return 0
         }
         
         switch section {
         case sectionDetails:
-            return orderManager.priceDetails.count
+            return orderSummaryManager.summary.count
         case sectionTotal:
-            return orderManager.priceDetails.count>0 ? 1 : 0
+            return orderSummaryManager.summary.count>0 ? 1 : 0
         case sectionOptions:
-            return orderManager.upsellOptions.count
+            return orderSummaryManager.upsellOptions.count
         default:
             return 0
         }
@@ -113,23 +102,23 @@ extension OrderSummaryViewController: UITableViewDataSource {
         switch indexPath.section {
         case sectionDetails:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrderSummaryDetailTableViewCell", for: indexPath) as! OrderSummaryDetailTableViewCell
-            cell.titleLabel.text = orderManager.priceDetails[indexPath.row].title
-            cell.priceLabel.text = orderManager.priceDetails[indexPath.row].price.formatted
+            cell.titleLabel.text = orderSummaryManager.summary[indexPath.row].name
+            cell.priceLabel.text = orderSummaryManager.summary[indexPath.row].price.formatted
             return cell
         case sectionTotal:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrderSummaryTotalTableViewCell", for: indexPath) as! OrderSummaryTotalTableViewCell
-            if orderManager.priceDetails.count > 0 {
+            if orderSummaryManager.summary.count > 0 {
                 var v:Float = 0
-                for x in orderManager.priceDetails {
+                for x in orderSummaryManager.summary {
                     v = v + x.price.value
                 }
-                cell.priceLabel.text = Price(value: v, currencyCode: orderManager.priceDetails[0].price.currencyCode, currencySymbol: orderManager.priceDetails[0].price.currencySymbol).formatted
+                cell.priceLabel.text = Price(value: v, currencyCode: orderSummaryManager.summary[0].price.currencyCode).formatted
             }
             return cell
         case sectionOptions:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrderSummaryUpsellTableViewCell", for: indexPath) as! OrderSummaryUpsellTableViewCell
-            cell.titleLabel?.text = "Upgrade to " + orderManager.upsellOptions[indexPath.row].title
-            if orderManager.selectedUpsellOptions.contains(orderManager.upsellOptions[indexPath.row].identifier) {
+            cell.titleLabel?.text = "Upgrade to " + orderSummaryManager.upsellOptions[indexPath.row].displayName
+            if orderSummaryManager.selectedUpsellOptions.contains(orderSummaryManager.upsellOptions[indexPath.row].type) {
                 cell.setSelected(true, animated: false)
             } else {
                 cell.setSelected(false, animated: false)
