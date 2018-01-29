@@ -81,6 +81,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         setup(with: photobook)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // Reset the var after a possible colour change
+        photobookNeedsRedrawing = false
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -614,9 +620,7 @@ extension PhotobookViewController: PageSetupDelegate {
             }
             collectionView.reloadData()
         }
-        dismiss(animated: true, completion: {
-            self.photobookNeedsRedrawing = false
-        })
+        navigationController?.popViewController(animated: true)
     }
 }
 

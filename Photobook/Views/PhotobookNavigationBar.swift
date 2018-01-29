@@ -86,7 +86,7 @@ enum PhotobookNavigationBarType {
     case clear, white
 }
 
-/// Delegate view controllers should conform to in order to customise the navigation bar appearance when presented
+/// Protocol view controllers should conform to in order to choose an appearance from application defaults when presented
 protocol PhotobookNavigationBarDelegate {
     var photobokNavigationBarType: PhotobookNavigationBarType { get }
 }
