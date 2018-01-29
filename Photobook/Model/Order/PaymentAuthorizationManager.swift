@@ -28,16 +28,25 @@ protocol PaymentAuthorizationManagerDelegate: class {
 }
 
 class PaymentAuthorizationManager: NSObject {
+    
+    private struct Constants {
+        static let applePayPayTo = "Canon"
+        static let applePayMerchantId = "merchant.ly.kite.sdk"
+        
+        static let stripePublicKey = "pk_test_fJtOj7oxBKrLFOneBFLj0OH3"
+        //        static let stripePublicKey = "pk_live_qQhXxzjS8inja3K31GDajdXo"
+    }
+    
     weak var delegate : PaymentAuthorizationManagerDelegate?
     
     var applePayPayTo: String {
         get{
-            return Config.Constants.applePayPayTo
+            return Constants.applePayPayTo
         }
     }
     var applePayMerchantId: String {
         get{
-            return Config.Constants.applePayMerchantId
+            return Constants.applePayMerchantId
         }
     }
     
@@ -56,7 +65,7 @@ class PaymentAuthorizationManager: NSObject {
     ///
     /// - Parameter cost: The total cost of the order
     private func authorizeCreditCard(cost: Cost) {
-        let stripeKey = Config.Constants.stripePublicKey
+        let stripeKey = Constants.stripePublicKey
         guard var currentCard = Card.currentCard else { return }
         
         currentCard.clientId = stripeKey
@@ -180,7 +189,7 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
         deliveryDetails.phone = payment.shippingContact?.phoneNumber?.stringValue
         ProductManager.shared.deliveryDetails = deliveryDetails
         
-        let client = STPAPIClient(publishableKey: Config.Constants.stripePublicKey)
+        let client = STPAPIClient(publishableKey: Constants.stripePublicKey)
         client.createToken(with: payment, completion: {(token: STPToken?, error: Error?) in
             guard error == nil else{
                 completion(.failure)

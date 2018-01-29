@@ -64,8 +64,8 @@ class AddressTableViewController: UITableViewController {
     
     private func check(_ textField: UITextField) -> Bool {
         if textField.text?.isEmpty ?? true {
-            textField.text = Global.Constants.requiredText
-            textField.textColor = Global.Constants.errorColor
+            textField.text = FormConstants.requiredText
+            textField.textColor = FormConstants.errorColor
             return false
         }
         
@@ -98,7 +98,7 @@ class AddressTableViewController: UITableViewController {
             cell.label.text = NSLocalizedString("AddressEntry/Line1", value: "Line1", comment: "Address Entry screen line1 textfield title")
             cell.textField.textContentType = .streetAddressLine1
             cell.textField.returnKeyType = .next
-            cell.textField.placeholder = Global.Constants.requiredText
+            cell.textField.placeholder = FormConstants.requiredText
             cell.textField.text = address.line1
             line1TextField = cell.textField
         case .line2:
@@ -111,7 +111,7 @@ class AddressTableViewController: UITableViewController {
             cell.label.text = NSLocalizedString("AddressEntry/City", value: "City", comment: "Address Entry screen City textfield title")
             cell.textField.textContentType = .addressCity
             cell.textField.returnKeyType = .next
-            cell.textField.placeholder = Global.Constants.requiredText
+            cell.textField.placeholder = FormConstants.requiredText
             cell.textField.text = address.city
             cityTextField = cell.textField
         case .stateOrCounty:
@@ -125,7 +125,7 @@ class AddressTableViewController: UITableViewController {
             cell.textField.textContentType = .postalCode
             cell.textField.returnKeyType = .done
             cell.textField.autocapitalizationType = .allCharacters
-            cell.textField.placeholder = Global.Constants.requiredText
+            cell.textField.placeholder = FormConstants.requiredText
             cell.textField.text = address.zipOrPostcode
             zipOrPostcodeTextField = cell.textField
         case .country:
@@ -173,7 +173,7 @@ extension AddressTableViewController {
 extension AddressTableViewController: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        if textField.text == Global.Constants.requiredText {
+        if textField.text == FormConstants.requiredText {
             textField.text = nil
         }
         

@@ -26,7 +26,7 @@ class DeliveryDetails: NSCopying, Codable {
                 let lastName = lastName, !lastName.isEmpty,
                 let address = address, address.isValid,
                 let email = email, email.isValidEmailAddress(),
-                let phone = phone, phone.count >= Global.Constants.minPhoneNumberLength
+                let phone = phone, phone.count >= FormConstants.minPhoneNumberLength
                 else { return false }
             
             return true

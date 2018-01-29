@@ -8,6 +8,12 @@
 
 import UIKit
 
+struct FormConstants {
+    static let errorColor = UIColor(red:1, green:0.23, blue:0.19, alpha:1)
+    static let requiredText = NSLocalizedString("UserInputRequired", value: "Required", comment: "User input required")
+    static let minPhoneNumberLength = 5
+}
+
 class DeliveryDetailsTableViewController: UITableViewController {
     
     private var details = (ProductManager.shared.deliveryDetails?.copy() as? DeliveryDetails ?? DeliveryDetails.loadLatestDetails()) ?? DeliveryDetails()
@@ -75,8 +81,8 @@ class DeliveryDetailsTableViewController: UITableViewController {
         textField.text = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         
         if textField.text?.isEmpty ?? true {
-            textField.text = Global.Constants.requiredText
-            textField.textColor = Global.Constants.errorColor
+            textField.text = FormConstants.requiredText
+            textField.textColor = FormConstants.errorColor
             return false
         }
         
@@ -86,15 +92,15 @@ class DeliveryDetailsTableViewController: UITableViewController {
             if let text = cell?.textField.text,
                 !text.isValidEmailAddress() {
                 cell?.errorMessage = NSLocalizedString("DeliveryDetails/Email is invalid", value: "Email is invalid", comment: "Error message saying that the email address is invalid")
-                cell?.textField.textColor = Global.Constants.errorColor
+                cell?.textField.textColor = FormConstants.errorColor
                 return false
             }
         case .phone:
             let cell = (tableView.cellForRow(at: IndexPath(row: DetailsRow.phone.rawValue, section: 0)) as? UserInputTableViewCell)
             if let text = cell?.textField.text,
-                text.count < Global.Constants.minPhoneNumberLength {
+                text.count < FormConstants.minPhoneNumberLength {
                 cell?.errorMessage = NSLocalizedString("DeliveryDetails/Phone is invalid", value: "Phone is invalid", comment: "Error message saying that the phone number is invalid")
-                cell?.textField.textColor = Global.Constants.errorColor
+                cell?.textField.textColor = FormConstants.errorColor
                 return false
             }
         default:
@@ -107,7 +113,7 @@ class DeliveryDetailsTableViewController: UITableViewController {
     private func checkAddress() -> Bool {
         if !(details.address?.isValid ?? false) {
             let cell = tableView.cellForRow(at: IndexPath(row: 0, section: Section.deliveryAddress.rawValue)) as? UserInputTableViewCell
-            cell?.errorMessage = Global.Constants.requiredText
+            cell?.errorMessage = FormConstants.requiredText
             return false
         }
         
@@ -275,7 +281,7 @@ extension DeliveryDetailsTableViewController {
 extension DeliveryDetailsTableViewController: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        if textField.text == Global.Constants.requiredText {
+        if textField.text == FormConstants.requiredText {
             textField.text = nil
         }
         
