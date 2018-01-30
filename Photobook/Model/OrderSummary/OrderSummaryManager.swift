@@ -15,7 +15,7 @@ protocol OrderSummaryManagerDelegate : class {
 
 class OrderSummaryManager {
     
-    private let taskReferenceImagePreview = "OrderSummary-ProductPreview-Image"
+    private let taskReferenceImagePreview = "OrderSummaryManager-ProductPreviewImage"
     
     //layouts configured by previous UX
     private var layouts:[ProductLayout] {
@@ -112,17 +112,19 @@ class OrderSummaryManager {
     
     private func uploadPreviewImage() {
         
-        let imageWidth = 300//Int(previewImageView.frame.size.width * UIScreen.main.scale)
-        let imageHeight = 300//Int(previewImageView.frame.size.height * UIScreen.main.scale)
-        
-        /*guard layouts.count > 0 else {
+        guard layouts.count > 0, let asset = layouts[0].asset else {
             return
         }
         
-        layouts[0].asset?.image(size: CGSize(width: imageWidth, height: imageHeight), applyEdits: false, progressHandler: nil, completionHandler: { (image, error) in*/
-            
-            APIClient.shared.uploadImage(UIImage(named: "Tick")!, imageName: "Tick.jpeg", reference: self.taskReferenceImagePreview, context: .pig, endpoint: "upload/")
-        //})
+        asset.image(size: CGSize(width: Int.max, height: Int.max), applyEdits: false, progressHandler: nil, completionHandler: { (image, error) in
+            if let image = image {
+                APIClient.shared.uploadImage(image, imageName: self.taskReferenceImagePreview + ".jpeg", reference: self.taskReferenceImagePreview, context: .pig, endpoint: "upload/")
+            } else {
+                // fetch product details straight away
+                print("OrderSummaryManager: Couldn't get image for asset")
+                self.fetchProductDetails()
+            }
+        })
     }
     
     @objc func imageUploadFinished(_ notification: Notification) {

@@ -2214,7 +2214,7 @@
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="didTapCheckout:" destination="l0p-H6-Aqd" eventType="touchUpInside" id="8mD-kA-KkC"/>
-                                            <segue destination="pwH-2w-dvy" kind="presentation" id="BNN-kz-aXb"/>
+                                            <segue destination="ays-et-QoH" kind="show" id="ixR-Fv-K8j"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -2893,7 +2893,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AmM-zD-PVQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2519" y="1458"/>
+            <point key="canvasLocation" x="2539" y="1585"/>
         </scene>
         <!--Empty Screen View Controller-->
         <scene sceneID="ij0-dd-Rvf">
@@ -3445,6 +3445,7 @@
         <image name="Stories" width="29" height="24"/>
         <image name="Tick" width="26" height="26"/>
         <image name="Tick-empty" width="26" height="26"/>
+        <image name="Tick-empty-dark" width="26" height="26"/>
         <image name="Tick-plain" width="19" height="14"/>
         <image name="addMore" width="26" height="26"/>
         <image name="apple-pay-method" width="45" height="29"/>
@@ -3458,7 +3459,6 @@
         <image name="plusButton" width="26" height="26"/>
         <image name="selectPhoto_off" width="29" height="29"/>
         <image name="selectPhoto_on" width="29" height="29"/>
-        <image name="Tick-empty-dark" width="26" height="26"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="2oC-kh-DmB"/>

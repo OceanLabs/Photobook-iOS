@@ -28,6 +28,8 @@ enum PhotobookAPIError: Error {
 
 class PhotobookAPIManager {
     
+    let imageUploadIdentifierPrefix = "PhotobookAPIManager-AssetUploader-"
+    
     private struct EndPoints {
         static let products = "/products/"
         static let imageUpload = "/upload/"
@@ -155,7 +157,7 @@ class PhotobookAPIManager {
                 }
                 
                 if let fileUrl = welf?.saveImageToCache(image: image!, name: "\(asset.identifier).jpg") {
-                    welf?.apiClient.uploadImage(fileUrl, reference: asset.identifier, context: .pig, endpoint: EndPoints.imageUpload)
+                    welf?.apiClient.uploadImage(fileUrl, reference: self.imageUploadIdentifierPrefix + asset.identifier, context: .pig, endpoint: EndPoints.imageUpload)
                 } else {
                     welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImage)
                 }
@@ -164,13 +166,20 @@ class PhotobookAPIManager {
     }
     
     @objc func imageUploadFinished(_ notification: Notification) {
-        guard let productLayouts = delegate?.productLayouts else {
-            fatalError("PBAPIManager: Layouts not available")
-        }
         
         guard let dictionary = notification.userInfo as? [String: AnyObject] else {
             print("PBAPIManager: Task finished but could not cast user info")
             return
+        }
+        
+        //check if this is a photobook api manager asset upload
+        if let reference = dictionary["task_reference"] as? String, !reference.hasPrefix(imageUploadIdentifierPrefix) {
+            //not intended for this class
+            return
+        }
+        
+        guard let productLayouts = delegate?.productLayouts else {
+            fatalError("PBAPIManager: Layouts not available")
         }
         
         if let error = dictionary["error"] as? APIClientError {
@@ -183,8 +192,9 @@ class PhotobookAPIManager {
             delegate?.didFailUpload(APIClientError.parsing)
             return
         }
+        let referenceId = reference.suffix(reference.count - imageUploadIdentifierPrefix.count)
         
-        guard let productLayout = productLayouts.first(where: { $0.asset != nil && $0.asset!.identifier == reference }) else {
+        guard let productLayout = productLayouts.first(where: { $0.asset != nil && $0.asset!.identifier == referenceId }) else {
             delegate?.didFailUpload(PhotobookAPIError.missingPhotobookInfo)
             return
         }

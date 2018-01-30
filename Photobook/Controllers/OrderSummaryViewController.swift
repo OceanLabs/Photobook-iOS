@@ -17,10 +17,16 @@ class OrderSummaryViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var previewImageView: UIImageView!
     
+    private lazy var emptyScreenViewController: EmptyScreenViewController = {
+        return EmptyScreenViewController.emptyScreen(parent: self)
+    }()
+    
     var orderSummaryManager:OrderSummaryManager!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        emptyScreenViewController.show(message: NSLocalizedString("OrderSummary/Loading", value: "Loading order details", comment: "Loading product summary"), activity: true)
         
         orderSummaryManager = OrderSummaryManager()
         orderSummaryManager.delegate = self
@@ -35,6 +41,8 @@ extension OrderSummaryViewController: OrderSummaryManagerDelegate {
     func orderSummaryManagerDidUpdate(_ manager: OrderSummaryManager) {
         tableView.reloadData()
         previewImageView.image = orderSummaryManager.previewImage
+        
+        emptyScreenViewController.hide(animated: true)
     }
     
     func orderSummaryManagerPreviewImageSize(_ manager: OrderSummaryManager) -> CGSize {
