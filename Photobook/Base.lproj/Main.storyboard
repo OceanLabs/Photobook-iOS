@@ -3455,38 +3455,52 @@
                     <rect key="frame" x="0.0" y="0.0" width="415" height="50"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="9nl-Bm-38s">
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Z5M-gW-3wz">
                             <rect key="frame" x="0.0" y="0.0" width="415" height="50"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Clear" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wuv-Zh-D99">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k5m-We-BNj">
                                     <rect key="frame" x="0.0" y="0.0" width="138.33333333333334" height="50"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <nil key="textColor"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Classic" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0vW-DE-wez">
+                                    <state key="normal" title="Clear">
+                                        <color key="titleColor" red="0.34901960780000002" green="0.34901960780000002" blue="0.36862745099999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="tappedToolButton:" destination="ixR-NF-UBV" eventType="touchUpInside" id="2am-lr-SkV"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PNm-1A-DqS">
                                     <rect key="frame" x="138.33333333333331" y="0.0" width="138.33333333333331" height="50"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <nil key="textColor"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Solid" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YxL-JT-XRn">
+                                    <state key="normal" title="Classic">
+                                        <color key="titleColor" red="0.34901960780000002" green="0.34901960780000002" blue="0.36862745099999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="tappedToolButton:" destination="ixR-NF-UBV" eventType="touchUpInside" id="nXx-wy-EQe"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T2R-xE-LAa">
                                     <rect key="frame" x="276.66666666666669" y="0.0" width="138.33333333333331" height="50"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <nil key="textColor"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
+                                    <state key="normal" title="Solid">
+                                        <color key="titleColor" red="0.34901960780000002" green="0.34901960780000002" blue="0.36862745099999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="tappedToolButton:" destination="ixR-NF-UBV" eventType="touchUpInside" id="eTu-xy-9RQ"/>
+                                    </connections>
+                                </button>
                             </subviews>
                         </stackView>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="9nl-Bm-38s" firstAttribute="top" secondItem="3m0-uA-zon" secondAttribute="top" id="MQP-FX-1LS"/>
-                        <constraint firstItem="3m0-uA-zon" firstAttribute="trailing" secondItem="9nl-Bm-38s" secondAttribute="trailing" id="Y3h-qh-N0K"/>
-                        <constraint firstItem="9nl-Bm-38s" firstAttribute="leading" secondItem="3m0-uA-zon" secondAttribute="leading" id="exB-UA-mdY"/>
-                        <constraint firstItem="3m0-uA-zon" firstAttribute="bottom" secondItem="9nl-Bm-38s" secondAttribute="bottom" id="iQT-41-kDF"/>
+                        <constraint firstAttribute="bottom" secondItem="Z5M-gW-3wz" secondAttribute="bottom" id="Vmb-8N-If3"/>
+                        <constraint firstItem="Z5M-gW-3wz" firstAttribute="top" secondItem="3m0-uA-zon" secondAttribute="top" id="ZS9-oE-YSK"/>
+                        <constraint firstItem="Z5M-gW-3wz" firstAttribute="leading" secondItem="3m0-uA-zon" secondAttribute="leading" id="gA3-v0-89K"/>
+                        <constraint firstItem="3m0-uA-zon" firstAttribute="trailing" secondItem="Z5M-gW-3wz" secondAttribute="trailing" id="w9J-sZ-Z48"/>
                     </constraints>
                     <viewLayoutGuide key="safeArea" id="3m0-uA-zon"/>
+                    <connections>
+                        <outletCollection property="toolButtons" destination="k5m-We-BNj" collectionClass="NSMutableArray" id="xMi-Oa-FQx"/>
+                        <outletCollection property="toolButtons" destination="PNm-1A-DqS" collectionClass="NSMutableArray" id="FxL-oF-zC9"/>
+                        <outletCollection property="toolButtons" destination="T2R-xE-LAa" collectionClass="NSMutableArray" id="Jt0-L2-pA9"/>
+                    </connections>
                 </view>
             </objects>
             <point key="canvasLocation" x="1780" y="-1110"/>

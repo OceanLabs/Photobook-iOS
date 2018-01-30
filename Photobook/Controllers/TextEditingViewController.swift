@@ -8,21 +8,41 @@
 
 import UIKit
 
+@objc enum FontType: Int {
+    case clear, classic, solid
+}
+
+@objc protocol TextToolBarViewDelegate {
+    func didSelectFontType(_ type: FontType)
+}
+
 class TextToolBarView: UIView {
     
-    // TODO: Configure with product colour
+    @IBOutlet var toolButtons: [UIButton]!
     
+    weak var delegate: TextToolBarViewDelegate?
+    
+    @IBAction func tappedToolButton(_ sender: UIButton) {
+        let index = toolButtons.index(of: sender)!
+        let fontType = FontType(rawValue: index)!
+        delegate?.didSelectFontType(fontType)
+    }
 }
 
 class TextEditingViewController: UIViewController {
 
     private struct Constants {
-        static let textViewBorderPadding: CGFloat = 12.0 // 8.0 padding, 4.0 thickness
+        static let textViewBorderPadding: CGFloat = 16.0 // 8.0 padding, 4.0 thickness, 4.0 for luck 🤡🎉
+        static let fontSize: CGFloat = 16.0 // FIXME: Get this from the product info
+        static let pageHeight: CGFloat = 430.866 // FIXME: Get this from the product info
+        static let fontFamily = "Helvetica" // FIXME: Get this from the product info
+        static let fontFamilyBold = "Helvetica-Bold" // FIXME: Get this from the product info
     }
     
     @IBOutlet private weak var textToolBarView: TextToolBarView! {
         didSet {
             textToolBarView.backgroundColor = UIColor(red: 208/255.0, green: 212/255.0, blue: 217/255.0, alpha: 1.0)
+            textToolBarView.delegate = self
         }
     }
     @IBOutlet private weak var textViewBorderView: UIView!
@@ -81,7 +101,6 @@ class TextEditingViewController: UIViewController {
         let layoutBoxSize = CGSize(width: textViewWidthConstraint.constant, height: textViewHeightConstraint.constant)
         let pageSize = layoutBox.containerSize(for: layoutBoxSize)
         
-        print("BC \(textViewBottomConstraint.constant)")
         let topMargin = view.bounds.height - textViewBottomConstraint.constant - textViewHeightConstraint.constant
         let layoutBoxRect = layoutBox.rectContained(in: pageSize)
         let pageXCoordinate = textViewLeadingConstraint.constant - layoutBoxRect.minX
@@ -90,7 +109,39 @@ class TextEditingViewController: UIViewController {
         pageView.frame.origin = CGPoint(x: pageXCoordinate, y: pageYCoordinate)
         pageView.frame.size = pageSize
         
+        // Set up the textField font
+        let photobookToOnScreenScale = pageSize.height / Constants.pageHeight
+        let fontSize = round(Constants.fontSize * photobookToOnScreenScale)
+        
+        setTextViewType(.classic, fontSize: fontSize)
+        
         // Place image if needed
         
+    }
+    
+    private func setTextViewType(_ type: FontType, fontSize: CGFloat) {
+        let font: UIFont
+        
+        switch type {
+        case .clear:
+            fallthrough
+        case .classic:
+            font = UIFont(name: Constants.fontFamily, size: fontSize)!
+        case .solid:
+            font = UIFont(name: Constants.fontFamilyBold, size: fontSize)!
+        }
+        
+        let attributes = [ NSAttributedStringKey.font.rawValue: font ]
+        textView.attributedText = NSAttributedString(string: textView.text, attributes: [ NSAttributedStringKey.font: font ])
+        textView.typingAttributes = attributes
+
+    }
+}
+
+extension TextEditingViewController: TextToolBarViewDelegate {
+    
+    func didSelectFontType(_ type: FontType) {
+        let fontSize = (textView.typingAttributes[ NSAttributedStringKey.font.rawValue] as! UIFont).pointSize
+        setTextViewType(type, fontSize: fontSize)
     }
 }
