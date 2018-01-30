@@ -13,12 +13,10 @@ protocol ShippingMethodsDelegate: class {
 class ShippingMethodsViewController: UIViewController {
     
     private struct Constants {
-        static let titleHeight: CGFloat = 50.0
-        static let methodHeight: CGFloat = 52.0
         static let leadingSeparatorInset: CGFloat = 16
     }
     
-    weak var delegate: ShippingMethodsDelegate!
+    weak var delegate: ShippingMethodsDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,13 +28,7 @@ class ShippingMethodsViewController: UIViewController {
         }
     }
     
-    @IBOutlet private weak var tableView: UITableView! {
-        didSet {
-            tableView.rowHeight = Constants.methodHeight
-            tableView.sectionHeaderHeight = Constants.titleHeight
-            tableView.reloadData()
-        }
-    }
+    @IBOutlet private weak var tableView: UITableView!
     
     @IBAction private func tappedCloseButton(_ sender: UIBarButtonItem) {
         delegate?.didTapToDismissShippingMethods()
@@ -69,21 +61,10 @@ extension ShippingMethodsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = UIView()
-        view.backgroundColor = .clear
+        let cell = tableView.dequeueReusableCell(withIdentifier: ShippingMethodHeaderTableViewCell.reuseIdentifier) as? ShippingMethodHeaderTableViewCell
+        cell?.label.text = ProductManager.shared.cachedCost?.lineItems?[section].name
         
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        label.text = ProductManager.shared.cachedCost?.lineItems?[section].name
-        
-        view.addSubview(label)
-        
-        var constraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[label]-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["label": label])
-        constraints.append(contentsOf: NSLayoutConstraint.constraints(withVisualFormat: "V:[label]-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["label": label]))
-        view.addConstraints(constraints)
-        
-        return view
+        return cell
     }
     
 }
