@@ -24,8 +24,8 @@ class CountryTests: XCTestCase {
     func testCountryArchiveUnarchive() {
         let country = Country(name: "Westeros", codeAlpha2: "RR", codeAlpha3: "GOT", currencyCode: "Silver")
         
-        let archivedCountry = NSKeyedArchiver.archivedData(withRootObject: country)
-        let unarchivedCountry = NSKeyedUnarchiver.unarchiveObject(with: archivedCountry) as! Country
+        guard let archivedCountry = try? PropertyListEncoder().encode(country) else { XCTFail("Failed to encode country"); return }
+        guard let unarchivedCountry = try? PropertyListDecoder().decode(Country.self, from: archivedCountry) else { XCTFail("Failed to decode country"); return }
         
         XCTAssert(country.name == unarchivedCountry.name, "Unarchived country did not have the correct name")
         XCTAssert(country.codeAlpha2 == unarchivedCountry.codeAlpha2, "Unarchived country did not have the correct code2")

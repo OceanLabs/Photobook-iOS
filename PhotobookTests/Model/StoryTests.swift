@@ -81,10 +81,11 @@ class StoryTests: XCTestCase {
         startComponents.day = 1; startComponents.month = 11; startComponents.year = 2017
         let startDate = calendar.date(from: startComponents)
         
+        story.locale = Locale(identifier: "en_US")
         (story.collectionList as! PHCollectionListMock).startDateStub = startDate
         (story.collectionList as! PHCollectionListMock).endDateStub = startDate
         
-        XCTAssertEqual(story.subtitle, "NOV 1, 2017", "The subtitle should be 'NOV 1, 2017'")
+        XCTAssert(story.subtitle ==  "NOV 1, 2017", "The subtitle should be 'NOV 1, 2017' but was: \(story.subtitle!)")
     }
     
     func testSubtitleIsCorrectForASameMonthDates() {

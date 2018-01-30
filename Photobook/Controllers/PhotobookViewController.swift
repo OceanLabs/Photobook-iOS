@@ -186,10 +186,6 @@ class PhotobookViewController: UIViewController {
         }
     }
     
-    @IBAction private func didTapCheckout(_ sender: UIButton) {
-        print("Tapped Checkout")
-    }
-    
     @IBAction private func didTapOnSpine(_ sender: UITapGestureRecognizer) {
         print("Tapped on spine")
     }
