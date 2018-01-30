@@ -35,3 +35,10 @@ class ShippingMethodTableViewCell: UITableViewCell {
     }
 }
 
+class ShippingMethodHeaderTableViewCell: UITableViewCell {
+    
+    static let reuseIdentifier = NSStringFromClass(ShippingMethodHeaderTableViewCell.self).components(separatedBy: ".").last!
+    
+    @IBOutlet weak var label: UILabel!
+}
+
