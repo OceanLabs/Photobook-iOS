@@ -31,13 +31,15 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private enum Tools: Int {
-        case selectAsset, selectLayout, placeAsset, selectColor
+        case selectAsset, selectLayout, placeAsset, selectColor, editText
     }
     
+    @IBOutlet private weak var photobookContainerView: UIView!
     @IBOutlet private weak var assetSelectionContainerView: UIView!
     @IBOutlet private weak var layoutSelectionContainerView: UIView!
     @IBOutlet private weak var placementContainerView: UIView!
     @IBOutlet private weak var colorSelectionContainerView: UIView!
+    @IBOutlet private weak var textEditingContainerView: UIView!
     
     @IBOutlet var toolbarButtons: [UIButton]!
     @IBOutlet weak var toolbar: UIToolbar!
@@ -48,6 +50,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     private var layoutSelectionViewController: LayoutSelectionViewController!
     private var assetPlacementViewController: AssetPlacementViewController!
     private var colorSelectionViewController: ColorSelectionViewController!
+    private var textEditingViewController: TextEditingViewController!
     
     @IBOutlet private weak var coverFrameView: CoverFrameView! {
         didSet { coverFrameView.isHidden = pageType != .cover }
@@ -153,6 +156,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         super.viewDidLayoutSubviews()
         
         if !hasDoneSetup {
+            textEditingContainerView.alpha = 0.0
+            
             coverFrameView.color = ProductManager.shared.coverColor
             coverFrameView.pageView.aspectRatio = ProductManager.shared.product!.aspectRatio
 
@@ -173,6 +178,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             setupAssetSelection()
             setupLayoutSelection()
             setupColorSelection()
+            setupTextEditing()
             hasDoneSetup = true
         }
     }
@@ -211,6 +217,11 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         colorSelectionViewController.selectedColor = selectedColor
     }
     
+    private func setupTextEditing() {
+        let enabled = productLayout.layout.textLayoutBox != nil
+        toolbarButtons[Tools.editText.rawValue].isEnabled = enabled
+    }
+    
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier else { return }
@@ -226,6 +237,9 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         case "ColorSelectionSegue":
             colorSelectionViewController = segue.destination as! ColorSelectionViewController
             colorSelectionViewController.delegate = self
+        case "TextEditingSegue":
+            textEditingViewController = segue.destination as! TextEditingViewController
+            //TextEditingViewController.delegate = self
         default:
             break
         }
@@ -269,11 +283,12 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
                 }
             }
             UIView.animate(withDuration: 0.1, animations: {
+                self.photobookContainerView.alpha = 1.0
+                self.textEditingContainerView.alpha = 0.0
                 self.assetSelectionContainerView.alpha = tool.rawValue == Tools.selectAsset.rawValue ? 1.0 : 0.0
                 self.layoutSelectionContainerView.alpha = tool.rawValue == Tools.selectLayout.rawValue ? 1.0 : 0.0
                 self.colorSelectionContainerView.alpha = tool.rawValue == Tools.selectColor.rawValue ? 1.0 : 0.0
             })
-            break
         case .placeAsset:
             view.bringSubview(toFront: placementContainerView)
             
@@ -282,7 +297,19 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             assetPlacementViewController.initialContainerRect = containerRect
             assetPlacementViewController.assetImage = assetImageView.image
             assetPlacementViewController.animateFromPhotobook()
-            break
+        case .editText:
+            view.bringSubview(toFront: textEditingContainerView)
+            
+            // TODO: Animate photobook
+            textEditingViewController.productLayout = productLayout!
+            
+            UIView.animate(withDuration: 0.1, animations: {
+                self.assetSelectionContainerView.alpha = 0.0
+                self.layoutSelectionContainerView.alpha = 0.0
+                self.colorSelectionContainerView.alpha = 0.0
+                self.photobookContainerView.alpha = 0.0
+                self.textEditingContainerView.alpha = 1.0
+            })
         }
     }
 }
@@ -299,6 +326,7 @@ extension PageSetupViewController: LayoutSelectionViewControllerDelegate {
         }
         
         setupAssetPlacement()
+        setupTextEditing()
     }
 }
 

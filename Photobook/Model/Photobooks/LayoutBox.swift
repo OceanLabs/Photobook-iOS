@@ -28,6 +28,21 @@ struct LayoutBox: Codable {
         return CGRect(x: x, y: y, width: width, height: height)
     }
     
+    func aspectRatio(forContainerRatio ratio: CGFloat) -> CGFloat {
+        let containerWidth: CGFloat = 1000.0
+        let containerHeight = containerWidth / ratio
+        
+        let width = ceil(containerWidth * rect.width)
+        let height = ceil(containerHeight * rect.height)
+        return width / height
+    }
+    
+    func containerSize(for size: CGSize) -> CGSize {
+        let width = ceil(size.width / rect.width)
+        let height = ceil(size.height / rect.height)
+        return CGSize(width: width, height: height)
+    }
+        
     static func parse(_ layoutBoxDictionary: [String: AnyObject]) -> LayoutBox? {
         guard
             let id = layoutBoxDictionary["id"] as? Int,
