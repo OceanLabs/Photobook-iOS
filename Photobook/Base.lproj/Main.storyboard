@@ -276,9 +276,6 @@
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="1" id="zhi-5p-R1G"/>
                                                 </constraints>
-                                                <connections>
-                                                    <outlet property="widthConstraint" destination="zhi-5p-R1G" id="Mvc-EE-2Cr"/>
-                                                </connections>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" red="0.89019607840000003" green="0.8980392157" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
@@ -573,9 +570,6 @@
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="1" id="NHW-0P-jCS"/>
                                                                     </constraints>
-                                                                    <connections>
-                                                                        <outlet property="widthConstraint" destination="NHW-0P-jCS" id="Mlh-ql-EZA"/>
-                                                                    </connections>
                                                                 </view>
                                                             </subviews>
                                                             <color key="backgroundColor" red="0.89019607840000003" green="0.8980392157" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
@@ -2067,9 +2061,6 @@
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="1" id="Kfk-vK-2Cm"/>
                                                             </constraints>
-                                                            <connections>
-                                                                <outlet property="widthConstraint" destination="Kfk-vK-2Cm" id="7XU-3j-8AG"/>
-                                                            </connections>
                                                         </view>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.89019607840000003" green="0.8980392157" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
