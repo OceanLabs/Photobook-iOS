@@ -8,26 +8,105 @@
 
 import UIKit
 
+@objc protocol PhotobookCollectionViewCellDelegate: class, UIGestureRecognizerDelegate {
+    func didTapOnPlusButton(at foldIndex: Int)
+    @objc func didLongPress(_ sender: UILongPressGestureRecognizer)
+    @objc func didPan(_ sender: UIPanGestureRecognizer)
+}
+
 class PhotobookCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var bookView: UIView!
-    @IBOutlet weak var backgroundImageView: UIImageView!
-    @IBOutlet weak var leftPageView: PhotobookPageView!
-    @IBOutlet weak var rightPageView: PhotobookPageView?
-    @IBOutlet weak var widthConstraint: NSLayoutConstraint!
-    @IBOutlet private var pageAspectRatioConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var photobookFrameView: PhotobookFrameView! {
+        didSet {
+            photobookFrameView.coverColor = ProductManager.shared.coverColor
+            photobookFrameView.pageColor = ProductManager.shared.pageColor
+            photobookFrameView.leftPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
+        }
+    }
+    @IBOutlet private weak var plusButton: UIButton!
+
+    static let reuseIdentifier = NSStringFromClass(PhotobookCollectionViewCell.self).components(separatedBy: ".").last!
     
-    /* This hidden view is here only to set the aspect ratio of the page,
-     because if the aspect ratio constraint is set to one of the non-hidden views,
-     the automatic sizing of the cells doesn't work. I don't know why, it might be a bug
-     in autolayout.
-     */
-    @IBOutlet private weak var aspectRatioHelperView: UIView!
+    var imageSize = CGSize(width: Int.max, height: Int.max) {
+        didSet {
+            photobookFrameView.leftPageView.imageSize = imageSize
+            photobookFrameView.rightPageView.imageSize = imageSize
+        }
+    }
     
-    func configurePageAspectRatio(_ ratio: CGFloat) {
-        aspectRatioHelperView.removeConstraint(pageAspectRatioConstraint)
-        pageAspectRatioConstraint = NSLayoutConstraint(item: aspectRatioHelperView, attribute: .width, relatedBy: .equal, toItem: aspectRatioHelperView, attribute: .height, multiplier: ratio, constant: 0)
-        pageAspectRatioConstraint.priority = UILayoutPriority(750)
-        aspectRatioHelperView.addConstraint(pageAspectRatioConstraint)
+    var leftIndex: Int? { return photobookFrameView.leftPageView.index }
+    var rightIndex: Int? { return photobookFrameView.rightPageView.index }
+    var width: CGFloat! { didSet { photobookFrameView.width = width } }
+    var isVisible: Bool {
+        get { return !photobookFrameView.isHidden }
+        set { photobookFrameView.isHidden = !newValue }
+    }
+    var isPlusButtonVisible: Bool {
+        get { return !plusButton.isHidden }
+        set { plusButton.isHidden = !isPlusButtonVisible }
+    }
+    
+    weak var delegate: PhotobookCollectionViewCellDelegate?
+    weak var pageDelegate: PhotobookPageViewDelegate? {
+        didSet {
+            photobookFrameView.leftPageView.delegate = pageDelegate
+            photobookFrameView.rightPageView.delegate = pageDelegate
+        }
+    }
+
+    func loadPages(leftIndex: Int?, rightIndex: Int?, leftLayout: ProductLayout? = nil, rightLayout: ProductLayout? = nil, redrawing: Bool = false) {
+        if let leftIndex = leftIndex {
+            photobookFrameView.isLeftPageVisible = true
+            photobookFrameView.leftPageView.index = leftIndex
+            if leftLayout != nil { photobookFrameView.leftPageView.productLayout = leftLayout }
+            
+            photobookFrameView.leftPageView.setupImageBox()
+        } else {
+            photobookFrameView.isLeftPageVisible = false
+        }
+        
+        if let rightIndex = rightIndex {
+            photobookFrameView.isRightPageVisible = true
+            photobookFrameView.rightPageView.index = rightIndex
+            if rightLayout != nil { photobookFrameView.rightPageView.productLayout = rightLayout }
+            
+            photobookFrameView.rightPageView.setupImageBox()
+        } else {
+            photobookFrameView.isRightPageVisible = false
+        }
+        
+        if redrawing {
+            photobookFrameView.coverColor = ProductManager.shared.coverColor
+            photobookFrameView.pageColor = ProductManager.shared.pageColor
+            photobookFrameView.resetPageColor()
+        }
+    }
+        
+    @IBAction func didTapPlus(_ sender: UIButton) {
+        guard let layoutIndex = photobookFrameView.leftPageView.index ?? photobookFrameView.rightPageView.index,
+            let foldIndex = ProductManager.shared.foldIndex(for: layoutIndex)
+            else { return }
+        delegate?.didTapOnPlusButton(at: foldIndex)
+    }
+    
+    func setIsRearranging(_ isRearranging: Bool) {
+        photobookFrameView.leftPageView.isUserInteractionEnabled = !isRearranging
+        photobookFrameView.rightPageView.isUserInteractionEnabled = !isRearranging
+    }
+    
+    private var hasSetUpGestures = false
+    func setupGestures() {
+        guard let delegate = delegate, !hasSetUpGestures else { return }
+        hasSetUpGestures = true
+
+        let longPressGesture = UILongPressGestureRecognizer(target: delegate, action: #selector(PhotobookCollectionViewCellDelegate.didLongPress(_:)))
+        longPressGesture.delegate = delegate
+        photobookFrameView.addGestureRecognizer(longPressGesture)
+
+        let panGesture = UIPanGestureRecognizer(target: delegate, action: #selector(PhotobookCollectionViewCellDelegate.didPan(_:)))
+        panGesture.delegate = delegate
+        panGesture.maximumNumberOfTouches = 1
+        photobookFrameView.addGestureRecognizer(panGesture)
     }
 }
+

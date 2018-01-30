@@ -166,7 +166,7 @@ extension StoriesViewController: UITableViewDataSource {
         if isDouble {
             // Double cell
             let story = stories[storyIndex]
-            let secondStory = stories[storyIndex + 1] //TODO: crashes here because no +1 index story exists
+            let secondStory = stories[storyIndex + 1]
             
             let doubleCell = tableView.dequeueReusableCell(withIdentifier: DoubleStoryTableViewCell.reuseIdentifier(), for: indexPath) as! DoubleStoryTableViewCell
             doubleCell.title = story.title

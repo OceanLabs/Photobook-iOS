@@ -16,6 +16,7 @@ class Story {
     var isWeekend = false
     var score = 0
     var assets = [Asset]()
+    lazy var locale = Locale.current
     
     var title: String {
         return collectionList.localizedTitle!.uppercased()
@@ -41,7 +42,8 @@ class Story {
         
         // Check if it's same day
         if NSCalendar.current.isDate(startDate, inSameDayAs: endDate) {
-            dateFormatter.dateStyle = .medium            
+            dateFormatter.dateStyle = .medium
+            dateFormatter.locale = locale
             return dateFormatter.string(from: startDate)
         }
         
@@ -97,7 +99,7 @@ extension Story: Album {
             fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
             let fetchedAssets = PHAsset.fetchAssets(in: collection, options: fetchOptions)
             fetchedAssets.enumerateObjects({ (asset, _, _) in
-                self.assets.append(PhotosAsset(asset, collection:collection))
+                self.assets.append(PhotosAsset(asset, albumIdentifier: self.identifier))
             })
         }
         

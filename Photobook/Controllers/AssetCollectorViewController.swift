@@ -270,7 +270,7 @@ class AssetCollectorViewController: UIViewController {
                 UIView.animate(withDuration: duration, animations: {
                     self.useTheseButtonContainer.alpha = 1
                     self.pickMoreLabel.alpha = 0
-                }, completion: { (finished) in
+                }, completion: { _ in
                     self.pickMoreLabel.isHidden = true
                 })
             } else {
