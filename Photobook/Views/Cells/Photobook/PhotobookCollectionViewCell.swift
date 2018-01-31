@@ -23,7 +23,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
             photobookFrameView.leftPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
         }
     }
-    @IBOutlet private weak var plusButton: UIButton!
+    @IBOutlet weak var plusButton: UIButton!
 
     static let reuseIdentifier = NSStringFromClass(PhotobookCollectionViewCell.self).components(separatedBy: ".").last!
     
@@ -40,10 +40,6 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
     var isVisible: Bool {
         get { return !photobookFrameView.isHidden }
         set { photobookFrameView.isHidden = !newValue }
-    }
-    var isPlusButtonVisible: Bool {
-        get { return !plusButton.isHidden }
-        set { plusButton.isHidden = !isPlusButtonVisible }
     }
     
     weak var delegate: PhotobookCollectionViewCellDelegate?
