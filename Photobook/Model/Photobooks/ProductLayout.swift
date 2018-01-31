@@ -44,6 +44,24 @@ class ProductLayout: Codable {
         }
     }
     
+    var fontType: FontType? {
+        get {
+            return productLayoutText?.fontType
+        }
+        set {
+            guard layout.textLayoutBox != nil else {
+                print("ProductLayout: Trying to assign a font type to unavailable container")
+                return
+            }
+            guard newValue != nil else {
+                print("ProductLayout: Trying to assign nil font type")
+                return
+            }
+            if productLayoutText == nil { productLayoutText = ProductLayoutText() }
+            productLayoutText!.fontType = newValue!
+        }
+    }
+    
     init(layout: Layout, productLayoutAsset: ProductLayoutAsset? = nil, productLayoutText: ProductLayoutText? = nil) {
         self.layout = layout
         self.productLayoutAsset = productLayoutAsset

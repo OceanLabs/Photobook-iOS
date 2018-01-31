@@ -8,8 +8,18 @@
 
 import UIKit
 
-@objc enum FontType: Int {
+@objc enum FontType: Int, Codable {
     case clear, classic, solid
+    
+    func fontWithSize(_ size: CGFloat) -> UIFont {
+        let name: String
+        switch self {
+        case .clear: name = "OpenSans-Regular"
+        case .classic: name = "Lora-Regular"
+        case .solid: name = "Montserrat-Bold"
+        }
+        return UIFont(name: name, size: size)!
+    }
 }
 
 @objc protocol TextToolBarViewDelegate {
@@ -18,15 +28,31 @@ import UIKit
 
 class TextToolBarView: UIView {
     
-    @IBOutlet var toolButtons: [UIButton]!
+    @IBOutlet private var toolButtons: [UIButton]! {
+        didSet { toolButtons.first?.isSelected = true }
+    }
+    private var selectedIndex = 0
     
     weak var delegate: TextToolBarViewDelegate?
     
     @IBAction func tappedToolButton(_ sender: UIButton) {
         let index = toolButtons.index(of: sender)!
+        guard selectedIndex != index else { return }
+
+        toolButtons[selectedIndex].isSelected = false
+        toolButtons[index].isSelected = true
+        
+        selectedIndex = index
         let fontType = FontType(rawValue: index)!
         delegate?.didSelectFontType(fontType)
     }
+}
+
+protocol TextEditingDelegate: class {
+    
+    func didChangeFontType(to fontType: FontType)
+    func didChangeText(to text: String?)
+    
 }
 
 class TextEditingViewController: UIViewController {
@@ -35,8 +61,6 @@ class TextEditingViewController: UIViewController {
         static let textViewBorderPadding: CGFloat = 16.0 // 8.0 padding, 4.0 thickness, 4.0 for luck 🤡🎉
         static let fontSize: CGFloat = 16.0 // FIXME: Get this from the product info
         static let pageHeight: CGFloat = 430.866 // FIXME: Get this from the product info
-        static let fontFamily = "Helvetica" // FIXME: Get this from the product info
-        static let fontFamilyBold = "Helvetica-Bold" // FIXME: Get this from the product info
     }
     
     @IBOutlet private weak var textToolBarView: TextToolBarView! {
@@ -60,6 +84,7 @@ class TextEditingViewController: UIViewController {
     
     var productLayout: ProductLayout?
     var assetImage: UIImage?
+    weak var delegate: TextEditingDelegate?
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -133,20 +158,11 @@ class TextEditingViewController: UIViewController {
     }
     
     private func setTextViewType(_ type: FontType, fontSize: CGFloat) {
-        let font: UIFont
-        
-        switch type {
-        case .clear:
-            fallthrough
-        case .classic:
-            font = UIFont(name: Constants.fontFamily, size: fontSize)!
-        case .solid:
-            font = UIFont(name: Constants.fontFamilyBold, size: fontSize)!
-        }
+        // TODO: Check that the new style doesn't go over the bounds
+        let font = type.fontWithSize(fontSize)
         let attributes = [ NSAttributedStringKey.font.rawValue: font ]
         textView.attributedText = NSAttributedString(string: textView.text, attributes: [ NSAttributedStringKey.font: font ])
         textView.typingAttributes = attributes
-
     }
 }
 
@@ -162,6 +178,10 @@ extension TextEditingViewController: UITextViewDelegate {
         
         // Check that the new length doesn't exceed the textView bounds
         return !textGoesOverBounds(for: textView, string: text, range: range)
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        delegate?.didChangeText(to: textView.text)
     }
     
     private func textGoesOverBounds(for textView: UITextView, string: String, range: NSRange) -> Bool {
@@ -182,8 +202,6 @@ extension TextEditingViewController: UITextViewDelegate {
         
         return textHeight >= viewHeight
     }
-    
-    
 }
 
 extension TextEditingViewController: TextToolBarViewDelegate {
@@ -191,5 +209,8 @@ extension TextEditingViewController: TextToolBarViewDelegate {
     func didSelectFontType(_ type: FontType) {
         let fontSize = (textView.typingAttributes[ NSAttributedStringKey.font.rawValue] as! UIFont).pointSize
         setTextViewType(type, fontSize: fontSize)
+        
+        // TODO: This should be conditional on whether the text goes over bounds or not
+        delegate?.didChangeFontType(to: type)
     }
 }

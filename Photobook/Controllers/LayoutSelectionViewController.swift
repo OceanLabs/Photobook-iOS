@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol LayoutSelectionViewControllerDelegate: class {
+protocol LayoutSelectionDelegate: class {
     
     func didSelectLayout(_ layout: Layout)
     
@@ -60,7 +60,7 @@ class LayoutSelectionViewController: UIViewController {
         }
     }
     
-    weak var delegate: LayoutSelectionViewControllerDelegate?
+    weak var delegate: LayoutSelectionDelegate?
 }
 
 extension LayoutSelectionViewController: UICollectionViewDataSource {

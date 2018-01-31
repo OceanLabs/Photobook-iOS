@@ -239,7 +239,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             colorSelectionViewController.delegate = self
         case "TextEditingSegue":
             textEditingViewController = segue.destination as! TextEditingViewController
-            //TextEditingViewController.delegate = self
+            textEditingViewController.delegate = self
         default:
             break
         }
@@ -316,7 +316,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
 }
 
-extension PageSetupViewController: LayoutSelectionViewControllerDelegate {
+extension PageSetupViewController: LayoutSelectionDelegate {
     
     func didSelectLayout(_ layout: Layout) {
         productLayout.layout = layout
@@ -364,5 +364,18 @@ extension PageSetupViewController: ColorSelectorDelegate {
             photobookFrameView.pageColor = color
             photobookFrameView.resetPageColor()
         }
+    }
+}
+
+extension PageSetupViewController: TextEditingDelegate {
+    
+    func didChangeText(to text: String?) {
+        productLayout.text = text
+        pageView.setupTextBox()
+    }
+    
+    func didChangeFontType(to fontType: FontType) {
+        productLayout.fontType = fontType
+        pageView.setupTextBox()
     }
 }
