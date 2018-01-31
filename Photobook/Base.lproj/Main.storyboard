@@ -2204,7 +2204,7 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <segue destination="bDf-a2-yFE" kind="show" id="3Zg-mY-2ol"/>
+                                            <action selector="didTapCheckout:" destination="l0p-H6-Aqd" eventType="touchUpInside" id="cae-sv-b12"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -2243,6 +2243,7 @@
                         <outlet property="collectionViewTopConstraint" destination="gZc-W1-xMM" id="BiB-dw-zEN"/>
                         <outlet property="collectionViewTrailingConstraint" destination="Hji-0y-uul" id="JI1-Tf-r5q"/>
                         <outlet property="ctaButtonContainer" destination="9PF-H7-3d7" id="hMk-Zi-KJ0"/>
+                        <segue destination="bDf-a2-yFE" kind="show" identifier="CheckoutSegue" id="C4b-S2-L6x"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="suS-9V-cjP" userLabel="First Responder" sceneMemberID="firstResponder"/>
