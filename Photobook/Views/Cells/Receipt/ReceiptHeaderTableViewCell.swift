@@ -9,6 +9,8 @@
 import UIKit
 
 class ReceiptHeaderTableViewCell: UITableViewCell {
+    
+    static let reuseIdentifier = NSStringFromClass(ReceiptHeaderTableViewCell.self).components(separatedBy: ".").last!
 
     @IBOutlet weak var previewImageView: UIImageView!
     @IBOutlet weak var uploadingSpinnerImageView: UIImageView!

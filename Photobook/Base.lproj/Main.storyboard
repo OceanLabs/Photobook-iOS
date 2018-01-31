@@ -2312,6 +2312,9 @@
                     <navigationItem key="navigationItem" title="Basket" id="flI-tl-pLR">
                         <barButtonItem key="backBarButtonItem" title="Back" id="pLV-hd-gxi"/>
                     </navigationItem>
+                    <connections>
+                        <segue destination="Ak1-TW-jZH" kind="show" identifier="ReceiptSegue" id="8Ig-MC-E5o"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fxx-MF-xXw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

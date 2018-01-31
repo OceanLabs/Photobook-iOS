@@ -9,6 +9,8 @@
 import UIKit
 
 class ReceiptFooterTableViewCell: UITableViewCell {
+    
+    static let reuseIdentifier = NSStringFromClass(ReceiptFooterTableViewCell.self).components(separatedBy: ".").last!
 
     @IBOutlet weak var totalCostLabel: UILabel!
     

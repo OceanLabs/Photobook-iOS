@@ -83,17 +83,29 @@ class ProductManager {
         return minimumRequiredAssets < productLayouts.count
     }
     
-    // Ordering
+    // Ordering (this should probably be in another class)
     var shippingMethod: Int?
-    var currencyCode: String? // TODO: Get this from somewhere
+    var currencyCode: String? = "GBP" // TODO: Get this from somewhere
     var deliveryDetails: DeliveryDetails?
     var paymentMethod: PaymentMethod?
-    var cachedCost: Cost?
-    
-    // TODO: this probably doesn't belong here
-    func updateCost (completionHandler: (_ error: Error?) -> Void) {
-        
+    var cachedCost: Cost? // private?
+    var validCost: Cost? {
+        return hasValidCachedCost ? cachedCost : nil
     }
+    func updateCost(forceUpdate: Bool = false, _ completionHandler: @escaping (_ error : Error?) -> Void) {
+        // TODO: update cost
+        completionHandler(nil)
+    }
+    var hasValidCachedCost: Bool {
+        // TODO: validate
+//        return cachedCost?.orderHash == self.hashValue
+        return true
+    }
+    var paymentToken: String?
+    func reset() {
+        // TODO: reset the product
+    }
+    
     
     // TODO: Spine
     

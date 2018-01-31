@@ -42,7 +42,7 @@ class ReceiptTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case Section.header.rawValue:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ReceiptHeaderTableViewCell", for: indexPath) as! ReceiptHeaderTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptHeaderTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptHeaderTableViewCell
             cell.shippingMethodLabel.text = cost?.shippingMethod(id: ProductManager.shared.shippingMethod)?.name
             // TODO: Replace with order number
             cell.orderNumberLabel.text = "#1234"
@@ -59,12 +59,12 @@ class ReceiptTableViewController: UITableViewController {
             
             return cell
         case Section.lineItems.rawValue:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ReceiptLineItemTableViewCell", for: indexPath) as! ReceiptLineItemTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptLineItemTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptLineItemTableViewCell
             cell.lineItemNameLabel.text = cost?.lineItems?[indexPath.row].name
             cell.lineItemCostLabel.text = cost?.lineItems?[indexPath.row].formattedCost
             return cell
         case Section.footer.rawValue:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ReceiptFooterTableViewCell", for: indexPath) as! ReceiptFooterTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptFooterTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptFooterTableViewCell
             cell.totalCostLabel.text = cost?.shippingMethod(id: ProductManager.shared.shippingMethod)?.totalCostFormatted
             return cell
         default:
