@@ -3389,7 +3389,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="415" height="400"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8HO-Mo-7oS">
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8HO-Mo-7oS">
                                         <rect key="frame" x="87" y="26" width="240" height="128"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
@@ -3415,7 +3415,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="bhd-OS-of5">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="bhd-OS-of5">
                                 <rect key="frame" x="20" y="296" width="374" height="100"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -3423,7 +3423,7 @@
                                     <constraint firstAttribute="height" constant="100" id="e7G-TC-B75"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" keyboardType="alphabet"/>
                             </textView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -3438,8 +3438,8 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="assetContainerView" destination="8HO-Mo-7oS" id="LKR-YS-Mys"/>
                         <outlet property="assetImageView" destination="TVV-iR-E0B" id="xxB-aR-BW9"/>
-                        <outlet property="imageContainerView" destination="8HO-Mo-7oS" id="ORH-Ah-PYX"/>
                         <outlet property="pageView" destination="fTe-qL-vtv" id="eRM-p8-KSe"/>
                         <outlet property="textToolBarView" destination="ixR-NF-UBV" id="dLY-1M-Wmj"/>
                         <outlet property="textView" destination="bhd-OS-of5" id="3pl-IZ-K6l"/>

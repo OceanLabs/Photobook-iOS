@@ -302,6 +302,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             // TODO: Animate photobook
             textEditingViewController.productLayout = productLayout!
+            textEditingViewController.assetImage = assetImageView.image
+            textEditingViewController.setup()
             
             UIView.animate(withDuration: 0.1, animations: {
                 self.assetSelectionContainerView.alpha = 0.0
@@ -345,7 +347,6 @@ extension PageSetupViewController: AssetSelectorDelegate {
             
             layoutSelectionViewController.selectedLayout = productLayout.layout
         }
-
         pageView.setupImageBox()
         setupAssetPlacement()
     }

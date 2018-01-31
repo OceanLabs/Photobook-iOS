@@ -41,14 +41,16 @@ class TextEditingViewController: UIViewController {
     
     @IBOutlet private weak var textToolBarView: TextToolBarView! {
         didSet {
-            textToolBarView.backgroundColor = UIColor(red: 208/255.0, green: 212/255.0, blue: 217/255.0, alpha: 1.0)
+            textToolBarView.backgroundColor = UIColor(red: 0.82, green: 0.83, blue: 0.85, alpha: 1.0)
             textToolBarView.delegate = self
         }
     }
     @IBOutlet private weak var textViewBorderView: UIView!
-    @IBOutlet private weak var textView: UITextView!
+    @IBOutlet private weak var textView: UITextView! {
+        didSet { textView.delegate = self }
+    }
     @IBOutlet private weak var pageView: UIView!
-    @IBOutlet private weak var imageContainerView: UIView!
+    @IBOutlet private weak var assetContainerView: UIView!
     @IBOutlet private weak var assetImageView: UIImageView!
     
     @IBOutlet private weak var textViewLeadingConstraint: NSLayoutConstraint!
@@ -56,13 +58,8 @@ class TextEditingViewController: UIViewController {
     @IBOutlet private weak var textViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var textViewBottomConstraint: NSLayoutConstraint!
     
-    var productLayout: ProductLayout? {
-        didSet {
-            textView.inputAccessoryView = textToolBarView
-            textView.becomeFirstResponder()
-            setupPage()
-        }
-    }
+    var productLayout: ProductLayout?
+    var assetImage: UIImage?
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -85,26 +82,29 @@ class TextEditingViewController: UIViewController {
         }
     }
 
-    private func setupPage() {
+    func setup() {
         // Figure out the height of the textView
         guard
             let pageRatio = ProductManager.shared.product?.aspectRatio,
-            let layoutBox = productLayout?.layout.textLayoutBox
+            let textLayoutBox = productLayout?.layout.textLayoutBox
         else {
             fatalError("Text editing failed due to missing layout info.")
         }
         
-        let aspectRatio = layoutBox.aspectRatio(forContainerRatio: pageRatio)
+        textView.inputAccessoryView = textToolBarView
+        textView.becomeFirstResponder()
+        
+        let aspectRatio = textLayoutBox.aspectRatio(forContainerRatio: pageRatio)
         textViewHeightConstraint.constant = textViewWidthConstraint.constant / aspectRatio
         
         // Position page and image box, if needed
         let layoutBoxSize = CGSize(width: textViewWidthConstraint.constant, height: textViewHeightConstraint.constant)
-        let pageSize = layoutBox.containerSize(for: layoutBoxSize)
+        let pageSize = textLayoutBox.containerSize(for: layoutBoxSize)
         
         let topMargin = view.bounds.height - textViewBottomConstraint.constant - textViewHeightConstraint.constant
-        let layoutBoxRect = layoutBox.rectContained(in: pageSize)
-        let pageXCoordinate = textViewLeadingConstraint.constant - layoutBoxRect.minX
-        let pageYCoordinate = topMargin - layoutBoxRect.minY
+        let textLayoutBoxRect = textLayoutBox.rectContained(in: pageSize)
+        let pageXCoordinate = textViewLeadingConstraint.constant - textLayoutBoxRect.minX
+        let pageYCoordinate = topMargin - textLayoutBoxRect.minY
         
         pageView.frame.origin = CGPoint(x: pageXCoordinate, y: pageYCoordinate)
         pageView.frame.size = pageSize
@@ -116,7 +116,20 @@ class TextEditingViewController: UIViewController {
         setTextViewType(.classic, fontSize: fontSize)
         
         // Place image if needed
+        guard let imageLayoutBox = productLayout!.layout.imageLayoutBox,
+            let asset = productLayout?.asset,
+            let image = assetImage else { return }
         
+        let imageLayoutRect = imageLayoutBox.rectContained(in: pageSize)
+        assetContainerView.frame = imageLayoutRect
+
+        assetImageView.image = image
+        assetImageView.transform = .identity
+        assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: asset.size.width, height: asset.size.height)
+        assetImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
+        
+        productLayout!.productLayoutAsset!.containerSize = assetContainerView.bounds.size
+        assetImageView.transform = productLayout!.productLayoutAsset!.transform
     }
     
     private func setTextViewType(_ type: FontType, fontSize: CGFloat) {
@@ -130,12 +143,47 @@ class TextEditingViewController: UIViewController {
         case .solid:
             font = UIFont(name: Constants.fontFamilyBold, size: fontSize)!
         }
-        
         let attributes = [ NSAttributedStringKey.font.rawValue: font ]
         textView.attributedText = NSAttributedString(string: textView.text, attributes: [ NSAttributedStringKey.font: font ])
         textView.typingAttributes = attributes
 
     }
+}
+
+extension TextEditingViewController: UITextViewDelegate {
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        
+        // Allow deleting
+        if text.count == 0 { return true }
+        
+        // Disallow pasting non-ascii characters
+        if !text.canBeConverted(to: String.Encoding.ascii) { return false }
+        
+        // Check that the new length doesn't exceed the textView bounds
+        return !textGoesOverBounds(for: textView, string: text, range: range)
+    }
+    
+    private func textGoesOverBounds(for textView: UITextView, string: String, range: NSRange) -> Bool {
+        let viewHeight = textView.bounds.height
+        let width = textView.textContainer.size.width
+        
+        let attributedString = NSMutableAttributedString(attributedString: textView.textStorage)
+        attributedString.replaceCharacters(in: range, with: string)
+        
+        let storage = NSTextStorage(attributedString: attributedString)
+        let container = NSTextContainer(size: CGSize(width: width, height: CGFloat.greatestFiniteMagnitude))
+        let layoutManager = NSLayoutManager()
+        
+        layoutManager.addTextContainer(container)
+        storage.addLayoutManager(layoutManager)
+        
+        let textHeight = layoutManager.usedRect(for: container).height
+        
+        return textHeight >= viewHeight
+    }
+    
+    
 }
 
 extension TextEditingViewController: TextToolBarViewDelegate {
