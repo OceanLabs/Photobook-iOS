@@ -9,6 +9,11 @@
 import UIKit
 
 class CheckoutViewController: UIViewController {
+    
+    private let segueIdentifierDeliveryDetails = "segueDeliveryDetails"
+    private let segueIdentifierShippingMethods = "segueShippingMethods"
+    private let segueIdentifierPaymentMethods = "seguePaymentMethods"
+    
     @IBOutlet weak var itemImageView: UIImageView!
     @IBOutlet weak var itemTitleLabel: UILabel!
     @IBOutlet weak var itemPriceLabel: UILabel!
@@ -38,6 +43,11 @@ class CheckoutViewController: UIViewController {
         registerForKeyboardNotifications()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    
+    }
+    
     private func registerForKeyboardNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(notification:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -46,6 +56,12 @@ class CheckoutViewController: UIViewController {
     func adaptPayButton() {
         
     }
+    
+    /*override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == segueIdentifierDeliveryDetails, let vc = segue.destination as? DeliveryDetailsTableViewController {
+            
+        }
+    }*/
     
     @IBAction private func deliveryDetailsTapped(_ sender: UITapGestureRecognizer) {
         //performSegue(withIdentifier: Constants.addressSegueName, sender: nil)

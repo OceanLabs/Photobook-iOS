@@ -99,13 +99,13 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qHd-uS-3Hd" customClass="CoverFrameView" customModule="Photobook" customModuleProvider="target">
-                                        <rect key="frame" x="30" y="78.333333333333329" width="354.66666666666669" height="255.66666666666669"/>
+                                        <rect key="frame" x="30" y="58" width="315" height="227"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Shv-7M-ANA" customClass="CoverBackgroundView" customModule="Photobook" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="354.66666666666669" height="255.66666666666666"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="315" height="227"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o9p-sQ-fNU" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
-                                                        <rect key="frame" x="17.666666666666657" y="0.0" width="337" height="255.66666666666666"/>
+                                                        <rect key="frame" x="15.5" y="0.0" width="299.5" height="227"/>
                                                         <subviews>
                                                             <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gqm-5A-oWZ">
                                                                 <rect key="frame" x="27.666666666666814" y="36" width="120" height="120"/>
@@ -163,32 +163,32 @@
                                         </connections>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i3e-1a-FKo" customClass="PhotobookFrameView" customModule="Photobook" customModuleProvider="target">
-                                        <rect key="frame" x="30.666666666666657" y="372.33333333333331" width="354.66666666666674" height="207.66666666666669"/>
+                                        <rect key="frame" x="30.5" y="337.5" width="355" height="208"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="syg-US-S7e" userLabel="Cover View" customClass="PhotobookFrameCoverView" customModule="Photobook" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.33333333333337123" width="354.66666666666669" height="207.33333333333334"/>
+                                                <rect key="frame" x="0.0" y="0.5" width="355" height="207.5"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fdP-l9-3aT" userLabel="Cover Inside Image View">
-                                                <rect key="frame" x="5" y="5.3333333333333712" width="344.66666666666669" height="197.33333333333334"/>
+                                                <rect key="frame" x="5" y="5.5" width="345" height="197.5"/>
                                             </imageView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7yw-nf-eJr" userLabel="Spread Background View" customClass="PhotobookFrameSpreadBackgroundView" customModule="Photobook" customModuleProvider="target">
-                                                <rect key="frame" x="13" y="5" width="328.66666666666669" height="197.66666666666666"/>
+                                                <rect key="frame" x="13" y="5" width="329" height="198"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OsK-MN-4fd" customClass="PhotobookFramePagesBehindView" customModule="Photobook" customModuleProvider="target">
-                                                <rect key="frame" x="12.999999999999996" y="5" width="7" height="197.66666666666666"/>
+                                                <rect key="frame" x="13" y="5" width="7" height="198"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="7" id="Va2-qR-SNF"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AuB-8K-VIu" customClass="PhotobookFramePageBackgroundView" customModule="Photobook" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="5" width="158.33333333333334" height="197.66666666666666"/>
+                                                <rect key="frame" x="20" y="5" width="158.5" height="198"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="urE-1B-NkH" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="5.3333333333333712" width="158.33333333333334" height="197.33333333333334"/>
+                                                <rect key="frame" x="20" y="5.5" width="158.5" height="197.5"/>
                                                 <subviews>
                                                     <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Rk-zp-BKy">
                                                         <rect key="frame" x="19.333333333333329" y="39" width="120" height="120"/>
@@ -224,18 +224,18 @@
                                                 </connections>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zfa-gp-SpN" customClass="PhotobookFramePagesBehindView" customModule="Photobook" customModuleProvider="target">
-                                                <rect key="frame" x="334.66666666666663" y="5.3333333333333712" width="7" height="196.66666666666666"/>
+                                                <rect key="frame" x="335" y="5.5" width="7" height="197.5"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="7" id="wlP-b5-gOr"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IJ7-bZ-Y37" customClass="PhotobookFramePageBackgroundView" customModule="Photobook" customModuleProvider="target">
-                                                <rect key="frame" x="177.33333333333331" y="4.3333333333333712" width="157.33333333333331" height="197.66666666666666"/>
+                                                <rect key="frame" x="177.5" y="4.5" width="157.5" height="198.5"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ext-3a-SVs" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
-                                                <rect key="frame" x="177.33333333333331" y="4.3333333333333712" width="157.33333333333331" height="198.33333333333334"/>
+                                                <rect key="frame" x="177.5" y="4.5" width="157.5" height="198.5"/>
                                                 <subviews>
                                                     <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VSB-Xc-eq6">
                                                         <rect key="frame" x="18.666666666666714" y="39" width="120" height="120"/>
@@ -271,7 +271,7 @@
                                                 </connections>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C4w-ms-gXv" userLabel="Page Divider View" customClass="PhotobookFramePageDividerView" customModule="Photobook" customModuleProvider="target">
-                                                <rect key="frame" x="177.33333333333334" y="5.3333333333333712" width="1" height="197.33333333333334"/>
+                                                <rect key="frame" x="177.5" y="5.5" width="1" height="197.5"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="1" id="zhi-5p-R1G"/>
@@ -351,7 +351,7 @@
                                 </constraints>
                             </view>
                             <containerView opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KHP-IW-R1o" userLabel="Color Selection Container View">
-                                <rect key="frame" x="0.0" y="572" width="414" height="120"/>
+                                <rect key="frame" x="0.0" y="503" width="375" height="120"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="120" id="1W5-sL-3kE"/>
                                 </constraints>
@@ -360,7 +360,7 @@
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p5s-6j-6B3" userLabel="Layout Selection Container View">
-                                <rect key="frame" x="0.0" y="618" width="414.66666666666669" height="74"/>
+                                <rect key="frame" x="0.0" y="549" width="375" height="74"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="74" id="OZu-U6-ioz"/>
                                 </constraints>
@@ -369,7 +369,7 @@
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rjg-CR-QNN" userLabel="Asset Selection Container View">
-                                <rect key="frame" x="0.0" y="618" width="414" height="74"/>
+                                <rect key="frame" x="0.0" y="549" width="375" height="74"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="74" id="D1l-e8-TlI"/>
                                 </constraints>
@@ -435,11 +435,11 @@
             <objects>
                 <viewController modalPresentationStyle="overCurrentContext" id="lKF-NC-kTc" customClass="LayoutSelectionViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9cr-Df-svs">
-                        <rect key="frame" x="0.0" y="0.0" width="414.66666666666669" height="74"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="74"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="65P-Rb-rBt">
-                                <rect key="frame" x="0.0" y="0.0" width="414.66666666666669" height="74"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="74"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="6" minimumInteritemSpacing="0.0" id="cls-2Q-OPO">
                                     <size key="itemSize" width="85" height="64"/>
@@ -462,22 +462,22 @@
                                                             <rect key="frame" x="-55" y="6" width="120" height="52"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mEH-0m-viF" userLabel="Cover View" customClass="PhotobookFrameCoverView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="-0.3333333333333357" y="0.33333333333333215" width="120" height="51.666666666666671"/>
+                                                                    <rect key="frame" x="-0.5" y="0.5" width="120" height="51.5"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </view>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SHb-GE-xgn" userLabel="Cover Inside Image View">
-                                                                    <rect key="frame" x="1.6666666666666643" y="2.3333333333333321" width="116" height="47.666666666666671"/>
+                                                                    <rect key="frame" x="1.5" y="2.5" width="116" height="47.5"/>
                                                                 </imageView>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UQ5-Ef-1Lx" userLabel="Spread Background View" customClass="PhotobookFrameSpreadBackgroundView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="5.6666666666666643" y="2" width="108" height="48"/>
+                                                                    <rect key="frame" x="5.5" y="2" width="108" height="48"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </view>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FTd-ye-Hey" customClass="PhotobookFramePageBackgroundView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="5.6666666666666607" y="2" width="55.333333333333343" height="48"/>
+                                                                    <rect key="frame" x="5.5" y="2" width="54.5" height="48"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </view>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CqD-yK-VxZ" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="5.6666666666666607" y="2.3333333333333321" width="55.333333333333343" height="47.666666666666671"/>
+                                                                    <rect key="frame" x="5.5" y="2.5" width="54.5" height="47.5"/>
                                                                     <subviews>
                                                                         <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1kq-DX-noZ">
                                                                             <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
@@ -519,11 +519,11 @@
                                                                     </connections>
                                                                 </view>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dNZ-05-dgZ" customClass="PhotobookFramePageBackgroundView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="60" y="1.3333333333333321" width="53.666666666666657" height="48"/>
+                                                                    <rect key="frame" x="59" y="1.5" width="54.5" height="48"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </view>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qiS-EF-1C4" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="60" y="1.3333333333333321" width="53.666666666666657" height="48.666666666666671"/>
+                                                                    <rect key="frame" x="59" y="1.5" width="54.5" height="48.5"/>
                                                                     <subviews>
                                                                         <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dzW-J6-cYK">
                                                                             <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
@@ -565,7 +565,7 @@
                                                                     </connections>
                                                                 </view>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kCn-Ht-0Ja" userLabel="Page Divider View" customClass="PhotobookFramePageDividerView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="60" y="2.3333333333333321" width="1" height="47.666666666666671"/>
+                                                                    <rect key="frame" x="59" y="2.5" width="1" height="47.5"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="1" id="NHW-0P-jCS"/>
@@ -661,13 +661,13 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="85" height="64"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SFY-NV-7VF" customClass="CoverFrameView" customModule="Photobook" customModuleProvider="target">
-                                                            <rect key="frame" x="6" y="6" width="73" height="52"/>
+                                                            <rect key="frame" x="6.5" y="6" width="72" height="52"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pxt-5T-2O8" customClass="CoverBackgroundView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="73" height="52"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="72" height="52"/>
                                                                     <subviews>
                                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oC0-Mt-wgy" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
-                                                                            <rect key="frame" x="3.6666666666666643" y="0.0" width="69.333333333333343" height="52"/>
+                                                                            <rect key="frame" x="3.5" y="0.0" width="68.5" height="52"/>
                                                                             <subviews>
                                                                                 <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Cd-Db-cE8">
                                                                                     <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
@@ -1417,7 +1417,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tm6-rH-30X">
-                                <rect key="frame" x="0.0" y="30" width="414" height="706"/>
+                                <rect key="frame" x="0.0" y="30" width="375" height="637"/>
                                 <connections>
                                     <segue destination="mcv-na-BVN" kind="embed" identifier="AlbumsCollectionSegue" id="2oC-kh-DmB"/>
                                 </connections>
@@ -1469,7 +1469,7 @@
             <objects>
                 <collectionViewController storyboardIdentifier="AlbumsCollectionViewController" id="dnn-z5-0C4" customClass="AlbumsCollectionViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" id="bn4-uC-JcP">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="706"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="637"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="eYK-0U-LrI">
@@ -1479,7 +1479,7 @@
                             <inset key="sectionInset" minX="20" minY="20" maxX="20" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <activityIndicatorView key="backgroundView" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" id="qvD-qJ-eaZ">
-                            <rect key="frame" x="0.0" y="-64" width="414" height="706"/>
+                            <rect key="frame" x="0.0" y="-64" width="375" height="637"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </activityIndicatorView>
@@ -1492,7 +1492,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="DRx-Ip-dVX">
-                                            <rect key="frame" x="0.0" y="0.0" width="177" height="167"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="177" height="147"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.040000000000000001" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -1501,7 +1501,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qS3-bO-f7J">
-                                            <rect key="frame" x="143" y="133" width="24" height="24"/>
+                                            <rect key="frame" x="143" y="113" width="24" height="24"/>
                                             <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="24" id="Av8-aO-OpE"/>
@@ -1512,13 +1512,13 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All Photos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lxg-eo-kS2">
-                                            <rect key="frame" x="0.0" y="172" width="69" height="18"/>
+                                            <rect key="frame" x="0.0" y="152" width="69" height="18"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10852" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9q5-oj-AEO">
-                                            <rect key="frame" x="0.0" y="190" width="44" height="18"/>
+                                            <rect key="frame" x="0.0" y="170" width="44" height="18"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
@@ -1806,11 +1806,11 @@
             <objects>
                 <viewController storyboardIdentifier="PhotobookViewController" hidesBottomBarWhenPushed="YES" id="l0p-H6-Aqd" customClass="PhotobookViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hYx-pR-ckZ" customClass="OutOfBoundsTouchView" customModule="Photobook" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TBG-9p-ivA" customClass="OutOfBoundsTouchCollectionView" customModule="Photobook" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" red="0.89019607840000003" green="0.8980392157" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="12" minimumInteritemSpacing="0.0" id="MEd-aD-PzO">
                                     <size key="itemSize" width="359" height="207"/>
@@ -1820,7 +1820,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotobookCoverCollectionViewCell" id="fIJ-b9-0Xr" userLabel="Photobook Cover Cell" customClass="PhotobookCoverCollectionViewCell" customModule="Photobook" customModuleProvider="target">
-                                        <rect key="frame" x="27.666666666666668" y="15" width="359" height="207"/>
+                                        <rect key="frame" x="8" y="15" width="359" height="207"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="359" height="207"/>
@@ -1834,7 +1834,7 @@
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ORz-yc-dFH">
-                                                            <rect key="frame" x="-28" y="104.33333333333333" width="66" height="0.0"/>
+                                                            <rect key="frame" x="-28" y="103.5" width="66" height="0.0"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="66" id="qsC-jx-jNX"/>
                                                             </constraints>
@@ -1866,7 +1866,7 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="173" height="207"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SIc-aM-s7t" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="8.6666666666666572" y="0.0" width="164.33333333333334" height="207"/>
+                                                                    <rect key="frame" x="8.5" y="0.0" width="164.5" height="207"/>
                                                                     <subviews>
                                                                         <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wv5-To-CaO">
                                                                             <rect key="frame" x="27.666666666666814" y="36" width="120" height="120"/>
@@ -1941,7 +1941,7 @@
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotobookCollectionViewCell" id="0j2-2Y-biD" userLabel="Photobook Cell" customClass="PhotobookCollectionViewCell" customModule="Photobook" customModuleProvider="target">
-                                        <rect key="frame" x="27.666666666666668" y="234" width="359" height="207"/>
+                                        <rect key="frame" x="8" y="234" width="359" height="207"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="359" height="207"/>
@@ -1951,11 +1951,11 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="359" height="207"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fft-iy-1CW" userLabel="Cover View" customClass="PhotobookFrameCoverView" customModule="Photobook" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.3333333333333286" width="359" height="206.66666666666669"/>
+                                                            <rect key="frame" x="0.0" y="0.5" width="359" height="206.5"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </view>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="enN-6P-pUJ" userLabel="Cover Inside Image View">
-                                                            <rect key="frame" x="5" y="5.3333333333333286" width="349" height="196.66666666666669"/>
+                                                            <rect key="frame" x="5" y="5.5" width="349" height="196.5"/>
                                                         </imageView>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TZQ-n4-cxl" userLabel="Spread Background View" customClass="PhotobookFrameSpreadBackgroundView" customModule="Photobook" customModuleProvider="target">
                                                             <rect key="frame" x="13" y="5" width="333" height="197"/>
@@ -1973,7 +1973,7 @@
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Vu-Py-eeg" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
-                                                            <rect key="frame" x="20" y="5.3333333333333286" width="160" height="196.66666666666669"/>
+                                                            <rect key="frame" x="20" y="5.5" width="160" height="196.5"/>
                                                             <subviews>
                                                                 <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="k6d-OH-WNp">
                                                                     <rect key="frame" x="19.333333333333329" y="39" width="120" height="120"/>
@@ -2009,18 +2009,18 @@
                                                             </connections>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Z1-jm-uVB" customClass="PhotobookFramePagesBehindView" customModule="Photobook" customModuleProvider="target">
-                                                            <rect key="frame" x="339" y="5.3333333333333286" width="7" height="196"/>
+                                                            <rect key="frame" x="339" y="5.5" width="7" height="196"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="7" id="3hH-bo-JKk"/>
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j1z-u2-5I8" customClass="PhotobookFramePageBackgroundView" customModule="Photobook" customModuleProvider="target">
-                                                            <rect key="frame" x="179" y="4.3333333333333286" width="160" height="197"/>
+                                                            <rect key="frame" x="179" y="4.5" width="160" height="197"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Bf-Wz-wqA" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
-                                                            <rect key="frame" x="179" y="4.3333333333333286" width="160" height="197.66666666666669"/>
+                                                            <rect key="frame" x="179" y="4.5" width="160" height="197.5"/>
                                                             <subviews>
                                                                 <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m5M-pH-dcx">
                                                                     <rect key="frame" x="18.666666666666714" y="39" width="120" height="120"/>
@@ -2056,7 +2056,7 @@
                                                             </connections>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8PU-St-qOP" userLabel="Page Divider View" customClass="PhotobookFramePageDividerView" customModule="Photobook" customModuleProvider="target">
-                                                            <rect key="frame" x="179" y="5.3333333333333286" width="1" height="196.66666666666669"/>
+                                                            <rect key="frame" x="179" y="5.5" width="1" height="196.5"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="1" id="Kfk-vK-2Cm"/>
@@ -2163,7 +2163,7 @@
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ProposalCollectionViewCell" id="FhU-tU-2dl" userLabel="Proposal Collection View Cell">
-                                        <rect key="frame" x="27.666666666666668" y="453" width="359" height="30"/>
+                                        <rect key="frame" x="8" y="453" width="359" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="359" height="30"/>
@@ -2173,11 +2173,11 @@
                                     </collectionViewCell>
                                 </cells>
                                 <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="6Z2-2z-LxZ">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="15"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="15"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </collectionReusableView>
                                 <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="UHe-CC-ypz">
-                                    <rect key="frame" x="0.0" y="483" width="414" height="15"/>
+                                    <rect key="frame" x="0.0" y="483" width="375" height="15"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </collectionReusableView>
                                 <connections>
@@ -2204,7 +2204,7 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <segue destination="bDf-a2-yFE" kind="show" id="3Zg-mY-2ol"/>
+                                            <segue destination="9J6-1w-1sY" kind="show" id="tUq-Zj-F1y"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -2613,20 +2613,23 @@
                 <tapGestureRecognizer id="4ri-Oa-Gwm">
                     <connections>
                         <action selector="deliveryDetailsTapped:" destination="9J6-1w-1sY" id="Qxa-Ro-JZD"/>
+                        <segue destination="cGc-cG-abp" kind="show" identifier="segueDeliveryDetails" id="3S9-gn-awE"/>
                     </connections>
                 </tapGestureRecognizer>
                 <tapGestureRecognizer id="RBk-Tv-vgL">
                     <connections>
                         <action selector="shippingMethodTapped:" destination="9J6-1w-1sY" id="sez-f4-W1g"/>
+                        <segue destination="hNa-Qw-KpV" kind="show" identifier="segueShippingMethods" id="oeo-yO-FRl"/>
                     </connections>
                 </tapGestureRecognizer>
                 <tapGestureRecognizer id="cId-PD-G2W">
                     <connections>
                         <action selector="paymentMethodTapped:" destination="9J6-1w-1sY" id="4eF-Df-v8L"/>
+                        <segue destination="eiW-1f-aeo" kind="show" identifier="seguePaymentMethods" id="D0J-ZT-Prm"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3669.5652173913045" y="773.64130434782612"/>
+            <point key="canvasLocation" x="3457" y="804"/>
         </scene>
         <!--Item-->
         <scene sceneID="c5L-BD-S21">
@@ -3111,11 +3114,11 @@
             <objects>
                 <viewController id="GA7-mj-nMv" customClass="AssetSelectorViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="mhg-GC-VRL">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="74"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="74"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="hcb-fY-wvf">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="74"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="74"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="6" minimumInteritemSpacing="0.0" id="A10-5E-dpH">
                                     <size key="itemSize" width="64" height="64"/>
@@ -3253,21 +3256,21 @@
             <objects>
                 <tableViewController storyboardIdentifier="DeliveryDetailsTableViewController" id="cGc-cG-abp" customClass="DeliveryDetailsTableViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="Aew-e7-OI5">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <gestureRecognizers/>
                         <inset key="separatorInset" minX="16" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="userInput" rowHeight="86" id="hsQ-rp-Lxv" customClass="UserInputTableViewCell" customModule="Photobook" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="55.333333333333336" width="414" height="86"/>
+                                <rect key="frame" x="0.0" y="55.5" width="375" height="86"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hsQ-rp-Lxv" id="lRW-hh-ayF">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="86"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="86"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Required" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="c3a-IO-Ki5">
-                                            <rect key="frame" x="68.666666666666657" y="0.0" width="309.33333333333337" height="44"/>
+                                            <rect key="frame" x="68" y="0.0" width="275" height="44"/>
                                             <accessibility key="accessibilityConfiguration" identifier="TextField"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" priority="750" constant="44" id="dRO-O7-tqP"/>
@@ -3280,27 +3283,27 @@
                                             </connections>
                                         </textField>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R27-zb-Ogp">
-                                            <rect key="frame" x="15.999999999999996" y="12.666666666666666" width="42.666666666666657" height="20.333333333333336"/>
+                                            <rect key="frame" x="16" y="12.5" width="42" height="20.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Dy-FC-OOj">
-                                            <rect key="frame" x="16" y="44" width="398" height="1"/>
+                                            <rect key="frame" x="16" y="44" width="359" height="1"/>
                                             <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="1" id="VmP-lL-pMN"/>
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="leW-2r-Wa3">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="1"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
                                             <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="1" id="SmN-Lx-rAp"/>
                                             </constraints>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yL9-8P-d2z">
-                                            <rect key="frame" x="16" y="45" width="382" height="15.666666666666664"/>
+                                            <rect key="frame" x="16" y="45" width="343" height="16"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <color key="textColor" red="0.4275171160697937" green="0.42716902494430542" blue="0.4470638632774353" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <nil key="highlightedColor"/>
@@ -3339,14 +3342,14 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="AddDeliveryAddressCell" rowHeight="86" id="NZ6-Ml-K9v" customClass="UserInputTableViewCell" customModule="Photobook" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="141.33333333333334" width="414" height="86"/>
+                                <rect key="frame" x="0.0" y="141.5" width="375" height="86"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="NZ6-Ml-K9v" id="4KG-j8-ofY">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="86"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="86"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <textField hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Required" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lxn-bz-H0E">
-                                            <rect key="frame" x="182" y="0.0" width="196" height="44"/>
+                                            <rect key="frame" x="182" y="0.0" width="161" height="44"/>
                                             <accessibility key="accessibilityConfiguration" identifier="TextField"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" priority="750" constant="44" id="wlD-Gb-dbd"/>
@@ -3356,7 +3359,7 @@
                                             <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                         </textField>
                                         <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lc6-6j-BG5">
-                                            <rect key="frame" x="16" y="6.3333333333333321" width="161" height="33"/>
+                                            <rect key="frame" x="16" y="5.5" width="161" height="33"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <state key="normal" title="Add delivery address"/>
                                             <connections>
@@ -3364,21 +3367,21 @@
                                             </connections>
                                         </button>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Vf-Xw-x5i">
-                                            <rect key="frame" x="0.0" y="44" width="414" height="1"/>
+                                            <rect key="frame" x="0.0" y="44" width="375" height="1"/>
                                             <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="1" id="eDs-FA-qZo"/>
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wed-4Z-LQO">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="1"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
                                             <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="1" id="Ita-VG-Jfh"/>
                                             </constraints>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="45s-9M-gdM">
-                                            <rect key="frame" x="16" y="51" width="382" height="15.666666666666671"/>
+                                            <rect key="frame" x="16" y="51" width="343" height="16"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -3413,40 +3416,40 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="detailButton" indentationWidth="10" reuseIdentifier="DeliveryAddressTableViewCell" id="8iT-kH-FnC" customClass="DeliveryAddressTableViewCell" customModule="Photobook" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="227.33333333333334" width="414" height="44"/>
+                                <rect key="frame" x="0.0" y="227.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="8iT-kH-FnC" id="22f-vy-356">
-                                    <rect key="frame" x="0.0" y="0.0" width="362" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="327" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Lorem Ipsum" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jd0-Hn-erf">
-                                            <rect key="frame" x="16" y="3" width="322" height="21"/>
+                                            <rect key="frame" x="16" y="3" width="287" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem Ipsum" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8eZ-lV-fP5">
-                                            <rect key="frame" x="16" y="22" width="322" height="19"/>
+                                            <rect key="frame" x="16" y="22" width="287" height="19"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cPw-eU-ZZZ">
-                                            <rect key="frame" x="8" y="43" width="406" height="1"/>
+                                            <rect key="frame" x="8" y="43" width="367" height="1"/>
                                             <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="1" id="cUe-6R-YiJ"/>
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e2x-rv-ujb">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="1"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
                                             <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="1" id="Hx5-r6-D3i"/>
                                             </constraints>
                                         </view>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" image="Tick-plain" translatesAutoresizingMaskIntoConstraints="NO" id="Nh0-Hf-0mx">
-                                            <rect key="frame" x="343" y="15" width="19" height="14"/>
+                                            <rect key="frame" x="308" y="15" width="19" height="14"/>
                                         </imageView>
                                     </subviews>
                                     <constraints>
@@ -3496,7 +3499,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cjv-vA-d7Z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3345" y="67"/>
+            <point key="canvasLocation" x="4337" y="1235"/>
         </scene>
         <!--Payment Methods-->
         <scene sceneID="jPW-8E-fek">
@@ -3507,40 +3510,40 @@
                         <viewControllerLayoutGuide type="bottom" id="7aS-Kd-9up"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="fmd-R8-H4g">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="672"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="D3f-X6-Wbe">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="672"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="separatorInset" minX="16" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="Xew-UJ-y1h">
-                                    <rect key="frame" x="0.0" y="161.33333333333334" width="414" height="44"/>
+                                    <rect key="frame" x="0.0" y="161.5" width="375" height="44"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="PaymentMethodTableViewCell" id="ffQ-6w-9af" customClass="PaymentMethodTableViewCell" customModule="Photobook" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="55.333333333333336" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ffQ-6w-9af" id="0ZH-eq-sN5">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apple Pay" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MRq-gJ-qjX">
-                                                    <rect key="frame" x="78" y="11.999999999999998" width="76.333333333333314" height="20.333333333333329"/>
+                                                    <rect key="frame" x="78" y="12" width="76.5" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="apple-pay-method" translatesAutoresizingMaskIntoConstraints="NO" id="Tf1-0c-5kY">
-                                                    <rect key="frame" x="17" y="7.3333333333333321" width="45" height="28.999999999999996"/>
+                                                    <rect key="frame" x="17" y="7.5" width="45" height="29"/>
                                                 </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tick-plain" translatesAutoresizingMaskIntoConstraints="NO" id="Tbh-Fr-A3E">
-                                                    <rect key="frame" x="379" y="15" width="19" height="14"/>
+                                                    <rect key="frame" x="340" y="15" width="19" height="14"/>
                                                 </imageView>
                                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IG4-ka-zkS" userLabel="Separator">
-                                                    <rect key="frame" x="0.0" y="42.666666666666664" width="414" height="1"/>
+                                                    <rect key="frame" x="0.0" y="42.5" width="375" height="1"/>
                                                     <color key="backgroundColor" red="0.78051763772964478" green="0.78408628702163696" blue="0.80000466108322144" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="0.5" id="ikl-m5-TfO"/>
@@ -3568,14 +3571,14 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="AddPaymentMethodCell" id="QKZ-tw-CMz">
-                                        <rect key="frame" x="0.0" y="99.333333333333343" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="99.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QKZ-tw-CMz" id="lcN-zV-epN">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TZW-eX-Xow">
-                                                    <rect key="frame" x="16" y="5.3333333333333321" width="166" height="33"/>
+                                                    <rect key="frame" x="16" y="5.5" width="166" height="33"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <state key="normal" title="Add Payment Method"/>
                                                     <connections>
@@ -3615,27 +3618,27 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BKJ-3a-TpP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4232" y="1567"/>
+            <point key="canvasLocation" x="4337" y="1942"/>
         </scene>
         <!--CREDIT CARD-->
         <scene sceneID="Y6v-Dm-QPS">
             <objects>
                 <tableViewController id="KxV-LF-cPn" customClass="CreditCardTableViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="gr8-os-wnD">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="672"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <inset key="separatorInset" minX="16" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="userInput" rowHeight="86" id="KDF-yy-E2E" customClass="UserInputTableViewCell" customModule="Photobook" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="55.333333333333336" width="414" height="86"/>
+                                <rect key="frame" x="0.0" y="55.5" width="375" height="86"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KDF-yy-E2E" id="ZPD-GW-DYO">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="86"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="86"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Required" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pbI-iM-EF9">
-                                            <rect key="frame" x="68.666666666666657" y="0.0" width="309.33333333333337" height="44"/>
+                                            <rect key="frame" x="68" y="0.0" width="275" height="44"/>
                                             <accessibility key="accessibilityConfiguration" identifier="TextField"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" priority="750" constant="44" id="y7k-uY-V9R"/>
@@ -3648,27 +3651,27 @@
                                             </connections>
                                         </textField>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dlL-3h-lse">
-                                            <rect key="frame" x="15.999999999999996" y="12.666666666666666" width="42.666666666666657" height="20.333333333333336"/>
+                                            <rect key="frame" x="16" y="12.5" width="42" height="20.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MFM-XV-ISI">
-                                            <rect key="frame" x="16" y="44" width="398" height="1"/>
+                                            <rect key="frame" x="16" y="44" width="359" height="1"/>
                                             <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="1" id="fSf-1k-4jk"/>
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fqL-RF-tZM">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="1"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
                                             <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="1" id="F11-OJ-Vlv"/>
                                             </constraints>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bbr-BM-nTt">
-                                            <rect key="frame" x="16" y="45" width="382" height="15.666666666666664"/>
+                                            <rect key="frame" x="16" y="45" width="343" height="16"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -3724,26 +3727,26 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tn5-Y0-f2z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4957" y="1567"/>
+            <point key="canvasLocation" x="5062" y="1942"/>
         </scene>
         <!--CHOOSE COUNTRY-->
         <scene sceneID="Ebn-ZC-YqS">
             <objects>
                 <tableViewController storyboardIdentifier="CountryPickerTableViewController" id="EWS-lF-JO7" customClass="CountryPickerTableViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="vlJ-Cb-X6W">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="checkmark" indentationWidth="10" reuseIdentifier="country" textLabel="yYO-hR-Fdk" style="IBUITableViewCellStyleDefault" id="FU3-m8-5Es">
-                                <rect key="frame" x="0.0" y="28" width="414" height="44"/>
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FU3-m8-5Es" id="ADJ-fp-SY7">
-                                    <rect key="frame" x="0.0" y="0.0" width="370" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="335" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="yYO-hR-Fdk">
-                                            <rect key="frame" x="20" y="0.0" width="350" height="44"/>
+                                            <rect key="frame" x="16" y="0.0" width="319" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
@@ -3763,32 +3766,32 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="A8T-wL-Quf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5097" y="66"/>
+            <point key="canvasLocation" x="5881" y="1234"/>
         </scene>
         <!--Address-->
         <scene sceneID="CLF-SY-6GY">
             <objects>
                 <tableViewController storyboardIdentifier="AddressTableViewController" id="pRm-3l-Qzk" customClass="AddressTableViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" estimatedRowHeight="44" sectionHeaderHeight="1" sectionFooterHeight="1" id="pgQ-tE-SYf">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <inset key="separatorInset" minX="16" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" id="u6I-xH-x66">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="10"/>
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="10"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="userInput" id="srm-ep-kBL" customClass="AddressFieldTableViewCell" customModule="Photobook" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="65.333333333333343" width="414" height="44"/>
+                                <rect key="frame" x="0.0" y="65.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="srm-ep-kBL" id="nCB-QE-QrI">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ijx-6I-L2F">
-                                            <rect key="frame" x="67.666666666666657" y="0.0" width="318.33333333333337" height="42"/>
+                                            <rect key="frame" x="68" y="0.0" width="283" height="42"/>
                                             <accessibility key="accessibilityConfiguration" identifier="TextField"/>
                                             <nil key="textColor"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -3798,7 +3801,7 @@
                                             </connections>
                                         </textField>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1LC-Ug-O7X">
-                                            <rect key="frame" x="15.999999999999996" y="11.666666666666666" width="41.666666666666657" height="20.333333333333336"/>
+                                            <rect key="frame" x="16" y="11.5" width="42" height="20.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -3841,18 +3844,18 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1L0-cN-oSb" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="AHd-VG-9SB"/>
             </objects>
-            <point key="canvasLocation" x="4232" y="67"/>
+            <point key="canvasLocation" x="5097" y="1234"/>
         </scene>
         <!--Color Selection View Controller-->
         <scene sceneID="6eA-VW-ovM">
             <objects>
                 <viewController id="DGE-Ds-4at" userLabel="Color Selection View Controller" customClass="ColorSelectionViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2s3-XS-AhA">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="120"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="120"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="26" translatesAutoresizingMaskIntoConstraints="NO" id="tlX-MW-gCq">
-                                <rect key="frame" x="148.33333333333334" y="37" width="118.00000000000003" height="46"/>
+                                <rect key="frame" x="128.5" y="37" width="118" height="46"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="05M-fh-sfo" customClass="ProductColorButtonView" customModule="Photobook" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="46" height="46"/>
@@ -3926,46 +3929,46 @@
                         <viewControllerLayoutGuide type="bottom" id="cA8-Gg-ZKR"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="QbR-5l-3kZ">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" estimatedRowHeight="44" sectionHeaderHeight="36" estimatedSectionHeaderHeight="36" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="i9W-fV-Wlt">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="wsU-QB-rC1">
-                                    <rect key="frame" x="0.0" y="124" width="414" height="10"/>
+                                    <rect key="frame" x="0.0" y="124" width="375" height="10"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ShippingMethodTableViewCell" id="oBZ-np-8oT" customClass="ShippingMethodTableViewCell" customModule="Photobook" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="36" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="36" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oBZ-np-8oT" id="WfL-IF-UMv">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Standard" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Akb-h0-z1B">
-                                                    <rect key="frame" x="51" y="3" width="297" height="24.333333333333332"/>
+                                                    <rect key="frame" x="51" y="3" width="258" height="24"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="£0.00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6w3-X4-RYN">
-                                                    <rect key="frame" x="353" y="11.999999999999998" width="45" height="20.333333333333329"/>
+                                                    <rect key="frame" x="314" y="12" width="45" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oka-Kf-1ZU" userLabel="Separator">
-                                                    <rect key="frame" x="16" y="43" width="398" height="1"/>
+                                                    <rect key="frame" x="16" y="43" width="359" height="1"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="bW8-Ix-Tbg"/>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mXt-bD-1yX" userLabel="TopSeparator">
-                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="1"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="yUT-PY-aZ0"/>
@@ -3975,7 +3978,7 @@
                                                     <rect key="frame" x="16" y="15" width="19" height="14"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="3-10 days" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oln-Da-X6G">
-                                                    <rect key="frame" x="51" y="25.333333333333332" width="297" height="15.666666666666668"/>
+                                                    <rect key="frame" x="51" y="25" width="258" height="16"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -4013,14 +4016,14 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ShippingMethodHeaderTableViewCell" id="q1h-9m-jMh" customClass="ShippingMethodHeaderTableViewCell" customModule="Photobook" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="80" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="80" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="q1h-9m-jMh" id="ayj-g4-VQZ">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NQu-VE-Ndt">
-                                                    <rect key="frame" x="15.999999999999996" y="18" width="43.666666666666657" height="21"/>
+                                                    <rect key="frame" x="16" y="18" width="43.5" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -4060,7 +4063,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GG9-mi-SKe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3344.9275362318845" y="1566.8478260869567"/>
+            <point key="canvasLocation" x="3418" y="1642"/>
         </scene>
     </scenes>
     <resources>

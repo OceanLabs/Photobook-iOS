@@ -38,10 +38,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window?.rootViewController = tabBarController
         }
         
-        let vc = storyboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
-        let nav = UINavigationController(rootViewController: vc)
-        window?.rootViewController = nav
-        
         return true
     }
     
