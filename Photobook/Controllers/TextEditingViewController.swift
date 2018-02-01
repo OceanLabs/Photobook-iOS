@@ -44,7 +44,6 @@ protocol TextEditingDelegate: class {
 class TextEditingViewController: UIViewController {
 
     private struct Constants {
-        static let textViewBorderPadding: CGFloat = 16.0 // 8.0 padding, 4.0 thickness, 4.0 for luck 🤡🎉
         static let fontSize: CGFloat = 16.0 // FIXME: Get this from the product info
         static let pageHeight: CGFloat = 430.866 // FIXME: Get this from the product info
     }
@@ -89,7 +88,7 @@ class TextEditingViewController: UIViewController {
     
     @objc private func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            textViewBottomConstraint.constant = keyboardSize.height + Constants.textViewBorderPadding
+            textViewBottomConstraint.constant = keyboardSize.height
         }
     }
 

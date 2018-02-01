@@ -3225,7 +3225,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m8b-sJ-paT">
-                                <rect key="frame" x="12" y="244" width="390" height="116"/>
+                                <rect key="frame" x="18" y="244" width="378" height="116"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -3237,7 +3237,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="bhd-OS-of5">
-                                <rect key="frame" x="20" y="252" width="374" height="100"/>
+                                <rect key="frame" x="26" y="252" width="362" height="100"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" priority="250" constant="345" id="AAs-Lm-4TE"/>
@@ -3250,10 +3250,10 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="m8b-sJ-paT" firstAttribute="height" secondItem="bhd-OS-of5" secondAttribute="height" constant="16" id="Jf2-Xl-z8w"/>
-                            <constraint firstAttribute="trailing" secondItem="bhd-OS-of5" secondAttribute="trailing" constant="20" id="NuE-MR-JXR"/>
+                            <constraint firstAttribute="trailing" secondItem="bhd-OS-of5" secondAttribute="trailing" constant="26" id="NuE-MR-JXR"/>
                             <constraint firstAttribute="bottom" secondItem="bhd-OS-of5" secondAttribute="bottom" constant="340" id="RJG-7g-qFn"/>
                             <constraint firstItem="m8b-sJ-paT" firstAttribute="centerY" secondItem="bhd-OS-of5" secondAttribute="centerY" id="jd8-HK-eYY"/>
-                            <constraint firstItem="bhd-OS-of5" firstAttribute="leading" secondItem="2B8-2W-mUx" secondAttribute="leading" constant="20" id="oEs-iZ-Dn6"/>
+                            <constraint firstItem="bhd-OS-of5" firstAttribute="leading" secondItem="2B8-2W-mUx" secondAttribute="leading" constant="26" id="oEs-iZ-Dn6"/>
                             <constraint firstItem="m8b-sJ-paT" firstAttribute="centerX" secondItem="bhd-OS-of5" secondAttribute="centerX" id="sdW-JX-wtt"/>
                             <constraint firstItem="m8b-sJ-paT" firstAttribute="width" secondItem="bhd-OS-of5" secondAttribute="width" constant="16" id="vGo-ga-Moc"/>
                         </constraints>
