@@ -63,14 +63,14 @@ class TextEditingViewController: UIViewController {
     @IBOutlet private weak var assetImageView: UIImageView!
     
     @IBOutlet private weak var textViewLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var textViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var textViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var textViewBottomConstraint: NSLayoutConstraint!
     
-    var productLayout: ProductLayout?
+    var productLayout: ProductLayout!
     var assetImage: UIImage?
+    var pageColor: ProductColor!
     weak var delegate: TextEditingDelegate?
-    
+        
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -105,10 +105,10 @@ class TextEditingViewController: UIViewController {
         textView.becomeFirstResponder()
         
         let aspectRatio = textLayoutBox.aspectRatio(forContainerRatio: pageRatio)
-        textViewHeightConstraint.constant = textViewWidthConstraint.constant / aspectRatio
+        textViewHeightConstraint.constant = textView.bounds.width / aspectRatio
         
         // Position page and image box, if needed
-        let layoutBoxSize = CGSize(width: textViewWidthConstraint.constant, height: textViewHeightConstraint.constant)
+        let layoutBoxSize = CGSize(width: textView.bounds.width, height: textViewHeightConstraint.constant)
         let pageSize = textLayoutBox.containerSize(for: layoutBoxSize)
         
         let topMargin = view.bounds.height - textViewBottomConstraint.constant - textViewHeightConstraint.constant
@@ -118,12 +118,13 @@ class TextEditingViewController: UIViewController {
         
         pageView.frame.origin = CGPoint(x: pageXCoordinate, y: pageYCoordinate)
         pageView.frame.size = pageSize
+        view.backgroundColor = pageColor.uiColor()
         
         // Set up the textField font
         let photobookToOnScreenScale = pageSize.height / Constants.pageHeight
         let fontSize = round(Constants.fontSize * photobookToOnScreenScale)
         
-        setTextViewAttributes(with: .clear, fontSize: fontSize)
+        setTextViewAttributes(with: .clear, fontSize: fontSize, fontColor: pageColor.fontColor())
         
         // Place image if needed
         guard let imageLayoutBox = productLayout!.layout.imageLayoutBox,
@@ -142,9 +143,9 @@ class TextEditingViewController: UIViewController {
         assetImageView.transform = productLayout!.productLayoutAsset!.transform
     }
     
-    private func setTextViewAttributes(with fontType: FontType, fontSize: CGFloat) {
-        textView.attributedText = fontType.attributedText(with: textView.text, fontSize: fontSize)
-        textView.typingAttributes = fontType.typingAttributes(fontSize: fontSize)
+    private func setTextViewAttributes(with fontType: FontType, fontSize: CGFloat, fontColor: UIColor) {
+        textView.attributedText = fontType.attributedText(with: textView.text, fontSize: fontSize, fontColor: fontColor)
+        textView.typingAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor)
     }
     
     private func textGoesOverBounds(for textView: UITextView, string: String, range: NSRange) -> Bool {
@@ -178,18 +179,14 @@ extension TextEditingViewController: UITextViewDelegate {
         
         // Check that the new length doesn't exceed the textView bounds
         return !textGoesOverBounds(for: textView, string: text, range: range)
-    }
-    
-    func textViewDidChange(_ textView: UITextView) {
-        delegate?.didChangeText(to: textView.text)
-    }
+    }    
 }
 
 extension TextEditingViewController: TextToolBarViewDelegate {
     
     func didSelectFontType(_ type: FontType) {
         let fontSize = (textView.typingAttributes[ NSAttributedStringKey.font.rawValue] as! UIFont).pointSize
-        setTextViewAttributes(with: type, fontSize: fontSize)
+        setTextViewAttributes(with: type, fontSize: fontSize, fontColor: pageColor.fontColor())
         
         // TODO: This should be conditional on whether the text goes over bounds or not
         delegate?.didChangeFontType(to: type)

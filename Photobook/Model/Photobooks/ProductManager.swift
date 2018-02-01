@@ -10,6 +10,20 @@ import UIKit
 
 enum ProductColor: String, Codable {
     case white, black
+    
+    func fontColor() -> UIColor {
+        switch self {
+        case .white: return .black
+        case .black: return .white
+        }
+    }
+    
+    func uiColor() -> UIColor {
+        switch self {
+        case .white: return .white
+        case .black: return .black
+        }
+    }
 }
 
 // Structure containing the user's photobok details to save them to disk

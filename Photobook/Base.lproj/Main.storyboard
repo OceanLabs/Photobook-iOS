@@ -3222,11 +3222,11 @@
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m8b-sJ-paT">
                                 <rect key="frame" x="18" y="244" width="378" height="116"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                         <real key="value" value="2"/>
@@ -3238,7 +3238,7 @@
                             </view>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="bhd-OS-of5">
                                 <rect key="frame" x="26" y="252" width="362" height="100"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" priority="250" constant="345" id="AAs-Lm-4TE"/>
                                     <constraint firstAttribute="height" constant="100" id="e7G-TC-B75"/>
@@ -3269,7 +3269,6 @@
                         <outlet property="textViewBottomConstraint" destination="RJG-7g-qFn" id="taz-6y-fAH"/>
                         <outlet property="textViewHeightConstraint" destination="e7G-TC-B75" id="dvh-d6-qdX"/>
                         <outlet property="textViewLeadingConstraint" destination="oEs-iZ-Dn6" id="VUw-W0-IKE"/>
-                        <outlet property="textViewWidthConstraint" destination="AAs-Lm-4TE" id="sj1-ia-LYj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="adf-a5-e3T" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3346,7 +3345,7 @@
                     </connections>
                 </view>
             </objects>
-            <point key="canvasLocation" x="1780" y="-1110"/>
+            <point key="canvasLocation" x="1780" y="-1128"/>
         </scene>
     </scenes>
     <resources>

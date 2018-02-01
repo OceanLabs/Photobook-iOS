@@ -30,7 +30,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         static let textBoxFont = UIFont.systemFont(ofSize: 6.0)
     }
     
-    private enum Tools: Int {
+    private enum Tool: Int {
         case selectAsset, selectLayout, placeAsset, selectColor, editText
     }
     
@@ -145,11 +145,13 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     private var selectedColor: ProductColor!
     private var pageColor = ProductManager.shared.pageColor
     
+    private var previouslySelectedButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         toolbar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
-        toolbarButtons[Tools.selectAsset.rawValue].isSelected = true
+        toolbarButtons[Tool.selectAsset.rawValue].isSelected = true
     }
     
     override func viewDidLayoutSubviews() {
@@ -219,7 +221,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     private func setupTextEditing() {
         let enabled = productLayout.layout.textLayoutBox != nil
-        toolbarButtons[Tools.editText.rawValue].isEnabled = enabled
+        toolbarButtons[Tool.editText.rawValue].isEnabled = enabled
     }
     
     // MARK: - Navigation
@@ -247,7 +249,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     private func setupAssetPlacement() {
         let enabled = productLayout.layout.imageLayoutBox != nil && productLayout.asset != nil
-        toolbarButtons[Tools.placeAsset.rawValue].isEnabled = enabled
+        toolbarButtons[Tool.placeAsset.rawValue].isEnabled = enabled
     }
     
     @IBAction func tappedCancelButton(_ sender: UIBarButtonItem) {
@@ -266,13 +268,14 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         guard let index = toolbarButtons.index(of: sender),
             !toolbarButtons[index].isSelected,
-            let tool = Tools(rawValue: index) else { return }
+            let tool = Tool(rawValue: index) else { return }
 
-        let editLayoutWasSelected = toolbarButtons[Tools.placeAsset.rawValue].isSelected
+        // Store currently selected tool so we may come back to it
+        previouslySelectedButton = toolbarButtons.first { $0.isSelected }
         
-        for button in toolbarButtons {
-            button.isSelected = (button === sender)
-        }
+        let editLayoutWasSelected = toolbarButtons[Tool.placeAsset.rawValue].isSelected
+        
+        for button in toolbarButtons { button.isSelected = (button === sender) }
         
         switch tool {
         case .selectAsset, .selectLayout, .selectColor:
@@ -282,12 +285,13 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
                     self.view.sendSubview(toBack: self.placementContainerView)
                 }
             }
+            
             UIView.animate(withDuration: 0.1, animations: {
                 self.photobookContainerView.alpha = 1.0
                 self.textEditingContainerView.alpha = 0.0
-                self.assetSelectionContainerView.alpha = tool.rawValue == Tools.selectAsset.rawValue ? 1.0 : 0.0
-                self.layoutSelectionContainerView.alpha = tool.rawValue == Tools.selectLayout.rawValue ? 1.0 : 0.0
-                self.colorSelectionContainerView.alpha = tool.rawValue == Tools.selectColor.rawValue ? 1.0 : 0.0
+                self.assetSelectionContainerView.alpha = tool.rawValue == Tool.selectAsset.rawValue ? 1.0 : 0.0
+                self.layoutSelectionContainerView.alpha = tool.rawValue == Tool.selectLayout.rawValue ? 1.0 : 0.0
+                self.colorSelectionContainerView.alpha = tool.rawValue == Tool.selectColor.rawValue ? 1.0 : 0.0
             })
         case .placeAsset:
             view.bringSubview(toFront: placementContainerView)
@@ -303,9 +307,10 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             // TODO: Animate photobook
             textEditingViewController.productLayout = productLayout!
             textEditingViewController.assetImage = assetImageView.image
+            textEditingViewController.pageColor = selectedColor
             textEditingViewController.setup()
             
-            UIView.animate(withDuration: 0.1, animations: {
+            UIView.animate(withDuration: 0.2, animations: {
                 self.assetSelectionContainerView.alpha = 0.0
                 self.layoutSelectionContainerView.alpha = 0.0
                 self.colorSelectionContainerView.alpha = 0.0
@@ -313,6 +318,17 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
                 self.textEditingContainerView.alpha = 1.0
             })
         }
+        
+        setTopBars(hidden: tool == .editText)
+    }
+    
+    private func setTopBars(hidden: Bool) {
+        navigationController?.setNavigationBarHidden(hidden, animated: true)
+        setNeedsStatusBarAppearanceUpdate()
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return toolbarButtons != nil ? toolbarButtons[Tool.editText.rawValue].isSelected : false
     }
 }
 
@@ -372,6 +388,7 @@ extension PageSetupViewController: TextEditingDelegate {
     func didChangeText(to text: String?) {
         productLayout.text = text
         pageView.setupTextBox()
+        tappedToolButton(previouslySelectedButton)
     }
     
     func didChangeFontType(to fontType: FontType) {

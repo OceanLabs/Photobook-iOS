@@ -36,17 +36,17 @@ import Foundation
         }
     }
     
-    func typingAttributes(fontSize: CGFloat) -> [String: Any] {
+    func typingAttributes(fontSize: CGFloat, fontColor: UIColor) -> [String: Any] {
         let paragraphStyle = self.paragraphStyle()
         let font = fontWithSize(fontSize)
-        return [ NSAttributedStringKey.font.rawValue: font, NSAttributedStringKey.paragraphStyle.rawValue: paragraphStyle ]
+        return [ NSAttributedStringKey.font.rawValue: font, NSAttributedStringKey.foregroundColor.rawValue: fontColor, NSAttributedStringKey.paragraphStyle.rawValue: paragraphStyle ]
     }
     
-    func attributedText(with text: String!, fontSize: CGFloat) -> NSAttributedString {
+    func attributedText(with text: String!, fontSize: CGFloat, fontColor: UIColor) -> NSAttributedString {
         let paragraphStyle = self.paragraphStyle()
         let font = fontWithSize(fontSize)
         
-        let attributes: [NSAttributedStringKey: Any] = [ NSAttributedStringKey.font: font, NSAttributedStringKey.paragraphStyle: paragraphStyle]
+        let attributes: [NSAttributedStringKey: Any] = [ NSAttributedStringKey.font: font, NSAttributedStringKey.foregroundColor: fontColor, NSAttributedStringKey.paragraphStyle: paragraphStyle]
         return NSAttributedString(string: text, attributes: attributes)
     }
 }

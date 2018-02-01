@@ -199,7 +199,7 @@ class PhotobookPageView: UIView {
         let fontSize = round(Constants.fontSize * photobookToOnScreenScale)
         
         let fontType = productLayout!.fontType ?? .clear
-        pageTextLabel.attributedText = fontType.attributedText(with: text!, fontSize: fontSize)
+        pageTextLabel.attributedText = fontType.attributedText(with: text!, fontSize: fontSize, fontColor: color.fontColor())
         
         let textHeight = pageTextLabel.attributedText!.height(for: fakeSize.width)
         if textHeight < fakeSize.height { pageTextLabel.frame.size.height = textHeight }
