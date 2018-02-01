@@ -3979,7 +3979,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" estimatedRowHeight="44" sectionHeaderHeight="36" estimatedSectionHeaderHeight="36" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="i9W-fV-Wlt">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" estimatedRowHeight="44" sectionHeaderHeight="36" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="i9W-fV-Wlt">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="wsU-QB-rC1">
@@ -4078,6 +4078,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
+                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="NQu-VE-Ndt" secondAttribute="trailing" constant="5" id="BTr-rf-b08"/>
                                                 <constraint firstAttribute="bottom" secondItem="NQu-VE-Ndt" secondAttribute="bottom" constant="5" id="Wol-3A-3jk"/>
                                                 <constraint firstItem="NQu-VE-Ndt" firstAttribute="leading" secondItem="ayj-g4-VQZ" secondAttribute="leading" constant="16" id="XsE-jI-WbI"/>
                                             </constraints>
