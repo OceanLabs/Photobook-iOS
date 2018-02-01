@@ -200,31 +200,29 @@ class ProductManager {
             }
         }
         
-        // Remove layouts of removed assets
+        // Update layouts with removed assets
         for asset in removedAssets {
-            if let index = productLayouts.index(where: {
-                guard let existingAsset = $0.asset else { return false }
-                return existingAsset == asset
-            }) {
-                productLayouts.remove(at: index)
-                
-                // If we've removed the cover photo, create a new cover
-                if index == 0 {
-                    // Use first photo for the cover
-                    let productLayoutAsset = ProductLayoutAsset()
-                    productLayoutAsset.asset = addedAssets.remove(at: 0)
-                    let productLayout = ProductLayout(layout: coverLayouts.first!, productLayoutAsset: productLayoutAsset)
-                    productLayouts.insert(productLayout, at: 0)
+            for productLayout in productLayouts {
+                guard let productLayoutAsset = productLayout.asset else { continue }
+                if productLayoutAsset == asset {
+                    productLayout.asset = nil
+                    // Not breaking because the same asset could be on more than one page
                 }
             }
         }
         
-        // Create new layouts for added assets
+        // Fill empty pages with added assets
+        for productLayout in productLayouts {
+            guard addedAssets.count > 0 else { break }
+            guard productLayout.asset == nil else { continue }
+            
+            productLayout.asset = addedAssets.first
+            addedAssets.remove(at: 0)
+        }
+        
+        // Create new layouts for added assets that haven't filled empty pages
         productLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: layouts))
         
-        // Fill minimum pages with Placeholder assets if needed
-        let numberOfPlaceholderLayoutsNeeded = photobook.minimumRequiredAssets + 1 - productLayouts.count - addedAssets.count // +1 for cover which is not included in the minimum
-        productLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: layouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
         
         // Switching products
         product = photobook
