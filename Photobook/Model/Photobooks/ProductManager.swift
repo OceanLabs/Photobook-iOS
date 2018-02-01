@@ -384,31 +384,31 @@ class ProductManager {
         }
     }
     
-    func foldIndex(for productLayoutIndex: Int) -> Int? {
-        var foldIndex = 0.5 // The first page is on the right because of the courtesy page
+    func spreadIndex(for productLayoutIndex: Int) -> Int? {
+        var spreadIndex = 0.5 // The first page is on the right because of the courtesy page
         
         var i = 0
         while i < productLayouts.count {
             if i == productLayoutIndex {
-                return Int(foldIndex)
+                return Int(spreadIndex)
             }
             
-            foldIndex += productLayouts[i].layout.isDoubleLayout ? 1 : 0.5
+            spreadIndex += productLayouts[i].layout.isDoubleLayout ? 1 : 0.5
             i += 1
         }
         
         return nil
     }
     
-    func productLayoutIndex(for foldIndex: Int) -> Int? {
-        var foldIndexCount = 1 // Skip the first fold which includes the courtesy page
-        var i = 2 // Skip the cover and the page on the first fold
+    func productLayoutIndex(for spreadIndex: Int) -> Int? {
+        var spreadIndexCount = 1 // Skip the first spread which includes the courtesy page
+        var i = 2 // Skip the cover and the page on the first spread
         while i < productLayouts.count {
-            if foldIndex == foldIndexCount {
+            if spreadIndex == spreadIndexCount {
                 return i
             }
             i += productLayouts[i].layout.isDoubleLayout ? 1 : 2
-            foldIndexCount += 1
+            spreadIndexCount += 1
         }
         
         return nil
