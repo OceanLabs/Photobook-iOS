@@ -156,7 +156,11 @@ class PhotobookPageView: UIView {
     }
     
     func setupTextBox(shouldBeLegible: Bool = true) {
-        guard let textBox = productLayout?.layout.textLayoutBox else { return }
+        guard let textBox = productLayout?.layout.textLayoutBox else {
+            if let placeholderView = textLabelPlaceholderBoxView { placeholderView.alpha = 0.0 }
+            if let pageTextLabel = pageTextLabel { pageTextLabel.alpha = 0.0 }
+            return
+        }
         
         if !shouldBeLegible, let placeholderView = textLabelPlaceholderBoxView {
             placeholderView.alpha = 1.0
