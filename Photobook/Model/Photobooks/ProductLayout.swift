@@ -40,7 +40,7 @@ class ProductLayout: Codable {
                 return
             }
             if productLayoutText == nil { productLayoutText = ProductLayoutText() }
-            productLayoutText!.text = text
+            productLayoutText!.text = newValue
         }
     }
     

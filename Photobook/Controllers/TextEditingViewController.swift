@@ -165,6 +165,7 @@ extension TextEditingViewController: UITextViewDelegate {
         
         // Dismiss on line break
         guard text.rangeOfCharacter(from: CharacterSet.newlines) == nil else {
+            delegate?.didChangeText(to: textView.text)
             textView.resignFirstResponder()
             return false
         }
