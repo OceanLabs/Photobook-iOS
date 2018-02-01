@@ -115,13 +115,21 @@ class AddressTableViewController: UITableViewController {
             cell.textField.text = address.city
             cityTextField = cell.textField
         case .stateOrCounty:
-            cell.label.text = NSLocalizedString("AddressEntry/County", value: "County", comment: "Address Entry screen County textfield title")
+            if address.country.codeAlpha3 == "USA" {
+                cell.label.text = NSLocalizedString("AddressEntry/State", value: "State", comment: "State of the recipient address (U.S. addresses only)")
+            } else {
+                cell.label.text = NSLocalizedString("AddressEntry/County", value: "County", comment: "Address Entry screen County textfield title")
+            }
             cell.textField.textContentType = .addressState
             cell.textField.returnKeyType = .next
             cell.textField.text = address.stateOrCounty
             stateOrCountyTextField = cell.textField
         case .zipOrPostcode:
-            cell.label.text = NSLocalizedString("AddressEntry/Postcode", value: "Postcode", comment: "Address Entry screen Postcode textfield title")
+            if address.country.codeAlpha3 == "USA" {
+                cell.label.text = NSLocalizedString("AddressEntry/ZipCode", value: "Zip Code", comment: "Zip code of the recipient address (U.S. addresses only)")
+            } else {
+                cell.label.text = NSLocalizedString("AddressEntry/Postcode", value: "Postcode", comment: "Address Entry screen Postcode textfield title")
+            }
             cell.textField.textContentType = .postalCode
             cell.textField.returnKeyType = .done
             cell.textField.autocapitalizationType = .allCharacters
@@ -217,7 +225,7 @@ extension AddressTableViewController: CountryPickerTableViewControllerDelegate {
     
     func countryPickerDidPick(country: Country) {
         address.country = country
-        tableView.reloadRows(at: [IndexPath(row: Row.country.rawValue, section: 0)], with: .none)
+        tableView.reloadData()
     }
     
 }
