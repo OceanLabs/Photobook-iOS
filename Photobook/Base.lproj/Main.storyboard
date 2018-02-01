@@ -540,12 +540,6 @@
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         </view>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="Xbg-JP-gyR">
-                                                                            <rect key="frame" x="19.999999999999964" y="163.00000000000003" width="116" height="21"/>
-                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                            <fontDescription key="fontDescription" type="system" pointSize="6"/>
-                                                                            <nil key="highlightedColor"/>
-                                                                        </label>
                                                                     </subviews>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
@@ -556,7 +550,6 @@
                                                                         <outlet property="assetContainerView" destination="1kq-DX-noZ" id="0ql-iO-yjv"/>
                                                                         <outlet property="assetImageView" destination="L2E-uH-cBm" id="ebK-Qn-QOH"/>
                                                                         <outlet property="assetPlaceholderIconImageView" destination="BcD-Q9-9Qk" id="JgQ-2W-wSq"/>
-                                                                        <outlet property="pageTextLabel" destination="Xbg-JP-gyR" id="Zwp-nz-XEm"/>
                                                                         <outlet property="textLabelPlaceholderBoxView" destination="yII-TH-7Oq" id="vpb-zZ-igS"/>
                                                                     </connections>
                                                                 </view>
@@ -586,12 +579,6 @@
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         </view>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lTE-ho-IWr">
-                                                                            <rect key="frame" x="19.333333333333371" y="162.66666666666666" width="116" height="21"/>
-                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                            <fontDescription key="fontDescription" type="system" pointSize="8"/>
-                                                                            <nil key="highlightedColor"/>
-                                                                        </label>
                                                                     </subviews>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
@@ -602,7 +589,6 @@
                                                                         <outlet property="assetContainerView" destination="dzW-J6-cYK" id="Z8T-RK-ghM"/>
                                                                         <outlet property="assetImageView" destination="Lek-SN-75n" id="kCU-27-QB9"/>
                                                                         <outlet property="assetPlaceholderIconImageView" destination="Nb1-W9-R5Q" id="HCW-SI-JwE"/>
-                                                                        <outlet property="pageTextLabel" destination="lTE-ho-IWr" id="fdV-cO-hpB"/>
                                                                         <outlet property="textLabelPlaceholderBoxView" destination="GZ2-Wu-tpH" id="3I7-RU-Zi3"/>
                                                                     </connections>
                                                                 </view>
@@ -733,12 +719,6 @@
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                 </view>
-                                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="cZK-bN-3JP">
-                                                                                    <rect key="frame" x="0.0" y="0.0" width="116" height="21"/>
-                                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                                    <fontDescription key="fontDescription" type="system" pointSize="6"/>
-                                                                                    <nil key="highlightedColor"/>
-                                                                                </label>
                                                                             </subviews>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                             <constraints>
@@ -749,7 +729,6 @@
                                                                                 <outlet property="assetContainerView" destination="8Cd-Db-cE8" id="EeH-xB-cj9"/>
                                                                                 <outlet property="assetImageView" destination="93e-sj-uJD" id="2tq-n0-1ll"/>
                                                                                 <outlet property="assetPlaceholderIconImageView" destination="mM3-hB-ILN" id="Mr3-93-hFd"/>
-                                                                                <outlet property="pageTextLabel" destination="cZK-bN-3JP" id="Txd-Df-3nf"/>
                                                                                 <outlet property="textLabelPlaceholderBoxView" destination="5kk-bD-AYQ" id="5p7-QX-lgd"/>
                                                                             </connections>
                                                                         </view>

@@ -54,8 +54,12 @@ class PhotobookPageView: UIView {
     @IBOutlet private weak var assetContainerView: UIView!
     @IBOutlet private weak var assetPlaceholderIconImageView: UIImageView!
     @IBOutlet private weak var assetImageView: UIImageView!
-    @IBOutlet private weak var pageTextLabel: UILabel?
-    @IBOutlet private weak var textLabelPlaceholderBoxView: TextLabelPlaceholderBoxView?
+    @IBOutlet private weak var pageTextLabel: UILabel? {
+        didSet { pageTextLabel!.alpha = 0.0 }
+    }
+    @IBOutlet private weak var textLabelPlaceholderBoxView: TextLabelPlaceholderBoxView? {
+        didSet { textLabelPlaceholderBoxView!.alpha = 0.0 }
+    }
     
     @IBOutlet private var aspectRatioConstraint: NSLayoutConstraint!
     
@@ -152,12 +156,7 @@ class PhotobookPageView: UIView {
     }
     
     func setupTextBox(shouldBeLegible: Bool = true) {
-        guard let pageTextLabel = pageTextLabel else { return }
-        guard let textBox = productLayout?.layout.textLayoutBox else {
-            pageTextLabel.alpha = 0.0
-            if let placeholderView = textLabelPlaceholderBoxView { placeholderView.alpha = 0.0 }
-            return
-        }
+        guard let textBox = productLayout?.layout.textLayoutBox else { return }
         
         if !shouldBeLegible, let placeholderView = textLabelPlaceholderBoxView {
             placeholderView.alpha = 1.0
@@ -167,6 +166,7 @@ class PhotobookPageView: UIView {
             return
         }
 
+        guard let pageTextLabel = pageTextLabel else { return }
         pageTextLabel.alpha = 1.0
         
         adjustTextLabel()
