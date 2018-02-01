@@ -108,7 +108,7 @@
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2pz-wa-Psx">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="692"/>
                                 <connections>
                                     <segue destination="tSR-55-LeJ" kind="embed" identifier="TextEditingSegue" id="umF-Cv-hAN"/>
                                 </connections>
@@ -411,7 +411,7 @@
                             <constraint firstItem="3pJ-D7-Ell" firstAttribute="leading" secondItem="2K5-To-oFe" secondAttribute="leading" id="O36-0S-lUD"/>
                             <constraint firstItem="2pz-wa-Psx" firstAttribute="trailing" secondItem="2K5-To-oFe" secondAttribute="trailing" id="UaF-4m-916"/>
                             <constraint firstItem="rjg-CR-QNN" firstAttribute="leading" secondItem="2K5-To-oFe" secondAttribute="leading" id="Vh0-1U-3kU"/>
-                            <constraint firstItem="3pJ-D7-Ell" firstAttribute="bottom" secondItem="2pz-wa-Psx" secondAttribute="bottom" id="a1J-qg-SSk"/>
+                            <constraint firstItem="3pJ-D7-Ell" firstAttribute="top" secondItem="2pz-wa-Psx" secondAttribute="bottom" id="a1J-qg-SSk"/>
                             <constraint firstAttribute="trailing" secondItem="Vdr-Ew-Ot6" secondAttribute="trailing" id="c3k-0O-ZG6"/>
                             <constraint firstItem="Q7V-q1-95p" firstAttribute="leading" secondItem="2K5-To-oFe" secondAttribute="leading" id="cAc-UJ-ioB"/>
                             <constraint firstItem="3pJ-D7-Ell" firstAttribute="top" secondItem="rjg-CR-QNN" secondAttribute="bottom" id="doW-BS-TOP"/>
@@ -3224,7 +3224,7 @@
             <objects>
                 <viewController id="tSR-55-LeJ" customClass="TextEditingViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2B8-2W-mUx">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="692"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fTe-qL-vtv">
@@ -3246,7 +3246,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m8b-sJ-paT">
-                                <rect key="frame" x="12" y="288" width="390" height="116"/>
+                                <rect key="frame" x="12" y="244" width="390" height="116"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -3258,14 +3258,14 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="bhd-OS-of5">
-                                <rect key="frame" x="20" y="296" width="374" height="100"/>
+                                <rect key="frame" x="20" y="252" width="374" height="100"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" priority="250" constant="345" id="AAs-Lm-4TE"/>
                                     <constraint firstAttribute="height" constant="100" id="e7G-TC-B75"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" keyboardType="alphabet"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" keyboardType="alphabet" returnKeyType="done"/>
                             </textView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

@@ -164,6 +164,12 @@ extension TextEditingViewController: UITextViewDelegate {
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
+        // Dismiss on line break
+        guard text.rangeOfCharacter(from: CharacterSet.newlines) == nil else {
+            textView.resignFirstResponder()
+            return false
+        }
+        
         // Allow deleting
         if text.count == 0 { return true }
         
