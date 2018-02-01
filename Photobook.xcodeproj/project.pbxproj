@@ -43,6 +43,11 @@
 		2E6B9EDC1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9EDB1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift */; };
 		2E6B9EDF1FBF1B0D00F28C00 /* FullScreenImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9EDE1FBF1B0D00F28C00 /* FullScreenImageViewController.swift */; };
 		2E6B9EE51FBF1CFB00F28C00 /* FullScreenImageUnwindSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9EE41FBF1CFB00F28C00 /* FullScreenImageUnwindSegue.swift */; };
+		2E7C3693202095DC008033E7 /* ReceiptFooterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C3692202095DC008033E7 /* ReceiptFooterTableViewCell.swift */; };
+		2E7C3695202095ED008033E7 /* ReceiptHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C3694202095ED008033E7 /* ReceiptHeaderTableViewCell.swift */; };
+		2E7C3697202095FB008033E7 /* ReceiptLineItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C3696202095FB008033E7 /* ReceiptLineItemTableViewCell.swift */; };
+		2E7C6F04201F4DF20071E6B8 /* PaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C6F03201F4DF20071E6B8 /* PaymentViewController.swift */; };
+		2E7C6F06201F4E670071E6B8 /* ReceiptTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C6F05201F4E670071E6B8 /* ReceiptTableViewController.swift */; };
 		2E876E091FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E876E081FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift */; };
 		2E876E0B1FC2FA15007CCFA2 /* ViewStorySegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E876E0A1FC2FA15007CCFA2 /* ViewStorySegue.swift */; };
 		2E8B3E441FD191AC00FB8878 /* PhotobookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8B3E431FD191AC00FB8878 /* PhotobookViewController.swift */; };
@@ -168,6 +173,11 @@
 		2E6B9EDB1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PHAssetCollectionExtensions.swift; sourceTree = "<group>"; };
 		2E6B9EDE1FBF1B0D00F28C00 /* FullScreenImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullScreenImageViewController.swift; sourceTree = "<group>"; };
 		2E6B9EE41FBF1CFB00F28C00 /* FullScreenImageUnwindSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullScreenImageUnwindSegue.swift; sourceTree = "<group>"; };
+		2E7C3692202095DC008033E7 /* ReceiptFooterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptFooterTableViewCell.swift; sourceTree = "<group>"; };
+		2E7C3694202095ED008033E7 /* ReceiptHeaderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptHeaderTableViewCell.swift; sourceTree = "<group>"; };
+		2E7C3696202095FB008033E7 /* ReceiptLineItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptLineItemTableViewCell.swift; sourceTree = "<group>"; };
+		2E7C6F03201F4DF20071E6B8 /* PaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentViewController.swift; sourceTree = "<group>"; };
+		2E7C6F05201F4E670071E6B8 /* ReceiptTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptTableViewController.swift; sourceTree = "<group>"; };
 		2E876E081FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPickerCoverCollectionViewCell.swift; sourceTree = "<group>"; };
 		2E876E0A1FC2FA15007CCFA2 /* ViewStorySegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewStorySegue.swift; sourceTree = "<group>"; };
 		2E8B3E431FD191AC00FB8878 /* PhotobookViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotobookViewController.swift; sourceTree = "<group>"; };
@@ -372,6 +382,16 @@
 			path = Segues;
 			sourceTree = "<group>";
 		};
+		2E7C369820209600008033E7 /* Receipt */ = {
+			isa = PBXGroup;
+			children = (
+				2E7C3692202095DC008033E7 /* ReceiptFooterTableViewCell.swift */,
+				2E7C3694202095ED008033E7 /* ReceiptHeaderTableViewCell.swift */,
+				2E7C3696202095FB008033E7 /* ReceiptLineItemTableViewCell.swift */,
+			);
+			path = Receipt;
+			sourceTree = "<group>";
+		};
 		2ECF57BA2010D0590047094C /* Payment */ = {
 			isa = PBXGroup;
 			children = (
@@ -456,6 +476,8 @@
 				2E2563902018BBCF0096DFC5 /* AddressTableViewController.swift */,
 				2E21DB552017943500D32989 /* CountryPickerTableViewController.swift */,
 				2EC81603201B33230046643B /* ShippingMethodsViewController.swift */,
+				2E7C6F03201F4DF20071E6B8 /* PaymentViewController.swift */,
+				2E7C6F05201F4E670071E6B8 /* ReceiptTableViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -491,6 +513,7 @@
 				2ED79FEC1FBAEE290046B96C /* Picker */,
 				2E3E6A5520036FC20044EDFC /* Photobook */,
 				2ECF57BA2010D0590047094C /* Payment */,
+				2E7C369820209600008033E7 /* Receipt */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -892,7 +915,9 @@
 				2E17338C2010B9EE00F0D718 /* Card.swift in Sources */,
 				2ED79FEE1FBAEE630046B96C /* AssetPickerCollectionViewCell.swift in Sources */,
 				2E0B58A41FB32ADD00F31A9E /* PhotosAlbumManager.swift in Sources */,
+				2E7C3697202095FB008033E7 /* ReceiptLineItemTableViewCell.swift in Sources */,
 				2ECF57BC2010D0830047094C /* PaymentMethodTableViewCell.swift in Sources */,
+				2E7C6F04201F4DF20071E6B8 /* PaymentViewController.swift in Sources */,
 				2ECB5A991FDFE71200FF39A5 /* OutOfBoundsTouchCollectionView.swift in Sources */,
 				2E5F8251201617CE002F3607 /* DeliveryDetailsTableViewController.swift in Sources */,
 				2E876E0B1FC2FA15007CCFA2 /* ViewStorySegue.swift in Sources */,
@@ -907,16 +932,19 @@
 				6F4606DC201886BD00C7583E /* BorderedRoundedView.swift in Sources */,
 				B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */,
 				2E17337F200F4E0B00F0D718 /* PaymentMethodsViewController.swift in Sources */,
+				2E7C3695202095ED008033E7 /* ReceiptHeaderTableViewCell.swift in Sources */,
 				2E0B58A21FB32AC100F31A9E /* PhotosAlbum.swift in Sources */,
 				6FA1893B2004B9C700E6D0AB /* ModalAlbumsCollectionViewController.swift in Sources */,
 				2E0B58A91FB3508B00F31A9E /* SelectedAssetsManager.swift in Sources */,
 				2E0B589D1FB3293100F31A9E /* PhotosAsset.swift in Sources */,
+				2E7C6F06201F4E670071E6B8 /* ReceiptTableViewController.swift in Sources */,
 				6F5A59F2200CBDD80006BFCA /* SpineFrameView.swift in Sources */,
 				6FA189311FFF96E500E6D0AB /* AssetSelectorAssetCollectionViewCell.swift in Sources */,
 				2E1733862010B6BA00F0D718 /* Cost.swift in Sources */,
 				6F0A68321FE1291200B7E56C /* PageSetupViewController.swift in Sources */,
 				6F18154A2009042E00D7082D /* CoverFrameView.swift in Sources */,
 				B9BC2E271FBF195200F4AA56 /* AssetCollectorViewController.swift in Sources */,
+				2E7C3693202095DC008033E7 /* ReceiptFooterTableViewCell.swift in Sources */,
 				2EC81602201B33180046643B /* ShippingMethodTableViewCell.swift in Sources */,
 				2E1733942010CD0B00F0D718 /* Address.swift in Sources */,
 				2ED5B3831FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift in Sources */,

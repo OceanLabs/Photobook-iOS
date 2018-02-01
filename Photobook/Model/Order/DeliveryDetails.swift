@@ -56,7 +56,7 @@ class DeliveryDetails: NSCopying, Codable {
         return try? PropertyListDecoder().decode(DeliveryDetails.self, from: detailsData)
     }
     
-    func fullName() -> String?{
+    var fullName: String? {
         guard !(firstName == nil && lastName == nil) else { return nil }
         return String(format: "%@ %@", firstName ?? "", lastName ?? "").trimmingCharacters(in: CharacterSet.whitespaces)
     }

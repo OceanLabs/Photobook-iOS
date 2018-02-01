@@ -20,7 +20,12 @@ struct Card {
     
     static var currentCard: Card? = nil
     
-    var clientId: String?
+    var clientId: String? {
+        didSet {
+            guard let key = clientId else { return }
+            Stripe.setDefaultPublishableKey(key)
+        }
+    }
     
     var number: String
     var numberMasked: String {
