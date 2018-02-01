@@ -8,20 +8,6 @@
 
 import UIKit
 
-@objc enum FontType: Int, Codable {
-    case clear, classic, solid
-    
-    func fontWithSize(_ size: CGFloat) -> UIFont {
-        let name: String
-        switch self {
-        case .clear: name = "OpenSans-Regular"
-        case .classic: name = "Lora-Regular"
-        case .solid: name = "Montserrat-Bold"
-        }
-        return UIFont(name: name, size: size)!
-    }
-}
-
 @objc protocol TextToolBarViewDelegate {
     func didSelectFontType(_ type: FontType)
 }
@@ -138,7 +124,7 @@ class TextEditingViewController: UIViewController {
         let photobookToOnScreenScale = pageSize.height / Constants.pageHeight
         let fontSize = round(Constants.fontSize * photobookToOnScreenScale)
         
-        setTextViewType(.classic, fontSize: fontSize)
+        setTextViewAttributes(with: .clear, fontSize: fontSize)
         
         // Place image if needed
         guard let imageLayoutBox = productLayout!.layout.imageLayoutBox,
@@ -157,12 +143,20 @@ class TextEditingViewController: UIViewController {
         assetImageView.transform = productLayout!.productLayoutAsset!.transform
     }
     
-    private func setTextViewType(_ type: FontType, fontSize: CGFloat) {
-        // TODO: Check that the new style doesn't go over the bounds
-        let font = type.fontWithSize(fontSize)
-        let attributes = [ NSAttributedStringKey.font.rawValue: font ]
-        textView.attributedText = NSAttributedString(string: textView.text, attributes: [ NSAttributedStringKey.font: font ])
-        textView.typingAttributes = attributes
+    private func setTextViewAttributes(with fontType: FontType, fontSize: CGFloat) {
+        textView.attributedText = fontType.attributedText(with: textView.text, fontSize: fontSize)
+        textView.typingAttributes = fontType.typingAttributes(fontSize: fontSize)
+    }
+    
+    private func textGoesOverBounds(for textView: UITextView, string: String, range: NSRange) -> Bool {
+        let viewHeight = textView.bounds.height
+        let width = textView.textContainer.size.width
+        
+        let attributedString = NSMutableAttributedString(attributedString: textView.textStorage)
+        attributedString.replaceCharacters(in: range, with: string)
+        
+        let textHeight = (attributedString as NSAttributedString).height(for: width)
+        return textHeight >= viewHeight
     }
 }
 
@@ -183,32 +177,13 @@ extension TextEditingViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         delegate?.didChangeText(to: textView.text)
     }
-    
-    private func textGoesOverBounds(for textView: UITextView, string: String, range: NSRange) -> Bool {
-        let viewHeight = textView.bounds.height
-        let width = textView.textContainer.size.width
-        
-        let attributedString = NSMutableAttributedString(attributedString: textView.textStorage)
-        attributedString.replaceCharacters(in: range, with: string)
-        
-        let storage = NSTextStorage(attributedString: attributedString)
-        let container = NSTextContainer(size: CGSize(width: width, height: CGFloat.greatestFiniteMagnitude))
-        let layoutManager = NSLayoutManager()
-        
-        layoutManager.addTextContainer(container)
-        storage.addLayoutManager(layoutManager)
-        
-        let textHeight = layoutManager.usedRect(for: container).height
-        
-        return textHeight >= viewHeight
-    }
 }
 
 extension TextEditingViewController: TextToolBarViewDelegate {
     
     func didSelectFontType(_ type: FontType) {
         let fontSize = (textView.typingAttributes[ NSAttributedStringKey.font.rawValue] as! UIFont).pointSize
-        setTextViewType(type, fontSize: fontSize)
+        setTextViewAttributes(with: type, fontSize: fontSize)
         
         // TODO: This should be conditional on whether the text goes over bounds or not
         delegate?.didChangeFontType(to: type)

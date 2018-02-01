@@ -105,6 +105,8 @@
 		6FCE08D22021E4B700C55D2F /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08CF2021E4A800C55D2F /* Montserrat-Bold.ttf */; };
 		6FCE08D32021E4B700C55D2F /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08D02021E4AD00C55D2F /* OpenSans-Regular.ttf */; };
 		6FCE08D42021E4B700C55D2F /* Lora-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08D12021E4B300C55D2F /* Lora-Regular.ttf */; };
+		6FCE08D620221C7C00C55D2F /* NSAttributedStringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE08D520221C7C00C55D2F /* NSAttributedStringExtensions.swift */; };
+		6FCE08D82023139D00C55D2F /* FontType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE08D72023139D00C55D2F /* FontType.swift */; };
 		6FCE959D1FF555EE0023FC14 /* AssetPlacementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE959C1FF555EE0023FC14 /* AssetPlacementViewController.swift */; };
 		6FDF25E51FB604E100F46BB0 /* PhotobookTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF25E41FB604E100F46BB0 /* PhotobookTabBar.swift */; };
 		6FDF25E71FB6052A00F46BB0 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF25E61FB6052A00F46BB0 /* UIImageExtensions.swift */; };
@@ -232,6 +234,8 @@
 		6FCE08CF2021E4A800C55D2F /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.ttf"; sourceTree = "<group>"; };
 		6FCE08D02021E4AD00C55D2F /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
 		6FCE08D12021E4B300C55D2F /* Lora-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lora-Regular.ttf"; sourceTree = "<group>"; };
+		6FCE08D520221C7C00C55D2F /* NSAttributedStringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAttributedStringExtensions.swift; sourceTree = "<group>"; };
+		6FCE08D72023139D00C55D2F /* FontType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontType.swift; sourceTree = "<group>"; };
 		6FCE959C1FF555EE0023FC14 /* AssetPlacementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPlacementViewController.swift; sourceTree = "<group>"; };
 		6FDF25E41FB604E100F46BB0 /* PhotobookTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookTabBar.swift; sourceTree = "<group>"; };
 		6FDF25E61FB6052A00F46BB0 /* UIImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
@@ -502,6 +506,7 @@
 			isa = PBXGroup;
 			children = (
 				2E17338D2010BA3600F0D718 /* StringExtensions.swift */,
+				6FCE08D520221C7C00C55D2F /* NSAttributedStringExtensions.swift */,
 				2E1733952010CDC400F0D718 /* LuhnStringExtensions.swift */,
 				2E1733892010B85F00F0D718 /* DecimalExtensions.swift */,
 				2E6B9ED91FBDEEF400F28C00 /* UIViewExtensions.swift */,
@@ -554,6 +559,7 @@
 				6F3C4ACC1FC880F100DA0196 /* ProductLayoutAsset.swift */,
 				6F3C4ACE1FC8811C00DA0196 /* ProductLayoutText.swift */,
 				6F34855D1FC5A9F900961B32 /* ProductManager.swift */,
+				6FCE08D72023139D00C55D2F /* FontType.swift */,
 			);
 			path = Photobooks;
 			sourceTree = "<group>";
@@ -834,6 +840,7 @@
 			files = (
 				6FC0DE791FE930B0009BB799 /* LayoutSelectionCollectionViewCell.swift in Sources */,
 				6FB670621FB49FF90062D630 /* UILabelExtensions.swift in Sources */,
+				6FCE08D82023139D00C55D2F /* FontType.swift in Sources */,
 				6F2FF37F1FD05686007DB545 /* LayoutUtils.swift in Sources */,
 				6F34855E1FC5A9F900961B32 /* ProductManager.swift in Sources */,
 				6F139E0F1FB45EFC005B937E /* Story.swift in Sources */,
@@ -894,6 +901,7 @@
 				2E0B58951FB3280000F31A9E /* AlbumManager.swift in Sources */,
 				6F4606DC201886BD00C7583E /* BorderedRoundedView.swift in Sources */,
 				B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */,
+				6FCE08D620221C7C00C55D2F /* NSAttributedStringExtensions.swift in Sources */,
 				2E17337F200F4E0B00F0D718 /* PaymentMethodsViewController.swift in Sources */,
 				2E0B58A21FB32AC100F31A9E /* PhotosAlbum.swift in Sources */,
 				6FA1893B2004B9C700E6D0AB /* ModalAlbumsCollectionViewController.swift in Sources */,

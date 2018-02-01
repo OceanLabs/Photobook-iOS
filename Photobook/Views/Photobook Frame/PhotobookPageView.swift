@@ -15,7 +15,10 @@ protocol PhotobookPageViewDelegate: class {
 class PhotobookPageView: UIView {
     
     private struct Constants {
-        static let textBoxFont = UIFont.systemFont(ofSize: 6.0)
+        static let textBoxFont = UIFont.systemFont(ofSize: 6.0) // FIXME: Remove
+
+        static let fontSize: CGFloat = 16.0 // FIXME: Get this from the product info
+        static let pageHeight: CGFloat = 430.866 // FIXME: Get this from the product info
     }
 
     weak var delegate: PhotobookPageViewDelegate?
@@ -51,12 +54,7 @@ class PhotobookPageView: UIView {
     @IBOutlet private weak var assetContainerView: UIView!
     @IBOutlet private weak var assetPlaceholderIconImageView: UIImageView!
     @IBOutlet private weak var assetImageView: UIImageView!
-    @IBOutlet private weak var pageTextLabel: UILabel! {
-        didSet {
-            pageTextLabel.font = Constants.textBoxFont
-            pageTextLabel.backgroundColor = .clear
-        }
-    }
+    @IBOutlet private weak var pageTextLabel: UILabel?
     @IBOutlet private weak var textLabelPlaceholderBoxView: TextLabelPlaceholderBoxView?
     
     @IBOutlet private var aspectRatioConstraint: NSLayoutConstraint!
@@ -79,10 +77,7 @@ class PhotobookPageView: UIView {
         
         assetPlaceholderIconImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
         
-        guard let textBox = productLayout?.layout.textLayoutBox else { return }
-        pageTextLabel.frame = textBox.rectContained(in: bounds.size)
-        pageTextLabel.font = Constants.textBoxFont
-        adjustLabelHeight()
+        adjustTextLabel()
     }
     
     private func setup() {
@@ -157,17 +152,11 @@ class PhotobookPageView: UIView {
     }
     
     func setupTextBox(shouldBeLegible: Bool = true) {
+        guard let pageTextLabel = pageTextLabel else { return }
         guard let textBox = productLayout?.layout.textLayoutBox else {
             pageTextLabel.alpha = 0.0
             if let placeholderView = textLabelPlaceholderBoxView { placeholderView.alpha = 0.0 }
             return
-        }
-        
-        var text = productLayout?.productLayoutText?.text
-        if (text ?? "").isEmpty {
-            text = NSLocalizedString("Views/Photobook Frame/PhotobookPageView/pageTextLabel/placeholder",
-                                     value: "Add your own text",
-                                     comment: "Placeholder text to show on a cover / page")
         }
         
         if !shouldBeLegible, let placeholderView = textLabelPlaceholderBoxView {
@@ -179,10 +168,41 @@ class PhotobookPageView: UIView {
         }
 
         pageTextLabel.alpha = 1.0
-        pageTextLabel.text = text
-        pageTextLabel.frame = textBox.rectContained(in: bounds.size)
+        
+        adjustTextLabel()
         setTextColor()
-        adjustLabelHeight()
+    }
+    
+    private func adjustTextLabel() {
+        guard let pageTextLabel = pageTextLabel, let textBox = productLayout?.layout.textLayoutBox else { return }
+        
+        var text = productLayout?.text
+        if (text ?? "").isEmpty {
+            text = NSLocalizedString("Views/Photobook Frame/PhotobookPageView/pageTextLabel/placeholder",
+                                     value: "Add your own text",
+                                     comment: "Placeholder text to show on a cover / page")
+        }
+
+        let finalFrame = textBox.rectContained(in: bounds.size)
+        let finalCentre =  CGPoint(x: finalFrame.midX, y: finalFrame.midY)
+        
+        let scale: CGFloat = 1.55
+        let fakeSize = CGSize(width: finalFrame.width * scale, height: finalFrame.height * scale)
+        
+        pageTextLabel.transform = .identity
+        pageTextLabel.frame = CGRect(x: finalFrame.minX, y: finalFrame.minY, width: finalFrame.width * scale, height: finalFrame.height * scale)
+        pageTextLabel.center = finalCentre
+        pageTextLabel.transform = pageTextLabel.transform.scaledBy(x: 1/scale, y: 1/scale)
+        
+        let layoutContainerSize = textBox.containerSize(for: fakeSize)
+        let photobookToOnScreenScale = layoutContainerSize.height / Constants.pageHeight
+        let fontSize = round(Constants.fontSize * photobookToOnScreenScale)
+        
+        let fontType = productLayout!.fontType ?? .clear
+        pageTextLabel.attributedText = fontType.attributedText(with: text!, fontSize: fontSize)
+        
+        let textHeight = pageTextLabel.attributedText!.height(for: fakeSize.width)
+        if textHeight < fakeSize.height { pageTextLabel.frame.size.height = textHeight }
     }
     
     private func setImagePlaceholder(visible: Bool) {
@@ -198,6 +218,7 @@ class PhotobookPageView: UIView {
     }
     
     func setTextColor() {
+        guard let pageTextLabel = pageTextLabel else { return }
         switch color {
         case .white: pageTextLabel.textColor = .darkText
         case .black: pageTextLabel.textColor = .white
@@ -207,13 +228,5 @@ class PhotobookPageView: UIView {
     @objc private func didTapOnPage(_ sender: UITapGestureRecognizer) {
         guard let index = index else { return }
         delegate?.didTapOnPage(index: index)
-    }
-    
-    private func adjustLabelHeight() {
-        let textAttributes = [NSAttributedStringKey.font: Constants.textBoxFont]
-        let rect = pageTextLabel.text!.boundingRect(with: CGSize(width: pageTextLabel.bounds.width, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, attributes: textAttributes, context: nil)
-        if rect.size.height < pageTextLabel.bounds.height {
-            pageTextLabel.frame.size.height = rect.size.height
-        }
     }
 }
