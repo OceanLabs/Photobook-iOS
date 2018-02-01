@@ -389,14 +389,14 @@ class ProductManager {
     }
     
     func productLayoutIndex(for spreadIndex: Int) -> Int? {
-        var foldIndexCount = 1 // Skip the first fold which includes the courtesy page
-        var i = 2 // Skip the cover and the page on the first fold
+        var spreadIndexCount = 1 // Skip the first spread which includes the courtesy page
+        var i = 2 // Skip the cover and the page on the first spread
         while i < productLayouts.count {
-            if spreadIndex == foldIndexCount {
+            if spreadIndex == spreadIndexCount {
                 return i
             }
             i += productLayouts[i].layout.isDoubleLayout ? 1 : 2
-            foldIndexCount += 1
+            spreadIndexCount += 1
         }
         
         return nil
