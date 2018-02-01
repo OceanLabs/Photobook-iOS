@@ -8,8 +8,7 @@
 
 import Foundation
 
-class Country: NSObject, NSCopying, NSSecureCoding {
-    static var supportsSecureCoding = true
+class Country: NSCopying, Codable {
     
     let name: String
     let codeAlpha2: String
@@ -21,26 +20,6 @@ class Country: NSObject, NSCopying, NSSecureCoding {
         self.codeAlpha2 = codeAlpha2
         self.codeAlpha3 = codeAlpha3
         self.currencyCode = currencyCode
-        
-        super.init()
-    }
-    
-    required convenience init?(coder aDecoder: NSCoder){
-        guard
-        let name = aDecoder.decodeObject(forKey: "name") as? String,
-        let codeAlpha2 = aDecoder.decodeObject(forKey: "codeAlpha2") as? String,
-        let codeAlpha3 = aDecoder.decodeObject(forKey: "codeAlpha3") as? String,
-        let currencyCode = aDecoder.decodeObject(forKey: "currencyCode") as? String
-            else { return nil }
-        
-        self.init(name: name, codeAlpha2: codeAlpha2, codeAlpha3: codeAlpha3, currencyCode:currencyCode)
-    }
-    
-    func encode(with aCoder: NSCoder) {
-        aCoder.encode(name, forKey: "name")
-        aCoder.encode(codeAlpha2, forKey: "codeAlpha2")
-        aCoder.encode(codeAlpha3, forKey: "codeAlpha3")
-        aCoder.encode(currencyCode, forKey: "currencyCode")
     }
     
     class func countryForCurrentLocale() -> Country{

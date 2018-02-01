@@ -25,9 +25,7 @@ enum PageType {
 class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate {
 
     private struct Constants {
-        static let pageSideMargin: CGFloat = 20.0
         static let photobookSideMargin: CGFloat = 20.0
-        static let textBoxFont = UIFont.systemFont(ofSize: 6.0)
     }
     
     private enum Tool: Int {

@@ -41,10 +41,6 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
         get { return !photobookFrameView.isHidden }
         set { photobookFrameView.isHidden = !newValue }
     }
-    var isPlusButtonVisible: Bool {
-        get { return !plusButton.isHidden }
-        set { plusButton.isHidden = !isPlusButtonVisible }
-    }
     
     weak var delegate: PhotobookCollectionViewCellDelegate?
     weak var pageDelegate: PhotobookPageViewDelegate? {
@@ -81,10 +77,14 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
             photobookFrameView.resetPageColor()
         }
     }
+    
+    func setPlusButtonHidden(_ hidden:Bool) {
+        plusButton.isHidden = hidden
+    }
         
     @IBAction func didTapPlus(_ sender: UIButton) {
         guard let layoutIndex = photobookFrameView.leftPageView.index ?? photobookFrameView.rightPageView.index,
-            let foldIndex = ProductManager.shared.foldIndex(for: layoutIndex)
+            let foldIndex = ProductManager.shared.spreadIndex(for: layoutIndex)
             else { return }
         delegate?.didTapOnPlusButton(at: foldIndex)
     }

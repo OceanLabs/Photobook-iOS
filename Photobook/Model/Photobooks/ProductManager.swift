@@ -97,17 +97,29 @@ class ProductManager {
         return minimumRequiredAssets < productLayouts.count
     }
     
-    // Ordering
+    // Ordering (this should probably be in another class)
     var shippingMethod: Int?
-    var currencyCode: String? // TODO: Get this from somewhere
-    var address: Address?
+    var currencyCode: String? = "GBP" // TODO: Get this from somewhere
+    var deliveryDetails: DeliveryDetails?
     var paymentMethod: PaymentMethod?
-    var cachedCost: Cost?
-    
-    // TODO: this probably doesn't belong here
-    func updateCost (completionHandler: (_ error: Error?) -> Void) {
-        
+    var cachedCost: Cost? // private?
+    var validCost: Cost? {
+        return hasValidCachedCost ? cachedCost : nil
     }
+    func updateCost(forceUpdate: Bool = false, _ completionHandler: @escaping (_ error : Error?) -> Void) {
+        // TODO: update cost
+        completionHandler(nil)
+    }
+    var hasValidCachedCost: Bool {
+        // TODO: validate
+//        return cachedCost?.orderHash == self.hashValue
+        return true
+    }
+    var paymentToken: String?
+    func reset() {
+        // TODO: reset the product
+    }
+    
     
     // TODO: Spine
     
@@ -125,6 +137,12 @@ class ProductManager {
             welf?.layouts = layouts
             
             completion(nil)
+            
+            // TODO: REMOVEME. Mock cost & shipping methods
+            let lineItem = LineItem(id: 0, name: "Clown Costume 🤡", cost: Decimal(integerLiteral: 10), formattedCost: "$10")
+            let shippingMethod = ShippingMethod(id: 1, name: "Fiesta Deliveries 🎉🚚", shippingCostFormatted: "$5", totalCost: Decimal(integerLiteral: 15), totalCostFormatted: "$15", maxDeliveryTime: 150, minDeliveryTime: 100)
+            let shippingMethod2 = ShippingMethod(id: 2, name: "Magic Unicorn ✨🦄✨", shippingCostFormatted: "$5000", totalCost: Decimal(integerLiteral: 15), totalCostFormatted: "$5010", maxDeliveryTime: 1, minDeliveryTime: 0)
+            self.cachedCost = Cost(hash: 0, lineItems: [lineItem], shippingMethods: [shippingMethod, shippingMethod2], promoDiscount: nil, promoCodeInvalidReason: nil)
         }
     }
     
@@ -380,31 +398,31 @@ class ProductManager {
         }
     }
     
-    func foldIndex(for productLayoutIndex: Int) -> Int? {
-        var foldIndex = 0.5 // The first page is on the right because of the courtesy page
+    func spreadIndex(for productLayoutIndex: Int) -> Int? {
+        var spreadIndex = 0.5 // The first page is on the right because of the courtesy page
         
         var i = 0
         while i < productLayouts.count {
             if i == productLayoutIndex {
-                return Int(foldIndex)
+                return Int(spreadIndex)
             }
             
-            foldIndex += productLayouts[i].layout.isDoubleLayout ? 1 : 0.5
+            spreadIndex += productLayouts[i].layout.isDoubleLayout ? 1 : 0.5
             i += 1
         }
         
         return nil
     }
     
-    func productLayoutIndex(for foldIndex: Int) -> Int? {
-        var foldIndexCount = 1 // Skip the first fold which includes the courtesy page
-        var i = 2 // Skip the cover and the page on the first fold
+    func productLayoutIndex(for spreadIndex: Int) -> Int? {
+        var spreadIndexCount = 1 // Skip the first spread which includes the courtesy page
+        var i = 2 // Skip the cover and the page on the first spread
         while i < productLayouts.count {
-            if foldIndex == foldIndexCount {
+            if spreadIndex == spreadIndexCount {
                 return i
             }
             i += productLayouts[i].layout.isDoubleLayout ? 1 : 2
-            foldIndexCount += 1
+            spreadIndexCount += 1
         }
         
         return nil

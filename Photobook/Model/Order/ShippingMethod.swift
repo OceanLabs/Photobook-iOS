@@ -21,7 +21,7 @@ class ShippingMethod: NSObject, NSSecureCoding {
     let minDeliveryTime: Int
     
     var deliveryTime: String {
-        return String.localizedStringWithFormat(NSLocalizedString("deliveryTime", value:"%d-%d days", comment: "Delivery estimates for a specific delivery method"), minDeliveryTime, maxDeliveryTime)
+        return String.localizedStringWithFormat(NSLocalizedString("ShippingMethod/DeliveryTime", value:"%d-%d working days", comment: "Delivery estimates for a specific delivery method"), minDeliveryTime, maxDeliveryTime)
     }
     
     init(id: Int, name: String, shippingCostFormatted: String, totalCost: Decimal, totalCostFormatted: String, maxDeliveryTime: Int, minDeliveryTime: Int) {
