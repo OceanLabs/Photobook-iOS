@@ -80,7 +80,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
         
     @IBAction func didTapPlus(_ sender: UIButton) {
         guard let layoutIndex = photobookFrameView.leftPageView.index ?? photobookFrameView.rightPageView.index,
-            let foldIndex = ProductManager.shared.foldIndex(for: layoutIndex)
+            let foldIndex = ProductManager.shared.spreadIndex(for: layoutIndex)
             else { return }
         delegate?.didTapOnPlusButton(at: foldIndex)
     }

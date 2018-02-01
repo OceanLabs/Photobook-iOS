@@ -438,7 +438,7 @@ class PhotobookViewController: UIViewController {
     
     func liftView(_ photobookFrameView: PhotobookFrameView) {
         guard let productLayoutIndex = photobookFrameView.leftPageView.index,
-            let foldIndex = ProductManager.shared.foldIndex(for: productLayoutIndex),
+            let foldIndex = ProductManager.shared.spreadIndex(for: productLayoutIndex),
             foldIndex != collectionView.numberOfItems(inSection: 1) - 1
             else { return }
         
@@ -483,7 +483,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 1:
-            guard let lastFoldIndex = ProductManager.shared.foldIndex(for: ProductManager.shared.productLayouts.count - 1) else { return 0 }
+            guard let lastFoldIndex = ProductManager.shared.spreadIndex(for: ProductManager.shared.productLayouts.count - 1) else { return 0 }
             return lastFoldIndex + 1 + (proposedDropIndexPath != nil ? 1 : 0)
         default:
             return 1
