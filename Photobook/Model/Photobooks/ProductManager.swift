@@ -152,6 +152,8 @@ class ProductManager {
             return assets
         }()
         
+        let imageOnlyLayouts = layouts.filter({ $0.imageLayoutBox != nil })
+        
         // First photobook only
         if product == nil {
             var tempLayouts = [ProductLayout]()
@@ -164,11 +166,15 @@ class ProductManager {
             tempLayouts.append(productLayout)
             
             // Create layouts for the remaining assets
-            let imageOnlyLayouts = layouts.filter({ $0.imageLayoutBox != nil })
             tempLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: imageOnlyLayouts))
             
             // Fill minimum pages with Placeholder assets if needed
-            let numberOfPlaceholderLayoutsNeeded = photobook.minimumRequiredAssets - tempLayouts.count
+            var numberOfPlaceholderLayoutsNeeded = max(photobook.minimumRequiredAssets - tempLayouts.count, 0)
+            
+            // We need an odd number of layouts including the cover and the 2 courtesy pages
+            if tempLayouts.count % 2 == 0 {
+                numberOfPlaceholderLayoutsNeeded += 1
+            }
             tempLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: imageOnlyLayouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
             
             productLayouts = tempLayouts
@@ -221,8 +227,12 @@ class ProductManager {
         }
         
         // Create new layouts for added assets that haven't filled empty pages
-        productLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: layouts))
+        productLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: imageOnlyLayouts))
         
+        // We need an odd number of layouts including the cover and the 2 courtesy pages
+        if productLayouts.count % 2 == 0 {
+            productLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: imageOnlyLayouts, placeholderLayouts: 1))
+        }
         
         // Switching products
         product = photobook
