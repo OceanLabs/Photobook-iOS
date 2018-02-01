@@ -23,7 +23,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
             photobookFrameView.leftPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
         }
     }
-    @IBOutlet weak var plusButton: UIButton!
+    @IBOutlet private weak var plusButton: UIButton!
 
     static let reuseIdentifier = NSStringFromClass(PhotobookCollectionViewCell.self).components(separatedBy: ".").last!
     
@@ -76,6 +76,10 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
             photobookFrameView.pageColor = ProductManager.shared.pageColor
             photobookFrameView.resetPageColor()
         }
+    }
+    
+    func setPlusButtonHidden(_ hidden:Bool) {
+        plusButton.isHidden = hidden
     }
         
     @IBAction func didTapPlus(_ sender: UIButton) {
