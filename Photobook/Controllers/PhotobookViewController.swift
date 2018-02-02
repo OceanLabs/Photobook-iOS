@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PhotobookViewController: UIViewController {
+class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate {
     
     private struct Constants {
         static let rearrageScale: CGFloat = 0.8
@@ -33,6 +33,9 @@ class PhotobookViewController: UIViewController {
     
     @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var ctaButtonContainer: UIView!
+    
+    var photobokNavigationBarType: PhotobookNavigationBarType = .clear
+    
     var selectedAssetsManager: SelectedAssetsManager?
     private var titleButton = UIButton()
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
@@ -72,6 +75,12 @@ class PhotobookViewController: UIViewController {
         }
         
         setup(with: photobook)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // Reset the var after a possible colour change
+        photobookNeedsRedrawing = false
     }
     
     override func viewDidLayoutSubviews() {
@@ -203,16 +212,17 @@ class PhotobookViewController: UIViewController {
     }
     
     private func updateNavBar() {
-        guard let navBar = navigationController?.navigationBar as? PhotobookNavigationBar else { return }
+        guard let navigationBar = navigationController?.navigationBar as? PhotobookNavigationBar else { return }
         
-        let navBarMaxY = (navigationController?.navigationBar.frame.maxY ?? 0)
+        let navigationBarMaxY = (navigationController?.navigationBar.frame.maxY ?? 0)
         
         var draggingViewUnderNavBar = false
         if let draggingView = draggingView {
-            draggingViewUnderNavBar = draggingView.frame.origin.y < navBarMaxY
+            draggingViewUnderNavBar = draggingView.frame.origin.y < navigationBarMaxY
         }
         
-        navBar.effectView.alpha = collectionView.contentOffset.y <= -navBarMaxY && !draggingViewUnderNavBar ? 0 : 1
+        let showBlur = collectionView.contentOffset.y > -navigationBarMaxY || draggingViewUnderNavBar
+        navigationBar.setBlur(showBlur)
     }
     
     private func stopTimer() {
@@ -597,7 +607,7 @@ extension PhotobookViewController: PhotobookPageViewDelegate {
         pageSetupViewController.selectedAssetsManager = selectedAssetsManager
         pageSetupViewController.pageIndex = index
         pageSetupViewController.delegate = self
-        present(pageSetupViewController, animated: true, completion: nil)
+        navigationController?.pushViewController(pageSetupViewController, animated: true)
     }
 }
 
@@ -620,9 +630,7 @@ extension PhotobookViewController: PageSetupDelegate {
             }
             collectionView.reloadData()
         }
-        dismiss(animated: true, completion: {
-            self.photobookNeedsRedrawing = false
-        })
+        navigationController?.popViewController(animated: true)
     }
 }
 

@@ -30,6 +30,8 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     var asset: Asset!
     var image: UIImage!
     var pageIndex: Int?
+    var coverColor: ProductColor!
+    var pageColor: ProductColor!
     
     private weak var assetContainerView: UIView! {
         guard let pageType = pageType else { return nil }
@@ -64,8 +66,8 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         
         let aspectRatio = ProductManager.shared.product!.aspectRatio!
         
-        photobookFrameView.coverColor = ProductManager.shared.coverColor
-        photobookFrameView.pageColor = ProductManager.shared.pageColor
+        photobookFrameView.coverColor = coverColor
+        photobookFrameView.pageColor = pageColor
         photobookFrameView.leftPageView.aspectRatio = aspectRatio
         photobookFrameView.rightPageView.aspectRatio = aspectRatio
         photobookFrameView.leftPageView.isTapGestureEnabled = false
@@ -100,6 +102,10 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         default:
             break
         }
+    }
+    
+    func resetColor() {
+        photobookFrameView.resetPageColor()
     }
 }
 

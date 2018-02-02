@@ -113,6 +113,12 @@
 		6FC7E8871FC4719300D2BCDA /* LayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E8861FC4719300D2BCDA /* LayoutTests.swift */; };
 		6FC7E8891FC47B4500D2BCDA /* PhotobookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E8881FC47B4500D2BCDA /* PhotobookTests.swift */; };
 		6FC7E88B1FC574DA00D2BCDA /* photobooks.json in Resources */ = {isa = PBXBuildFile; fileRef = 6FC7E88A1FC574DA00D2BCDA /* photobooks.json */; };
+		6FCE08CE2020755500C55D2F /* TextEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE08CD2020755500C55D2F /* TextEditingViewController.swift */; };
+		6FCE08D22021E4B700C55D2F /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08CF2021E4A800C55D2F /* Montserrat-Bold.ttf */; };
+		6FCE08D32021E4B700C55D2F /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08D02021E4AD00C55D2F /* OpenSans-Regular.ttf */; };
+		6FCE08D42021E4B700C55D2F /* Lora-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08D12021E4B300C55D2F /* Lora-Regular.ttf */; };
+		6FCE08D620221C7C00C55D2F /* NSAttributedStringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE08D520221C7C00C55D2F /* NSAttributedStringExtensions.swift */; };
+		6FCE08D82023139D00C55D2F /* FontType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE08D72023139D00C55D2F /* FontType.swift */; };
 		6FCE959D1FF555EE0023FC14 /* AssetPlacementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE959C1FF555EE0023FC14 /* AssetPlacementViewController.swift */; };
 		6FDF25E51FB604E100F46BB0 /* PhotobookTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF25E41FB604E100F46BB0 /* PhotobookTabBar.swift */; };
 		6FDF25E71FB6052A00F46BB0 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF25E61FB6052A00F46BB0 /* UIImageExtensions.swift */; };
@@ -248,6 +254,12 @@
 		6FC7E8861FC4719300D2BCDA /* LayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutTests.swift; sourceTree = "<group>"; };
 		6FC7E8881FC47B4500D2BCDA /* PhotobookTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookTests.swift; sourceTree = "<group>"; };
 		6FC7E88A1FC574DA00D2BCDA /* photobooks.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = photobooks.json; sourceTree = "<group>"; };
+		6FCE08CD2020755500C55D2F /* TextEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditingViewController.swift; sourceTree = "<group>"; };
+		6FCE08CF2021E4A800C55D2F /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.ttf"; sourceTree = "<group>"; };
+		6FCE08D02021E4AD00C55D2F /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
+		6FCE08D12021E4B300C55D2F /* Lora-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lora-Regular.ttf"; sourceTree = "<group>"; };
+		6FCE08D520221C7C00C55D2F /* NSAttributedStringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAttributedStringExtensions.swift; sourceTree = "<group>"; };
+		6FCE08D72023139D00C55D2F /* FontType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontType.swift; sourceTree = "<group>"; };
 		6FCE959C1FF555EE0023FC14 /* AssetPlacementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPlacementViewController.swift; sourceTree = "<group>"; };
 		6FDF25E41FB604E100F46BB0 /* PhotobookTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookTabBar.swift; sourceTree = "<group>"; };
 		6FDF25E61FB6052A00F46BB0 /* UIImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
@@ -472,6 +484,7 @@
 				2E8B3E431FD191AC00FB8878 /* PhotobookViewController.swift */,
 				2E17337E200F4E0B00F0D718 /* PaymentMethodsViewController.swift */,
 				2ECF57C220120D2A0047094C /* CreditCardTableViewController.swift */,
+				6FCE08CD2020755500C55D2F /* TextEditingViewController.swift */,
 				2E5F8250201617CE002F3607 /* DeliveryDetailsTableViewController.swift */,
 				2E2563902018BBCF0096DFC5 /* AddressTableViewController.swift */,
 				2E21DB552017943500D32989 /* CountryPickerTableViewController.swift */,
@@ -485,6 +498,9 @@
 		6F4DE64F1FB35AE50099A97E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6FCE08D12021E4B300C55D2F /* Lora-Regular.ttf */,
+				6FCE08CF2021E4A800C55D2F /* Montserrat-Bold.ttf */,
+				6FCE08D02021E4AD00C55D2F /* OpenSans-Regular.ttf */,
 				6F4DE6501FB35B000099A97E /* LeagueGothic-Regular.otf */,
 				2E0B58861FB30F2100F31A9E /* Assets.xcassets */,
 			);
@@ -534,6 +550,7 @@
 			isa = PBXGroup;
 			children = (
 				2E17338D2010BA3600F0D718 /* StringExtensions.swift */,
+				6FCE08D520221C7C00C55D2F /* NSAttributedStringExtensions.swift */,
 				2E1733952010CDC400F0D718 /* LuhnStringExtensions.swift */,
 				2E1733892010B85F00F0D718 /* DecimalExtensions.swift */,
 				2E6B9ED91FBDEEF400F28C00 /* UIViewExtensions.swift */,
@@ -586,6 +603,7 @@
 				6F3C4ACC1FC880F100DA0196 /* ProductLayoutAsset.swift */,
 				6F3C4ACE1FC8811C00DA0196 /* ProductLayoutText.swift */,
 				6F34855D1FC5A9F900961B32 /* ProductManager.swift */,
+				6FCE08D72023139D00C55D2F /* FontType.swift */,
 			);
 			path = Photobooks;
 			sourceTree = "<group>";
@@ -721,7 +739,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E0B588A1FB30F2100F31A9E /* LaunchScreen.storyboard in Resources */,
+				6FCE08D42021E4B700C55D2F /* Lora-Regular.ttf in Resources */,
 				2E0B58871FB30F2100F31A9E /* Assets.xcassets in Resources */,
+				6FCE08D22021E4B700C55D2F /* Montserrat-Bold.ttf in Resources */,
+				6FCE08D32021E4B700C55D2F /* OpenSans-Regular.ttf in Resources */,
 				2E0B58851FB30F2100F31A9E /* Main.storyboard in Resources */,
 				6F4DE6511FB35B010099A97E /* LeagueGothic-Regular.otf in Resources */,
 				6FC7E88B1FC574DA00D2BCDA /* photobooks.json in Resources */,
@@ -863,6 +884,7 @@
 			files = (
 				6FC0DE791FE930B0009BB799 /* LayoutSelectionCollectionViewCell.swift in Sources */,
 				6FB670621FB49FF90062D630 /* UILabelExtensions.swift in Sources */,
+				6FCE08D82023139D00C55D2F /* FontType.swift in Sources */,
 				6F2FF37F1FD05686007DB545 /* LayoutUtils.swift in Sources */,
 				6F34855E1FC5A9F900961B32 /* ProductManager.swift in Sources */,
 				2EC81604201B33230046643B /* ShippingMethodsViewController.swift in Sources */,
@@ -872,6 +894,7 @@
 				2E2563932018C3950096DFC5 /* AddressFieldTableViewCell.swift in Sources */,
 				2E1733812010B50400F0D718 /* PaymentAuthorizationManager.swift in Sources */,
 				6FA189331FFF976200E6D0AB /* AssetSelectorAddMoreCollectionViewCell.swift in Sources */,
+				6FCE08CE2020755500C55D2F /* TextEditingViewController.swift in Sources */,
 				2E876E091FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift in Sources */,
 				2E1733882010B83100F0D718 /* ShippingMethod.swift in Sources */,
 				6F4DE6571FB452390099A97E /* DoubleStoryTableViewCell.swift in Sources */,
@@ -931,6 +954,7 @@
 				2E21DB5220177E5400D32989 /* DeliveryDetails.swift in Sources */,
 				6F4606DC201886BD00C7583E /* BorderedRoundedView.swift in Sources */,
 				B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */,
+				6FCE08D620221C7C00C55D2F /* NSAttributedStringExtensions.swift in Sources */,
 				2E17337F200F4E0B00F0D718 /* PaymentMethodsViewController.swift in Sources */,
 				2E7C3695202095ED008033E7 /* ReceiptHeaderTableViewCell.swift in Sources */,
 				2E0B58A21FB32AC100F31A9E /* PhotosAlbum.swift in Sources */,

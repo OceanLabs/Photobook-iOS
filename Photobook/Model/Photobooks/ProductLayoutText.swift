@@ -17,10 +17,12 @@ class ProductLayoutText: Codable {
         }
     }
     var text: String?
+    var fontType: FontType = .clear
     
     func deepCopy() -> ProductLayoutText {
         let aLayoutText = ProductLayoutText()
-        aLayoutText.text = text?.copy() as? String
+        aLayoutText.text = text
+        aLayoutText.fontType = fontType
         aLayoutText.containerSize = containerSize
         return aLayoutText
     }
