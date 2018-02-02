@@ -46,25 +46,35 @@ class LayoutSelectionViewController: UIViewController {
             })
         }
     }
-    var layouts: [Layout]! {
+    var layouts: [Layout]! { didSet { collectionView?.reloadData() } }
+    var coverColor: ProductColor! {
         didSet {
-            collectionView?.reloadData()
+            if coverColor != oldValue { shouldResetColor = true }
+            collectionView.reloadData()
+        }
+    }
+    var pageColor: ProductColor! {
+        didSet {
+            if pageColor != oldValue { shouldResetColor = true }
+            collectionView.reloadData()
         }
     }
     
     var selectedLayoutIndex = 0
     var selectedLayout: Layout! {
         didSet {
-            self.selectedLayoutIndex = self.layouts.index(of: selectedLayout) ?? 0
-            self.collectionView.scrollToItem(at: IndexPath(row: selectedLayoutIndex, section: 0), at: .centeredHorizontally, animated: true)
+            selectedLayoutIndex = layouts.index(of: selectedLayout) ?? 0
+            collectionView.scrollToItem(at: IndexPath(row: selectedLayoutIndex, section: 0), at: .centeredHorizontally, animated: true)
         }
     }
     
     weak var delegate: LayoutSelectionDelegate?
+    
+    private var shouldResetColor: Bool = false
 }
 
 extension LayoutSelectionViewController: UICollectionViewDataSource {
-
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return layouts != nil ? 1 : 0
     }
@@ -81,8 +91,9 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
             cell.image = image // Pass the image to avoid reloading
             cell.asset = asset
             cell.isBorderVisible = (indexPath.row == selectedLayoutIndex)
+            cell.coverColor = coverColor
             cell.setupLayout()
-            
+            if shouldResetColor { cell.resetColor() }
             return cell
         }
         
@@ -94,9 +105,16 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
         cell.asset = asset
         cell.pageType = pageType
         cell.isBorderVisible = (indexPath.row == selectedLayoutIndex)
+        cell.coverColor = coverColor
+        cell.pageColor = pageColor
         cell.setupLayout()
+        if shouldResetColor { cell.resetColor() }
 
         return cell
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        shouldResetColor = false
     }
 }
 

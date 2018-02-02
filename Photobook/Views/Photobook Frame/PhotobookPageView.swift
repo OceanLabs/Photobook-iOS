@@ -224,10 +224,10 @@ class PhotobookPageView: UIView {
     }
     
     func setTextColor() {
-        guard let pageTextLabel = pageTextLabel else { return }
-        switch color {
-        case .white: pageTextLabel.textColor = .darkText
-        case .black: pageTextLabel.textColor = .white
+        if let pageTextLabel = pageTextLabel { pageTextLabel.textColor = color.fontColor() }
+        if let placeholderView = textLabelPlaceholderBoxView {
+            placeholderView.color = color
+            placeholderView.setNeedsDisplay()
         }
     }
     
