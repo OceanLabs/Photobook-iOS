@@ -60,6 +60,7 @@ class TextEditingViewController: UIViewController {
     }
     @IBOutlet private weak var pageView: UIView!
     @IBOutlet private weak var assetContainerView: UIView!
+    @IBOutlet private weak var assetPlaceholderIconImageView: UIImageView!
     @IBOutlet private weak var assetImageView: UIImageView!
     
     @IBOutlet private weak var textViewLeadingConstraint: NSLayoutConstraint!
@@ -127,13 +128,22 @@ class TextEditingViewController: UIViewController {
         setTextViewAttributes(with: .clear, fontSize: fontSize, fontColor: pageColor.fontColor())
         
         // Place image if needed
-        guard let imageLayoutBox = productLayout!.layout.imageLayoutBox,
-            let asset = productLayout?.asset,
-            let image = assetImage else { return }
+        guard let imageLayoutBox = productLayout!.layout.imageLayoutBox else {
+            assetContainerView.alpha = 0.0
+            return
+        }
+        assetContainerView.alpha = 1.0
         
         let imageLayoutRect = imageLayoutBox.rectContained(in: pageSize)
         assetContainerView.frame = imageLayoutRect
 
+        guard let asset = productLayout?.asset,
+              let image = assetImage else {
+                setImagePlaceholder(visible: true)
+                return
+        }
+        setImagePlaceholder(visible: false)
+        
         assetImageView.image = image
         assetImageView.transform = .identity
         assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: asset.size.width, height: asset.size.height)
@@ -143,6 +153,18 @@ class TextEditingViewController: UIViewController {
         assetImageView.transform = productLayout!.productLayoutAsset!.transform
     }
     
+    private func setImagePlaceholder(visible: Bool) {
+        if visible {
+            assetImageView.image = nil
+            assetContainerView.backgroundColor = UIColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1.0)
+            assetPlaceholderIconImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
+            assetPlaceholderIconImageView.alpha = 1.0
+        } else {
+            assetContainerView.backgroundColor = .clear
+            assetPlaceholderIconImageView.alpha = 0.0
+        }
+    }
+
     private func setTextViewAttributes(with fontType: FontType, fontSize: CGFloat, fontColor: UIColor) {
         textView.attributedText = fontType.attributedText(with: textView.text, fontSize: fontSize, fontColor: fontColor)
         textView.typingAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor)
