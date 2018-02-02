@@ -79,6 +79,8 @@ class PhotobookPageView: UIView {
         guard let imageBox = productLayout?.layout.imageLayoutBox else { return }
         assetContainerView.frame = imageBox.rectContained(in: CGSize(width: frame.width, height: frame.height))
         
+        let iconSize = min(assetContainerView.bounds.width, assetContainerView.bounds.height)
+        assetPlaceholderIconImageView.bounds.size = CGSize(width: iconSize * 0.2, height: iconSize * 0.2)
         assetPlaceholderIconImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
         
         adjustTextLabel()

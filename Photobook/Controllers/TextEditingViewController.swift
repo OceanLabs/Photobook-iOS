@@ -157,6 +157,8 @@ class TextEditingViewController: UIViewController {
         if visible {
             assetImageView.image = nil
             assetContainerView.backgroundColor = UIColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1.0)
+            let iconSize = min(assetContainerView.bounds.width, assetContainerView.bounds.height)
+            assetPlaceholderIconImageView.bounds.size = CGSize(width: iconSize * 0.1, height: iconSize * 0.1)
             assetPlaceholderIconImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
             assetPlaceholderIconImageView.alpha = 1.0
         } else {
