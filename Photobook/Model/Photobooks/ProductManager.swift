@@ -217,15 +217,6 @@ class ProductManager {
             }
         }
         
-        // Fill empty pages with added assets
-        for productLayout in productLayouts {
-            guard addedAssets.count > 0 else { break }
-            guard productLayout.asset == nil else { continue }
-            
-            productLayout.asset = addedAssets.first
-            addedAssets.remove(at: 0)
-        }
-        
         // Create new layouts for added assets that haven't filled empty pages
         productLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: imageOnlyLayouts))
         
