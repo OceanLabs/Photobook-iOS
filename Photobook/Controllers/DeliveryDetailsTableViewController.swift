@@ -60,8 +60,9 @@ class DeliveryDetailsTableViewController: UITableViewController {
     }
     
     @IBAction private func saveTapped(_ sender: Any) {
-        var detailsAreValid = true
+        view.endEditing(false)
         
+        var detailsAreValid = true
         tableView.beginUpdates()
         detailsAreValid = check(firstNameTextField) && detailsAreValid
         detailsAreValid = check(lastNameTextField) && detailsAreValid
@@ -98,7 +99,7 @@ class DeliveryDetailsTableViewController: UITableViewController {
         case .phone:
             let cell = (tableView.cellForRow(at: IndexPath(row: DetailsRow.phone.rawValue, section: 0)) as? UserInputTableViewCell)
             if let text = cell?.textField.text,
-                text.count < FormConstants.minPhoneNumberLength {
+                text.count < FormConstants.minPhoneNumberLength || text == FormConstants.requiredText {
                 cell?.errorMessage = NSLocalizedString("DeliveryDetails/Phone is invalid", value: "Phone is invalid", comment: "Error message saying that the phone number is invalid")
                 cell?.textField.textColor = FormConstants.errorColor
                 return false

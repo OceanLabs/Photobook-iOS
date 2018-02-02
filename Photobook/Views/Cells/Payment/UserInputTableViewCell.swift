@@ -58,7 +58,7 @@ class UserInputTableViewCell: UITableViewCell {
             messageLabel.alpha = 1
             messageLabel.textColor = FormConstants.errorColor
             
-            guard message != nil else {
+            guard errorMessage != nil else {
                 messageBottomConstraint.constant = 0
                 messageTopConstraint?.constant = 0
                 return

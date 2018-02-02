@@ -81,6 +81,8 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     @IBAction func unwindToThisView(withUnwindSegue unwindSegue: UIStoryboardSegue) {}
 
     @IBAction func selectAllButtonTapped(_ sender: UIBarButtonItem) {
+        guard !(sender.title?.isEmpty ?? true) else { return }
+        
         if selectedAssetsManager?.count(for: album) == album.assets.count {
             selectedAssetsManager?.deselectAllAssets(for: album)
         }
