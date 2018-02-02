@@ -231,7 +231,9 @@ class AssetCollectorViewController: UIViewController {
     private func adaptHeight() {
         var height: CGFloat = viewHeight
         if let tabBar = tabBar {
-            height = height + tabBar.frame.size.height
+            height += tabBar.frame.size.height
+        } else if #available(iOS 11.0, *) {
+            height += isHidden ? 0 : parentController!.view.safeAreaInsets.bottom
         }
         
         view.translatesAutoresizingMaskIntoConstraints = false
