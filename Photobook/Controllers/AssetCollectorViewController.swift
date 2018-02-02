@@ -179,10 +179,6 @@ class AssetCollectorViewController: UIViewController {
         selectedAssetsManager?.deselectAllAssets()
     }
     
-    @objc private func assetCountChanged() {
-        adaptToNewAssetCount()
-    }
-    
     @IBAction private func turnOnDeletingMode() {
         isDeletingEnabled = true
         imageCollectionView.reloadData()
@@ -298,10 +294,10 @@ class AssetCollectorViewController: UIViewController {
         }
     }
     
-    private func moveToCollectionViewEnd() {
+    private func moveToCollectionViewEnd(animated: Bool) {
         if assets.count > 0 {
             let indexPath = IndexPath(item: assets.count-1, section: 0)
-            imageCollectionView.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.right, animated: true)
+            imageCollectionView.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.right, animated: animated)
         }
     }
     
@@ -325,7 +321,7 @@ class AssetCollectorViewController: UIViewController {
             }
             imageCollectionView.reloadItems(at: indexPaths)
             adaptToNewAssetCount()
-            moveToCollectionViewEnd()
+            moveToCollectionViewEnd(animated: indexPaths.count == 1)
         }
     }
     
