@@ -93,6 +93,16 @@ class IntroViewController: UIViewController {
         IntroViewController.userHasDismissed = true
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let segueIdentifier = segue.identifier else { return }
+        
+        if segueIdentifier == "IntroDismiss" {
+            let tabBarController = segue.destination as? UITabBarController
+            let albumViewController = (tabBarController?.viewControllers?[1] as? UINavigationController)?.topViewController as? AlbumsCollectionViewController
+            albumViewController?.albumManager = PhotosAlbumManager()
+        }
+    }
+    
     func showPermissionDeniedDialog() {
         
         let alertText = NSLocalizedString("Controllers/IntroViewController/PermissionDeniedDialogText",
@@ -112,9 +122,7 @@ class IntroViewController: UIViewController {
         let alert = UIAlertController(title: alertTitle, message: alertText, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: alertOpenSettings, style: UIAlertActionStyle.default, handler: { (action) in
             if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.open(appSettings, options: [:], completionHandler: { (success) in
-                    
-                })
+                UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
             }
         }))
         alert.addAction(UIAlertAction(title: alertOK, style: UIAlertActionStyle.cancel, handler: { (action) in

@@ -84,8 +84,8 @@ class PhotobookAPIManagerTests: XCTestCase {
         
         photobookAPIManager.requestPhotobookInfo { (photobooks, layouts, error) in
             XCTAssertNil(error, "PhotobookInfo: Error should be nil with a valid response")
-            XCTAssertTrue((photobooks ?? []).count == 2, "PhotobookInfo: Photobooks should include layouts products")
-            XCTAssertTrue((layouts ?? []).count == 26, "PhotobookInfo: Layouts should include 26 layouts")
+            XCTAssertTrue((photobooks ?? []).count == 4, "PhotobookInfo: Photobooks should include layouts products")
+            XCTAssertTrue((layouts ?? []).count == 52, "PhotobookInfo: Layouts should include 26 layouts")
         }
     }
     

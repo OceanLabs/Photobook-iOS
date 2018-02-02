@@ -8,6 +8,9 @@
 
 import UIKit
 import Photos
+import Fabric
+import Crashlytics
+import Stripe
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,6 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        
+        Fabric.with([STPAPIClient.self, Crashlytics.self])
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
@@ -30,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         if IntroViewController.userHasDismissed {
             //set initial view controller to tab bar vc
-            self.window?.rootViewController = tabBarController
+            window?.rootViewController = tabBarController
         }
         
         return true

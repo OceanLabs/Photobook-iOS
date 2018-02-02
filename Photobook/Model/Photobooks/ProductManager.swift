@@ -28,12 +28,15 @@ class ProductManager {
     static let shouldRetryUploadingImages = Notification.Name("ProductManagerShouldRetryUploadingImages")
     static let finishedPhotobookCreation = Notification.Name("ProductManagerFinishedPhotobookCreation")
     
+    var currentPortraitLayout = 0
+    var currentLandscapeLayout = 0
+    
     private struct Storage {
         static let photobookDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!.appending("/Photobook/")
         static let photobookBackUpFile = photobookDirectory.appending("Photobook.dat")
     }
     
-    static let shared = ProductManager()
+    static let shared: ProductManager = ProductManager()
     
     private lazy var apiManager: PhotobookAPIManager = {
         let manager = PhotobookAPIManager()
@@ -58,9 +61,51 @@ class ProductManager {
     
     // Current photobook
     var product: Photobook?
+    var spineText: String?
     var coverColor: ProductColor = .white
     var pageColor: ProductColor = .white
     var productLayouts = [ProductLayout]()
+    var minimumRequiredAssets: Int {
+        let defaultMinimum = 20
+        
+        return product?.minimumRequiredAssets ?? products?.first?.minimumRequiredAssets ?? defaultMinimum
+    }
+    var maximumAllowedAssets: Int {
+        // TODO: get this from the photobook
+        return 70
+    }
+    var isAddingPagesAllowed: Bool {
+        // TODO: Use pages count instead of assets/layout count
+        return maximumAllowedAssets > productLayouts.count
+    }
+    var isRemovingPagesAllowed: Bool {
+        // TODO: Use pages count instead of assets/layout count
+        return minimumRequiredAssets < productLayouts.count
+    }
+    
+    // Ordering (this should probably be in another class)
+    var shippingMethod: Int?
+    var currencyCode: String? = "GBP" // TODO: Get this from somewhere
+    var deliveryDetails: DeliveryDetails?
+    var paymentMethod: PaymentMethod?
+    var cachedCost: Cost? // private?
+    var validCost: Cost? {
+        return hasValidCachedCost ? cachedCost : nil
+    }
+    func updateCost(forceUpdate: Bool = false, _ completionHandler: @escaping (_ error : Error?) -> Void) {
+        // TODO: update cost
+        completionHandler(nil)
+    }
+    var hasValidCachedCost: Bool {
+        // TODO: validate
+//        return cachedCost?.orderHash == self.hashValue
+        return true
+    }
+    var paymentToken: String?
+    func reset() {
+        // TODO: reset the product
+    }
+    
     
     // TODO: Spine
     
@@ -78,10 +123,16 @@ class ProductManager {
             welf?.layouts = layouts
             
             completion(nil)
+            
+            // TODO: REMOVEME. Mock cost & shipping methods
+            let lineItem = LineItem(id: 0, name: "Clown Costume 🤡", cost: Decimal(integerLiteral: 10), formattedCost: "$10")
+            let shippingMethod = ShippingMethod(id: 1, name: "Fiesta Deliveries 🎉🚚", shippingCostFormatted: "$5", totalCost: Decimal(integerLiteral: 15), totalCostFormatted: "$15", maxDeliveryTime: 150, minDeliveryTime: 100)
+            let shippingMethod2 = ShippingMethod(id: 2, name: "Magic Unicorn ✨🦄✨", shippingCostFormatted: "$5000", totalCost: Decimal(integerLiteral: 15), totalCostFormatted: "$5010", maxDeliveryTime: 1, minDeliveryTime: 0)
+            self.cachedCost = Cost(hash: 0, lineItems: [lineItem], shippingMethods: [shippingMethod, shippingMethod2], promoDiscount: nil, promoCodeInvalidReason: nil)
         }
     }
     
-    func setPhotobook(_ photobook: Photobook, withAssets assets: [Asset]) {
+    func setPhotobook(_ photobook: Photobook, withAssets assets: [Asset]? = nil) {
         guard
             let coverLayouts = coverLayouts(for: photobook),
             coverLayouts.count > 0,
@@ -92,69 +143,160 @@ class ProductManager {
             return
         }
 
-        var unusedAssets = assets
-
-        var portraitLayouts = layouts.filter { !$0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
-        var landscapeLayouts = layouts.filter { $0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
+        var addedAssets = assets ?? {
+            var assets = [Asset]()
+            for layout in ProductManager.shared.productLayouts{
+                guard let asset = layout.asset else { continue }
+                assets.append(asset)
+            }
+            return assets
+        }()
         
-        // First photobook
-        // TODO: Check if the minimum number of pages are met. Create empty pages that the user will have to assign
-        // assets to. Take into account that the first and last pages should be empty.
+        // First photobook only
         if product == nil {
             var tempLayouts = [ProductLayout]()
 
-            var currentPortraitLayout = 0
-            var currentLandscapeLayout = 0
-
             // Use first photo for the cover
             let productLayoutAsset = ProductLayoutAsset()
-            productLayoutAsset.asset = unusedAssets.remove(at: 0)
-            let productLayout = ProductLayout(layout: coverLayouts.first!, productLayoutAsset: productLayoutAsset)
+            productLayoutAsset.asset = addedAssets.remove(at: 0)
+            let coverLayout = coverLayouts.first(where: { $0.imageLayoutBox != nil } )
+            let productLayout = ProductLayout(layout: coverLayout!, productLayoutAsset: productLayoutAsset)
             tempLayouts.append(productLayout)
             
-            // Loop through the remaining assets
-            for asset in unusedAssets {
-                // FIXME: Logic TBC
-                let productLayoutAsset = ProductLayoutAsset()
-                productLayoutAsset.asset = asset
-
-                var layout: Layout
-                if asset.isLandscape {
-                    layout = landscapeLayouts[currentLandscapeLayout]
-                    currentLandscapeLayout = currentLandscapeLayout < landscapeLayouts.count - 1 ? currentLandscapeLayout + 1 : 0
-                } else {
-                    layout = portraitLayouts[currentPortraitLayout]
-                    currentPortraitLayout = currentPortraitLayout < portraitLayouts.count - 1 ? currentPortraitLayout + 1 : 0
-                }
-                let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset)
-                tempLayouts.append(productLayout)
-            }
+            // Create layouts for the remaining assets
+            let imageOnlyLayouts = layouts.filter({ $0.imageLayoutBox != nil })
+            tempLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: imageOnlyLayouts))
+            
+            // Fill minimum pages with Placeholder assets if needed
+            let numberOfPlaceholderLayoutsNeeded = photobook.minimumRequiredAssets - tempLayouts.count
+            tempLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: imageOnlyLayouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
             
             productLayouts = tempLayouts
             product = photobook
             return
         }
         
+        // Reset the current layout since we are changing products
+        currentLandscapeLayout = 0
+        currentPortraitLayout = 0
+        
+        // Find if any assets were removed or added since the last time
+        var removedAssets = [Asset]()
+        var keptAssets = [Asset]()
+        
+        for productLayout in productLayouts {
+            guard let asset = productLayout.asset else { continue }
+            
+            // Check if asset is still included in the new selections
+            if let addedIndex = addedAssets.index(where: { $0 == asset }) {
+                addedAssets.remove(at: addedIndex)
+                
+                // Mark asset as kept
+                keptAssets.append(asset)
+            }
+            
+            if keptAssets.index(where: { $0 == asset }) == nil {
+                removedAssets.append(asset)
+            }
+        }
+        
+        // Remove layouts of removed assets
+        for asset in removedAssets {
+            if let index = productLayouts.index(where: {
+                guard let existingAsset = $0.asset else { return false }
+                return existingAsset == asset
+            }) {
+                productLayouts.remove(at: index)
+                
+                // If we've removed the cover photo, create a new cover
+                if index == 0 {
+                    // Use first photo for the cover
+                    let productLayoutAsset = ProductLayoutAsset()
+                    productLayoutAsset.asset = addedAssets.remove(at: 0)
+                    let productLayout = ProductLayout(layout: coverLayouts.first!, productLayoutAsset: productLayoutAsset)
+                    productLayouts.insert(productLayout, at: 0)
+                }
+            }
+        }
+        
+        // Create new layouts for added assets
+        productLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: layouts))
+        
+        // Fill minimum pages with Placeholder assets if needed
+        let numberOfPlaceholderLayoutsNeeded = photobook.minimumRequiredAssets + 1 - productLayouts.count - addedAssets.count // +1 for cover which is not included in the minimum
+        productLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: layouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
+        
         // Switching products
+        product = photobook
         for pageLayout in productLayouts {
+            let availableLayouts = pageLayout === productLayouts.first ? coverLayouts : layouts
+            
             // Match layouts from the current product to the new one
-            var newLayout = layouts.first { $0.category == pageLayout.layout.category }
+            var newLayout = availableLayouts.first {
+                $0.category == pageLayout.layout.category
+            }
             if newLayout == nil {
                 // Should not happen but to be safe, pick the first layout
-                newLayout = layouts.first
+                newLayout = availableLayouts.first
             }
             pageLayout.layout = newLayout
         }
     }
     
-    private func coverLayouts(for photobook: Photobook) -> [Layout]? {
+    func createLayoutsForAssets(assets: [Asset], from layouts:[Layout], placeholderLayouts: Int = 0) -> [ProductLayout] {
+        var portraitLayouts = layouts.filter { !$0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
+        var landscapeLayouts = layouts.filter { $0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
+    
+        var productLayouts = [ProductLayout]()
+        
+        for asset in assets {
+            // FIXME: Logic TBC
+            let productLayoutAsset = ProductLayoutAsset()
+            productLayoutAsset.asset = asset
+            
+            var layout: Layout
+            if asset.isLandscape {
+                layout = landscapeLayouts[currentLandscapeLayout]
+                currentLandscapeLayout = currentLandscapeLayout < landscapeLayouts.count - 1 ? currentLandscapeLayout + 1 : 0
+            } else {
+                layout = portraitLayouts[currentPortraitLayout]
+                currentPortraitLayout = currentPortraitLayout < portraitLayouts.count - 1 ? currentPortraitLayout + 1 : 0
+            }
+            let productLayoutText = layout.textLayoutBox != nil ? ProductLayoutText() : nil
+            let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset, productLayoutText: productLayoutText)
+            productLayouts.append(productLayout)
+        }
+        
+        var placeholderLayouts = placeholderLayouts
+        while placeholderLayouts > 0 {
+            let layout = landscapeLayouts[currentLandscapeLayout]
+            currentLandscapeLayout = currentLandscapeLayout < landscapeLayouts.count - 1 ? currentLandscapeLayout + 1 : 0
+            let productLayout = ProductLayout(layout: layout, productLayoutAsset: nil)
+            productLayouts.append(productLayout)
+            placeholderLayouts -= 1
+        }
+        
+        return productLayouts
+    }
+    
+    func coverLayouts(for photobook: Photobook) -> [Layout]? {
         guard let layouts = layouts else { return nil }
         return layouts.filter { photobook.coverLayouts.contains($0.id) }
     }
     
-    private func layouts(for photobook: Photobook) -> [Layout]? {
+    func layouts(for photobook: Photobook) -> [Layout]? {
         guard let layouts = layouts else { return nil }
         return layouts.filter { photobook.layouts.contains($0.id) }
+    }
+    
+    func currentCoverLayouts() -> [Layout]? {
+        guard product != nil else { return nil }
+        return coverLayouts(for: product!)
+    }
+    
+    func currentLayouts() -> [Layout]? {
+        guard product != nil else { return nil }
+        return layouts(for: product!)
     }
     
     /// Sets one of the available layouts for a page number
@@ -241,6 +383,55 @@ class ProductManager {
             print("ProductManager: failed to archive product")
         }
     }
+    
+    func spreadIndex(for productLayoutIndex: Int) -> Int? {
+        var spreadIndex = 0.5 // The first page is on the right because of the courtesy page
+        
+        var i = 0
+        while i < productLayouts.count {
+            if i == productLayoutIndex {
+                return Int(spreadIndex)
+            }
+            
+            spreadIndex += productLayouts[i].layout.isDoubleLayout ? 1 : 0.5
+            i += 1
+        }
+        
+        return nil
+    }
+    
+    func productLayoutIndex(for spreadIndex: Int) -> Int? {
+        var spreadIndexCount = 1 // Skip the first spread which includes the courtesy page
+        var i = 2 // Skip the cover and the page on the first spread
+        while i < productLayouts.count {
+            if spreadIndex == spreadIndexCount {
+                return i
+            }
+            i += productLayouts[i].layout.isDoubleLayout ? 1 : 2
+            spreadIndexCount += 1
+        }
+        
+        return nil
+    }
+    
+    func addPages(at index: Int, pages: [ProductLayout]? = nil) {
+        guard let product = product,
+            let layouts = layouts(for: product)
+            else { return }
+        let newProductLayouts = pages ?? createLayoutsForAssets(assets: [], from: layouts, placeholderLayouts: 2)
+        
+        productLayouts.insert(contentsOf: newProductLayouts, at: index)
+    }
+    
+    func deletePage(at productLayout: ProductLayout) {
+        guard let index = productLayouts.index(where: { $0 === productLayout }) else { return }
+        productLayouts.remove(at: index)
+        
+        if !productLayout.layout.isDoubleLayout {
+            productLayouts.remove(at: index)
+        }
+    }
+    
 }
 
 extension ProductManager: PhotobookAPIManagerDelegate {
