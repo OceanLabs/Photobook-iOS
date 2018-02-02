@@ -9,11 +9,14 @@
 import UIKit
 
 protocol OrderSummaryManagerDelegate : class {
-    func orderSummaryManagerDidUpdate(_ manager:OrderSummaryManager)
-    func orderSummaryManagerPreviewImageSize(_ manager:OrderSummaryManager) -> CGSize
+    func orderSummaryManager(_ manager:OrderSummaryManager, didUpdate success:Bool)
 }
 
 class OrderSummaryManager {
+    
+    // Notification keys
+    static let notificationSummaryUpdated = Notification.Name("OrderManagerSummaryUpdated")
+    static let notificationSummaryRefreshFailed = Notification.Name("OrderManagerSummaryRefreshFailed")
     
     private let taskReferenceImagePreview = "OrderSummaryManager-ProductPreviewImage"
     
@@ -23,47 +26,39 @@ class OrderSummaryManager {
             return ProductManager.shared.productLayouts
         }
     }
-    private var pigUrl:String? //doesn't include image parameters
     private var coverImageUrl:String?
-    private var previewImageUrl:String? {
-        get {
-            guard let pigUrl = pigUrl, let coverImageUrl = coverImageUrl else {
-                return nil
-            }
-            return getProductPreviewImage(pigUrl, coverImageUrl)
-        }
-    }
     
     //original product provided by previous UX
-    public var product:Photobook? {
+    var product:Photobook? {
         get {
             return ProductManager.shared.product
         }
     }
-    public var upsellOptions:[UpsellOption] {
+    var upsellOptions:[UpsellOption]? {
         get {
-            return getUpsellOptions() //TODO: replace with data from product object
+            return ProductManager.shared.upsellOptions
         }
     }
-    public var selectedUpsellOptions:Set<String> = []
-    public private(set) var previewImage:UIImage?
-    public private(set) var summary:[OrderSummaryItem] = []
-    public private(set) var upsoldProduct:Photobook? //product to place the order with. Reflects user's selected upsell options.
+    var selectedUpsellOptions:Set<UpsellOption> = []
+    private(set) var summary:OrderSummary?
+    private(set) var previewImage:UIImage?
+    private(set) var upsoldProduct:Photobook? //product to place the order with. Reflects user's selected upsell options.
     
-    public weak var delegate:OrderSummaryManagerDelegate?
+    weak var delegate:OrderSummaryManagerDelegate?
     
     init() {
         NotificationCenter.default.addObserver(self, selector: #selector(imageUploadFinished(_:)), name: APIClient.backgroundSessionTaskFinished, object: nil)
         
-        refresh()
+        refresh(true)
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func refresh() {
-        if coverImageUrl != nil {
+    func refresh(_ resetImage:Bool = false) {
+        
+        if coverImageUrl != nil && resetImage == false {
             fetchProductDetails()
         } else {
             uploadPreviewImage()
@@ -72,47 +67,37 @@ class OrderSummaryManager {
     
     func fetchProductDetails() {
         
-        var priceDetails = [OrderSummaryItem]()
-        
         // mock data
-        guard let fileDict = json(file: "order_summary") as? [String:Any], let dictionaries = fileDict["summary"] as? [[String:Any]] else {
+        guard let summaryDict = json(file: "order_summary") as? [String:Any] else {
+            delegate?.orderSummaryManager(self, didUpdate: false)
             return //return
         }
         
         //summary
-        for dict in dictionaries {
-            if let item = OrderSummaryItem(dict) {
-                priceDetails.append(item)
-            }
-        }
-        summary = priceDetails
-        
-        //image
-        if let url = fileDict["imagePreviewUrl"] as? String {
-            pigUrl = url
-        }
-        
-        guard let previewImageUrl = previewImageUrl, let url = URL(string: previewImageUrl) else {
-            self.previewImage = nil
-            delegate?.orderSummaryManagerDidUpdate(self)
+        guard let summary = OrderSummary(summaryDict), let coverImageUrl = coverImageUrl else {
+            delegate?.orderSummaryManager(self, didUpdate: false)
             return
         }
+        self.summary = summary
         
-        URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) -> Void in
-            if error != nil {
-                return
-            }
-            DispatchQueue.main.async(execute: { () -> Void in
-                self.previewImage = UIImage(data: data!)
-                self.delegate?.orderSummaryManagerDidUpdate(self)
-            })
-            
-        }).resume()
+        if let imageUrl = summary.previewImageUrl(withCoverImageUrl: coverImageUrl, size: CGSize(width: 300, height: 300)), let url = URL(string: imageUrl) {
+            URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) -> Void in
+                DispatchQueue.main.async(execute: { () -> Void in
+                    if let data = data {
+                        self.previewImage = UIImage(data: data)
+                    }
+                    self.delegate?.orderSummaryManager(self, didUpdate: true)
+                })
+                
+            }).resume()
+        }
+        
     }
     
     private func uploadPreviewImage() {
         
         guard layouts.count > 0, let asset = layouts[0].asset else {
+            self.fetchProductDetails()
             return
         }
         
@@ -128,6 +113,11 @@ class OrderSummaryManager {
     }
     
     @objc func imageUploadFinished(_ notification: Notification) {
+        
+        defer {
+            fetchProductDetails() //always proceed to fetch product details that'll also take care of sending notifications to all observers
+        }
+        
         guard let dictionary = notification.userInfo as? [String: AnyObject] else {
             print("OrderSummaryManager: Task finished but could not cast user info")
             return
@@ -144,18 +134,6 @@ class OrderSummaryManager {
         }
         
         coverImageUrl = url
-        fetchProductDetails()
-    }
-    
-    private func getProductPreviewImage(_ pigUrl:String, _ imageUrl:String) -> String {
-        guard let delegate = delegate else {
-            return ""
-        }
-        
-        let size = delegate.orderSummaryManagerPreviewImageSize(self)
-        
-        let previewUrlString = pigUrl + "&image=" + imageUrl + "&size=\(size.width)x\(size.height)" + "&fill_mode=fit"
-        return previewUrlString
     }
     
     private func json(file: String) -> AnyObject? {
@@ -168,55 +146,5 @@ class OrderSummaryManager {
             print("JSON: Could not parse file")
         }
         return nil
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    func getUpsellOptions() -> [UpsellOption] {
-        let dictionaries = [
-        [
-            "type": "size",
-            "displayName": "larger size (210x210)"
-            ],
-        [
-            "type": "finish",
-            "displayName": "gloss finish"
-            ]
-        ] as [[String: AnyObject]]
-        
-        var upsellOptions = [UpsellOption]()
-        for dict in dictionaries {
-            if let upsellOption = UpsellOption(dict) {
-                upsellOptions.append(upsellOption)
-            }
-        }
-        
-        return upsellOptions
-    }
-    
-    func getMockPhotobook() -> Photobook {
-        let validDictionary = [
-            "id": 10,
-            "name": "210 x 210",
-            "pageWidth": 1000,
-            "pageHeight": 400,
-            "coverWidth": 1030,
-            "coverHeight": 415,
-            "cost": [ "EUR": 10.00 as Decimal, "USD": 12.00 as Decimal, "GBP": 9.00 as Decimal ],
-            "costPerPage": [ "EUR": 1.00 as Decimal, "USD": 1.20 as Decimal, "GBP": 0.85 as Decimal ],
-            "coverLayouts": [ 9, 10 ],
-            "layouts": [ 10, 11, 12, 13 ]
-            ] as [String: AnyObject]
-        
-        return Photobook.parse(validDictionary)!
     }
 }

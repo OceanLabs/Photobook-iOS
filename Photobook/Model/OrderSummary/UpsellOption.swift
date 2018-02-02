@@ -8,7 +8,7 @@
 
 import UIKit
 
-class UpsellOption {
+class UpsellOption: Equatable {
     var type:String
     var displayName:String
     var payload:AnyObject?
@@ -27,5 +27,17 @@ class UpsellOption {
         }
         
         self.init(type: type, displayName: displayName, payload: dict["payload"] as AnyObject)
+    }
+}
+
+func ==(lhs: UpsellOption, rhs: UpsellOption) -> Bool {
+    return lhs.type == rhs.type
+}
+
+extension UpsellOption: Hashable {
+    var hashValue: Int {
+        get {
+            return type.hashValue
+        }
     }
 }

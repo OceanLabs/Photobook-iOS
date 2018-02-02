@@ -2204,7 +2204,6 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="didTapCheckout:" destination="l0p-H6-Aqd" eventType="touchUpInside" id="8mD-kA-KkC"/>
                                             <segue destination="ays-et-QoH" kind="show" id="ixR-Fv-K8j"/>
                                         </connections>
                                     </button>

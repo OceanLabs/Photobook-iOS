@@ -59,8 +59,34 @@ class ProductManager {
     // List of all available layouts
     private(set) var layouts: [Layout]?
     
+    // List of all available upsell options
+    var upsellOptions: [UpsellOption]? {
+        get {
+            //mock data
+            let dictionaries = [
+                [
+                    "type": "size",
+                    "displayName": "larger size (210x210)"
+                ],
+                [
+                    "type": "finish",
+                    "displayName": "gloss finish"
+                ]
+                ] as [[String: AnyObject]]
+            
+            var options = [UpsellOption]()
+            for dict in dictionaries {
+                if let upsellOption = UpsellOption(dict) {
+                    options.append(upsellOption)
+                }
+            }
+            return options
+        }
+    } //TODO: Get this from the initial-data endpoint
+    
     // Current photobook
     var product: Photobook?
+    var productUpsellOptions: [UpsellOption]? //TODO: Get this from the initial-data endpoint
     var spineText: String?
     var coverColor: ProductColor = .white
     var pageColor: ProductColor = .white
@@ -82,13 +108,6 @@ class ProductManager {
         // TODO: Use pages count instead of assets/layout count
         return minimumRequiredAssets < productLayouts.count
     }
-    
-    // Ordering
-    var shippingMethod: Int?
-    var currencyCode: String? // TODO: Get this from somewhere
-    var deliveryDetails: DeliveryDetails?
-    var paymentMethod: PaymentMethod?
-    var cachedCost: Cost?
     
     // TODO: this probably doesn't belong here
     func updateCost (completionHandler: (_ error: Error?) -> Void) {

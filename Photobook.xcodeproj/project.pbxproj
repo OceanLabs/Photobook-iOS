@@ -120,11 +120,12 @@
 		B939FE8C200CD18200B1084B /* OrderSummaryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B939FE8B200CD18200B1084B /* OrderSummaryManager.swift */; };
 		B986DF2D20164BDA005461A0 /* order_summary.json in Resources */ = {isa = PBXBuildFile; fileRef = B986DF2C20164BDA005461A0 /* order_summary.json */; };
 		B986DF2F201B445E005461A0 /* UpsellOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = B986DF2E201B445E005461A0 /* UpsellOption.swift */; };
-		B986DF31201B684E005461A0 /* OrderSummaryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B986DF30201B684E005461A0 /* OrderSummaryItem.swift */; };
 		B9A1433B1FDAD278000EFE0D /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A1433A1FDAD278000EFE0D /* Random.swift */; };
 		B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */; };
 		B9BC2E271FBF195200F4AA56 /* AssetCollectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BC2E261FBF195200F4AA56 /* AssetCollectorViewController.swift */; };
 		B9BE9F941FBF33320002C459 /* AssetCollectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BE9F931FBF33320002C459 /* AssetCollectorCollectionViewCell.swift */; };
+		B9D3340220220FE7003D4338 /* OrderSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D3340120220FE7003D4338 /* OrderSummary.swift */; };
+		B9D33406202486CC003D4338 /* OrderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D33405202486CC003D4338 /* OrderManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -259,11 +260,12 @@
 		B939FE8B200CD18200B1084B /* OrderSummaryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryManager.swift; sourceTree = "<group>"; };
 		B986DF2C20164BDA005461A0 /* order_summary.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = order_summary.json; sourceTree = "<group>"; };
 		B986DF2E201B445E005461A0 /* UpsellOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpsellOption.swift; sourceTree = "<group>"; };
-		B986DF30201B684E005461A0 /* OrderSummaryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryItem.swift; sourceTree = "<group>"; };
 		B9A1433A1FDAD278000EFE0D /* Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Random.swift; sourceTree = "<group>"; };
 		B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
 		B9BC2E261FBF195200F4AA56 /* AssetCollectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCollectorViewController.swift; sourceTree = "<group>"; };
 		B9BE9F931FBF33320002C459 /* AssetCollectorCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCollectorCollectionViewCell.swift; sourceTree = "<group>"; };
+		B9D3340120220FE7003D4338 /* OrderSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummary.swift; sourceTree = "<group>"; };
+		B9D33405202486CC003D4338 /* OrderManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderManager.swift; sourceTree = "<group>"; };
 		FF99346143FA805B3676D912 /* Pods-PhotobookTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -361,6 +363,7 @@
 		2E1733842010B5AA00F0D718 /* Order */ = {
 			isa = PBXGroup;
 			children = (
+				B9D33405202486CC003D4338 /* OrderManager.swift */,
 				2E17338B2010B9EE00F0D718 /* Card.swift */,
 				2E1733852010B6BA00F0D718 /* Cost.swift */,
 				2E1733872010B83100F0D718 /* ShippingMethod.swift */,
@@ -621,7 +624,7 @@
 			children = (
 				B986DF2C20164BDA005461A0 /* order_summary.json */,
 				B939FE8B200CD18200B1084B /* OrderSummaryManager.swift */,
-				B986DF30201B684E005461A0 /* OrderSummaryItem.swift */,
+				B9D3340120220FE7003D4338 /* OrderSummary.swift */,
 				B986DF2E201B445E005461A0 /* UpsellOption.swift */,
 				B90F288620050F1D00FF3D15 /* Price.swift */,
 			);
@@ -886,6 +889,7 @@
 				6FB670621FB49FF90062D630 /* UILabelExtensions.swift in Sources */,
 				B939FE8A2009075000B1084B /* CarouselCollectionView.swift in Sources */,
 				B90F288B20066D3100FF3D15 /* OrderSummaryTotalTableViewCell.swift in Sources */,
+				B9D33406202486CC003D4338 /* OrderManager.swift in Sources */,
 				6F2FF37F1FD05686007DB545 /* LayoutUtils.swift in Sources */,
 				B939FE8C200CD18200B1084B /* OrderSummaryManager.swift in Sources */,
 				6F34855E1FC5A9F900961B32 /* ProductManager.swift in Sources */,
@@ -893,6 +897,7 @@
 				2E6B9EE51FBF1CFB00F28C00 /* FullScreenImageUnwindSegue.swift in Sources */,
 				B90F288720050F1D00FF3D15 /* Price.swift in Sources */,
 				2E6B9EDC1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift in Sources */,
+				B9D3340220220FE7003D4338 /* OrderSummary.swift in Sources */,
 				2E2563932018C3950096DFC5 /* AddressFieldTableViewCell.swift in Sources */,
 				2E1733812010B50400F0D718 /* PaymentAuthorizationManager.swift in Sources */,
 				6FA189331FFF976200E6D0AB /* AssetSelectorAddMoreCollectionViewCell.swift in Sources */,
@@ -911,7 +916,6 @@
 				6F1DB8DB201617B7001BECC8 /* CoverLayoutSelectionCollectionViewCell.swift in Sources */,
 				6F181546200781BB00D7082D /* PhotobookFrameView.swift in Sources */,
 				6F34855C1FC5A52900961B32 /* CGFloatExtensions.swift in Sources */,
-				B986DF31201B684E005461A0 /* OrderSummaryItem.swift in Sources */,
 				2EBBC0CD1FEBB72E00A4EF45 /* ArrayExtensions.swift in Sources */,
 				2E2563912018BBCF0096DFC5 /* AddressTableViewController.swift in Sources */,
 				6FC7E8761FBD985900D2BCDA /* APIClient.swift in Sources */,
