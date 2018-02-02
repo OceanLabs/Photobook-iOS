@@ -55,7 +55,7 @@ class ViewStorySegue: UIStoryboardSegue {
             if sourceSnapShot != nil{
                 navigationController.view.insertSubview(sourceSnapShot!, belowSubview: navigationController.navigationBar)
             }
-            navigationController.pushViewController(destination, animated: true)
+            navigationController.pushViewController(destination, animated: false)
             
             // Need to wait a slight bit because push seems to happen asynchronously. Also because we want the dest vc to load its high quality thumbnails otherwise there's an unpleasant effect where they all seem to update at once. The delay is imperceptible.
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.05, execute: {
