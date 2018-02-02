@@ -44,8 +44,9 @@ class AddressTableViewController: UITableViewController {
     }
     
     @IBAction private func saveTapped(_ sender: Any) {
-        var detailsAreValid = true
+        view.endEditing(false)
         
+        var detailsAreValid = true
         detailsAreValid = check(line1TextField) && detailsAreValid
         detailsAreValid = check(cityTextField) && detailsAreValid
         detailsAreValid = check(zipOrPostcodeTextField) && detailsAreValid
