@@ -22,30 +22,33 @@ enum PageType {
     case cover, first, last, left, right
 }
 
-class PageSetupViewController: UIViewController {
+class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate {
 
     private struct Constants {
-        static let pageSideMargin: CGFloat = 20.0
         static let photobookSideMargin: CGFloat = 20.0
-        static let textBoxFont = UIFont.systemFont(ofSize: 6.0)
     }
     
-    private enum Tools: Int {
-        case selectAsset, selectLayout, placeAsset, selectColor
+    private enum Tool: Int {
+        case selectAsset, selectLayout, placeAsset, selectColor, editText
     }
     
+    @IBOutlet private weak var photobookContainerView: UIView!
     @IBOutlet private weak var assetSelectionContainerView: UIView!
     @IBOutlet private weak var layoutSelectionContainerView: UIView!
     @IBOutlet private weak var placementContainerView: UIView!
     @IBOutlet private weak var colorSelectionContainerView: UIView!
+    @IBOutlet private weak var textEditingContainerView: UIView!
     
     @IBOutlet var toolbarButtons: [UIButton]!
     @IBOutlet weak var toolbar: UIToolbar!
+    
+    var photobokNavigationBarType: PhotobookNavigationBarType = .clear
     
     private var assetSelectorViewController: AssetSelectorViewController!
     private var layoutSelectionViewController: LayoutSelectionViewController!
     private var assetPlacementViewController: AssetPlacementViewController!
     private var colorSelectionViewController: ColorSelectionViewController!
+    private var textEditingViewController: TextEditingViewController!
     
     @IBOutlet private weak var coverFrameView: CoverFrameView! {
         didSet { coverFrameView.isHidden = pageType != .cover }
@@ -140,17 +143,21 @@ class PageSetupViewController: UIViewController {
     private var selectedColor: ProductColor!
     private var pageColor = ProductManager.shared.pageColor
     
+    private var previouslySelectedButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         toolbar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
-        toolbarButtons[Tools.selectAsset.rawValue].isSelected = true
+        toolbarButtons[Tool.selectAsset.rawValue].isSelected = true
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         if !hasDoneSetup {
+            textEditingContainerView.alpha = 0.0
+            
             coverFrameView.color = ProductManager.shared.coverColor
             coverFrameView.pageView.aspectRatio = ProductManager.shared.product!.aspectRatio
 
@@ -171,6 +178,7 @@ class PageSetupViewController: UIViewController {
             setupAssetSelection()
             setupLayoutSelection()
             setupColorSelection()
+            setupTextEditing()
             hasDoneSetup = true
         }
     }
@@ -203,10 +211,17 @@ class PageSetupViewController: UIViewController {
         layoutSelectionViewController.asset = productLayout.asset
         layoutSelectionViewController.layouts = availableLayouts
         layoutSelectionViewController.selectedLayout = productLayout!.layout
+        layoutSelectionViewController.coverColor = ProductManager.shared.coverColor
+        layoutSelectionViewController.pageColor = ProductManager.shared.pageColor
     }
     
     private func setupColorSelection() {
         colorSelectionViewController.selectedColor = selectedColor
+    }
+    
+    private func setupTextEditing() {
+        let enabled = productLayout.layout.textLayoutBox != nil
+        toolbarButtons[Tool.editText.rawValue].isEnabled = enabled
     }
     
     // MARK: - Navigation
@@ -224,6 +239,9 @@ class PageSetupViewController: UIViewController {
         case "ColorSelectionSegue":
             colorSelectionViewController = segue.destination as! ColorSelectionViewController
             colorSelectionViewController.delegate = self
+        case "TextEditingSegue":
+            textEditingViewController = segue.destination as! TextEditingViewController
+            textEditingViewController.delegate = self
         default:
             break
         }
@@ -231,7 +249,7 @@ class PageSetupViewController: UIViewController {
     
     private func setupAssetPlacement() {
         let enabled = productLayout.layout.imageLayoutBox != nil && productLayout.asset != nil
-        toolbarButtons[Tools.placeAsset.rawValue].isEnabled = enabled
+        toolbarButtons[Tool.placeAsset.rawValue].isEnabled = enabled
     }
     
     @IBAction func tappedCancelButton(_ sender: UIBarButtonItem) {
@@ -250,13 +268,14 @@ class PageSetupViewController: UIViewController {
         
         guard let index = toolbarButtons.index(of: sender),
             !toolbarButtons[index].isSelected,
-            let tool = Tools(rawValue: index) else { return }
+            let tool = Tool(rawValue: index) else { return }
 
-        let editLayoutWasSelected = toolbarButtons[Tools.placeAsset.rawValue].isSelected
+        // Store currently selected tool so we may come back to it
+        previouslySelectedButton = toolbarButtons.first { $0.isSelected }
         
-        for button in toolbarButtons {
-            button.isSelected = (button === sender)
-        }
+        let editLayoutWasSelected = toolbarButtons[Tool.placeAsset.rawValue].isSelected
+        
+        for button in toolbarButtons { button.isSelected = (button === sender) }
         
         switch tool {
         case .selectAsset, .selectLayout, .selectColor:
@@ -266,12 +285,14 @@ class PageSetupViewController: UIViewController {
                     self.view.sendSubview(toBack: self.placementContainerView)
                 }
             }
+            
             UIView.animate(withDuration: 0.1, animations: {
-                self.assetSelectionContainerView.alpha = tool.rawValue == Tools.selectAsset.rawValue ? 1.0 : 0.0
-                self.layoutSelectionContainerView.alpha = tool.rawValue == Tools.selectLayout.rawValue ? 1.0 : 0.0
-                self.colorSelectionContainerView.alpha = tool.rawValue == Tools.selectColor.rawValue ? 1.0 : 0.0
+                self.photobookContainerView.alpha = 1.0
+                self.textEditingContainerView.alpha = 0.0
+                self.assetSelectionContainerView.alpha = tool.rawValue == Tool.selectAsset.rawValue ? 1.0 : 0.0
+                self.layoutSelectionContainerView.alpha = tool.rawValue == Tool.selectLayout.rawValue ? 1.0 : 0.0
+                self.colorSelectionContainerView.alpha = tool.rawValue == Tool.selectColor.rawValue ? 1.0 : 0.0
             })
-            break
         case .placeAsset:
             view.bringSubview(toFront: placementContainerView)
             
@@ -280,12 +301,38 @@ class PageSetupViewController: UIViewController {
             assetPlacementViewController.initialContainerRect = containerRect
             assetPlacementViewController.assetImage = assetImageView.image
             assetPlacementViewController.animateFromPhotobook()
-            break
+        case .editText:
+            view.bringSubview(toFront: textEditingContainerView)
+            
+            // TODO: Animate photobook
+            textEditingViewController.productLayout = productLayout!
+            textEditingViewController.assetImage = assetImageView.image
+            textEditingViewController.pageColor = selectedColor
+            textEditingViewController.setup()
+            
+            UIView.animate(withDuration: 0.2, animations: {
+                self.assetSelectionContainerView.alpha = 0.0
+                self.layoutSelectionContainerView.alpha = 0.0
+                self.colorSelectionContainerView.alpha = 0.0
+                self.photobookContainerView.alpha = 0.0
+                self.textEditingContainerView.alpha = 1.0
+            })
         }
+        
+        setTopBars(hidden: tool == .editText)
+    }
+    
+    private func setTopBars(hidden: Bool) {
+        navigationController?.setNavigationBarHidden(hidden, animated: true)
+        setNeedsStatusBarAppearanceUpdate()
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return toolbarButtons != nil ? toolbarButtons[Tool.editText.rawValue].isSelected : false
     }
 }
 
-extension PageSetupViewController: LayoutSelectionViewControllerDelegate {
+extension PageSetupViewController: LayoutSelectionDelegate {
     
     func didSelectLayout(_ layout: Layout) {
         productLayout.layout = layout
@@ -297,6 +344,7 @@ extension PageSetupViewController: LayoutSelectionViewControllerDelegate {
         }
         
         setupAssetPlacement()
+        setupTextEditing()
     }
 }
 
@@ -315,7 +363,6 @@ extension PageSetupViewController: AssetSelectorDelegate {
             
             layoutSelectionViewController.selectedLayout = productLayout.layout
         }
-
         pageView.setupImageBox()
         setupAssetPlacement()
     }
@@ -329,9 +376,28 @@ extension PageSetupViewController: ColorSelectorDelegate {
         if pageType == .cover {
             coverFrameView.color = color
             coverFrameView.resetCoverColor()
+            
+            layoutSelectionViewController.coverColor = color
         } else {
             photobookFrameView.pageColor = color
             photobookFrameView.resetPageColor()
+            
+            layoutSelectionViewController.pageColor = color
         }
+        
+    }
+}
+
+extension PageSetupViewController: TextEditingDelegate {
+    
+    func didChangeText(to text: String?) {
+        productLayout.text = text
+        pageView.setupTextBox()
+        tappedToolButton(previouslySelectedButton)
+    }
+    
+    func didChangeFontType(to fontType: FontType) {
+        productLayout.fontType = fontType
+        pageView.setupTextBox()
     }
 }
