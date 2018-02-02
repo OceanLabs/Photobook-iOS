@@ -198,7 +198,7 @@ class PhotobookViewController: UIViewController {
     private func updateVisibleCells() {
         for cell in collectionView.visibleCells {
             guard let photobookCell = cell as? PhotobookCollectionViewCell else { continue }
-            photobookCell.setPlusButtonHidden(!ProductManager.shared.isAddingPagesAllowed || collectionView.indexPath(for: cell)?.item == 0)
+            photobookCell.isPlusButtonVisible = ProductManager.shared.isAddingPagesAllowed && collectionView.indexPath(for: cell)?.item != 0
         }
     }
     
@@ -547,7 +547,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
 
             cell.loadPages(leftIndex: leftIndex, rightIndex: rightIndex, leftLayout: leftLayout, rightLayout: rightLayout, redrawing: photobookNeedsRedrawing)
             
-            cell.setPlusButtonHidden(!ProductManager.shared.isAddingPagesAllowed || indexPath.item == 0)
+            cell.isPlusButtonVisible = ProductManager.shared.isAddingPagesAllowed && indexPath.item != 0
             
             return cell
         }
