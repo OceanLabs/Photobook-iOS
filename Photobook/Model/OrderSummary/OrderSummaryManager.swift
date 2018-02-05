@@ -67,10 +67,10 @@ class OrderSummaryManager {
     
     func fetchProductDetails() {
         
-        // mock data
+        //TODO: mock data REMOVE
         guard let summaryDict = json(file: "order_summary") as? [String:Any] else {
             delegate?.orderSummaryManager(self, didUpdate: false)
-            return //return
+            return
         }
         
         //summary

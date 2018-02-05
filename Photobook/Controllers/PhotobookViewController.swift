@@ -195,11 +195,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         print("Tapped on spine")
     }
     
-    @IBAction func didTapCheckout(_ sender: Any) {
-        guard draggingView == nil else { return }
-        performSegue(withIdentifier: "CheckoutSegue", sender: nil)
-    }
-    
     override var canBecomeFirstResponder: Bool{
         return true
     }
