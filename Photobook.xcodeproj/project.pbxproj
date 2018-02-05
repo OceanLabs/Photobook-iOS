@@ -43,11 +43,18 @@
 		2E6B9EDC1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9EDB1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift */; };
 		2E6B9EDF1FBF1B0D00F28C00 /* FullScreenImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9EDE1FBF1B0D00F28C00 /* FullScreenImageViewController.swift */; };
 		2E6B9EE51FBF1CFB00F28C00 /* FullScreenImageUnwindSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9EE41FBF1CFB00F28C00 /* FullScreenImageUnwindSegue.swift */; };
+		2E7C3693202095DC008033E7 /* ReceiptFooterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C3692202095DC008033E7 /* ReceiptFooterTableViewCell.swift */; };
+		2E7C3695202095ED008033E7 /* ReceiptHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C3694202095ED008033E7 /* ReceiptHeaderTableViewCell.swift */; };
+		2E7C3697202095FB008033E7 /* ReceiptLineItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C3696202095FB008033E7 /* ReceiptLineItemTableViewCell.swift */; };
+		2E7C6F04201F4DF20071E6B8 /* PaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C6F03201F4DF20071E6B8 /* PaymentViewController.swift */; };
+		2E7C6F06201F4E670071E6B8 /* ReceiptTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C6F05201F4E670071E6B8 /* ReceiptTableViewController.swift */; };
 		2E876E091FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E876E081FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift */; };
 		2E876E0B1FC2FA15007CCFA2 /* ViewStorySegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E876E0A1FC2FA15007CCFA2 /* ViewStorySegue.swift */; };
 		2E8B3E441FD191AC00FB8878 /* PhotobookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8B3E431FD191AC00FB8878 /* PhotobookViewController.swift */; };
 		2EB39DD51FC5AE0F009EC5B2 /* PhotobookPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB39DD41FC5AE0F009EC5B2 /* PhotobookPageView.swift */; };
 		2EBBC0CD1FEBB72E00A4EF45 /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBBC0CC1FEBB72D00A4EF45 /* ArrayExtensions.swift */; };
+		2EC81602201B33180046643B /* ShippingMethodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC81601201B33180046643B /* ShippingMethodTableViewCell.swift */; };
+		2EC81604201B33230046643B /* ShippingMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC81603201B33230046643B /* ShippingMethodsViewController.swift */; };
 		2ECB5A971FDFE01100FF39A5 /* OutOfBoundsTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECB5A961FDFE01100FF39A5 /* OutOfBoundsTouchView.swift */; };
 		2ECB5A991FDFE71200FF39A5 /* OutOfBoundsTouchCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECB5A981FDFE71200FF39A5 /* OutOfBoundsTouchCollectionView.swift */; };
 		2ECF57BC2010D0830047094C /* PaymentMethodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECF57BB2010D0830047094C /* PaymentMethodTableViewCell.swift */; };
@@ -106,6 +113,12 @@
 		6FC7E8871FC4719300D2BCDA /* LayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E8861FC4719300D2BCDA /* LayoutTests.swift */; };
 		6FC7E8891FC47B4500D2BCDA /* PhotobookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E8881FC47B4500D2BCDA /* PhotobookTests.swift */; };
 		6FC7E88B1FC574DA00D2BCDA /* photobooks.json in Resources */ = {isa = PBXBuildFile; fileRef = 6FC7E88A1FC574DA00D2BCDA /* photobooks.json */; };
+		6FCE08CE2020755500C55D2F /* TextEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE08CD2020755500C55D2F /* TextEditingViewController.swift */; };
+		6FCE08D22021E4B700C55D2F /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08CF2021E4A800C55D2F /* Montserrat-Bold.ttf */; };
+		6FCE08D32021E4B700C55D2F /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08D02021E4AD00C55D2F /* OpenSans-Regular.ttf */; };
+		6FCE08D42021E4B700C55D2F /* Lora-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08D12021E4B300C55D2F /* Lora-Regular.ttf */; };
+		6FCE08D620221C7C00C55D2F /* NSAttributedStringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE08D520221C7C00C55D2F /* NSAttributedStringExtensions.swift */; };
+		6FCE08D82023139D00C55D2F /* FontType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE08D72023139D00C55D2F /* FontType.swift */; };
 		6FCE959D1FF555EE0023FC14 /* AssetPlacementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE959C1FF555EE0023FC14 /* AssetPlacementViewController.swift */; };
 		6FDF25E51FB604E100F46BB0 /* PhotobookTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF25E41FB604E100F46BB0 /* PhotobookTabBar.swift */; };
 		6FDF25E71FB6052A00F46BB0 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF25E61FB6052A00F46BB0 /* UIImageExtensions.swift */; };
@@ -139,6 +152,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		11DC81CB632AAC7078697EBD /* Pods-Photobook.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.release test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.release test.xcconfig"; sourceTree = "<group>"; };
 		1561A4A2B130A5F1A92351A0 /* Pods_PhotobookTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PhotobookTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E0B587C1FB30F2100F31A9E /* Photobook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Photobook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E0B587F1FB30F2100F31A9E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -178,11 +192,18 @@
 		2E6B9EDB1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PHAssetCollectionExtensions.swift; sourceTree = "<group>"; };
 		2E6B9EDE1FBF1B0D00F28C00 /* FullScreenImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullScreenImageViewController.swift; sourceTree = "<group>"; };
 		2E6B9EE41FBF1CFB00F28C00 /* FullScreenImageUnwindSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullScreenImageUnwindSegue.swift; sourceTree = "<group>"; };
+		2E7C3692202095DC008033E7 /* ReceiptFooterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptFooterTableViewCell.swift; sourceTree = "<group>"; };
+		2E7C3694202095ED008033E7 /* ReceiptHeaderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptHeaderTableViewCell.swift; sourceTree = "<group>"; };
+		2E7C3696202095FB008033E7 /* ReceiptLineItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptLineItemTableViewCell.swift; sourceTree = "<group>"; };
+		2E7C6F03201F4DF20071E6B8 /* PaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentViewController.swift; sourceTree = "<group>"; };
+		2E7C6F05201F4E670071E6B8 /* ReceiptTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptTableViewController.swift; sourceTree = "<group>"; };
 		2E876E081FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPickerCoverCollectionViewCell.swift; sourceTree = "<group>"; };
 		2E876E0A1FC2FA15007CCFA2 /* ViewStorySegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewStorySegue.swift; sourceTree = "<group>"; };
 		2E8B3E431FD191AC00FB8878 /* PhotobookViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotobookViewController.swift; sourceTree = "<group>"; };
 		2EB39DD41FC5AE0F009EC5B2 /* PhotobookPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookPageView.swift; sourceTree = "<group>"; };
 		2EBBC0CC1FEBB72D00A4EF45 /* ArrayExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
+		2EC81601201B33180046643B /* ShippingMethodTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShippingMethodTableViewCell.swift; sourceTree = "<group>"; };
+		2EC81603201B33230046643B /* ShippingMethodsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShippingMethodsViewController.swift; sourceTree = "<group>"; };
 		2ECB5A961FDFE01100FF39A5 /* OutOfBoundsTouchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutOfBoundsTouchView.swift; sourceTree = "<group>"; };
 		2ECB5A981FDFE71200FF39A5 /* OutOfBoundsTouchCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutOfBoundsTouchCollectionView.swift; sourceTree = "<group>"; };
 		2ECF57BB2010D0830047094C /* PaymentMethodTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodTableViewCell.swift; sourceTree = "<group>"; };
@@ -197,6 +218,7 @@
 		2ED79FED1FBAEE630046B96C /* AssetPickerCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerCollectionViewCell.swift; sourceTree = "<group>"; };
 		35185092CEAA07251E4FD67C /* Pods_Photobook.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Photobook.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		405456FD88C003A4C2B2B699 /* Pods-Photobook.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.debug.xcconfig"; sourceTree = "<group>"; };
+		509D34875259D1916ED674CB /* Pods-PhotobookTests.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.debug test.xcconfig"; sourceTree = "<group>"; };
 		547A4E0B82B81A32EC456DDF /* Pods-Photobook.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.release.xcconfig"; sourceTree = "<group>"; };
 		6F0A682D1FE0243400B7E56C /* EmptyScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyScreenViewController.swift; sourceTree = "<group>"; };
 		6F0A682F1FE03C2100B7E56C /* EmptyScreenViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyScreenViewControllerExtensions.swift; sourceTree = "<group>"; };
@@ -246,9 +268,16 @@
 		6FC7E8861FC4719300D2BCDA /* LayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutTests.swift; sourceTree = "<group>"; };
 		6FC7E8881FC47B4500D2BCDA /* PhotobookTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookTests.swift; sourceTree = "<group>"; };
 		6FC7E88A1FC574DA00D2BCDA /* photobooks.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = photobooks.json; sourceTree = "<group>"; };
+		6FCE08CD2020755500C55D2F /* TextEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditingViewController.swift; sourceTree = "<group>"; };
+		6FCE08CF2021E4A800C55D2F /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.ttf"; sourceTree = "<group>"; };
+		6FCE08D02021E4AD00C55D2F /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
+		6FCE08D12021E4B300C55D2F /* Lora-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lora-Regular.ttf"; sourceTree = "<group>"; };
+		6FCE08D520221C7C00C55D2F /* NSAttributedStringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAttributedStringExtensions.swift; sourceTree = "<group>"; };
+		6FCE08D72023139D00C55D2F /* FontType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontType.swift; sourceTree = "<group>"; };
 		6FCE959C1FF555EE0023FC14 /* AssetPlacementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPlacementViewController.swift; sourceTree = "<group>"; };
 		6FDF25E41FB604E100F46BB0 /* PhotobookTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookTabBar.swift; sourceTree = "<group>"; };
 		6FDF25E61FB6052A00F46BB0 /* UIImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
+		8FBCA2FB941818489E78FF98 /* Pods-Photobook.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.debug test.xcconfig"; sourceTree = "<group>"; };
 		A9A9A5996008D1B40B2E10F9 /* Pods-PhotobookTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.release.xcconfig"; sourceTree = "<group>"; };
 		B90F287E1FFF8D1A00FF3D15 /* OrderSummaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryViewController.swift; sourceTree = "<group>"; };
 		B90F28812003B7A300FF3D15 /* OrderSummaryUpsellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryUpsellTableViewCell.swift; sourceTree = "<group>"; };
@@ -266,6 +295,7 @@
 		B9BE9F931FBF33320002C459 /* AssetCollectorCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCollectorCollectionViewCell.swift; sourceTree = "<group>"; };
 		B9D3340120220FE7003D4338 /* OrderSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummary.swift; sourceTree = "<group>"; };
 		B9D33405202486CC003D4338 /* OrderManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderManager.swift; sourceTree = "<group>"; };
+		EE165E68796AB33E673EA271 /* Pods-PhotobookTests.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.release test.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.release test.xcconfig"; sourceTree = "<group>"; };
 		FF99346143FA805B3676D912 /* Pods-PhotobookTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -393,9 +423,20 @@
 			path = Segues;
 			sourceTree = "<group>";
 		};
+		2E7C369820209600008033E7 /* Receipt */ = {
+			isa = PBXGroup;
+			children = (
+				2E7C3692202095DC008033E7 /* ReceiptFooterTableViewCell.swift */,
+				2E7C3694202095ED008033E7 /* ReceiptHeaderTableViewCell.swift */,
+				2E7C3696202095FB008033E7 /* ReceiptLineItemTableViewCell.swift */,
+			);
+			path = Receipt;
+			sourceTree = "<group>";
+		};
 		2ECF57BA2010D0590047094C /* Payment */ = {
 			isa = PBXGroup;
 			children = (
+				2EC81601201B33180046643B /* ShippingMethodTableViewCell.swift */,
 				2ECF57BB2010D0830047094C /* PaymentMethodTableViewCell.swift */,
 				2ECF57C420120DF60047094C /* UserInputTableViewCell.swift */,
 				2E5F825220162855002F3607 /* DeliveryAddressTableViewCell.swift */,
@@ -436,6 +477,10 @@
 				547A4E0B82B81A32EC456DDF /* Pods-Photobook.release.xcconfig */,
 				FF99346143FA805B3676D912 /* Pods-PhotobookTests.debug.xcconfig */,
 				A9A9A5996008D1B40B2E10F9 /* Pods-PhotobookTests.release.xcconfig */,
+				8FBCA2FB941818489E78FF98 /* Pods-Photobook.debug test.xcconfig */,
+				11DC81CB632AAC7078697EBD /* Pods-Photobook.release test.xcconfig */,
+				509D34875259D1916ED674CB /* Pods-PhotobookTests.debug test.xcconfig */,
+				EE165E68796AB33E673EA271 /* Pods-PhotobookTests.release test.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -474,9 +519,13 @@
 				2E17337E200F4E0B00F0D718 /* PaymentMethodsViewController.swift */,
 				2ECF57C220120D2A0047094C /* CreditCardTableViewController.swift */,
 				B90F287E1FFF8D1A00FF3D15 /* OrderSummaryViewController.swift */,
+				6FCE08CD2020755500C55D2F /* TextEditingViewController.swift */,
 				2E5F8250201617CE002F3607 /* DeliveryDetailsTableViewController.swift */,
 				2E2563902018BBCF0096DFC5 /* AddressTableViewController.swift */,
 				2E21DB552017943500D32989 /* CountryPickerTableViewController.swift */,
+				2EC81603201B33230046643B /* ShippingMethodsViewController.swift */,
+				2E7C6F03201F4DF20071E6B8 /* PaymentViewController.swift */,
+				2E7C6F05201F4E670071E6B8 /* ReceiptTableViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -484,6 +533,9 @@
 		6F4DE64F1FB35AE50099A97E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6FCE08D12021E4B300C55D2F /* Lora-Regular.ttf */,
+				6FCE08CF2021E4A800C55D2F /* Montserrat-Bold.ttf */,
+				6FCE08D02021E4AD00C55D2F /* OpenSans-Regular.ttf */,
 				6F4DE6501FB35B000099A97E /* LeagueGothic-Regular.otf */,
 				2E0B58861FB30F2100F31A9E /* Assets.xcassets */,
 			);
@@ -515,6 +567,7 @@
 				B939FE872009063C00B1084B /* CarouselCollectionViewCell.swift */,
 				2E3E6A5520036FC20044EDFC /* Photobook */,
 				2ECF57BA2010D0590047094C /* Payment */,
+				2E7C369820209600008033E7 /* Receipt */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -535,6 +588,7 @@
 			isa = PBXGroup;
 			children = (
 				2E17338D2010BA3600F0D718 /* StringExtensions.swift */,
+				6FCE08D520221C7C00C55D2F /* NSAttributedStringExtensions.swift */,
 				2E1733952010CDC400F0D718 /* LuhnStringExtensions.swift */,
 				2E1733892010B85F00F0D718 /* DecimalExtensions.swift */,
 				2E6B9ED91FBDEEF400F28C00 /* UIViewExtensions.swift */,
@@ -587,6 +641,7 @@
 				6F3C4ACC1FC880F100DA0196 /* ProductLayoutAsset.swift */,
 				6F3C4ACE1FC8811C00DA0196 /* ProductLayoutText.swift */,
 				6F34855D1FC5A9F900961B32 /* ProductManager.swift */,
+				6FCE08D72023139D00C55D2F /* FontType.swift */,
 			);
 			path = Photobooks;
 			sourceTree = "<group>";
@@ -744,7 +799,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E0B588A1FB30F2100F31A9E /* LaunchScreen.storyboard in Resources */,
+				6FCE08D42021E4B700C55D2F /* Lora-Regular.ttf in Resources */,
 				2E0B58871FB30F2100F31A9E /* Assets.xcassets in Resources */,
+				6FCE08D22021E4B700C55D2F /* Montserrat-Bold.ttf in Resources */,
+				6FCE08D32021E4B700C55D2F /* OpenSans-Regular.ttf in Resources */,
 				B986DF2D20164BDA005461A0 /* order_summary.json in Resources */,
 				2E0B58851FB30F2100F31A9E /* Main.storyboard in Resources */,
 				6F4DE6511FB35B010099A97E /* LeagueGothic-Regular.otf in Resources */,
@@ -887,12 +945,14 @@
 			files = (
 				6FC0DE791FE930B0009BB799 /* LayoutSelectionCollectionViewCell.swift in Sources */,
 				6FB670621FB49FF90062D630 /* UILabelExtensions.swift in Sources */,
+				6FCE08D82023139D00C55D2F /* FontType.swift in Sources */,
 				B939FE8A2009075000B1084B /* CarouselCollectionView.swift in Sources */,
 				B90F288B20066D3100FF3D15 /* OrderSummaryTotalTableViewCell.swift in Sources */,
 				B9D33406202486CC003D4338 /* OrderManager.swift in Sources */,
 				6F2FF37F1FD05686007DB545 /* LayoutUtils.swift in Sources */,
 				B939FE8C200CD18200B1084B /* OrderSummaryManager.swift in Sources */,
 				6F34855E1FC5A9F900961B32 /* ProductManager.swift in Sources */,
+				2EC81604201B33230046643B /* ShippingMethodsViewController.swift in Sources */,
 				6F139E0F1FB45EFC005B937E /* Story.swift in Sources */,
 				2E6B9EE51FBF1CFB00F28C00 /* FullScreenImageUnwindSegue.swift in Sources */,
 				B90F288720050F1D00FF3D15 /* Price.swift in Sources */,
@@ -901,6 +961,7 @@
 				2E2563932018C3950096DFC5 /* AddressFieldTableViewCell.swift in Sources */,
 				2E1733812010B50400F0D718 /* PaymentAuthorizationManager.swift in Sources */,
 				6FA189331FFF976200E6D0AB /* AssetSelectorAddMoreCollectionViewCell.swift in Sources */,
+				6FCE08CE2020755500C55D2F /* TextEditingViewController.swift in Sources */,
 				2E876E091FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift in Sources */,
 				2E1733882010B83100F0D718 /* ShippingMethod.swift in Sources */,
 				6F4DE6571FB452390099A97E /* DoubleStoryTableViewCell.swift in Sources */,
@@ -946,7 +1007,9 @@
 				2E17338C2010B9EE00F0D718 /* Card.swift in Sources */,
 				2ED79FEE1FBAEE630046B96C /* AssetPickerCollectionViewCell.swift in Sources */,
 				2E0B58A41FB32ADD00F31A9E /* PhotosAlbumManager.swift in Sources */,
+				2E7C3697202095FB008033E7 /* ReceiptLineItemTableViewCell.swift in Sources */,
 				2ECF57BC2010D0830047094C /* PaymentMethodTableViewCell.swift in Sources */,
+				2E7C6F04201F4DF20071E6B8 /* PaymentViewController.swift in Sources */,
 				2ECB5A991FDFE71200FF39A5 /* OutOfBoundsTouchCollectionView.swift in Sources */,
 				2E5F8251201617CE002F3607 /* DeliveryDetailsTableViewController.swift in Sources */,
 				2E876E0B1FC2FA15007CCFA2 /* ViewStorySegue.swift in Sources */,
@@ -960,18 +1023,23 @@
 				2E21DB5220177E5400D32989 /* DeliveryDetails.swift in Sources */,
 				6F4606DC201886BD00C7583E /* BorderedRoundedView.swift in Sources */,
 				B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */,
+				6FCE08D620221C7C00C55D2F /* NSAttributedStringExtensions.swift in Sources */,
 				B939FE882009063C00B1084B /* CarouselCollectionViewCell.swift in Sources */,
 				2E17337F200F4E0B00F0D718 /* PaymentMethodsViewController.swift in Sources */,
+				2E7C3695202095ED008033E7 /* ReceiptHeaderTableViewCell.swift in Sources */,
 				2E0B58A21FB32AC100F31A9E /* PhotosAlbum.swift in Sources */,
 				6FA1893B2004B9C700E6D0AB /* ModalAlbumsCollectionViewController.swift in Sources */,
 				2E0B58A91FB3508B00F31A9E /* SelectedAssetsManager.swift in Sources */,
 				2E0B589D1FB3293100F31A9E /* PhotosAsset.swift in Sources */,
+				2E7C6F06201F4E670071E6B8 /* ReceiptTableViewController.swift in Sources */,
 				6F5A59F2200CBDD80006BFCA /* SpineFrameView.swift in Sources */,
 				6FA189311FFF96E500E6D0AB /* AssetSelectorAssetCollectionViewCell.swift in Sources */,
 				2E1733862010B6BA00F0D718 /* Cost.swift in Sources */,
 				6F0A68321FE1291200B7E56C /* PageSetupViewController.swift in Sources */,
 				6F18154A2009042E00D7082D /* CoverFrameView.swift in Sources */,
 				B9BC2E271FBF195200F4AA56 /* AssetCollectorViewController.swift in Sources */,
+				2E7C3693202095DC008033E7 /* ReceiptFooterTableViewCell.swift in Sources */,
+				2EC81602201B33180046643B /* ShippingMethodTableViewCell.swift in Sources */,
 				2E1733942010CD0B00F0D718 /* Address.swift in Sources */,
 				2ED5B3831FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift in Sources */,
 				B90F288920066D1500FF3D15 /* OrderSummaryDetailTableViewCell.swift in Sources */,
@@ -1178,11 +1246,199 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Photobook/Photobook-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
+		};
+		2E73DA9020236D47002471F8 /* Debug Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = "Debug Test";
+		};
+		2E73DA9120236D47002471F8 /* Debug Test */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8FBCA2FB941818489E78FF98 /* Pods-Photobook.debug test.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Photobook/Photobook.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				INFOPLIST_FILE = Photobook/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "TEST_ENVIRONMENT DEBUG";
+				SWIFT_OBJC_BRIDGING_HEADER = "Photobook/Photobook-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = "Debug Test";
+		};
+		2E73DA9220236D47002471F8 /* Debug Test */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 509D34875259D1916ED674CB /* Pods-PhotobookTests.debug test.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				INFOPLIST_FILE = PhotobookTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = Kite.PhotobookTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Photobook.app/Photobook";
+			};
+			name = "Debug Test";
+		};
+		2E73DA9320236D51002471F8 /* Release Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release Test";
+		};
+		2E73DA9420236D51002471F8 /* Release Test */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 11DC81CB632AAC7078697EBD /* Pods-Photobook.release test.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Photobook/Photobook.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				INFOPLIST_FILE = Photobook/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = TEST_ENVIRONMENT;
+				SWIFT_OBJC_BRIDGING_HEADER = "Photobook/Photobook-Bridging-Header.h";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = "Release Test";
+		};
+		2E73DA9520236D51002471F8 /* Release Test */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EE165E68796AB33E673EA271 /* Pods-PhotobookTests.release test.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				INFOPLIST_FILE = PhotobookTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = Kite.PhotobookTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Photobook.app/Photobook";
+			};
+			name = "Release Test";
 		};
 		6FB6706E1FB5BAD40062D630 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1227,7 +1483,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2E0B588C1FB30F2100F31A9E /* Debug */,
+				2E73DA9020236D47002471F8 /* Debug Test */,
 				2E0B588D1FB30F2100F31A9E /* Release */,
+				2E73DA9320236D51002471F8 /* Release Test */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1236,7 +1494,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2E0B588F1FB30F2100F31A9E /* Debug */,
+				2E73DA9120236D47002471F8 /* Debug Test */,
 				2E0B58901FB30F2100F31A9E /* Release */,
+				2E73DA9420236D51002471F8 /* Release Test */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1245,7 +1505,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6FB6706E1FB5BAD40062D630 /* Debug */,
+				2E73DA9220236D47002471F8 /* Debug Test */,
 				6FB6706F1FB5BAD40062D630 /* Release */,
+				2E73DA9520236D51002471F8 /* Release Test */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

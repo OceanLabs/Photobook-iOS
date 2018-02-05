@@ -44,6 +44,9 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>LeagueGothic-Regular.otf</string>
+		<string>Lora-Regular.ttf</string>
+		<string>Montserrat-Bold.ttf</string>
+		<string>OpenSans-Regular.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -64,7 +67,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>UIViewEdgeAntialiasing</key>
-	<true/>
 </dict>
 </plist>

@@ -33,8 +33,11 @@ class PaymentAuthorizationManager: NSObject {
         static let applePayPayTo = "Canon"
         static let applePayMerchantId = "merchant.ly.kite.sdk"
         
+        #if TEST_ENVIRONMENT
         static let stripePublicKey = "pk_test_fJtOj7oxBKrLFOneBFLj0OH3"
-        //        static let stripePublicKey = "pk_live_qQhXxzjS8inja3K31GDajdXo"
+        #else
+        static let stripePublicKey = "pk_live_qQhXxzjS8inja3K31GDajdXo"
+        #endif
     }
     
     weak var delegate : PaymentAuthorizationManagerDelegate?
@@ -218,7 +221,7 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
         deliveryDetails.address = shippingAddress
         OrderManager.shared.deliveryDetails = deliveryDetails
         
-        ProductManager.shared.updateCost { [weak welf = self] (error: Error?) in
+        OrderManager.shared.updateCost { [weak welf = self] (error: Error?) in
             
             guard let cachedCost = OrderManager.shared.cachedCost else {
                 completion(.failure, [PKShippingMethod](), [PKPaymentSummaryItem]())

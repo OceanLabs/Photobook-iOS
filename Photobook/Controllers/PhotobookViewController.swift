@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PhotobookViewController: UIViewController {
+class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate {
     
     private struct Constants {
         static let rearrageScale: CGFloat = 0.8
@@ -17,7 +17,7 @@ class PhotobookViewController: UIViewController {
         static let dragLiftScale: CGFloat = 1.1
         static let autoScrollTopScreenThreshold: CGFloat = 0.2
         static let autoScrollBottomScreenThreshold: CGFloat = 0.9
-        static let autoScrollInset: CGFloat = 10.0
+        static let autoScrollOffset: CGFloat = 10.0
         static let dragLiftAnimationDuration: TimeInterval = 0.15
         static let dropAnimationDuration: TimeInterval = 0.3
         static let proposalCellHeight: CGFloat = 30.0
@@ -33,6 +33,9 @@ class PhotobookViewController: UIViewController {
     
     @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var ctaButtonContainer: UIView!
+    
+    var photobokNavigationBarType: PhotobookNavigationBarType = .clear
+    
     var selectedAssetsManager: SelectedAssetsManager?
     private var titleButton = UIButton()
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
@@ -45,16 +48,12 @@ class PhotobookViewController: UIViewController {
     private var isRearranging = false
     private var draggingView: UIView?
     private var isDragging = false
+    private weak var currentlyPanningGesture: UIPanGestureRecognizer?
     private var scrollingTimer: Timer?
-    private lazy var screenRefreshRate: Double = {
-        if #available(iOS 10.3, *) {
-            return 1.0 / Double(UIScreen.main.maximumFramesPerSecond)
-        } else {
-            return 1.0 / 60.0
-        }
-    }()
-    
     private var photobookNeedsRedrawing = false
+    
+    // Scrolling at 60Hz when we are dragging looks good enough and avoids having to normalize the scroll offset
+    private lazy var screenRefreshRate: Double = 1.0 / 60.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,6 +75,12 @@ class PhotobookViewController: UIViewController {
         }
         
         setup(with: photobook)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // Reset the var after a possible colour change
+        photobookNeedsRedrawing = false
     }
     
     override func viewDidLayoutSubviews() {
@@ -190,6 +195,11 @@ class PhotobookViewController: UIViewController {
         print("Tapped on spine")
     }
     
+    @IBAction func didTapCheckout(_ sender: Any) {
+        guard draggingView == nil else { return }
+        performSegue(withIdentifier: "CheckoutSegue", sender: nil)
+    }
+    
     override var canBecomeFirstResponder: Bool{
         return true
     }
@@ -197,13 +207,25 @@ class PhotobookViewController: UIViewController {
     private func updateVisibleCells() {
         for cell in collectionView.visibleCells {
             guard let photobookCell = cell as? PhotobookCollectionViewCell else { continue }
-            if collectionView.indexPath(for: cell)?.item != 0 {
-                photobookCell.isPlusButtonVisible = ProductManager.shared.isAddingPagesAllowed
-            }
+            photobookCell.isPlusButtonVisible = ProductManager.shared.isAddingPagesAllowed && collectionView.indexPath(for: cell)?.item != 0
         }
     }
     
-    func stopTimer() {
+    private func updateNavBar() {
+        guard let navigationBar = navigationController?.navigationBar as? PhotobookNavigationBar else { return }
+        
+        let navigationBarMaxY = (navigationController?.navigationBar.frame.maxY ?? 0)
+        
+        var draggingViewUnderNavBar = false
+        if let draggingView = draggingView {
+            draggingViewUnderNavBar = draggingView.frame.origin.y < navigationBarMaxY
+        }
+        
+        let showBlur = collectionView.contentOffset.y > -navigationBarMaxY || draggingViewUnderNavBar
+        navigationBar.setBlur(showBlur)
+    }
+    
+    private func stopTimer() {
         scrollingTimer?.invalidate()
         scrollingTimer = nil
     }
@@ -339,7 +361,7 @@ class PhotobookViewController: UIViewController {
     }
     
     func dropView() {
-        guard let sourceIndexPath = interactingItemIndexPath,
+        guard var sourceIndexPath = interactingItemIndexPath,
             let draggingView = self.draggingView
             else { return }
         
@@ -347,10 +369,15 @@ class PhotobookViewController: UIViewController {
         
         let destinationIndexPath = proposedDropIndexPath ?? sourceIndexPath
         let movingDown = sourceIndexPath.item < destinationIndexPath.item
-        
-        guard let destinationCell = collectionView.cellForItem(at: IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 0), section: destinationIndexPath.section)) else { return }
-        
-        let destinationY = self.collectionView.convert(destinationCell.frame, to: self.view).origin.y
+                
+        let destinationY: CGFloat
+        if let destinationCell = collectionView.cellForItem(at: IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 0), section: destinationIndexPath.section)) {
+            destinationY = self.collectionView.convert(destinationCell.frame, to: self.view).origin.y
+        } else if draggingView.frame.origin.y + draggingView.frame.height > view.frame.height / 2.0 {
+            destinationY = -draggingView.frame.height
+        } else {
+            destinationY = view.frame.height + draggingView.frame.height
+        }
         
         UIView.animate(withDuration: Constants.dropAnimationDuration, delay: 0, options: .curveEaseInOut, animations: {
             draggingView.transform = CGAffineTransform(translationX: draggingView.transform.tx, y: draggingView.transform.ty)
@@ -373,7 +400,7 @@ class PhotobookViewController: UIViewController {
         })
         
         if destinationIndexPath != sourceIndexPath,
-            var sourceProductLayoutIndex = sourceCell?.leftIndex {
+            var sourceProductLayoutIndex = ProductManager.shared.productLayoutIndex(for: sourceIndexPath.item + (movingDown ? 0 : -1)) {
             
             let sourceProductLayout = ProductManager.shared.productLayouts[sourceProductLayoutIndex]
             
@@ -412,9 +439,7 @@ class PhotobookViewController: UIViewController {
             collectionView.performBatchUpdates({
                 collectionView.insertItems(at: [insertingIndexPath])
                 deleteProposalCell(enableFeedback: false)
-                if sourceCell != nil, let indexPath = collectionView.indexPath(for: sourceCell!){
-                    collectionView.deleteItems(at: [IndexPath(item: indexPath.item + (movingDown ? 0 : 1), section: indexPath.section)])
-                }
+                collectionView.deleteItems(at: [IndexPath(item: sourceIndexPath.item + (movingDown ? 0 : 1), section: sourceIndexPath.section)])
             }, completion: { _ in
                 self.updateVisibleCellIndexes()
             })
@@ -423,7 +448,7 @@ class PhotobookViewController: UIViewController {
     
     func liftView(_ photobookFrameView: PhotobookFrameView) {
         guard let productLayoutIndex = photobookFrameView.leftPageView.index,
-            let foldIndex = ProductManager.shared.foldIndex(for: productLayoutIndex),
+            let foldIndex = ProductManager.shared.spreadIndex(for: productLayoutIndex),
             foldIndex != collectionView.numberOfItems(inSection: 1) - 1
             else { return }
         
@@ -468,7 +493,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 1:
-            guard let lastFoldIndex = ProductManager.shared.foldIndex(for: ProductManager.shared.productLayouts.count - 1) else { return 0 }
+            guard let lastFoldIndex = ProductManager.shared.spreadIndex(for: ProductManager.shared.productLayouts.count - 1) else { return 0 }
             return lastFoldIndex + 1 + (proposedDropIndexPath != nil ? 1 : 0)
         default:
             return 1
@@ -512,7 +537,8 @@ extension PhotobookViewController: UICollectionViewDataSource {
             case collectionView.numberOfItems(inSection: 1) - 1: // Last page
                 leftIndex = ProductManager.shared.productLayouts.count - 1
             default:
-                guard let index = ProductManager.shared.productLayoutIndex(for: indexPath.item) else { return cell }
+                let indexPathItem = indexPath.item - ((proposedDropIndexPath?.item ?? Int.max) < indexPath.item ? 1 : 0)
+                guard let index = ProductManager.shared.productLayoutIndex(for: indexPathItem) else { return cell }
                 leftIndex = index
                 if index + 1 < ProductManager.shared.productLayouts.count {
                     rightIndex = index + 1
@@ -531,7 +557,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
 
             cell.loadPages(leftIndex: leftIndex, rightIndex: rightIndex, leftLayout: leftLayout, rightLayout: rightLayout, redrawing: photobookNeedsRedrawing)
             
-            cell.isPlusButtonVisible = ProductManager.shared.isAddingPagesAllowed && indexPath.item > 0
+            cell.isPlusButtonVisible = ProductManager.shared.isAddingPagesAllowed && indexPath.item != 0
             
             return cell
         }
@@ -542,9 +568,7 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
     // MARK: UICollectionViewDelegate
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard let navBar = navigationController?.navigationBar as? PhotobookNavigationBar else { return }
-        
-        navBar.effectView.alpha = scrollView.contentOffset.y <= -(navigationController?.navigationBar.frame.maxY ?? 0)  ? 0 : 1
+        updateNavBar()
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -583,7 +607,7 @@ extension PhotobookViewController: PhotobookPageViewDelegate {
         pageSetupViewController.selectedAssetsManager = selectedAssetsManager
         pageSetupViewController.pageIndex = index
         pageSetupViewController.delegate = self
-        present(pageSetupViewController, animated: true, completion: nil)
+        navigationController?.pushViewController(pageSetupViewController, animated: true)
     }
 }
 
@@ -606,9 +630,7 @@ extension PhotobookViewController: PageSetupDelegate {
             }
             collectionView.reloadData()
         }
-        dismiss(animated: true, completion: {
-            self.photobookNeedsRedrawing = false
-        })
+        navigationController?.popViewController(animated: true)
     }
 }
 
@@ -635,8 +657,12 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
         }
         guard let draggingView = draggingView, sender.state == .changed else { return }
         
+        currentlyPanningGesture = sender
+        
         let translation = sender.translation(in: view)
-        draggingView.transform = CGAffineTransform(scaleX: Constants.dragLiftScale, y: Constants.dragLiftScale).translatedBy(x: translation.x, y: translation.y)
+        draggingView.transform = CGAffineTransform(translationX: translation.x, y: translation.y).scaledBy(x: Constants.dragLiftScale, y: Constants.dragLiftScale)
+        autoScrollIfNeeded()
+        updateNavBar()
         
         let dragPointOnCollectionView = CGPoint(x: collectionView.frame.size.width / 2.0, y: sender.location(in: collectionView).y)
         guard let indexPathForDragPoint = collectionView.indexPathForItem(at: dragPointOnCollectionView),
@@ -657,7 +683,7 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
             proposedDropIndexPath == nil || proposedIndexPath.item != proposedDropIndexPath!.item + 1
             else { return }
         
-        // Clear proposed drop index path if we are to drop:
+        // Clear proposed drop index path if the proposal is:
         guard proposedIndexPath != interactingItemIndexPath, // back to the where we picked it up
             proposedIndexPath.item != 0, // at the first page or cover
             proposedIndexPath.section != 0, // at the cover
@@ -674,14 +700,22 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
             self.insertProposalCell(proposedIndexPath)
         })
         
+    }
+    
+    func autoScrollIfNeeded() {
+        guard let draggingView = draggingView else { return }
+        
         // Auto-scroll the collectionView if you drag to the top or bottom
         if draggingView.frame.origin.y + draggingView.frame.size.height / 2.0 > view.frame.size.height * Constants.autoScrollBottomScreenThreshold {
             guard scrollingTimer == nil else { return }
             
             scrollingTimer = Timer(timeInterval: screenRefreshRate, repeats: true, block: { [weak welf = self] timer in
                 guard welf != nil else { return }
-                if welf!.collectionView.contentOffset.y - welf!.collectionView.contentInset.bottom + welf!.collectionView.frame.size.height + Constants.autoScrollInset < welf!.collectionView.contentSize.height {
-                    welf!.collectionView.contentOffset = CGPoint(x: welf!.collectionView.contentOffset.x, y: welf!.collectionView.contentOffset.y + Constants.autoScrollInset);
+                if welf!.collectionView.contentOffset.y + welf!.collectionView.frame.size.height + (welf!.navigationController?.navigationBar.frame.maxY ?? 0) - Constants.proposalCellHeight < welf!.collectionView.contentSize.height {
+                    welf!.collectionView.contentOffset = CGPoint(x: welf!.collectionView.contentOffset.x, y: welf!.collectionView.contentOffset.y + Constants.autoScrollOffset);
+                    if let gesture = welf!.currentlyPanningGesture{
+                        welf!.didPan(gesture)
+                    }
                 }
             })
         }
@@ -689,8 +723,8 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
             guard scrollingTimer == nil else { return }
             scrollingTimer = Timer(timeInterval: screenRefreshRate, repeats: true, block: { [weak welf = self] _ in
                 guard welf != nil else { return }
-                if (welf!.collectionView.contentOffset.y + welf!.collectionView.contentInset.top - Constants.autoScrollInset > 0){
-                    welf!.collectionView.contentOffset = CGPoint(x: welf!.collectionView.contentOffset.x, y: welf!.collectionView.contentOffset.y - Constants.autoScrollInset);
+                if welf!.collectionView.contentOffset.y > -(welf!.navigationController?.navigationBar.frame.maxY ?? 0) {
+                    welf!.collectionView.contentOffset = CGPoint(x: welf!.collectionView.contentOffset.x, y: welf!.collectionView.contentOffset.y - Constants.autoScrollOffset);
                 }
             })
         }
