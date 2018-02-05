@@ -83,7 +83,7 @@ class ProductLayout: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         
         layout = try values.decode(Layout.self, forKey: .layout)
-        productLayoutAsset = try values.decode(ProductLayoutAsset.self, forKey: .productLayoutAsset)
+        productLayoutAsset = try values.decodeIfPresent(ProductLayoutAsset.self, forKey: .productLayoutAsset)
         productLayoutText = try values.decodeIfPresent(ProductLayoutText.self, forKey: .productLayoutText)
     }
     

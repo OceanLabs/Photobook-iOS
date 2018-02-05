@@ -22,8 +22,9 @@ class ModalAlbumsCollectionViewController: UIViewController {
         static let screenThresholdToDismiss: CGFloat = 3.0 // A third of the height
     }
     @IBOutlet private weak var containerView: UIView!
-    @IBOutlet private weak var containerViewTopMarginConstraint: NSLayoutConstraint!
-
+    @IBOutlet private weak var containerViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var containerViewHeightConstraint: NSLayoutConstraint!
+    
     private var rootNavigationController: UINavigationController!
     private var downwardArrowButton: UIButton!
     private var hasAppliedMask = false
@@ -35,13 +36,18 @@ class ModalAlbumsCollectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
-        containerViewTopMarginConstraint.constant = view.bounds.height
+        containerViewBottomConstraint.constant = view.bounds.height
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        containerViewTopMarginConstraint.constant = Constants.topMargin
+        if #available(iOS 11.0, *) {
+            containerViewHeightConstraint.constant = view.bounds.height - Constants.topMargin - view.safeAreaInsets.top
+        } else {
+            containerViewHeightConstraint.constant = view.bounds.height - Constants.topMargin
+        }
+        containerViewBottomConstraint.constant = 0
         UIView.animate(withDuration: 0.3) {
             self.view.backgroundColor = UIColor(white: 0.0, alpha: 0.6)
             self.view.layoutIfNeeded()
@@ -100,10 +106,10 @@ class ModalAlbumsCollectionViewController: UIViewController {
         case .changed:
             let deltaY = gesture.translation(in: view).y
             if deltaY <= 0.0 {
-                containerViewTopMarginConstraint.constant = Constants.topMargin
+                containerViewBottomConstraint.constant = Constants.topMargin
                 return
             }
-            containerViewTopMarginConstraint.constant = Constants.topMargin + deltaY
+            containerViewBottomConstraint.constant = Constants.topMargin + deltaY
         case .ended:
             let deltaY = gesture.translation(in: view).y
             let velocityY = gesture.velocity(in: view).y
@@ -114,7 +120,7 @@ class ModalAlbumsCollectionViewController: UIViewController {
                 animateContainerViewOffScreen(duration: duration)
                 return
             }
-            containerViewTopMarginConstraint.constant = Constants.topMargin
+            containerViewBottomConstraint.constant = Constants.topMargin
             UIView.animate(withDuration: 0.1, delay: 0.0, options: [.beginFromCurrentState, .curveEaseOut], animations: {
                 self.view.layoutIfNeeded()
             }, completion: nil)
@@ -124,7 +130,7 @@ class ModalAlbumsCollectionViewController: UIViewController {
     }
     
     private func animateContainerViewOffScreen(duration: TimeInterval = 0.4, adding assets: [Asset]? = nil) {
-        containerViewTopMarginConstraint.constant = view.bounds.height
+        containerViewBottomConstraint.constant = view.bounds.height
         UIView.animate(withDuration: duration, delay: 0.0, options: [.beginFromCurrentState, .curveEaseOut], animations: {
             self.view.backgroundColor = .clear
             self.view.layoutIfNeeded()

@@ -106,7 +106,6 @@ class CreditCardTableViewController: UITableViewController {
     private func saveCardDetails() {
         view.endEditing(false)
         
-        
         if cardNumberTextField.text?.isEmpty ?? true || cardNumberTextField.text == FormConstants.requiredText {
             let cell = (tableView.cellForRow(at: IndexPath(row: Constants.creditCardRow, section: 0)) as! UserInputTableViewCell)
             cell.textField.text = FormConstants.requiredText

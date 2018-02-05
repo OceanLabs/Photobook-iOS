@@ -112,12 +112,12 @@ class PhotobookPageView: UIView {
             return
         }
         
+        assetContainerView.frame = imageBox.rectContained(in: bounds.size)
+        
         guard let index = index, let asset = productLayout?.productLayoutAsset?.asset else {
             setImagePlaceholder(visible: true)
             return
         }
-        
-        assetContainerView.frame = imageBox.rectContained(in: bounds.size)
         
         let imageCompletion: ((UIImage) -> Void) = { [weak welf = self] (image) in
             welf?.setImage(image: image)

@@ -166,6 +166,8 @@ class ProductManager {
             return assets
         }()
         
+        let imageOnlyLayouts = layouts.filter({ $0.imageLayoutBox != nil })
+        
         // First photobook only
         if product == nil {
             var tempLayouts = [ProductLayout]()
@@ -178,11 +180,15 @@ class ProductManager {
             tempLayouts.append(productLayout)
             
             // Create layouts for the remaining assets
-            let imageOnlyLayouts = layouts.filter({ $0.imageLayoutBox != nil })
             tempLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: imageOnlyLayouts))
             
             // Fill minimum pages with Placeholder assets if needed
-            let numberOfPlaceholderLayoutsNeeded = photobook.minimumRequiredAssets - tempLayouts.count
+            var numberOfPlaceholderLayoutsNeeded = max(photobook.minimumRequiredAssets - tempLayouts.count, 0)
+            
+            // We need an odd number of layouts including the cover and the 2 courtesy pages
+            if tempLayouts.count % 2 == 0 {
+                numberOfPlaceholderLayoutsNeeded += 1
+            }
             tempLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: imageOnlyLayouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
             
             productLayouts = tempLayouts
@@ -214,31 +220,24 @@ class ProductManager {
             }
         }
         
-        // Remove layouts of removed assets
+        // Update layouts with removed assets
         for asset in removedAssets {
-            if let index = productLayouts.index(where: {
-                guard let existingAsset = $0.asset else { return false }
-                return existingAsset == asset
-            }) {
-                productLayouts.remove(at: index)
-                
-                // If we've removed the cover photo, create a new cover
-                if index == 0 {
-                    // Use first photo for the cover
-                    let productLayoutAsset = ProductLayoutAsset()
-                    productLayoutAsset.asset = addedAssets.remove(at: 0)
-                    let productLayout = ProductLayout(layout: coverLayouts.first!, productLayoutAsset: productLayoutAsset)
-                    productLayouts.insert(productLayout, at: 0)
+            for productLayout in productLayouts {
+                guard let productLayoutAsset = productLayout.asset else { continue }
+                if productLayoutAsset == asset {
+                    productLayout.asset = nil
+                    // Not breaking because the same asset could be on more than one page
                 }
             }
         }
         
-        // Create new layouts for added assets
-        productLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: layouts))
+        // Create new layouts for added assets that haven't filled empty pages
+        productLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: imageOnlyLayouts))
         
-        // Fill minimum pages with Placeholder assets if needed
-        let numberOfPlaceholderLayoutsNeeded = photobook.minimumRequiredAssets + 1 - productLayouts.count - addedAssets.count // +1 for cover which is not included in the minimum
-        productLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: layouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
+        // We need an odd number of layouts including the cover and the 2 courtesy pages
+        if productLayouts.count % 2 == 0 {
+            productLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: imageOnlyLayouts, placeholderLayouts: 1))
+        }
         
         // Switching products
         product = photobook
