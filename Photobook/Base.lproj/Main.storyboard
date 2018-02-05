@@ -1317,11 +1317,6 @@
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8rf-T8-n85">
                                                                     <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
-                                                                    <userDefinedRuntimeAttributes>
-                                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                            <real key="value" value="0.0"/>
-                                                                        </userDefinedRuntimeAttribute>
-                                                                    </userDefinedRuntimeAttributes>
                                                                 </imageView>
                                                                 <view alpha="0.10000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dCo-5L-Muf">
                                                                     <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
@@ -1353,11 +1348,6 @@
                                                                 <constraint firstAttribute="bottom" secondItem="8rf-T8-n85" secondAttribute="bottom" id="nWm-HU-N1e"/>
                                                                 <constraint firstItem="dCo-5L-Muf" firstAttribute="height" secondItem="8rf-T8-n85" secondAttribute="height" id="qN8-U4-1Ed"/>
                                                             </constraints>
-                                                            <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                    <real key="value" value="0.0"/>
-                                                                </userDefinedRuntimeAttribute>
-                                                            </userDefinedRuntimeAttributes>
                                                         </view>
                                                     </subviews>
                                                 </view>
@@ -1402,6 +1392,7 @@
                             <constraint firstItem="2wO-Q7-0QW" firstAttribute="trailing" secondItem="UMO-hB-Zun" secondAttribute="trailing" id="saJ-ZW-Koa"/>
                             <constraint firstItem="2wO-Q7-0QW" firstAttribute="leading" secondItem="UMO-hB-Zun" secondAttribute="leading" id="yxi-ym-Ont"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="lfw-PK-zof"/>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="414" height="125"/>
