@@ -138,9 +138,9 @@ extension StoriesViewController: UITableViewDataSource {
             }
         } else {
             let withoutHeadStories = stories.count - Constants.storiesInHeader
-            let baseOffset = withoutHeadStories / Constants.storiesPerLayoutPattern
-            let repeatedLayoutIndex = withoutHeadStories % Constants.rowsPerLayoutPattern
-            return baseOffset * Constants.rowsPerLayoutPattern + (repeatedLayoutIndex == 0 ? 1 : 2) + Constants.rowsInHeader
+            let baseOffset = (withoutHeadStories - 1) / Constants.storiesPerLayoutPattern
+            let repeatedLayoutIndex = withoutHeadStories % Constants.storiesPerLayoutPattern
+            return baseOffset * Constants.rowsPerLayoutPattern + (repeatedLayoutIndex == 1 ? 1 : 2) + Constants.rowsInHeader
         }
     }
     
