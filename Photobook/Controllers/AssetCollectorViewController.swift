@@ -118,7 +118,7 @@ class AssetCollectorViewController: UIViewController {
     
     public static func instance(fromStoryboardWithParent parent: UIViewController, selectedAssetsManager: SelectedAssetsManager) -> AssetCollectorViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "ImageCollectorViewController") as! AssetCollectorViewController
+        let vc = storyboard.instantiateViewController(withIdentifier: "AssetCollectorViewController") as! AssetCollectorViewController
         vc.parentController = parent
         vc.selectedAssetsManager = selectedAssetsManager
         
@@ -191,7 +191,7 @@ class AssetCollectorViewController: UIViewController {
     
     private func adaptToParent() {
         guard let parentController = parentController else {
-            fatalError("ImageCollectorViewController not added to parent!")
+            fatalError("AssetCollectorViewController not added to parent!")
         }
         
         view.frame = parentController.view.bounds
@@ -346,7 +346,7 @@ extension AssetCollectorViewController: UICollectionViewDataSource, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCollectorCollectionViewCell", for: indexPath) as! AssetCollectorCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AssetCollectorCollectionViewCell", for: indexPath) as! AssetCollectorCollectionViewCell
         
         let asset = assets[indexPath.row]
         asset.image(size: cell.imageView.frame.size, completionHandler: { (image, error) in
