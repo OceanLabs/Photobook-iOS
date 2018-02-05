@@ -1292,7 +1292,7 @@
                                             <constraint firstItem="dWa-a1-3BW" firstAttribute="centerY" secondItem="xdb-Md-YZB" secondAttribute="centerY" id="zPL-6S-IMD"/>
                                         </constraints>
                                     </view>
-                                    <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Vnf-n4-Ta6">
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Vnf-n4-Ta6">
                                         <rect key="frame" x="0.0" y="53" width="414" height="64"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
@@ -1402,6 +1402,7 @@
                             <constraint firstItem="2wO-Q7-0QW" firstAttribute="trailing" secondItem="UMO-hB-Zun" secondAttribute="trailing" id="saJ-ZW-Koa"/>
                             <constraint firstItem="2wO-Q7-0QW" firstAttribute="leading" secondItem="UMO-hB-Zun" secondAttribute="leading" id="yxi-ym-Ont"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="90g-Wn-L6w"/>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="414" height="125"/>

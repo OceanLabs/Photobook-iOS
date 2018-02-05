@@ -84,6 +84,7 @@ class ViewStorySegue: UIStoryboardSegue {
                     sourceView.alpha = 1
                     
                     UIView.animate(withDuration: 0.1, animations: {
+                        (destination.tabBarController?.tabBar as? PhotobookTabBar)?.isBackgroundHidden = true
                         
                         // Creates the effect that the text fades in
                         imageView.alpha = 0

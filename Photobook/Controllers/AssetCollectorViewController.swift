@@ -112,13 +112,7 @@ class AssetCollectorViewController: UIViewController {
     
     private var tabBar: PhotobookTabBar? {
         get {
-            var tabBar: UITabBar?
-            if let tab = tabBarController {
-                tabBar = tab.tabBar
-            } else if let tab = self.navigationController?.tabBarController {
-                tabBar = tab.tabBar
-            }
-            return tabBar as? PhotobookTabBar
+            return parentController?.tabBarController?.tabBar as? PhotobookTabBar
         }
     }
     
@@ -152,7 +146,7 @@ class AssetCollectorViewController: UIViewController {
         isHideShowAnimated = false
         
         //adapt tabbar
-        tabBar?.isBackgroundHidden = true
+//        tabBar?.isBackgroundHidden = true
         imageCollectionView.reloadData()
         adaptToNewAssetCount()
     }
@@ -161,7 +155,7 @@ class AssetCollectorViewController: UIViewController {
         super.viewDidAppear(animated)
         
         //adapt tabbar
-        tabBar?.isBackgroundHidden = true
+//        tabBar?.isBackgroundHidden = true
         isHideShowAnimated = true //enable animation for hidden state changes
     }
     
