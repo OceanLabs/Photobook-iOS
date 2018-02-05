@@ -258,7 +258,6 @@ class AssetCollectorViewController: UIViewController {
                 
                 //animate
                 let duration: TimeInterval = changesState ? fadeDuration : 0
-                useTheseButtonContainer.alpha = 0
                 UIView.animate(withDuration: duration, animations: {
                     self.useTheseButtonContainer.alpha = 1
                     self.pickMoreLabel.alpha = 0
