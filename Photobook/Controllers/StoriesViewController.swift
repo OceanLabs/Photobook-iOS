@@ -48,8 +48,11 @@ class StoriesViewController: UIViewController {
                 let asset = stories[sender.index].assets.first
                 else { return }
             
-            assetPickerController.album = stories[sender.index]
-            assetPickerController.selectedAssetsManager = stories[sender.index].selectedAssetsManager
+            let story = stories[sender.index]
+            story.performAutoSelectionIfNeeded()
+            
+            assetPickerController.album = story
+            assetPickerController.selectedAssetsManager = story.selectedAssetsManager
             
             segue.asset = asset
             segue.sourceView = sourceView

@@ -9,6 +9,10 @@
 import Photos
 
 class Story {
+    private enum StoryError: Error {
+        case assetType
+    }
+    
     let collectionList: PHCollectionList
     let collectionForCoverPhoto: PHAssetCollection
     let selectedAssetsManager = SelectedAssetsManager()
@@ -17,6 +21,7 @@ class Story {
     var isWeekend = false
     var score = 0
     var assets = [Asset]()
+    private var hasPerformedAutoSelection = false
     
     // Ability to set locale in Unit Tests
     lazy var locale = Locale.current
@@ -73,6 +78,47 @@ class Story {
         // Same month
         dateFormatter.dateFormat = "MMM yyyy"
         return dateFormatter.string(from: startDate)
+    }
+    
+    func performAutoSelectionIfNeeded() {
+        guard !hasPerformedAutoSelection else { return }
+        
+        var selectedAssets = [Asset]()
+        var unusedAssets = [Asset]()
+        
+        let minimumAssets = ProductManager.shared.minimumRequiredAssets
+        let subarrayLength = minimumAssets // For readability
+        let subarrayCount: Int = photoCount / subarrayLength
+        let assetsFromEachSubarray: Int = minimumAssets / subarrayCount
+        
+        for subarrayIndex in 0..<subarrayCount {
+            
+            let subarrayStartIndex = subarrayIndex * subarrayLength
+            // The last subarray will take on any leftovers resulting from integer division
+            var subarray = Array(subarrayIndex == subarrayCount - 1 ? assets[subarrayStartIndex...] : assets[subarrayStartIndex..<subarrayStartIndex + subarrayLength])
+            
+            for _ in 0..<assetsFromEachSubarray {
+                let selectedIndex = Int(arc4random()) % subarray.count
+                selectedAssets.append(subarray.remove(at: selectedIndex))
+            }
+            unusedAssets.append(contentsOf: subarray)
+        }
+        
+        // In case we have come up short because of all the integer divisions we have done above, select some more assets from the unused ones if needed.
+        while selectedAssets.count < minimumAssets {
+            let selectedIndex = Int(arc4random()) % unusedAssets.count
+            selectedAssets.append(unusedAssets.remove(at: selectedIndex))
+        }
+        
+        // Sort
+        try? selectedAssets.sort(by: {
+            guard let d1 = ($0 as? PhotosAsset)?.photosAsset.creationDate,
+                let d2 = ($1 as? PhotosAsset)?.photosAsset.creationDate else { throw StoryError.assetType }
+            return d1 < d2
+        })
+        
+        selectedAssetsManager.select(selectedAssets)
+        hasPerformedAutoSelection = true
     }
 }
 
