@@ -14,13 +14,6 @@ protocol PhotobookPageViewDelegate: class {
 
 class PhotobookPageView: UIView {
     
-    private struct Constants {
-        static let textBoxFont = UIFont.systemFont(ofSize: 6.0) // FIXME: Remove
-
-        static let fontSize: CGFloat = 16.0 // FIXME: Get this from the product info
-        static let pageHeight: CGFloat = 430.866 // FIXME: Get this from the product info
-    }
-
     weak var delegate: PhotobookPageViewDelegate?
     var index: Int?
     var aspectRatio: CGFloat? {
@@ -201,10 +194,12 @@ class PhotobookPageView: UIView {
         pageTextLabel.transform = pageTextLabel.transform.scaledBy(x: 1/scale, y: 1/scale)
         
         let layoutContainerSize = textBox.containerSize(for: fakeSize)
-        let photobookToOnScreenScale = layoutContainerSize.height / Constants.pageHeight
-        let fontSize = round(Constants.fontSize * photobookToOnScreenScale)
         
         let fontType = productLayout!.fontType ?? .clear
+        
+        let photobookToOnScreenScale = layoutContainerSize.height / ProductManager.shared.product!.pageHeight
+        let fontSize = round(fontType.photobookFontSize() * photobookToOnScreenScale)
+
         pageTextLabel.attributedText = fontType.attributedText(with: text!, fontSize: fontSize, fontColor: color.fontColor())
         
         let textHeight = pageTextLabel.attributedText!.height(for: fakeSize.width)

@@ -14,6 +14,7 @@ class PhotobookTests: XCTestCase {
     let validDictionary = ([
         "id": 10,
         "name": "210 x 210",
+        "pageHeight": 400.34,
         "aspectRatio": 1.38,
         "coverLayouts": [ 9, 10 ],
         "layouts": [ 10, 11, 12, 13 ]
@@ -38,7 +39,22 @@ class PhotobookTests: XCTestCase {
         XCTAssertNil(photobookBox, "Parse: Should return nil if name is missing")
     }
     
-    // PageWidth
+    // Page Height
+    func testParse_ShouldReturnNilIfPageHeightIsMissing() {
+        var photobookDictionary = validDictionary
+        photobookDictionary["pageHeight"] = nil
+        let photobookBox = Photobook.parse(photobookDictionary)
+        XCTAssertNil(photobookBox, "Parse: Should return nil if pageHeight is missing")
+    }
+    
+    func testParse_ShouldReturnNilIfPageHeightIsZero() {
+        var photobookDictionary = validDictionary
+        photobookDictionary["pageHeight"] = 0.0 as AnyObject
+        let photobookBox = Photobook.parse(photobookDictionary)
+        XCTAssertNil(photobookBox, "Parse: Should return nil if pageHeight is zero")
+    }
+
+    // Aspect Ratio
     func testParse_ShouldReturnNilIfAspectRatioIsMissing() {
         var photobookDictionary = validDictionary
         photobookDictionary["aspectRatio"] = nil

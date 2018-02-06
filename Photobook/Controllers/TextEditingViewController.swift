@@ -44,8 +44,6 @@ protocol TextEditingDelegate: class {
 class TextEditingViewController: UIViewController {
 
     private struct Constants {
-        static let fontSize: CGFloat = 16.0 // FIXME: Get this from the product info
-        static let pageHeight: CGFloat = 430.866 // FIXME: Get this from the product info
         static let keyboardInitialBottomConstraint: CGFloat = 100.0
     }
     
@@ -213,9 +211,7 @@ class TextEditingViewController: UIViewController {
         view.backgroundColor = pageColor.uiColor()
         
         // Set up the textField font
-        let photobookToOnScreenScale = pageSize.height / Constants.pageHeight
-        let fontSize = round(Constants.fontSize * photobookToOnScreenScale)
-        
+        let fontSize = onScreenFontSize(for: .clear)
         setTextViewAttributes(with: .clear, fontSize: fontSize, fontColor: pageColor.fontColor())
         
         // Place image if needed
@@ -242,6 +238,11 @@ class TextEditingViewController: UIViewController {
         
         productLayout!.productLayoutAsset!.containerSize = assetContainerView.bounds.size
         assetImageView.transform = productLayout!.productLayoutAsset!.transform
+    }
+    
+    private func onScreenFontSize(for fontType: FontType) -> CGFloat {
+        let photobookToOnScreenScale = pageView.bounds.height / ProductManager.shared.product!.pageHeight
+        return round(fontType.photobookFontSize() * photobookToOnScreenScale)
     }
     
     private func setImagePlaceholder(visible: Bool) {
@@ -299,11 +300,11 @@ extension TextEditingViewController: UITextViewDelegate {
 
 extension TextEditingViewController: TextToolBarViewDelegate {
     
-    func didSelectFontType(_ type: FontType) {
-        let fontSize = (textView.typingAttributes[ NSAttributedStringKey.font.rawValue] as! UIFont).pointSize
-        setTextViewAttributes(with: type, fontSize: fontSize, fontColor: pageColor.fontColor())
+    func didSelectFontType(_ fontType: FontType) {
+        let fontSize = onScreenFontSize(for: fontType)
+        setTextViewAttributes(with: fontType, fontSize: fontSize, fontColor: pageColor.fontColor())
         
         // TODO: This should be conditional on whether the text goes over bounds or not
-        delegate?.didChangeFontType(to: type)
+        delegate?.didChangeFontType(to: fontType)
     }
 }
