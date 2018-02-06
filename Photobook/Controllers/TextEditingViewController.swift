@@ -99,7 +99,7 @@ class TextEditingViewController: UIViewController {
             // Code placed here animate along with the keyboard, hence the closure
             UIView.performWithoutAnimation {
                 textViewBottomConstraint.constant = keyboardSize.height
-                self.pageView.center = CGPoint(x: self.pageView.center.x, y: self.pageView.center.x - (keyboardSize.height - Constants.keyboardInitialBottomConstraint))
+                self.pageView.center = CGPoint(x: self.pageView.center.x, y: self.pageView.center.y - (keyboardSize.height - Constants.keyboardInitialBottomConstraint))
                 self.performAnimations()
             }
         }
