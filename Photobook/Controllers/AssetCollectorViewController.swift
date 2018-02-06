@@ -145,8 +145,6 @@ class AssetCollectorViewController: UIViewController {
         
         isHideShowAnimated = false
         
-        //adapt tabbar
-//        tabBar?.isBackgroundHidden = true
         imageCollectionView.reloadData()
         adaptToNewAssetCount()
     }
@@ -154,15 +152,12 @@ class AssetCollectorViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        //adapt tabbar
-//        tabBar?.isBackgroundHidden = true
         isHideShowAnimated = true //enable animation for hidden state changes
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        //adapt tabbar
         tabBar?.isBackgroundHidden = false
         isHideShowAnimated = false
     }
