@@ -9,12 +9,21 @@
 import UIKit
 import Photos
 
+enum LibraryError: Error {
+    case accessDenied
+}
+
 class PhotosAlbumManager: AlbumManager {
     
     var albums:[Album] = [Album]()
     static let imageManager = PHCachingImageManager()
     
     func loadAlbums(completionHandler: ((Error?) -> Void)?) {
+        guard PHPhotoLibrary.authorizationStatus() == .authorized else {
+            completionHandler?(LibraryError.accessDenied)
+            return
+        }
+        
         DispatchQueue.global(qos: .background).async {
             let options = PHFetchOptions()
             options.wantsIncrementalChangeDetails = false

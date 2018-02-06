@@ -29,4 +29,12 @@ extension EmptyScreenViewController {
             }
         })
     }
+    
+    func showErrorScreen(error: Error) {
+        if error as? LibraryError == .accessDenied {
+            showGalleryPermissionsScreen()
+        } else {
+            show(message: error.localizedDescription)
+        }
+    }
 }

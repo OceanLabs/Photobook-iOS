@@ -16,23 +16,19 @@ class StoriesViewController: UIViewController {
         static let rowsInHeader = 4
         static let storiesPerLayoutPattern = 3
         static let rowsPerLayoutPattern = 2
-        static let maxStoriesToDisplay = 16
         static let viewStorySegueName = "ViewStorySegue"
     }
     
     @IBOutlet private weak var tableView: UITableView!
     
-    private var stories = [Story]()
+    var stories: [Story] {
+        return StoriesManager.shared.stories
+    }
     private let selectedAssetsManager = SelectedAssetsManager()
     private var imageCollectorController:AssetCollectorViewController?
     
-    private lazy var emptyScreenViewController: EmptyScreenViewController = {
-        return EmptyScreenViewController.emptyScreen(parent: self)
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadStories()
         setupImageCollector()
         addObservers()
     }
@@ -69,6 +65,10 @@ class StoriesViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     private func setupImageCollector() {
         // Setup the Image Collector Controller
         imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
@@ -78,32 +78,8 @@ class StoriesViewController: UIViewController {
     }
 
     @objc private func loadStories() {
-        guard PHPhotoLibrary.authorizationStatus() == .authorized else {
-            emptyScreenViewController.showGalleryPermissionsScreen()
-            return
-        }
-        
-        StoriesManager.shared.topStories(Constants.maxStoriesToDisplay) { [weak welf = self] (stories, error) in
-            // Ignore error as we've already handled it before the call to the function
-            guard error == nil else { return }
-            
-            guard let stories = stories, stories.count > 0 else {
-                let title = NSLocalizedString("NoStoriesFound", value: "No Stories Found", comment: "Title shown to the user if the Photos app doesn't have any memory collections available")
-                let message = NSLocalizedString("YourPhotosApp", value: "You don't seem to have any stories yet!\nGet out there and take more photos.", comment: "Message shown to the user if the Photos app doesn't have any memory collections available")
-                welf?.emptyScreenViewController.show(message: message, title: title)
-                return
-            }
-            
-            welf?.stories = stories
-            welf?.tableView.reloadData()
-
-            // Once we are done loading the things needed to show on this screen, load the assets from each story so that they are ready if the user taps on a story
-            for story in stories {
-                story.loadAssets(completionHandler: nil)
-            }
-            
-            welf?.emptyScreenViewController.hide(animated: true)
-        }
+        StoriesManager.shared.loadTopStories()
+        tableView.reloadData()
     }
 }
 
@@ -214,6 +190,11 @@ extension StoriesViewController: StoryTableViewCellDelegate {
     // MARK: StoryTableViewCellDelegate
     
     func didTapOnStory(index: Int, sourceView: UIView?) {
+        guard stories[index].assets.count > 0 else {
+            // For a moment after the app has resumed, while the stories are reloading, if the user taps on a story just ignore it. It's unlikely to happen anyway, and even if it does, it's not worth trying to handle it gracefully.
+            return
+        }
+        
         performSegue(withIdentifier: Constants.viewStorySegueName, sender: (index: index, sourceView: sourceView))
     }
 }

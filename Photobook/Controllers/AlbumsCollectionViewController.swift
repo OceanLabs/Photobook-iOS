@@ -22,13 +22,13 @@ class AlbumsCollectionViewController: UICollectionViewController {
     private let selectedAssetsManager = SelectedAssetsManager()
     var collectorMode: AssetCollectorMode = .selecting
     weak var addingDelegate: AssetCollectorAddingDelegate?
+    private lazy var emptyScreenViewController: EmptyScreenViewController = {
+        return EmptyScreenViewController.emptyScreen(parent: self)
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        albumManager.loadAlbums(completionHandler: { [weak welf = self] (error) in
-            welf?.activityIndicator.stopAnimating()
-            welf?.collectionView?.reloadData()
-        })
+        loadAlbums()
         
         // Setup the Image Collector Controller
         imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
@@ -40,6 +40,18 @@ class AlbumsCollectionViewController: UICollectionViewController {
         //listen to asset manager
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
+    }
+    
+    func loadAlbums() {
+        albumManager.loadAlbums(completionHandler: { [weak welf = self] (error) in
+            guard error == nil else {
+                welf?.emptyScreenViewController.showErrorScreen(error: error!)
+                return
+            }
+            
+            welf?.activityIndicator.stopAnimating()
+            welf?.collectionView?.reloadData()
+        })
     }
     
     deinit {
