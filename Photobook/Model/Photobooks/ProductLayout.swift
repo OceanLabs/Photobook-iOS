@@ -40,7 +40,25 @@ class ProductLayout: Codable {
                 return
             }
             if productLayoutText == nil { productLayoutText = ProductLayoutText() }
-            productLayoutText!.text = text
+            productLayoutText!.text = newValue
+        }
+    }
+    
+    var fontType: FontType? {
+        get {
+            return productLayoutText?.fontType
+        }
+        set {
+            guard layout.textLayoutBox != nil else {
+                print("ProductLayout: Trying to assign a font type to unavailable container")
+                return
+            }
+            guard newValue != nil else {
+                print("ProductLayout: Trying to assign nil font type")
+                return
+            }
+            if productLayoutText == nil { productLayoutText = ProductLayoutText() }
+            productLayoutText!.fontType = newValue!
         }
     }
     
@@ -65,7 +83,7 @@ class ProductLayout: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         
         layout = try values.decode(Layout.self, forKey: .layout)
-        productLayoutAsset = try values.decode(ProductLayoutAsset.self, forKey: .productLayoutAsset)
+        productLayoutAsset = try values.decodeIfPresent(ProductLayoutAsset.self, forKey: .productLayoutAsset)
         productLayoutText = try values.decodeIfPresent(ProductLayoutText.self, forKey: .productLayoutText)
     }
     

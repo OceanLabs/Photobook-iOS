@@ -13,8 +13,8 @@ class PhotobookNavigationBar: UINavigationBar {
     private static let contentHeight: CGFloat = 44.0
     private static let promptHeight: CGFloat = 34.0
     
-    var hasAddedBlur = false
-    var effectView: UIVisualEffectView!
+    private var hasAddedBlur = false
+    private var effectView: UIVisualEffectView!
     
     var willShowPrompt = false {
         didSet {
@@ -51,7 +51,7 @@ class PhotobookNavigationBar: UINavigationBar {
         sendSubview(toBack: effectView)
     }
     
-    func setup() {
+    private func setup() {
         barTintColor = .white
         
         if #available(iOS 11.0, *) {
@@ -62,19 +62,43 @@ class PhotobookNavigationBar: UINavigationBar {
         shadowImage = UIImage()
     }
     
-}
-
-extension PhotobookNavigationBar: UINavigationControllerDelegate{
-    
-    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool){
-        if viewController as? PhotobookViewController != nil{
-            barTintColor = UIColor(red:0.89, green:0.9, blue:0.9, alpha:1)
-            effectView.alpha = 0
-        }
-        else{
+    private func setBarType(_ type: PhotobookNavigationBarType) {
+        switch type {
+        case .clear:
+            barTintColor = .clear
+            effectView.alpha = 0.0
+        case .white:
             barTintColor = .white
-            effectView.alpha = 1
+            effectView.alpha = 1.0
         }
     }
     
+    func setBlur(_ visible: Bool = true) {
+        effectView.alpha = visible ? 1.0 : 0.0
+    }
+}
+
+/// Navigation bar configurations
+///
+/// - clear: A transparent bar
+/// - white: A semi-transparent white tinted bar with a blur effect
+enum PhotobookNavigationBarType {
+    case clear, white
+}
+
+/// Protocol view controllers should conform to in order to choose an appearance from application defaults when presented
+protocol PhotobookNavigationBarDelegate {
+    var photobokNavigationBarType: PhotobookNavigationBarType { get }
+}
+
+extension PhotobookNavigationBar: UINavigationControllerDelegate {
+    
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool){
+        
+        if let viewController = viewController as? PhotobookNavigationBarDelegate {
+            setBarType(viewController.photobokNavigationBarType)
+            return
+        }
+        setBarType(.white)
+    }
 }

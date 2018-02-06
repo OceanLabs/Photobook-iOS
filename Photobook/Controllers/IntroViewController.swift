@@ -93,6 +93,16 @@ class IntroViewController: UIViewController {
         IntroViewController.userHasDismissed = true
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let segueIdentifier = segue.identifier else { return }
+        
+        if segueIdentifier == "IntroDismiss" {
+            let tabBarController = segue.destination as? UITabBarController
+            let albumViewController = (tabBarController?.viewControllers?[1] as? UINavigationController)?.topViewController as? AlbumsCollectionViewController
+            albumViewController?.albumManager = PhotosAlbumManager()
+        }
+    }
+    
     func showPermissionDeniedDialog() {
         
         let alertText = NSLocalizedString("Controllers/IntroViewController/PermissionDeniedDialogText",

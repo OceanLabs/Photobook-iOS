@@ -10,6 +10,20 @@ import UIKit
 
 enum ProductColor: String, Codable {
     case white, black
+    
+    func fontColor() -> UIColor {
+        switch self {
+        case .white: return .black
+        case .black: return .white
+        }
+    }
+    
+    func uiColor() -> UIColor {
+        switch self {
+        case .white: return .white
+        case .black: return .black
+        }
+    }
 }
 
 // Structure containing the user's photobok details to save them to disk
@@ -83,17 +97,29 @@ class ProductManager {
         return minimumRequiredAssets < productLayouts.count
     }
     
-    // Ordering
+    // Ordering (this should probably be in another class)
     var shippingMethod: Int?
-    var currencyCode: String? // TODO: Get this from somewhere
+    var currencyCode: String? = "GBP" // TODO: Get this from somewhere
     var deliveryDetails: DeliveryDetails?
     var paymentMethod: PaymentMethod?
-    var cachedCost: Cost?
-    
-    // TODO: this probably doesn't belong here
-    func updateCost (completionHandler: (_ error: Error?) -> Void) {
-        
+    var cachedCost: Cost? // private?
+    var validCost: Cost? {
+        return hasValidCachedCost ? cachedCost : nil
     }
+    func updateCost(forceUpdate: Bool = false, _ completionHandler: @escaping (_ error : Error?) -> Void) {
+        // TODO: update cost
+        completionHandler(nil)
+    }
+    var hasValidCachedCost: Bool {
+        // TODO: validate
+//        return cachedCost?.orderHash == self.hashValue
+        return true
+    }
+    var paymentToken: String?
+    func reset() {
+        // TODO: reset the product
+    }
+    
     
     // TODO: Spine
     
@@ -114,8 +140,8 @@ class ProductManager {
             
             // TODO: REMOVEME. Mock cost & shipping methods
             let lineItem = LineItem(id: 0, name: "Clown Costume 🤡", cost: Decimal(integerLiteral: 10), formattedCost: "$10")
-            let shippingMethod = ShippingMethod(id: 0, name: "Fiesta Deliveries 🎉🚚", shippingCostFormatted: "$5", totalCost: Decimal(integerLiteral: 15), totalCostFormatted: "$15", maxDeliveryTime: 150, minDeliveryTime: 100)
-            let shippingMethod2 = ShippingMethod(id: 1, name: "Magic Unicorn ✨🦄✨", shippingCostFormatted: "$5000", totalCost: Decimal(integerLiteral: 15), totalCostFormatted: "$5010", maxDeliveryTime: 1, minDeliveryTime: 0)
+            let shippingMethod = ShippingMethod(id: 1, name: "Fiesta Deliveries 🎉🚚", shippingCostFormatted: "$5", totalCost: Decimal(integerLiteral: 15), totalCostFormatted: "$15", maxDeliveryTime: 150, minDeliveryTime: 100)
+            let shippingMethod2 = ShippingMethod(id: 2, name: "Magic Unicorn ✨🦄✨", shippingCostFormatted: "$5000", totalCost: Decimal(integerLiteral: 15), totalCostFormatted: "$5010", maxDeliveryTime: 1, minDeliveryTime: 0)
             self.cachedCost = Cost(hash: 0, lineItems: [lineItem], shippingMethods: [shippingMethod, shippingMethod2], promoDiscount: nil, promoCodeInvalidReason: nil)
         }
     }
@@ -140,6 +166,8 @@ class ProductManager {
             return assets
         }()
         
+        let imageOnlyLayouts = layouts.filter({ $0.imageLayoutBox != nil })
+        
         // First photobook only
         if product == nil {
             var tempLayouts = [ProductLayout]()
@@ -152,11 +180,15 @@ class ProductManager {
             tempLayouts.append(productLayout)
             
             // Create layouts for the remaining assets
-            let imageOnlyLayouts = layouts.filter({ $0.imageLayoutBox != nil })
             tempLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: imageOnlyLayouts))
             
             // Fill minimum pages with Placeholder assets if needed
-            let numberOfPlaceholderLayoutsNeeded = photobook.minimumRequiredAssets - tempLayouts.count
+            var numberOfPlaceholderLayoutsNeeded = max(photobook.minimumRequiredAssets - tempLayouts.count, 0)
+            
+            // We need an odd number of layouts including the cover and the 2 courtesy pages
+            if tempLayouts.count % 2 == 0 {
+                numberOfPlaceholderLayoutsNeeded += 1
+            }
             tempLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: imageOnlyLayouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
             
             productLayouts = tempLayouts
@@ -188,31 +220,24 @@ class ProductManager {
             }
         }
         
-        // Remove layouts of removed assets
+        // Update layouts with removed assets
         for asset in removedAssets {
-            if let index = productLayouts.index(where: {
-                guard let existingAsset = $0.asset else { return false }
-                return existingAsset == asset
-            }) {
-                productLayouts.remove(at: index)
-                
-                // If we've removed the cover photo, create a new cover
-                if index == 0 {
-                    // Use first photo for the cover
-                    let productLayoutAsset = ProductLayoutAsset()
-                    productLayoutAsset.asset = addedAssets.remove(at: 0)
-                    let productLayout = ProductLayout(layout: coverLayouts.first!, productLayoutAsset: productLayoutAsset)
-                    productLayouts.insert(productLayout, at: 0)
+            for productLayout in productLayouts {
+                guard let productLayoutAsset = productLayout.asset else { continue }
+                if productLayoutAsset == asset {
+                    productLayout.asset = nil
+                    // Not breaking because the same asset could be on more than one page
                 }
             }
         }
         
-        // Create new layouts for added assets
-        productLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: layouts))
+        // Create new layouts for added assets that haven't filled empty pages
+        productLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: imageOnlyLayouts))
         
-        // Fill minimum pages with Placeholder assets if needed
-        let numberOfPlaceholderLayoutsNeeded = photobook.minimumRequiredAssets + 1 - productLayouts.count - addedAssets.count // +1 for cover which is not included in the minimum
-        productLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: layouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
+        // We need an odd number of layouts including the cover and the 2 courtesy pages
+        if productLayouts.count % 2 == 0 {
+            productLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: imageOnlyLayouts, placeholderLayouts: 1))
+        }
         
         // Switching products
         product = photobook
@@ -372,31 +397,31 @@ class ProductManager {
         }
     }
     
-    func foldIndex(for productLayoutIndex: Int) -> Int? {
-        var foldIndex = 0.5 // The first page is on the right because of the courtesy page
+    func spreadIndex(for productLayoutIndex: Int) -> Int? {
+        var spreadIndex = 0.5 // The first page is on the right because of the courtesy page
         
         var i = 0
         while i < productLayouts.count {
             if i == productLayoutIndex {
-                return Int(foldIndex)
+                return Int(spreadIndex)
             }
             
-            foldIndex += productLayouts[i].layout.isDoubleLayout ? 1 : 0.5
+            spreadIndex += productLayouts[i].layout.isDoubleLayout ? 1 : 0.5
             i += 1
         }
         
         return nil
     }
     
-    func productLayoutIndex(for foldIndex: Int) -> Int? {
-        var foldIndexCount = 1 // Skip the first fold which includes the courtesy page
-        var i = 2 // Skip the cover and the page on the first fold
+    func productLayoutIndex(for spreadIndex: Int) -> Int? {
+        var spreadIndexCount = 1 // Skip the first spread which includes the courtesy page
+        var i = 2 // Skip the cover and the page on the first spread
         while i < productLayouts.count {
-            if foldIndex == foldIndexCount {
+            if spreadIndex == spreadIndexCount {
                 return i
             }
             i += productLayouts[i].layout.isDoubleLayout ? 1 : 2
-            foldIndexCount += 1
+            spreadIndexCount += 1
         }
         
         return nil

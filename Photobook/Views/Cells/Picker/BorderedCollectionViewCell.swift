@@ -20,7 +20,7 @@ class BorderedCollectionViewCell: UICollectionViewCell, BorderedViewProtocol {
     var roundedBorderColor: UIColor? { didSet { setup(reset: true) } }
     var roundedBorderWidth: CGFloat? = 4.0 { didSet { setup(reset: true) } }
     var roundedCornerRadius: CGFloat? = BorderedCollectionViewCell.cornerRadius { didSet { setup(reset: true) } }
-    var color: UIColor! = .white
+    var color: UIColor! = UIColor(red: 0.79, green: 0.8, blue: 0.8, alpha: 1.0)
 
     override init(frame: CGRect) {
         super.init(frame: frame)
