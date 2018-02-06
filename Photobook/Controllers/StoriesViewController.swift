@@ -49,10 +49,8 @@ class StoriesViewController: UIViewController {
                 else { return }
             
             let story = stories[sender.index]
-            story.performAutoSelectionIfNeeded()
-            
             assetPickerController.album = story
-            assetPickerController.selectedAssetsManager = story.selectedAssetsManager
+            assetPickerController.selectedAssetsManager = StoriesManager.shared.selectedAssetsManager(for: story)
             
             segue.asset = asset
             segue.sourceView = sourceView
@@ -83,7 +81,7 @@ class StoriesViewController: UIViewController {
 
             // Once we are done loading the things needed to show on this screen, load the assets from each story so that they are ready if the user taps on a story
             for story in stories {
-                story.loadAssets(completionHandler: nil)
+                StoriesManager.shared.prepare(story: story, completionHandler: nil)
             }
             
             welf?.emptyScreenViewController.hide(animated: true)
