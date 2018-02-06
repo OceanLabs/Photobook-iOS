@@ -46,6 +46,7 @@ class TextEditingViewController: UIViewController {
     private struct Constants {
         static let fontSize: CGFloat = 16.0 // FIXME: Get this from the product info
         static let pageHeight: CGFloat = 430.866 // FIXME: Get this from the product info
+        static let keyboardInitialBottomConstraint: CGFloat = 100.0
     }
     
     @IBOutlet private weak var textToolBarView: TextToolBarView! {
@@ -70,8 +71,12 @@ class TextEditingViewController: UIViewController {
     var productLayout: ProductLayout!
     var assetImage: UIImage?
     var pageColor: ProductColor!
+    var initialContainerRect: CGRect?
     weak var delegate: TextEditingDelegate?
-        
+
+    private lazy var animatableAssetImageView = UIImageView()
+    private var completionBlock: (() -> Void)?
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -79,6 +84,8 @@ class TextEditingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        view.alpha = 0.0
+        
         // FIXME: Move color to global scope
         textViewBorderView.borderColor = UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0)
         textView.textContainer.lineFragmentPadding = 0.0
@@ -89,11 +96,93 @@ class TextEditingViewController: UIViewController {
     
     @objc private func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            textViewBottomConstraint.constant = keyboardSize.height
+            // Code placed here animate along with the keyboard, hence the closure
+            UIView.performWithoutAnimation {
+                textViewBottomConstraint.constant = keyboardSize.height
+                self.pageView.center = CGPoint(x: self.pageView.center.x, y: self.pageView.center.x - (keyboardSize.height - Constants.keyboardInitialBottomConstraint))
+                self.performAnimations()
+            }
         }
     }
+    
+    func animateOn(completion: @escaping () -> Void) {
+        // Place views according to layout
+        setup()
+        
+        completionBlock = completion
+        textView.becomeFirstResponder()
+    }
+    
+    private func performAnimations() {
+        guard let initialContainerRect = initialContainerRect else { return }
+        
+        // Take a view snapshot and shrink it to the initial frame
+        textViewBorderView.alpha = 0.0
+        textView.alpha = 0.0
+        
+        let backgroundColor = view.backgroundColor
+        view.backgroundColor = .clear
+        pageView.layoutIfNeeded()
+        
+        animatableAssetImageView.transform = .identity
+        animatableAssetImageView.frame = assetContainerView.frame
+        animatableAssetImageView.image = assetContainerView.snapshot()
+        animatableAssetImageView.center = CGPoint(x: initialContainerRect.midX, y: initialContainerRect.midY)
+        
+        assetContainerView.alpha = 0.0
 
-    func setup() {
+        let targetRect = pageView.convert(assetContainerView.frame, to: view)
+        let initialScale = initialContainerRect.width / targetRect.width
+        animatableAssetImageView.transform = CGAffineTransform.identity.scaledBy(x: initialScale, y: initialScale)
+        
+        view.addSubview(animatableAssetImageView)
+        view.alpha = 1.0
+        
+        // Re-enable animations
+        UIView.setAnimationsEnabled(true)
+
+        UIView.animate(withDuration: 0.1) {
+            self.view.backgroundColor = backgroundColor
+        }
+
+        UIView.animate(withDuration: 0.2, delay: 0.1, options: [.curveEaseInOut], animations: {
+            self.animatableAssetImageView.frame = targetRect
+        }, completion: { _ in
+            self.animatableAssetImageView.alpha = 0.0
+            self.assetContainerView.alpha = 1.0
+
+            UIView.animate(withDuration: 0.1) {
+                self.textViewBorderView.alpha = 1.0
+                self.textView.alpha = 1.0
+            }
+        })
+    }
+    
+    func animateOff() {
+        guard let initialContainerRect = initialContainerRect else { return }
+        
+        animatableAssetImageView.alpha = 1.0
+        assetContainerView.alpha = 0.0
+
+        let backgroundColor = view.backgroundColor
+
+        textView.alpha = 0.0
+        textViewBorderView.alpha = 0.0
+
+        UIView.animate(withDuration: 0.1, delay: 0.1, animations: {
+            self.view.backgroundColor = .clear
+        })
+
+        UIView.animate(withDuration: 0.2, delay: 0.0, options: [.curveEaseInOut], animations: {
+            self.animatableAssetImageView.frame = initialContainerRect
+        }, completion: { _ in
+            self.view.alpha = 0.0
+            self.view.backgroundColor = backgroundColor
+            if let completion = self.completionBlock { completion() }
+        })
+    }
+    
+    private func setup() {
         // Figure out the height of the textView
         guard
             let pageRatio = ProductManager.shared.product?.aspectRatio,
@@ -103,10 +192,12 @@ class TextEditingViewController: UIViewController {
         }
         
         textView.inputAccessoryView = textToolBarView
-        textView.becomeFirstResponder()
         
         let aspectRatio = textLayoutBox.aspectRatio(forContainerRatio: pageRatio)
         textViewHeightConstraint.constant = textView.bounds.width / aspectRatio
+        
+        // Place it above the selectors to begin with
+        textViewBottomConstraint.constant = Constants.keyboardInitialBottomConstraint
         
         // Position page and image box, if needed
         let layoutBoxSize = CGSize(width: textView.bounds.width, height: textViewHeightConstraint.constant)
@@ -190,8 +281,8 @@ extension TextEditingViewController: UITextViewDelegate {
         
         // Dismiss on line break
         guard text.rangeOfCharacter(from: CharacterSet.newlines) == nil else {
-            delegate?.didChangeText(to: textView.text)
             textView.resignFirstResponder()
+            delegate?.didChangeText(to: textView.text)
             return false
         }
         

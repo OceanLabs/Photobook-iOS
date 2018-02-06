@@ -156,7 +156,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         super.viewDidLayoutSubviews()
         
         if !hasDoneSetup {
-            textEditingContainerView.alpha = 0.0
+            //textEditingContainerView.alpha = 0.0
             
             coverFrameView.color = ProductManager.shared.coverColor
             coverFrameView.pageView.aspectRatio = ProductManager.shared.product!.aspectRatio
@@ -273,50 +273,57 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         // Store currently selected tool so we may come back to it
         previouslySelectedButton = toolbarButtons.first { $0.isSelected }
         
-        let editLayoutWasSelected = toolbarButtons[Tool.placeAsset.rawValue].isSelected
+        let placeAssetWasSelected = toolbarButtons[Tool.placeAsset.rawValue].isSelected
+        let textEditingWasSelected = toolbarButtons[Tool.editText.rawValue].isSelected
         
         for button in toolbarButtons { button.isSelected = (button === sender) }
         
         switch tool {
         case .selectAsset, .selectLayout, .selectColor:
-            if editLayoutWasSelected {
+            if placeAssetWasSelected {
                 assetPlacementViewController.animateBackToPhotobook {
                     self.assetImageView.transform = self.productLayout!.productLayoutAsset!.transform
                     self.view.sendSubview(toBack: self.placementContainerView)
                 }
             }
             
+            if textEditingWasSelected {
+                textEditingViewController.animateOff()
+            }
+
             UIView.animate(withDuration: 0.1, animations: {
                 self.photobookContainerView.alpha = 1.0
-                self.textEditingContainerView.alpha = 0.0
                 self.assetSelectionContainerView.alpha = tool.rawValue == Tool.selectAsset.rawValue ? 1.0 : 0.0
                 self.layoutSelectionContainerView.alpha = tool.rawValue == Tool.selectLayout.rawValue ? 1.0 : 0.0
                 self.colorSelectionContainerView.alpha = tool.rawValue == Tool.selectColor.rawValue ? 1.0 : 0.0
             })
         case .placeAsset:
-            view.bringSubview(toFront: placementContainerView)
-            
             let containerRect = placementContainerView.convert(assetContainerView.frame, from: pageView)
             assetPlacementViewController.productLayout = productLayout
             assetPlacementViewController.initialContainerRect = containerRect
             assetPlacementViewController.assetImage = assetImageView.image
-            assetPlacementViewController.animateFromPhotobook()
+            if textEditingWasSelected {
+                textEditingViewController.animateOff()
+            } else {
+                view.bringSubview(toFront: placementContainerView)
+                assetPlacementViewController.animateFromPhotobook()
+            }
         case .editText:
             view.bringSubview(toFront: textEditingContainerView)
+            self.textEditingContainerView.alpha = 1.0
             
-            // TODO: Animate photobook
             textEditingViewController.productLayout = productLayout!
             textEditingViewController.assetImage = assetImageView.image
             textEditingViewController.pageColor = selectedColor
-            textEditingViewController.setup()
-            
-            UIView.animate(withDuration: 0.2, animations: {
-                self.assetSelectionContainerView.alpha = 0.0
-                self.layoutSelectionContainerView.alpha = 0.0
-                self.colorSelectionContainerView.alpha = 0.0
-                self.photobookContainerView.alpha = 0.0
-                self.textEditingContainerView.alpha = 1.0
-            })
+            if placeAssetWasSelected {
+                let containerRect = textEditingContainerView.convert(assetPlacementViewController.targetRect!, from: placementContainerView)
+                textEditingViewController.initialContainerRect = containerRect
+            } else {
+                textEditingViewController.initialContainerRect = textEditingContainerView.convert(assetContainerView.frame, from: pageView)
+            }
+            textEditingViewController.animateOn {
+                self.view.sendSubview(toBack: self.textEditingContainerView)
+            }
         }
         
         setTopBars(hidden: tool == .editText)
