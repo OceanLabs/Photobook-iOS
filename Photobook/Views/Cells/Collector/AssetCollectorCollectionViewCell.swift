@@ -8,10 +8,14 @@
 
 import UIKit
 
-class AssetCollectorCollectionViewCell: UICollectionViewCell {
+class AssetCollectorCollectionViewCell: BorderedCollectionViewCell {
     @IBOutlet weak var deleteView: UIView!
     @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var containerView: UIView! {
+        didSet {
+            containerView.bezierRoundedCorners(withRadius: BorderedCollectionViewCell.cornerRadius)
+        }
+    }
     
     private(set) var isWobbling:Bool = false
     var isDeletingEnabled:Bool = false {
