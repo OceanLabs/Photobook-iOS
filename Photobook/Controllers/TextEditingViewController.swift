@@ -66,14 +66,16 @@ class TextEditingViewController: UIViewController {
     @IBOutlet private weak var textViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var textViewBottomConstraint: NSLayoutConstraint!
     
-    var productLayout: ProductLayout!
+    var productLayout: ProductLayout! {
+        didSet { hasAnImageLayout = (productLayout.layout.imageLayoutBox != nil) }
+    }
     var assetImage: UIImage?
     var pageColor: ProductColor!
     var initialContainerRect: CGRect?
     weak var delegate: TextEditingDelegate?
 
     private lazy var animatableAssetImageView = UIImageView()
-    private var completionBlock: (() -> Void)?
+    private var hasAnImageLayout: Bool!
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -103,38 +105,42 @@ class TextEditingViewController: UIViewController {
         }
     }
     
-    func animateOn(completion: @escaping () -> Void) {
+    func animateOn() {
         // Place views according to layout
         setup()
         
-        completionBlock = completion
         textView.becomeFirstResponder()
     }
     
     private func performAnimations() {
         guard let initialContainerRect = initialContainerRect else { return }
         
-        // Take a view snapshot and shrink it to the initial frame
         textViewBorderView.alpha = 0.0
         textView.alpha = 0.0
         
         let backgroundColor = view.backgroundColor
         view.backgroundColor = .clear
+        view.alpha = 1.0
         pageView.layoutIfNeeded()
         
-        animatableAssetImageView.transform = .identity
-        animatableAssetImageView.frame = assetContainerView.frame
-        animatableAssetImageView.image = assetContainerView.snapshot()
-        animatableAssetImageView.center = CGPoint(x: initialContainerRect.midX, y: initialContainerRect.midY)
+        // Take a view snapshot and shrink it to the initial frame
+        var targetRect = CGRect.zero
+        if hasAnImageLayout {
+            animatableAssetImageView.transform = .identity
+            animatableAssetImageView.frame = assetContainerView.frame
+            animatableAssetImageView.image = assetContainerView.snapshot()
+            animatableAssetImageView.center = CGPoint(x: initialContainerRect.midX, y: initialContainerRect.midY)
+
+            targetRect = pageView.convert(assetContainerView.frame, to: view)
+            let initialScale = initialContainerRect.width / targetRect.width
+            animatableAssetImageView.transform = CGAffineTransform.identity.scaledBy(x: initialScale, y: initialScale)
+            
+            view.addSubview(animatableAssetImageView)
+        } else {
+            animatableAssetImageView.alpha = 0.0
+        }
         
         assetContainerView.alpha = 0.0
-
-        let targetRect = pageView.convert(assetContainerView.frame, to: view)
-        let initialScale = initialContainerRect.width / targetRect.width
-        animatableAssetImageView.transform = CGAffineTransform.identity.scaledBy(x: initialScale, y: initialScale)
-        
-        view.addSubview(animatableAssetImageView)
-        view.alpha = 1.0
         
         // Re-enable animations
         UIView.setAnimationsEnabled(true)
@@ -143,44 +149,72 @@ class TextEditingViewController: UIViewController {
             self.view.backgroundColor = backgroundColor
         }
 
+        if !hasAnImageLayout {
+            UIView.animate(withDuration: 0.1) {
+                self.textViewBorderView.alpha = 1.0
+                self.textView.alpha = 1.0
+            }
+            return
+        }
+        
         UIView.animate(withDuration: 0.2, delay: 0.1, options: [.curveEaseInOut], animations: {
             self.animatableAssetImageView.frame = targetRect
         }, completion: { _ in
             self.animatableAssetImageView.alpha = 0.0
             self.assetContainerView.alpha = 1.0
-
-            UIView.animate(withDuration: 0.1) {
-                self.textViewBorderView.alpha = 1.0
-                self.textView.alpha = 1.0
-            }
         })
+        
+        UIView.animate(withDuration: 0.15, delay: 0.28, options: [.curveEaseInOut], animations: {
+            self.textViewBorderView.alpha = 1.0
+            self.textView.alpha = 1.0
+        }, completion: nil)
+
     }
     
     func visibleTextInLayout() -> String? {
         return textView.visibleText
     }
     
-    func animateOff() {
+    func animateOff(completion: @escaping () -> Void) {
         guard let initialContainerRect = initialContainerRect else { return }
-        
-        animatableAssetImageView.alpha = 1.0
-        assetContainerView.alpha = 0.0
+
+        if hasAnImageLayout {
+            animatableAssetImageView.alpha = 1.0
+            assetContainerView.alpha = 0.0
+        }
 
         let backgroundColor = view.backgroundColor
 
-        textView.alpha = 0.0
-        textViewBorderView.alpha = 0.0
+        UIView.setAnimationsEnabled(true)
 
-        UIView.animate(withDuration: 0.1, delay: 0.1, animations: {
+        if !hasAnImageLayout {
+
+            UIView.animate(withDuration: 0.1, animations: {
+                self.textView.alpha = 0.0
+                self.textViewBorderView.alpha = 0.0
+            })
+
+            UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseInOut], animations: {
+                self.view.backgroundColor = .clear
+            }, completion: { _ in
+                completion()
+            })
+            return
+        }
+
+        UIView.animate(withDuration: 0.1, delay: 0.2, animations: {
             self.view.backgroundColor = .clear
         })
-
-        UIView.animate(withDuration: 0.2, delay: 0.0, options: [.curveEaseInOut], animations: {
+        
+        textView.alpha = 0.0
+        textViewBorderView.alpha = 0.0
+        
+        UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseInOut], animations: {
             self.animatableAssetImageView.frame = initialContainerRect
         }, completion: { _ in
             self.view.alpha = 0.0
             self.view.backgroundColor = backgroundColor
-            if let completion = self.completionBlock { completion() }
+            completion()
         })
     }
     

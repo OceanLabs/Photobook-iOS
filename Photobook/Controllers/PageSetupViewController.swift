@@ -304,7 +304,9 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             }
             
             if textEditingWasSelected {
-                textEditingViewController.animateOff()
+                textEditingViewController.animateOff {
+                    self.view.sendSubview(toBack: self.textEditingContainerView)
+                }
             }
 
             UIView.animate(withDuration: 0.1, animations: {
@@ -319,7 +321,9 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             assetPlacementViewController.initialContainerRect = containerRect
             assetPlacementViewController.assetImage = assetImageView.image
             if textEditingWasSelected {
-                textEditingViewController.animateOff()
+                textEditingViewController.animateOff {
+                    self.view.sendSubview(toBack: self.textEditingContainerView)
+                }
             } else {
                 view.bringSubview(toFront: placementContainerView)
                 assetPlacementViewController.animateFromPhotobook()
@@ -337,9 +341,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             } else {
                 textEditingViewController.initialContainerRect = textEditingContainerView.convert(assetContainerView.frame, from: pageView)
             }
-            textEditingViewController.animateOn {
-                self.view.sendSubview(toBack: self.textEditingContainerView)
-            }
+            textEditingViewController.animateOn()
         }
         
         setTopBars(hidden: tool == .editText)
