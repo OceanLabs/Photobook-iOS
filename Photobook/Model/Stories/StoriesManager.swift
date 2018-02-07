@@ -12,12 +12,14 @@ class StoriesManager {
     
     enum StoriesManagerError: Error {
         case unauthorized
+        case incompatibleAssetType
     }
     
     // Shared client
     static let shared = StoriesManager()
     
     private let imageManager = PHImageManager.default()
+    private var selectedAssetsManagerPerStory = [String : SelectedAssetsManager]()
     var stories = [Story]()
     
     private struct Constants {
@@ -47,7 +49,7 @@ class StoriesManager {
         options.sortDescriptors = [ NSSortDescriptor(key: "endDate", ascending: false) ]
         
         let momentLists = PHCollectionList.fetchMomentLists(with: .momentListCluster, options: options)
-        momentLists.enumerateObjects { (list: PHCollectionList, index: Int, stop: UnsafeMutablePointer<ObjCBool>) in
+        momentLists.enumerateObjects { [weak welf = self] (list: PHCollectionList, index: Int, stop: UnsafeMutablePointer<ObjCBool>) in
             // Access individual moments and get the total estimated photo count
             var totalAssetCount = 0
             
@@ -76,6 +78,7 @@ class StoriesManager {
             let story = Story(list: list, coverCollection: moments.firstObject!)
             story.components = locationComponents
             story.photoCount = totalAssetCount
+            welf?.selectedAssetsManagerPerStory[story.identifier] = SelectedAssetsManager()
             
             stories.append(story)
         }
@@ -158,5 +161,55 @@ class StoriesManager {
         return location.components(separatedBy: CharacterSet(charactersIn: ",&")).map { (item) -> String in
             return item.trimmingCharacters(in: CharacterSet(charactersIn: " "))
         }
+    }
+    
+    func prepare(story: Story, completionHandler: ((Error?) -> Void)?) {
+        story.loadAssets(completionHandler: { [weak welf = self] error in
+            welf?.performAutoSelection(on: story)
+            completionHandler?(error)
+        })
+    }
+    
+    func selectedAssetsManager(for story: Story) -> SelectedAssetsManager?{
+        return selectedAssetsManagerPerStory[story.identifier]
+    }
+    
+    private func performAutoSelection(on story: Story) {
+        var selectedAssets = [Asset]()
+        var unusedAssets = [Asset]()
+        
+        let minimumAssets = ProductManager.shared.minimumRequiredAssets
+        let subarrayLength = minimumAssets // For readability
+        let subarrayCount: Int = story.photoCount / subarrayLength
+        let assetsFromEachSubarray: Int = minimumAssets / subarrayCount
+        
+        for subarrayIndex in 0..<subarrayCount {
+            
+            let subarrayStartIndex = subarrayIndex * subarrayLength
+            // The last subarray will take on any leftovers resulting from integer division
+            var subarray = Array(subarrayIndex == subarrayCount - 1 ? story.assets[subarrayStartIndex...] : story.assets[subarrayStartIndex..<subarrayStartIndex + subarrayLength])
+            
+            for _ in 0..<assetsFromEachSubarray {
+                let selectedIndex = Int(arc4random()) % subarray.count
+                selectedAssets.append(subarray.remove(at: selectedIndex))
+            }
+            unusedAssets.append(contentsOf: subarray)
+        }
+        
+        // In case we have come up short because of all the integer divisions we have done above, select some more assets from the unused ones if needed.
+        while selectedAssets.count < minimumAssets {
+            let selectedIndex = Int(arc4random()) % unusedAssets.count
+            selectedAssets.append(unusedAssets.remove(at: selectedIndex))
+        }
+        
+        // Sort
+        try? selectedAssets.sort(by: {
+            guard let d1 = ($0 as? PhotosAsset)?.photosAsset.creationDate,
+                let d2 = ($1 as? PhotosAsset)?.photosAsset.creationDate else { throw StoriesManagerError.incompatibleAssetType }
+            return d1 < d2
+        })
+        
+        
+        selectedAssetsManagerPerStory[story.identifier]?.select(selectedAssets)
     }
 }

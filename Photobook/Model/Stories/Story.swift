@@ -16,6 +16,8 @@ class Story {
     var isWeekend = false
     var score = 0
     var assets = [Asset]()
+    
+    // Ability to set locale in Unit Tests
     lazy var locale = Locale.current
     
     var title: String {

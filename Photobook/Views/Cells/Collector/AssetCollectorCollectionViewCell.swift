@@ -1,5 +1,5 @@
 //
-//  ImageCollectorTableViewCell.swift
+//  AssetCollectorCollectionViewCell.swift
 //  Photobook
 //
 //  Created by Julian Gruber on 17/11/2017.

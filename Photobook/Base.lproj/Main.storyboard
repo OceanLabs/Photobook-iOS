@@ -1166,7 +1166,7 @@
         <!--Asset Collector View Controller-->
         <scene sceneID="cPZ-5K-p1g">
             <objects>
-                <viewController storyboardIdentifier="ImageCollectorViewController" modalPresentationStyle="overCurrentContext" id="HYw-Yl-MfL" customClass="AssetCollectorViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AssetCollectorViewController" modalPresentationStyle="overCurrentContext" id="HYw-Yl-MfL" customClass="AssetCollectorViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="UMO-hB-Zun">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="125"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1292,7 +1292,7 @@
                                             <constraint firstItem="dWa-a1-3BW" firstAttribute="centerY" secondItem="xdb-Md-YZB" secondAttribute="centerY" id="zPL-6S-IMD"/>
                                         </constraints>
                                     </view>
-                                    <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Vnf-n4-Ta6">
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Vnf-n4-Ta6">
                                         <rect key="frame" x="0.0" y="53" width="414" height="64"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
@@ -1305,7 +1305,7 @@
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ImageCollectorCollectionViewCell" id="6nK-PW-pTc" customClass="AssetCollectorCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AssetCollectorCollectionViewCell" id="6nK-PW-pTc" customClass="AssetCollectorCollectionViewCell" customModule="Photobook" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">

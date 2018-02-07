@@ -112,19 +112,13 @@ class AssetCollectorViewController: UIViewController {
     
     private var tabBar: PhotobookTabBar? {
         get {
-            var tabBar: UITabBar?
-            if let tab = tabBarController {
-                tabBar = tab.tabBar
-            } else if let tab = self.navigationController?.tabBarController {
-                tabBar = tab.tabBar
-            }
-            return tabBar as? PhotobookTabBar
+            return parentController?.tabBarController?.tabBar as? PhotobookTabBar
         }
     }
     
     public static func instance(fromStoryboardWithParent parent: UIViewController, selectedAssetsManager: SelectedAssetsManager) -> AssetCollectorViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "ImageCollectorViewController") as! AssetCollectorViewController
+        let vc = storyboard.instantiateViewController(withIdentifier: "AssetCollectorViewController") as! AssetCollectorViewController
         vc.parentController = parent
         vc.selectedAssetsManager = selectedAssetsManager
         
@@ -151,8 +145,6 @@ class AssetCollectorViewController: UIViewController {
         
         isHideShowAnimated = false
         
-        //adapt tabbar
-        tabBar?.isBackgroundHidden = true
         imageCollectionView.reloadData()
         adaptToNewAssetCount()
     }
@@ -160,15 +152,12 @@ class AssetCollectorViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        //adapt tabbar
-        tabBar?.isBackgroundHidden = true
         isHideShowAnimated = true //enable animation for hidden state changes
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        //adapt tabbar
         tabBar?.isBackgroundHidden = false
         isHideShowAnimated = false
     }
@@ -197,7 +186,7 @@ class AssetCollectorViewController: UIViewController {
     
     private func adaptToParent() {
         guard let parentController = parentController else {
-            fatalError("ImageCollectorViewController not added to parent!")
+            fatalError("AssetCollectorViewController not added to parent!")
         }
         
         view.frame = parentController.view.bounds
@@ -264,7 +253,6 @@ class AssetCollectorViewController: UIViewController {
                 
                 //animate
                 let duration: TimeInterval = changesState ? fadeDuration : 0
-                useTheseButtonContainer.alpha = 0
                 UIView.animate(withDuration: duration, animations: {
                     self.useTheseButtonContainer.alpha = 1
                     self.pickMoreLabel.alpha = 0
@@ -352,7 +340,7 @@ extension AssetCollectorViewController: UICollectionViewDataSource, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCollectorCollectionViewCell", for: indexPath) as! AssetCollectorCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AssetCollectorCollectionViewCell", for: indexPath) as! AssetCollectorCollectionViewCell
         
         let asset = assets[indexPath.row]
         asset.image(size: cell.imageView.frame.size, completionHandler: { (image, error) in

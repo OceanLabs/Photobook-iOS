@@ -21,16 +21,13 @@ class StoriesViewController: UIViewController {
     
     @IBOutlet private weak var tableView: UITableView!
     
-    var stories: [Story] {
+    private var stories: [Story] {
         return StoriesManager.shared.stories
     }
-    private let selectedAssetsManager = SelectedAssetsManager()
-    private var imageCollectorController:AssetCollectorViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupImageCollector()
-        addObservers()
+        loadStories()
     }
     
     @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
@@ -47,8 +44,10 @@ class StoriesViewController: UIViewController {
                 let sourceView = sender.sourceView,
                 let asset = stories[sender.index].assets.first
                 else { return }
-            assetPickerController.album = stories[sender.index]
-            assetPickerController.selectedAssetsManager = selectedAssetsManager
+            
+            let story = stories[sender.index]
+            assetPickerController.album = story
+            assetPickerController.selectedAssetsManager = StoriesManager.shared.selectedAssetsManager(for: story)
             
             segue.asset = asset
             segue.sourceView = sourceView
@@ -56,47 +55,10 @@ class StoriesViewController: UIViewController {
             break
         }
     }
-    
-    private func addObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(loadStories), name: .UIApplicationDidBecomeActive, object: nil)
-        
-        //listen to asset manager
-        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
-        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    private func setupImageCollector() {
-        // Setup the Image Collector Controller
-        imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
-        imageCollectorController?.delegate = self
-        
-        self.tableView.tableFooterView = UIView(frame: CGRect())
-    }
 
     @objc private func loadStories() {
         StoriesManager.shared.loadTopStories()
         tableView.reloadData()
-    }
-}
-
-extension StoriesViewController: AssetCollectorViewControllerDelegate {
-
-    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
-        var height:CGFloat = 0
-        if let imageCollectorVC = imageCollectorController {
-            height = imageCollectorVC.viewHeight
-        }
-        tableView.tableFooterView?.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: height)
-    }
-    
-    func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
-        let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
-        photobookViewController.selectedAssetsManager = selectedAssetsManager
-        navigationController?.pushViewController(photobookViewController, animated: true)
     }
 }
 
