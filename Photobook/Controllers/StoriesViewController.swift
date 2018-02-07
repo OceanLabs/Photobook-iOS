@@ -25,6 +25,10 @@ class StoriesViewController: UIViewController {
         return StoriesManager.shared.stories
     }
     
+    private var minimumNumberOfStories: Int {
+        return stories.count == 1 ? 4 : 3
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         loadStories()
@@ -66,16 +70,17 @@ extension StoriesViewController: UITableViewDataSource {
     // MARK: UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        let numberOfStories = max(stories.count, minimumNumberOfStories)
 
-        if stories.count <= Constants.storiesInHeader {
-            switch stories.count {
-            case 1, 2: return stories.count
+        if numberOfStories <= Constants.storiesInHeader {
+            switch numberOfStories {
             case 3, 4: return Constants.rowsInHeader - 1
             case 5, 6: return Constants.rowsInHeader
             default: return 0
             }
         } else {
-            let withoutHeadStories = stories.count - Constants.storiesInHeader
+            let withoutHeadStories = numberOfStories - Constants.storiesInHeader
             let baseOffset = (withoutHeadStories - 1) / Constants.storiesPerLayoutPattern
             let repeatedLayoutIndex = withoutHeadStories % Constants.storiesPerLayoutPattern
             return baseOffset * Constants.rowsPerLayoutPattern + (repeatedLayoutIndex == 1 ? 1 : 2) + Constants.rowsInHeader
@@ -85,48 +90,57 @@ extension StoriesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var isDouble = false
         var storyIndex = 0
+        let numberOfStories = max(stories.count, minimumNumberOfStories)
         
         switch indexPath.row {
         case 0, 1: // Single cells for the first and second rows
             storyIndex = indexPath.row
         case 2, 3: // Double cells for the second and third rows
             storyIndex = indexPath.row == 2 ? 2 : 4 // Indexes corresponding to the first story of the third and fourth rows
-            isDouble = stories.count >= (indexPath.row * 2) // Check if we have enought stories for a double cell
+            isDouble = numberOfStories >= (indexPath.row * 2) // Check if we have enought stories for a double cell
         default:
             let minusHeaderRows = indexPath.row - Constants.rowsInHeader
             let numberOfLayouts = minusHeaderRows / Constants.rowsPerLayoutPattern
             let potentialDouble = minusHeaderRows % Constants.rowsPerLayoutPattern == 1 // First row in the layout pattern is a single & the second a double
             
             storyIndex = numberOfLayouts * Constants.storiesPerLayoutPattern + (potentialDouble ? 1 : 0) + Constants.storiesInHeader
-            isDouble = (potentialDouble && storyIndex < stories.count - 1)
+            isDouble = (potentialDouble && storyIndex < numberOfStories - 1)
         }
         
         if isDouble {
             // Double cell
-            let story = stories[storyIndex]
-            let secondStory = stories[storyIndex + 1]
+            let story = storyIndex < stories.count ? stories[storyIndex] : nil
+            let secondStory = storyIndex + 1 < stories.count ? stories[storyIndex + 1] : nil
             
             let doubleCell = tableView.dequeueReusableCell(withIdentifier: DoubleStoryTableViewCell.reuseIdentifier(), for: indexPath) as! DoubleStoryTableViewCell
-            doubleCell.title = story.title
-            doubleCell.dates = story.subtitle
-            doubleCell.secondTitle = secondStory.title
-            doubleCell.secondDates = secondStory.subtitle
-            doubleCell.localIdentifier = story.identifier
+            doubleCell.title = story?.title
+            doubleCell.dates = story?.subtitle
+            doubleCell.secondTitle = secondStory?.title
+            doubleCell.secondDates = secondStory?.subtitle
+            doubleCell.localIdentifier = story?.identifier
             doubleCell.storyIndex = storyIndex
             doubleCell.delegate = self
+            doubleCell.containerView.backgroundColor = story == nil ? UIColor(white: 0, alpha: 0.04) : .groupTableViewBackground
+            doubleCell.secondContainerView.backgroundColor = secondStory == nil ? UIColor(white: 0, alpha: 0.04) : .groupTableViewBackground
+            doubleCell.overlayView.isHidden = story == nil
+            doubleCell.secondOverlayView.isHidden = secondStory == nil
             
-            story.coverImage(size: doubleCell.coverSize, completionHandler:{ (image, _) in
-                if doubleCell.localIdentifier == story.identifier {
+            story?.coverImage(size: doubleCell.coverSize, completionHandler:{ (image, _) in
+                if doubleCell.localIdentifier == story?.identifier {
                     doubleCell.cover = image
                 }
             })
-            secondStory.coverImage(size: doubleCell.coverSize, completionHandler: { (image, _) in
-                if doubleCell.localIdentifier == story.identifier {
+            secondStory?.coverImage(size: doubleCell.coverSize, completionHandler: { (image, _) in
+                if doubleCell.localIdentifier == story?.identifier {
                     doubleCell.secondCover = image
                 }
             })
             
             return doubleCell
+        }
+        
+        guard storyIndex < stories.count else {
+            return tableView.dequeueReusableCell(withIdentifier: "EmptyStoryTableViewCell", for: indexPath)
         }
         
         let story = stories[storyIndex]

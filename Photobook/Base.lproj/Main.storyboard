@@ -1084,13 +1084,63 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="containerView" destination="xiN-tP-wZb" id="cjm-o6-oWD"/>
                                             <outlet property="coverImageView" destination="XP8-sz-FlQ" id="SDH-7i-pZr"/>
                                             <outlet property="datesLabel" destination="98S-YZ-ATE" id="6AG-sf-7YU"/>
+                                            <outlet property="overlayView" destination="QbJ-Q4-FWD" id="0LT-Cu-43i"/>
+                                            <outlet property="secondContainerView" destination="weU-Y8-NsY" id="4p8-2p-Zxh"/>
                                             <outlet property="secondCoverImageView" destination="OAo-UX-egq" id="c4g-SH-18t"/>
                                             <outlet property="secondDatesLabel" destination="S8o-db-JJh" id="Cvq-ff-Ckk"/>
+                                            <outlet property="secondOverlayView" destination="KZr-5e-2Xw" id="OrD-ag-ALI"/>
                                             <outlet property="secondTitleLabel" destination="a7S-9F-Ten" id="mPj-5E-5Ba"/>
                                             <outlet property="titleLabel" destination="eOz-ny-Awi" id="GMa-bY-W7p"/>
                                         </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="EmptyStoryTableViewCell" rowHeight="210" id="mRg-4N-YQA">
+                                        <rect key="frame" x="0.0" y="448" width="414" height="210"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mRg-4N-YQA" id="6nU-p5-hS2">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="210"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jec-dv-MUn">
+                                                    <rect key="frame" x="20" y="5" width="374" height="200"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UYO-rE-bk6">
+                                                            <rect key="frame" x="35" y="80" width="304" height="40"/>
+                                                            <attributedString key="attributedText">
+                                                                <fragment content="As you take more pictures you will find more ready to print stories here">
+                                                                    <attributes>
+                                                                        <color key="NSColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                        <font key="NSFont" metaFont="system" size="14"/>
+                                                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" minimumLineHeight="20" maximumLineHeight="20" tighteningFactorForTruncation="0.0"/>
+                                                                    </attributes>
+                                                                </fragment>
+                                                            </attributedString>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.040000000000000001" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstItem="UYO-rE-bk6" firstAttribute="centerX" secondItem="Jec-dv-MUn" secondAttribute="centerX" id="75u-M8-JCB"/>
+                                                        <constraint firstItem="UYO-rE-bk6" firstAttribute="width" secondItem="Jec-dv-MUn" secondAttribute="width" multiplier="304:374" id="KgH-IJ-3G0"/>
+                                                        <constraint firstItem="UYO-rE-bk6" firstAttribute="centerY" secondItem="Jec-dv-MUn" secondAttribute="centerY" id="SD5-VC-Mg0"/>
+                                                        <constraint firstAttribute="width" secondItem="Jec-dv-MUn" secondAttribute="height" multiplier="187:100" priority="750" id="fBm-AR-Xc7"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                            <real key="value" value="4"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="Jec-dv-MUn" secondAttribute="bottom" constant="5" id="HfL-39-m91"/>
+                                                <constraint firstItem="Jec-dv-MUn" firstAttribute="top" secondItem="6nU-p5-hS2" secondAttribute="top" constant="5" id="UC3-8h-fNO"/>
+                                                <constraint firstAttribute="trailing" secondItem="Jec-dv-MUn" secondAttribute="trailing" constant="20" id="ZSk-P7-E8C"/>
+                                                <constraint firstItem="Jec-dv-MUn" firstAttribute="leading" secondItem="6nU-p5-hS2" secondAttribute="leading" constant="20" id="tB4-X5-eJ3"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
