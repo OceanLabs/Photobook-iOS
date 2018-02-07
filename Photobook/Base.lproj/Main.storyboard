@@ -434,6 +434,7 @@
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="e5h-rz-EdT">
+                            <color key="tintColor" red="0.0" green="0.47999999999999998" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="tappedDoneButton:" destination="sIe-n5-8hl" id="77E-g5-4rx"/>
                             </connections>
