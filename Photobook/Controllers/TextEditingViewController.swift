@@ -156,6 +156,10 @@ class TextEditingViewController: UIViewController {
         })
     }
     
+    func visibleTextInLayout() -> String? {
+        return textView.visibleText
+    }
+    
     func animateOff() {
         guard let initialContainerRect = initialContainerRect else { return }
         
@@ -190,6 +194,7 @@ class TextEditingViewController: UIViewController {
         }
         
         textView.inputAccessoryView = textToolBarView
+        textView.text = productLayout.text
         
         let aspectRatio = textLayoutBox.aspectRatio(forContainerRatio: pageRatio)
         textViewHeightConstraint.constant = textView.bounds.width / aspectRatio
@@ -211,8 +216,13 @@ class TextEditingViewController: UIViewController {
         view.backgroundColor = pageColor.uiColor()
         
         // Set up the textField font
-        let fontSize = onScreenFontSize(for: .clear)
-        setTextViewAttributes(with: .clear, fontSize: fontSize, fontColor: pageColor.fontColor())
+        let fontType: FontType
+        if let productLayoutText = productLayout.productLayoutText {
+            fontType = productLayoutText.fontType
+        } else {
+            fontType = .clear
+        }
+        setTextViewAttributes(with: fontType, fontColor: pageColor.fontColor())
         
         // Place image if needed
         guard let imageLayoutBox = productLayout!.layout.imageLayoutBox else {
@@ -259,7 +269,8 @@ class TextEditingViewController: UIViewController {
         }
     }
 
-    private func setTextViewAttributes(with fontType: FontType, fontSize: CGFloat, fontColor: UIColor) {
+    private func setTextViewAttributes(with fontType: FontType, fontColor: UIColor) {
+        let fontSize = onScreenFontSize(for: fontType)
         textView.attributedText = fontType.attributedText(with: textView.text, fontSize: fontSize, fontColor: fontColor)
         textView.typingAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor)
     }
@@ -301,10 +312,8 @@ extension TextEditingViewController: UITextViewDelegate {
 extension TextEditingViewController: TextToolBarViewDelegate {
     
     func didSelectFontType(_ fontType: FontType) {
-        let fontSize = onScreenFontSize(for: fontType)
-        setTextViewAttributes(with: fontType, fontSize: fontSize, fontColor: pageColor.fontColor())
+        setTextViewAttributes(with: fontType, fontColor: pageColor.fontColor())
         
-        // TODO: This should be conditional on whether the text goes over bounds or not
         delegate?.didChangeFontType(to: fontType)
     }
 }

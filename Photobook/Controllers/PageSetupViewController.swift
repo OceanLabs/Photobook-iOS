@@ -261,6 +261,15 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             // Remove the asset if the layout doesn't have an image box
             productLayout.asset = nil
         }
+        // Work out whether we need to cut the user's text to fit the layout
+        let visibleText = textEditingViewController.visibleTextInLayout()
+        if productLayout.layout.textLayoutBox != nil &&
+            productLayout.productLayoutText?.text != nil &&
+            visibleText != nil &&
+            visibleText != productLayout.productLayoutText?.text
+        {
+            productLayout.productLayoutText!.text = visibleText
+        }
         delegate?.didFinishEditingPage(pageIndex, productLayout: productLayout, color: selectedColor)
     }
     
