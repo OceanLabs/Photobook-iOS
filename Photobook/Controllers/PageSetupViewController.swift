@@ -364,6 +364,8 @@ extension PageSetupViewController: LayoutSelectionDelegate {
         // Deselect the asset if the layout does not have an image box
         if productLayout.layout.imageLayoutBox == nil {
             assetSelectorViewController.selectedAsset = nil
+        } else if productLayout.asset != nil && assetSelectorViewController.selectedAsset == nil {
+            assetSelectorViewController.reselectAsset(productLayout.asset!)
         }
         
         setupAssetPlacement()

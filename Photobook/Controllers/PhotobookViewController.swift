@@ -85,6 +85,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         photobookNeedsRedrawing = false
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        (tabBarController?.tabBar as? PhotobookTabBar)?.isBackgroundHidden = true
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         

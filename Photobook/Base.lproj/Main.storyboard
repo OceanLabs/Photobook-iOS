@@ -1167,7 +1167,7 @@
         <!--Asset Collector View Controller-->
         <scene sceneID="cPZ-5K-p1g">
             <objects>
-                <viewController storyboardIdentifier="ImageCollectorViewController" modalPresentationStyle="overCurrentContext" id="HYw-Yl-MfL" customClass="AssetCollectorViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AssetCollectorViewController" modalPresentationStyle="overCurrentContext" id="HYw-Yl-MfL" customClass="AssetCollectorViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="UMO-hB-Zun">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="125"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1293,7 +1293,7 @@
                                             <constraint firstItem="dWa-a1-3BW" firstAttribute="centerY" secondItem="xdb-Md-YZB" secondAttribute="centerY" id="zPL-6S-IMD"/>
                                         </constraints>
                                     </view>
-                                    <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Vnf-n4-Ta6">
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Vnf-n4-Ta6">
                                         <rect key="frame" x="0.0" y="53" width="414" height="64"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
@@ -1306,7 +1306,7 @@
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ImageCollectorCollectionViewCell" id="6nK-PW-pTc" customClass="AssetCollectorCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AssetCollectorCollectionViewCell" id="6nK-PW-pTc" customClass="AssetCollectorCollectionViewCell" customModule="Photobook" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -1318,11 +1318,6 @@
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8rf-T8-n85">
                                                                     <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
-                                                                    <userDefinedRuntimeAttributes>
-                                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                            <real key="value" value="0.0"/>
-                                                                        </userDefinedRuntimeAttribute>
-                                                                    </userDefinedRuntimeAttributes>
                                                                 </imageView>
                                                                 <view alpha="0.10000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dCo-5L-Muf">
                                                                     <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
@@ -1354,11 +1349,6 @@
                                                                 <constraint firstAttribute="bottom" secondItem="8rf-T8-n85" secondAttribute="bottom" id="nWm-HU-N1e"/>
                                                                 <constraint firstItem="dCo-5L-Muf" firstAttribute="height" secondItem="8rf-T8-n85" secondAttribute="height" id="qN8-U4-1Ed"/>
                                                             </constraints>
-                                                            <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                    <real key="value" value="11"/>
-                                                                </userDefinedRuntimeAttribute>
-                                                            </userDefinedRuntimeAttributes>
                                                         </view>
                                                     </subviews>
                                                 </view>
@@ -1403,7 +1393,7 @@
                             <constraint firstItem="2wO-Q7-0QW" firstAttribute="trailing" secondItem="UMO-hB-Zun" secondAttribute="trailing" id="saJ-ZW-Koa"/>
                             <constraint firstItem="2wO-Q7-0QW" firstAttribute="leading" secondItem="UMO-hB-Zun" secondAttribute="leading" id="yxi-ym-Ont"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="cMP-zb-CMt"/>
+                        <viewLayoutGuide key="safeArea" id="lfw-PK-zof"/>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="414" height="125"/>

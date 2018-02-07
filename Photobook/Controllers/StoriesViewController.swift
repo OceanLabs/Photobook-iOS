@@ -23,8 +23,6 @@ class StoriesViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
     
     private var stories = [Story]()
-    private let selectedAssetsManager = SelectedAssetsManager()
-    private var imageCollectorController:AssetCollectorViewController?
     
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
@@ -33,8 +31,6 @@ class StoriesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         loadStories()
-        setupImageCollector()
-        addObservers()
     }
     
     @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
@@ -51,30 +47,16 @@ class StoriesViewController: UIViewController {
                 let sourceView = sender.sourceView,
                 let asset = stories[sender.index].assets.first
                 else { return }
-            assetPickerController.album = stories[sender.index]
-            assetPickerController.selectedAssetsManager = selectedAssetsManager
+            
+            let story = stories[sender.index]
+            assetPickerController.album = story
+            assetPickerController.selectedAssetsManager = StoriesManager.shared.selectedAssetsManager(for: story)
             
             segue.asset = asset
             segue.sourceView = sourceView
         default:
             break
         }
-    }
-    
-    private func addObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(loadStories), name: .UIApplicationDidBecomeActive, object: nil)
-        
-        //listen to asset manager
-        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
-        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
-    }
-    
-    private func setupImageCollector() {
-        // Setup the Image Collector Controller
-        imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
-        imageCollectorController?.delegate = self
-        
-        self.tableView.tableFooterView = UIView(frame: CGRect())
     }
 
     @objc private func loadStories() {
@@ -99,28 +81,11 @@ class StoriesViewController: UIViewController {
 
             // Once we are done loading the things needed to show on this screen, load the assets from each story so that they are ready if the user taps on a story
             for story in stories {
-                story.loadAssets(completionHandler: nil)
+                StoriesManager.shared.prepare(story: story, completionHandler: nil)
             }
             
             welf?.emptyScreenViewController.hide(animated: true)
         }
-    }
-}
-
-extension StoriesViewController: AssetCollectorViewControllerDelegate {
-
-    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
-        var height:CGFloat = 0
-        if let imageCollectorVC = imageCollectorController {
-            height = imageCollectorVC.viewHeight
-        }
-        tableView.tableFooterView?.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: height)
-    }
-    
-    func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
-        let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
-        photobookViewController.selectedAssetsManager = selectedAssetsManager
-        navigationController?.pushViewController(photobookViewController, animated: true)
     }
 }
 
@@ -138,9 +103,9 @@ extension StoriesViewController: UITableViewDataSource {
             }
         } else {
             let withoutHeadStories = stories.count - Constants.storiesInHeader
-            let baseOffset = withoutHeadStories / Constants.storiesPerLayoutPattern
-            let repeatedLayoutIndex = withoutHeadStories % Constants.rowsPerLayoutPattern
-            return baseOffset * Constants.rowsPerLayoutPattern + (repeatedLayoutIndex == 0 ? 1 : 2) + Constants.rowsInHeader
+            let baseOffset = (withoutHeadStories - 1) / Constants.storiesPerLayoutPattern
+            let repeatedLayoutIndex = withoutHeadStories % Constants.storiesPerLayoutPattern
+            return baseOffset * Constants.rowsPerLayoutPattern + (repeatedLayoutIndex == 1 ? 1 : 2) + Constants.rowsInHeader
         }
     }
     

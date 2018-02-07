@@ -12,7 +12,7 @@ import UIKit
 class AlbumsCollectionViewController: UICollectionViewController {
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    var imageCollectorController: AssetCollectorViewController!
+    var assetCollectorController: AssetCollectorViewController!
     
     /// The height between the bottom of the image and bottom of the cell where the labels sit
     private let albumCellLabelsHeight: CGFloat = 50
@@ -31,9 +31,9 @@ class AlbumsCollectionViewController: UICollectionViewController {
         })
         
         // Setup the Image Collector Controller
-        imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
-        imageCollectorController.mode = collectorMode
-        imageCollectorController.delegate = self
+        assetCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
+        assetCollectorController.mode = collectorMode
+        assetCollectorController.delegate = self
         
         calcAndSetCellSize()
         
@@ -188,8 +188,8 @@ extension AlbumsCollectionViewController{
 extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         var height:CGFloat = 0
-        if let imageCollectorVC = imageCollectorController {
-            height = imageCollectorVC.viewHeight
+        if let assetCollectorViewController = assetCollectorController {
+            height = assetCollectorViewController.viewHeight
         }
         return CGSize(width: collectionView.frame.size.width, height: height)
     }

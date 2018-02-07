@@ -59,7 +59,12 @@ class AssetSelectorViewController: UIViewController {
             }
         }
     }
-    var browseNavigationController: UINavigationController!    
+    var browseNavigationController: UINavigationController!
+    
+    func reselectAsset(_ asset: Asset) {
+        selectedAsset = asset
+        timesUsed[selectedAsset!.identifier] = timesUsed[selectedAsset!.identifier]! + 1
+    }
 }
 
 extension AssetSelectorViewController: UICollectionViewDataSource {
