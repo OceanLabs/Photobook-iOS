@@ -51,10 +51,16 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     private var textEditingViewController: TextEditingViewController!
     
     @IBOutlet private weak var coverFrameView: CoverFrameView! {
-        didSet { coverFrameView.isHidden = pageType != .cover }
+        didSet {
+            coverFrameView.isHidden = pageType != .cover
+            coverFrameView.interaction = .assetAndText
+        }
     }
     @IBOutlet private weak var photobookFrameView: PhotobookFrameView!  {
-        didSet { photobookFrameView.isHidden = pageType == .cover }
+        didSet {
+            photobookFrameView.isHidden = pageType == .cover
+            photobookFrameView.interaction = .assetAndText
+        }
     }
     
     @IBOutlet private weak var photobookHorizontalAlignmentConstraint: NSLayoutConstraint!
@@ -156,8 +162,6 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         super.viewDidLayoutSubviews()
         
         if !hasDoneSetup {
-            //textEditingContainerView.alpha = 0.0
-            
             coverFrameView.color = ProductManager.shared.coverColor
             coverFrameView.pageView.aspectRatio = ProductManager.shared.product!.aspectRatio
 
@@ -166,6 +170,9 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             photobookFrameView.leftPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
             photobookFrameView.rightPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
+            
+            photobookFrameView.leftPageView.delegate = self
+            photobookFrameView.rightPageView.delegate = self
 
             photobookFrameView.width = (view.bounds.width - 2.0 * Constants.photobookSideMargin) * 2.0
             
@@ -415,5 +422,16 @@ extension PageSetupViewController: TextEditingDelegate {
     func didChangeFontType(to fontType: FontType) {
         productLayout.fontType = fontType
         pageView.setupTextBox()
+    }
+}
+
+extension PageSetupViewController: PhotobookPageViewDelegate {
+    
+    func didTapOnAsset(index: Int) {
+        tappedToolButton(toolbarButtons[Tool.placeAsset.rawValue])
+    }
+
+    func didTapOnText(index: Int) {
+        tappedToolButton(toolbarButtons[Tool.editText.rawValue])
     }
 }

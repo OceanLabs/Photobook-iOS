@@ -59,11 +59,16 @@ class PhotobookFrameView: UIView {
     @IBOutlet private var spreadBackgroundLeadingConstraint: NSLayoutConstraint!
     @IBOutlet private var spreadBackgroundTrailingConstraint: NSLayoutConstraint!
     
-    @IBOutlet weak var leftPageView: PhotobookPageView!
-    @IBOutlet weak var rightPageView: PhotobookPageView!
+    @IBOutlet weak var leftPageView: PhotobookPageView! {
+        didSet { leftPageView.interaction = interaction }
+    }
+    @IBOutlet weak var rightPageView: PhotobookPageView! {
+        didSet { leftPageView.interaction = interaction }
+    }
     
     var coverColor: ProductColor = .white
     var pageColor: ProductColor = .white
+    var interaction: PhotobookPageViewInteraction = .disabled
     
     var isLeftPageVisible = true {
         didSet {

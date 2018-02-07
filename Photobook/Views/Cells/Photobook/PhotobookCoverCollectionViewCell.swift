@@ -13,7 +13,9 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell {
     static let reuseIdentifier = NSStringFromClass(PhotobookCoverCollectionViewCell.self).components(separatedBy: ".").last!
     
     @IBOutlet private weak var spineFrameView: SpineFrameView!
-    @IBOutlet private weak var coverFrameView: CoverFrameView!
+    @IBOutlet private weak var coverFrameView: CoverFrameView! {
+        didSet { coverFrameView.interaction = .wholePage }
+    }
     
     var imageSize = CGSize(width: Int.max, height: Int.max) {
         didSet {

@@ -8,8 +8,14 @@
 
 import UIKit
 
-protocol PhotobookPageViewDelegate: class {
-    func didTapOnPage(index: Int)
+@objc protocol PhotobookPageViewDelegate: class {
+    @objc optional func didTapOnPage(index: Int)
+    @objc optional func didTapOnAsset(index: Int)
+    @objc optional func didTapOnText(index: Int)
+}
+
+enum PhotobookPageViewInteraction {
+    case disabled, wholePage, assetAndText
 }
 
 class PhotobookPageView: UIView {
@@ -26,7 +32,7 @@ class PhotobookPageView: UIView {
         }
     }
     var imageSize = CGSize(width: Int.max, height: Int.max)
-    var isVisible: Bool = true {
+    var isVisible: Bool = false {
         didSet {
             for subview in subviews {
                 subview.isHidden = !isVisible
@@ -35,14 +41,10 @@ class PhotobookPageView: UIView {
     }
     var color: ProductColor = .white
     
-    private var tapGesture: UITapGestureRecognizer!
+    private var hasSetupGestures = false
     var productLayout: ProductLayout?
     
-    var isTapGestureEnabled = true {
-        didSet {
-            tapGesture.isEnabled = isTapGestureEnabled
-        }
-    }
+    var interaction: PhotobookPageViewInteraction = .disabled
     
     @IBOutlet private weak var assetContainerView: UIView!
     @IBOutlet private weak var assetPlaceholderIconImageView: UIImageView!
@@ -56,16 +58,6 @@ class PhotobookPageView: UIView {
     
     @IBOutlet private var aspectRatioConstraint: NSLayoutConstraint!
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setup()
-    }
-    
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -77,11 +69,25 @@ class PhotobookPageView: UIView {
         assetPlaceholderIconImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
         
         adjustTextLabel()
+        setupGestures()
     }
     
-    private func setup() {
-        tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapOnPage(_:)))
-        addGestureRecognizer(tapGesture)
+    private func setupGestures() {
+        guard !hasSetupGestures else { return }
+        switch interaction {
+        case .wholePage:
+            let pageTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOnPage(_:)))
+            addGestureRecognizer(pageTapGestureRecognizer)
+        case .assetAndText:
+            let assetTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOnAsset(_:)))
+            assetContainerView.addGestureRecognizer(assetTapGestureRecognizer)
+            
+            let textTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOnText(_:)))
+            pageTextLabel?.addGestureRecognizer(textTapGestureRecognizer)
+        default:
+            break
+        }
+        hasSetupGestures = true
     }
     
     func setupLayoutBoxes() {
@@ -228,6 +234,17 @@ class PhotobookPageView: UIView {
     
     @objc private func didTapOnPage(_ sender: UITapGestureRecognizer) {
         guard let index = index else { return }
-        delegate?.didTapOnPage(index: index)
+        delegate?.didTapOnPage?(index: index)
     }
+    
+    @objc private func didTapOnAsset(_ sender: UITapGestureRecognizer) {
+        guard let index = index else { return }
+        delegate?.didTapOnAsset?(index: index)
+    }
+
+    @objc private func didTapOnText(_ sender: UITapGestureRecognizer) {
+        guard let index = index else { return }
+        delegate?.didTapOnText?(index: index)
+    }
+
 }
