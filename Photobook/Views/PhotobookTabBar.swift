@@ -14,7 +14,7 @@ class PhotobookTabBar: UITabBar {
     
     var isBackgroundHidden:Bool = false {
         didSet {
-            effectView?.isHidden = isBackgroundHidden
+            effectView?.alpha = isBackgroundHidden ? 0 : 1
         }
     }
     
