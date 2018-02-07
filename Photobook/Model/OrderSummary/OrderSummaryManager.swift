@@ -14,10 +14,6 @@ protocol OrderSummaryManagerDelegate : class {
 
 class OrderSummaryManager {
     
-    // Notification keys
-    static let notificationSummaryUpdated = Notification.Name("OrderManagerSummaryUpdated")
-    static let notificationSummaryRefreshFailed = Notification.Name("OrderManagerSummaryRefreshFailed")
-    
     private let taskReferenceImagePreview = "OrderSummaryManager-ProductPreviewImage"
     
     //layouts configured by previous UX

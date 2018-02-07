@@ -36,10 +36,6 @@ class OrderSummaryViewController: UIViewController {
         orderSummaryManager = OrderSummaryManager()
         orderSummaryManager.delegate = self
     }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
 }
 
 extension OrderSummaryViewController: OrderSummaryManagerDelegate {
