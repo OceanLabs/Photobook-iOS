@@ -36,6 +36,10 @@ class SelectedAssetsManager: NSObject {
         select([asset])
     }
     
+    func orderAssetsByDate() {
+        selectedAssets.sort { ($0.date ?? .distantFuture) < ($1.date ?? .distantFuture) }
+    }
+    
     func select(_ assets:[Asset]) {
         var addedAssets = [Asset]()
         var addedIndices = [Int]()

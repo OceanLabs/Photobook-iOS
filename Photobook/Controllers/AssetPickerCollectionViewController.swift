@@ -233,6 +233,8 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
             photobookViewController.selectedAssetsManager = selectedAssetsManager
             navigationController?.pushViewController(photobookViewController, animated: true)
         }
+        selectedAssetsManager?.orderAssetsByDate()
+        collectionView?.reloadData()
     }
 }
 
