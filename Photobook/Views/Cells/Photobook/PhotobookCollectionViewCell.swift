@@ -79,7 +79,6 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
         if photobookFrameView.coverColor != ProductManager.shared.coverColor ||
             photobookFrameView.pageColor != ProductManager.shared.pageColor {
             
-            print("redrawing page")
             photobookFrameView.coverColor = ProductManager.shared.coverColor
             photobookFrameView.pageColor = ProductManager.shared.pageColor
             photobookFrameView.resetPageColor()
