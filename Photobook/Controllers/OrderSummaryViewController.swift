@@ -20,11 +20,16 @@ class OrderSummaryViewController: UIViewController {
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
     }()
+    private lazy var progressOverlayViewController: ProgressOverlayViewController = {
+        return ProgressOverlayViewController.progressOverlay(parent: self)
+    }()
     
     var orderSummaryManager:OrderSummaryManager!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.title = NSLocalizedString("OrderSummary/Title", value: "Your order", comment: "Title of the screen that displays order details and upsell options")
         
         emptyScreenViewController.show(message: NSLocalizedString("OrderSummary/Loading", value: "Loading order details", comment: "Loading product summary"), activity: true)
         
@@ -47,6 +52,7 @@ extension OrderSummaryViewController: OrderSummaryManagerDelegate {
         }
         
         emptyScreenViewController.hide(animated: true)
+        progressOverlayViewController.hide(animated: true)
     }
 }
 
@@ -67,9 +73,8 @@ extension OrderSummaryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == sectionOptions {
             //handle changed upsell selection
-            orderSummaryManager.selectedUpsellOptions.insert(orderSummaryManager.upsellOptions![indexPath.row])
-            orderSummaryManager.refresh()
-            emptyScreenViewController.show(message: NSLocalizedString("OrderSummary/Loading", value: "Loading order details", comment: "Loading product summary"), activity: true)
+            orderSummaryManager.selectUpsellOption(orderSummaryManager.upsellOptions![indexPath.row])
+            progressOverlayViewController.show(message: NSLocalizedString("OrderSummary/Loading", value: "Loading order details", comment: "Loading product summary"))
         } else {
             tableView.deselectRow(at: indexPath, animated: false)
         }
@@ -78,9 +83,8 @@ extension OrderSummaryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         if indexPath.section == sectionOptions {
             //handle changed upsell selection
-            orderSummaryManager.selectedUpsellOptions.remove(orderSummaryManager.upsellOptions![indexPath.row])
-            orderSummaryManager.refresh()
-            emptyScreenViewController.show(message: NSLocalizedString("OrderSummary/Loading", value: "Loading order details", comment: "Loading product summary"), activity: true)
+            orderSummaryManager.deselectUpsellOption(orderSummaryManager.upsellOptions![indexPath.row])
+            progressOverlayViewController.show(message: NSLocalizedString("OrderSummary/Loading", value: "Loading order details", comment: "Loading product summary"))
         }
     }
 }
@@ -114,23 +118,17 @@ extension OrderSummaryViewController: UITableViewDataSource {
         case sectionDetails:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrderSummaryDetailTableViewCell", for: indexPath) as! OrderSummaryDetailTableViewCell
             cell.titleLabel.text = orderSummaryManager.summary?.details[indexPath.row].name
-            cell.priceLabel.text = orderSummaryManager.summary?.details[indexPath.row].price.formatted
+            cell.priceLabel.text = orderSummaryManager.summary?.details[indexPath.row].price
             return cell
         case sectionTotal:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrderSummaryTotalTableViewCell", for: indexPath) as! OrderSummaryTotalTableViewCell
             let summary = orderSummaryManager.summary!
-            if summary.details.count > 0 {
-                var v:Float = 0
-                for x in summary.details {
-                    v = v + x.price.value
-                }
-                cell.priceLabel.text = Price(value: v, currencyCode: summary.details[0].price.currencyCode).formatted
-            }
+            cell.priceLabel.text = summary.total
             return cell
         case sectionOptions:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrderSummaryUpsellTableViewCell", for: indexPath) as! OrderSummaryUpsellTableViewCell
-            cell.titleLabel?.text = "Upgrade to " + orderSummaryManager.upsellOptions![indexPath.row].displayName
-            if orderSummaryManager.selectedUpsellOptions.contains(orderSummaryManager.upsellOptions![indexPath.row]) {
+            cell.titleLabel?.text = orderSummaryManager.upsellOptions![indexPath.row].displayName
+            if orderSummaryManager.isUpsellOptionSelected(orderSummaryManager.upsellOptions![indexPath.row]) {
                 tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
             }
             return cell

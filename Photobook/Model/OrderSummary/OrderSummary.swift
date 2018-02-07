@@ -12,15 +12,15 @@ class OrderSummary {
     
     struct Detail {
         var name:String
-        var price:Price
+        var price:String
         
-        init(name:String, price:Price) {
+        init(name:String, price:String) {
             self.name = name
             self.price = price
         }
         
         init?(_ dict:[String:Any]) {
-            guard let name = dict["name"] as? String, let priceDict = dict["price"] as? [String:Any], let price = Price(priceDict) else {
+            guard let name = dict["name"] as? String, let price = dict["price"] as? String else {
                 //invalid
                 print("OrderSummary.Detail: couldn't initialise")
                 return nil
@@ -31,15 +31,16 @@ class OrderSummary {
     }
     
     var details = [Detail]()
+    var total:String?
     private var pigBaseUrl:String?
     
-    private init(details:[Detail], pigBaseUrl:String) {
+    private init(details:[Detail], total:String, pigBaseUrl:String) {
         self.details = details
         self.pigBaseUrl = pigBaseUrl
     }
     
     convenience init?(_ dict:[String:Any]) {
-        guard let dictionaries = dict["summary"] as? [[String:Any]], let imageUrl = dict["imagePreviewUrl"] as? String else {
+        guard let dictionaries = dict["summary"] as? [[String:Any]], let imageUrl = dict["imagePreviewUrl"] as? String, let total = dict["total"] as? String else {
             print("OrderSummary: couldn't initialise")
             return nil
         }
@@ -51,13 +52,15 @@ class OrderSummary {
             }
         }
         
-        self.init(details:details, pigBaseUrl:imageUrl)
+        self.init(details:details, total:total, pigBaseUrl:imageUrl)
     }
     
     func previewImageUrl(withCoverImageUrl imageUrl:String, size:CGSize) -> String? {
         guard let pigBaseUrl = pigBaseUrl else { return nil }
         
-        return pigBaseUrl + "&image=" + imageUrl + "&size=\(size.width)x\(size.height)" + "&fill_mode=fit"
+        let urlString = pigBaseUrl + "&image=" + imageUrl + "&size=\(size.width)x\(size.height)" + "&fill_mode=fit"
+        
+        return URL(string: urlString) != nil ? urlString : nil
     }
     
 }

@@ -39,7 +39,7 @@ class OrderSummaryManager {
             return ProductManager.shared.upsellOptions
         }
     }
-    var selectedUpsellOptions:Set<UpsellOption> = []
+    private var selectedUpsellOptions:Set<UpsellOption> = []
     private(set) var summary:OrderSummary?
     private(set) var previewImage:UIImage?
     private(set) var upsoldProduct:Photobook? //product to place the order with. Reflects user's selected upsell options.
@@ -65,10 +65,24 @@ class OrderSummaryManager {
         }
     }
     
+    func selectUpsellOption(_ option:UpsellOption) {
+        selectedUpsellOptions.insert(option)
+        refresh(true)
+    }
+    
+    func deselectUpsellOption(_ option:UpsellOption) {
+        selectedUpsellOptions.remove(option)
+        refresh(true)
+    }
+    
+    func isUpsellOptionSelected(_ option:UpsellOption) -> Bool {
+        return selectedUpsellOptions.contains(option)
+    }
+    
     func fetchProductDetails() {
         
         //TODO: mock data REMOVE
-        guard let summaryDict = json(file: "order_summary") as? [String:Any] else {
+        guard let summaryDict = JSON.parse(file: "order_summary") as? [String:Any] else {
             delegate?.orderSummaryManager(self, didUpdate: false)
             return
         }
@@ -134,17 +148,5 @@ class OrderSummaryManager {
         }
         
         coverImageUrl = url
-    }
-    
-    private func json(file: String) -> AnyObject? {
-        guard let path = Bundle.main.path(forResource: file, ofType: "json") else { return nil }
-        
-        do {
-            let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
-            return try JSONSerialization.jsonObject(with: data, options: .mutableLeaves) as AnyObject
-        } catch {
-            print("JSON: Could not parse file")
-        }
-        return nil
     }
 }

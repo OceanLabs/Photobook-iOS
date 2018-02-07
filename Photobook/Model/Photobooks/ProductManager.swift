@@ -74,29 +74,7 @@ class ProductManager {
     private(set) var layouts: [Layout]?
     
     // List of all available upsell options
-    var upsellOptions: [UpsellOption]? {
-        get {
-            //mock data
-            let dictionaries = [
-                [
-                    "type": "size",
-                    "displayName": "larger size (210x210)"
-                ],
-                [
-                    "type": "finish",
-                    "displayName": "gloss finish"
-                ]
-                ] as [[String: AnyObject]]
-            
-            var options = [UpsellOption]()
-            for dict in dictionaries {
-                if let upsellOption = UpsellOption(dict) {
-                    options.append(upsellOption)
-                }
-            }
-            return options
-        }
-    } //TODO: Get this from the initial-data endpoint
+    private(set) var upsellOptions: [UpsellOption]?
     
     // Current photobook
     var product: Photobook?
@@ -134,7 +112,7 @@ class ProductManager {
     ///
     /// - Parameter completion: Completion block with an optional error
     func initialise(completion:@escaping (Error?)->()) {
-        apiManager.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, error) in
+        apiManager.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, upsellOptions, error) in
             guard error == nil else {
                 completion(error!)
                 return
@@ -142,6 +120,7 @@ class ProductManager {
             
             welf?.products = photobooks
             welf?.layouts = layouts
+            welf?.upsellOptions = upsellOptions
             
             completion(nil)
         }
@@ -160,7 +139,7 @@ class ProductManager {
 
         var addedAssets = assets ?? {
             var assets = [Asset]()
-            for layout in ProductManager.shared.productLayouts{
+            for layout in ProductManager.shared.productLayouts {
                 guard let asset = layout.asset else { continue }
                 assets.append(asset)
             }

@@ -64,17 +64,17 @@ class PhotobookAPIManager {
     /// Requests the information about photobook products and layouts from the API
     ///
     /// - Parameter completionHandler: Closure to be called when the request completes
-    func requestPhotobookInfo(_ completionHandler:@escaping ([Photobook]?, [Layout]?, Error?) -> ()) {
+    func requestPhotobookInfo(_ completionHandler:@escaping ([Photobook]?, [Layout]?, [UpsellOption]?, Error?) -> ()) {
         
         apiClient.get(context: .photobook, endpoint: EndPoints.products, parameters: nil) { (jsonData, error) in
             
             // TEMP: Fake api response. Don't run for tests.
             var jsonData = jsonData
             if NSClassFromString("XCTest") == nil {
-                jsonData = self.json(file: "photobooks")
+                jsonData = JSON.parse(file: "photobooks")
             } else {
                 if error != nil {
-                    completionHandler(nil, nil, error!)
+                    completionHandler(nil, nil, nil, error!)
                     return
                 }
             }
@@ -82,9 +82,10 @@ class PhotobookAPIManager {
             guard
                 let photobooksData = jsonData as? [String: AnyObject],
                 let productsData = photobooksData["products"] as? [[String: AnyObject]],
-                let layoutsData = photobooksData["layouts"] as? [[String: AnyObject]]
+                let layoutsData = photobooksData["layouts"] as? [[String: AnyObject]],
+                let upsellData = photobooksData["upsellOptions"] as? [[String: AnyObject]]
             else {
-                completionHandler(nil, nil, APIClientError.parsing)
+                completionHandler(nil, nil, nil, APIClientError.parsing)
                 return
             }
             
@@ -98,7 +99,7 @@ class PhotobookAPIManager {
             
             if tempLayouts.count == 0 {
                 print("PBAPIManager: parsing layouts failed")
-                completionHandler(nil, nil, APIClientError.parsing)
+                completionHandler(nil, nil, nil, APIClientError.parsing)
                 return
             }
             
@@ -113,11 +114,20 @@ class PhotobookAPIManager {
             
             if tempPhotobooks.count == 0 {
                 print("PBAPIManager: parsing photobook products failed")
-                completionHandler(nil, nil, APIClientError.parsing)
+                completionHandler(nil, nil, nil, APIClientError.parsing)
                 return
             }
+            
+            // Parse photobook upsell options
+            var tempUpsellOptions = [UpsellOption]()
+            
+            for upsellOptionDictionary in upsellData {
+                if let upsellOption = UpsellOption(upsellOptionDictionary) {
+                    tempUpsellOptions.append(upsellOption)
+                }
+            }
 
-            completionHandler(tempPhotobooks, tempLayouts, nil)
+            completionHandler(tempPhotobooks, tempLayouts, tempUpsellOptions, nil)
         }
     }
     
@@ -254,17 +264,5 @@ class PhotobookAPIManager {
         } catch {
             return nil
         }
-    }
-    
-    private func json(file: String) -> AnyObject? {
-        guard let path = Bundle.main.path(forResource: file, ofType: "json") else { return nil }
-        
-        do {
-            let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
-            return try JSONSerialization.jsonObject(with: data, options: .mutableLeaves) as AnyObject
-        } catch {
-            print("JSON: Could not parse file")
-        }
-        return nil
     }
 }

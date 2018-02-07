@@ -258,12 +258,12 @@ class APIClient: NSObject {
     }
     
     func uploadImage(_ image: UIImage, imageName: String, reference: String?, context: APIContext, endpoint: String) {
-        guard let fileData = UIImageJPEGRepresentation(image, 1) else {
-            print("File Upload: cannot read file data")
+        guard let data = UIImageJPEGRepresentation(image, 0.8) else {
+            print("Image Upload: cannot read image data")
             return
         }
         
-        uploadImage(fileData, imageName:imageName, reference: reference, context: context, endpoint: endpoint)
+        uploadImage(data, imageName:imageName, reference: reference, context: context, endpoint: endpoint)
     }
     
     func uploadImage(_ file: URL, reference: String?, context: APIContext, endpoint: String) {

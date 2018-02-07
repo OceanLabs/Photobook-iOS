@@ -3065,6 +3065,75 @@ Copyright © 2018 Kite. All right reserverd.</string>
             </objects>
             <point key="canvasLocation" x="1074" y="-1136"/>
         </scene>
+        <!--Progress Overlay View Controller-->
+        <scene sceneID="dLC-iX-1EH">
+            <objects>
+                <viewController storyboardIdentifier="ProgressOverlayViewController" id="RbI-12-Ape" customClass="ProgressOverlayViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="PnV-D9-W13">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ciZ-cW-ggr">
+                                <rect key="frame" x="160.66666666666666" y="321.33333333333331" width="94.333333333333343" height="94.333333333333314"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Byh-tU-3Mh">
+                                    <rect key="frame" x="0.0" y="0.0" width="94" height="95"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sdD-vw-kJp">
+                                            <rect key="frame" x="0.0" y="0.0" width="94.333333333333329" height="94.333333333333329"/>
+                                            <color key="backgroundColor" white="0.66666666666666663" alpha="0.24951840753424659" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </view>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yW4-0i-yeb">
+                                            <rect key="frame" x="15" y="60.000000000000007" width="64.333333333333329" height="19.333333333333336"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Zaq-sw-bU0">
+                                            <rect key="frame" x="36.666666666666686" y="25" width="20" height="20"/>
+                                        </activityIndicatorView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="yW4-0i-yeb" secondAttribute="bottom" constant="15" id="0Os-vY-HyX"/>
+                                        <constraint firstItem="Zaq-sw-bU0" firstAttribute="top" secondItem="Byh-tU-3Mh" secondAttribute="top" constant="25" id="2DK-gd-gDQ"/>
+                                        <constraint firstAttribute="bottom" secondItem="sdD-vw-kJp" secondAttribute="bottom" id="2Xt-DN-KJx"/>
+                                        <constraint firstItem="sdD-vw-kJp" firstAttribute="leading" secondItem="Byh-tU-3Mh" secondAttribute="leading" id="6jz-A7-ojH"/>
+                                        <constraint firstItem="yW4-0i-yeb" firstAttribute="top" secondItem="Zaq-sw-bU0" secondAttribute="bottom" constant="15" id="Hi3-Y5-RsO"/>
+                                        <constraint firstAttribute="trailing" secondItem="sdD-vw-kJp" secondAttribute="trailing" id="R8J-qz-KDR"/>
+                                        <constraint firstItem="yW4-0i-yeb" firstAttribute="leading" secondItem="Byh-tU-3Mh" secondAttribute="leading" constant="15" id="SfV-wU-z4d"/>
+                                        <constraint firstAttribute="trailing" secondItem="yW4-0i-yeb" secondAttribute="trailing" constant="15" id="V6O-aQ-vIm"/>
+                                        <constraint firstItem="sdD-vw-kJp" firstAttribute="top" secondItem="Byh-tU-3Mh" secondAttribute="top" id="ZQe-pS-PqD"/>
+                                        <constraint firstItem="Zaq-sw-bU0" firstAttribute="centerX" secondItem="Byh-tU-3Mh" secondAttribute="centerX" id="nHo-7e-CAz"/>
+                                        <constraint firstItem="sdD-vw-kJp" firstAttribute="centerX" secondItem="Byh-tU-3Mh" secondAttribute="centerX" id="xjH-uw-qdc"/>
+                                        <constraint firstItem="sdD-vw-kJp" firstAttribute="centerY" secondItem="Byh-tU-3Mh" secondAttribute="centerY" id="yL8-2z-73e"/>
+                                    </constraints>
+                                </view>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" secondItem="ciZ-cW-ggr" secondAttribute="height" id="H5e-7s-47P"/>
+                                </constraints>
+                                <blurEffect style="light"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="9"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </visualEffectView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="ciZ-cW-ggr" firstAttribute="centerY" secondItem="PnV-D9-W13" secondAttribute="centerY" id="QGd-0r-aja"/>
+                            <constraint firstItem="ciZ-cW-ggr" firstAttribute="centerX" secondItem="PnV-D9-W13" secondAttribute="centerX" id="t6L-1C-Fr4"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="opK-92-GoU"/>
+                    </view>
+                    <connections>
+                        <outlet property="activityIndicatorView" destination="Zaq-sw-bU0" id="Rns-A0-mYg"/>
+                        <outlet property="descriptionTextView" destination="yW4-0i-yeb" id="8nB-J5-PDM"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vWo-Ou-ZVb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1796" y="2205"/>
+        </scene>
         <!--Order Summary View Controller-->
         <scene sceneID="Iv0-BH-Ffz">
             <objects>
@@ -3081,11 +3150,11 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="coG-HL-VIW">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="196.66666666666666"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="206.66666666666666"/>
                                             <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Order details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3RN-ib-X8q">
-                                            <rect key="frame" x="15" y="211.66666666666666" width="384" height="33.333333333333343"/>
+                                            <rect key="frame" x="15" y="221.66666666666666" width="384" height="33.333333333333343"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="28"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -3095,7 +3164,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     <constraints>
                                         <constraint firstItem="coG-HL-VIW" firstAttribute="top" secondItem="g0z-sj-ddc" secondAttribute="top" id="2Z4-cK-3ep"/>
                                         <constraint firstAttribute="trailing" secondItem="coG-HL-VIW" secondAttribute="trailing" id="4lf-el-rMN"/>
-                                        <constraint firstAttribute="bottom" secondItem="3RN-ib-X8q" secondAttribute="bottom" constant="15" id="StF-5a-a3u"/>
+                                        <constraint firstAttribute="bottom" secondItem="3RN-ib-X8q" secondAttribute="bottom" constant="5" id="StF-5a-a3u"/>
                                         <constraint firstItem="3RN-ib-X8q" firstAttribute="top" secondItem="coG-HL-VIW" secondAttribute="bottom" constant="15" id="ZFU-iP-kDf"/>
                                         <constraint firstAttribute="trailing" secondItem="3RN-ib-X8q" secondAttribute="trailing" constant="15" id="Zn3-nA-aq3"/>
                                         <constraint firstItem="coG-HL-VIW" firstAttribute="leading" secondItem="g0z-sj-ddc" secondAttribute="leading" id="pHs-ZZ-ayK"/>
