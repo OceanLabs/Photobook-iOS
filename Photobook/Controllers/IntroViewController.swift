@@ -77,7 +77,7 @@ class IntroViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.ctaButton.isEnabled = true
                     
-                    // We don't care about the outcome, the next screens will take care of showing the user an error screen
+                    // We don't care about the outcome, the next screens will take care of showing the user an error screen if needed
                     self.userHasDismissed = true
                     self.proceedToTabBarController()
                 }
@@ -100,7 +100,7 @@ class IntroViewController: UIViewController {
         }
     }
     
-    func configureTabBarController(_ tabBarController: UITabBarController) {
+    private func configureTabBarController(_ tabBarController: UITabBarController) {
         // Second Tab: Browse
         // Set the albumManager to the AlbumsCollectionViewController
         let albumViewController = (tabBarController.viewControllers?[1] as? UINavigationController)?.topViewController as? AlbumsCollectionViewController
@@ -113,7 +113,7 @@ class IntroViewController: UIViewController {
             tabBarController.viewControllers = Array(viewControllers[1...])
         }
         
-        // Load the products here, so that the user avoids a loading screen on the PhotobookViewController
+        // Load the products here, so that the user avoids a loading screen on PhotobookViewController
         ProductManager.shared.initialise(completion: nil)
         
     }
