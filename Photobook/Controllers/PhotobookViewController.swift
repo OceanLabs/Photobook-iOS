@@ -34,7 +34,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var ctaButtonContainer: UIView!
     
-    var photobokNavigationBarType: PhotobookNavigationBarType = .clear
+    var photobookNavigationBarType: PhotobookNavigationBarType = .clear
     
     var selectedAssetsManager: SelectedAssetsManager?
     private var titleButton = UIButton()
@@ -228,7 +228,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         
         let showBlur = collectionView.contentOffset.y > -navigationBarMaxY || draggingViewUnderNavBar
-        navigationBar.setBlur(showBlur)
+        photobookNavigationBarType = showBlur ? .white : .clear
+        navigationBar.setBarType(photobookNavigationBarType)
     }
     
     private func stopTimer() {
