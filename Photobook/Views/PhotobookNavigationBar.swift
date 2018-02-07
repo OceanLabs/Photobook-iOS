@@ -62,7 +62,7 @@ class PhotobookNavigationBar: UINavigationBar {
         shadowImage = UIImage()
     }
     
-    private func setBarType(_ type: PhotobookNavigationBarType) {
+    func setBarType(_ type: PhotobookNavigationBarType) {
         switch type {
         case .clear:
             barTintColor = .clear
@@ -71,11 +71,7 @@ class PhotobookNavigationBar: UINavigationBar {
             barTintColor = .white
             effectView.alpha = 1.0
         }
-    }
-    
-    func setBlur(_ visible: Bool = true) {
-        effectView.alpha = visible ? 1.0 : 0.0
-    }
+    }    
 }
 
 /// Navigation bar configurations
@@ -88,7 +84,7 @@ enum PhotobookNavigationBarType {
 
 /// Protocol view controllers should conform to in order to choose an appearance from application defaults when presented
 protocol PhotobookNavigationBarDelegate {
-    var photobokNavigationBarType: PhotobookNavigationBarType { get }
+    var photobookNavigationBarType: PhotobookNavigationBarType { get }
 }
 
 extension PhotobookNavigationBar: UINavigationControllerDelegate {
@@ -96,7 +92,7 @@ extension PhotobookNavigationBar: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool){
         
         if let viewController = viewController as? PhotobookNavigationBarDelegate {
-            setBarType(viewController.photobokNavigationBarType)
+            setBarType(viewController.photobookNavigationBarType)
             return
         }
         setBarType(.white)

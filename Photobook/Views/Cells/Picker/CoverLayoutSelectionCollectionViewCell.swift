@@ -29,7 +29,7 @@ class CoverLayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         
         let aspectRatio = ProductManager.shared.product!.aspectRatio!
         
-        coverFrameView.color = coverColor
+        
         coverFrameView.pageView.isTapGestureEnabled = false
         coverFrameView.width = (bounds.height - 2.0 * Constants.photobookVerticalMargin) * aspectRatio
         
@@ -41,9 +41,10 @@ class CoverLayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         coverFrameView.pageView.productLayout = productLayout
         coverFrameView.pageView.setupImageBox(with: image)
         coverFrameView.pageView.setupTextBox(shouldBeLegible: false)
-    }
-    
-    func resetColor() {
-        coverFrameView.resetCoverColor()
+        
+        if coverFrameView.color != coverColor {
+            coverFrameView.color = coverColor
+            coverFrameView.resetCoverColor()
+        }
     }
 }
