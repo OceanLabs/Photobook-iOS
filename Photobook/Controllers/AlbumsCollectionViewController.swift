@@ -62,7 +62,16 @@ class AlbumsCollectionViewController: UICollectionViewController {
         super.viewWillAppear(animated)
         
         // Refresh number of assets selected badges
-        collectionView?.reloadData()
+        for cell in collectionView?.visibleCells ?? [] {
+            guard let cell = cell as? AlbumCollectionViewCell,
+            let indexPath = collectionView?.indexPath(for: cell)
+            else { continue }
+            
+            let album = albumManager.albums[indexPath.item]
+            let selectedAssetsCount = selectedAssetsManager.count(for: album)
+            cell.selectedCountLabel.text = "\(selectedAssetsCount)"
+            cell.selectedCountLabel.isHidden = selectedAssetsCount == 0
+        }
     }
     
     @IBAction func searchIconTapped(_ sender: Any) {
