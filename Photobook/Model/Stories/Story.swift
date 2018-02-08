@@ -98,7 +98,7 @@ extension Story: Album {
         let moments = PHAssetCollection.fetchMoments(inMomentList: collectionList, options: PHFetchOptions())
         moments.enumerateObjects { (collection: PHAssetCollection, index: Int,  stop: UnsafeMutablePointer<ObjCBool>) in
             
-            fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
+            fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: true) ]
             let fetchedAssets = PHAsset.fetchAssets(in: collection, options: fetchOptions)
             fetchedAssets.enumerateObjects({ (asset, _, _) in
                 self.assets.append(PhotosAsset(asset, albumIdentifier: self.identifier))
