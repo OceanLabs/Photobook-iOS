@@ -139,7 +139,7 @@
                                                                     </imageView>
                                                                 </subviews>
                                                             </view>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CLX-rE-8ac">
+                                                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CLX-rE-8ac">
                                                                 <rect key="frame" x="29" y="163" width="116" height="21"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="8"/>
@@ -222,7 +222,7 @@
                                                             </imageView>
                                                         </subviews>
                                                     </view>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f1I-iY-MP8">
+                                                    <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f1I-iY-MP8">
                                                         <rect key="frame" x="20" y="163.00000000000003" width="116" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="8"/>
@@ -269,7 +269,7 @@
                                                             </imageView>
                                                         </subviews>
                                                     </view>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="dbm-j0-eAm">
+                                                    <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="dbm-j0-eAm">
                                                         <rect key="frame" x="19.333333333333371" y="162.66666666666669" width="116" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="6"/>
@@ -434,6 +434,7 @@
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="e5h-rz-EdT">
+                            <color key="tintColor" red="0.0" green="0.47999999999999998" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="tappedDoneButton:" destination="sIe-n5-8hl" id="77E-g5-4rx"/>
                             </connections>
@@ -2914,10 +2915,10 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TET-AS-1ry">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="582"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="672"/>
                                 <subviews>
                                     <view contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="Mss-Ro-X4n">
-                                        <rect key="frame" x="52" y="91.666666666666686" width="310" height="400"/>
+                                        <rect key="frame" x="52" y="136.66666666666663" width="310" height="400"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yms-yt-a0G">
                                                 <rect key="frame" x="-23" y="-28" width="358" height="454"/>
@@ -2931,7 +2932,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         </constraints>
                                     </view>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" translatesAutoresizingMaskIntoConstraints="NO" id="D9q-gx-ZYX" userLabel="Horizontal Grid Stack View">
-                                        <rect key="frame" x="52" y="91.666666666666686" width="310" height="400"/>
+                                        <rect key="frame" x="52" y="136.66666666666663" width="310" height="400"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="02l-cy-ebb">
                                                 <rect key="frame" x="0.0" y="0.0" width="310" height="1"/>
@@ -2941,7 +2942,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3oC-PZ-D7f">
-                                                <rect key="frame" x="0.0" y="133" width="310" height="1"/>
+                                                <rect key="frame" x="0.0" y="133.00000000000003" width="310" height="1"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="0.5" id="uhU-ew-pgy"/>
@@ -2964,7 +2965,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" translatesAutoresizingMaskIntoConstraints="NO" id="iV8-rP-TPh" userLabel="Vertical Grid Stack View">
-                                        <rect key="frame" x="52" y="91" width="310" height="400"/>
+                                        <rect key="frame" x="52" y="136" width="310" height="400"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9p4-Vi-fR5">
                                                 <rect key="frame" x="0.0" y="0.0" width="1" height="400"/>
@@ -2997,21 +2998,33 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         </subviews>
                                     </stackView>
                                     <view alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X2g-TJ-SgU">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="91.666666666666671"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="136.66666666666666"/>
                                         <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                                     </view>
                                     <view alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gin-ch-DcM">
-                                        <rect key="frame" x="0.0" y="91.666666666666686" width="52" height="400"/>
+                                        <rect key="frame" x="0.0" y="136.66666666666663" width="52" height="400"/>
                                         <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                                     </view>
                                     <view alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="deO-XL-e3u">
-                                        <rect key="frame" x="0.0" y="491.66666666666669" width="414" height="90.333333333333314"/>
+                                        <rect key="frame" x="0.0" y="536.66666666666663" width="414" height="135.33333333333337"/>
                                         <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                                     </view>
                                     <view alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qHB-a9-3hj">
-                                        <rect key="frame" x="362" y="91.666666666666686" width="52" height="400"/>
+                                        <rect key="frame" x="362" y="136.66666666666663" width="52" height="400"/>
                                         <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                                     </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CeI-dF-0wW">
+                                        <rect key="frame" x="185" y="598" width="44" height="44"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="44" id="1Yf-6o-sSE"/>
+                                            <constraint firstAttribute="height" constant="44" id="6ej-kU-dqy"/>
+                                        </constraints>
+                                        <state key="normal" image="Rotate"/>
+                                        <connections>
+                                            <action selector="tappedRotateButton:" destination="0tx-1H-1gY" eventType="touchUpInside" id="LyH-In-kFf"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -3021,6 +3034,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     <constraint firstItem="D9q-gx-ZYX" firstAttribute="centerX" secondItem="Mss-Ro-X4n" secondAttribute="centerX" id="DhC-QZ-nNV"/>
                                     <constraint firstItem="X2g-TJ-SgU" firstAttribute="top" secondItem="TET-AS-1ry" secondAttribute="top" id="G9y-Ni-s49"/>
                                     <constraint firstItem="qHB-a9-3hj" firstAttribute="leading" secondItem="Mss-Ro-X4n" secondAttribute="trailing" id="KY2-ci-jnG"/>
+                                    <constraint firstAttribute="bottom" secondItem="CeI-dF-0wW" secondAttribute="bottom" constant="30" id="Les-zu-73o"/>
                                     <constraint firstItem="D9q-gx-ZYX" firstAttribute="height" secondItem="Mss-Ro-X4n" secondAttribute="height" id="Mcg-sx-amb"/>
                                     <constraint firstItem="deO-XL-e3u" firstAttribute="top" secondItem="qHB-a9-3hj" secondAttribute="bottom" id="P4x-x8-qmZ"/>
                                     <constraint firstAttribute="trailing" secondItem="X2g-TJ-SgU" secondAttribute="trailing" id="Prs-Xf-E2W"/>
@@ -3033,6 +3047,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     <constraint firstItem="Mss-Ro-X4n" firstAttribute="centerX" secondItem="TET-AS-1ry" secondAttribute="centerX" id="hl9-PG-uuH"/>
                                     <constraint firstItem="Gin-ch-DcM" firstAttribute="bottom" secondItem="Mss-Ro-X4n" secondAttribute="bottom" id="iYn-fi-zZ9"/>
                                     <constraint firstAttribute="bottom" secondItem="deO-XL-e3u" secondAttribute="bottom" id="kR1-QL-EId"/>
+                                    <constraint firstItem="CeI-dF-0wW" firstAttribute="centerX" secondItem="TET-AS-1ry" secondAttribute="centerX" id="kcO-Wk-YhK"/>
                                     <constraint firstItem="iV8-rP-TPh" firstAttribute="width" secondItem="Mss-Ro-X4n" secondAttribute="width" id="otC-Fl-Jm6"/>
                                     <constraint firstItem="D9q-gx-ZYX" firstAttribute="centerY" secondItem="Mss-Ro-X4n" secondAttribute="centerY" id="qeD-c8-fCs"/>
                                     <constraint firstItem="Mss-Ro-X4n" firstAttribute="top" secondItem="X2g-TJ-SgU" secondAttribute="bottom" id="rtC-Wy-Q4I"/>
@@ -3043,41 +3058,14 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     <constraint firstItem="Gin-ch-DcM" firstAttribute="leading" secondItem="TET-AS-1ry" secondAttribute="leading" id="zsl-Wp-4qx"/>
                                 </constraints>
                             </view>
-                            <view alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lRc-aT-yr6">
-                                <rect key="frame" x="0.0" y="582" width="414" height="90"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CeI-dF-0wW">
-                                        <rect key="frame" x="184.66666666666666" y="0.0" width="44" height="44"/>
-                                        <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="44" id="1Yf-6o-sSE"/>
-                                            <constraint firstAttribute="height" constant="44" id="6ej-kU-dqy"/>
-                                        </constraints>
-                                        <state key="normal" image="Rotate"/>
-                                        <connections>
-                                            <action selector="tappedRotateButton:" destination="0tx-1H-1gY" eventType="touchUpInside" id="LyH-In-kFf"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="90" id="Dym-9L-gSZ"/>
-                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="CeI-dF-0wW" secondAttribute="bottom" constant="30" id="F3m-9U-gtA"/>
-                                    <constraint firstItem="CeI-dF-0wW" firstAttribute="centerX" secondItem="lRc-aT-yr6" secondAttribute="centerX" id="dR7-f0-Kvu"/>
-                                    <constraint firstItem="CeI-dF-0wW" firstAttribute="top" secondItem="lRc-aT-yr6" secondAttribute="top" id="tz7-yv-rom"/>
-                                </constraints>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.86666666670000003" green="0.87450980389999999" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="lRc-aT-yr6" firstAttribute="leading" secondItem="v7z-cU-uWS" secondAttribute="leading" id="1iD-bc-MOr"/>
                             <constraint firstItem="TET-AS-1ry" firstAttribute="top" secondItem="2ha-XX-PVN" secondAttribute="top" id="DEQ-KG-IVK"/>
-                            <constraint firstItem="lRc-aT-yr6" firstAttribute="top" secondItem="TET-AS-1ry" secondAttribute="bottom" id="DfC-ba-PqD"/>
                             <constraint firstItem="TET-AS-1ry" firstAttribute="leading" secondItem="2ha-XX-PVN" secondAttribute="leading" id="O68-PW-kWx"/>
-                            <constraint firstAttribute="bottom" secondItem="lRc-aT-yr6" secondAttribute="bottom" id="YIm-R2-qqj"/>
+                            <constraint firstAttribute="bottom" secondItem="TET-AS-1ry" secondAttribute="bottom" id="bce-3n-XBE"/>
                             <constraint firstAttribute="trailing" secondItem="TET-AS-1ry" secondAttribute="trailing" id="iea-8r-Edd"/>
-                            <constraint firstItem="lRc-aT-yr6" firstAttribute="trailing" secondItem="v7z-cU-uWS" secondAttribute="trailing" id="joY-IV-k3r"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="v7z-cU-uWS"/>
                         <connections>
@@ -3222,6 +3210,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="kEv-tO-tiv">
                                                     <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
+                                                    <color key="backgroundColor" red="0.74901960779999999" green="0.75686274509999996" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="64" id="GSw-PO-3nw"/>
                                                         <constraint firstAttribute="height" constant="64" id="jc4-4e-DiH"/>
@@ -4038,7 +4027,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m8b-sJ-paT">
-                                <rect key="frame" x="18" y="244" width="378" height="116"/>
+                                <rect key="frame" x="18" y="464" width="378" height="116"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -4050,21 +4039,21 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="bhd-OS-of5">
-                                <rect key="frame" x="26" y="252" width="362" height="100"/>
+                                <rect key="frame" x="26" y="472" width="362" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" priority="250" constant="345" id="AAs-Lm-4TE"/>
                                     <constraint firstAttribute="height" constant="100" id="e7G-TC-B75"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" keyboardType="alphabet" returnKeyType="done"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" keyboardType="alphabet" returnKeyType="done"/>
                             </textView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="m8b-sJ-paT" firstAttribute="height" secondItem="bhd-OS-of5" secondAttribute="height" constant="16" id="Jf2-Xl-z8w"/>
                             <constraint firstAttribute="trailing" secondItem="bhd-OS-of5" secondAttribute="trailing" constant="26" id="NuE-MR-JXR"/>
-                            <constraint firstAttribute="bottom" secondItem="bhd-OS-of5" secondAttribute="bottom" constant="340" id="RJG-7g-qFn"/>
+                            <constraint firstAttribute="bottom" secondItem="bhd-OS-of5" secondAttribute="bottom" constant="120" id="RJG-7g-qFn"/>
                             <constraint firstItem="m8b-sJ-paT" firstAttribute="centerY" secondItem="bhd-OS-of5" secondAttribute="centerY" id="jd8-HK-eYY"/>
                             <constraint firstItem="bhd-OS-of5" firstAttribute="leading" secondItem="2B8-2W-mUx" secondAttribute="leading" constant="26" id="oEs-iZ-Dn6"/>
                             <constraint firstItem="m8b-sJ-paT" firstAttribute="centerX" secondItem="bhd-OS-of5" secondAttribute="centerX" id="sdW-JX-wtt"/>

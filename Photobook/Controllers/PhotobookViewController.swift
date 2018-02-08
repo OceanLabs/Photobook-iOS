@@ -21,8 +21,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         static let dragLiftAnimationDuration: TimeInterval = 0.15
         static let dropAnimationDuration: TimeInterval = 0.3
         static let proposalCellHeight: CGFloat = 30.0
+        static let doneBlueColor = UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0)
+        static let rearrangeGreyColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1.0)
     }
-    private var reverseRearrageScale: CGFloat {
+    private var reverseRearrangeScale: CGFloat {
         return 1 + (1 - Constants.rearrageScale) / Constants.rearrageScale
     }
 
@@ -34,7 +36,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var ctaButtonContainer: UIView!
     
-    var photobokNavigationBarType: PhotobookNavigationBarType = .clear
+    var photobookNavigationBarType: PhotobookNavigationBarType = .clear
     
     var selectedAssetsManager: SelectedAssetsManager?
     private var titleButton = UIButton()
@@ -50,7 +52,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     private var isDragging = false
     private weak var currentlyPanningGesture: UIPanGestureRecognizer?
     private var scrollingTimer: Timer?
-    private var photobookNeedsRedrawing = false
     
     // Scrolling at 60Hz when we are dragging looks good enough and avoids having to normalize the scroll offset
     private lazy var screenRefreshRate: Double = 1.0 / 60.0
@@ -65,7 +66,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         // Remove pasteboard so that we avoid edge-cases with stale or inconsistent data
         UIPasteboard.remove(withName: UIPasteboardName("ly.kite.photobook.rearrange"))
         
-        collectionViewBottomConstraint.constant = -self.view.frame.height * (reverseRearrageScale - 1)
+        collectionViewBottomConstraint.constant = -view.frame.height * (reverseRearrangeScale - 1)
         
         NotificationCenter.default.addObserver(self, selector: #selector(menuDidHide), name: NSNotification.Name.UIMenuControllerDidHideMenu, object: nil)
         
@@ -75,12 +76,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         
         setup(with: photobook)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        // Reset the var after a possible colour change
-        photobookNeedsRedrawing = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -99,7 +94,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             insets = .zero
         }
         
-        let bottomInset = isRearranging ? ctaButtonContainer.frame.size.height * reverseRearrageScale - insets.bottom : ctaButtonContainer.frame.size.height - insets.bottom - collectionViewBottomConstraint.constant
+        let bottomInset = isRearranging ? ctaButtonContainer.frame.size.height * reverseRearrangeScale - insets.bottom : ctaButtonContainer.frame.size.height - insets.bottom - collectionViewBottomConstraint.constant
         
         let topInset = isRearranging ? (navigationController?.navigationBar.frame.maxY ?? 0) * (1 - Constants.rearrageScale) : 0
                 
@@ -180,6 +175,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             }, completion: nil)
             
             sender.title = NSLocalizedString("Photobook/DoneButtonTitle", value: "Done", comment: "Done button title")
+            sender.tintColor = Constants.doneBlueColor
         } else{
             UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
                 self.collectionView.transform = .identity
@@ -188,6 +184,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             }, completion: nil)
             
             sender.title = NSLocalizedString("Photobook/RearrangeButtonTitle", value: "Rearrange", comment: "Rearrange button title")
+            sender.tintColor = Constants.rearrangeGreyColor
         }
         
         // Update drag interaction enabled status
@@ -228,7 +225,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         
         let showBlur = collectionView.contentOffset.y > -navigationBarMaxY || draggingViewUnderNavBar
-        navigationBar.setBlur(showBlur)
+        photobookNavigationBarType = showBlur ? .white : .clear
+        navigationBar.setBarType(photobookNavigationBarType)
     }
     
     private func stopTimer() {
@@ -517,7 +515,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             cell.imageSize = imageSize
             cell.width = (view.bounds.size.width - Constants.cellSideMargin * 2.0) / 2.0
             cell.delegate = self
-            cell.loadCover(redrawing: photobookNeedsRedrawing)
+            cell.loadCover()
             
             return cell
         default:
@@ -561,8 +559,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             let leftLayout: ProductLayout? = leftIndex != nil ? ProductManager.shared.productLayouts[leftIndex!] : nil
             let rightLayout: ProductLayout? = rightIndex != nil ? ProductManager.shared.productLayouts[rightIndex!] : nil
 
-            cell.loadPages(leftIndex: leftIndex, rightIndex: rightIndex, leftLayout: leftLayout, rightLayout: rightLayout, redrawing: photobookNeedsRedrawing)
-            
+            cell.loadPages(leftIndex: leftIndex, rightIndex: rightIndex, leftLayout: leftLayout, rightLayout: rightLayout)
             cell.isPlusButtonVisible = ProductManager.shared.isAddingPagesAllowed && indexPath.item != 0
             
             return cell
@@ -627,10 +624,8 @@ extension PhotobookViewController: PageSetupDelegate {
             }
             if let color = color {
                 if index == 0 { // Cover
-                    photobookNeedsRedrawing = ProductManager.shared.coverColor != color
                     ProductManager.shared.coverColor = color
                 } else {
-                    photobookNeedsRedrawing = ProductManager.shared.pageColor != color
                     ProductManager.shared.pageColor = color
                 }
             }

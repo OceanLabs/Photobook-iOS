@@ -65,13 +65,9 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         backgroundColor = .clear
         
         let aspectRatio = ProductManager.shared.product!.aspectRatio!
-        
-        photobookFrameView.coverColor = coverColor
-        photobookFrameView.pageColor = pageColor
+
         photobookFrameView.leftPageView.aspectRatio = aspectRatio
         photobookFrameView.rightPageView.aspectRatio = aspectRatio
-        photobookFrameView.leftPageView.isTapGestureEnabled = false
-        photobookFrameView.rightPageView.isTapGestureEnabled = false
 
         photobookFrameView.width = (bounds.height - 2.0 * Constants.photobookVerticalMargin) * aspectRatio * 2.0
         
@@ -102,10 +98,13 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         default:
             break
         }
-    }
-    
-    func resetColor() {
-        photobookFrameView.resetPageColor()
+        
+        if photobookFrameView.coverColor != coverColor ||
+            photobookFrameView.pageColor != pageColor {
+                photobookFrameView.coverColor = coverColor
+                photobookFrameView.pageColor = pageColor
+                photobookFrameView.resetPageColor()
+        }
     }
 }
 

@@ -20,6 +20,7 @@ protocol Asset: Codable {
     var isLandscape: Bool { get }
     var uploadUrl: String? { get set }
     var assetType: String { get }
+    var date: Date? { get }
     
     var albumIdentifier: String { get }
     

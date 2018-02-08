@@ -34,6 +34,7 @@ class PhotosAsset: Asset {
             identifier = photosAsset.localIdentifier
         }
     }
+    
     var identifier: String! {
         didSet {
             if photosAsset == nil || photosAsset.localIdentifier != identifier,
@@ -41,6 +42,10 @@ class PhotosAsset: Asset {
                     photosAsset = asset
             }
         }
+    }
+    
+    var date: Date? {
+        return photosAsset.creationDate
     }
     
     var albumIdentifier: String

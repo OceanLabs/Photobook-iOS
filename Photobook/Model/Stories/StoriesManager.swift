@@ -202,14 +202,10 @@ class StoriesManager {
             selectedAssets.append(unusedAssets.remove(at: selectedIndex))
         }
         
+        let selectedAssetsManager = selectedAssetsManagerPerStory[story.identifier]
+        selectedAssetsManager?.select(selectedAssets)
+        
         // Sort
-        try? selectedAssets.sort(by: {
-            guard let d1 = ($0 as? PhotosAsset)?.photosAsset.creationDate,
-                let d2 = ($1 as? PhotosAsset)?.photosAsset.creationDate else { throw StoriesManagerError.incompatibleAssetType }
-            return d1 < d2
-        })
-        
-        
-        selectedAssetsManagerPerStory[story.identifier]?.select(selectedAssets)
+        selectedAssetsManager?.orderAssetsByDate()
     }
 }

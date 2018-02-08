@@ -17,9 +17,9 @@ extension PHAssetCollection {
             fetchOptions.wantsIncrementalChangeDetails = false
             fetchOptions.includeHiddenAssets = false
             fetchOptions.includeAllBurstAssets = false
-            fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
+            fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: true) ]
             
-            guard let coverAsset = PHAsset.fetchAssets(in: self, options: fetchOptions).firstObject else{
+            guard let coverAsset = PHAsset.fetchAssets(in: self, options: fetchOptions).firstObject else {
                 DispatchQueue.main.async {
                     completionHandler(nil, nil) //TODO: return an error
                 }
