@@ -42,7 +42,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet var toolbarButtons: [UIButton]!
     @IBOutlet weak var toolbar: UIToolbar!
     
-    var photobokNavigationBarType: PhotobookNavigationBarType = .clear
+    var photobookNavigationBarType: PhotobookNavigationBarType = .clear
     
     private var assetSelectorViewController: AssetSelectorViewController!
     private var layoutSelectionViewController: LayoutSelectionViewController!

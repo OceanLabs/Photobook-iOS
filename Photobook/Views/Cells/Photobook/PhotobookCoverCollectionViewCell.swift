@@ -32,12 +32,12 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell {
         coverFrameView.aspectRatio = ProductManager.shared.product!.aspectRatio
     }
 
-    func loadCover(redrawing: Bool = false) {
+    func loadCover() {
         coverFrameView.pageView.index = 0
         coverFrameView.pageView.productLayout = ProductManager.shared.productLayouts.first
         coverFrameView.pageView.setupImageBox()
         
-        if redrawing {
+        if coverFrameView.color != ProductManager.shared.coverColor {
             coverFrameView.color = ProductManager.shared.coverColor
             spineFrameView.color = ProductManager.shared.coverColor
             coverFrameView.resetCoverColor()

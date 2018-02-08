@@ -3160,6 +3160,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="kEv-tO-tiv">
                                                     <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
+                                                    <color key="backgroundColor" red="0.74901960779999999" green="0.75686274509999996" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="64" id="GSw-PO-3nw"/>
                                                         <constraint firstAttribute="height" constant="64" id="jc4-4e-DiH"/>
