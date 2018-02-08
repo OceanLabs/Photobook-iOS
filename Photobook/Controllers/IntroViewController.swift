@@ -11,7 +11,7 @@ import Photos
 
 class IntroViewController: UIViewController {
     
-    public var userHasDismissed:Bool {
+    var userHasDismissed:Bool {
         get {
             return UserDefaults.standard.bool(forKey: "IntroViewController.userHasDismissed")
         }
@@ -109,8 +109,8 @@ class IntroViewController: UIViewController {
         // First Tab: Stories
         // If there are no stories, remove the stories tab
         StoriesManager.shared.loadTopStories()
-        if StoriesManager.shared.stories.count == 0, let viewControllers = tabBarController.viewControllers {
-            tabBarController.viewControllers = Array(viewControllers[1...])
+        if StoriesManager.shared.stories.count == 0 {
+            tabBarController.viewControllers?.removeFirst()
         }
         
         // Load the products here, so that the user avoids a loading screen on PhotobookViewController

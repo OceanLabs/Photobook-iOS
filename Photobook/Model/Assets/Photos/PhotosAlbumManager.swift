@@ -9,18 +9,31 @@
 import UIKit
 import Photos
 
-enum LibraryError: Error {
-    case accessDenied
-}
-
 class PhotosAlbumManager: AlbumManager {
+    
+    private struct Constants {
+        static let permissionsTitle = NSLocalizedString("Controllers/EmptyScreenViewController/PermissionDeniedTitle",
+                                                        value: "Permissions Required",
+                                                        comment: "Title shown when the photo library access has been disabled")
+        static let permissionsMessage = NSLocalizedString("Controllers/EmptyScreenViewController/PermissionDeniedMessage",
+                                                          value: "Photo access has been restricted, but it's needed to create beautiful photo books.\nYou can turn it back on in the system settings",
+                                                          comment: "Message shown when the photo library access has been disabled")
+        static let permissionsButtonTitle = NSLocalizedString("Controllers/StoriesviewController/PermissionDeniedSettingsButton",
+                                                              value: "Open Settings",
+                                                              comment: "Button title to direct the user to the app permissions screen in the phone settings")
+    }
     
     var albums:[Album] = [Album]()
     static let imageManager = PHCachingImageManager()
     
-    func loadAlbums(completionHandler: ((Error?) -> Void)?) {
+    func loadAlbums(completionHandler: ((ErrorMessage?) -> Void)?) {
         guard PHPhotoLibrary.authorizationStatus() == .authorized else {
-            completionHandler?(LibraryError.accessDenied)
+            let errorMessage = ErrorMessage(title: Constants.permissionsTitle, message: Constants.permissionsMessage, buttonTitle: Constants.permissionsButtonTitle, buttonAction: {
+                if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
+                    UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
+                }
+            })
+            completionHandler?(errorMessage)
             return
         }
         

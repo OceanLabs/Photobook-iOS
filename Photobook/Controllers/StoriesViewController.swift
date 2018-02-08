@@ -97,7 +97,7 @@ extension StoriesViewController: UITableViewDataSource {
             storyIndex = indexPath.row
         case 2, 3: // Double cells for the second and third rows
             storyIndex = indexPath.row == 2 ? 2 : 4 // Indexes corresponding to the first story of the third and fourth rows
-            isDouble = numberOfStories >= (indexPath.row * 2) // Check if we have enought stories for a double cell
+            isDouble = numberOfStories >= (indexPath.row * 2) // Check if we have enough stories for a double cell
         default:
             let minusHeaderRows = indexPath.row - Constants.rowsInHeader
             let numberOfLayouts = minusHeaderRows / Constants.rowsPerLayoutPattern

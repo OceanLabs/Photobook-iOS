@@ -43,9 +43,9 @@ class AlbumsCollectionViewController: UICollectionViewController {
     }
     
     func loadAlbums() {
-        albumManager.loadAlbums(completionHandler: { [weak welf = self] (error) in
-            guard error == nil else {
-                welf?.emptyScreenViewController.showErrorScreen(error: error!)
+        albumManager.loadAlbums(completionHandler: { [weak welf = self] (errorMessage) in
+            guard errorMessage == nil else {
+                welf?.emptyScreenViewController.show(message: errorMessage!.message, title:errorMessage!.title, buttonTitle: errorMessage!.buttonTitle, buttonAction: errorMessage?.buttonAction)
                 return
             }
             
