@@ -68,8 +68,6 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
 
         photobookFrameView.leftPageView.aspectRatio = aspectRatio
         photobookFrameView.rightPageView.aspectRatio = aspectRatio
-        photobookFrameView.leftPageView.isTapGestureEnabled = false
-        photobookFrameView.rightPageView.isTapGestureEnabled = false
 
         photobookFrameView.width = (bounds.height - 2.0 * Constants.photobookVerticalMargin) * aspectRatio * 2.0
         

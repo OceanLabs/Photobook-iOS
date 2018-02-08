@@ -21,6 +21,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
             photobookFrameView.coverColor = ProductManager.shared.coverColor
             photobookFrameView.pageColor = ProductManager.shared.pageColor
             photobookFrameView.leftPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
+            photobookFrameView.interaction = .wholePage
         }
     }
     @IBOutlet private weak var plusButton: UIButton!

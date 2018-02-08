@@ -23,6 +23,7 @@ class ProductManagerTests: XCTestCase {
         let validDictionary = ([
             "id": 10,
             "name": "210 x 210",
+            "pageHeight": 450.34,
             "aspectRatio": 1.38,
             "coverLayouts": [ 9, 10 ],
             "layouts": [ 10, 11, 12, 13 ]

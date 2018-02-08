@@ -21,6 +21,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         static let dragLiftAnimationDuration: TimeInterval = 0.15
         static let dropAnimationDuration: TimeInterval = 0.3
         static let proposalCellHeight: CGFloat = 30.0
+        static let doneBlueColor = UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0)
+        static let rearrangeGreyColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1.0)
     }
     private var reverseRearrangeScale: CGFloat {
         return 1 + (1 - Constants.rearrageScale) / Constants.rearrageScale
@@ -173,6 +175,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             }, completion: nil)
             
             sender.title = NSLocalizedString("Photobook/DoneButtonTitle", value: "Done", comment: "Done button title")
+            sender.tintColor = Constants.doneBlueColor
         } else{
             UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
                 self.collectionView.transform = .identity
@@ -181,6 +184,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             }, completion: nil)
             
             sender.title = NSLocalizedString("Photobook/RearrangeButtonTitle", value: "Rearrange", comment: "Rearrange button title")
+            sender.tintColor = Constants.rearrangeGreyColor
         }
         
         // Update drag interaction enabled status
