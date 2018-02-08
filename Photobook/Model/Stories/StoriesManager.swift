@@ -32,7 +32,7 @@ class StoriesManager {
         
         DispatchQueue.global(qos: .background).async {
             for story in self.stories {
-                story.loadAssets(completionHandler: nil)
+                self.prepare(story: story, completionHandler: nil)
             }
         }
     }
