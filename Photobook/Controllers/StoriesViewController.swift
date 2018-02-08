@@ -32,6 +32,8 @@ class StoriesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         loadStories()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(loadStories), name: .UIApplicationDidBecomeActive, object: nil)
     }
     
     @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
