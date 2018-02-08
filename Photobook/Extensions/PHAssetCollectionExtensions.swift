@@ -10,14 +10,14 @@ import Photos
 
 extension PHAssetCollection {
     
-    func coverImage(size: CGSize, completionHandler: @escaping (UIImage?, Error?) -> Void) {
+    func coverImage(coverIsFirstImageInCollection: Bool, size: CGSize, completionHandler: @escaping (UIImage?, Error?) -> Void) {
         DispatchQueue.global(qos: .background).async {
             let fetchOptions = PHFetchOptions()
             fetchOptions.fetchLimit = 1
             fetchOptions.wantsIncrementalChangeDetails = false
             fetchOptions.includeHiddenAssets = false
             fetchOptions.includeAllBurstAssets = false
-            fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: true) ]
+            fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: coverIsFirstImageInCollection) ]
             
             guard let coverAsset = PHAsset.fetchAssets(in: self, options: fetchOptions).firstObject else {
                 DispatchQueue.main.async {

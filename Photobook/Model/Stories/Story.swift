@@ -109,7 +109,7 @@ extension Story: Album {
     }
     
     func coverImage(size: CGSize, completionHandler: @escaping (UIImage?, Error?) -> Void) {
-        collectionForCoverPhoto.coverImage(size: size, completionHandler: completionHandler)
+        collectionForCoverPhoto.coverImage(coverIsFirstImageInCollection: true, size: size, completionHandler: completionHandler)
     }
 }
 
