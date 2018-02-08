@@ -20,22 +20,19 @@ class StoriesManager {
     
     private let imageManager = PHImageManager.default()
     private var selectedAssetsManagerPerStory = [String : SelectedAssetsManager]()
+    var stories = [Story]()
     
     private struct Constants {
-        static let photosPerBook = 20
+        static let maxStoriesToDisplay = 16
     }
     
-    func topStories(_ count: Int, completion: @escaping ([Story]?, Error?)->()) {
-        PHPhotoLibrary.requestAuthorization { (status) in
-            guard status == .authorized else {
-                completion(nil, StoriesManagerError.unauthorized)
-                return
-            }
-            
-            // Do the ordering asynchronously
-            DispatchQueue.main.async {
-                let memories = self.orderStories()
-                completion(Array<Story>(memories.prefix(count)), nil)
+    func loadTopStories(){
+        let memories = self.orderStories()
+        stories = Array<Story>(memories.prefix(Constants.maxStoriesToDisplay))
+        
+        DispatchQueue.global(qos: .background).async {
+            for story in self.stories {
+                self.prepare(story: story, completionHandler: nil)
             }
         }
     }
@@ -76,7 +73,7 @@ class StoriesManager {
             }
             
             // Minimum asset count
-            guard totalAssetCount > Constants.photosPerBook else { return }
+            guard totalAssetCount > ProductManager.shared.minimumRequiredAssets else { return }
             
             let story = Story(list: list, coverCollection: moments.firstObject!)
             story.components = locationComponents

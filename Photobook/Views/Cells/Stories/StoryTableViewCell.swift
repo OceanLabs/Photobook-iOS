@@ -22,6 +22,8 @@ class StoryTableViewCell: UITableViewCell {
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var datesLabel: UILabel!
     @IBOutlet private weak var coverImageView: UIImageView!
+    @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var overlayView: UIView!
     
     var title: String? {
         didSet {

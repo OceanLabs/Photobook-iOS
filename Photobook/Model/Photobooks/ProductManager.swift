@@ -126,17 +126,17 @@ class ProductManager {
     /// Requests the photobook details so the user can start building their photobook
     ///
     /// - Parameter completion: Completion block with an optional error
-    func initialise(completion:@escaping (Error?)->()) {
+    func initialise(completion:((Error?)->())?) {
         apiManager.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, error) in
             guard error == nil else {
-                completion(error!)
+                completion?(error!)
                 return
             }
             
             welf?.products = photobooks
             welf?.layouts = layouts
             
-            completion(nil)
+            completion?(nil)
             
             // TODO: REMOVEME. Mock cost & shipping methods
             let lineItem = LineItem(id: 0, name: "Clown Costume 🤡", cost: Decimal(integerLiteral: 10), formattedCost: "$10")

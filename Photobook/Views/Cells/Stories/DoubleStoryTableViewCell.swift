@@ -17,6 +17,8 @@ class DoubleStoryTableViewCell: StoryTableViewCell {
     @IBOutlet private weak var secondTitleLabel: UILabel!
     @IBOutlet private weak var secondDatesLabel: UILabel!
     @IBOutlet private weak var secondCoverImageView: UIImageView!
+    @IBOutlet weak var secondContainerView: UIView!
+    @IBOutlet weak var secondOverlayView: UIView!
     
     var secondTitle: String? {
         didSet {
