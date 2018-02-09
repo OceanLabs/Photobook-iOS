@@ -41,21 +41,25 @@ class OrderSummaryViewController: UIViewController {
         orderSummaryManager = OrderSummaryManager()
         orderSummaryManager.delegate = self
     }
+    
+    func retryFetchingSummary() {
+        self.emptyScreenViewController.show(message: self.stringLoading, activity: true)
+        orderSummaryManager.refresh(false)
+    }
 }
 
 extension OrderSummaryViewController: OrderSummaryManagerDelegate {
     func orderSummaryManager(_ manager: OrderSummaryManager, didUpdate success: Bool) {
-        emptyScreenViewController.hide(animated: true)
         progressOverlayViewController.hide(animated: true)
         
         if success {
+            emptyScreenViewController.hide(animated: true)
             tableView.reloadData()
             previewImageView.image = orderSummaryManager.previewImage
         } else {
-            print("OrderSummaryViewController: Updating summary failed")
             
             emptyScreenViewController.show(message: stringLoadingFail, title: nil, image: nil, activity: false, buttonTitle: stringLoadingRetry, buttonAction: {
-                self.emptyScreenViewController.show(message: self.stringLoading, activity: true)
+                self.retryFetchingSummary()
             })
         }
     }

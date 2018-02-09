@@ -78,7 +78,11 @@ class OrderSummaryManager {
     func fetchProductDetails() {
         
         //TODO: mock data REMOVE
-        guard let summaryDict = JSON.parse(file: "order_summary") as? [String:Any] else {
+        let randomInt = arc4random_uniform(4)
+        let filename = "order_summary_\(randomInt)"
+        print("mock file: " + filename)
+        
+        guard let summaryDict = JSON.parse(file: filename) as? [String:Any] else {
             delegate?.orderSummaryManager(self, didUpdate: false)
             return
         }

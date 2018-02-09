@@ -3076,7 +3076,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ciZ-cW-ggr">
                                 <rect key="frame" x="160.66666666666666" y="321.33333333333331" width="94.333333333333343" height="94.333333333333314"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Byh-tU-3Mh">
-                                    <rect key="frame" x="0.0" y="0.0" width="94" height="95"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="94.333333333333343" height="94.333333333333314"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sdD-vw-kJp">

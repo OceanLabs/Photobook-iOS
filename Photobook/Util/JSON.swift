@@ -8,7 +8,7 @@
 
 import UIKit
 
-class JSON: NSObject {
+class JSON {
     static func parse(file: String) -> AnyObject? {
         guard let path = Bundle.main.path(forResource: file, ofType: "json") else { return nil }
         
