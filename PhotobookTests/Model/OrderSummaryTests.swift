@@ -14,7 +14,7 @@ class OrderSummaryTests: XCTestCase {
     let validDictionary:[String:Any] = ["details":[["name":"book", "price":"£50.00"],
                                                    ["name":"Glossy finish", "price":"£10.00"]],
                                         "total":"£60.00",
-                                        "imagePreviewUrl":"https://image.kite.ly/render/?product_id=twill_tote_bag&variant=back2_melange_black&format=jpeg&debug=false&background=efefef"]
+                                        "previewImageUrl":"https://image.kite.ly/render/?product_id=twill_tote_bag&variant=back2_melange_black&format=jpeg&debug=false&background=efefef"]
     
     override func setUp() {
         super.setUp()
@@ -44,7 +44,7 @@ class OrderSummaryTests: XCTestCase {
         let invalidUrlDictionary:[String:Any] = ["details":[["name":"book", "price":"£50.00"],
                                                             ["name":"Glossy finish", "price":"£10.00"]],
                                                  "total":"£60.00",
-                                                 "imagePreviewUrl":"somethingelse"]
+                                                 "previewImageUrl":"somethingelse"]
         
         guard let invalidUrlSummary = OrderSummary(invalidUrlDictionary) else {
             XCTFail("Could not initialise OrderSummary object")

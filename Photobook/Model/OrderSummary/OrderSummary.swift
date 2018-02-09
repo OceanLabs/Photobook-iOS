@@ -41,7 +41,7 @@ class OrderSummary {
     }
     
     convenience init?(_ dict:[String:Any]) {
-        guard let dictionaries = dict["details"] as? [[String:Any]], let imageUrl = dict["imagePreviewUrl"] as? String, let total = dict["total"] as? String else {
+        guard let dictionaries = dict["details"] as? [[String:Any]], let imageUrl = dict["previewImageUrl"] as? String, let total = dict["total"] as? String else {
             print("OrderSummary: couldn't initialise")
             return nil
         }
