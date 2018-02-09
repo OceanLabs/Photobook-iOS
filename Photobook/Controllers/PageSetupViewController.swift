@@ -42,7 +42,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet var toolbarButtons: [UIButton]!
     @IBOutlet weak var toolbar: UIToolbar!
     
-    var photobokNavigationBarType: PhotobookNavigationBarType = .clear
+    var photobookNavigationBarType: PhotobookNavigationBarType = .clear
     
     private var assetSelectorViewController: AssetSelectorViewController!
     private var layoutSelectionViewController: LayoutSelectionViewController!
@@ -51,10 +51,16 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     private var textEditingViewController: TextEditingViewController!
     
     @IBOutlet private weak var coverFrameView: CoverFrameView! {
-        didSet { coverFrameView.isHidden = pageType != .cover }
+        didSet {
+            coverFrameView.isHidden = pageType != .cover
+            coverFrameView.interaction = .assetAndText
+        }
     }
     @IBOutlet private weak var photobookFrameView: PhotobookFrameView!  {
-        didSet { photobookFrameView.isHidden = pageType == .cover }
+        didSet {
+            photobookFrameView.isHidden = pageType == .cover
+            photobookFrameView.interaction = .assetAndText
+        }
     }
     
     @IBOutlet private weak var photobookHorizontalAlignmentConstraint: NSLayoutConstraint!
@@ -156,8 +162,6 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         super.viewDidLayoutSubviews()
         
         if !hasDoneSetup {
-            textEditingContainerView.alpha = 0.0
-            
             coverFrameView.color = ProductManager.shared.coverColor
             coverFrameView.pageView.aspectRatio = ProductManager.shared.product!.aspectRatio
 
@@ -166,6 +170,9 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             photobookFrameView.leftPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
             photobookFrameView.rightPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
+            
+            photobookFrameView.leftPageView.delegate = self
+            photobookFrameView.rightPageView.delegate = self
 
             photobookFrameView.width = (view.bounds.width - 2.0 * Constants.photobookSideMargin) * 2.0
             
@@ -261,6 +268,15 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             // Remove the asset if the layout doesn't have an image box
             productLayout.asset = nil
         }
+        // Work out whether we need to cut the user's text to fit the layout
+        let visibleText = textEditingViewController.visibleTextInLayout()
+        if productLayout.layout.textLayoutBox != nil &&
+            productLayout.productLayoutText?.text != nil &&
+            visibleText != nil &&
+            visibleText != productLayout.productLayoutText?.text
+        {
+            productLayout.productLayoutText!.text = visibleText
+        }
         delegate?.didFinishEditingPage(pageIndex, productLayout: productLayout, color: selectedColor)
     }
     
@@ -273,50 +289,59 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         // Store currently selected tool so we may come back to it
         previouslySelectedButton = toolbarButtons.first { $0.isSelected }
         
-        let editLayoutWasSelected = toolbarButtons[Tool.placeAsset.rawValue].isSelected
+        let placeAssetWasSelected = toolbarButtons[Tool.placeAsset.rawValue].isSelected
+        let textEditingWasSelected = toolbarButtons[Tool.editText.rawValue].isSelected
         
         for button in toolbarButtons { button.isSelected = (button === sender) }
         
         switch tool {
         case .selectAsset, .selectLayout, .selectColor:
-            if editLayoutWasSelected {
+            if placeAssetWasSelected {
                 assetPlacementViewController.animateBackToPhotobook {
                     self.assetImageView.transform = self.productLayout!.productLayoutAsset!.transform
                     self.view.sendSubview(toBack: self.placementContainerView)
                 }
             }
             
+            if textEditingWasSelected {
+                textEditingViewController.animateOff {
+                    self.view.sendSubview(toBack: self.textEditingContainerView)
+                }
+            }
+
             UIView.animate(withDuration: 0.1, animations: {
                 self.photobookContainerView.alpha = 1.0
-                self.textEditingContainerView.alpha = 0.0
                 self.assetSelectionContainerView.alpha = tool.rawValue == Tool.selectAsset.rawValue ? 1.0 : 0.0
                 self.layoutSelectionContainerView.alpha = tool.rawValue == Tool.selectLayout.rawValue ? 1.0 : 0.0
                 self.colorSelectionContainerView.alpha = tool.rawValue == Tool.selectColor.rawValue ? 1.0 : 0.0
             })
         case .placeAsset:
-            view.bringSubview(toFront: placementContainerView)
-            
             let containerRect = placementContainerView.convert(assetContainerView.frame, from: pageView)
             assetPlacementViewController.productLayout = productLayout
             assetPlacementViewController.initialContainerRect = containerRect
             assetPlacementViewController.assetImage = assetImageView.image
-            assetPlacementViewController.animateFromPhotobook()
+            if textEditingWasSelected {
+                textEditingViewController.animateOff {
+                    self.view.sendSubview(toBack: self.textEditingContainerView)
+                }
+            } else {
+                view.bringSubview(toFront: placementContainerView)
+                assetPlacementViewController.animateFromPhotobook()
+            }
         case .editText:
             view.bringSubview(toFront: textEditingContainerView)
+            self.textEditingContainerView.alpha = 1.0
             
-            // TODO: Animate photobook
             textEditingViewController.productLayout = productLayout!
             textEditingViewController.assetImage = assetImageView.image
             textEditingViewController.pageColor = selectedColor
-            textEditingViewController.setup()
-            
-            UIView.animate(withDuration: 0.2, animations: {
-                self.assetSelectionContainerView.alpha = 0.0
-                self.layoutSelectionContainerView.alpha = 0.0
-                self.colorSelectionContainerView.alpha = 0.0
-                self.photobookContainerView.alpha = 0.0
-                self.textEditingContainerView.alpha = 1.0
-            })
+            if placeAssetWasSelected {
+                let containerRect = textEditingContainerView.convert(assetPlacementViewController.targetRect!, from: placementContainerView)
+                textEditingViewController.initialContainerRect = containerRect
+            } else {
+                textEditingViewController.initialContainerRect = textEditingContainerView.convert(assetContainerView.frame, from: pageView)
+            }
+            textEditingViewController.animateOn()
         }
         
         setTopBars(hidden: tool == .editText)
@@ -341,6 +366,8 @@ extension PageSetupViewController: LayoutSelectionDelegate {
         // Deselect the asset if the layout does not have an image box
         if productLayout.layout.imageLayoutBox == nil {
             assetSelectorViewController.selectedAsset = nil
+        } else if productLayout.asset != nil && assetSelectorViewController.selectedAsset == nil {
+            assetSelectorViewController.reselectAsset(productLayout.asset!)
         }
         
         setupAssetPlacement()
@@ -399,5 +426,16 @@ extension PageSetupViewController: TextEditingDelegate {
     func didChangeFontType(to fontType: FontType) {
         productLayout.fontType = fontType
         pageView.setupTextBox()
+    }
+}
+
+extension PageSetupViewController: PhotobookPageViewDelegate {
+    
+    func didTapOnAsset(index: Int) {
+        tappedToolButton(toolbarButtons[Tool.placeAsset.rawValue])
+    }
+
+    func didTapOnText(index: Int) {
+        tappedToolButton(toolbarButtons[Tool.editText.rawValue])
     }
 }

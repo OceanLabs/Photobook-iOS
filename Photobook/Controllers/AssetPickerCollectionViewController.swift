@@ -16,7 +16,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     private let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
     private var previousPreheatRect = CGRect.zero
     var selectedAssetsManager: SelectedAssetsManager?
-    var imageCollectorController: AssetCollectorViewController!
+    var assetCollectorController: AssetCollectorViewController!
     static let coverAspectRatio: CGFloat = 2.723684211
     
     var albumManager: AlbumManager?
@@ -58,9 +58,9 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         
         // Setup the Image Collector Controller
         if let manager = selectedAssetsManager {
-            imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: manager)
-            imageCollectorController.mode = collectorMode
-            imageCollectorController.delegate = self
+            assetCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: manager)
+            assetCollectorController.mode = collectorMode
+            assetCollectorController.delegate = self
         }
         
         //listen to asset manager
@@ -233,6 +233,8 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
             photobookViewController.selectedAssetsManager = selectedAssetsManager
             navigationController?.pushViewController(photobookViewController, animated: true)
         }
+        selectedAssetsManager?.orderAssetsByDate()
+        collectionView?.reloadData()
     }
 }
 
@@ -300,8 +302,8 @@ extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayou
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         var height:CGFloat = 0
-        if let imageCollectorVC = imageCollectorController {
-            height = imageCollectorVC.viewHeight
+        if let assetCollectorViewController = assetCollectorController {
+            height = assetCollectorViewController.viewHeight
         }
         return CGSize(width: collectionView.frame.size.width, height: height)
     }

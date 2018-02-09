@@ -21,6 +21,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
             photobookFrameView.coverColor = ProductManager.shared.coverColor
             photobookFrameView.pageColor = ProductManager.shared.pageColor
             photobookFrameView.leftPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
+            photobookFrameView.interaction = .wholePage
         }
     }
     @IBOutlet private weak var plusButton: UIButton!
@@ -55,7 +56,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
         set { plusButton.isHidden = !newValue }
     }
 
-    func loadPages(leftIndex: Int?, rightIndex: Int?, leftLayout: ProductLayout? = nil, rightLayout: ProductLayout? = nil, redrawing: Bool = false) {
+    func loadPages(leftIndex: Int?, rightIndex: Int?, leftLayout: ProductLayout? = nil, rightLayout: ProductLayout? = nil) {
         if let leftIndex = leftIndex {
             photobookFrameView.isLeftPageVisible = true
             photobookFrameView.leftPageView.index = leftIndex
@@ -76,7 +77,9 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
             photobookFrameView.isRightPageVisible = false
         }
         
-        if redrawing {
+        if photobookFrameView.coverColor != ProductManager.shared.coverColor ||
+            photobookFrameView.pageColor != ProductManager.shared.pageColor {
+            
             photobookFrameView.coverColor = ProductManager.shared.coverColor
             photobookFrameView.pageColor = ProductManager.shared.pageColor
             photobookFrameView.resetPageColor()
