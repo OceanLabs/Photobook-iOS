@@ -63,12 +63,12 @@ class OrderSummaryManager {
     
     func selectUpsellOption(_ option:UpsellOption) {
         selectedUpsellOptions.insert(option)
-        refresh(true)
+        refresh(false)
     }
     
     func deselectUpsellOption(_ option:UpsellOption) {
         selectedUpsellOptions.remove(option)
-        refresh(true)
+        refresh(false)
     }
     
     func isUpsellOptionSelected(_ option:UpsellOption) -> Bool {
@@ -90,8 +90,8 @@ class OrderSummaryManager {
         }
         self.summary = summary
         
-        if let imageUrl = summary.previewImageUrl(withCoverImageUrl: coverImageUrl, size: CGSize(width: 300, height: 300)), let url = URL(string: imageUrl) {
-            URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) -> Void in
+        if let imageUrl = summary.previewImageUrl(withCoverImageUrl: coverImageUrl, size: CGSize(width: 300, height: 300)) {
+            URLSession.shared.dataTask(with: imageUrl, completionHandler: { (data, response, error) -> Void in
                 DispatchQueue.main.async(execute: { () -> Void in
                     if let data = data {
                         self.previewImage = UIImage(data: data)
@@ -111,7 +111,7 @@ class OrderSummaryManager {
             return
         }
         
-        asset.image(size: CGSize(width: Int.max, height: Int.max), applyEdits: false, progressHandler: nil, completionHandler: { (image, error) in
+        asset.image(size: assetMaximumSize, applyEdits: false, progressHandler: nil, completionHandler: { (image, error) in
             if let image = image {
                 APIClient.shared.uploadImage(image, imageName: self.taskReferenceImagePreview + ".jpeg", reference: self.taskReferenceImagePreview, context: .pig, endpoint: "upload/")
             } else {

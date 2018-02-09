@@ -47,6 +47,7 @@ class ProgressOverlayViewController: UIViewController {
             self.didMove(toParentViewController: parentController)
         }
         
+        self.view.alpha = 1.0
         descriptionTextView.text = message
         activityIndicatorView.startAnimating()
     }

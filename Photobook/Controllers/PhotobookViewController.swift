@@ -174,7 +174,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             }, completion: nil)
             
             sender.title = NSLocalizedString("Photobook/DoneButtonTitle", value: "Done", comment: "Done button title")
-        } else{
+        } else {
             UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
                 self.collectionView.transform = .identity
                 self.view.setNeedsLayout()
@@ -189,6 +189,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             guard let photobookCell = cell as? PhotobookCollectionViewCell else { continue }
             photobookCell.setIsRearranging(isRearranging)
         }
+    }
+    
+    @IBAction func didTapCheckout(_ sender: Any) {
+        guard draggingView == nil else { return }
+        let orderSummaryViewController = storyboard?.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
+        self.navigationController?.pushViewController(orderSummaryViewController, animated: true)
     }
     
     @IBAction private func didTapOnSpine(_ sender: UITapGestureRecognizer) {

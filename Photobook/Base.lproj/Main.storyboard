@@ -2195,7 +2195,7 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <segue destination="ays-et-QoH" kind="show" id="ixR-Fv-K8j"/>
+                                            <action selector="didTapCheckout:" destination="l0p-H6-Aqd" eventType="touchUpInside" id="fYd-4z-j4W"/>
                                         </connections>
                                     </button>
                                 </subviews>

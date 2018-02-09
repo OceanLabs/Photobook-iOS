@@ -14,6 +14,11 @@ class OrderSummaryViewController: UIViewController {
     private let sectionTotal = 1
     private let sectionOptions = 2
     
+    private let stringLoading = NSLocalizedString("OrderSummary/Loading", value: "Loading order details", comment: "Loading product summary")
+    private let stringLoadingFail = NSLocalizedString("OrderSummary/LoadingFail", value: "Couldn't load order details", comment: "When loading order details fails")
+    private let stringLoadingRetry = NSLocalizedString("OrderSummary/LoadingFailRetry", value: "Retry", comment: "Retry button title when loading order details fails")
+    private let stringTitle = NSLocalizedString("OrderSummary/Title", value: "Your order", comment: "Title of the screen that displays order details and upsell options")
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var previewImageView: UIImageView!
     
@@ -29,9 +34,9 @@ class OrderSummaryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = NSLocalizedString("OrderSummary/Title", value: "Your order", comment: "Title of the screen that displays order details and upsell options")
+        self.title = stringTitle
         
-        emptyScreenViewController.show(message: NSLocalizedString("OrderSummary/Loading", value: "Loading order details", comment: "Loading product summary"), activity: true)
+        emptyScreenViewController.show(message: stringLoading, activity: true)
         
         orderSummaryManager = OrderSummaryManager()
         orderSummaryManager.delegate = self
@@ -40,15 +45,19 @@ class OrderSummaryViewController: UIViewController {
 
 extension OrderSummaryViewController: OrderSummaryManagerDelegate {
     func orderSummaryManager(_ manager: OrderSummaryManager, didUpdate success: Bool) {
+        emptyScreenViewController.hide(animated: true)
+        progressOverlayViewController.hide(animated: true)
+        
         if success {
             tableView.reloadData()
             previewImageView.image = orderSummaryManager.previewImage
         } else {
             print("OrderSummaryViewController: Updating summary failed")
+            
+            emptyScreenViewController.show(message: stringLoadingFail, title: nil, image: nil, activity: false, buttonTitle: stringLoadingRetry, buttonAction: {
+                self.emptyScreenViewController.show(message: self.stringLoading, activity: true)
+            })
         }
-        
-        emptyScreenViewController.hide(animated: true)
-        progressOverlayViewController.hide(animated: true)
     }
 }
 

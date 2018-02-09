@@ -36,11 +36,12 @@ class OrderSummary {
     
     private init(details:[Detail], total:String, pigBaseUrl:String) {
         self.details = details
+        self.total = total
         self.pigBaseUrl = pigBaseUrl
     }
     
     convenience init?(_ dict:[String:Any]) {
-        guard let dictionaries = dict["summary"] as? [[String:Any]], let imageUrl = dict["imagePreviewUrl"] as? String, let total = dict["total"] as? String else {
+        guard let dictionaries = dict["details"] as? [[String:Any]], let imageUrl = dict["imagePreviewUrl"] as? String, let total = dict["total"] as? String else {
             print("OrderSummary: couldn't initialise")
             return nil
         }
@@ -55,12 +56,14 @@ class OrderSummary {
         self.init(details:details, total:total, pigBaseUrl:imageUrl)
     }
     
-    func previewImageUrl(withCoverImageUrl imageUrl:String, size:CGSize) -> String? {
+    func previewImageUrl(withCoverImageUrl imageUrl:String, size:CGSize) -> URL? {
+        
         guard let pigBaseUrl = pigBaseUrl else { return nil }
         
         let urlString = pigBaseUrl + "&image=" + imageUrl + "&size=\(size.width)x\(size.height)" + "&fill_mode=fit"
+        guard let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) else { return nil }
         
-        return URL(string: urlString) != nil ? urlString : nil
+        return url
     }
     
 }
