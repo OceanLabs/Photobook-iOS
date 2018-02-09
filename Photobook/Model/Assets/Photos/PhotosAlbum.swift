@@ -11,8 +11,9 @@ import Photos
 
 class PhotosAlbum: Album {
     
-    private let assetCollection: PHAssetCollection
+    let assetCollection: PHAssetCollection
     var assets = [Asset]()
+    var fetchedAssets: PHFetchResult<PHAsset>?
 
     init(_ assetCollection: PHAssetCollection) {
         self.assetCollection = assetCollection
@@ -41,14 +42,18 @@ class PhotosAlbum: Album {
     
     func loadAssetsFromPhotoLibrary() {
         let fetchOptions = PHFetchOptions()
-        fetchOptions.wantsIncrementalChangeDetails = false
+        fetchOptions.wantsIncrementalChangeDetails = true
         fetchOptions.includeHiddenAssets = false
         fetchOptions.includeAllBurstAssets = false
         fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
         let fetchedAssets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+        var assets = [Asset]()
         fetchedAssets.enumerateObjects({ (asset, _, _) in
-            self.assets.append(PhotosAsset(asset, albumIdentifier: self.identifier))
+            assets.append(PhotosAsset(asset, albumIdentifier: self.identifier))
         })
+        
+        self.assets = assets
+        self.fetchedAssets = fetchedAssets
     }
     
     func coverImage(size: CGSize, completionHandler: @escaping (UIImage?, Error?) -> Void) {
