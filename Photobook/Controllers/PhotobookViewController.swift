@@ -210,7 +210,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let alertController = UIAlertController(title: NSLocalizedString("Photobook/BackAlertTitle", value: "Are you sure?", comment: "Title for alert asking the user to go back"), message: NSLocalizedString("Photobook/BackAlertMessage", value: "This will discard any changes made to your photobook", comment: "Message for alert asking the user to go back"), preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: NSLocalizedString("Photobook/BackAlertConfirmationButtonTitle", value: "Yes", comment: "Confirmation button title for alert asking the user to go back"), style: .destructive, handler: { _ in
             
-            //Clear photobook
+            // Clear photobook
             ProductManager.shared.productLayouts = [ProductLayout]()
             ProductManager.shared.product = nil
             ProductManager.shared.spineText = nil
