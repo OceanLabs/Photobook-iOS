@@ -431,11 +431,11 @@ extension PageSetupViewController: TextEditingDelegate {
 
 extension PageSetupViewController: PhotobookPageViewDelegate {
     
-    func didTapOnAsset(index: Int) {
+    func didTapOnAsset(at index: Int) {
         tappedToolButton(toolbarButtons[Tool.placeAsset.rawValue])
     }
 
-    func didTapOnText(index: Int) {
+    func didTapOnText(at index: Int) {
         tappedToolButton(toolbarButtons[Tool.editText.rawValue])
     }
 }

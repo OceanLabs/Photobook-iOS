@@ -48,10 +48,7 @@ class TextEditingViewController: UIViewController {
     }
     
     @IBOutlet private weak var textToolBarView: TextToolBarView! {
-        didSet {
-            textToolBarView.backgroundColor = UIColor(red: 0.82, green: 0.83, blue: 0.85, alpha: 1.0)
-            textToolBarView.delegate = self
-        }
+        didSet { textToolBarView.delegate = self }
     }
     @IBOutlet private weak var textViewBorderView: UIView!
     @IBOutlet private weak var textView: UITextView! {
@@ -86,8 +83,6 @@ class TextEditingViewController: UIViewController {
 
         view.alpha = 0.0
         
-        // FIXME: Move color to global scope
-        textViewBorderView.borderColor = UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0)
         textView.textContainer.lineFragmentPadding = 0.0
         textView.textContainerInset = .zero
         
