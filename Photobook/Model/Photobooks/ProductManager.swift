@@ -200,45 +200,6 @@ class ProductManager {
         currentLandscapeLayout = 0
         currentPortraitLayout = 0
         
-        // Find if any assets were removed or added since the last time
-        var removedAssets = [Asset]()
-        var keptAssets = [Asset]()
-        
-        for productLayout in productLayouts {
-            guard let asset = productLayout.asset else { continue }
-            
-            // Check if asset is still included in the new selections
-            if let addedIndex = addedAssets.index(where: { $0 == asset }) {
-                addedAssets.remove(at: addedIndex)
-                
-                // Mark asset as kept
-                keptAssets.append(asset)
-            }
-            
-            if keptAssets.index(where: { $0 == asset }) == nil {
-                removedAssets.append(asset)
-            }
-        }
-        
-        // Update layouts with removed assets
-        for asset in removedAssets {
-            for productLayout in productLayouts {
-                guard let productLayoutAsset = productLayout.asset else { continue }
-                if productLayoutAsset == asset {
-                    productLayout.asset = nil
-                    // Not breaking because the same asset could be on more than one page
-                }
-            }
-        }
-        
-        // Create new layouts for added assets that haven't filled empty pages
-        productLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: imageOnlyLayouts))
-        
-        // We need an odd number of layouts including the cover and the 2 courtesy pages
-        if productLayouts.count % 2 == 0 {
-            productLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: imageOnlyLayouts, placeholderLayouts: 1))
-        }
-        
         // Switching products
         product = photobook
         for pageLayout in productLayouts {
