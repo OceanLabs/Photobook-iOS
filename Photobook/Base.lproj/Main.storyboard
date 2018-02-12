@@ -4165,7 +4165,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
             </objects>
             <point key="canvasLocation" x="1780" y="-1128"/>
         </scene>
-        <!--Spine Text-->
+        <!-- -->
         <scene sceneID="p5U-cd-YVD">
             <objects>
                 <viewController modalPresentationStyle="overFullScreen" id="6rp-6Z-yrq" customClass="SpineTextEditingViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
@@ -4261,7 +4261,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <viewLayoutGuide key="safeArea" id="ftA-yg-YCE"/>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Spine Text" id="aaa-fe-Rzl">
+                    <navigationItem key="navigationItem" title=" " largeTitleDisplayMode="never" id="aaa-fe-Rzl">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="GGV-He-oao">
                             <color key="tintColor" red="0.34901960780000002" green="0.34901960780000002" blue="0.36862745099999999" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
@@ -4276,6 +4276,8 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="cancelButton" destination="GGV-He-oao" id="red-iZ-JOT"/>
+                        <outlet property="doneButton" destination="Pc2-tj-poN" id="lEK-3d-9zz"/>
                         <outlet property="spineContainerView" destination="kNP-gA-dkt" id="gvu-y0-HH8"/>
                         <outlet property="spineFrameView" destination="w6A-z9-rqE" id="1nR-wo-cG8"/>
                         <outlet property="spineFrameViewBottomConstraint" destination="1Ma-rp-cmd" id="TZ7-Vf-8aq"/>

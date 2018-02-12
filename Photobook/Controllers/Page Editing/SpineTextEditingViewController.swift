@@ -22,6 +22,8 @@ class SpineTextEditingViewController: UIViewController {
     @IBOutlet private weak var textToolBarView: TextToolBarView! {
         didSet { textToolBarView.delegate = self }
     }
+    @IBOutlet private var cancelButton: UIBarButtonItem!
+    @IBOutlet private var doneButton: UIBarButtonItem!
     
     @IBOutlet private weak var spineFrameViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var spineFrameViewHeightConstraint: NSLayoutConstraint!
@@ -55,6 +57,9 @@ class SpineTextEditingViewController: UIViewController {
         
         let navigationBar = navigationController?.navigationBar as? PhotobookNavigationBar
         navigationBar?.setBarType(.clear)
+
+        navigationItem.setLeftBarButton(nil, animated: false)
+        navigationItem.setRightBarButton(nil, animated: false)
         
         // Calculate view rects
         setup()
@@ -62,6 +67,9 @@ class SpineTextEditingViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        navigationItem.setLeftBarButton(cancelButton, animated: true)
+        navigationItem.setRightBarButton(doneButton, animated: true)
         
         textView.textContainer.lineFragmentPadding = 0.0
         textView.textContainerInset = .zero
