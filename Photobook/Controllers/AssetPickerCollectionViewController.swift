@@ -375,7 +375,7 @@ extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegat
         fullScreenImageViewController.prepareForPop()
         fullScreenImageViewController.modalPresentationCapturesStatusBarAppearance = true
         
-        tabBarController?.present(viewControllerToCommit, animated: true, completion: nil)
+        navigationController?.parent?.present(viewControllerToCommit, animated: true, completion: nil)
     }
     
 }
