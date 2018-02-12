@@ -523,7 +523,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             cell.imageSize = imageSize
             cell.width = (view.bounds.size.width - Constants.cellSideMargin * 2.0) / 2.0
             cell.delegate = self
-            cell.loadCover()
+            cell.loadCoverAndSpine()
             
             return cell
         default:
@@ -615,7 +615,6 @@ extension PhotobookViewController: PhotobookCoverCollectionViewCellDelegate {
         
         let spineTextEditingNavigationController = storyboard?.instantiateViewController(withIdentifier: "SpineTextEditingNavigationController") as! UINavigationController
         let spineTextEditingViewController = spineTextEditingNavigationController.viewControllers.first! as! SpineTextEditingViewController
-        spineTextEditingViewController.coverColor = ProductManager.shared.coverColor
         spineTextEditingViewController.initialRect = initialRect
         spineTextEditingViewController.delegate = self
         
@@ -784,8 +783,18 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
 
 extension PhotobookViewController: SpineTextEditingDelegate {
     
-    func didDismissSpineTextEditing(_ spineTextEditingViewController: SpineTextEditingViewController, spineText: String?, fontType: FontType?) {
-        // TODO: Effect the changes in the product and reload cover cell if necessary
+    func didCancelSpineTextEditing(_ spineTextEditingViewController: SpineTextEditingViewController) {
+        spineTextEditingViewController.animateOff {
+            self.dismiss(animated: false, completion: nil)
+        }
+    }
+    
+    func didSaveSpineTextEditing(_ spineTextEditingViewController: SpineTextEditingViewController, spineText: String?, fontType: FontType) {
+        ProductManager.shared.spineText = spineText
+        ProductManager.shared.spineFontType = fontType
+        
+        collectionView.reloadItems(at: [IndexPath(row: 0, section: 0)])
+        
         spineTextEditingViewController.animateOff {
             self.dismiss(animated: false, completion: nil)
         }

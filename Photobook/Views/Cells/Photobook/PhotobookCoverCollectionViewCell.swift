@@ -35,15 +35,17 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell {
     }
 
     override func layoutSubviews() {
-        super.layoutSubviews()        
-        spineFrameView.spineText = ProductManager.shared.spineText
+        super.layoutSubviews()
         coverFrameView.aspectRatio = ProductManager.shared.product!.aspectRatio
     }
-
-    func loadCover() {
+    
+    func loadCoverAndSpine() {
         coverFrameView.pageView.index = 0
         coverFrameView.pageView.productLayout = ProductManager.shared.productLayouts.first
         coverFrameView.pageView.setupImageBox()
+        
+        spineFrameView.text = ProductManager.shared.spineText
+        spineFrameView.fontType = ProductManager.shared.spineFontType
         
         if coverFrameView.color != ProductManager.shared.coverColor {
             coverFrameView.color = ProductManager.shared.coverColor

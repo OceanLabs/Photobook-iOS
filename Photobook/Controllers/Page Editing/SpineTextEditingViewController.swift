@@ -9,13 +9,8 @@
 import UIKit
 
 protocol SpineTextEditingDelegate: class {
-    func didDismissSpineTextEditing(_ spineTextEditingViewController: SpineTextEditingViewController, spineText: String?, fontType: FontType?)
-}
-
-extension SpineTextEditingDelegate {
-    func didDismissSpineTextEditing(_ spineTextEditingViewController: SpineTextEditingViewController, spineText: String? = nil, fontType: FontType? = nil) {
-        didDismissSpineTextEditing(spineTextEditingViewController, spineText: spineText, fontType: fontType)
-    }
+    func didCancelSpineTextEditing(_ spineTextEditingViewController: SpineTextEditingViewController)
+    func didSaveSpineTextEditing(_ spineTextEditingViewController: SpineTextEditingViewController, spineText: String?, fontType: FontType)
 }
 
 class SpineTextEditingViewController: UIViewController {
@@ -49,8 +44,6 @@ class SpineTextEditingViewController: UIViewController {
         static let textViewPadding: CGFloat = 16.0
     }
     
-    var spineText: String?
-    var coverColor: ProductColor!
     var initialRect: CGRect!
     weak var delegate: SpineTextEditingDelegate?
     
@@ -58,8 +51,7 @@ class SpineTextEditingViewController: UIViewController {
     private var backgroundColor: UIColor!
     private var initialTransform: CGAffineTransform!
     
-    private var editedText: String?
-    private var editedFontType: FontType?
+    private var fontType: FontType = ProductManager.shared.spineFontType
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -155,7 +147,7 @@ class SpineTextEditingViewController: UIViewController {
     
     private func setup() {
         textView.inputAccessoryView = textToolBarView
-        textView.text = spineText
+        textView.text = ProductManager.shared.spineText
 
         let paddingRatio = Constants.spineTextPadding / ProductManager.shared.product!.pageHeight
         let initialContainerRatio = initialRect.width / initialRect.height
@@ -168,12 +160,9 @@ class SpineTextEditingViewController: UIViewController {
         spineFrameViewHeightConstraint.constant = height
         spineFrameView.resetSpineColor()
         
-        spineFrameView.spineText = spineText
-        
         textViewHeightConstraint.constant = width - Constants.textViewPadding // since the cover will be on its side
         
-        // FIXME: Set style from product manager
-        setTextViewAttributes(with: Constants.fontType, fontColor: coverColor.fontColor())
+        setTextViewAttributes(with: Constants.fontType, fontColor: ProductManager.shared.coverColor.fontColor())
         
         textViewBorderView.alpha = 0.0
         textView.alpha = 0.0
@@ -211,20 +200,19 @@ class SpineTextEditingViewController: UIViewController {
     }
     
     @IBAction func tappedCancelButton(_ sender: UIBarButtonItem) {
-        delegate?.didDismissSpineTextEditing(self)
+        delegate?.didCancelSpineTextEditing(self)
     }
     
     @IBAction func tappedDoneButton(_ sender: UIBarButtonItem) {
-        delegate?.didDismissSpineTextEditing(self, spineText: editedText, fontType: editedFontType)
+        delegate?.didSaveSpineTextEditing(self, spineText: textView.text, fontType: fontType)
     }
 }
-
 
 extension SpineTextEditingViewController: TextToolBarViewDelegate {
     
     func didSelectFontType(_ fontType: FontType) {
-        setTextViewAttributes(with: fontType, fontColor: coverColor.fontColor())
-        editedFontType = fontType
+        setTextViewAttributes(with: fontType, fontColor: ProductManager.shared.coverColor.fontColor())
+        self.fontType = fontType
     }
 }
 

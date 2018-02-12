@@ -23,15 +23,16 @@ import Foundation
     }
     
     private func paragraphStyle() -> NSParagraphStyle {
-        let lineHeightMultiple: CGFloat
+        let paragraphStyle = NSMutableParagraphStyle()
+        
         switch self {
         case .clear, .classic, .solid:
-            lineHeightMultiple = 1.2
-        default:
-            lineHeightMultiple = 1.0
+            paragraphStyle.lineHeightMultiple = 1.2
+        case .cover:
+            paragraphStyle.lineHeightMultiple = 1.0
+            paragraphStyle.alignment = .center
         }
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineHeightMultiple = lineHeightMultiple
+
         return paragraphStyle.copy() as! NSParagraphStyle
     }
     
