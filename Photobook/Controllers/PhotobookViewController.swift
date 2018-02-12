@@ -788,6 +788,7 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard gestureRecognizer as? UILongPressGestureRecognizer == nil else { return false }
         return otherGestureRecognizer.view === gestureRecognizer.view || draggingView == nil
     }
 }
