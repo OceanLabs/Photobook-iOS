@@ -35,6 +35,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var ctaButtonContainer: UIView!
+    @IBOutlet weak var backButton: UIButton!
     
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
     
@@ -76,6 +77,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         
         setup(with: photobook)
+        
+        backButton.setTitleColor(navigationController?.navigationBar.tintColor, for: .normal)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -201,6 +204,24 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBAction func didTapCheckout(_ sender: Any) {
         guard draggingView == nil else { return }
         performSegue(withIdentifier: "CheckoutSegue", sender: nil)
+    }
+    
+    @IBAction func didTapBack() {
+        let alertController = UIAlertController(title: NSLocalizedString("Photobook/BackAlertTitle", value: "Are you sure?", comment: "Title for alert asking the user to go back"), message: NSLocalizedString("Photobook/BackAlertMessage", value: "This will discard any changes made to your photobook", comment: "Message for alert asking the user to go back"), preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("Photobook/BackAlertConfirmationButtonTitle", value: "Yes", comment: "Confirmation button title for alert asking the user to go back"), style: .destructive, handler: { _ in
+            
+            //Clear photobook
+            ProductManager.shared.productLayouts = [ProductLayout]()
+            ProductManager.shared.product = nil
+            ProductManager.shared.spineText = nil
+            ProductManager.shared.coverColor = .white
+            ProductManager.shared.pageColor = .white
+            
+            self.navigationController?.popViewController(animated: true)
+        }))
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("Photobook/BackAlertCancelButtonTitle", value: "Cancel", comment: "Cancel button title for alert asking the user to go back"), style: .default, handler: nil))
+        
+        present(alertController, animated: true, completion: nil)
     }
     
     override var canBecomeFirstResponder: Bool{
