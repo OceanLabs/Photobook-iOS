@@ -617,6 +617,7 @@ extension PhotobookViewController: PhotobookCoverCollectionViewCellDelegate {
         let spineTextEditingViewController = spineTextEditingNavigationController.viewControllers.first! as! SpineTextEditingViewController
         spineTextEditingViewController.coverColor = ProductManager.shared.coverColor
         spineTextEditingViewController.initialRect = initialRect
+        spineTextEditingViewController.delegate = self
         
         navigationController?.present(spineTextEditingNavigationController, animated: false, completion: nil)
     }
@@ -778,6 +779,16 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return otherGestureRecognizer.view === gestureRecognizer.view || draggingView == nil
+    }
+}
+
+extension PhotobookViewController: SpineTextEditingDelegate {
+    
+    func didDismissSpineTextEditing(_ spineTextEditingViewController: SpineTextEditingViewController, spineText: String?, fontType: FontType?) {
+        // TODO: Effect the changes in the product and reload cover cell if necessary
+        spineTextEditingViewController.animateOff {
+            self.dismiss(animated: false, completion: nil)
+        }
     }
 }
 

@@ -4218,7 +4218,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mwj-KF-u0a">
-                                <rect key="frame" x="14" y="248" width="386" height="124"/>
+                                <rect key="frame" x="14" y="244" width="386" height="132"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -4251,7 +4251,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                             <constraint firstItem="kNP-gA-dkt" firstAttribute="top" secondItem="ftA-yg-YCE" secondAttribute="top" id="URc-tV-2HB"/>
                             <constraint firstItem="ftA-yg-YCE" firstAttribute="trailing" secondItem="UpR-Oa-iba" secondAttribute="trailing" constant="26" id="X1P-mc-Pm1"/>
                             <constraint firstItem="kNP-gA-dkt" firstAttribute="centerY" secondItem="UpR-Oa-iba" secondAttribute="centerY" id="YNK-qd-74z"/>
-                            <constraint firstItem="Mwj-KF-u0a" firstAttribute="height" secondItem="UpR-Oa-iba" secondAttribute="height" constant="24" id="YXq-hW-ACY"/>
+                            <constraint firstItem="Mwj-KF-u0a" firstAttribute="height" secondItem="UpR-Oa-iba" secondAttribute="height" constant="32" id="YXq-hW-ACY"/>
                             <constraint firstItem="Mwj-KF-u0a" firstAttribute="width" secondItem="UpR-Oa-iba" secondAttribute="width" constant="24" id="c85-8I-ZyZ"/>
                             <constraint firstItem="Mwj-KF-u0a" firstAttribute="centerX" secondItem="UpR-Oa-iba" secondAttribute="centerX" id="g04-SH-D6t"/>
                             <constraint firstItem="kNP-gA-dkt" firstAttribute="centerX" secondItem="CZ3-Jg-WFg" secondAttribute="centerX" id="jXl-Zd-48L"/>

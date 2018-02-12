@@ -180,8 +180,6 @@ class TextEditingViewController: UIViewController {
 
         let backgroundColor = view.backgroundColor
 
-        UIView.setAnimationsEnabled(true)
-
         if !hasAnImageLayout {
 
             UIView.animate(withDuration: 0.1, animations: {

@@ -8,6 +8,16 @@
 
 import UIKit
 
+protocol SpineTextEditingDelegate: class {
+    func didDismissSpineTextEditing(_ spineTextEditingViewController: SpineTextEditingViewController, spineText: String?, fontType: FontType?)
+}
+
+extension SpineTextEditingDelegate {
+    func didDismissSpineTextEditing(_ spineTextEditingViewController: SpineTextEditingViewController, spineText: String? = nil, fontType: FontType? = nil) {
+        didDismissSpineTextEditing(spineTextEditingViewController, spineText: spineText, fontType: fontType)
+    }
+}
+
 class SpineTextEditingViewController: UIViewController {
 
     @IBOutlet private weak var spineContainerView: UIView!
@@ -42,9 +52,14 @@ class SpineTextEditingViewController: UIViewController {
     var spineText: String?
     var coverColor: ProductColor!
     var initialRect: CGRect!
+    weak var delegate: SpineTextEditingDelegate?
     
     private lazy var animatableSpineImageView = UIImageView()
     private var backgroundColor: UIColor!
+    private var initialTransform: CGAffineTransform!
+    
+    private var editedText: String?
+    private var editedFontType: FontType?
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -95,7 +110,7 @@ class SpineTextEditingViewController: UIViewController {
             self.view.backgroundColor = self.backgroundColor
         }
 
-        UIView.animate(withDuration: 0.6, delay: 0.1, options: [.curveEaseInOut], animations: {
+        UIView.animate(withDuration: 0.5, delay: 0.0, options: [.curveEaseInOut], animations: {
             self.animatableSpineImageView.center = self.spineContainerView.convert(self.spineFrameView.center, to: self.view)
             self.animatableSpineImageView.transform = CGAffineTransform(rotationAngle: .pi / 2.0)
         }, completion: { _ in
@@ -107,6 +122,34 @@ class SpineTextEditingViewController: UIViewController {
                 self.textViewBorderView.alpha = 1.0
                 self.textView.alpha = 1.0
             }
+        })
+    }
+    
+    func animateOff(completion: @escaping () -> Void) {
+        let backgroundColor = view.backgroundColor
+        
+        textView.resignFirstResponder()
+        
+        textView.alpha = 0.0
+        textViewBorderView.alpha = 0.0
+        
+        spineFrameView.alpha = 0.0
+        animatableSpineImageView.alpha = 1.0
+        
+        navigationItem.setLeftBarButton(nil, animated: true)
+        navigationItem.setRightBarButton(nil, animated: true)
+        
+        UIView.animate(withDuration: 0.36, delay: 0.0, options: [.curveEaseInOut], animations: {
+            self.animatableSpineImageView.center = CGPoint(x: self.initialRect.midX, y: self.initialRect.midY)
+            self.animatableSpineImageView.transform = self.initialTransform
+        }, completion: { _ in
+            UIView.animate(withDuration: 0.14, delay: 0.0, options: [], animations: {
+                self.view.backgroundColor = .clear
+            }, completion: { _ in
+                self.view.alpha = 0.0
+                self.view.backgroundColor = backgroundColor
+                completion()
+            })
         })
     }
     
@@ -148,7 +191,8 @@ class SpineTextEditingViewController: UIViewController {
         animatableSpineImageView.center = CGPoint(x: initialRect.midX, y: initialRect.midY)
         
         let initialScale = initialRect.height / spineFrameView.bounds.height
-        animatableSpineImageView.transform = CGAffineTransform.identity.scaledBy(x: initialScale, y: initialScale)
+        initialTransform = CGAffineTransform.identity.scaledBy(x: initialScale, y: initialScale)
+        animatableSpineImageView.transform = initialTransform
         
         view.addSubview(animatableSpineImageView)
         spineFrameView.alpha = 0.0
@@ -167,11 +211,11 @@ class SpineTextEditingViewController: UIViewController {
     }
     
     @IBAction func tappedCancelButton(_ sender: UIBarButtonItem) {
-        // FIXME: Add to delegate
-        dismiss(animated: false, completion: nil)
+        delegate?.didDismissSpineTextEditing(self)
     }
     
     @IBAction func tappedDoneButton(_ sender: UIBarButtonItem) {
+        delegate?.didDismissSpineTextEditing(self, spineText: editedText, fontType: editedFontType)
     }
 }
 
@@ -179,9 +223,8 @@ class SpineTextEditingViewController: UIViewController {
 extension SpineTextEditingViewController: TextToolBarViewDelegate {
     
     func didSelectFontType(_ fontType: FontType) {
-//        setTextViewAttributes(with: fontType, fontColor: pageColor.fontColor())
-//
-//        delegate?.didChangeFontType(to: fontType)
+        setTextViewAttributes(with: fontType, fontColor: coverColor.fontColor())
+        editedFontType = fontType
     }
 }
 
