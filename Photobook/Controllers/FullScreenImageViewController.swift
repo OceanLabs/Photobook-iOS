@@ -66,8 +66,13 @@ class FullScreenImageViewController: UIViewController {
     
     // Select or deselect the asset
     @IBAction func tapGestureRecognized(_ sender: Any) {
-        // TODO: Use result to present alert that we have selected the maximum amount of photos
-        _ = selectedAssetsManager?.toggleSelected(asset)
+        guard let selectedAssetsManager = selectedAssetsManager else { return }
+        guard selectedAssetsManager.toggleSelected(asset) else {
+            let alertController = UIAlertController(title: NSLocalizedString("ImagePicker/TooManyPicturesAlertTitle", value: "Too many pictures", comment: "Alert title informing the user that they have reached the maximum number of images"), message: NSLocalizedString("ImagePicker/TooManyPicturesAlertMessage", value: "Your photobook cannot contain more than \(selectedAssetsManager.maximumAllowedAssets)", comment: "Alert message informing the user that they have reached the maximum number of images"), preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: NSLocalizedString("GenericAlert/OK", value: "OK", comment: "Acknowledgement to an alert dialog"), style: .default, handler: nil))
+            present(alertController, animated: true, completion: nil)
+            return
+        }
         updateSelectedStatusIndicator()
         
         self.delegate?.previewDidUpdate(asset: asset)
