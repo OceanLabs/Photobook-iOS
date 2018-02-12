@@ -64,6 +64,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
             if leftLayout != nil { photobookFrameView.leftPageView.productLayout = leftLayout }
             
             photobookFrameView.leftPageView.setupImageBox()
+            photobookFrameView.leftPageView.setupTextBox(mode: .userTextOnly)
         } else {
             photobookFrameView.isLeftPageVisible = false
         }
@@ -74,6 +75,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
             if rightLayout != nil { photobookFrameView.rightPageView.productLayout = rightLayout }
             
             photobookFrameView.rightPageView.setupImageBox()
+            photobookFrameView.rightPageView.setupTextBox(mode: .userTextOnly)
         } else {
             photobookFrameView.isRightPageVisible = false
         }

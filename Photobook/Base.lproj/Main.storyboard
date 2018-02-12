@@ -1945,6 +1945,12 @@
                                                                                 </imageView>
                                                                             </subviews>
                                                                         </view>
+                                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y2b-Gz-PKL">
+                                                                            <rect key="frame" x="29.666666666666686" y="163" width="116" height="21"/>
+                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                            <fontDescription key="fontDescription" type="system" pointSize="8"/>
+                                                                            <nil key="highlightedColor"/>
+                                                                        </label>
                                                                     </subviews>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
@@ -1955,6 +1961,7 @@
                                                                         <outlet property="assetContainerView" destination="wv5-To-CaO" id="DQC-jA-SnU"/>
                                                                         <outlet property="assetImageView" destination="NdV-Np-sVV" id="TCq-7A-pnD"/>
                                                                         <outlet property="assetPlaceholderIconImageView" destination="Zmx-Ke-UPF" id="y8z-9x-rFy"/>
+                                                                        <outlet property="pageTextLabel" destination="Y2b-Gz-PKL" id="Hrv-y4-fmO"/>
                                                                     </connections>
                                                                 </view>
                                                             </subviews>
@@ -2057,6 +2064,12 @@
                                                                         </imageView>
                                                                     </subviews>
                                                                 </view>
+                                                                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gqw-YR-BoV">
+                                                                    <rect key="frame" x="21.333333333333329" y="162.66666666666669" width="116" height="21"/>
+                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="8"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
@@ -2067,6 +2080,7 @@
                                                                 <outlet property="assetContainerView" destination="k6d-OH-WNp" id="9P9-eV-LMa"/>
                                                                 <outlet property="assetImageView" destination="FXg-wP-weo" id="J2v-sz-nJN"/>
                                                                 <outlet property="assetPlaceholderIconImageView" destination="3pL-KW-yok" id="WBU-62-bOA"/>
+                                                                <outlet property="pageTextLabel" destination="gqw-YR-BoV" id="2Fb-BP-e6T"/>
                                                             </connections>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Z1-jm-uVB" customClass="PhotobookFramePagesBehindView" customModule="Photobook" customModuleProvider="target">
@@ -2097,6 +2111,12 @@
                                                                         </imageView>
                                                                     </subviews>
                                                                 </view>
+                                                                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x7I-y4-fWV">
+                                                                    <rect key="frame" x="21.333333333333332" y="162.66666666666666" width="116" height="21"/>
+                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="8"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
@@ -2107,6 +2127,7 @@
                                                                 <outlet property="assetContainerView" destination="m5M-pH-dcx" id="L5K-Ai-mmp"/>
                                                                 <outlet property="assetImageView" destination="OBN-UQ-uc5" id="Qb1-mX-TFv"/>
                                                                 <outlet property="assetPlaceholderIconImageView" destination="7lw-b4-jQf" id="9Bg-tw-a0D"/>
+                                                                <outlet property="pageTextLabel" destination="x7I-y4-fWV" id="iuC-FP-C2O"/>
                                                             </connections>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8PU-St-qOP" userLabel="Page Divider View" customClass="PhotobookFramePageDividerView" customModule="Photobook" customModuleProvider="target">

@@ -15,7 +15,15 @@ import UIKit
 }
 
 enum PhotobookPageViewInteraction {
-    case disabled, wholePage, assetAndText
+    case disabled // The user cannot tap on the page
+    case wholePage // The user can tap anywhere on the page for a single action
+    case assetAndText // The user can tap on the page and the text for two different actions
+}
+
+enum TextBoxMode {
+    case placeHolder // Shows a placeholder "Add your own text" or the user's input if available
+    case userTextOnly // Only shows the user's input if available. Blank otherwise.
+    case linesPlaceholder // Shows a graphical representation of text in the form of two lines
 }
 
 class PhotobookPageView: UIView {
@@ -156,14 +164,14 @@ class PhotobookPageView: UIView {
         assetImageView.transform = productLayout!.productLayoutAsset!.transform
     }
     
-    func setupTextBox(shouldBeLegible: Bool = true) {
+    func setupTextBox(mode: TextBoxMode = .placeHolder) {
         guard let textBox = productLayout?.layout.textLayoutBox else {
             if let placeholderView = textLabelPlaceholderBoxView { placeholderView.alpha = 0.0 }
             if let pageTextLabel = pageTextLabel { pageTextLabel.alpha = 0.0 }
             return
         }
         
-        if !shouldBeLegible, let placeholderView = textLabelPlaceholderBoxView {
+        if mode == .linesPlaceholder, let placeholderView = textLabelPlaceholderBoxView {
             placeholderView.alpha = 1.0
             placeholderView.frame = textBox.rectContained(in: bounds.size)
             placeholderView.color = color
@@ -174,19 +182,20 @@ class PhotobookPageView: UIView {
         guard let pageTextLabel = pageTextLabel else { return }
         pageTextLabel.alpha = 1.0
         
+        if (productLayout?.text ?? "").isEmpty && mode == .placeHolder {
+            pageTextLabel.text = NSLocalizedString("Views/Photobook Frame/PhotobookPageView/pageTextLabel/placeholder",
+                                     value: "Add your own text",
+                                     comment: "Placeholder text to show on a cover / page")
+        } else {
+            pageTextLabel.text = productLayout?.text
+        }
+
         adjustTextLabel()
         setTextColor()
     }
     
     private func adjustTextLabel() {
         guard let pageTextLabel = pageTextLabel, let textBox = productLayout?.layout.textLayoutBox else { return }
-        
-        var text = productLayout?.text
-        if (text ?? "").isEmpty {
-            text = NSLocalizedString("Views/Photobook Frame/PhotobookPageView/pageTextLabel/placeholder",
-                                     value: "Add your own text",
-                                     comment: "Placeholder text to show on a cover / page")
-        }
 
         let finalFrame = textBox.rectContained(in: bounds.size)
         let finalCentre =  CGPoint(x: finalFrame.midX, y: finalFrame.midY)
@@ -199,6 +208,8 @@ class PhotobookPageView: UIView {
         pageTextLabel.center = finalCentre
         pageTextLabel.transform = pageTextLabel.transform.scaledBy(x: 1/scale, y: 1/scale)
         
+        guard pageTextLabel.text != nil else { return }
+        
         let layoutContainerSize = textBox.containerSize(for: fakeSize)
         
         let fontType = productLayout!.fontType ?? .clear
@@ -206,7 +217,7 @@ class PhotobookPageView: UIView {
         let photobookToOnScreenScale = layoutContainerSize.height / ProductManager.shared.product!.pageHeight
         let fontSize = round(fontType.photobookFontSize() * photobookToOnScreenScale)
 
-        pageTextLabel.attributedText = fontType.attributedText(with: text!, fontSize: fontSize, fontColor: color.fontColor())
+        pageTextLabel.attributedText = fontType.attributedText(with: pageTextLabel.text!, fontSize: fontSize, fontColor: color.fontColor())
         
         let textHeight = pageTextLabel.attributedText!.height(for: fakeSize.width)
         if textHeight < fakeSize.height { pageTextLabel.frame.size.height = textHeight }

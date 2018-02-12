@@ -43,6 +43,7 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell {
         coverFrameView.pageView.index = 0
         coverFrameView.pageView.productLayout = ProductManager.shared.productLayouts.first
         coverFrameView.pageView.setupImageBox()
+        coverFrameView.pageView.setupTextBox(mode: .userTextOnly)
         
         spineFrameView.text = ProductManager.shared.spineText
         spineFrameView.fontType = ProductManager.shared.spineFontType

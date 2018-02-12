@@ -86,7 +86,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
             photobookFrameView.leftPageView.index = pageIndex
             photobookFrameView.leftPageView.productLayout = productLayout
             photobookFrameView.leftPageView.setupImageBox(with: image)
-            photobookFrameView.leftPageView.setupTextBox(shouldBeLegible: false)
+            photobookFrameView.leftPageView.setupTextBox(mode: .linesPlaceholder)
         case .first:
             photobookFrameView.isLeftPageVisible = false
             fallthrough
@@ -94,7 +94,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
             photobookFrameView.rightPageView.index = pageIndex
             photobookFrameView.rightPageView.productLayout = productLayout
             photobookFrameView.rightPageView.setupImageBox(with: image)
-            photobookFrameView.rightPageView.setupTextBox(shouldBeLegible: false)
+            photobookFrameView.rightPageView.setupTextBox(mode: .linesPlaceholder)
         default:
             break
         }
