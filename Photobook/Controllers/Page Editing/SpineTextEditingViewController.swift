@@ -102,9 +102,11 @@ class SpineTextEditingViewController: UIViewController {
             self.view.backgroundColor = self.backgroundColor
         }
 
-        UIView.animate(withDuration: 0.5, delay: 0.0, options: [.curveEaseInOut], animations: {
-            self.animatableSpineImageView.center = self.spineContainerView.convert(self.spineFrameView.center, to: self.view)
-            self.animatableSpineImageView.transform = CGAffineTransform(rotationAngle: .pi / 2.0)
+        UIView.animateKeyframes(withDuration: 0.4, delay: 0, options: .calculationModePaced, animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1.0, animations: {
+                self.animatableSpineImageView.center = self.spineContainerView.convert(self.spineFrameView.center, to: self.view)
+                self.animatableSpineImageView.transform = CGAffineTransform(rotationAngle: .pi / 2.0)
+            })
         }, completion: { _ in
             self.animatableSpineImageView.alpha = 0.0
             self.spineFrameView.alpha = 1.0

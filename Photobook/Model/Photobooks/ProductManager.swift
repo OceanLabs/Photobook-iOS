@@ -76,6 +76,7 @@ class ProductManager {
     // Current photobook
     var product: Photobook?
     var spineText: String?
+    var spineFontType: FontType = .cover
     var coverColor: ProductColor = .white
     var pageColor: ProductColor = .white
     var productLayouts = [ProductLayout]()
