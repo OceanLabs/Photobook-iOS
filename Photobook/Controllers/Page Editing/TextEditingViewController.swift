@@ -51,9 +51,7 @@ class TextEditingViewController: UIViewController {
         didSet { textToolBarView.delegate = self }
     }
     @IBOutlet private weak var textViewBorderView: UIView!
-    @IBOutlet private weak var textView: UITextView! {
-        didSet { textView.delegate = self }
-    }
+    @IBOutlet private weak var textView: PhotobookTextView!
     @IBOutlet private weak var pageView: UIView!
     @IBOutlet private weak var assetContainerView: UIView!
     @IBOutlet private weak var assetPlaceholderIconImageView: UIImageView!
@@ -276,7 +274,7 @@ class TextEditingViewController: UIViewController {
         productLayout!.productLayoutAsset!.containerSize = assetContainerView.bounds.size
         assetImageView.transform = productLayout!.productLayoutAsset!.transform
     }
-        
+    
     private func setImagePlaceholder(visible: Bool) {
         if visible {
             assetImageView.image = nil
@@ -313,6 +311,8 @@ extension TextEditingViewController: UITextViewDelegate {
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
+        let textView = textView as! PhotobookTextView
+        
         // Dismiss on line break
         guard text.rangeOfCharacter(from: CharacterSet.newlines) == nil else {
             textView.resignFirstResponder()
@@ -320,15 +320,8 @@ extension TextEditingViewController: UITextViewDelegate {
             return false
         }
         
-        // Allow deleting
-        if text.count == 0 { return true }
-        
-        // Disallow pasting non-ascii characters
-        if !text.canBeConverted(to: String.Encoding.ascii) { return false }
-        
-        // Check that the new length doesn't exceed the textView bounds
-        return !textGoesOverBounds(for: textView, string: text, range: range)
-    }    
+        return textView.shouldChangePhotobookText(in: range, replacementText: text)
+    }
 }
 
 extension TextEditingViewController: TextToolBarViewDelegate {

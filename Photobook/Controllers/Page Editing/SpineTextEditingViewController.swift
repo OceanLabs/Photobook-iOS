@@ -18,7 +18,7 @@ class SpineTextEditingViewController: UIViewController {
     @IBOutlet private weak var spineContainerView: UIView!
     @IBOutlet private weak var spineFrameView: SpineFrameView!
     @IBOutlet private weak var textViewBorderView: UIView!
-    @IBOutlet private weak var textView: UITextView! {
+    @IBOutlet private weak var textView: PhotobookTextView! {
         didSet {
             textView.textContainer.maximumNumberOfLines = 1
             textView.textContainer.lineBreakMode = .byTruncatingTail
@@ -202,6 +202,23 @@ class SpineTextEditingViewController: UIViewController {
     }
 }
 
+extension SpineTextEditingViewController: UITextViewDelegate {
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        
+        let textView = textView as! PhotobookTextView
+        
+        // Dismiss on line break
+        guard text.rangeOfCharacter(from: CharacterSet.newlines) == nil else {
+            textView.resignFirstResponder()
+            delegate?.didSaveSpineTextEditing(self, spineText: textView.text, fontType: fontType)
+            return false
+        }
+
+        return textView.shouldChangePhotobookText(in: range, replacementText: text)
+    }
+}
+
 extension SpineTextEditingViewController: TextToolBarViewDelegate {
     
     func didSelectFontType(_ fontType: FontType) {
@@ -209,4 +226,3 @@ extension SpineTextEditingViewController: TextToolBarViewDelegate {
         self.fontType = fontType
     }
 }
-
