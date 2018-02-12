@@ -187,14 +187,8 @@ class SpineTextEditingViewController: UIViewController {
         spineFrameView.alpha = 0.0
     }
     
-    // FIXME: Add to extension
-    private func onScreenFontSize(for fontType: FontType) -> CGFloat {
-        let photobookToOnScreenScale = textViewHeightConstraint.constant / Constants.spineThickness
-        return round(fontType.photobookFontSize() * photobookToOnScreenScale)
-    }
-
     private func setTextViewAttributes(with fontType: FontType, fontColor: UIColor) {
-        let fontSize = onScreenFontSize(for: fontType)
+        let fontSize = fontType.sizeForScreenHeight(spineFrameViewHeightConstraint.constant)
         textView.attributedText = fontType.attributedText(with: textView.text, fontSize: fontSize, fontColor: fontColor)
         textView.typingAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor)
     }

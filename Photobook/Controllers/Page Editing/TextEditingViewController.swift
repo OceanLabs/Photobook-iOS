@@ -276,12 +276,7 @@ class TextEditingViewController: UIViewController {
         productLayout!.productLayoutAsset!.containerSize = assetContainerView.bounds.size
         assetImageView.transform = productLayout!.productLayoutAsset!.transform
     }
-    
-    private func onScreenFontSize(for fontType: FontType) -> CGFloat {
-        let photobookToOnScreenScale = pageView.bounds.height / ProductManager.shared.product!.pageHeight
-        return round(fontType.photobookFontSize() * photobookToOnScreenScale)
-    }
-    
+        
     private func setImagePlaceholder(visible: Bool) {
         if visible {
             assetImageView.image = nil
@@ -297,7 +292,7 @@ class TextEditingViewController: UIViewController {
     }
 
     private func setTextViewAttributes(with fontType: FontType, fontColor: UIColor) {
-        let fontSize = onScreenFontSize(for: fontType)
+        let fontSize = fontType.sizeForScreenHeight(pageView.bounds.height)
         textView.attributedText = fontType.attributedText(with: textView.text, fontSize: fontSize, fontColor: fontColor)
         textView.typingAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor)
     }

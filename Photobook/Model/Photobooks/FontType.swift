@@ -56,4 +56,9 @@ import Foundation
         let attributes: [NSAttributedStringKey: Any] = [ NSAttributedStringKey.font: font, NSAttributedStringKey.foregroundColor: fontColor, NSAttributedStringKey.paragraphStyle: paragraphStyle]
         return NSAttributedString(string: text, attributes: attributes)
     }
+    
+    func sizeForScreenHeight(_ screenHeight: CGFloat) -> CGFloat {
+        let photobookToOnScreenScale = screenHeight / ProductManager.shared.product!.pageHeight
+        return round(self.photobookFontSize() * photobookToOnScreenScale)
+    }
 }
