@@ -10,6 +10,7 @@ import UIKit
 
 @objc protocol PhotobookCollectionViewCellDelegate: class, UIGestureRecognizerDelegate {
     func didTapOnPlusButton(at foldIndex: Int)
+    func didTapOnPage(at: Int)
     @objc func didLongPress(_ sender: UILongPressGestureRecognizer)
     @objc func didPan(_ sender: UIPanGestureRecognizer)
 }
@@ -77,6 +78,9 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
             photobookFrameView.isRightPageVisible = false
         }
         
+        photobookFrameView.leftPageView.delegate = self
+        photobookFrameView.rightPageView.delegate = self
+        
         if photobookFrameView.coverColor != ProductManager.shared.coverColor ||
             photobookFrameView.pageColor != ProductManager.shared.pageColor {
             
@@ -112,5 +116,13 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
         panGesture.maximumNumberOfTouches = 1
         photobookFrameView.addGestureRecognizer(panGesture)
     }
+}
+
+extension PhotobookCollectionViewCell: PhotobookPageViewDelegate {
+    
+    func didTapOnPage(at index: Int) {
+        delegate?.didTapOnPage(at: index)
+    }
+    
 }
 

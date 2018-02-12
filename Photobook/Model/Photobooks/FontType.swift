@@ -9,9 +9,7 @@
 import Foundation
 
 @objc enum FontType: Int, Codable {
-    case clear, classic, solid
-    
-    static let lineHeightMultiple: CGFloat = 1.2
+    case clear, classic, solid, cover
     
     private func fontWithSize(_ size: CGFloat) -> UIFont {
         let name: String
@@ -19,19 +17,27 @@ import Foundation
         case .clear: name = "OpenSans-Regular"
         case .classic: name = "Lora-Regular"
         case .solid: name = "Montserrat-Bold"
+        case .cover: name = "OpenSans-Regular"
         }
         return UIFont(name: name, size: size)!
     }
     
     private func paragraphStyle() -> NSParagraphStyle {
+        let lineHeightMultiple: CGFloat
+        switch self {
+        case .clear, .classic, .solid:
+            lineHeightMultiple = 1.2
+        default:
+            lineHeightMultiple = 1.0
+        }
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineHeightMultiple = FontType.lineHeightMultiple
+        paragraphStyle.lineHeightMultiple = lineHeightMultiple
         return paragraphStyle.copy() as! NSParagraphStyle
     }
     
     func photobookFontSize() -> CGFloat {
         switch self {
-        case .clear, .classic: return 14.0
+        case .clear, .classic, .cover: return 14.0
         case .solid: return 16.0
         }
     }

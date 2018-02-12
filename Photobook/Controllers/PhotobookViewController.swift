@@ -483,6 +483,14 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             cell.loadPages(leftIndex: productLayoutIndex, rightIndex: productLayoutIndex + 1)
         }
     }
+    
+    func editPage(at index: Int) {
+        let pageSetupViewController = storyboard?.instantiateViewController(withIdentifier: "PageSetupViewController") as! PageSetupViewController
+        pageSetupViewController.selectedAssetsManager = selectedAssetsManager
+        pageSetupViewController.pageIndex = index
+        pageSetupViewController.delegate = self
+        navigationController?.pushViewController(pageSetupViewController, animated: true)
+    }
 }
 
 extension PhotobookViewController: UICollectionViewDataSource {
@@ -528,9 +536,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             cell.imageSize = imageSize
             cell.width = view.bounds.size.width - Constants.cellSideMargin * 2.0
             cell.clipsToBounds = false
-            
             cell.delegate = self
-            cell.pageDelegate = self
             
             // First and last pages of the book are courtesy pages, no photos on them
             var leftIndex: Int? = nil
@@ -602,15 +608,21 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
     }
 }
 
-extension PhotobookViewController: PhotobookPageViewDelegate {
-    // MARK: PhotobookPageViewDelegate
-
-    func didTapOnPage(index: Int) {
-        let pageSetupViewController = storyboard?.instantiateViewController(withIdentifier: "PageSetupViewController") as! PageSetupViewController
-        pageSetupViewController.selectedAssetsManager = selectedAssetsManager
-        pageSetupViewController.pageIndex = index
-        pageSetupViewController.delegate = self
-        navigationController?.pushViewController(pageSetupViewController, animated: true)
+extension PhotobookViewController: PhotobookCoverCollectionViewCellDelegate {
+    
+    func didTapOnSpine(with rect: CGRect, in containerView: UIView) {
+        let initialRect = containerView.convert(rect, to: view)
+        
+        let spineTextEditingNavigationController = storyboard?.instantiateViewController(withIdentifier: "SpineTextEditingNavigationController") as! UINavigationController
+        let spineTextEditingViewController = spineTextEditingNavigationController.viewControllers.first! as! SpineTextEditingViewController
+        spineTextEditingViewController.coverColor = ProductManager.shared.coverColor
+        spineTextEditingViewController.initialRect = initialRect
+        
+        navigationController?.present(spineTextEditingNavigationController, animated: false, completion: nil)
+    }
+    
+    func didTapOnCover() {
+        editPage(at: 0)
     }
 }
 
@@ -638,6 +650,10 @@ extension PhotobookViewController: PageSetupDelegate {
 extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
     // MARK: PhotobookCollectionViewCellDelegate
     
+    func didTapOnPage(at index: Int) {
+        editPage(at: index)
+    }
+
     func didLongPress(_ sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
             guard let photobookFrameView = sender.view as? PhotobookFrameView else {

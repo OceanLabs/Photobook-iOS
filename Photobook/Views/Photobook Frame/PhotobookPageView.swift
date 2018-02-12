@@ -9,9 +9,9 @@
 import UIKit
 
 @objc protocol PhotobookPageViewDelegate: class {
-    @objc optional func didTapOnPage(index: Int)
-    @objc optional func didTapOnAsset(index: Int)
-    @objc optional func didTapOnText(index: Int)
+    @objc optional func didTapOnPage(at index: Int)
+    @objc optional func didTapOnAsset(at index: Int)
+    @objc optional func didTapOnText(at index: Int)
 }
 
 enum PhotobookPageViewInteraction {
@@ -234,17 +234,17 @@ class PhotobookPageView: UIView {
     
     @objc private func didTapOnPage(_ sender: UITapGestureRecognizer) {
         guard let index = index else { return }
-        delegate?.didTapOnPage?(index: index)
+        delegate?.didTapOnPage?(at: index)
     }
     
     @objc private func didTapOnAsset(_ sender: UITapGestureRecognizer) {
         guard let index = index else { return }
-        delegate?.didTapOnAsset?(index: index)
+        delegate?.didTapOnAsset?(at: index)
     }
 
     @objc private func didTapOnText(_ sender: UITapGestureRecognizer) {
         guard let index = index else { return }
-        delegate?.didTapOnText?(index: index)
+        delegate?.didTapOnText?(at: index)
     }
 
 }

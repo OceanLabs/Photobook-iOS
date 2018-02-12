@@ -21,7 +21,6 @@ class SpineFrameView: UIView {
     @IBOutlet private weak var textLabelWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var spineBackgroundView: SpineBackgroundView!
     
-    var pageSide = PageSide.left
     var color: ProductColor = .white
     var spineText: String?
     
