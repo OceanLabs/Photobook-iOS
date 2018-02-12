@@ -185,6 +185,11 @@ class SpineTextEditingViewController: UIViewController {
         initialTransform = CGAffineTransform.identity.scaledBy(x: initialScale, y: initialScale)
         animatableSpineImageView.transform = initialTransform
         
+        animatableSpineImageView.layer.shadowColor = spineFrameView.layer.shadowColor
+        animatableSpineImageView.layer.shadowOffset = spineFrameView.layer.shadowOffset
+        animatableSpineImageView.layer.shadowOpacity = spineFrameView.layer.shadowOpacity
+        animatableSpineImageView.layer.shadowRadius = spineFrameView.layer.shadowRadius
+
         view.addSubview(animatableSpineImageView)
         spineFrameView.alpha = 0.0
     }
