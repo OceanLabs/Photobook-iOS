@@ -18,5 +18,8 @@ class AlbumCollectionViewCell: UICollectionViewCell {
     
     var albumId: String?
     
+    override func prepareForReuse() {
+        albumCoverImageView.image = nil
+    }
     
 }

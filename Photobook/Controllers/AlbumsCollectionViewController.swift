@@ -37,9 +37,12 @@ class AlbumsCollectionViewController: UICollectionViewController {
         
         calcAndSetCellSize()
         
-        //listen to asset manager
+        // Listen to asset manager
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
+        
+        // Listen for album changes
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereReloaded(_:)), name: AssetsNotificationName.albumsWereReloaded, object: nil)
     }
     
     func loadAlbums() {
@@ -62,7 +65,16 @@ class AlbumsCollectionViewController: UICollectionViewController {
         super.viewWillAppear(animated)
         
         // Refresh number of assets selected badges
-        collectionView?.reloadData()
+        for cell in collectionView?.visibleCells ?? [] {
+            guard let cell = cell as? AlbumCollectionViewCell,
+            let indexPath = collectionView?.indexPath(for: cell)
+            else { continue }
+            
+            let album = albumManager.albums[indexPath.item]
+            let selectedAssetsCount = selectedAssetsManager.count(for: album)
+            cell.selectedCountLabel.text = "\(selectedAssetsCount)"
+            cell.selectedCountLabel.isHidden = selectedAssetsCount == 0
+        }
     }
     
     @IBAction func searchIconTapped(_ sender: Any) {
@@ -124,6 +136,18 @@ class AlbumsCollectionViewController: UICollectionViewController {
         collectionView.reloadItems(at: indexPathsToReload)
     }
     
+    @objc func albumsWereReloaded(_ notification: Notification) {
+        guard let albumsChanged = notification.object as? [Album] else { return }
+        var indexPathsChanged = [IndexPath]()
+        
+        for album in albumsChanged {
+            guard let index = albumManager.albums.index(where: { $0.identifier == album.identifier }) else { continue }
+            indexPathsChanged.append(IndexPath(item: index, section: 0))
+        }
+        
+        collectionView?.reloadItems(at: indexPathsChanged)
+    }
+    
 }
 
 extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
@@ -157,7 +181,6 @@ extension AlbumsCollectionViewController{
     
         let album = albumManager.albums[indexPath.item]
         cell.albumId = album.identifier
-        cell.albumCoverImageView.image = nil
         
         let cellWidth = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize.width ?? 0
         album.coverImage(size: CGSize(width: cellWidth, height: cellWidth), completionHandler: {(image, error) in
