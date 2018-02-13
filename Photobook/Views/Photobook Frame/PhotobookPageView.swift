@@ -29,7 +29,7 @@ enum TextBoxMode {
 class PhotobookPageView: UIView {
     
     weak var delegate: PhotobookPageViewDelegate?
-    var index: Int?
+    var pageIndex: Int?
     var aspectRatio: CGFloat? {
         didSet {
             guard let aspectRatio = aspectRatio else { return }
@@ -121,7 +121,7 @@ class PhotobookPageView: UIView {
         
         assetContainerView.frame = imageBox.rectContained(in: bounds.size)
         
-        guard let index = index, let asset = productLayout?.productLayoutAsset?.asset else {
+        guard let index = pageIndex, let asset = productLayout?.productLayoutAsset?.asset else {
             setImagePlaceholder(visible: true)
             return
         }
@@ -141,7 +141,7 @@ class PhotobookPageView: UIView {
         }
         
         asset.image(size: imageSize, completionHandler: { [weak welf = self] (image, _) in
-            guard welf?.index == index, let image = image else { return }
+            guard welf?.pageIndex == index, let image = image else { return }
             imageCompletion(image)
         })
     }
@@ -242,17 +242,17 @@ class PhotobookPageView: UIView {
     }
     
     @objc private func didTapOnPage(_ sender: UITapGestureRecognizer) {
-        guard let index = index else { return }
+        guard let index = pageIndex else { return }
         delegate?.didTapOnPage?(at: index)
     }
     
     @objc private func didTapOnAsset(_ sender: UITapGestureRecognizer) {
-        guard let index = index else { return }
+        guard let index = pageIndex else { return }
         delegate?.didTapOnAsset?(at: index)
     }
 
     @objc private func didTapOnText(_ sender: UITapGestureRecognizer) {
-        guard let index = index else { return }
+        guard let index = pageIndex else { return }
         delegate?.didTapOnText?(at: index)
     }
 

@@ -36,8 +36,8 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    var leftIndex: Int? { return photobookFrameView.leftPageView.index }
-    var rightIndex: Int? { return photobookFrameView.rightPageView.index }
+    var leftIndex: Int? { return photobookFrameView.leftPageView.pageIndex }
+    var rightIndex: Int? { return photobookFrameView.rightPageView.pageIndex }
     var width: CGFloat! { didSet { photobookFrameView.width = width } }
     var isVisible: Bool {
         get { return !photobookFrameView.isHidden }
@@ -60,7 +60,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
     func loadPages(leftIndex: Int?, rightIndex: Int?, leftLayout: ProductLayout? = nil, rightLayout: ProductLayout? = nil) {
         if let leftIndex = leftIndex {
             photobookFrameView.isLeftPageVisible = true
-            photobookFrameView.leftPageView.index = leftIndex
+            photobookFrameView.leftPageView.pageIndex = leftIndex
             if leftLayout != nil { photobookFrameView.leftPageView.productLayout = leftLayout }
             
             photobookFrameView.leftPageView.setupImageBox()
@@ -71,7 +71,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
         
         if let rightIndex = rightIndex {
             photobookFrameView.isRightPageVisible = true
-            photobookFrameView.rightPageView.index = rightIndex
+            photobookFrameView.rightPageView.pageIndex = rightIndex
             if rightLayout != nil { photobookFrameView.rightPageView.productLayout = rightLayout }
             
             photobookFrameView.rightPageView.setupImageBox()
@@ -93,7 +93,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
     }
         
     @IBAction func didTapPlus(_ sender: UIButton) {
-        guard let layoutIndex = photobookFrameView.leftPageView.index ?? photobookFrameView.rightPageView.index,
+        guard let layoutIndex = photobookFrameView.leftPageView.pageIndex ?? photobookFrameView.rightPageView.pageIndex,
             let foldIndex = ProductManager.shared.spreadIndex(for: layoutIndex)
             else { return }
         delegate?.didTapOnPlusButton(at: foldIndex)

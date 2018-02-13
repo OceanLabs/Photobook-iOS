@@ -451,7 +451,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     func liftView(_ photobookFrameView: PhotobookFrameView) {
-        guard let productLayoutIndex = photobookFrameView.leftPageView.index,
+        guard let productLayoutIndex = photobookFrameView.leftPageView.pageIndex,
             let foldIndex = ProductManager.shared.spreadIndex(for: productLayoutIndex),
             foldIndex != collectionView.numberOfItems(inSection: 1) - 1
             else { return }

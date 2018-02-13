@@ -83,7 +83,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         case .left:
             photobookLeftAligmentConstraint.constant = bounds.width - Constants.photobookAlignmentMargin
             
-            photobookFrameView.leftPageView.index = pageIndex
+            photobookFrameView.leftPageView.pageIndex = pageIndex
             photobookFrameView.leftPageView.productLayout = productLayout
             photobookFrameView.leftPageView.setupImageBox(with: image)
             photobookFrameView.leftPageView.setupTextBox(mode: .linesPlaceholder)
@@ -91,7 +91,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
             photobookFrameView.isLeftPageVisible = false
             fallthrough
         case .right:
-            photobookFrameView.rightPageView.index = pageIndex
+            photobookFrameView.rightPageView.pageIndex = pageIndex
             photobookFrameView.rightPageView.productLayout = productLayout
             photobookFrameView.rightPageView.setupImageBox(with: image)
             photobookFrameView.rightPageView.setupTextBox(mode: .linesPlaceholder)

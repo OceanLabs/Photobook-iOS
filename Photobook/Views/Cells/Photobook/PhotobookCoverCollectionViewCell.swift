@@ -40,7 +40,7 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell {
     }
     
     func loadCoverAndSpine() {
-        coverFrameView.pageView.index = 0
+        coverFrameView.pageView.pageIndex = 0
         coverFrameView.pageView.productLayout = ProductManager.shared.productLayouts.first
         coverFrameView.pageView.setupImageBox()
         coverFrameView.pageView.setupTextBox(mode: .userTextOnly)
