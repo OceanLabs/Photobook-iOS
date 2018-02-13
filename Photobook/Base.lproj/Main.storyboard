@@ -4189,10 +4189,10 @@ Copyright © 2018 Kite. All right reserverd.</string>
             </objects>
             <point key="canvasLocation" x="1780" y="-1128"/>
         </scene>
-        <!-- -->
+        <!--Spine Text Editing View Controller-->
         <scene sceneID="p5U-cd-YVD">
             <objects>
-                <viewController modalPresentationStyle="overFullScreen" id="6rp-6Z-yrq" customClass="SpineTextEditingViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="overFullScreen" id="6rp-6Z-yrq" userLabel="Spine Text Editing View Controller" customClass="SpineTextEditingViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="CZ3-Jg-WFg">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -4242,7 +4242,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mwj-KF-u0a">
-                                <rect key="frame" x="14" y="244" width="386" height="132"/>
+                                <rect key="frame" x="14.666666666666657" y="244" width="386" height="132"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -4256,33 +4256,33 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="UpR-Oa-iba" customClass="PhotobookTextView" customModule="Photobook" customModuleProvider="target">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Puf-aO-D14">
                                 <rect key="frame" x="26" y="260" width="362" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" priority="250" constant="345" id="kA5-h6-YZe"/>
-                                    <constraint firstAttribute="height" constant="100" id="r88-Ky-TzN"/>
+                                    <constraint firstAttribute="height" constant="100" id="XzQ-Le-fuS"/>
+                                    <constraint firstAttribute="width" priority="250" constant="345" id="wbo-Jd-JtS"/>
                                 </constraints>
+                                <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" keyboardType="alphabet" returnKeyType="done"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" keyboardType="alphabet"/>
                                 <connections>
-                                    <outlet property="delegate" destination="6rp-6Z-yrq" id="xNF-je-fz4"/>
+                                    <outlet property="delegate" destination="6rp-6Z-yrq" id="dou-H7-wuw"/>
                                 </connections>
-                            </textView>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" red="0.8666666666666667" green="0.87450980392156863" blue="0.8784313725490196" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="ftA-yg-YCE" firstAttribute="bottom" secondItem="kNP-gA-dkt" secondAttribute="bottom" constant="180" id="1Ma-rp-cmd"/>
-                            <constraint firstItem="Mwj-KF-u0a" firstAttribute="centerY" secondItem="UpR-Oa-iba" secondAttribute="centerY" id="2MC-gI-Ioe"/>
-                            <constraint firstItem="UpR-Oa-iba" firstAttribute="leading" secondItem="ftA-yg-YCE" secondAttribute="leading" constant="26" id="CNa-DL-KNc"/>
+                            <constraint firstItem="Puf-aO-D14" firstAttribute="centerY" secondItem="Mwj-KF-u0a" secondAttribute="centerY" id="1qk-Ir-9wI"/>
+                            <constraint firstItem="ftA-yg-YCE" firstAttribute="trailing" secondItem="Puf-aO-D14" secondAttribute="trailing" constant="26" id="2gJ-v7-FDf"/>
+                            <constraint firstItem="Puf-aO-D14" firstAttribute="leading" secondItem="ftA-yg-YCE" secondAttribute="leading" constant="26" id="OPw-Kk-Sl1"/>
+                            <constraint firstItem="kNP-gA-dkt" firstAttribute="centerY" secondItem="Puf-aO-D14" secondAttribute="centerY" id="TB7-dM-Ubm"/>
                             <constraint firstItem="kNP-gA-dkt" firstAttribute="top" secondItem="ftA-yg-YCE" secondAttribute="top" id="URc-tV-2HB"/>
-                            <constraint firstItem="ftA-yg-YCE" firstAttribute="trailing" secondItem="UpR-Oa-iba" secondAttribute="trailing" constant="26" id="X1P-mc-Pm1"/>
-                            <constraint firstItem="kNP-gA-dkt" firstAttribute="centerY" secondItem="UpR-Oa-iba" secondAttribute="centerY" id="YNK-qd-74z"/>
-                            <constraint firstItem="Mwj-KF-u0a" firstAttribute="height" secondItem="UpR-Oa-iba" secondAttribute="height" constant="32" id="YXq-hW-ACY"/>
-                            <constraint firstItem="Mwj-KF-u0a" firstAttribute="width" secondItem="UpR-Oa-iba" secondAttribute="width" constant="24" id="c85-8I-ZyZ"/>
-                            <constraint firstItem="Mwj-KF-u0a" firstAttribute="centerX" secondItem="UpR-Oa-iba" secondAttribute="centerX" id="g04-SH-D6t"/>
-                            <constraint firstItem="kNP-gA-dkt" firstAttribute="centerX" secondItem="CZ3-Jg-WFg" secondAttribute="centerX" id="jXl-Zd-48L"/>
+                            <constraint firstItem="Mwj-KF-u0a" firstAttribute="width" secondItem="Puf-aO-D14" secondAttribute="width" constant="24" id="ctY-qB-ozb"/>
+                            <constraint firstItem="Mwj-KF-u0a" firstAttribute="height" secondItem="Puf-aO-D14" secondAttribute="height" constant="32" id="dmT-vo-QD2"/>
                             <constraint firstItem="ftA-yg-YCE" firstAttribute="trailing" secondItem="kNP-gA-dkt" secondAttribute="trailing" id="kco-Oh-2eb"/>
+                            <constraint firstItem="Puf-aO-D14" firstAttribute="centerX" secondItem="Mwj-KF-u0a" secondAttribute="centerX" id="qA2-Me-ikw"/>
                             <constraint firstItem="kNP-gA-dkt" firstAttribute="leading" secondItem="ftA-yg-YCE" secondAttribute="leading" id="tCb-Ka-hew"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ftA-yg-YCE"/>
@@ -4310,10 +4310,10 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <outlet property="spineFrameViewBottomConstraint" destination="1Ma-rp-cmd" id="TZ7-Vf-8aq"/>
                         <outlet property="spineFrameViewHeightConstraint" destination="nt5-vz-Bue" id="BPR-pE-QPI"/>
                         <outlet property="spineFrameViewWidthConstraint" destination="gOI-Gn-vbg" id="UXN-RA-jg0"/>
+                        <outlet property="textField" destination="Puf-aO-D14" id="ucH-PZ-rdj"/>
+                        <outlet property="textFieldHeightConstraint" destination="XzQ-Le-fuS" id="Sn5-wi-dj8"/>
                         <outlet property="textToolBarView" destination="dRv-pI-FWm" id="6fv-Kj-OuI"/>
-                        <outlet property="textView" destination="UpR-Oa-iba" id="FPH-UJ-SdO"/>
                         <outlet property="textViewBorderView" destination="Mwj-KF-u0a" id="w9M-MW-r84"/>
-                        <outlet property="textViewHeightConstraint" destination="r88-Ky-TzN" id="NM9-KD-FEk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kby-UO-ZuI" userLabel="First Responder" sceneMemberID="firstResponder"/>

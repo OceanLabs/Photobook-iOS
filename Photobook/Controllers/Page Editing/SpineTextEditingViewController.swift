@@ -18,12 +18,8 @@ class SpineTextEditingViewController: UIViewController {
     @IBOutlet private weak var spineContainerView: UIView!
     @IBOutlet private weak var spineFrameView: SpineFrameView!
     @IBOutlet private weak var textViewBorderView: UIView!
-    @IBOutlet private weak var textView: PhotobookTextView! {
-        didSet {
-            textView.textContainer.maximumNumberOfLines = 1
-            textView.textContainer.lineFragmentPadding = 0
-        }
-    }
+    
+    @IBOutlet private weak var textField: UITextField!
     @IBOutlet private weak var textToolBarView: TextToolBarView! {
         didSet { textToolBarView.delegate = self }
     }
@@ -33,15 +29,15 @@ class SpineTextEditingViewController: UIViewController {
     @IBOutlet private weak var spineFrameViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var spineFrameViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var spineFrameViewBottomConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var textViewHeightConstraint: NSLayoutConstraint!
     
-    // TEMP
+    @IBOutlet private weak var textFieldHeightConstraint: NSLayoutConstraint!
+
     private struct Constants {
-        static let spineThickness: CGFloat = 20.0
-        static let spineTextPadding: CGFloat = 100.0
-        static let fontType: FontType = .plain
+        static let textFieldSafetyPadding: CGFloat = 4.0
+        static let textFieldPadding: CGFloat = 16.0
         
-        static let textViewPadding: CGFloat = 16.0
+        // TEMP
+        static let spineTextPadding: CGFloat = 100.0
     }
     
     var initialRect: CGRect!
@@ -78,10 +74,7 @@ class SpineTextEditingViewController: UIViewController {
         navigationItem.setLeftBarButton(cancelButton, animated: true)
         navigationItem.setRightBarButton(doneButton, animated: true)
         
-        textView.textContainer.lineFragmentPadding = 0.0
-        textView.textContainerInset = .zero
-
-        textView.becomeFirstResponder()
+        textField.becomeFirstResponder()
     }
 
     @objc private func keyboardWillShow(notification: NSNotification) {
@@ -114,7 +107,7 @@ class SpineTextEditingViewController: UIViewController {
             
             UIView.animate(withDuration: 0.1) {
                 self.textViewBorderView.alpha = 1.0
-                self.textView.alpha = 1.0
+                self.textField.alpha = 1.0
             }
         })
     }
@@ -122,9 +115,9 @@ class SpineTextEditingViewController: UIViewController {
     func animateOff(completion: @escaping () -> Void) {
         let backgroundColor = view.backgroundColor
         
-        textView.resignFirstResponder()
+        textField.resignFirstResponder()
+        textField.alpha = 0.0
         
-        textView.alpha = 0.0
         textViewBorderView.alpha = 0.0
         
         spineFrameView.alpha = 0.0
@@ -148,14 +141,15 @@ class SpineTextEditingViewController: UIViewController {
     }
     
     private func setup() {
-        textView.inputAccessoryView = textToolBarView
-        textView.text = ProductManager.shared.spineText
+        
+        textField.inputAccessoryView = textToolBarView
+        textField.text = ProductManager.shared.spineText
 
         let paddingRatio = Constants.spineTextPadding / ProductManager.shared.product!.pageHeight
         let initialContainerRatio = initialRect.width / initialRect.height
         
         // Figure out the size of the spine frame
-        let height = textView.bounds.width * (1.0 + paddingRatio * 2.0)
+        let height = textField.bounds.width * (1.0 + paddingRatio * 2.0)
         let width = height * initialContainerRatio
         
         spineFrameViewWidthConstraint.constant = width
@@ -163,12 +157,10 @@ class SpineTextEditingViewController: UIViewController {
         spineFrameView.color = ProductManager.shared.coverColor
         spineFrameView.resetSpineColor()
         
-        textViewHeightConstraint.constant = width - Constants.textViewPadding // since the cover will be on its side
-        
-        setTextViewAttributes(with: Constants.fontType, fontColor: ProductManager.shared.coverColor.fontColor())
+        textFieldHeightConstraint.constant = width - Constants.textFieldPadding // since the cover will be on its side
         
         textViewBorderView.alpha = 0.0
-        textView.alpha = 0.0
+        textField.alpha = 0.0
         
         backgroundColor = view.backgroundColor
         view.backgroundColor = .clear
@@ -195,10 +187,11 @@ class SpineTextEditingViewController: UIViewController {
         spineFrameView.alpha = 0.0
     }
     
-    private func setTextViewAttributes(with fontType: FontType, fontColor: UIColor) {
+    private func setTextFieldAttributes() {
         let fontSize = fontType.sizeForScreenHeight(spineFrameViewHeightConstraint.constant, isSpineText: true)
-        textView.attributedText = fontType.attributedText(with: textView.text, fontSize: fontSize, fontColor: fontColor, isSpineText: true)
-        textView.typingAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor, isSpineText: true)
+        let fontColor = ProductManager.shared.coverColor.fontColor()
+        textField.attributedText = fontType.attributedText(with: textField.text, fontSize: fontSize, fontColor: fontColor, isSpineText: true)
+        textField.typingAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor, isSpineText: true)
     }
     
     @IBAction func tappedCancelButton(_ sender: UIBarButtonItem) {
@@ -206,31 +199,37 @@ class SpineTextEditingViewController: UIViewController {
     }
     
     @IBAction func tappedDoneButton(_ sender: UIBarButtonItem) {
-        delegate?.didSaveSpineTextEditing(self, spineText: textView.text, fontType: fontType)
+        delegate?.didSaveSpineTextEditing(self, spineText: textField.text, fontType: fontType)
     }
 }
 
-extension SpineTextEditingViewController: UITextViewDelegate {
+extension SpineTextEditingViewController: UITextFieldDelegate {
     
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        setTextFieldAttributes()
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
-        let textView = textView as! PhotobookTextView
+        // Allow deleting
+        if string.count == 0 { return true }
         
-        // Dismiss on line break
-        guard text.rangeOfCharacter(from: CharacterSet.newlines) == nil else {
-            textView.resignFirstResponder()
-            delegate?.didSaveSpineTextEditing(self, spineText: textView.text, fontType: fontType)
-            return false
-        }
+        // Disallow pasting non-ascii characters
+        if !string.canBeConverted(to: String.Encoding.ascii) { return false }
+        
+        // Check that the new length doesn't exceed the textField bounds
+        let attributedString = NSMutableAttributedString(attributedString: textField.attributedText!)
+        attributedString.replaceCharacters(in: range, with: string)
 
-        return textView.shouldChangePhotobookText(in: range, replacementText: text)
+        // Reduce the text area slightly to avoid the first character getting cut off
+        return attributedString.size().width < textField.bounds.width - Constants.textFieldSafetyPadding
     }
 }
 
 extension SpineTextEditingViewController: TextToolBarViewDelegate {
     
     func didSelectFontType(_ fontType: FontType) {
-        setTextViewAttributes(with: fontType, fontColor: ProductManager.shared.coverColor.fontColor())
         self.fontType = fontType
+        setTextFieldAttributes()
     }
 }

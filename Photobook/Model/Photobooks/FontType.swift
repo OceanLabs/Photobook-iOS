@@ -25,6 +25,8 @@ import Foundation
         let paragraphStyle = NSMutableParagraphStyle()
         if !isSpineText {
             paragraphStyle.lineHeightMultiple = 1.2
+        } else {
+            paragraphStyle.alignment = .center
         }
 
         return paragraphStyle.copy() as! NSParagraphStyle
