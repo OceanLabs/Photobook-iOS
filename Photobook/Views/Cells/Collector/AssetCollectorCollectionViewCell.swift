@@ -65,5 +65,6 @@ class AssetCollectorCollectionViewCell: BorderedCollectionViewCell {
         super.prepareForReuse()
         
         isDeletingEnabled = false
+        imageView.image = nil
     }
 }
