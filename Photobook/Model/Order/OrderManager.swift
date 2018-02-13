@@ -1,5 +1,5 @@
 //
-//  OrderSummaryManager.swift
+//  OrderManager.swift
 //  Photobook
 //
 //  Created by Julian Gruber on 02/02/2018.

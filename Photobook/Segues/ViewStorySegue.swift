@@ -38,7 +38,7 @@ class ViewStorySegue: UIStoryboardSegue {
         
         
         let size = CGSize(width: source.view.frame.size.width, height: source.view.frame.size.width / AssetPickerCollectionViewController.coverAspectRatio)
-        asset.image(size: size, completionHandler: {(image, _) in
+        asset.image(size: size, loadThumbnailsFirst: true, completionHandler: {(image, _) in
             imageView.image = image
         })
         

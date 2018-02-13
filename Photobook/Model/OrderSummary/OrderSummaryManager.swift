@@ -1,5 +1,5 @@
 //
-//  OrderManager.swift
+//  OrderSummaryManager.swift
 //  Photobook
 //
 //  Created by Julian Gruber on 15/01/2018.
@@ -10,11 +10,10 @@ import UIKit
 
 protocol OrderSummaryManagerDelegate : class {
     func orderSummaryManager(_ manager:OrderSummaryManager, didUpdate success:Bool)
+    func orderSummaryManagerSizeForPreviewImage(_ manager:OrderSummaryManager) -> CGSize
 }
 
 class OrderSummaryManager {
-    
-    private let taskReferenceImagePreview = "OrderSummaryManager-ProductPreviewImage"
     
     //layouts configured by previous UX
     private var layouts:[ProductLayout] {
@@ -43,8 +42,6 @@ class OrderSummaryManager {
     weak var delegate:OrderSummaryManagerDelegate?
     
     init() {
-        NotificationCenter.default.addObserver(self, selector: #selector(imageUploadFinished(_:)), name: APIClient.backgroundSessionTaskFinished, object: nil)
-        
         refresh(true)
     }
     
@@ -78,7 +75,7 @@ class OrderSummaryManager {
     func fetchProductDetails() {
         
         //TODO: mock data REMOVE
-        let randomInt = arc4random_uniform(4)
+        let randomInt = arc4random_uniform(3)
         let filename = "order_summary_\(randomInt)"
         print("mock file: " + filename)
         
@@ -94,16 +91,15 @@ class OrderSummaryManager {
         }
         self.summary = summary
         
-        if let imageUrl = summary.previewImageUrl(withCoverImageUrl: coverImageUrl, size: CGSize(width: 300, height: 300)) {
-            URLSession.shared.dataTask(with: imageUrl, completionHandler: { (data, response, error) -> Void in
+        let size = delegate?.orderSummaryManagerSizeForPreviewImage(self) ?? CGSize.zero
+        
+        if let imageUrl = summary.previewImageUrl(withCoverImageUrl: coverImageUrl, size: size) {
+            APIClient.shared.get(context: .none, endpoint: imageUrl.absoluteString, parameters: nil, completion: { (data, error) in
                 DispatchQueue.main.async(execute: { () -> Void in
-                    if let data = data {
-                        self.previewImage = UIImage(data: data)
-                    }
+                    self.previewImage = data as? UIImage
                     self.delegate?.orderSummaryManager(self, didUpdate: true)
                 })
-                
-            }).resume()
+            })
         }
         
     }
@@ -115,38 +111,31 @@ class OrderSummaryManager {
             return
         }
         
-        asset.image(size: assetMaximumSize, applyEdits: false, progressHandler: nil, completionHandler: { (image, error) in
+        asset.image(size: assetMaximumSize, applyEdits: false, loadThumbnailsFirst: false, progressHandler: nil, completionHandler: { (image, error) in
             if let image = image {
-                APIClient.shared.uploadImage(image, imageName: self.taskReferenceImagePreview + ".jpeg", reference: self.taskReferenceImagePreview, context: .pig, endpoint: "upload/")
+                APIClient.shared.uploadImage(image, imageName: "OrderSummaryPreviewImage.jpeg", context: .pig, endpoint: "upload/", completion: { (json, error) in
+                    
+                    defer {
+                        DispatchQueue.main.async { self.fetchProductDetails() }
+                    }
+                    
+                    if let error = error {
+                        print(error.localizedDescription)
+                        return
+                    }
+                    
+                    guard let dictionary = json as? [String:AnyObject], let url = dictionary["full"] as? String else {
+                        print("OderSummaryManager: Couldn't parse URL of uploaded image")
+                        return
+                    }
+                    
+                    self.coverImageUrl = url
+                })
             } else {
                 // fetch product details straight away
                 print("OrderSummaryManager: Couldn't get image for asset")
-                self.fetchProductDetails()
+                DispatchQueue.main.async { self.fetchProductDetails() }
             }
         })
-    }
-    
-    @objc func imageUploadFinished(_ notification: Notification) {
-        
-        defer {
-            fetchProductDetails() //always proceed to fetch product details that'll also take care of sending notifications to all observers
-        }
-        
-        guard let dictionary = notification.userInfo as? [String: AnyObject] else {
-            print("OrderSummaryManager: Task finished but could not cast user info")
-            return
-        }
-        
-        if let error = dictionary["error"] as? APIClientError {
-            print(error.localizedDescription)
-            return
-        }
-        
-        guard let reference = dictionary["task_reference"] as? String, reference == taskReferenceImagePreview,
-            let url = dictionary["full"] as? String else {
-                return
-        }
-        
-        coverImageUrl = url
     }
 }

@@ -160,7 +160,7 @@ class PhotobookAPIManager {
             }
 
             // TEMP: Size doesn't seem necessary. Apply edits server side. Progress not needed either.
-            asset.image(size: CGSize(width: Int.max, height: Int.max), applyEdits: false, progressHandler: nil, completionHandler: { [weak welf = self] (image, error) in
+            asset.image(size: CGSize(width: Int.max, height: Int.max), applyEdits: false, loadThumbnailsFirst: true, progressHandler: nil, completionHandler: { [weak welf = self] (image, error) in
                 if error != nil || image == nil {
                     welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImage)
                     return

@@ -42,10 +42,6 @@ class OrderSummaryViewController: UIViewController {
         orderSummaryManager.delegate = self
     }
     
-    func retryFetchingSummary() {
-        self.emptyScreenViewController.show(message: self.stringLoading, activity: true)
-        orderSummaryManager.refresh(false)
-    }
 }
 
 extension OrderSummaryViewController: OrderSummaryManagerDelegate {
@@ -59,9 +55,15 @@ extension OrderSummaryViewController: OrderSummaryManagerDelegate {
         } else {
             
             emptyScreenViewController.show(message: stringLoadingFail, title: nil, image: nil, activity: false, buttonTitle: stringLoadingRetry, buttonAction: {
-                self.retryFetchingSummary()
+                self.emptyScreenViewController.show(message: self.stringLoading, activity: true)
+                self.orderSummaryManager.refresh(false)
             })
         }
+    }
+    
+    func orderSummaryManagerSizeForPreviewImage(_ manager: OrderSummaryManager) -> CGSize {
+        let scaleFactor = UIScreen.main.scale
+        return CGSize(width: previewImageView.frame.size.width * scaleFactor, height: previewImageView.frame.size.height * scaleFactor)
     }
 }
 

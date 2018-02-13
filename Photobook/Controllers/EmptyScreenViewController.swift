@@ -68,7 +68,6 @@ class EmptyScreenViewController: UIViewController {
             parentController.addChildViewController(self)
             self.didMove(toParentViewController: parentController)
         }
-        view.alpha = 1
         
         imageView.image = image
         imageViewHeightConstraint.constant = image != nil ? EmptyScreenViewController.imageHeight : 0.0
@@ -108,6 +107,7 @@ class EmptyScreenViewController: UIViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.view.alpha = 0.0
             }, completion: { (finished) in
+                self.view.alpha = 1
                 self.view.removeFromSuperview()
                 self.removeFromParentViewController()
             })

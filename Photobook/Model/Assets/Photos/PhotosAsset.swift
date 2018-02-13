@@ -62,9 +62,9 @@ class PhotosAsset: Asset {
         self.albumIdentifier = albumIdentifier
     }
     
-    func uneditedImage(size: CGSize, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
+    func uneditedImage(size: CGSize, loadThumbnailsFirst: Bool, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
         let options = PHImageRequestOptions()
-        options.deliveryMode = .opportunistic
+        options.deliveryMode = loadThumbnailsFirst ? .opportunistic : .highQualityFormat
         options.isNetworkAccessAllowed = true
         
         let imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())

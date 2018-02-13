@@ -132,7 +132,7 @@ class PhotobookPageView: UIView {
             return
         }
         
-        asset.image(size: imageSize, completionHandler: { [weak welf = self] (image, _) in
+        asset.image(size: imageSize, loadThumbnailsFirst: true, completionHandler: { [weak welf = self] (image, _) in
             guard welf?.index == index, let image = image else { return }
             imageCompletion(image)
         })
