@@ -21,7 +21,7 @@ class SpineTextEditingViewController: UIViewController {
     @IBOutlet private weak var textView: PhotobookTextView! {
         didSet {
             textView.textContainer.maximumNumberOfLines = 1
-            textView.textContainer.lineBreakMode = .byTruncatingTail
+            textView.textContainer.lineFragmentPadding = 0
         }
     }
     @IBOutlet private weak var textToolBarView: TextToolBarView! {
@@ -39,7 +39,7 @@ class SpineTextEditingViewController: UIViewController {
     private struct Constants {
         static let spineThickness: CGFloat = 20.0
         static let spineTextPadding: CGFloat = 100.0
-        static let fontType: FontType = .cover
+        static let fontType: FontType = .plain
         
         static let textViewPadding: CGFloat = 16.0
     }
@@ -160,6 +160,7 @@ class SpineTextEditingViewController: UIViewController {
         
         spineFrameViewWidthConstraint.constant = width
         spineFrameViewHeightConstraint.constant = height
+        spineFrameView.color = ProductManager.shared.coverColor
         spineFrameView.resetSpineColor()
         
         textViewHeightConstraint.constant = width - Constants.textViewPadding // since the cover will be on its side
@@ -195,9 +196,9 @@ class SpineTextEditingViewController: UIViewController {
     }
     
     private func setTextViewAttributes(with fontType: FontType, fontColor: UIColor) {
-        let fontSize = fontType.sizeForScreenHeight(spineFrameViewHeightConstraint.constant)
-        textView.attributedText = fontType.attributedText(with: textView.text, fontSize: fontSize, fontColor: fontColor)
-        textView.typingAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor)
+        let fontSize = fontType.sizeForScreenHeight(spineFrameViewHeightConstraint.constant, isSpineText: true)
+        textView.attributedText = fontType.attributedText(with: textView.text, fontSize: fontSize, fontColor: fontColor, isSpineText: true)
+        textView.typingAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor, isSpineText: true)
     }
     
     @IBAction func tappedCancelButton(_ sender: UIBarButtonItem) {

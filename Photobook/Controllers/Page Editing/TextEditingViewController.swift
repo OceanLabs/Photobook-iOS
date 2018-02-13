@@ -245,7 +245,7 @@ class TextEditingViewController: UIViewController {
         if let productLayoutText = productLayout.productLayoutText {
             fontType = productLayoutText.fontType
         } else {
-            fontType = .clear
+            fontType = .plain
         }
         setTextViewAttributes(with: fontType, fontColor: pageColor.fontColor())
         

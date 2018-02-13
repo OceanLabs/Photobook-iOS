@@ -27,7 +27,7 @@ class SpineFrameView: UIView {
     
     var color: ProductColor = .white
     var text: String?
-    var fontType: FontType = .cover
+    var fontType: FontType = .plain
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -37,8 +37,8 @@ class SpineFrameView: UIView {
         textLabelWidthConstraint.constant = bounds.height * (1.0 - paddingRatio * 2.0)
         
         if !(text ?? "").isEmpty {
-            let fontSize = fontType.sizeForScreenHeight(bounds.height)
-            textLabel.attributedText = fontType.attributedText(with: text!, fontSize: fontSize, fontColor: color.fontColor())
+            let fontSize = fontType.sizeForScreenHeight(bounds.height, isSpineText: true)
+            textLabel.attributedText = fontType.attributedText(with: text!, fontSize: fontSize, fontColor: color.fontColor(), isSpineText: true)
         } else {
             textLabel.text = ""
         }

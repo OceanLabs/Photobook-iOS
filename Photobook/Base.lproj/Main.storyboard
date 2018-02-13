@@ -4124,7 +4124,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k5m-We-BNj">
                                     <rect key="frame" x="0.0" y="0.0" width="125" height="50"/>
                                     <fontDescription key="fontDescription" name="OpenSans-Regular" family="Open Sans" pointSize="20"/>
-                                    <state key="normal" title="Clear">
+                                    <state key="normal" title="Plain">
                                         <color key="titleColor" red="0.5725490196078431" green="0.58431372549019611" blue="0.59215686274509804" alpha="1" colorSpace="calibratedRGB"/>
                                     </state>
                                     <state key="selected">
@@ -4327,7 +4327,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9GE-wD-ugg">
                                     <rect key="frame" x="0.0" y="0.0" width="125" height="50"/>
                                     <fontDescription key="fontDescription" name="OpenSans-Regular" family="Open Sans" pointSize="20"/>
-                                    <state key="normal" title="Clear">
+                                    <state key="normal" title="Plain">
                                         <color key="titleColor" red="0.57254901960000004" green="0.58431372550000005" blue="0.59215686270000001" alpha="1" colorSpace="calibratedRGB"/>
                                     </state>
                                     <state key="selected">

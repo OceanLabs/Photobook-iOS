@@ -12,10 +12,10 @@ import UIKit
 class PhotobookTextView: UITextView {
     
     private func textGoesOverBounds(_ string: String, range: NSRange) -> Bool {
-        let viewHeight = self.bounds.height
-        let width = self.textContainer.size.width
+        let viewHeight = bounds.height
+        let width = textContainer.size.width
         
-        let attributedString = NSMutableAttributedString(attributedString: self.textStorage)
+        let attributedString = NSMutableAttributedString(attributedString: textStorage)
         attributedString.replaceCharacters(in: range, with: string)
         
         let textHeight = (attributedString as NSAttributedString).height(for: width)
