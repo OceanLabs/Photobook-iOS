@@ -199,7 +199,20 @@ class SpineTextEditingViewController: UIViewController {
     }
     
     @IBAction func tappedDoneButton(_ sender: UIBarButtonItem) {
-        delegate?.didSaveSpineTextEditing(self, spineText: textField.text, fontType: fontType)
+        // Check that the text still fits the bounds
+        var attributedString: NSMutableAttributedString? = nil
+        if textField.attributedText != nil {
+            attributedString = NSMutableAttributedString(attributedString: textField.attributedText!)
+            while !textFitsBounds(attributedString!) {
+                attributedString!.deleteCharacters(in: NSMakeRange(attributedString!.length-1, 1))
+            }
+        }
+        delegate?.didSaveSpineTextEditing(self, spineText: attributedString?.string.trimmingCharacters(in: .whitespaces), fontType: fontType)
+    }
+    
+    private func textFitsBounds(_ attributedString: NSAttributedString) -> Bool {
+        // Reduce the text area slightly to avoid the first character getting cut off
+        return attributedString.size().width < textField.bounds.width - Constants.textFieldSafetyPadding
     }
 }
 
@@ -221,8 +234,7 @@ extension SpineTextEditingViewController: UITextFieldDelegate {
         let attributedString = NSMutableAttributedString(attributedString: textField.attributedText!)
         attributedString.replaceCharacters(in: range, with: string)
 
-        // Reduce the text area slightly to avoid the first character getting cut off
-        return attributedString.size().width < textField.bounds.width - Constants.textFieldSafetyPadding
+        return textFitsBounds(attributedString)
     }
 }
 
