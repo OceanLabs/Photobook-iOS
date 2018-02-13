@@ -20,7 +20,7 @@ class PhotosAlbum: Album {
     }
     
     var numberOfAssets: Int{
-        return assets.count > 0 ? assets.count : assetCollection.estimatedAssetCount
+        return !assets.isEmpty ? assets.count : assetCollection.estimatedAssetCount
     }
     
     var localizedName: String?{

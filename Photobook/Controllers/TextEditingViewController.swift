@@ -333,7 +333,7 @@ extension TextEditingViewController: UITextViewDelegate {
         }
         
         // Allow deleting
-        if text.count == 0 { return true }
+        if text.isEmpty { return true }
         
         // Disallow pasting non-ascii characters
         if !text.canBeConverted(to: String.Encoding.ascii) { return false }

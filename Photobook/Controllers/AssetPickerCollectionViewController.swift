@@ -40,7 +40,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
             navigationItem.largeTitleDisplayMode = .never
         }
         
-        if album.assets.count == 0{
+        if album.assets.isEmpty {
             self.album.loadAssets(completionHandler: { (_) in
                 self.collectionView?.reloadData()
                 self.postAlbumLoadSetup()

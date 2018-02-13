@@ -57,7 +57,7 @@ class PhotosAlbumManager: NSObject, AlbumManager {
                 
                 // Load assets here so that we know the number of assets in this album
                 album.loadAssetsFromPhotoLibrary()
-                if album.assets.count > 0 {
+                if !album.assets.isEmpty {
                     albums.append(album)
                 }
                 
@@ -69,7 +69,7 @@ class PhotosAlbumManager: NSObject, AlbumManager {
                 
                 // Load assets here so that we know the number of assets in this album
                 album.loadAssetsFromPhotoLibrary()
-                if album.assets.count > 0 {
+                if !album.assets.isEmpty {
                     albums.append(album)
                 }
             }
@@ -80,7 +80,7 @@ class PhotosAlbumManager: NSObject, AlbumManager {
                 
                 // Load assets here so that we know the number of assets in this album
                 album.loadAssetsFromPhotoLibrary()
-                if album.assets.count > 0 {
+                if !album.assets.isEmpty {
                     albums.append(album)
                 }
             }
@@ -92,7 +92,7 @@ class PhotosAlbumManager: NSObject, AlbumManager {
                     
                     // Load assets here so that we know the number of assets in this album
                     album.loadAssetsFromPhotoLibrary()
-                    if album.assets.count > 0 {
+                    if !album.assets.isEmpty {
                         albums.append(album)
                     }
                 }
@@ -104,7 +104,7 @@ class PhotosAlbumManager: NSObject, AlbumManager {
                 
                 // Load assets here so that we know the number of assets in this album
                 album.loadAssetsFromPhotoLibrary()
-                if album.assets.count > 0 {
+                if !album.assets.isEmpty {
                     albums.append(album)
                 }
             }
@@ -151,12 +151,13 @@ extension PhotosAlbumManager: PHPhotoLibraryChangeObserver {
                 guard let album = album as? PhotosAlbum,
                     let fetchedResult = album.fetchedAssets
                     else { continue }
-                if let changeDetails = changeInstance.changeDetails(for: fetchedResult), changeDetails.removedObjects.count > 0 || changeDetails.insertedObjects.count > 0 {
+                if let changeDetails = changeInstance.changeDetails(for: fetchedResult),
+                    !changeDetails.removedObjects.isEmpty || !changeDetails.insertedObjects.isEmpty {
                     changedAlbums.append(album)
                 }
             }
             
-            if changedAlbums.count > 0 {
+            if !changedAlbums.isEmpty {
                 let dispatchGroup = DispatchGroup()
                 
                 for album in changedAlbums {

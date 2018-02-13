@@ -132,7 +132,7 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
 extension AssetSelectorViewController: AssetCollectorAddingDelegate {
     
     func didFinishAdding(assets: [Asset]?) {
-        guard let assets = assets, assets.count > 0 else {
+        guard let assets = assets, !assets.isEmpty else {
             self.dismiss(animated: false, completion: nil)
             return
         }

@@ -109,7 +109,7 @@ class IntroViewController: UIViewController {
         // First Tab: Stories
         // If there are no stories, remove the stories tab
         StoriesManager.shared.loadTopStories()
-        if StoriesManager.shared.stories.count == 0 {
+        if StoriesManager.shared.stories.isEmpty {
             tabBarController.viewControllers?.removeFirst()
         }
         

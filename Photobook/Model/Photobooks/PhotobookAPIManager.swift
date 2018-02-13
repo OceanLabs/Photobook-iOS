@@ -94,7 +94,7 @@ class PhotobookAPIManager {
                 }
             }
             
-            if tempLayouts.count == 0 {
+            if tempLayouts.isEmpty {
                 print("PBAPIManager: parsing layouts failed")
                 completionHandler(nil, nil, APIClientError.parsing)
                 return
@@ -109,7 +109,7 @@ class PhotobookAPIManager {
                 }
             }
             
-            if tempPhotobooks.count == 0 {
+            if tempPhotobooks.isEmpty {
                 print("PBAPIManager: parsing photobook products failed")
                 completionHandler(nil, nil, APIClientError.parsing)
                 return

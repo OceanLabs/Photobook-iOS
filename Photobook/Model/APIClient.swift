@@ -104,7 +104,7 @@ class APIClient: NSObject {
     
     /// Save semantic references for pending upload tasks to disk
     @objc func savePendingTasks() {
-        if taskReferences.count == 0 {
+        if taskReferences.isEmpty {
             try? FileManager.default.removeItem(atPath: Storage.uploadTasksFile)
             return
         }

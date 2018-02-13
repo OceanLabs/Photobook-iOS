@@ -149,9 +149,9 @@ class ProductManager {
     func setPhotobook(_ photobook: Photobook, withAssets assets: [Asset]? = nil) {
         guard
             let coverLayouts = coverLayouts(for: photobook),
-            coverLayouts.count > 0,
+            !coverLayouts.isEmpty,
             let layouts = layouts(for: photobook),
-            layouts.count > 0
+            !layouts.isEmpty
         else {
             print("ProductManager: Missing layouts for selected photobook")
             return

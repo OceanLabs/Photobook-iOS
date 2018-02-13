@@ -44,8 +44,8 @@ class Photobook: Codable {
             let name = dictionary["name"] as? String,
             let pageHeight = dictionary["pageHeight"] as? CGFloat, pageHeight > 0.0,
             let aspectRatio = dictionary["aspectRatio"] as? CGFloat, aspectRatio > 0.0,
-            let coverLayouts = dictionary["coverLayouts"] as? [Int], coverLayouts.count > 0,
-            let layouts = dictionary["layouts"] as? [Int], layouts.count > 0
+            let coverLayouts = dictionary["coverLayouts"] as? [Int], !coverLayouts.isEmpty,
+            let layouts = dictionary["layouts"] as? [Int], !layouts.isEmpty
         else { return nil }
         
         return Photobook(id: id, name: name, pageHeight: pageHeight, aspectRatio: aspectRatio, coverLayouts: coverLayouts, layouts: layouts)

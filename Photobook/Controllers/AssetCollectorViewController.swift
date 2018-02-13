@@ -236,7 +236,7 @@ class AssetCollectorViewController: UIViewController {
     }
     
     private func adaptToNewAssetCount() {
-        if assets.count == 0 {
+        if assets.isEmpty {
             isHidden = true
             return
         }
@@ -283,7 +283,7 @@ class AssetCollectorViewController: UIViewController {
     }
     
     private func moveToCollectionViewEnd(animated: Bool) {
-        if assets.count > 0 {
+        if !assets.isEmpty {
             let indexPath = IndexPath(item: assets.count-1, section: 0)
             imageCollectionView.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.right, animated: animated)
         }
