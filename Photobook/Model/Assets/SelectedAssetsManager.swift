@@ -103,16 +103,12 @@ class SelectedAssetsManager: NSObject {
         if isSelected(asset){
             deselect(asset)
             return true
-        } else if count < maximumAllowedAssets {
+        } else if count < ProductManager.shared.maximumAllowedAssets {
             select(asset)
             return true
         } else {
             return false
         }
-    }
-    
-    var maximumAllowedAssets: Int {
-        return ProductManager.shared.maximumAllowedAssets
     }
     
     func count(for album: Album) -> Int {
