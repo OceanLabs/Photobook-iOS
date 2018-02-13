@@ -158,6 +158,8 @@ class SpineTextEditingViewController: UIViewController {
         textViewBorderView.alpha = 0.0
         textField.alpha = 0.0
         
+        setTextFieldAttributes()
+        
         backgroundColor = view.backgroundColor
         view.backgroundColor = .clear
         view.alpha = 1.0
@@ -187,7 +189,7 @@ class SpineTextEditingViewController: UIViewController {
         let fontSize = fontType.sizeForScreenHeight(spineFrameViewHeightConstraint.constant, isSpineText: true)
         let fontColor = ProductManager.shared.coverColor.fontColor()
         textField.attributedText = fontType.attributedText(with: textField.text, fontSize: fontSize, fontColor: fontColor, isSpineText: true)
-        textField.typingAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor, isSpineText: true)
+        textField.defaultTextAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor, isSpineText: true)
     }
     
     @IBAction func tappedCancelButton(_ sender: UIBarButtonItem) {
@@ -213,10 +215,6 @@ class SpineTextEditingViewController: UIViewController {
 }
 
 extension SpineTextEditingViewController: UITextFieldDelegate {
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        setTextFieldAttributes()
-    }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
