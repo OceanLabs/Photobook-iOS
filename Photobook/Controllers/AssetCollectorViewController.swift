@@ -333,7 +333,7 @@ extension AssetCollectorViewController: UICollectionViewDataSource, UICollection
         
         let asset = assets[indexPath.row]
         cell.assetId = asset.identifier
-        cell.imageView.setAndFadeIn(asset: asset, size: cell.imageView.frame.size, completionHandler: {
+        cell.imageView.setImage(from: asset, size: cell.imageView.frame.size, completionHandler: {
             return asset.identifier == cell.assetId
         })
         cell.isDeletingEnabled = isDeletingEnabled

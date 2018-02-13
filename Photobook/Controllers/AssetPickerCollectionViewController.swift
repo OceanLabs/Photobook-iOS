@@ -19,6 +19,8 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     var assetCollectorController: AssetCollectorViewController!
     static let coverAspectRatio: CGFloat = 2.723684211
     
+    var shouldFadeInImages = true
+    
     var albumManager: AlbumManager?
     var album: Album! {
         didSet{
@@ -275,7 +277,7 @@ extension AssetPickerCollectionViewController {
         updateSelectedStatus(cell: cell, indexPath: indexPath, asset: asset)
         
         let size = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize ?? .zero
-        cell.imageView.setAndFadeIn(asset: asset, size: size, completionHandler: {
+        cell.imageView.setImage(from: asset, fadeIn: shouldFadeInImages, size: size, completionHandler: {
             return cell.assetId == asset.identifier
         })
         

@@ -169,6 +169,7 @@ class StoriesManager {
             completionHandler?(error)
             
             // Cache the first 25 thumbnails from each story so that they don't appear blank on the first animation
+            // Not bulletproof, because the user might tap on a story before the assets finish caching
             guard !story.assets.isEmpty else { return }
             let imageWidth = UIScreen.main.bounds.size.width / 4.0
             welf?.imageManager.startCachingImages(for: PhotosAsset.photosAssets(from: Array(story.assets[0..<min(story.assets.count, 25)])), targetSize: CGSize(width: imageWidth, height: imageWidth), contentMode: .aspectFill, options: nil)

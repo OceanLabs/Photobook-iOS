@@ -10,6 +10,10 @@ import UIKit
 
 extension UIImageView {
     
+    private struct Constants {
+        static let fadeDuration = 0.2
+    }
+    
     
     ///  Set the image from an Asset to the imageView and fade in while doing so
     ///
@@ -17,8 +21,8 @@ extension UIImageView {
     ///   - asset: The Asset to use to get the image from
     ///   - size: Request a specific size from the asset. If nil the imageView's frame size will be used
     ///   - completionHandler: Called after the image has been fetched, but doesn't wait for the fade animation to complete. The completion handler returns a Bool indicating if we're allowed to continue. A typical example where it will be false is if we are in a reusable view (cell) which has been recycled.
-    func setAndFadeIn(asset: Asset?, size: CGSize? = nil, completionHandler:(()->(Bool))?) {
-        guard let asset = asset else {
+    func setImage(from: Asset?, fadeIn: Bool = true, size: CGSize? = nil, completionHandler:(()->(Bool))?) {
+        guard let asset = from else {
             image = nil
             return
         }
@@ -29,7 +33,7 @@ extension UIImageView {
             guard completionHandler?() ?? true else { return }
             
             self.image = image
-            UIView.animate(withDuration: 0.2, animations: {
+            UIView.animate(withDuration: fadeIn ? Constants.fadeDuration : 0, animations: {
                 self.alpha = 1
             })
         })

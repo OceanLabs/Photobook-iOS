@@ -23,7 +23,7 @@ class AssetPickerCoverCollectionViewCell: UICollectionViewCell {
     var dates: String? { didSet { datesLabel.text = dates } }
     
     func setCover (cover: Asset?, size: CGSize) {
-        coverImageView.setAndFadeIn(asset: cover, size: size, completionHandler: nil)
+        coverImageView.setImage(from: cover, size: size, completionHandler: nil)
     }
     
 }

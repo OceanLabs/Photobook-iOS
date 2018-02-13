@@ -39,7 +39,7 @@ extension AlbumSearchResultsTableViewController{
         cell.albumId = album.identifier
         
         album.coverAsset(completionHandler: {(asset, _) in
-            cell.albumCoverImageView.setAndFadeIn(asset: asset, size: CGSize(width: tableView.rowHeight, height: tableView.rowHeight), completionHandler: {
+            cell.albumCoverImageView.setImage(from: asset, size: CGSize(width: tableView.rowHeight, height: tableView.rowHeight), completionHandler: {
                 return cell.albumId == album.identifier
             })
         })

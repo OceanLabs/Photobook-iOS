@@ -184,7 +184,7 @@ extension AlbumsCollectionViewController{
         
         let cellWidth = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize.width ?? 0
         album.coverAsset(completionHandler: {(asset, error) in
-            cell.albumCoverImageView.setAndFadeIn(asset: asset, size: CGSize(width: cellWidth, height: cellWidth), completionHandler: {
+            cell.albumCoverImageView.setImage(from: asset, size: CGSize(width: cellWidth, height: cellWidth), completionHandler: {
                 return cell.albumId == album.identifier
             })
         })
