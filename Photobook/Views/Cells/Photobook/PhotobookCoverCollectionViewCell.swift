@@ -45,8 +45,13 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell {
         coverFrameView.pageView.setupImageBox()
         coverFrameView.pageView.setupTextBox(mode: .userTextOnly)
         
-        spineFrameView.text = ProductManager.shared.spineText
-        spineFrameView.fontType = ProductManager.shared.spineFontType
+        if spineFrameView.text != ProductManager.shared.spineText ||
+            spineFrameView.fontType != ProductManager.shared.spineFontType {
+                spineFrameView.text = ProductManager.shared.spineText
+                spineFrameView.fontType = ProductManager.shared.spineFontType
+                spineFrameView.setNeedsLayout()
+                spineFrameView.layoutIfNeeded()
+        }
         
         if coverFrameView.color != ProductManager.shared.coverColor {
             coverFrameView.color = ProductManager.shared.coverColor
