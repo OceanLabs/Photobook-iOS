@@ -130,22 +130,14 @@ class PhotosAlbumManager: NSObject, AlbumManager {
     }
     
     func startCachingImages(for assets: [Asset], targetSize: CGSize) {
-        PhotosAlbumManager.imageManager.startCachingImages(for: photosAssets(from: assets), targetSize: targetSize, contentMode: .aspectFill, options: nil)
+        PhotosAlbumManager.imageManager.startCachingImages(for: PhotosAsset.photosAssets(from: assets), targetSize: targetSize, contentMode: .aspectFill, options: nil)
     }
     
     func stopCachingImages(for assets: [Asset], targetSize: CGSize) {
-        PhotosAlbumManager.imageManager.stopCachingImages(for: photosAssets(from: assets), targetSize: targetSize, contentMode: .aspectFill, options: nil)
+        PhotosAlbumManager.imageManager.stopCachingImages(for: PhotosAsset.photosAssets(from: assets), targetSize: targetSize, contentMode: .aspectFill, options: nil)
     }
     
-    func photosAssets(from assets:[Asset]) -> [PHAsset]{
-        var photosAssets = [PHAsset]()
-        for asset in assets{
-            guard let photosAsset = asset as? PhotosAsset else { continue }
-            photosAssets.append(photosAsset.photosAsset)
-        }
-        
-        return photosAssets
-    }
+    
 
 }
 

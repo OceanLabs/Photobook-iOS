@@ -102,4 +102,14 @@ class PhotosAsset: Asset {
         
     }
     
+    static func photosAssets(from assets:[Asset]) -> [PHAsset]{
+        var photosAssets = [PHAsset]()
+        for asset in assets{
+            guard let photosAsset = asset as? PhotosAsset else { continue }
+            photosAssets.append(photosAsset.photosAsset)
+        }
+        
+        return photosAssets
+    }
+    
 }
