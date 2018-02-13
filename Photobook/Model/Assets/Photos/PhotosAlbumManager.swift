@@ -9,7 +9,7 @@
 import UIKit
 import Photos
 
-class PhotosAlbumManager: AlbumManager {
+class PhotosAlbumManager: NSObject, AlbumManager {
     
     private struct Constants {
         static let permissionsTitle = NSLocalizedString("Controllers/EmptyScreenViewController/PermissionDeniedTitle",
@@ -26,6 +26,11 @@ class PhotosAlbumManager: AlbumManager {
     var albums:[Album] = [Album]()
     static let imageManager = PHCachingImageManager()
     
+    override init() {
+        super.init()
+        PHPhotoLibrary.shared().register(self)
+    }
+    
     func loadAlbums(completionHandler: ((ErrorMessage?) -> Void)?) {
         guard PHPhotoLibrary.authorizationStatus() == .authorized else {
             let errorMessage = ErrorMessage(title: Constants.permissionsTitle, message: Constants.permissionsMessage, buttonTitle: Constants.permissionsButtonTitle, buttonAction: {
@@ -38,19 +43,22 @@ class PhotosAlbumManager: AlbumManager {
         }
         
         DispatchQueue.global(qos: .background).async {
+            var albums = [Album]()
+            
             let options = PHFetchOptions()
             options.wantsIncrementalChangeDetails = false
             options.includeHiddenAssets = false
             options.includeAllBurstAssets = false
             
             // Get "All Photos" album
-            if let collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: options).firstObject{
+            let fetchedResult = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: options)
+            if let collection = fetchedResult.firstObject{
                 let album = PhotosAlbum(collection)
                 
                 // Load assets here so that we know the number of assets in this album
                 album.loadAssetsFromPhotoLibrary()
                 if album.assets.count > 0 {
-                    self.albums.append(album)
+                    albums.append(album)
                 }
                 
             }
@@ -62,7 +70,7 @@ class PhotosAlbumManager: AlbumManager {
                 // Load assets here so that we know the number of assets in this album
                 album.loadAssetsFromPhotoLibrary()
                 if album.assets.count > 0 {
-                    self.albums.append(album)
+                    albums.append(album)
                 }
             }
             
@@ -73,7 +81,7 @@ class PhotosAlbumManager: AlbumManager {
                 // Load assets here so that we know the number of assets in this album
                 album.loadAssetsFromPhotoLibrary()
                 if album.assets.count > 0 {
-                    self.albums.append(album)
+                    albums.append(album)
                 }
             }
             
@@ -85,7 +93,7 @@ class PhotosAlbumManager: AlbumManager {
                     // Load assets here so that we know the number of assets in this album
                     album.loadAssetsFromPhotoLibrary()
                     if album.assets.count > 0 {
-                        self.albums.append(album)
+                        albums.append(album)
                     }
                 }
             }
@@ -97,17 +105,19 @@ class PhotosAlbumManager: AlbumManager {
                 // Load assets here so that we know the number of assets in this album
                 album.loadAssetsFromPhotoLibrary()
                 if album.assets.count > 0 {
-                    self.albums.append(album)
+                    albums.append(album)
                 }
             }
             
             // Get User albums
             let collections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: options)
-            collections.enumerateObjects({ [weak welf = self] (collection, _, _) in
+            collections.enumerateObjects({ (collection, _, _) in
                 guard collection.estimatedAssetCount != 0 else { return }
                 let album = PhotosAlbum(collection)
-                welf?.albums.append(album)
+                albums.append(album)
             })
+            
+            self.albums = albums
             
             DispatchQueue.main.async(execute: {() -> Void in
                 completionHandler?(nil)
@@ -137,4 +147,39 @@ class PhotosAlbumManager: AlbumManager {
         return photosAssets
     }
 
+}
+
+extension PhotosAlbumManager: PHPhotoLibraryChangeObserver {
+    
+    func photoLibraryDidChange(_ changeInstance: PHChange) {
+        var changedAlbums = [Album]()
+        
+        DispatchQueue.main.sync {
+            for album in albums {
+                guard let album = album as? PhotosAlbum,
+                    let fetchedResult = album.fetchedAssets
+                    else { continue }
+                if let changeDetails = changeInstance.changeDetails(for: fetchedResult), changeDetails.removedObjects.count > 0 || changeDetails.insertedObjects.count > 0 {
+                    changedAlbums.append(album)
+                }
+            }
+            
+            if changedAlbums.count > 0 {
+                let dispatchGroup = DispatchGroup()
+                
+                for album in changedAlbums {
+                    dispatchGroup.enter()
+                    album.loadAssets(completionHandler: { _ in
+                        dispatchGroup.leave()
+                    })
+                }
+                
+                dispatchGroup.notify(queue: DispatchQueue.main, execute: {
+                   NotificationCenter.default.post(name: AssetsNotificationName.albumsWereReloaded, object: changedAlbums)
+                })
+                
+            }
+        }
+    }
+    
 }

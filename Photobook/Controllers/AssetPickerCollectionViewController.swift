@@ -63,9 +63,12 @@ class AssetPickerCollectionViewController: UICollectionViewController {
             assetCollectorController.delegate = self
         }
         
-        //listen to asset manager
+        // Listen to asset manager
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
+        
+        // Listen for album changes
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereReloaded(_:)), name: AssetsNotificationName.albumsWereReloaded, object: nil)
     }
     
     deinit {
@@ -76,6 +79,16 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         super.viewDidAppear(animated)
         
         updateCachedAssets()
+    }
+    
+    @objc func albumsWereReloaded(_ notification: Notification) {
+        guard let albumsChanged = notification.object as? [Album] else { return }
+        
+        for album in albumsChanged {
+            if album.identifier == self.album.identifier {
+                collectionView?.reloadSections(IndexSet(integer: 0))
+            }
+        }
     }
     
     @IBAction func unwindToThisView(withUnwindSegue unwindSegue: UIStoryboardSegue) {}
