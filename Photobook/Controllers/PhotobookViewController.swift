@@ -211,11 +211,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         alertController.addAction(UIAlertAction(title: NSLocalizedString("Photobook/BackAlertConfirmationButtonTitle", value: "Yes", comment: "Confirmation button title for alert asking the user to go back"), style: .destructive, handler: { _ in
             
             // Clear photobook
-            ProductManager.shared.productLayouts = [ProductLayout]()
-            ProductManager.shared.product = nil
-            ProductManager.shared.spineText = nil
-            ProductManager.shared.coverColor = .white
-            ProductManager.shared.pageColor = .white
+            ProductManager.shared.reset()
             
             self.navigationController?.popViewController(animated: true)
         }))

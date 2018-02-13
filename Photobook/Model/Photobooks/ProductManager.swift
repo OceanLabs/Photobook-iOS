@@ -116,8 +116,13 @@ class ProductManager {
         return true
     }
     var paymentToken: String?
+    
     func reset() {
-        // TODO: reset the product
+        productLayouts = [ProductLayout]()
+        product = nil
+        spineText = nil
+        coverColor = .white
+        pageColor = .white
     }
     
     
