@@ -39,12 +39,12 @@ extension Asset {
     /// Request the image that this asset represents. This method will do all of the processing in a serial background thread.
     ///
     /// - Parameters:
-    ///   - size: The requested image size in points. Depensding on the asset type and source this size may just a guideline
+    ///   - size: The requested image size in points. Depending on the asset type and source this size may just a guideline
     ///   - applyEdits: Option to apply the edits that the user has made
     ///   - loadThumbnail: Whether thumbnails get loaded first before the actual image. Setting this to true will result in the completion handler being executed multiple times
     ///   - progressHandler: Handler that returns the progress, for a example of a download
     ///   - completionHandler: The completion handler that returns the image
-    func image(size: CGSize, applyEdits: Bool = true, loadThumbnailsFirst: Bool, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)? = nil, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void){
+    func image(size: CGSize, applyEdits: Bool = true, loadThumbnailsFirst: Bool = true, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)? = nil, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void){
         
         uneditedImage(size: size, loadThumbnailsFirst: loadThumbnailsFirst, progressHandler: progressHandler, completionHandler: {(image: UIImage?, error: Error?) -> Void in
             guard error == nil else{

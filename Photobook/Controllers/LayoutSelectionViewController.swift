@@ -36,7 +36,7 @@ class LayoutSelectionViewController: UIViewController {
             guard let asset = asset else { return }
             
             let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-            asset.image(size: flowLayout.itemSize, loadThumbnailsFirst: true, completionHandler: { (image, error) in
+            asset.image(size: flowLayout.itemSize, completionHandler: { (image, error) in
                 guard error == nil else {
                     print("Layouts: error retrieving image")
                     return

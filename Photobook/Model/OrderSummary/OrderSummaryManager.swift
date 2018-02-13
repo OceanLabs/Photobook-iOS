@@ -125,7 +125,7 @@ class OrderSummaryManager {
                     }
                     
                     guard let dictionary = json as? [String:AnyObject], let url = dictionary["full"] as? String else {
-                        print("OderSummaryManager: Couldn't parse URL of uploaded image")
+                        print("OrderSummaryManager: Couldn't parse URL of uploaded image")
                         return
                     }
                     

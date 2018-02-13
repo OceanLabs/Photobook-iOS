@@ -92,7 +92,7 @@ extension AssetSelectorViewController: UICollectionViewDataSource {
         cell.assetIdentifier = asset.identifier
         let itemSize = (collectionView.collectionViewLayout as! UICollectionViewFlowLayout).itemSize
         
-        asset.image(size: itemSize, loadThumbnailsFirst: true, completionHandler: { (image, error) in
+        asset.image(size: itemSize, completionHandler: { (image, error) in
             guard cell.assetIdentifier == asset.identifier, error == nil else { return }
             cell.assetImage = image
         })
