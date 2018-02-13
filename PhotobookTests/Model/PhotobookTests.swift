@@ -15,6 +15,7 @@ class PhotobookTests: XCTestCase {
         "id": 10,
         "name": "210 x 210",
         "pageHeight": 400.34,
+        "spineTextRatio": 0.8,
         "aspectRatio": 1.38,
         "coverLayouts": [ 9, 10 ],
         "layouts": [ 10, 11, 12, 13 ]
@@ -52,6 +53,21 @@ class PhotobookTests: XCTestCase {
         photobookDictionary["pageHeight"] = 0.0 as AnyObject
         let photobookBox = Photobook.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if pageHeight is zero")
+    }
+
+    // Spine Ratio
+    func testParse_ShouldReturnNilIfSpineRatioIsMissing() {
+        var photobookDictionary = validDictionary
+        photobookDictionary["spineTextRatio"] = nil
+        let photobookBox = Photobook.parse(photobookDictionary)
+        XCTAssertNil(photobookBox, "Parse: Should return nil if spineTextRatio is missing")
+    }
+    
+    func testParse_ShouldReturnNilIfSpineRatioIsZero() {
+        var photobookDictionary = validDictionary
+        photobookDictionary["spineTextRatio"] = 0.0 as AnyObject
+        let photobookBox = Photobook.parse(photobookDictionary)
+        XCTAssertNil(photobookBox, "Parse: Should return nil if spineTextRatio is zero")
     }
 
     // Aspect Ratio

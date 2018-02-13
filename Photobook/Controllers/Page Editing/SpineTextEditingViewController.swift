@@ -35,9 +35,6 @@ class SpineTextEditingViewController: UIViewController {
     private struct Constants {
         static let textFieldSafetyPadding: CGFloat = 4.0
         static let textFieldPadding: CGFloat = 16.0
-        
-        // TEMP
-        static let spineTextPadding: CGFloat = 100.0
     }
     
     var initialRect: CGRect!
@@ -145,11 +142,10 @@ class SpineTextEditingViewController: UIViewController {
         textField.inputAccessoryView = textToolBarView
         textField.text = ProductManager.shared.spineText
 
-        let paddingRatio = Constants.spineTextPadding / ProductManager.shared.product!.pageHeight
         let initialContainerRatio = initialRect.width / initialRect.height
         
         // Figure out the size of the spine frame
-        let height = textField.bounds.width * (1.0 + paddingRatio * 2.0)
+        let height = textField.bounds.width / ProductManager.shared.product!.spineTextRatio
         let width = height * initialContainerRatio
         
         spineFrameViewWidthConstraint.constant = width
