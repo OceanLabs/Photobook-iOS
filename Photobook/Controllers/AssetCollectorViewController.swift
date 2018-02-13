@@ -343,8 +343,9 @@ extension AssetCollectorViewController: UICollectionViewDataSource, UICollection
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AssetCollectorCollectionViewCell", for: indexPath) as! AssetCollectorCollectionViewCell
         
         let asset = assets[indexPath.row]
-        asset.image(size: cell.imageView.frame.size, completionHandler: { (image, error) in
-            cell.imageView.image = image
+        cell.assetId = asset.identifier
+        cell.imageView.setAndFadeIn(asset: asset, size: cell.imageView.frame.size, completionHandler: {
+            return asset.identifier == cell.assetId
         })
         cell.isDeletingEnabled = isDeletingEnabled
         

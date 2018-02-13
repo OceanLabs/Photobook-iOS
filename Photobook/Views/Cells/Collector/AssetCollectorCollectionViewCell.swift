@@ -18,6 +18,7 @@ class AssetCollectorCollectionViewCell: BorderedCollectionViewCell {
     }
     
     private(set) var isWobbling:Bool = false
+    var assetId: String?
     var isDeletingEnabled:Bool = false {
         didSet {
             if isDeletingEnabled {

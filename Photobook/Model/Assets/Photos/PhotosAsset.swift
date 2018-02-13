@@ -29,7 +29,7 @@ class PhotosAsset: Asset {
         return NSStringFromClass(PhotosAsset.self)
     }
     
-    var photosAsset: PHAsset! {
+    var photosAsset: PHAsset {
         didSet {
             identifier = photosAsset.localIdentifier
         }
@@ -68,9 +68,8 @@ class PhotosAsset: Asset {
         options.isNetworkAccessAllowed = true
         
         let imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())
-        DispatchQueue.global(qos: .background).async { [weak welf = self] in
-            guard let asset = welf?.photosAsset else { return }
-            PHImageManager.default().requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options) { (image, _) in
+        DispatchQueue.global(qos: .background).async {
+            PHImageManager.default().requestImage(for: self.photosAsset, targetSize: imageSize, contentMode: .aspectFill, options: options) { (image, _) in
                 completionHandler(image, nil)
             }
         }

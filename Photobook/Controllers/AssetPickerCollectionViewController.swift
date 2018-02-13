@@ -268,9 +268,8 @@ extension AssetPickerCollectionViewController {
         cell.selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
         
         let size = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize ?? .zero
-        asset.image(size: size, completionHandler: {(image, _) in
-            guard cell.assetId == asset.identifier else { return }
-            cell.imageView.image = image
+        cell.imageView.setAndFadeIn(asset: asset, size: size, completionHandler: {
+            return cell.assetId == asset.identifier
         })
         
         return cell
@@ -285,8 +284,8 @@ extension AssetPickerCollectionViewController {
                 else { return UICollectionReusableView() }
             
             let size = self.collectionView(collectionView, layout: collectionView.collectionViewLayout, referenceSizeForHeaderInSection: indexPath.section)
-            story.coverImage(size: size, completionHandler: {(image, _) in
-                cell.cover = image
+            story.coverAsset(completionHandler: {(asset, _) in
+                cell.setCover(cover: asset, size: size)
             })
             
             cell.title = story.title

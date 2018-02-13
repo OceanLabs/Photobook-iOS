@@ -56,8 +56,8 @@ class PhotosAlbum: Album {
         self.fetchedAssets = fetchedAssets
     }
     
-    func coverImage(size: CGSize, completionHandler: @escaping (UIImage?, Error?) -> Void) {
-        assetCollection.coverImage(useFirstImageInCollection: false, size: size, completionHandler: completionHandler)
+    func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
+        assetCollection.coverAsset(useFirstImageInCollection: false, completionHandler: completionHandler)
     }
     
 }

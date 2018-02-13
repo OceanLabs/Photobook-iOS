@@ -24,7 +24,7 @@ protocol Asset: Codable {
     
     var albumIdentifier: String { get }
     
-    /// Request the original, unedited image that this asset represents. Avoid using this method directly, instead use image(size:applyEdits:contentMode:cacheResult:progressHandler:completionHandler:)
+    /// Request the original, unedited image that this asset represents. Avoid using this method directly, instead use image(size:contentMode:cacheResult:progressHandler:completionHandler:)
     ///
     /// - Parameters:
     ///   - size: The requested image size in points. Depending on the asset type and source this size may just a guideline
@@ -39,10 +39,9 @@ extension Asset {
     ///
     /// - Parameters:
     ///   - size: The requested image size in points. Depending on the asset type and source this size may just a guideline
-    ///   - applyEdits: Option to apply the edits that the user has made
     ///   - progressHandler: Handler that returns the progress, for a example of a download
     ///   - completionHandler: The completion handler that returns the image
-    func image(size: CGSize, applyEdits: Bool = true, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)? = nil, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void){
+    func image(size: CGSize, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)? = nil, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void){
         
         uneditedImage(size: size, progressHandler: progressHandler, completionHandler: {(image: UIImage?, error: Error?) -> Void in
             guard error == nil else{
@@ -53,8 +52,6 @@ extension Asset {
                 completionHandler(nil, NSError()) //TODO: better error reporting
                 return
             }
-            
-            //TODO: apply edits here if needed
             
             DispatchQueue.main.async {
                 completionHandler(image, nil)

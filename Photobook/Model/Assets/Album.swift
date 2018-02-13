@@ -17,6 +17,6 @@ protocol Album {
     var assets: [Asset] { get }
     
     func loadAssets(completionHandler: ((_ error: Error?) -> Void)?)
-    func coverImage(size: CGSize, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void)
+    func coverAsset(completionHandler: @escaping (_ asset: Asset?, _ error: Error?) -> Void)
     
 }
