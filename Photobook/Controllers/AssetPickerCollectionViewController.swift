@@ -8,10 +8,15 @@
 
 import UIKit
 
+protocol AssetPickerCollectionViewControllerDelegate: class {
+    func viewControllerForPresentingOn() -> UIViewController?
+}
+
 class AssetPickerCollectionViewController: UICollectionViewController {
 
     @IBOutlet private weak var selectAllButton: UIBarButtonItem!
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
+    weak var delegate: AssetPickerCollectionViewControllerDelegate?
     private let marginBetweenImages: CGFloat = 1
     private let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
     private var previousPreheatRect = CGRect.zero
@@ -375,7 +380,7 @@ extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegat
         fullScreenImageViewController.prepareForPop()
         fullScreenImageViewController.modalPresentationCapturesStatusBarAppearance = true
         
-        navigationController?.parent?.present(viewControllerToCommit, animated: true, completion: nil)
+        (delegate?.viewControllerForPresentingOn() ?? tabBarController)?.present(viewControllerToCommit, animated: true, completion: nil)
     }
     
 }

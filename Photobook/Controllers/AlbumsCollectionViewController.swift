@@ -22,6 +22,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     private let selectedAssetsManager = SelectedAssetsManager()
     var collectorMode: AssetCollectorMode = .selecting
     weak var addingDelegate: AssetCollectorAddingDelegate?
+    weak var assetPickerDelegate: AssetPickerCollectionViewControllerDelegate?
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
     }()
@@ -110,6 +111,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
         assetPickerController.selectedAssetsManager = selectedAssetsManager
         assetPickerController.collectorMode = collectorMode
         assetPickerController.addingDelegate = addingDelegate
+        assetPickerController.delegate = assetPickerDelegate
         
         self.navigationController?.pushViewController(assetPickerController, animated: true)
     }
