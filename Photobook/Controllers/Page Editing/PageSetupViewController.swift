@@ -209,11 +209,11 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             if removedAsset.identifier == productLayout.asset?.identifier {
                 productLayout.asset = nil
                 updateAll(with: nil)
+                assetSelectorViewController.selectedAsset = nil
                 break
             }
         }
         
-        assetSelectorViewController.selectedAsset = nil        
     }
     
     private func setupPhotobookFrame() {
