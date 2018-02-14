@@ -17,7 +17,7 @@ class ProductLayoutText: Codable {
         }
     }
     var text: String?
-    var fontType: FontType = .clear
+    var fontType: FontType = .plain
     
     func deepCopy() -> ProductLayoutText {
         let aLayoutText = ProductLayoutText()

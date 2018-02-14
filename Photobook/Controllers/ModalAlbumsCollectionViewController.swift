@@ -95,6 +95,7 @@ class ModalAlbumsCollectionViewController: UIViewController {
             albumsCollectionViewController.albumManager = albumManager
             albumsCollectionViewController.collectorMode = collectorMode
             albumsCollectionViewController.addingDelegate = self
+            albumsCollectionViewController.assetPickerDelegate = self
         }
     }
     
@@ -157,4 +158,12 @@ extension ModalAlbumsCollectionViewController: AssetCollectorAddingDelegate {
     func didFinishAdding(assets: [Asset]?) {
         animateContainerViewOffScreen(adding: assets)
     }
+}
+
+extension ModalAlbumsCollectionViewController: AssetPickerCollectionViewControllerDelegate {
+    
+    func viewControllerForPresentingOn() -> UIViewController? {
+        return self
+    }
+    
 }

@@ -35,10 +35,10 @@ class CoverLayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         productLayoutAsset.asset = asset
         
         let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset)
-        coverFrameView.pageView.index = 0
+        coverFrameView.pageView.pageIndex = 0
         coverFrameView.pageView.productLayout = productLayout
         coverFrameView.pageView.setupImageBox(with: image)
-        coverFrameView.pageView.setupTextBox(shouldBeLegible: false)
+        coverFrameView.pageView.setupTextBox(mode: .linesPlaceholder)
         
         if coverFrameView.color != coverColor {
             coverFrameView.color = coverColor

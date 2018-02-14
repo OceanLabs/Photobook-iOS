@@ -10,6 +10,7 @@ import UIKit
 
 @objc protocol PhotobookCollectionViewCellDelegate: class, UIGestureRecognizerDelegate {
     func didTapOnPlusButton(at foldIndex: Int)
+    func didTapOnPage(at: Int)
     @objc func didLongPress(_ sender: UILongPressGestureRecognizer)
     @objc func didPan(_ sender: UIPanGestureRecognizer)
 }
@@ -35,8 +36,8 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    var leftIndex: Int? { return photobookFrameView.leftPageView.index }
-    var rightIndex: Int? { return photobookFrameView.rightPageView.index }
+    var leftIndex: Int? { return photobookFrameView.leftPageView.pageIndex }
+    var rightIndex: Int? { return photobookFrameView.rightPageView.pageIndex }
     var width: CGFloat! { didSet { photobookFrameView.width = width } }
     var isVisible: Bool {
         get { return !photobookFrameView.isHidden }
@@ -59,23 +60,28 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
     func loadPages(leftIndex: Int?, rightIndex: Int?, leftLayout: ProductLayout? = nil, rightLayout: ProductLayout? = nil) {
         if let leftIndex = leftIndex {
             photobookFrameView.isLeftPageVisible = true
-            photobookFrameView.leftPageView.index = leftIndex
+            photobookFrameView.leftPageView.pageIndex = leftIndex
             if leftLayout != nil { photobookFrameView.leftPageView.productLayout = leftLayout }
             
             photobookFrameView.leftPageView.setupImageBox()
+            photobookFrameView.leftPageView.setupTextBox(mode: .userTextOnly)
         } else {
             photobookFrameView.isLeftPageVisible = false
         }
         
         if let rightIndex = rightIndex {
             photobookFrameView.isRightPageVisible = true
-            photobookFrameView.rightPageView.index = rightIndex
+            photobookFrameView.rightPageView.pageIndex = rightIndex
             if rightLayout != nil { photobookFrameView.rightPageView.productLayout = rightLayout }
             
             photobookFrameView.rightPageView.setupImageBox()
+            photobookFrameView.rightPageView.setupTextBox(mode: .userTextOnly)
         } else {
             photobookFrameView.isRightPageVisible = false
         }
+        
+        photobookFrameView.leftPageView.delegate = self
+        photobookFrameView.rightPageView.delegate = self
         
         if photobookFrameView.coverColor != ProductManager.shared.coverColor ||
             photobookFrameView.pageColor != ProductManager.shared.pageColor {
@@ -87,7 +93,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
     }
         
     @IBAction func didTapPlus(_ sender: UIButton) {
-        guard let layoutIndex = photobookFrameView.leftPageView.index ?? photobookFrameView.rightPageView.index,
+        guard let layoutIndex = photobookFrameView.leftPageView.pageIndex ?? photobookFrameView.rightPageView.pageIndex,
             let foldIndex = ProductManager.shared.spreadIndex(for: layoutIndex)
             else { return }
         delegate?.didTapOnPlusButton(at: foldIndex)
@@ -112,5 +118,13 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
         panGesture.maximumNumberOfTouches = 1
         photobookFrameView.addGestureRecognizer(panGesture)
     }
+}
+
+extension PhotobookCollectionViewCell: PhotobookPageViewDelegate {
+    
+    func didTapOnPage(at index: Int) {
+        delegate?.didTapOnPage(at: index)
+    }
+    
 }
 

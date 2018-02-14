@@ -4,6 +4,7 @@
 		"id": 1,
 		"name": "Landscape 210x152",
         "pageHeight": 430.87,
+        "spineTextRatio": 0.72,
 		"aspectRatio": 1.38157681,
         "coverLayouts": [ 1, 2, 3, 4, 5 ],
 		"layouts": [ 6, 7, 8, 9, 10, 11, 12, 13 ]
@@ -12,6 +13,7 @@
 		"id": 2,
 		"name": "Square 127x127",
         "pageHeight": 360.0,
+        "spineTextRatio": 0.87,
 		"aspectRatio": 1.0,
         "coverLayouts": [ 14, 15, 16, 17, 18 ],
 		"layouts": [ 19, 20, 21, 22, 23, 24, 25, 26 ]
@@ -20,6 +22,7 @@
 		"id": 3,
 		"name": "Landscape 297x210",
         "pageHeight": 595.28,
+        "spineTextRatio": 0.76,
 		"aspectRatio": 1.41427563,
         "coverLayouts": [ 27, 28, 29, 30, 31 ],
 		"layouts": [ 32, 33, 34, 35, 36, 37, 38, 39 ]
@@ -28,6 +31,7 @@
 		"id": 4,
 		"name": "Square 210x210",
         "pageHeight": 595.28,
+        "spineTextRatio": 0.76,
 		"aspectRatio": 1.0,
         "coverLayouts": [ 40, 41, 42, 43, 44 ],
 		"layouts": [ 45, 46, 47, 48, 49, 50, 51, 52 ]

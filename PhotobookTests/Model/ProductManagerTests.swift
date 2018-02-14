@@ -24,6 +24,7 @@ class ProductManagerTests: XCTestCase {
             "id": 10,
             "name": "210 x 210",
             "pageHeight": 450.34,
+            "spineTextRatio": 0.8,
             "aspectRatio": 1.38,
             "coverLayouts": [ 9, 10 ],
             "layouts": [ 10, 11, 12, 13 ]
