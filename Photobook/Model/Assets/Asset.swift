@@ -44,16 +44,16 @@ extension Asset {
     func image(size: CGSize, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)? = nil, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void){
         
         uneditedImage(size: size, progressHandler: progressHandler, completionHandler: {(image: UIImage?, error: Error?) -> Void in
-            guard error == nil else{
-                completionHandler(nil, error)
-                return
-            }
-            guard let image = image else{
-                completionHandler(nil, NSError()) //TODO: better error reporting
-                return
-            }
-            
             DispatchQueue.main.async {
+                guard error == nil else{
+                    completionHandler(nil, error)
+                    return
+                }
+                guard let image = image else{
+                    completionHandler(nil, NSError()) //TODO: better error reporting
+                    return
+                }
+                
                 completionHandler(image, nil)
             }
         })

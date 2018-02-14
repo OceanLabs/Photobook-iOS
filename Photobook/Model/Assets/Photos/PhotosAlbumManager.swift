@@ -144,7 +144,7 @@ class PhotosAlbumManager: NSObject, AlbumManager {
 extension PhotosAlbumManager: PHPhotoLibraryChangeObserver {
     
     func photoLibraryDidChange(_ changeInstance: PHChange) {
-        var changedAlbums = [Album]()
+        var albumChanges = [AlbumChange]()
         
         DispatchQueue.main.sync {
             for album in albums {
@@ -153,22 +153,22 @@ extension PhotosAlbumManager: PHPhotoLibraryChangeObserver {
                     else { continue }
                 if let changeDetails = changeInstance.changeDetails(for: fetchedResult),
                     !changeDetails.removedObjects.isEmpty || !changeDetails.insertedObjects.isEmpty {
-                    changedAlbums.append(album)
+                    albumChanges.append(AlbumChange(album: album, assetsRemoved: PhotosAsset.assets(from: changeDetails.removedObjects, albumId: album.identifier), assetsAdded: PhotosAsset.assets(from: changeDetails.insertedObjects, albumId: album.identifier)))
                 }
             }
             
-            if !changedAlbums.isEmpty {
+            if !albumChanges.isEmpty {
                 let dispatchGroup = DispatchGroup()
                 
-                for album in changedAlbums {
+                for albumChange in albumChanges {
                     dispatchGroup.enter()
-                    album.loadAssets(completionHandler: { _ in
+                    albumChange.album.loadAssets(completionHandler: { _ in
                         dispatchGroup.leave()
                     })
                 }
                 
                 dispatchGroup.notify(queue: DispatchQueue.main, execute: {
-                   NotificationCenter.default.post(name: AssetsNotificationName.albumsWereReloaded, object: changedAlbums)
+                   NotificationCenter.default.post(name: AssetsNotificationName.albumsWereReloaded, object: albumChanges)
                 })
                 
             }

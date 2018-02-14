@@ -20,3 +20,9 @@ protocol Album {
     func coverAsset(completionHandler: @escaping (_ asset: Asset?, _ error: Error?) -> Void)
     
 }
+
+struct AlbumChange {
+    var album: Album
+    var assetsRemoved: [Asset]
+    var assetsAdded: [Asset]
+}

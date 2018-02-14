@@ -20,6 +20,8 @@ class SelectedAssetsManager: NSObject {
     
     override init() {
         super.init()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereReloaded(_:)), name: AssetsNotificationName.albumsWereReloaded, object: nil)
     }
     
     deinit {
@@ -100,7 +102,7 @@ class SelectedAssetsManager: NSObject {
     ///   - asset: The asset to toggle
     /// - Returns: False if the asset is not able to be selected because of reaching the limit
     func toggleSelected(_ asset:Asset) -> Bool {
-        if isSelected(asset){
+        if isSelected(asset) {
             deselect(asset)
             return true
         } else if count < ProductManager.shared.maximumAllowedAssets {
@@ -124,16 +126,29 @@ class SelectedAssetsManager: NSObject {
     }
     
     
-    func selectAllAssets(for album: Album){
+    func selectAllAssets(for album: Album) {
         select(album.assets)
     }
     
-    func deselectAllAssets(for album: Album){
+    func deselectAllAssets(for album: Album) {
         deselect(album.assets)
     }
     
     func deselectAllAssets(){
         deselect(selectedAssets)
+    }
+    
+    @objc func albumsWereReloaded(_ notification: Notification) {
+        guard let albumsChanges = notification.object as? [AlbumChange] else { return }
+        
+        for albumChange in albumsChanges {
+            for asset in albumChange.assetsRemoved {
+                if isSelected(asset) {
+                    deselect(asset)
+                }
+            }
+        }
+        
     }
     
 }

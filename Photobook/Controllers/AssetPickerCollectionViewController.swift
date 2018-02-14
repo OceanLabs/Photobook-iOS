@@ -89,10 +89,10 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     }
     
     @objc func albumsWereReloaded(_ notification: Notification) {
-        guard let albumsChanged = notification.object as? [Album] else { return }
+        guard let albumsChanges = notification.object as? [AlbumChange] else { return }
         
-        for album in albumsChanged {
-            if album.identifier == self.album.identifier {
+        for albumChange in albumsChanges {
+            if albumChange.album.identifier == self.album.identifier {
                 collectionView?.reloadSections(IndexSet(integer: 0))
             }
         }
