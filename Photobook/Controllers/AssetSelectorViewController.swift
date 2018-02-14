@@ -87,14 +87,11 @@ extension AssetSelectorViewController: UICollectionViewDataSource {
         cell.isBorderVisible = selectedAssetIndex == indexPath.row
         cell.timesUsed = (timesUsed[asset.identifier] ?? 0)
         
-        guard cell.assetIdentifier != asset.identifier || cell.assetImage == nil else { return cell }
-        
         cell.assetIdentifier = asset.identifier
         let itemSize = (collectionView.collectionViewLayout as! UICollectionViewFlowLayout).itemSize
         
-        asset.image(size: itemSize, completionHandler: { (image, error) in
-            guard cell.assetIdentifier == asset.identifier, error == nil else { return }
-            cell.assetImage = image
+        cell.assetImageView.setImage(from: asset, size: itemSize, completionHandler: {
+            return cell.assetIdentifier == asset.identifier
         })
         
         return cell
@@ -137,7 +134,7 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
 extension AssetSelectorViewController: AssetCollectorAddingDelegate {
     
     func didFinishAdding(assets: [Asset]?) {
-        guard let assets = assets, assets.count > 0 else {
+        guard let assets = assets, !assets.isEmpty else {
             self.dismiss(animated: false, completion: nil)
             return
         }

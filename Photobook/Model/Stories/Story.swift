@@ -108,8 +108,8 @@ extension Story: Album {
         completionHandler?(nil)
     }
     
-    func coverImage(size: CGSize, completionHandler: @escaping (UIImage?, Error?) -> Void) {
-        collectionForCoverPhoto.coverImage(useFirstImageInCollection: true, size: size, completionHandler: completionHandler)
+    func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
+        collectionForCoverPhoto.coverAsset(useFirstImageInCollection: true, completionHandler: completionHandler)
     }
 }
 

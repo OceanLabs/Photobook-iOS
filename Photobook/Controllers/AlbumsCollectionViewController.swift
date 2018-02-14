@@ -183,9 +183,10 @@ extension AlbumsCollectionViewController{
         cell.albumId = album.identifier
         
         let cellWidth = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize.width ?? 0
-        album.coverImage(size: CGSize(width: cellWidth, height: cellWidth), completionHandler: {(image, error) in
-            guard cell.albumId == album.identifier else { return }
-            cell.albumCoverImageView.image = image
+        album.coverAsset(completionHandler: {(asset, error) in
+            cell.albumCoverImageView.setImage(from: asset, size: CGSize(width: cellWidth, height: cellWidth), completionHandler: {
+                return cell.albumId == album.identifier
+            })
         })
         
         cell.albumNameLabel.text = album.localizedName

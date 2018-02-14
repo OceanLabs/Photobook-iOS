@@ -10,7 +10,7 @@ import Photos
 
 extension PHAssetCollection {
     
-    func coverImage(useFirstImageInCollection: Bool, size: CGSize, completionHandler: @escaping (UIImage?, Error?) -> Void) {
+    func coverAsset(useFirstImageInCollection: Bool, completionHandler: @escaping (Asset?, Error?) -> Void) {
         DispatchQueue.global(qos: .background).async {
             let fetchOptions = PHFetchOptions()
             fetchOptions.fetchLimit = 1
@@ -26,23 +26,9 @@ extension PHAssetCollection {
                 return
             }
             
-            let options = PHImageRequestOptions()
-            options.deliveryMode = .highQualityFormat
-            options.isNetworkAccessAllowed = true
-            
-            let imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())
-            PHImageManager.default().requestImage(for: coverAsset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: { (image, _) in
-                guard let image = image else {
-                    DispatchQueue.main.async {
-                        completionHandler(nil, nil) //TODO: return an error
-                    }
-                    return
-                }
-                
-                DispatchQueue.main.async {
-                    completionHandler(image, nil)
-                }
-            })
+            DispatchQueue.main.async {
+                completionHandler(PhotosAsset(coverAsset, albumIdentifier: self.localIdentifier), nil)
+            }
         }
     }
     

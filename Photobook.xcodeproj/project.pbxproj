@@ -51,6 +51,7 @@
 		2E876E091FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E876E081FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift */; };
 		2E876E0B1FC2FA15007CCFA2 /* ViewStorySegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E876E0A1FC2FA15007CCFA2 /* ViewStorySegue.swift */; };
 		2E8B3E441FD191AC00FB8878 /* PhotobookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8B3E431FD191AC00FB8878 /* PhotobookViewController.swift */; };
+		2EA2FDFE2032DF9500BD0586 /* UIImageViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA2FDFD2032DF9500BD0586 /* UIImageViewExtensions.swift */; };
 		2EB39DD51FC5AE0F009EC5B2 /* PhotobookPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB39DD41FC5AE0F009EC5B2 /* PhotobookPageView.swift */; };
 		2EBBC0CD1FEBB72E00A4EF45 /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBBC0CC1FEBB72D00A4EF45 /* ArrayExtensions.swift */; };
 		2EC81602201B33180046643B /* ShippingMethodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC81601201B33180046643B /* ShippingMethodTableViewCell.swift */; };
@@ -188,6 +189,7 @@
 		2E876E081FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPickerCoverCollectionViewCell.swift; sourceTree = "<group>"; };
 		2E876E0A1FC2FA15007CCFA2 /* ViewStorySegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewStorySegue.swift; sourceTree = "<group>"; };
 		2E8B3E431FD191AC00FB8878 /* PhotobookViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotobookViewController.swift; sourceTree = "<group>"; };
+		2EA2FDFD2032DF9500BD0586 /* UIImageViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageViewExtensions.swift; sourceTree = "<group>"; };
 		2EB39DD41FC5AE0F009EC5B2 /* PhotobookPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookPageView.swift; sourceTree = "<group>"; };
 		2EBBC0CC1FEBB72D00A4EF45 /* ArrayExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
 		2EC81601201B33180046643B /* ShippingMethodTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShippingMethodTableViewCell.swift; sourceTree = "<group>"; };
@@ -569,6 +571,7 @@
 				2E6B9EDB1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift */,
 				2EBBC0CC1FEBB72D00A4EF45 /* ArrayExtensions.swift */,
 				6F3A731D202AFB6800EEF04C /* UITextViewExtensions.swift */,
+				2EA2FDFD2032DF9500BD0586 /* UIImageViewExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -895,6 +898,7 @@
 				6FCE08D82023139D00C55D2F /* FontType.swift in Sources */,
 				6F2FF37F1FD05686007DB545 /* LayoutUtils.swift in Sources */,
 				6F34855E1FC5A9F900961B32 /* ProductManager.swift in Sources */,
+				2EA2FDFE2032DF9500BD0586 /* UIImageViewExtensions.swift in Sources */,
 				2EC81604201B33230046643B /* ShippingMethodsViewController.swift in Sources */,
 				6F139E0F1FB45EFC005B937E /* Story.swift in Sources */,
 				2E6B9EE51FBF1CFB00F28C00 /* FullScreenImageUnwindSegue.swift in Sources */,

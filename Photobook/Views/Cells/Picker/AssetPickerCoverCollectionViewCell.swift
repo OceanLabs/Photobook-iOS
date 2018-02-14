@@ -21,6 +21,9 @@ class AssetPickerCoverCollectionViewCell: UICollectionViewCell {
         }
     }
     var dates: String? { didSet { datesLabel.text = dates } }
-    var cover: UIImage? { didSet { coverImageView.image = cover} }
+    
+    func setCover (cover: Asset?, size: CGSize) {
+        coverImageView.setImage(from: cover, size: size, completionHandler: nil)
+    }
     
 }

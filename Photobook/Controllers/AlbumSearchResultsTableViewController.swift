@@ -38,9 +38,10 @@ extension AlbumSearchResultsTableViewController{
         
         cell.albumId = album.identifier
         
-        album.coverImage(size: CGSize(width: tableView.rowHeight, height: tableView.rowHeight), completionHandler: {(image, _) in
-            guard cell.albumId == album.identifier else { return }
-            cell.albumCoverImageView.image = image
+        album.coverAsset(completionHandler: {(asset, _) in
+            cell.albumCoverImageView.setImage(from: asset, size: CGSize(width: tableView.rowHeight, height: tableView.rowHeight), completionHandler: {
+                return cell.albumId == album.identifier
+            })
         })
         
         cell.imageCountLabel.text = "\(album.numberOfAssets)"

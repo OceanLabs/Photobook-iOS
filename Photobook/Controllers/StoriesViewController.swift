@@ -127,15 +127,15 @@ extension StoriesViewController: UITableViewDataSource {
             doubleCell.overlayView.isHidden = story == nil
             doubleCell.secondOverlayView.isHidden = secondStory == nil
             
-            story?.coverImage(size: doubleCell.coverSize, completionHandler:{ (image, _) in
-                if doubleCell.localIdentifier == story?.identifier {
-                    doubleCell.cover = image
-                }
+            story?.coverAsset(completionHandler:{ (asset, _) in
+                doubleCell.coverImageView.setImage(from: asset, size: doubleCell.coverImageView.bounds.size, completionHandler: {
+                    return doubleCell.localIdentifier == story?.identifier
+                })
             })
-            secondStory?.coverImage(size: doubleCell.coverSize, completionHandler: { (image, _) in
-                if doubleCell.localIdentifier == story?.identifier {
-                    doubleCell.secondCover = image
-                }
+            secondStory?.coverAsset(completionHandler: { (asset, _) in
+                doubleCell.secondCoverImageView.setImage(from: asset, size: doubleCell.secondCoverImageView.bounds.size, completionHandler: {
+                    return doubleCell.localIdentifier == story?.identifier
+                })
             })
             
             return doubleCell
@@ -154,10 +154,10 @@ extension StoriesViewController: UITableViewDataSource {
         singleCell.storyIndex = storyIndex
         singleCell.delegate = self
 
-        story.coverImage(size: singleCell.coverSize, completionHandler: { (image, _) in
-            if singleCell.localIdentifier == story.identifier {
-                singleCell.cover = image
-            }
+        story.coverAsset(completionHandler: { (asset, _) in
+            singleCell.coverImageView.setImage(from: asset, size: singleCell.coverImageView.bounds.size, completionHandler: {
+                return singleCell.localIdentifier == story.identifier
+            })
         })
 
         return singleCell
@@ -168,7 +168,7 @@ extension StoriesViewController: StoryTableViewCellDelegate {
     // MARK: StoryTableViewCellDelegate
     
     func didTapOnStory(index: Int, sourceView: UIView?) {
-        guard stories[index].assets.count > 0 else {
+        guard !stories[index].assets.isEmpty else {
             // For a moment after the app has resumed, while the stories are reloading, if the user taps on a story just ignore it. It's unlikely to happen anyway, and even if it does, it's not worth trying to handle it gracefully.
             return
         }
