@@ -365,7 +365,7 @@ class ProductManager {
     }
     
     func spreadIndex(for productLayoutIndex: Int) -> Int? {
-        var spreadIndex = 0.5 // The first page is on the right because of the courtesy page
+        var spreadIndex = 0.0
         
         var i = 0
         while i < productLayouts.count {
