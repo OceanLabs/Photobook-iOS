@@ -24,5 +24,6 @@ protocol Album {
 struct AlbumChange {
     var album: Album
     var assetsRemoved: [Asset]
+    var indexesRemoved: [Int]
     var assetsAdded: [Asset]
 }

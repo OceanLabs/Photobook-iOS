@@ -153,7 +153,17 @@ extension PhotosAlbumManager: PHPhotoLibraryChangeObserver {
                     else { continue }
                 if let changeDetails = changeInstance.changeDetails(for: fetchedResult),
                     !changeDetails.removedObjects.isEmpty || !changeDetails.insertedObjects.isEmpty {
-                    albumChanges.append(AlbumChange(album: album, assetsRemoved: PhotosAsset.assets(from: changeDetails.removedObjects, albumId: album.identifier), assetsAdded: PhotosAsset.assets(from: changeDetails.insertedObjects, albumId: album.identifier)))
+                    let assetsAdded = PhotosAsset.assets(from: changeDetails.insertedObjects, albumId: album.identifier)
+                    let assetsRemoved = PhotosAsset.assets(from: changeDetails.removedObjects, albumId: album.identifier)
+                    
+                    var indexesRemoved = [Int]()
+                    for assetRemoved in assetsRemoved {
+                        if let index = album.assets.index(where: { $0.identifier == assetRemoved.identifier}) {
+                            indexesRemoved.append(index)
+                        }
+                    }
+                    
+                    albumChanges.append(AlbumChange(album: album, assetsRemoved: assetsRemoved, indexesRemoved: indexesRemoved, assetsAdded: assetsAdded))
                 }
             }
             
