@@ -338,7 +338,7 @@ extension CreditCardTableViewController: UITextFieldDelegate {
             
             if string.isEmpty && idx + offset > (textField.text?.count ?? 0) {
                 offset = -2
-            } else if string.isEmpty {
+            } else if !string.isEmpty {
                 offset = 1
                 if (textField.text?.count ?? 0) > idx {
                     let startIndex = textField.text!.index(textField.text!.startIndex, offsetBy: idx)
