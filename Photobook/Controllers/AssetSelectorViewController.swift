@@ -116,10 +116,12 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
         guard selectedAssetIndex != indexPath.row else { return }
 
         if let selectedAsset = selectedAsset {
-            let currentSelectedCell = collectionView.cellForItem(at: IndexPath(row: selectedAssetIndex, section: 0)) as! AssetSelectorAssetCollectionViewCell
             timesUsed[selectedAsset.identifier] = timesUsed[selectedAsset.identifier]! - 1
-            currentSelectedCell.timesUsed = timesUsed[selectedAsset.identifier]!
-            currentSelectedCell.isBorderVisible = false
+            
+            if let currentSelectedCell = collectionView.cellForItem(at: IndexPath(row: selectedAssetIndex, section: 0)) as? AssetSelectorAssetCollectionViewCell {
+                currentSelectedCell.timesUsed = timesUsed[selectedAsset.identifier]!
+                currentSelectedCell.isBorderVisible = false
+            }
         }
         
         selectedAsset = selectedAssetsManager.selectedAssets[indexPath.row]
