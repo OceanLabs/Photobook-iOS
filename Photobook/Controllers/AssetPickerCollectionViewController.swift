@@ -8,10 +8,15 @@
 
 import UIKit
 
+protocol AssetPickerCollectionViewControllerDelegate: class {
+    func viewControllerForPresentingOn() -> UIViewController?
+}
+
 class AssetPickerCollectionViewController: UICollectionViewController {
 
     @IBOutlet private weak var selectAllButton: UIBarButtonItem!
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
+    weak var delegate: AssetPickerCollectionViewControllerDelegate?
     private let marginBetweenImages: CGFloat = 1
     private let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
     private var previousPreheatRect = CGRect.zero
@@ -334,10 +339,15 @@ extension AssetPickerCollectionViewController {
     //MARK: UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let selectedAssetsManager = selectedAssetsManager else { return }
         let asset = album.assets[indexPath.item]
         
-        // TODO: Use result to present alert that we have selected the maximum amount of photos
-        _ = selectedAssetsManager?.toggleSelected(asset)
+        guard selectedAssetsManager.toggleSelected(asset) else {
+            let alertController = UIAlertController(title: NSLocalizedString("ImagePicker/TooManyPicturesAlertTitle", value: "Too many pictures", comment: "Alert title informing the user that they have reached the maximum number of images"), message: NSLocalizedString("ImagePicker/TooManyPicturesAlertMessage", value: "Your photobook cannot contain more than \(ProductManager.shared.maximumAllowedAssets) pictures", comment: "Alert message informing the user that they have reached the maximum number of images"), preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: NSLocalizedString("GenericAlert/OK", value: "OK", comment: "Acknowledgement to an alert dialog"), style: .default, handler: nil))
+            present(alertController, animated: true, completion: nil)
+            return
+        }
         
         updateSelectedStatus(indexPath: indexPath, asset: asset)
         
@@ -378,7 +388,7 @@ extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegat
         fullScreenImageViewController.prepareForPop()
         fullScreenImageViewController.modalPresentationCapturesStatusBarAppearance = true
         
-        tabBarController?.present(viewControllerToCommit, animated: true, completion: nil)
+        delegate?.viewControllerForPresentingOn()?.present(viewControllerToCommit, animated: true, completion: nil)
     }
     
 }
