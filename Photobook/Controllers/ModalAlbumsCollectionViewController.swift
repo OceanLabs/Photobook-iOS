@@ -73,7 +73,7 @@ class ModalAlbumsCollectionViewController: UIViewController {
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "AlbumsCollectionSegue" {
+        if segue.identifier == "EmbeddedNavigationController" {
             rootNavigationController = segue.destination as! UINavigationController
             rootNavigationController.delegate = self
             
@@ -90,7 +90,8 @@ class ModalAlbumsCollectionViewController: UIViewController {
             let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didPanOnNavigationBar(_:)))
             navigationBar.addGestureRecognizer(panGestureRecognizer)
 
-            let albumsCollectionViewController = rootNavigationController.viewControllers.first as! AlbumsCollectionViewController
+            let albumsCollectionViewController = storyboard?.instantiateViewController(withIdentifier: "AlbumsCollectionViewController") as! AlbumsCollectionViewController
+            rootNavigationController.setViewControllers([albumsCollectionViewController], animated: false)
             albumsCollectionViewController.albumManager = albumManager
             albumsCollectionViewController.collectorMode = collectorMode
             albumsCollectionViewController.addingDelegate = self
