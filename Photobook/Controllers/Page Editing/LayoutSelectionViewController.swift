@@ -33,7 +33,11 @@ class LayoutSelectionViewController: UIViewController {
     var pageType: PageType!
     var asset: Asset? {
         didSet {
-            guard let asset = asset else { return }
+            guard let asset = asset else {
+                image = nil
+                collectionView.reloadData()
+                return
+            }
             
             let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
             asset.image(size: flowLayout.itemSize, completionHandler: { (image, error) in
