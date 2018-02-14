@@ -111,7 +111,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
         assetPickerController.selectedAssetsManager = selectedAssetsManager
         assetPickerController.collectorMode = collectorMode
         assetPickerController.addingDelegate = addingDelegate
-        assetPickerController.delegate = assetPickerDelegate
+        assetPickerController.delegate = assetPickerDelegate ?? self
         
         self.navigationController?.pushViewController(assetPickerController, animated: true)
     }
@@ -245,5 +245,11 @@ extension AlbumsCollectionViewController: AlbumSearchResultsTableViewControllerD
         showAlbum(album: album)
     }
     
+}
+
+extension AlbumsCollectionViewController: AssetPickerCollectionViewControllerDelegate {
+    func viewControllerForPresentingOn() -> UIViewController? {
+        return tabBarController
+    }
     
 }

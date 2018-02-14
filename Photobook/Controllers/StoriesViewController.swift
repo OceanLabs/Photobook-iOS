@@ -54,6 +54,7 @@ class StoriesViewController: UIViewController {
             let story = stories[sender.index]
             assetPickerController.album = story
             assetPickerController.selectedAssetsManager = StoriesManager.shared.selectedAssetsManager(for: story)
+            assetPickerController.delegate = self
             
             segue.asset = asset
             segue.sourceView = sourceView
@@ -175,4 +176,11 @@ extension StoriesViewController: StoryTableViewCellDelegate {
         
         performSegue(withIdentifier: Constants.viewStorySegueName, sender: (index: index, sourceView: sourceView))
     }
+}
+
+extension StoriesViewController: AssetPickerCollectionViewControllerDelegate {
+    func viewControllerForPresentingOn() -> UIViewController? {
+        return tabBarController
+    }
+    
 }
