@@ -48,15 +48,10 @@ class TextEditingViewController: UIViewController {
     }
     
     @IBOutlet private weak var textToolBarView: TextToolBarView! {
-        didSet {
-            textToolBarView.backgroundColor = UIColor(red: 0.82, green: 0.83, blue: 0.85, alpha: 1.0)
-            textToolBarView.delegate = self
-        }
+        didSet { textToolBarView.delegate = self }
     }
     @IBOutlet private weak var textViewBorderView: UIView!
-    @IBOutlet private weak var textView: UITextView! {
-        didSet { textView.delegate = self }
-    }
+    @IBOutlet private weak var textView: PhotobookTextView!
     @IBOutlet private weak var pageView: UIView!
     @IBOutlet private weak var assetContainerView: UIView!
     @IBOutlet private weak var assetPlaceholderIconImageView: UIImageView!
@@ -86,8 +81,6 @@ class TextEditingViewController: UIViewController {
 
         view.alpha = 0.0
         
-        // FIXME: Move color to global scope
-        textViewBorderView.borderColor = UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0)
         textView.textContainer.lineFragmentPadding = 0.0
         textView.textContainerInset = .zero
         
@@ -185,8 +178,6 @@ class TextEditingViewController: UIViewController {
 
         let backgroundColor = view.backgroundColor
 
-        UIView.setAnimationsEnabled(true)
-
         if !hasAnImageLayout {
 
             UIView.animate(withDuration: 0.1, animations: {
@@ -254,7 +245,7 @@ class TextEditingViewController: UIViewController {
         if let productLayoutText = productLayout.productLayoutText {
             fontType = productLayoutText.fontType
         } else {
-            fontType = .clear
+            fontType = .plain
         }
         setTextViewAttributes(with: fontType, fontColor: pageColor.fontColor())
         
@@ -284,11 +275,6 @@ class TextEditingViewController: UIViewController {
         assetImageView.transform = productLayout!.productLayoutAsset!.transform
     }
     
-    private func onScreenFontSize(for fontType: FontType) -> CGFloat {
-        let photobookToOnScreenScale = pageView.bounds.height / ProductManager.shared.product!.pageHeight
-        return round(fontType.photobookFontSize() * photobookToOnScreenScale)
-    }
-    
     private func setImagePlaceholder(visible: Bool) {
         if visible {
             assetImageView.image = nil
@@ -304,7 +290,7 @@ class TextEditingViewController: UIViewController {
     }
 
     private func setTextViewAttributes(with fontType: FontType, fontColor: UIColor) {
-        let fontSize = onScreenFontSize(for: fontType)
+        let fontSize = fontType.sizeForScreenHeight(pageView.bounds.height)
         textView.attributedText = fontType.attributedText(with: textView.text, fontSize: fontSize, fontColor: fontColor)
         textView.typingAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor)
     }
@@ -325,6 +311,8 @@ extension TextEditingViewController: UITextViewDelegate {
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
+        let textView = textView as! PhotobookTextView
+        
         // Dismiss on line break
         guard text.rangeOfCharacter(from: CharacterSet.newlines) == nil else {
             textView.resignFirstResponder()
@@ -332,15 +320,8 @@ extension TextEditingViewController: UITextViewDelegate {
             return false
         }
         
-        // Allow deleting
-        if text.isEmpty { return true }
-        
-        // Disallow pasting non-ascii characters
-        if !text.canBeConverted(to: String.Encoding.ascii) { return false }
-        
-        // Check that the new length doesn't exceed the textView bounds
-        return !textGoesOverBounds(for: textView, string: text, range: range)
-    }    
+        return textView.shouldChangePhotobookText(in: range, replacementText: text)
+    }
 }
 
 extension TextEditingViewController: TextToolBarViewDelegate {

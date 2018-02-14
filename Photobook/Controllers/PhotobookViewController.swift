@@ -464,7 +464,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     func liftView(_ photobookFrameView: PhotobookFrameView) {
-        guard let productLayoutIndex = photobookFrameView.leftPageView.index,
+        guard let productLayoutIndex = photobookFrameView.leftPageView.pageIndex,
             let spreadIndex = ProductManager.shared.spreadIndex(for: productLayoutIndex),
             spreadIndex != collectionView.numberOfItems(inSection: 1) - 1
             else { return }
@@ -495,6 +495,14 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
 
             cell.loadPages(leftIndex: productLayoutIndex, rightIndex: productLayoutIndex + 1)
         }
+    }
+    
+    func editPage(at index: Int) {
+        let pageSetupViewController = storyboard?.instantiateViewController(withIdentifier: "PageSetupViewController") as! PageSetupViewController
+        pageSetupViewController.selectedAssetsManager = selectedAssetsManager
+        pageSetupViewController.pageIndex = index
+        pageSetupViewController.delegate = self
+        navigationController?.pushViewController(pageSetupViewController, animated: true)
     }
 }
 
@@ -528,7 +536,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             cell.imageSize = imageSize
             cell.width = (view.bounds.size.width - Constants.cellSideMargin * 2.0) / 2.0
             cell.delegate = self
-            cell.loadCover()
+            cell.loadCoverAndSpine()
             
             return cell
         default:
@@ -541,9 +549,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             cell.imageSize = imageSize
             cell.width = view.bounds.size.width - Constants.cellSideMargin * 2.0
             cell.clipsToBounds = false
-            
             cell.delegate = self
-            cell.pageDelegate = self
             
             // First and last pages of the book are courtesy pages, no photos on them
             var leftIndex: Int? = nil
@@ -615,15 +621,21 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
     }
 }
 
-extension PhotobookViewController: PhotobookPageViewDelegate {
-    // MARK: PhotobookPageViewDelegate
-
-    func didTapOnPage(index: Int) {
-        let pageSetupViewController = storyboard?.instantiateViewController(withIdentifier: "PageSetupViewController") as! PageSetupViewController
-        pageSetupViewController.selectedAssetsManager = selectedAssetsManager
-        pageSetupViewController.pageIndex = index
-        pageSetupViewController.delegate = self
-        navigationController?.pushViewController(pageSetupViewController, animated: true)
+extension PhotobookViewController: PhotobookCoverCollectionViewCellDelegate {
+    
+    func didTapOnSpine(with rect: CGRect, in containerView: UIView) {
+        let initialRect = containerView.convert(rect, to: view)
+        
+        let spineTextEditingNavigationController = storyboard?.instantiateViewController(withIdentifier: "SpineTextEditingNavigationController") as! UINavigationController
+        let spineTextEditingViewController = spineTextEditingNavigationController.viewControllers.first! as! SpineTextEditingViewController
+        spineTextEditingViewController.initialRect = initialRect
+        spineTextEditingViewController.delegate = self
+        
+        navigationController?.present(spineTextEditingNavigationController, animated: false, completion: nil)
+    }
+    
+    func didTapOnCover() {
+        editPage(at: 0)
     }
 }
 
@@ -651,6 +663,10 @@ extension PhotobookViewController: PageSetupDelegate {
 extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
     // MARK: PhotobookCollectionViewCellDelegate
     
+    func didTapOnPage(at index: Int) {
+        editPage(at: index)
+    }
+
     func didLongPress(_ sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
             guard let photobookFrameView = sender.view as? PhotobookFrameView else {
@@ -786,6 +802,26 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         guard gestureRecognizer as? UILongPressGestureRecognizer == nil else { return false }
         return otherGestureRecognizer.view === gestureRecognizer.view || draggingView == nil
+    }
+}
+
+extension PhotobookViewController: SpineTextEditingDelegate {
+    
+    func didCancelSpineTextEditing(_ spineTextEditingViewController: SpineTextEditingViewController) {
+        spineTextEditingViewController.animateOff {
+            self.dismiss(animated: false, completion: nil)
+        }
+    }
+    
+    func didSaveSpineTextEditing(_ spineTextEditingViewController: SpineTextEditingViewController, spineText: String?, fontType: FontType) {
+        ProductManager.shared.spineText = spineText
+        ProductManager.shared.spineFontType = fontType
+        
+        collectionView.reloadItems(at: [IndexPath(row: 0, section: 0)])
+        
+        spineTextEditingViewController.animateOff {
+            self.dismiss(animated: false, completion: nil)
+        }
     }
 }
 

@@ -164,7 +164,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         if !hasDoneSetup {
             coverFrameView.color = ProductManager.shared.coverColor
             coverFrameView.pageView.aspectRatio = ProductManager.shared.product!.aspectRatio
-
+            coverFrameView.pageView.delegate = self
+            
             photobookFrameView.pageColor = ProductManager.shared.pageColor
             photobookFrameView.coverColor = ProductManager.shared.coverColor
             
@@ -176,7 +177,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
 
             photobookFrameView.width = (view.bounds.width - 2.0 * Constants.photobookSideMargin) * 2.0
             
-            pageView.index = pageIndex
+            pageView.pageIndex = pageIndex
             pageView.productLayout = productLayout            
             pageView.setupLayoutBoxes()
 
@@ -431,11 +432,11 @@ extension PageSetupViewController: TextEditingDelegate {
 
 extension PageSetupViewController: PhotobookPageViewDelegate {
     
-    func didTapOnAsset(index: Int) {
+    func didTapOnAsset(at index: Int) {
         tappedToolButton(toolbarButtons[Tool.placeAsset.rawValue])
     }
 
-    func didTapOnText(index: Int) {
+    func didTapOnText(at index: Int) {
         tappedToolButton(toolbarButtons[Tool.editText.rawValue])
     }
 }

@@ -11,7 +11,11 @@ import UIKit
 /// Represents a photobook spine as seen from the side
 class SpineFrameView: UIView {
     
-    static let spineTextPadding: CGFloat = 5.0
+    // TEMP
+    private struct Constants {
+        static let spineThickness: CGFloat = 20.0
+        static let spineTextPadding: CGFloat = 100.0
+    }
     
     @IBOutlet private weak var textLabel: UILabel! {
         didSet {
@@ -21,15 +25,23 @@ class SpineFrameView: UIView {
     @IBOutlet private weak var textLabelWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var spineBackgroundView: SpineBackgroundView!
     
-    var pageSide = PageSide.left
     var color: ProductColor = .white
-    var spineText: String?
+    var text: String?
+    var fontType: FontType = .plain
     
     override func layoutSubviews() {
         super.layoutSubviews()
+
+        // Figure out the available width of the spine frame
+        let paddingRatio = Constants.spineTextPadding / ProductManager.shared.product!.pageHeight
+        textLabelWidthConstraint.constant = bounds.height * (1.0 - paddingRatio * 2.0)
         
-        textLabel.text = spineText
-        textLabelWidthConstraint.constant = bounds.height - 2.0 * SpineFrameView.spineTextPadding
+        if !(text ?? "").isEmpty {
+            let fontSize = fontType.sizeForScreenHeight(bounds.height, isSpineText: true)
+            textLabel.attributedText = fontType.attributedText(with: text!, fontSize: fontSize, fontColor: color.fontColor(), isSpineText: true)
+        } else {
+            textLabel.text = ""
+        }
         
         layer.shadowOffset = PhotobookConstants.shadowOffset
         layer.shadowOpacity = 1.0
@@ -56,7 +68,7 @@ class SpineFrameView: UIView {
     func resetSpineColor() {
         setSpineColor()
         spineBackgroundView.setNeedsDisplay()
-    }
+    }    
 }
 
 // Internal background view of a spine. Please use SpineFrameView instead.
