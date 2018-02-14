@@ -2324,7 +2324,7 @@
                         <viewLayoutGuide key="safeArea" id="5ur-7F-Rc5"/>
                     </view>
                     <navigationItem key="navigationItem" id="gKR-NM-iRy">
-                        <barButtonItem key="leftBarButtonItem" style="plain" id="6qc-zf-Ccw">
+                        <barButtonItem key="leftBarButtonItem" style="done" id="6qc-zf-Ccw">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="9hV-eh-P4W">
                                 <rect key="frame" x="20" y="6.6666666666666679" width="59" height="31.000000000000004"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
