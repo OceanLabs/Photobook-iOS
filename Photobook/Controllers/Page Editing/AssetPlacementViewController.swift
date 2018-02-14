@@ -186,7 +186,7 @@ class AssetPlacementViewController: UIViewController {
         
         switch gesture.state {
         case .began:
-            if gestures.count == 0 { initialTransform = assetImageView.transform }
+            if gestures.isEmpty { initialTransform = assetImageView.transform }
             gestures.insert(gesture)
             if let gesture = gesture as? UIRotationGestureRecognizer {
                 startedRotationGesture(gesture, inView: assetImageView)
@@ -198,7 +198,7 @@ class AssetPlacementViewController: UIViewController {
             }
         case .ended:
             gestures.remove(gesture)
-            if gestures.count == 0 {
+            if gestures.isEmpty {
                 setAnchorPoint(anchorPoint: CGPoint(x: 0.5, y: 0.5), view: assetImageView)
                 
                 assetImageView.transform = LayoutUtils.centerTransform(assetImageView.transform, inParentView: assetContainerView, fromPoint: assetImageView.center)

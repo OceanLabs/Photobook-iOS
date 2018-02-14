@@ -12,7 +12,7 @@ class AssetSelectorAssetCollectionViewCell: BorderedCollectionViewCell {
     
     static let reuseIdentifier = NSStringFromClass(AssetSelectorAssetCollectionViewCell.self).components(separatedBy: ".").last!
     
-    @IBOutlet private weak var assetImageView: UIImageView! {
+    @IBOutlet weak var assetImageView: UIImageView! {
         didSet {
             assetImageView.bezierRoundedCorners(withRadius: BorderedCollectionViewCell.cornerRadius)
         }
@@ -22,11 +22,6 @@ class AssetSelectorAssetCollectionViewCell: BorderedCollectionViewCell {
     @IBOutlet private weak var badgeLabel: UILabel!
     
     var assetIdentifier: String!
-    var assetImage: UIImage? {
-        didSet {
-            self.assetImageView.image = assetImage
-        }
-    }
     
     var timesUsed = 0 {
         didSet {

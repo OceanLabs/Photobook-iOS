@@ -2305,13 +2305,27 @@
                         <viewLayoutGuide key="safeArea" id="5ur-7F-Rc5"/>
                     </view>
                     <navigationItem key="navigationItem" id="gKR-NM-iRy">
+                        <barButtonItem key="leftBarButtonItem" style="plain" id="6qc-zf-Ccw">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="9hV-eh-P4W">
+                                <rect key="frame" x="20" y="6.6666666666666679" width="59" height="31.000000000000004"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <inset key="contentEdgeInsets" minX="-20" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <inset key="titleEdgeInsets" minX="12.5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" title="Back" image="back-chevron"/>
+                                <connections>
+                                    <action selector="didTapBack" destination="l0p-H6-Aqd" eventType="touchUpInside" id="dkL-wm-Ufx"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Rearrange" id="1Vp-C0-Rdb">
                             <connections>
                                 <action selector="didTapRearrange:" destination="l0p-H6-Aqd" id="G8L-QL-TgA"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="backButton" destination="9hV-eh-P4W" id="b6n-Rx-odh"/>
                         <outlet property="collectionView" destination="TBG-9p-ivA" id="kYP-Tq-eWB"/>
                         <outlet property="collectionViewBottomConstraint" destination="NOb-rL-Lvt" id="4ZO-T9-d17"/>
                         <outlet property="collectionViewLeadingConstraint" destination="XjE-e5-L0D" id="Q5L-TT-Oq7"/>
@@ -2339,7 +2353,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mie-ko-bP1">
-                                <rect key="frame" x="147.66666666666666" y="361.66666666666669" width="118.99999999999997" height="33"/>
+                                <rect key="frame" x="147.66666666666666" y="383.66666666666669" width="118.99999999999997" height="33"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Delivery Details"/>
                                 <connections>
@@ -2347,7 +2361,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b48-Kx-74i">
-                                <rect key="frame" x="141.66666666666666" y="423.66666666666669" width="130.99999999999997" height="33"/>
+                                <rect key="frame" x="141.66666666666666" y="445.66666666666669" width="130.99999999999997" height="33"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Payment Method"/>
                                 <connections>
@@ -2355,7 +2369,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pPB-Bf-lbZ">
-                                <rect key="frame" x="141.66666666666666" y="298.66666666666669" width="130.99999999999997" height="33"/>
+                                <rect key="frame" x="141.66666666666666" y="320.66666666666669" width="130.99999999999997" height="33"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Shipping Method"/>
                                 <connections>
@@ -2363,7 +2377,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fQ6-zv-TjH">
-                                <rect key="frame" x="192" y="484.66666666666669" width="30" height="33.000000000000057"/>
+                                <rect key="frame" x="192" y="506.66666666666674" width="30" height="33"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Pay"/>
                                 <connections>
@@ -4571,6 +4585,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <image name="addMore" width="26" height="26"/>
         <image name="apple-pay-method" width="45" height="29"/>
         <image name="assetPlaceholder" width="18" height="18"/>
+        <image name="back-chevron" width="13" height="21"/>
         <image name="editColor_off" width="29" height="29"/>
         <image name="editColor_on" width="29" height="29"/>
         <image name="editLayout_off" width="29" height="29"/>

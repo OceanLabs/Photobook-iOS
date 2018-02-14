@@ -8,16 +8,23 @@
 
 import UIKit
 
+protocol AssetPickerCollectionViewControllerDelegate: class {
+    func viewControllerForPresentingOn() -> UIViewController?
+}
+
 class AssetPickerCollectionViewController: UICollectionViewController {
 
     @IBOutlet private weak var selectAllButton: UIBarButtonItem!
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
+    weak var delegate: AssetPickerCollectionViewControllerDelegate?
     private let marginBetweenImages: CGFloat = 1
     private let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
     private var previousPreheatRect = CGRect.zero
     var selectedAssetsManager: SelectedAssetsManager?
     var assetCollectorController: AssetCollectorViewController!
     static let coverAspectRatio: CGFloat = 2.723684211
+    
+    var shouldFadeInImages = true
     
     var albumManager: AlbumManager?
     var album: Album! {
@@ -40,7 +47,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
             navigationItem.largeTitleDisplayMode = .never
         }
         
-        if album.assets.count == 0{
+        if album.assets.isEmpty {
             self.album.loadAssets(completionHandler: { (_) in
                 self.collectionView?.reloadData()
                 self.postAlbumLoadSetup()
@@ -104,7 +111,10 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         }
         
         updateSelectAllButton()
-        collectionView?.reloadData()
+        
+        for indexPath in collectionView?.indexPathsForVisibleItems ?? [] {
+            updateSelectedStatus(indexPath: indexPath)
+        }
     }
     
     func postAlbumLoadSetup() {
@@ -132,12 +142,20 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         }
     }
     
-    func calcAndSetCellSize() {
+    private func calcAndSetCellSize() {
         guard let collectionView = collectionView else { return }
         var usableSpace = collectionView.frame.size.width
         usableSpace -= (numberOfCellsPerRow - 1.0) * marginBetweenImages
         let cellWidth = usableSpace / numberOfCellsPerRow
         (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize = CGSize(width: cellWidth, height: cellWidth)
+    }
+    
+    private func updateSelectedStatus(cell: AssetPickerCollectionViewCell? = nil, indexPath: IndexPath, asset: Asset? = nil) {
+        guard let cell = cell ?? collectionView?.cellForItem(at: indexPath) as? AssetPickerCollectionViewCell else { return }
+        let asset = asset ?? album.assets[indexPath.item]
+        
+        let selected = selectedAssetsManager?.isSelected(asset) ?? false
+        cell.selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
     }
     
     // MARK: UIScrollView
@@ -215,16 +233,14 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         guard let assets = notification.userInfo?[SelectedAssetsManager.notificationUserObjectKeyAssets] as? [Asset], let collectionView = collectionView else {
             return
         }
-        var indexPathsToReload = [IndexPath]()
         for asset in assets {
             if let index = album.assets.index(where: { (a) -> Bool in
                 return a == asset
             }) {
-                indexPathsToReload.append(IndexPath(row: index, section: 0))
+                updateSelectedStatus(indexPath: IndexPath(row: index, section: 0), asset: asset)
             }
         }
         
-        collectionView.reloadItems(at: indexPathsToReload)
         updateSelectAllButton()
     }
     
@@ -247,7 +263,6 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
             navigationController?.pushViewController(photobookViewController, animated: true)
         }
         selectedAssetsManager?.orderAssetsByDate()
-        collectionView?.reloadData()
     }
 }
 
@@ -264,13 +279,11 @@ extension AssetPickerCollectionViewController {
         let asset = album.assets[indexPath.item]
         cell.assetId = asset.identifier
         
-        let selected = selectedAssetsManager?.isSelected(asset) ?? false
-        cell.selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
+        updateSelectedStatus(cell: cell, indexPath: indexPath, asset: asset)
         
         let size = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize ?? .zero
-        asset.image(size: size, completionHandler: {(image, _) in
-            guard cell.assetId == asset.identifier else { return }
-            cell.imageView.image = image
+        cell.imageView.setImage(from: asset, fadeIn: shouldFadeInImages, size: size, completionHandler: {
+            return cell.assetId == asset.identifier
         })
         
         return cell
@@ -285,8 +298,8 @@ extension AssetPickerCollectionViewController {
                 else { return UICollectionReusableView() }
             
             let size = self.collectionView(collectionView, layout: collectionView.collectionViewLayout, referenceSizeForHeaderInSection: indexPath.section)
-            story.coverImage(size: size, completionHandler: {(image, _) in
-                cell.cover = image
+            story.coverAsset(completionHandler: {(asset, _) in
+                cell.setCover(cover: asset, size: size)
             })
             
             cell.title = story.title
@@ -326,12 +339,17 @@ extension AssetPickerCollectionViewController {
     //MARK: UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let selectedAssetsManager = selectedAssetsManager else { return }
         let asset = album.assets[indexPath.item]
         
-        // TODO: Use result to present alert that we have selected the maximum amount of photos
-        _ = selectedAssetsManager?.toggleSelected(asset)
+        guard selectedAssetsManager.toggleSelected(asset) else {
+            let alertController = UIAlertController(title: NSLocalizedString("ImagePicker/TooManyPicturesAlertTitle", value: "Too many pictures", comment: "Alert title informing the user that they have reached the maximum number of images"), message: NSLocalizedString("ImagePicker/TooManyPicturesAlertMessage", value: "Your photobook cannot contain more than \(ProductManager.shared.maximumAllowedAssets) pictures", comment: "Alert message informing the user that they have reached the maximum number of images"), preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: NSLocalizedString("GenericAlert/OK", value: "OK", comment: "Acknowledgement to an alert dialog"), style: .default, handler: nil))
+            present(alertController, animated: true, completion: nil)
+            return
+        }
         
-        collectionView.reloadItems(at: [indexPath])
+        updateSelectedStatus(indexPath: indexPath, asset: asset)
         
         updateSelectAllButton()
     }
@@ -370,7 +388,7 @@ extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegat
         fullScreenImageViewController.prepareForPop()
         fullScreenImageViewController.modalPresentationCapturesStatusBarAppearance = true
         
-        tabBarController?.present(viewControllerToCommit, animated: true, completion: nil)
+        delegate?.viewControllerForPresentingOn()?.present(viewControllerToCommit, animated: true, completion: nil)
     }
     
 }

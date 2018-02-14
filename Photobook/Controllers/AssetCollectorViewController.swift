@@ -236,7 +236,7 @@ class AssetCollectorViewController: UIViewController {
     }
     
     private func adaptToNewAssetCount() {
-        if assets.count == 0 {
+        if assets.isEmpty {
             isHidden = true
             return
         }
@@ -283,7 +283,7 @@ class AssetCollectorViewController: UIViewController {
     }
     
     private func moveToCollectionViewEnd(animated: Bool) {
-        if assets.count > 0 {
+        if !assets.isEmpty {
             let indexPath = IndexPath(item: assets.count-1, section: 0)
             imageCollectionView.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.right, animated: animated)
         }
@@ -297,17 +297,6 @@ class AssetCollectorViewController: UIViewController {
                 indexPaths.append(IndexPath(row: index, section: 0))
             }
             imageCollectionView.insertItems(at: indexPaths)
-            indexPaths.removeAll()
-            var i = 0
-            while i<assets.count {
-                if indices.index(where: { (x) -> Bool in
-                    return x == i
-                }) == nil {
-                    indexPaths.append(IndexPath(item: i, section: 0))
-                }
-                i = i+1
-            }
-            imageCollectionView.reloadItems(at: indexPaths)
             adaptToNewAssetCount()
             moveToCollectionViewEnd(animated: indexPaths.count == 1)
         }
@@ -343,8 +332,9 @@ extension AssetCollectorViewController: UICollectionViewDataSource, UICollection
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AssetCollectorCollectionViewCell", for: indexPath) as! AssetCollectorCollectionViewCell
         
         let asset = assets[indexPath.row]
-        asset.image(size: cell.imageView.frame.size, completionHandler: { (image, error) in
-            cell.imageView.image = image
+        cell.assetId = asset.identifier
+        cell.imageView.setImage(from: asset, size: cell.imageView.frame.size, completionHandler: {
+            return asset.identifier == cell.assetId
         })
         cell.isDeletingEnabled = isDeletingEnabled
         

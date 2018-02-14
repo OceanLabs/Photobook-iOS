@@ -98,22 +98,25 @@ class SelectedAssetsManager: NSObject {
     ///
     /// - Parameters:
     ///   - asset: The asset to toggle
-    ///   - album: The album the asset is in
     /// - Returns: False if the asset is not able to be selected because of reaching the limit
     func toggleSelected(_ asset:Asset) -> Bool {
         if isSelected(asset){
             deselect(asset)
-        }
-        else {
+            return true
+        } else if count < ProductManager.shared.maximumAllowedAssets {
             select(asset)
+            return true
+        } else {
+            return false
         }
-        
-        //TODO: Check if we've reached the limit
-        return true
     }
     
-    func count(for album:Album) -> Int {
-        return selectedAssets(for: album).count
+    func count(for album: Album) -> Int {
+            return selectedAssets(for: album).count
+    }
+    
+    var count: Int {
+        return selectedAssets.count
     }
     
     func willSelectingAllExceedTotalAllowed(_ album:Album) -> Bool {
