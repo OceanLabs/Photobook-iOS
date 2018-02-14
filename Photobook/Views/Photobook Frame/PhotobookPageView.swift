@@ -52,7 +52,13 @@ class PhotobookPageView: UIView {
     private var hasSetupGestures = false
     var productLayout: ProductLayout?
     
-    var interaction: PhotobookPageViewInteraction = .disabled
+    var interaction: PhotobookPageViewInteraction = .disabled {
+        willSet {
+            if newValue != interaction {
+                hasSetupGestures = false
+            }
+        }
+    }
     
     @IBOutlet private weak var assetContainerView: UIView!
     @IBOutlet private weak var assetPlaceholderIconImageView: UIImageView!
@@ -82,6 +88,13 @@ class PhotobookPageView: UIView {
     
     private func setupGestures() {
         guard !hasSetupGestures else { return }
+        
+        if let gestureRecognizers = gestureRecognizers {
+            for gestureRecognizer in gestureRecognizers {
+                removeGestureRecognizer(gestureRecognizer)
+            }
+        }
+        
         switch interaction {
         case .wholePage:
             let pageTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOnPage(_:)))
