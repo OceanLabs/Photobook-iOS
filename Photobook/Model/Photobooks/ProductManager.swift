@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Stripe
 
 enum ProductColor: String, Codable {
     case white, black
@@ -102,7 +103,7 @@ class ProductManager {
     var shippingMethod: Int?
     var currencyCode: String? = "GBP" // TODO: Get this from somewhere
     var deliveryDetails: DeliveryDetails?
-    var paymentMethod: PaymentMethod?
+    var paymentMethod: PaymentMethod? = Stripe.deviceSupportsApplePay() ? .applePay : nil
     var cachedCost: Cost? // private?
     var validCost: Cost? {
         return hasValidCachedCost ? cachedCost : nil
