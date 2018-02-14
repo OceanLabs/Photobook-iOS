@@ -106,6 +106,7 @@ class CreditCardTableViewController: UITableViewController {
     private func saveCardDetails() {
         view.endEditing(false)
         
+        var creditCardIsValid = false
         if cardNumberTextField.text?.isEmpty ?? true || cardNumberTextField.text == FormConstants.requiredText {
             let cell = (tableView.cellForRow(at: IndexPath(row: Constants.creditCardRow, section: 0)) as! UserInputTableViewCell)
             cell.textField.text = FormConstants.requiredText
@@ -117,8 +118,11 @@ class CreditCardTableViewController: UITableViewController {
             cell.errorMessage = NSLocalizedString("CardNumberError", value: "This doesn't seem to be a valid card number", comment: "Error displayed when the card number field is missing or invalid")
             cell.textField.textColor = FormConstants.errorColor
             tableView.endUpdates()
+        } else {
+            creditCardIsValid = true
         }
         
+        var cvvIsValid = false
         if cvvTextField.text?.isEmpty ?? true {
             let cell = (tableView.cellForRow(at: IndexPath(row: Constants.cvvRow, section: 0)) as! UserInputTableViewCell)
             cell.textField.text = FormConstants.requiredText
@@ -132,6 +136,8 @@ class CreditCardTableViewController: UITableViewController {
                 cell.textField.textColor = FormConstants.errorColor
                 tableView.endUpdates()
             }
+        } else {
+            cvvIsValid = true
         }
 
         if selectedExpiryMonth == nil || selectedExpiryYear == nil {
@@ -140,14 +146,14 @@ class CreditCardTableViewController: UITableViewController {
             cell.textField.textColor = FormConstants.errorColor
         }
         
+        guard let selectedExpiryYear = selectedExpiryYear, let selectedExpiryMonth = selectedExpiryMonth else { return }
+        
         let components = Calendar.current.dateComponents([.month, .year], from: Date())
         let thisMonth = components.month!
         let thisYear = components.year!
         
-        guard let selectedExpiryYear = selectedExpiryYear, let selectedExpiryMonth = selectedExpiryMonth else { return }
-        
         if thisYear == selectedExpiryYear && thisMonth > selectedExpiryMonth {
-            if let cell = (tableView.cellForRow(at: IndexPath(row: Constants.expiryDateRow, section: 0)) as? UserInputTableViewCell){
+            if let cell = (tableView.cellForRow(at: IndexPath(row: Constants.expiryDateRow, section: 0)) as? UserInputTableViewCell) {
                 tableView.beginUpdates()
                 cell.errorMessage = NSLocalizedString("ExpiryDateInThePastError", value: "The expiry date is in the past", comment: "Error displayed when the expiry date entered is in the past")
                 cell.textField.textColor = FormConstants.errorColor
@@ -156,9 +162,9 @@ class CreditCardTableViewController: UITableViewController {
             return
         }
         
-        guard cardNumberTextField.text!.isValidCardNumber(), let cvvText = cvvTextField.text else { return }
+        guard creditCardIsValid && cvvIsValid else { return }
 
-        let card = Card(number: cardNumberTextField.text!, expireMonth: selectedExpiryMonth, expireYear: selectedExpiryYear, cvv2: cvvText)
+        let card = Card(number: cardNumberTextField.text!, expireMonth: selectedExpiryMonth, expireYear: selectedExpiryYear, cvv2: cvvTextField.text!)
         Card.currentCard = card
         
         ProductManager.shared.paymentMethod = .creditCard
