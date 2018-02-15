@@ -196,13 +196,9 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         // Update drag interaction enabled status
         for cell in collectionView.visibleCells {
-            guard let photobookCell = cell as? PhotobookCollectionViewCell else { continue }
-            photobookCell.setIsRearranging(isRearranging)
+            guard var photobookCell = cell as? InteractivePagesCell else { continue }
+            photobookCell.isPageInteractionEnabled = !isRearranging
         }
-    }
-    
-    @IBAction private func didTapOnSpine(_ sender: UITapGestureRecognizer) {
-        print("Tapped on spine")
     }
     
     @IBAction func didTapCheckout(_ sender: Any) {
@@ -574,6 +570,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             cell.width = (view.bounds.size.width - Constants.cellSideMargin * 2.0) / 2.0
             cell.delegate = self
             cell.loadCoverAndSpine()
+            cell.isPageInteractionEnabled = !isRearranging
             
             return cell
         default:
@@ -604,7 +601,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
                     rightIndex = index + 1
                 }
                 cell.setupGestures()
-                cell.setIsRearranging(isRearranging)
+                cell.isPageInteractionEnabled = !isRearranging
                 
                 // Get a larger image if the layout is double width
                 if ProductManager.shared.productLayouts[index].layout.isDoubleLayout {

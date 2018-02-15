@@ -8,6 +8,11 @@
 
 import UIKit
 
+// Protocol cells conform to enable / disaple page interaction
+protocol InteractivePagesCell {
+    var isPageInteractionEnabled: Bool { get set }
+}
+
 @objc protocol PhotobookCollectionViewCellDelegate: class, UIGestureRecognizerDelegate {
     func didTapOnPlusButton(at foldIndex: Int)
     func didTapOnPage(at: Int)
@@ -15,7 +20,7 @@ import UIKit
     @objc func didPan(_ sender: UIPanGestureRecognizer)
 }
 
-class PhotobookCollectionViewCell: UICollectionViewCell {
+class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
     
     @IBOutlet private weak var photobookFrameView: PhotobookFrameView! {
         didSet {
@@ -55,6 +60,13 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
     var isPlusButtonVisible: Bool {
         get { return !plusButton.isHidden }
         set { plusButton.isHidden = !newValue }
+    }
+    
+    var isPageInteractionEnabled: Bool = false {
+        didSet {
+            photobookFrameView.leftPageView.isUserInteractionEnabled = isPageInteractionEnabled
+            photobookFrameView.rightPageView.isUserInteractionEnabled = isPageInteractionEnabled
+        }
     }
 
     func loadPages(leftIndex: Int?, rightIndex: Int?, leftLayout: ProductLayout? = nil, rightLayout: ProductLayout? = nil) {
@@ -97,11 +109,6 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
             let foldIndex = ProductManager.shared.spreadIndex(for: layoutIndex)
             else { return }
         delegate?.didTapOnPlusButton(at: foldIndex)
-    }
-    
-    func setIsRearranging(_ isRearranging: Bool) {
-        photobookFrameView.leftPageView.isUserInteractionEnabled = !isRearranging
-        photobookFrameView.rightPageView.isUserInteractionEnabled = !isRearranging
     }
     
     private var hasSetUpGestures = false
