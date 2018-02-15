@@ -126,23 +126,19 @@ class PhotobookPageView: UIView {
             return
         }
         
-        let imageCompletion: ((UIImage) -> Void) = { [weak welf = self] (image) in
-            welf?.setImage(image: image)
-            
-            UIView.animate(withDuration: 0.3) {
-                welf?.assetContainerView.alpha = 1.0
-            }
-        }
-        
         // Avoid reloading image if not necessary
-        if assetImage != nil {
-            imageCompletion(assetImage!)
+        if let assetImage = assetImage {
+            setImage(image: assetImage)
             return
         }
         
         asset.image(size: imageSize, completionHandler: { [weak welf = self] (image, _) in
             guard welf?.pageIndex == index, let image = image else { return }
-            imageCompletion(image)
+            welf?.setImage(image: image)
+            
+            UIView.animate(withDuration: 0.1) {
+                welf?.assetContainerView.alpha = 1.0
+            }
         })
     }
     

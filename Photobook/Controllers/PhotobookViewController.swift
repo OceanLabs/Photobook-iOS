@@ -155,6 +155,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let alertController = UIAlertController(title: nil, message: NSLocalizedString("Photobook/ChangeSizeTitle", value: "Changing the size keeps your layout intact", comment: "Information when the user wants to change the photo book's size"), preferredStyle: .actionSheet)
         for photobook in photobooks{
             alertController.addAction(UIAlertAction(title: photobook.name, style: .default, handler: { [weak welf = self] (_) in
+                guard ProductManager.shared.product!.id != photobook.id else { return }
+                
                 welf?.titleButton.setTitle(photobook.name, for: .normal)
                 
                 ProductManager.shared.setPhotobook(photobook)
