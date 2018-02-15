@@ -21,6 +21,10 @@ class OrderSummaryViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var previewImageView: UIImageView!
+    @IBOutlet weak var previewImageActivityIndicatorView: UIActivityIndicatorView!
+    @IBOutlet weak var previewImageProgressView: UIView!
+    
+    private var timer: Timer?
     
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
@@ -38,27 +42,48 @@ class OrderSummaryViewController: UIViewController {
         
         emptyScreenViewController.show(message: stringLoading, activity: true)
         
-        orderSummaryManager = OrderSummaryManager()
-        orderSummaryManager.delegate = self
+        orderSummaryManager = OrderSummaryManager(withDelegate: self)
+        orderSummaryManager.refresh()
+    }
+    
+    @objc private func timerTriggered(_ timer: Timer) {
+        previewImageProgressView.isHidden = false
+        previewImageActivityIndicatorView.startAnimating()
     }
     
 }
 
 extension OrderSummaryViewController: OrderSummaryManagerDelegate {
-    func orderSummaryManager(_ manager: OrderSummaryManager, didUpdate success: Bool) {
+    func orderSummaryManagerWillUpdate(_ manager: OrderSummaryManager) {
+        previewImageView.image = nil
+        
+        // Don't show a loading view if the request takes less than 0.3 seconds
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(timerTriggered(_:)), userInfo: nil, repeats: false)
+        RunLoop.current.add(timer!, forMode: .defaultRunLoopMode)
+    }
+    
+    func orderSummaryManager(_ manager: OrderSummaryManager, didUpdateSummary success: Bool) {
         progressOverlayViewController.hide(animated: true)
         
         if success {
             emptyScreenViewController.hide(animated: true)
             tableView.reloadData()
-            previewImageView.image = orderSummaryManager.previewImage
         } else {
             
             emptyScreenViewController.show(message: stringLoadingFail, title: nil, image: nil, activity: false, buttonTitle: stringLoadingRetry, buttonAction: {
                 self.emptyScreenViewController.show(message: self.stringLoading, activity: true)
-                self.orderSummaryManager.refresh(false)
+                self.orderSummaryManager.refresh()
             })
         }
+    }
+    
+    func orderSummaryManager(_ manager: OrderSummaryManager, didUpdatePreviewImage success:Bool) {
+        self.previewImageView.image = manager.previewImage
+        
+        timer?.invalidate()
+        previewImageProgressView.isHidden = true
+        previewImageActivityIndicatorView.stopAnimating()
     }
     
     func orderSummaryManagerSizeForPreviewImage(_ manager: OrderSummaryManager) -> CGSize {

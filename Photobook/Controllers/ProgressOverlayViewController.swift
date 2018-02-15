@@ -21,6 +21,8 @@ class ProgressOverlayViewController: UIViewController {
         }
     }
     
+    private var timer: Timer?
+    
     /// Factory method to create a progress overlay
     ///
     /// - Parameter parent: The parent view controller to add it to
@@ -47,9 +49,14 @@ class ProgressOverlayViewController: UIViewController {
             self.didMove(toParentViewController: parentController)
         }
         
-        self.view.alpha = 1.0
+        timer?.invalidate()
+        
         descriptionTextView.text = message
         activityIndicatorView.startAnimating()
+        
+        // Don't show a loading view if the request takes less than 0.3 seconds
+        timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(timerTriggered(_:)), userInfo: nil, repeats: false)
+        RunLoop.current.add(timer!, forMode: .defaultRunLoopMode)
     }
     
     /// Hides the Empty Screen
@@ -58,16 +65,33 @@ class ProgressOverlayViewController: UIViewController {
     func hide(animated: Bool = false) {
         guard parentController != nil else { return }
         
+        timer?.invalidate()
+        
         if animated {
+            showSubviews(false)
             UIView.animate(withDuration: 0.3, animations: {
                 self.view.alpha = 0.0
             }, completion: { (finished) in
+                self.view.alpha = 1
                 self.view.removeFromSuperview()
                 self.removeFromParentViewController()
             })
-        } else {
-            self.view.removeFromSuperview()
-            self.removeFromParentViewController()
+            
+            return
         }
+        
+        view.removeFromSuperview()
+        removeFromParentViewController()
+    }
+    
+    private func showSubviews(_ show: Bool) {
+        for subview in view.subviews {
+            subview.alpha = show ? 1.0 : 0.0
+        }
+    }
+    
+    @objc private func timerTriggered(_ timer: Timer) {
+        showSubviews(true)
+        activityIndicatorView.startAnimating()
     }
 }

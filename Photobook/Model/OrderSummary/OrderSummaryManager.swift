@@ -9,7 +9,9 @@
 import UIKit
 
 protocol OrderSummaryManagerDelegate : class {
-    func orderSummaryManager(_ manager:OrderSummaryManager, didUpdate success:Bool)
+    func orderSummaryManagerWillUpdate(_ manager:OrderSummaryManager)
+    func orderSummaryManager(_ manager:OrderSummaryManager, didUpdatePreviewImage success:Bool)
+    func orderSummaryManager(_ manager:OrderSummaryManager, didUpdateSummary success:Bool)
     func orderSummaryManagerSizeForPreviewImage(_ manager:OrderSummaryManager) -> CGSize
 }
 
@@ -22,6 +24,7 @@ class OrderSummaryManager {
         }
     }
     private var coverImageUrl:String?
+    private var isUploadingCoverImage = false
     
     //original product provided by previous UX
     var product:Photobook? {
@@ -41,31 +44,32 @@ class OrderSummaryManager {
     
     weak var delegate:OrderSummaryManagerDelegate?
     
-    init() {
-        refresh(true)
+    init(withDelegate delegate:OrderSummaryManagerDelegate) {
+        self.delegate = delegate
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    func refresh(_ resetImage:Bool = false) {
+    func refresh() {
+        delegate?.orderSummaryManagerWillUpdate(self)
         
-        if coverImageUrl != nil && resetImage == false {
-            fetchProductDetails()
-        } else {
-            uploadPreviewImage()
+        summary = nil
+        previewImage = nil
+        upsoldProduct = nil
+        
+        if coverImageUrl == nil {
+            uploadCoverImage()
         }
+        
+        fetchProductDetails()
     }
     
     func selectUpsellOption(_ option:UpsellOption) {
         selectedUpsellOptions.insert(option)
-        refresh(false)
+        refresh()
     }
     
     func deselectUpsellOption(_ option:UpsellOption) {
         selectedUpsellOptions.remove(option)
-        refresh(false)
+        refresh()
     }
     
     func isUpsellOptionSelected(_ option:UpsellOption) -> Bool {
@@ -80,61 +84,74 @@ class OrderSummaryManager {
         print("mock file: " + filename)
         
         guard let summaryDict = JSON.parse(file: filename) as? [String:Any] else {
-            delegate?.orderSummaryManager(self, didUpdate: false)
+            delegate?.orderSummaryManager(self, didUpdateSummary: false)
             return
         }
         
         //summary
-        guard let summary = OrderSummary(summaryDict), let coverImageUrl = coverImageUrl else {
-            delegate?.orderSummaryManager(self, didUpdate: false)
+        guard let summary = OrderSummary(summaryDict) else {
+            delegate?.orderSummaryManager(self, didUpdateSummary: false)
+            delegate?.orderSummaryManager(self, didUpdatePreviewImage: false) //no summary, no preview
             return
         }
         self.summary = summary
+        self.delegate?.orderSummaryManager(self, didUpdateSummary: true)
         
-        let size = delegate?.orderSummaryManagerSizeForPreviewImage(self) ?? CGSize.zero
-        
-        if let imageUrl = summary.previewImageUrl(withCoverImageUrl: coverImageUrl, size: size) {
-            APIClient.shared.get(context: .none, endpoint: imageUrl.absoluteString, parameters: nil, completion: { (data, error) in
-                DispatchQueue.main.async(execute: { () -> Void in
-                    self.previewImage = data as? UIImage
-                    self.delegate?.orderSummaryManager(self, didUpdate: true)
-                })
-            })
-        }
+        //preview image
+        fetchPreviewImage()
         
     }
     
-    private func uploadPreviewImage() {
+    private func fetchPreviewImage() {
+        
+        guard let coverImageUrl = coverImageUrl else {
+            return
+        }
+        
+        let size = delegate?.orderSummaryManagerSizeForPreviewImage(self) ?? CGSize.zero
+        
+        if let summary = summary,
+            let imageUrl = summary.previewImageUrl(withCoverImageUrl: coverImageUrl, size: size) {
+            APIClient.shared.get(context: .none, endpoint: imageUrl.absoluteString, parameters: nil, completion: { (data, error) in
+                self.previewImage = data as? UIImage
+                DispatchQueue.main.async { self.delegate?.orderSummaryManager(self, didUpdatePreviewImage: self.previewImage != nil) }
+            })
+        } else {
+            DispatchQueue.main.async { self.delegate?.orderSummaryManager(self, didUpdatePreviewImage: false) }
+        }
+    }
+    
+    private func uploadCoverImage() {
+        isUploadingCoverImage = true
         
         guard layouts.count > 0, let asset = layouts[0].asset else {
-            self.fetchProductDetails()
+            self.isUploadingCoverImage = false
+            DispatchQueue.main.async { self.delegate?.orderSummaryManager(self, didUpdatePreviewImage: false) }
             return
         }
         
         asset.image(size: assetMaximumSize, applyEdits: false, loadThumbnailsFirst: false, progressHandler: nil, completionHandler: { (image, error) in
             if let image = image {
                 APIClient.shared.uploadImage(image, imageName: "OrderSummaryPreviewImage.jpeg", context: .pig, endpoint: "upload/", completion: { (json, error) in
-                    
-                    defer {
-                        DispatchQueue.main.async { self.fetchProductDetails() }
-                    }
+                    self.isUploadingCoverImage = false
                     
                     if let error = error {
                         print(error.localizedDescription)
-                        return
                     }
                     
                     guard let dictionary = json as? [String:AnyObject], let url = dictionary["full"] as? String else {
                         print("OrderSummaryManager: Couldn't parse URL of uploaded image")
+                        DispatchQueue.main.async { self.delegate?.orderSummaryManager(self, didUpdatePreviewImage: false) }
                         return
                     }
                     
                     self.coverImageUrl = url
+                    self.fetchPreviewImage()
                 })
             } else {
-                // fetch product details straight away
                 print("OrderSummaryManager: Couldn't get image for asset")
-                DispatchQueue.main.async { self.fetchProductDetails() }
+                self.isUploadingCoverImage = false
+                DispatchQueue.main.async { self.delegate?.orderSummaryManager(self, didUpdatePreviewImage: false) }
             }
         })
     }
