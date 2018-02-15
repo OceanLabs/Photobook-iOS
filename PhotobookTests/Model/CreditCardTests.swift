@@ -55,8 +55,8 @@ class CreditCardTests: XCTestCase {
         let actual = input.creditCardFormatted()
         XCTAssert(actual == expected, "Credit card number formatter does not work properly. Expected: \(expected) but got: \(actual)")
         
-        let type = input.creditCardType()
-        XCTAssert(type == .amex, "Expected AMEX type but got \(type)")
+        let type = input.cardType()
+        XCTAssert(type == .amex, "Expected AMEX type but got \(type.debugDescription)")
     }
     
     func testCreditCardFormatterVisaInput() {
@@ -65,8 +65,8 @@ class CreditCardTests: XCTestCase {
         let actual = input.creditCardFormatted()
         XCTAssert(actual == expected, "Credit card number formatter does not work properly. Expected: \(expected) but got: \(actual)")
         
-        let type = input.creditCardType()
-        XCTAssert(type == .visa, "Expected Visa type but got \(type)")
+        let type = input.cardType()
+        XCTAssert(type == .visa, "Expected Visa type but got \(type.debugDescription)")
     }
     
     func testCardGetters() {

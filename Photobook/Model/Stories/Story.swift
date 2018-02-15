@@ -89,6 +89,10 @@ extension Story: Album {
         return collectionList.localIdentifier
     }
     
+    var requiresExclusivePicking: Bool {
+        return true
+    }
+    
     func loadAssets(completionHandler: ((Error?) -> Void)?) {
         let fetchOptions = PHFetchOptions()
         fetchOptions.wantsIncrementalChangeDetails = false
@@ -111,5 +115,7 @@ extension Story: Album {
     func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
         collectionForCoverPhoto.coverAsset(useFirstImageInCollection: true, completionHandler: completionHandler)
     }
+    
+    
 }
 

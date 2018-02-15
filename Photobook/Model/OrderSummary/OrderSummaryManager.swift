@@ -130,7 +130,7 @@ class OrderSummaryManager {
             return
         }
         
-        asset.image(size: assetMaximumSize, applyEdits: false, loadThumbnailsFirst: false, progressHandler: nil, completionHandler: { (image, error) in
+        asset.image(size: assetMaximumSize, loadThumbnailsFirst: false, progressHandler: nil, completionHandler: { (image, error) in
             if let image = image {
                 APIClient.shared.uploadImage(image, imageName: "OrderSummaryPreviewImage.jpeg", context: .pig, endpoint: "upload/", completion: { (json, error) in
                     self.isUploadingCoverImage = false

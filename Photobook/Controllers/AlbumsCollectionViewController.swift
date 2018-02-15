@@ -139,11 +139,11 @@ class AlbumsCollectionViewController: UICollectionViewController {
     }
     
     @objc func albumsWereReloaded(_ notification: Notification) {
-        guard let albumsChanged = notification.object as? [Album] else { return }
+        guard let albumsChanges = notification.object as? [AlbumChange] else { return }
         var indexPathsChanged = [IndexPath]()
         
-        for album in albumsChanged {
-            guard let index = albumManager.albums.index(where: { $0.identifier == album.identifier }) else { continue }
+        for albumChange in albumsChanges {
+            guard let index = albumManager.albums.index(where: { $0.identifier == albumChange.album.identifier }) else { continue }
             indexPathsChanged.append(IndexPath(item: index, section: 0))
         }
         

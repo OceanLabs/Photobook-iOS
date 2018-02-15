@@ -89,11 +89,30 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     }
     
     @objc func albumsWereReloaded(_ notification: Notification) {
-        guard let albumsChanged = notification.object as? [Album] else { return }
+        guard let collectionView = collectionView,
+            let albumsChanges = notification.object as? [AlbumChange]
+            else { return }
         
-        for album in albumsChanged {
-            if album.identifier == self.album.identifier {
-                collectionView?.reloadSections(IndexSet(integer: 0))
+        for albumChange in albumsChanges {
+            if albumChange.album.identifier == album.identifier {
+                var indexPathsAdded = [IndexPath]()
+                for assetAdded in albumChange.assetsAdded {
+                    if let index = album.assets.index(where: { $0.identifier == assetAdded.identifier }) {
+                        indexPathsAdded.append(IndexPath(item: index, section: 0))
+                    }
+                }
+                
+                var indexPathsRemoved = [IndexPath]()
+                for indexRemoved in albumChange.indexesRemoved {
+                    indexPathsRemoved.append(IndexPath(item: indexRemoved, section: 0))
+                }
+                
+                collectionView.performBatchUpdates({
+                    collectionView.deleteItems(at: indexPathsRemoved)
+                    collectionView.insertItems(at: indexPathsAdded)
+                }, completion: nil)
+                
+                break
             }
         }
     }
@@ -230,7 +249,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     }
     
     @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
-        guard let assets = notification.userInfo?[SelectedAssetsManager.notificationUserObjectKeyAssets] as? [Asset], let collectionView = collectionView else {
+        guard let assets = notification.userInfo?[SelectedAssetsManager.notificationUserObjectKeyAssets] as? [Asset] else {
             return
         }
         for asset in assets {
@@ -260,6 +279,7 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
         default:
             let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
             photobookViewController.selectedAssetsManager = selectedAssetsManager
+            photobookViewController.albumForEditingPicker = album.requiresExclusivePicking ? album : nil
             navigationController?.pushViewController(photobookViewController, animated: true)
         }
         selectedAssetsManager?.orderAssetsByDate()

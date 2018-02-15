@@ -43,6 +43,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet weak var toolbar: UIToolbar!
     
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
+    var albumForPicker: Album?
     
     private var assetSelectorViewController: AssetSelectorViewController!
     private var layoutSelectionViewController: LayoutSelectionViewController!
@@ -156,6 +157,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         toolbar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
         toolbarButtons[Tool.selectAsset.rawValue].isSelected = true
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereReloaded(_:)), name: AssetsNotificationName.albumsWereReloaded, object: nil)
     }
     
     override func viewDidLayoutSubviews() {
@@ -164,7 +167,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         if !hasDoneSetup {
             coverFrameView.color = ProductManager.shared.coverColor
             coverFrameView.pageView.aspectRatio = ProductManager.shared.product!.aspectRatio
-
+            coverFrameView.pageView.delegate = self
+            
             photobookFrameView.pageColor = ProductManager.shared.pageColor
             photobookFrameView.coverColor = ProductManager.shared.coverColor
             
@@ -176,7 +180,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
 
             photobookFrameView.width = (view.bounds.width - 2.0 * Constants.photobookSideMargin) * 2.0
             
-            pageView.index = pageIndex
+            pageView.pageIndex = pageIndex
             pageView.productLayout = productLayout            
             pageView.setupLayoutBoxes()
 
@@ -188,6 +192,29 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             setupTextEditing()
             hasDoneSetup = true
         }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func albumsWereReloaded(_ notification: Notification) {
+        guard let albumsChanges = notification.object as? [AlbumChange] else { return }
+        
+        var removedAssets = [Asset]()
+        for albumChange in albumsChanges {
+            removedAssets.append(contentsOf: albumChange.assetsRemoved)
+        }
+        
+        for removedAsset in removedAssets {
+            if removedAsset.identifier == productLayout.asset?.identifier {
+                productLayout.asset = nil
+                updateAll(with: nil)
+                assetSelectorViewController.selectedAsset = nil
+                break
+            }
+        }
+        
     }
     
     private func setupPhotobookFrame() {
@@ -209,6 +236,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     private func setupAssetSelection() {
         assetSelectorViewController.selectedAssetsManager = selectedAssetsManager
+        assetSelectorViewController.albumForPicker = albumForPicker
         assetSelectorViewController.selectedAsset = productLayout.asset
     }
     
@@ -229,6 +257,23 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     private func setupTextEditing() {
         let enabled = productLayout.layout.textLayoutBox != nil
         toolbarButtons[Tool.editText.rawValue].isEnabled = enabled
+    }
+    
+    private func updateAll(with asset:Asset?) {
+        layoutSelectionViewController.asset = asset
+        productLayout.asset = asset
+        
+        // If the current layout does not have an image box, find the first layout that does and use it
+        if productLayout.layout.imageLayoutBox == nil {
+            let defaultLayout = availableLayouts.first(where: { $0.imageLayoutBox != nil })
+            
+            productLayout.layout = defaultLayout
+            pageView.setupTextBox()
+            
+            layoutSelectionViewController.selectedLayout = productLayout.layout
+        }
+        pageView.setupImageBox()
+        setupAssetPlacement()
     }
     
     // MARK: - Navigation
@@ -378,20 +423,7 @@ extension PageSetupViewController: LayoutSelectionDelegate {
 extension PageSetupViewController: AssetSelectorDelegate {
     
     func didSelect(asset: Asset) {
-        layoutSelectionViewController.asset = asset
-        productLayout.asset = asset
-
-        // If the current layout does not have an image box, find the first layout that does and use it
-        if productLayout.layout.imageLayoutBox == nil {
-            let defaultLayout = availableLayouts.first(where: { $0.imageLayoutBox != nil })
-
-            productLayout.layout = defaultLayout
-            pageView.setupTextBox()
-            
-            layoutSelectionViewController.selectedLayout = productLayout.layout
-        }
-        pageView.setupImageBox()
-        setupAssetPlacement()
+        updateAll(with: asset)
     }
 }
 
@@ -431,11 +463,11 @@ extension PageSetupViewController: TextEditingDelegate {
 
 extension PageSetupViewController: PhotobookPageViewDelegate {
     
-    func didTapOnAsset(index: Int) {
+    func didTapOnAsset(at index: Int) {
         tappedToolButton(toolbarButtons[Tool.placeAsset.rawValue])
     }
 
-    func didTapOnText(index: Int) {
+    func didTapOnText(at index: Int) {
         tappedToolButton(toolbarButtons[Tool.editText.rawValue])
     }
 }

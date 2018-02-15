@@ -37,7 +37,7 @@ class PhotosAsset: Asset {
     
     var identifier: String! {
         didSet {
-            if photosAsset == nil || photosAsset.localIdentifier != identifier,
+            if photosAsset.localIdentifier != identifier,
                let asset = PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: PHFetchOptions()).firstObject {
                     photosAsset = asset
             }
@@ -102,7 +102,7 @@ class PhotosAsset: Asset {
         
     }
     
-    static func photosAssets(from assets:[Asset]) -> [PHAsset]{
+    static func photosAssets(from assets:[Asset]) -> [PHAsset] {
         var photosAssets = [PHAsset]()
         for asset in assets{
             guard let photosAsset = asset as? PhotosAsset else { continue }
@@ -110,6 +110,15 @@ class PhotosAsset: Asset {
         }
         
         return photosAssets
+    }
+    
+    static func assets(from photosAssets:[PHAsset], albumId: String) -> [Asset] {
+        var assets = [Asset]()
+        for photosAsset in photosAssets{
+            assets.append(PhotosAsset(photosAsset, albumIdentifier: albumId))
+        }
+        
+        return assets
     }
     
 }

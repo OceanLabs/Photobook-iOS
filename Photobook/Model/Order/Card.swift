@@ -63,7 +63,10 @@ struct Card {
 extension Card {
     
     var cardIcon: UIImage {
-        let cardType = number.creditCardType()
+        guard let cardType = number.cardType() else {
+            return UIImage(named: "add-payment")!
+        }
+        
         switch cardType {
         case .amex:
             return UIImage(named: "amex-logo")!
@@ -72,12 +75,12 @@ extension Card {
         case .mastercard:
             return UIImage(named: "mastercard-logo")!
         default:
-            return UIImage(named: "add-payment")!
+            return UIImage()
         }
     }
     
     var isAmex: Bool {
-        return number.creditCardType() == .amex
+        return number.cardType() == .amex
     }
     
 }

@@ -40,6 +40,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
     
     var selectedAssetsManager: SelectedAssetsManager?
+    var albumForEditingPicker: Album?
     private var titleButton = UIButton()
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
@@ -70,6 +71,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         collectionViewBottomConstraint.constant = -view.frame.height * (reverseRearrangeScale - 1)
         
         NotificationCenter.default.addObserver(self, selector: #selector(menuDidHide), name: NSNotification.Name.UIMenuControllerDidHideMenu, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereReloaded(_:)), name: AssetsNotificationName.albumsWereReloaded, object: nil)
         
         guard let photobook = ProductManager.shared.products?.first else {
             loadProducts()
@@ -155,6 +157,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let alertController = UIAlertController(title: nil, message: NSLocalizedString("Photobook/ChangeSizeTitle", value: "Changing the size keeps your layout intact", comment: "Information when the user wants to change the photo book's size"), preferredStyle: .actionSheet)
         for photobook in photobooks{
             alertController.addAction(UIAlertAction(title: photobook.name, style: .default, handler: { [weak welf = self] (_) in
+                guard ProductManager.shared.product!.id != photobook.id else { return }
+                
                 welf?.titleButton.setTitle(photobook.name, for: .normal)
                 
                 ProductManager.shared.setPhotobook(photobook)
@@ -192,8 +196,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         // Update drag interaction enabled status
         for cell in collectionView.visibleCells {
-            guard let photobookCell = cell as? PhotobookCollectionViewCell else { continue }
-            photobookCell.setIsRearranging(isRearranging)
+            guard var photobookCell = cell as? InteractivePagesCell else { continue }
+            photobookCell.isPageInteractionEnabled = !isRearranging
         }
     }
     
@@ -243,6 +247,38 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     private func stopTimer() {
         scrollingTimer?.invalidate()
         scrollingTimer = nil
+    }
+    
+    @objc func albumsWereReloaded(_ notification: Notification) {
+        guard let albumsChanges = notification.object as? [AlbumChange] else { return }
+        
+        var removedAssets = [Asset]()
+        for albumChange in albumsChanges {
+            removedAssets.append(contentsOf: albumChange.assetsRemoved)
+        }
+        
+        for removedAsset in removedAssets {
+            if let removedIndex = ProductManager.shared.productLayouts.index(where: { $0.asset?.identifier == removedAsset.identifier }) {
+                ProductManager.shared.productLayouts[removedIndex].asset = nil
+                
+                // Check if the cover needs refreshing
+                if removedIndex == 0 && !collectionView.indexPathsForVisibleItems.contains(IndexPath(item: 0, section: 0)) {
+                    continue
+                } else if (removedIndex == 0), let cell = collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) as? PhotobookCoverCollectionViewCell {
+                    cell.loadCoverAndSpine()
+                    continue
+                }
+                
+                let spreadIndex = ProductManager.shared.spreadIndex(for: removedIndex)
+                if let visibleIndexPathToLoad = collectionView.indexPathsForVisibleItems.filter({ $0.item == spreadIndex && $0.section == 1 }).first,
+                    let cell = collectionView.cellForItem(at: visibleIndexPathToLoad) as? PhotobookCollectionViewCell
+                {
+                    if cell.leftIndex == removedIndex || cell.rightIndex == removedIndex {
+                        cell.loadPages(leftIndex: cell.leftIndex, rightIndex: cell.rightIndex)
+                    }
+                }
+            }
+        }
     }
     
     deinit {
@@ -465,7 +501,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     func liftView(_ photobookFrameView: PhotobookFrameView) {
-        guard let productLayoutIndex = photobookFrameView.leftPageView.index,
+        guard let productLayoutIndex = photobookFrameView.leftPageView.pageIndex,
             let spreadIndex = ProductManager.shared.spreadIndex(for: productLayoutIndex),
             spreadIndex != collectionView.numberOfItems(inSection: 1) - 1
             else { return }
@@ -496,6 +532,15 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
 
             cell.loadPages(leftIndex: productLayoutIndex, rightIndex: productLayoutIndex + 1)
         }
+    }
+    
+    func editPage(at index: Int) {
+        let pageSetupViewController = storyboard?.instantiateViewController(withIdentifier: "PageSetupViewController") as! PageSetupViewController
+        pageSetupViewController.selectedAssetsManager = selectedAssetsManager
+        pageSetupViewController.pageIndex = index
+        pageSetupViewController.delegate = self
+        pageSetupViewController.albumForPicker = albumForEditingPicker
+        navigationController?.pushViewController(pageSetupViewController, animated: true)
     }
 }
 
@@ -529,7 +574,8 @@ extension PhotobookViewController: UICollectionViewDataSource {
             cell.imageSize = imageSize
             cell.width = (view.bounds.size.width - Constants.cellSideMargin * 2.0) / 2.0
             cell.delegate = self
-            cell.loadCover()
+            cell.loadCoverAndSpine()
+            cell.isPageInteractionEnabled = !isRearranging
             
             return cell
         default:
@@ -542,9 +588,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             cell.imageSize = imageSize
             cell.width = view.bounds.size.width - Constants.cellSideMargin * 2.0
             cell.clipsToBounds = false
-            
             cell.delegate = self
-            cell.pageDelegate = self
             
             // First and last pages of the book are courtesy pages, no photos on them
             var leftIndex: Int? = nil
@@ -562,7 +606,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
                     rightIndex = index + 1
                 }
                 cell.setupGestures()
-                cell.setIsRearranging(isRearranging)
+                cell.isPageInteractionEnabled = !isRearranging
                 
                 // Get a larger image if the layout is double width
                 if ProductManager.shared.productLayouts[index].layout.isDoubleLayout {
@@ -616,15 +660,21 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
     }
 }
 
-extension PhotobookViewController: PhotobookPageViewDelegate {
-    // MARK: PhotobookPageViewDelegate
-
-    func didTapOnPage(index: Int) {
-        let pageSetupViewController = storyboard?.instantiateViewController(withIdentifier: "PageSetupViewController") as! PageSetupViewController
-        pageSetupViewController.selectedAssetsManager = selectedAssetsManager
-        pageSetupViewController.pageIndex = index
-        pageSetupViewController.delegate = self
-        navigationController?.pushViewController(pageSetupViewController, animated: true)
+extension PhotobookViewController: PhotobookCoverCollectionViewCellDelegate {
+    
+    func didTapOnSpine(with rect: CGRect, in containerView: UIView) {
+        let initialRect = containerView.convert(rect, to: view)
+        
+        let spineTextEditingNavigationController = storyboard?.instantiateViewController(withIdentifier: "SpineTextEditingNavigationController") as! UINavigationController
+        let spineTextEditingViewController = spineTextEditingNavigationController.viewControllers.first! as! SpineTextEditingViewController
+        spineTextEditingViewController.initialRect = initialRect
+        spineTextEditingViewController.delegate = self
+        
+        navigationController?.present(spineTextEditingNavigationController, animated: false, completion: nil)
+    }
+    
+    func didTapOnCover() {
+        editPage(at: 0)
     }
 }
 
@@ -652,6 +702,10 @@ extension PhotobookViewController: PageSetupDelegate {
 extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
     // MARK: PhotobookCollectionViewCellDelegate
     
+    func didTapOnPage(at index: Int) {
+        editPage(at: index)
+    }
+
     func didLongPress(_ sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
             guard let photobookFrameView = sender.view as? PhotobookFrameView else {
@@ -787,6 +841,26 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         guard gestureRecognizer as? UILongPressGestureRecognizer == nil else { return false }
         return otherGestureRecognizer.view === gestureRecognizer.view || draggingView == nil
+    }
+}
+
+extension PhotobookViewController: SpineTextEditingDelegate {
+    
+    func didCancelSpineTextEditing(_ spineTextEditingViewController: SpineTextEditingViewController) {
+        spineTextEditingViewController.animateOff {
+            self.dismiss(animated: false, completion: nil)
+        }
+    }
+    
+    func didSaveSpineTextEditing(_ spineTextEditingViewController: SpineTextEditingViewController, spineText: String?, fontType: FontType) {
+        ProductManager.shared.spineText = spineText
+        ProductManager.shared.spineFontType = fontType
+        
+        collectionView.reloadItems(at: [IndexPath(row: 0, section: 0)])
+        
+        spineTextEditingViewController.animateOff {
+            self.dismiss(animated: false, completion: nil)
+        }
     }
 }
 

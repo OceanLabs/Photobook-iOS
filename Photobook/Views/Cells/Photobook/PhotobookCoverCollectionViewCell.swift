@@ -8,7 +8,12 @@
 
 import UIKit
 
-class PhotobookCoverCollectionViewCell: UICollectionViewCell {
+protocol PhotobookCoverCollectionViewCellDelegate: class {
+    func didTapOnSpine(with rect: CGRect, in containerView: UIView)
+    func didTapOnCover()
+}
+
+class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
     
     static let reuseIdentifier = NSStringFromClass(PhotobookCoverCollectionViewCell.self).components(separatedBy: ".").last!
     
@@ -18,24 +23,41 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell {
     }
     
     var imageSize = CGSize(width: Int.max, height: Int.max) {
+        didSet { coverFrameView.pageView.imageSize = imageSize }
+    }
+
+    var width: CGFloat! {
+        didSet { coverFrameView.width = width }
+    }
+    
+    weak var delegate: PhotobookCoverCollectionViewCellDelegate? {
+        didSet { coverFrameView.pageView.delegate = self }
+    }
+    
+    var isPageInteractionEnabled: Bool = false {
         didSet {
-            coverFrameView.pageView.imageSize = imageSize
+            coverFrameView.isUserInteractionEnabled = isPageInteractionEnabled
         }
     }
-    var width: CGFloat! { didSet { coverFrameView.width = width } }
-    
-    weak var delegate: PhotobookPageViewDelegate? { didSet { coverFrameView.pageView.delegate = delegate } }
 
     override func layoutSubviews() {
-        super.layoutSubviews()        
-        spineFrameView.spineText = ProductManager.shared.spineText
+        super.layoutSubviews()
         coverFrameView.aspectRatio = ProductManager.shared.product!.aspectRatio
     }
-
-    func loadCover() {
-        coverFrameView.pageView.index = 0
+    
+    func loadCoverAndSpine() {
+        coverFrameView.pageView.pageIndex = 0
         coverFrameView.pageView.productLayout = ProductManager.shared.productLayouts.first
         coverFrameView.pageView.setupImageBox()
+        coverFrameView.pageView.setupTextBox(mode: .userTextOnly)
+        
+        if spineFrameView.text != ProductManager.shared.spineText ||
+            spineFrameView.fontType != ProductManager.shared.spineFontType {
+                spineFrameView.text = ProductManager.shared.spineText
+                spineFrameView.fontType = ProductManager.shared.spineFontType
+                spineFrameView.setNeedsLayout()
+                spineFrameView.layoutIfNeeded()
+        }
         
         if coverFrameView.color != ProductManager.shared.coverColor {
             coverFrameView.color = ProductManager.shared.coverColor
@@ -43,6 +65,17 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell {
             coverFrameView.resetCoverColor()
             spineFrameView.resetSpineColor()
         }
+    }
+    
+    @IBAction func tappedOnSpine(_ sender: UIButton) {
+        delegate?.didTapOnSpine(with: spineFrameView.frame, in: spineFrameView.superview!)
+    }
+}
+
+extension PhotobookCoverCollectionViewCell: PhotobookPageViewDelegate {
+    
+    func didTapOnPage(at index: Int) {
+        delegate?.didTapOnCover()
     }
 }
 

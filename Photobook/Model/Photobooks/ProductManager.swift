@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Stripe
 
 enum ProductColor: String, Codable {
     case white, black
@@ -80,6 +81,7 @@ class ProductManager {
     var product: Photobook?
     var productUpsellOptions: [UpsellOption]? //TODO: Get this from the initial-data endpoint
     var spineText: String?
+    var spineFontType: FontType = .plain
     var coverColor: ProductColor = .white
     var pageColor: ProductColor = .white
     var productLayouts = [ProductLayout]()
@@ -343,7 +345,7 @@ class ProductManager {
     }
     
     func spreadIndex(for productLayoutIndex: Int) -> Int? {
-        var spreadIndex = 0.5 // The first page is on the right because of the courtesy page
+        var spreadIndex = 0.0
         
         var i = 0
         while i < productLayouts.count {

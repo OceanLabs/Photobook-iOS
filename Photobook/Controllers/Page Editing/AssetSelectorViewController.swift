@@ -39,13 +39,18 @@ class AssetSelectorViewController: UIViewController {
     private var selectedAssetIndex = -1
     
     var selectedAssetsManager: SelectedAssetsManager!
+    var albumForPicker: Album?
     weak var delegate: AssetSelectorDelegate?
     
     var selectedAsset: Asset? {
         didSet {
             guard selectedAsset != nil else {
                 if let previousAsset = oldValue, timesUsed[previousAsset.identifier] != nil {
-                    timesUsed[previousAsset.identifier] = timesUsed[previousAsset.identifier]! - 1
+                    if selectedAssetsManager.selectedAssets.index(where: { $0.identifier == previousAsset.identifier }) == nil {
+                        timesUsed.removeValue(forKey: previousAsset.identifier)
+                    } else {
+                        timesUsed[previousAsset.identifier] = timesUsed[previousAsset.identifier]! - 1
+                    }
                 }
                 selectedAssetIndex = -1
                 collectionView.reloadData()
@@ -53,7 +58,6 @@ class AssetSelectorViewController: UIViewController {
                 return
             }
             selectedAssetIndex = assets.index { $0.identifier == selectedAsset!.identifier } ?? -1
-            if oldValue == nil { collectionView.reloadData() }
             if collectionView.numberOfItems(inSection: 0) > selectedAssetIndex && selectedAssetIndex >= 0 {
                 collectionView.scrollToItem(at: IndexPath(row: selectedAssetIndex, section: 0), at: .centeredHorizontally, animated: true)
             }
@@ -104,6 +108,7 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
         if indexPath.row == assets.count {
             let modalAlbumsCollectionViewController = storyboard?.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
             modalAlbumsCollectionViewController.albumManager = PhotosAlbumManager() // FIXME: Could be a different source
+            modalAlbumsCollectionViewController.albumForPicker = albumForPicker
             modalAlbumsCollectionViewController.addingDelegate = self
             
             present(modalAlbumsCollectionViewController, animated: false, completion: nil)
@@ -122,10 +127,11 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
         }
         
         selectedAsset = selectedAssetsManager.selectedAssets[indexPath.row]
-        let newSelectedCell = collectionView.cellForItem(at: indexPath) as! AssetSelectorAssetCollectionViewCell
         timesUsed[selectedAsset!.identifier] = (timesUsed[selectedAsset!.identifier] ?? 0) + 1
-        newSelectedCell.timesUsed = timesUsed[selectedAsset!.identifier]!
-        newSelectedCell.isBorderVisible = true
+        if let newSelectedCell = collectionView.cellForItem(at: indexPath) as? AssetSelectorAssetCollectionViewCell {
+            newSelectedCell.timesUsed = timesUsed[selectedAsset!.identifier]!
+            newSelectedCell.isBorderVisible = true
+        }
 
         delegate?.didSelect(asset: assets[indexPath.row])
     }
