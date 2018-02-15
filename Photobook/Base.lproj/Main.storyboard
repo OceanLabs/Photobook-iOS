@@ -28,7 +28,7 @@
         <!--View Controller-->
         <scene sceneID="eeW-YJ-knS">
             <objects>
-                <viewController id="CJe-ow-F6K" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="InstagramLandingViewController" id="CJe-ow-F6K" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="72Z-i4-Dnc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -103,7 +103,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="GJF-dH-hU4">
-                                <rect key="frame" x="189" y="357" width="37" height="37"/>
+                                <rect key="frame" x="189" y="381.66666666666669" width="37" height="37"/>
                                 <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </activityIndicatorView>
                         </subviews>
@@ -4705,7 +4705,6 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     <nil name="viewControllers"/>
                     <connections>
                         <outlet property="delegate" destination="95M-V6-bH2" id="bVg-fS-UdG"/>
-                        <segue destination="CJe-ow-F6K" kind="relationship" relationship="rootViewController" id="Wtu-V2-xif"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sGR-sj-BQW" userLabel="First Responder" sceneMemberID="firstResponder"/>
