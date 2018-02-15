@@ -81,7 +81,7 @@ class DeliveryDetailsTableViewController: UITableViewController {
     private func check(_ textField: UITextField, type: EntryType? = nil) -> Bool {
         textField.text = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        if textField.text?.isEmpty ?? true {
+        guard let text = textField.text, !text.isEmpty, text != FormConstants.requiredText else {
             textField.text = FormConstants.requiredText
             textField.textColor = FormConstants.errorColor
             return false
