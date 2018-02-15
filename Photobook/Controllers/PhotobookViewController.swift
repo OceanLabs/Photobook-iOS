@@ -140,15 +140,21 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func setupTitleView() {
-        titleButton = UIButton()
-        titleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        titleButton.setTitleColor(.black, for: .normal)
-        titleButton.setTitle(ProductManager.shared.product?.name, for: .normal)
-        titleButton.setImage(UIImage(named:"chevron-down"), for: .normal)
-        titleButton.semanticContentAttribute = .forceRightToLeft
-        titleButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -5)
-        titleButton.addTarget(self, action: #selector(didTapOnTitle), for: .touchUpInside)
-        navigationItem.titleView = titleButton
+        if !isRearranging {
+            titleButton = UIButton()
+            titleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+            titleButton.setTitleColor(.black, for: .normal)
+            titleButton.setTitle(ProductManager.shared.product?.name, for: .normal)
+            titleButton.setImage(UIImage(named:"chevron-down"), for: .normal)
+            titleButton.semanticContentAttribute = .forceRightToLeft
+            titleButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -5)
+            titleButton.addTarget(self, action: #selector(didTapOnTitle), for: .touchUpInside)
+            navigationItem.titleView = titleButton
+            return
+        }
+        
+        navigationItem.titleView = nil
+        navigationItem.title = NSLocalizedString("Photobook/RearrangeTitle", value: "Rearranging Pages", comment: "Title of the photobook preview screen in rearrange mode")
     }
     
     @objc private func didTapOnTitle() {
@@ -200,6 +206,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             photobookCell.isFaded = isRearranging && shouldFadeWhenRearranging(cell)
             photobookCell.isPageInteractionEnabled = !isRearranging
         }
+        
+        setupTitleView()
     }
     
     private func shouldFadeWhenRearranging(_ cell: UICollectionViewCell) -> Bool {
