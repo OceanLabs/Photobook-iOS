@@ -46,7 +46,11 @@ class AssetSelectorViewController: UIViewController {
         didSet {
             guard selectedAsset != nil else {
                 if let previousAsset = oldValue, timesUsed[previousAsset.identifier] != nil {
-                    timesUsed[previousAsset.identifier] = timesUsed[previousAsset.identifier]! - 1
+                    if selectedAssetsManager.selectedAssets.index(where: { $0.identifier == previousAsset.identifier }) == nil {
+                        timesUsed.removeValue(forKey: previousAsset.identifier)
+                    } else {
+                        timesUsed[previousAsset.identifier] = timesUsed[previousAsset.identifier]! - 1
+                    }
                 }
                 selectedAssetIndex = -1
                 collectionView.reloadData()
@@ -124,10 +128,11 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
         }
         
         selectedAsset = selectedAssetsManager.selectedAssets[indexPath.row]
-        let newSelectedCell = collectionView.cellForItem(at: indexPath) as! AssetSelectorAssetCollectionViewCell
         timesUsed[selectedAsset!.identifier] = (timesUsed[selectedAsset!.identifier] ?? 0) + 1
-        newSelectedCell.timesUsed = timesUsed[selectedAsset!.identifier]!
-        newSelectedCell.isBorderVisible = true
+        if let newSelectedCell = collectionView.cellForItem(at: indexPath) as? AssetSelectorAssetCollectionViewCell {
+            newSelectedCell.timesUsed = timesUsed[selectedAsset!.identifier]!
+            newSelectedCell.isBorderVisible = true
+        }
 
         delegate?.didSelect(asset: assets[indexPath.row])
     }
