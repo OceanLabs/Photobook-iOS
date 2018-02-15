@@ -97,7 +97,7 @@ class PhotobookAPIManager {
                 }
             }
             
-            if tempLayouts.count == 0 {
+            if tempLayouts.isEmpty {
                 print("PBAPIManager: parsing layouts failed")
                 completionHandler(nil, nil, nil, APIClientError.parsing)
                 return
@@ -112,7 +112,7 @@ class PhotobookAPIManager {
                 }
             }
             
-            if tempPhotobooks.count == 0 {
+            if tempPhotobooks.isEmpty {
                 print("PBAPIManager: parsing photobook products failed")
                 completionHandler(nil, nil, nil, APIClientError.parsing)
                 return
@@ -159,8 +159,7 @@ class PhotobookAPIManager {
                 continue
             }
 
-            // TEMP: Size doesn't seem necessary. Apply edits server side. Progress not needed either.
-            asset.image(size: CGSize(width: Int.max, height: Int.max), applyEdits: false, progressHandler: nil, completionHandler: { [weak welf = self] (image, error) in
+            asset.image(size: assetMaximumSize, completionHandler: { [weak welf = self] (image, error) in
                 if error != nil || image == nil {
                     welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImage)
                     return

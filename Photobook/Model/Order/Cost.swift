@@ -84,7 +84,7 @@ class Cost: NSObject, NSSecureCoding {
     }
     
     func shippingMethod(id method: Int?) -> ShippingMethod? {
-        guard method != nil, method! > 0, let methods = shippingMethods, methods.count > 0 else { return nil }
+        guard method != nil, method! > 0, let methods = shippingMethods, !methods.isEmpty else { return nil }
         
         for aMethod in methods {
             if aMethod.id == method { return aMethod }

@@ -24,7 +24,7 @@ protocol Asset: Codable {
     
     var albumIdentifier: String { get }
     
-    /// Request the original, unedited image that this asset represents. Avoid using this method directly, instead use image(size:applyEdits:contentMode:cacheResult:progressHandler:completionHandler:)
+    /// Request the original, unedited image that this asset represents. Avoid using this method directly, instead use image(size:contentMode:cacheResult:progressHandler:completionHandler:)
     ///
     /// - Parameters:
     ///   - size: The requested image size in points. Depending on the asset type and source this size may just a guideline
@@ -40,7 +40,6 @@ extension Asset {
     ///
     /// - Parameters:
     ///   - size: The requested image size in points. Depending on the asset type and source this size may just a guideline
-    ///   - applyEdits: Option to apply the edits that the user has made
     ///   - loadThumbnail: Whether thumbnails get loaded first before the actual image. Setting this to true will result in the completion handler being executed multiple times
     ///   - progressHandler: Handler that returns the progress, for a example of a download
     ///   - completionHandler: The completion handler that returns the image
@@ -55,8 +54,6 @@ extension Asset {
                 completionHandler(nil, NSError()) //TODO: better error reporting
                 return
             }
-            
-            //TODO: apply edits here if needed
             
             DispatchQueue.main.async {
                 completionHandler(image, nil)

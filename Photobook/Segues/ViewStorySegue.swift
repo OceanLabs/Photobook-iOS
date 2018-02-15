@@ -36,6 +36,7 @@ class ViewStorySegue: UIStoryboardSegue {
         shadeView.frame = imageView.bounds
         imageView.addSubview(shadeView)
         
+        destination.shouldFadeInImages = false
         
         let size = CGSize(width: source.view.frame.size.width, height: source.view.frame.size.width / AssetPickerCollectionViewController.coverAspectRatio)
         asset.image(size: size, completionHandler: {(image, _) in
@@ -67,6 +68,7 @@ class ViewStorySegue: UIStoryboardSegue {
                 if destSnapShot != nil{
                     navigationController.view.insertSubview(destSnapShot!, belowSubview: navigationController.navigationBar)
                 }
+                destination.shouldFadeInImages = true
                 
                 UIView.animate(withDuration: 0.45, animations: {
                     

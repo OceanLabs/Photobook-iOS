@@ -22,6 +22,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     private let selectedAssetsManager = SelectedAssetsManager()
     var collectorMode: AssetCollectorMode = .selecting
     weak var addingDelegate: AssetCollectorAddingDelegate?
+    weak var assetPickerDelegate: AssetPickerCollectionViewControllerDelegate?
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
     }()
@@ -110,6 +111,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
         assetPickerController.selectedAssetsManager = selectedAssetsManager
         assetPickerController.collectorMode = collectorMode
         assetPickerController.addingDelegate = addingDelegate
+        assetPickerController.delegate = assetPickerDelegate ?? self
         
         self.navigationController?.pushViewController(assetPickerController, animated: true)
     }
@@ -183,9 +185,10 @@ extension AlbumsCollectionViewController{
         cell.albumId = album.identifier
         
         let cellWidth = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize.width ?? 0
-        album.coverImage(size: CGSize(width: cellWidth, height: cellWidth), completionHandler: {(image, error) in
-            guard cell.albumId == album.identifier else { return }
-            cell.albumCoverImageView.image = image
+        album.coverAsset(completionHandler: {(asset, error) in
+            cell.albumCoverImageView.setImage(from: asset, size: CGSize(width: cellWidth, height: cellWidth), completionHandler: {
+                return cell.albumId == album.identifier
+            })
         })
         
         cell.albumNameLabel.text = album.localizedName
@@ -243,5 +246,11 @@ extension AlbumsCollectionViewController: AlbumSearchResultsTableViewControllerD
         showAlbum(album: album)
     }
     
+}
+
+extension AlbumsCollectionViewController: AssetPickerCollectionViewControllerDelegate {
+    func viewControllerForPresentingOn() -> UIViewController? {
+        return tabBarController
+    }
     
 }
