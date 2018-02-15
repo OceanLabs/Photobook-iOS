@@ -8,8 +8,11 @@
 
 import UIKit
 import OAuthSwift
+import WebKit
 
 class InstagramLoginViewController: UIViewController {
+    
+    var webView: WKWebView = WKWebView()
     
     private struct Constants {
         static let clientId = "1af4c208cbdc4d09bbe251704990638f"
@@ -19,7 +22,6 @@ class InstagramLoginViewController: UIViewController {
         static let scope = "basic"
     }
 
-    @IBOutlet weak var webView: UIWebView!
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     
     lazy var oauthswift: OAuth2Swift = {
@@ -31,6 +33,10 @@ class InstagramLoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        webView.navigationDelegate = self
+        webView.frame = view.bounds
+        view.insertSubview(webView, at: 0)
         
         startAuthenticatingUser()
     }
@@ -48,22 +54,23 @@ class InstagramLoginViewController: UIViewController {
     }
 }
 
-extension InstagramLoginViewController: UIWebViewDelegate {
+extension InstagramLoginViewController: WKNavigationDelegate {
     
-    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
-        guard let url = request.url else { return true }
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        guard let url = navigationAction.request.url else { decisionHandler(.allow); return }
         
         if url.absoluteString.hasPrefix(Constants.redirectUri) {
             webView.stopLoading()
             
             OAuthSwift.handle(url: url)
+            decisionHandler(.cancel)
         }
         
         activityIndicatorView.stopAnimating()
-        return true
+        decisionHandler(.allow)
     }
     
-    func webViewDidFinishLoad(_ webView: UIWebView) {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         activityIndicatorView.stopAnimating()
     }
     
@@ -71,7 +78,7 @@ extension InstagramLoginViewController: UIWebViewDelegate {
 
 extension InstagramLoginViewController: OAuthSwiftURLHandlerType {
     func handle(_ url: URL) {
-        webView.loadRequest(URLRequest(url: url))
+        webView.load(URLRequest(url: url))
     }
     
     
