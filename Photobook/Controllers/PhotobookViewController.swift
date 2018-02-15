@@ -40,6 +40,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
     
     var selectedAssetsManager: SelectedAssetsManager?
+    var albumForEditingPicker: Album?
     private var titleButton = UIButton()
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
@@ -504,6 +505,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         pageSetupViewController.selectedAssetsManager = selectedAssetsManager
         pageSetupViewController.pageIndex = index
         pageSetupViewController.delegate = self
+        pageSetupViewController.albumForPicker = albumForEditingPicker
         navigationController?.pushViewController(pageSetupViewController, animated: true)
     }
 }

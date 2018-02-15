@@ -39,6 +39,7 @@ class AssetSelectorViewController: UIViewController {
     private var selectedAssetIndex = -1
     
     var selectedAssetsManager: SelectedAssetsManager!
+    var albumForPicker: Album?
     weak var delegate: AssetSelectorDelegate?
     
     var selectedAsset: Asset? {
@@ -104,6 +105,7 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
         if indexPath.row == assets.count {
             let modalAlbumsCollectionViewController = storyboard?.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
             modalAlbumsCollectionViewController.albumManager = PhotosAlbumManager() // FIXME: Could be a different source
+            modalAlbumsCollectionViewController.albumForPicker = albumForPicker
             modalAlbumsCollectionViewController.addingDelegate = self
             
             present(modalAlbumsCollectionViewController, animated: false, completion: nil)

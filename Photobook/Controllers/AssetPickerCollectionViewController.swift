@@ -230,7 +230,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     }
     
     @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
-        guard let assets = notification.userInfo?[SelectedAssetsManager.notificationUserObjectKeyAssets] as? [Asset], let collectionView = collectionView else {
+        guard let assets = notification.userInfo?[SelectedAssetsManager.notificationUserObjectKeyAssets] as? [Asset] else {
             return
         }
         for asset in assets {
@@ -260,6 +260,7 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
         default:
             let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
             photobookViewController.selectedAssetsManager = selectedAssetsManager
+            photobookViewController.albumForEditingPicker = album.requiresExclusivePicking ? album : nil
             navigationController?.pushViewController(photobookViewController, animated: true)
         }
         selectedAssetsManager?.orderAssetsByDate()

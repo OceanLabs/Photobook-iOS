@@ -43,6 +43,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet weak var toolbar: UIToolbar!
     
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
+    var albumForPicker: Album?
     
     private var assetSelectorViewController: AssetSelectorViewController!
     private var layoutSelectionViewController: LayoutSelectionViewController!
@@ -210,6 +211,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     private func setupAssetSelection() {
         assetSelectorViewController.selectedAssetsManager = selectedAssetsManager
+        assetSelectorViewController.albumForPicker = albumForPicker
         assetSelectorViewController.selectedAsset = productLayout.asset
     }
     
