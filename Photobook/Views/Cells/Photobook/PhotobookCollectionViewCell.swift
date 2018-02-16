@@ -16,7 +16,7 @@ protocol InteractivePagesCell {
 }
 
 extension InteractivePagesCell {
-    var interactivePageFadedAlpha: CGFloat { return 0.3 }
+    var interactivePageFadedAlpha: CGFloat { return 0.5 }
 }
 
 @objc protocol PhotobookCollectionViewCellDelegate: class, UIGestureRecognizerDelegate {

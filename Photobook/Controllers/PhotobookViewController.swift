@@ -180,8 +180,19 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBAction private func didTapRearrange(_ sender: UIBarButtonItem) {
         isRearranging = !isRearranging
         
+        // Update drag interaction enabled status
+        let interactiveCellClosure: ((Bool) -> Void) = { [weak welf = self] (isRearranging) in
+            guard let stelf = welf else { return }
+            for cell in stelf.collectionView.visibleCells {
+                guard var photobookCell = cell as? InteractivePagesCell else { continue }
+                photobookCell.isFaded = isRearranging && stelf.shouldFadeWhenRearranging(cell)
+                photobookCell.isPageInteractionEnabled = !isRearranging
+            }
+        }
+        
         if isRearranging {
             UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
+                interactiveCellClosure(true)
                 self.collectionView.transform = CGAffineTransform(translationX: 0, y: -self.collectionView.frame.size.height * (1.0-Constants.rearrageScale)/2.0).scaledBy(x: Constants.rearrageScale, y: Constants.rearrageScale)
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
@@ -191,6 +202,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             sender.tintColor = Constants.doneBlueColor
         } else{
             UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
+                interactiveCellClosure(false)
                 self.collectionView.transform = .identity
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
@@ -200,12 +212,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             sender.tintColor = Constants.rearrangeGreyColor
         }
         
-        // Update drag interaction enabled status
-        for cell in collectionView.visibleCells {
-            guard var photobookCell = cell as? InteractivePagesCell else { continue }
-            photobookCell.isFaded = isRearranging && shouldFadeWhenRearranging(cell)
-            photobookCell.isPageInteractionEnabled = !isRearranging
-        }
         
         setupTitleView()
     }

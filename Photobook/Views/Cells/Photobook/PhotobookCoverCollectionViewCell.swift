@@ -39,7 +39,10 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
     }
     
     var isFaded: Bool = false {
-        didSet { coverFrameView.alpha = isFaded ? interactivePageFadedAlpha : 1.0 }
+        didSet {
+            coverFrameView.alpha = isFaded ? interactivePageFadedAlpha : 1.0
+            spineFrameView.alpha = coverFrameView.alpha
+        }
     }
 
     override func layoutSubviews() {
