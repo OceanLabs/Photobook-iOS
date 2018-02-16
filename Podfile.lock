@@ -5,6 +5,9 @@ PODS:
   - KeychainSwift (10.0.0)
   - OAuthSwift (1.2.0)
   - PayPal-iOS-SDK/Core (2.18.1)
+  - SDWebImage (4.3.0):
+    - SDWebImage/Core (= 4.3.0)
+  - SDWebImage/Core (4.3.0)
   - Stripe (12.1.0)
 
 DEPENDENCIES:
@@ -13,6 +16,7 @@ DEPENDENCIES:
   - KeychainSwift
   - OAuthSwift (~> 1.2.0)
   - PayPal-iOS-SDK/Core (~> 2.18.0)
+  - SDWebImage (~> 4.3)
   - Stripe
 
 SPEC CHECKSUMS:
@@ -21,8 +25,9 @@ SPEC CHECKSUMS:
   KeychainSwift: f9f7910449a0c0fd2cabc889121530dd2c477c33
   OAuthSwift: 7fd6855b8e4d58eb5a30d156ea9bed7a8aecd1ca
   PayPal-iOS-SDK: 10654cd111e911a9807bddb96fae81aacb8e9915
+  SDWebImage: 6da6c8bca115addc4de8613362e1b15f66333825
   Stripe: de8bffa8e6813f678d526c52f416fe224141fa09
 
-PODFILE CHECKSUM: c3ac7f363b719e79944076e666b977a895ef5156
+PODFILE CHECKSUM: bf5d8e1e04b339689dcf0b37934c526fc6d474e9
 
 COCOAPODS: 1.4.0

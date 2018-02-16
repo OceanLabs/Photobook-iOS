@@ -64,11 +64,10 @@
                                     <segue destination="mCf-Vp-0wQ" kind="show" id="xQl-VW-9vr"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Jdf-5N-Pfk">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" image="Instagram-big" translatesAutoresizingMaskIntoConstraints="NO" id="Jdf-5N-Pfk">
                                 <rect key="frame" x="90" y="264" width="234" height="234"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="234" id="740-kX-MpM"/>
-                                    <constraint firstAttribute="width" constant="234" id="kY9-4d-XNG"/>
+                                    <constraint firstAttribute="width" secondItem="Jdf-5N-Pfk" secondAttribute="height" id="iAJ-74-C2M"/>
                                 </constraints>
                             </imageView>
                         </subviews>
@@ -4716,7 +4715,8 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <image name="Albums" width="22" height="22"/>
         <image name="Canon" width="177" height="37"/>
         <image name="Drag-down-arrow" width="36" height="12"/>
-        <image name="Instagram" width="16" height="16"/>
+        <image name="Instagram" width="25" height="24"/>
+        <image name="Instagram-big" width="234" height="234"/>
         <image name="IntroTitle" width="285" height="100"/>
         <image name="LaunchImage" width="414" height="812"/>
         <image name="Minus" width="23" height="23"/>

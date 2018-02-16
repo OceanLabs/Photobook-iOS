@@ -17,21 +17,17 @@ class InstagramLoginViewController: UIViewController {
     
     private var webView: WKWebView = WKWebView()
     private struct Constants {
-        static let clientId = "1af4c208cbdc4d09bbe251704990638f"
-        static let secret = "c8a5b1b1806f4586afad2f277cee1d5c"
         static let redirectUri = "https://kite.ly/instagram-callback"
-        static let instagramAuthUrlString = "https://api.instagram.com/oauth/authorize"
         static let scope = "basic"
     }
+    
+    private lazy var instagramClient: OAuth2Swift = {
+        let client = OAuth2Swift.instagramClient()
+        client.authorizeURLHandler = self
+        return client
+    }()
 
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
-    
-    lazy var oauthswift: OAuth2Swift = {
-        let oauthswift = OAuth2Swift(consumerKey: Constants.clientId, consumerSecret: Constants.secret, authorizeUrl: Constants.instagramAuthUrlString, responseType: "token")
-        oauthswift.authorizeURLHandler = self
-        
-        return oauthswift
-    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,11 +42,12 @@ class InstagramLoginViewController: UIViewController {
     private func startAuthenticatingUser() {
         activityIndicatorView.startAnimating()
         
-        oauthswift.authorize(withCallbackURL: URL(string: Constants.redirectUri)!, scope: Constants.scope, state:"INSTAGRAM",
+        instagramClient.authorize(withCallbackURL: URL(string: Constants.redirectUri)!, scope: Constants.scope, state:"INSTAGRAM",
             success: { [weak welf = self] credential, response, parameters in
                 KeychainSwift().set(credential.oauthToken, forKey: keychainInstagramTokenKey)
                 let assetPicker = welf?.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
-                assetPicker.album = InstagramAlbum()
+                assetPicker.album = InstagramAlbum(authenticationHandler: assetPicker)
+                assetPicker.selectedAssetsManager = SelectedAssetsManager()
                 
                 welf?.navigationController?.setViewControllers([assetPicker, welf!], animated: false)
                 welf?.navigationController?.popViewController(animated: true)
