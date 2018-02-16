@@ -10,7 +10,13 @@ import UIKit
 
 // Protocol cells conform to enable / disaple page interaction
 protocol InteractivePagesCell {
+    var interactivePageFadedAlpha: CGFloat { get }
     var isPageInteractionEnabled: Bool { get set }
+    var isFaded: Bool { get set }
+}
+
+extension InteractivePagesCell {
+    var interactivePageFadedAlpha: CGFloat { return 0.5 }
 }
 
 @objc protocol PhotobookCollectionViewCellDelegate: class, UIGestureRecognizerDelegate {
@@ -67,6 +73,10 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
             photobookFrameView.leftPageView.isUserInteractionEnabled = isPageInteractionEnabled
             photobookFrameView.rightPageView.isUserInteractionEnabled = isPageInteractionEnabled
         }
+    }
+    
+    var isFaded: Bool = false {
+        didSet { photobookFrameView.alpha = isFaded ? interactivePageFadedAlpha : 1.0 }
     }
 
     func loadPages(leftIndex: Int?, rightIndex: Int?, leftLayout: ProductLayout? = nil, rightLayout: ProductLayout? = nil) {
