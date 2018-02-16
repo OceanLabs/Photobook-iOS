@@ -24,10 +24,10 @@ class PaymentMethodsViewController: UIViewController {
 
     fileprivate var selectedPaymentMethod: PaymentMethod? {
         get {
-            return ProductManager.shared.paymentMethod
+            return OrderManager.shared.paymentMethod
         }
         set {
-            ProductManager.shared.paymentMethod = newValue
+            OrderManager.shared.paymentMethod = newValue
         }
     }
 
@@ -125,7 +125,7 @@ extension PaymentMethodsViewController: UITableViewDelegate {
         }
         
         tableView.reloadData()
-        ProductManager.shared.paymentMethod = selectedPaymentMethod
+        OrderManager.shared.paymentMethod = selectedPaymentMethod
     }
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
