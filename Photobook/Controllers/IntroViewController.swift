@@ -9,6 +9,7 @@
 import UIKit
 import Photos
 import OAuthSwift
+import KeychainSwift
 
 class IntroViewController: UIViewController {
     
@@ -116,7 +117,7 @@ class IntroViewController: UIViewController {
         
         // Instagram
         // Depending on whether we are logged in or not show the Instagram login screen or the asset picker
-        if false { // FIXME check if we have a token
+        if KeychainSwift().getData(keychainInstagramTokenKey) != nil { // FIXME check if we have a token
             let assetPicker = storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
             assetPicker.album = InstagramAlbum()
             (tabBarController.viewControllers?[Tab.instagram.rawValue] as? UINavigationController)?.setViewControllers([assetPicker], animated: false)

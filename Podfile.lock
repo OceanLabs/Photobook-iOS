@@ -2,6 +2,7 @@ PODS:
   - Crashlytics (3.10.0):
     - Fabric (~> 1.7.3)
   - Fabric (1.7.3)
+  - KeychainSwift (10.0.0)
   - OAuthSwift (1.2.0)
   - PayPal-iOS-SDK/Core (2.18.1)
   - Stripe (12.1.0)
@@ -9,6 +10,7 @@ PODS:
 DEPENDENCIES:
   - Crashlytics
   - Fabric
+  - KeychainSwift
   - OAuthSwift (~> 1.2.0)
   - PayPal-iOS-SDK/Core (~> 2.18.0)
   - Stripe
@@ -16,10 +18,11 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   Crashlytics: a989ef242b66605577a425733797f810bd2725eb
   Fabric: bb495bb9a7a7677c6d03a1f8b83d95bc49b47e41
+  KeychainSwift: f9f7910449a0c0fd2cabc889121530dd2c477c33
   OAuthSwift: 7fd6855b8e4d58eb5a30d156ea9bed7a8aecd1ca
   PayPal-iOS-SDK: 10654cd111e911a9807bddb96fae81aacb8e9915
   Stripe: de8bffa8e6813f678d526c52f416fe224141fa09
 
-PODFILE CHECKSUM: a9cac8239755d7e3d661b4c3cfabefa9e00eb4da
+PODFILE CHECKSUM: c3ac7f363b719e79944076e666b977a895ef5156
 
 COCOAPODS: 1.4.0

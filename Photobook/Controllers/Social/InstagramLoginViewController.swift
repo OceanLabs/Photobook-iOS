@@ -9,11 +9,13 @@
 import UIKit
 import OAuthSwift
 import WebKit
+import KeychainSwift
+
+let keychainInstagramTokenKey = "InstagramTokenKey"
 
 class InstagramLoginViewController: UIViewController {
     
-    var webView: WKWebView = WKWebView()
-    
+    private var webView: WKWebView = WKWebView()
     private struct Constants {
         static let clientId = "1af4c208cbdc4d09bbe251704990638f"
         static let secret = "c8a5b1b1806f4586afad2f277cee1d5c"
@@ -45,9 +47,14 @@ class InstagramLoginViewController: UIViewController {
         activityIndicatorView.startAnimating()
         
         oauthswift.authorize(withCallbackURL: URL(string: Constants.redirectUri)!, scope: Constants.scope, state:"INSTAGRAM",
-            success: { credential, response, parameters in
-                print(credential.oauthToken)
-                // Do your request
+            success: { [weak welf = self] credential, response, parameters in
+                KeychainSwift().set(credential.oauthToken, forKey: keychainInstagramTokenKey)
+                let assetPicker = welf?.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
+                assetPicker.album = InstagramAlbum()
+                
+                welf?.navigationController?.setViewControllers([assetPicker, welf!], animated: false)
+                welf?.navigationController?.popViewController(animated: true)
+                
         }, failure: { error in
                 print(error.localizedDescription)
         })
@@ -64,6 +71,7 @@ extension InstagramLoginViewController: WKNavigationDelegate {
             
             OAuthSwift.handle(url: url)
             decisionHandler(.cancel)
+            return
         }
         
         activityIndicatorView.stopAnimating()

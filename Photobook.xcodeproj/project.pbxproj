@@ -881,11 +881,13 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/KeychainSwift/KeychainSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/OAuthSwift/OAuthSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Stripe/Stripe.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OAuthSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework",
 			);
@@ -916,11 +918,13 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Photobook/Pods-Photobook-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/KeychainSwift/KeychainSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/OAuthSwift/OAuthSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Stripe/Stripe.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OAuthSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework",
 			);
