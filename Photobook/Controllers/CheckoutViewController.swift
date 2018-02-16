@@ -31,6 +31,7 @@ class CheckoutViewController: UIViewController {
     @IBOutlet weak var payButtonContainerView: UIView!
     @IBOutlet weak var payButton: UIButton!
     private var applePayButton: PKPaymentButton?
+    private var payButtonOriginalColor:UIColor!
     
     
     @IBOutlet weak var optionsViewBottomContraint: NSLayoutConstraint!
@@ -49,6 +50,8 @@ class CheckoutViewController: UIViewController {
         registerForKeyboardNotifications()
         
         paymentViewController = PaymentViewController()
+        
+        payButtonOriginalColor = payButton.backgroundColor
         
         //APPLE PAY
         let applePayButton = PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .black)
@@ -133,12 +136,20 @@ class CheckoutViewController: UIViewController {
         payButton.isHidden = true
         payButton.isEnabled = false
         
-        if let paymentMethod = OrderManager.shared.paymentMethod, paymentMethod == .applePay && PKPaymentAuthorizationViewController.canMakePayments() {
+        let paymentMethod = OrderManager.shared.paymentMethod
+        
+        if paymentMethod == .applePay && PKPaymentAuthorizationViewController.canMakePayments() {
             applePayButton?.isHidden = false
             applePayButton?.isEnabled = true
         } else {
             payButton.isHidden = false
             payButton.isEnabled = true
+            payButton.alpha = 1.0
+            payButton.backgroundColor = payButtonOriginalColor
+            if paymentMethod == nil {
+                payButton.alpha = 0.5
+                payButton.backgroundColor = UIColor.lightGray
+            }
         }
     }
     
@@ -161,6 +172,9 @@ class CheckoutViewController: UIViewController {
     }
     
     @IBAction private func applePayButtonTapped(_ sender: PKPaymentButton) {
+        
+        
+        
         paymentViewController.payTapped(sender)
     }
     
