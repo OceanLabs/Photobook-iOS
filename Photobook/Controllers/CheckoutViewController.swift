@@ -112,7 +112,6 @@ class CheckoutViewController: UIViewController {
             shippingMethodLabel.text = selectedShippingMethod.totalCostFormatted
         }
         
-        
         //address
         var addressString = ""
         if let address = OrderManager.shared.deliveryDetails?.address, let line1 = address.line1 {
@@ -134,11 +133,7 @@ class CheckoutViewController: UIViewController {
         payButton.isHidden = true
         payButton.isEnabled = false
         
-        guard let paymentMethod = OrderManager.shared.paymentMethod else {
-            return
-        }
-        
-        if paymentMethod == .applePay && PKPaymentAuthorizationViewController.canMakePayments() {
+        if let paymentMethod = OrderManager.shared.paymentMethod, paymentMethod == .applePay && PKPaymentAuthorizationViewController.canMakePayments() {
             applePayButton?.isHidden = false
             applePayButton?.isEnabled = true
         } else {
@@ -199,8 +194,6 @@ class CheckoutViewController: UIViewController {
 
 extension CheckoutViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
-        
         
         textField.resignFirstResponder()
         return false
