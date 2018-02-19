@@ -12,7 +12,7 @@ struct ErrorMessage {
     var title: String
     var message: String
     var buttonTitle: String
-    var buttonAction: ()->()
+    var buttonAction: () -> ()
 }
 
 /// Controller to add as a child to present the empty state.

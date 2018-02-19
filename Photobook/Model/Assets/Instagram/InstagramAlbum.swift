@@ -14,6 +14,8 @@ class InstagramAlbum {
     
     private struct Constants {
         static let instagramMediaBaseUrl = "https://api.instagram.com/v1/users/self/media/recent"
+        static let serviceName = "Instagram"
+        static let genericErrorMessage = NSLocalizedString("Social/AccessError", value: "There was an error when trying to access \(serviceName)", comment: "Generic error when trying to access a social service eg Instagram/Facebook")
     }
     
     var assets: [Asset] = []
@@ -28,7 +30,7 @@ class InstagramAlbum {
         instagramClient.authorizeURLHandler = authenticationHandler
     }
     
-    func fetchAssets(url: String? = nil, completionHandler:((_ assets: [Asset], _ next: Any?, _ error: Error?)->())?) {
+    func fetchAssets(url: String? = nil, completionHandler:((_ error: ErrorMessage?)->())?) {
         guard let tokenData = KeychainSwift().getData(keychainInstagramTokenKey),
             let token = String(data: tokenData, encoding: .utf8)
             else { return }
@@ -47,7 +49,13 @@ class InstagramAlbum {
             let pagination = json["pagination"] as? [String : Any],
             let data = json["data"] as? [[String : Any]]
             else {
-                // TODO: show error
+                // Not worth showing an error if one of the later pagination requests fail
+                guard self.assets.isEmpty else { return }
+                
+                completionHandler?(ErrorMessage(message: Constants.genericErrorMessage, retryButtonAction: { [weak welf = self] in
+                    welf?.fetchAssets(url: url, completionHandler: completionHandler)
+                }))
+                
                 return
             }
             
@@ -78,7 +86,7 @@ class InstagramAlbum {
             DispatchQueue.main.async {
                 // Call the completion handler only on the first request, subsequent requests will update the album
                 if completionHandler != nil {
-                    completionHandler?(newAssets, nil, nil)
+                    completionHandler?(nil)
                 } else {
                     NotificationCenter.default.post(name: AssetsNotificationName.albumsWereReloaded, object: [AlbumChange(album: self, assetsRemoved: [], indexesRemoved: [], assetsAdded: newAssets)])
                 }
@@ -89,8 +97,13 @@ class InstagramAlbum {
             }
             
         }, failure: { failure in
-            print(failure)
-            // TODO: show error
+            // Not worth showing an error if one of the later pagination requests fail
+            guard self.assets.isEmpty else { return }
+            
+            let message = failure.underlyingError?.localizedDescription ?? Constants.genericErrorMessage
+            completionHandler?(ErrorMessage(message: message, retryButtonAction: { [weak welf = self] in
+                welf?.fetchAssets(url: url, completionHandler: completionHandler)
+            }))
         })
         
     }
@@ -110,13 +123,13 @@ extension InstagramAlbum: Album {
         return "Instagram"
     }
     
-    func loadAssets(completionHandler: ((Error?) -> Void)?) {
-        fetchAssets(completionHandler: { _,_, error in
+    func loadAssets(completionHandler: ((ErrorMessage?) -> Void)?) {
+        fetchAssets(completionHandler: {error in
             completionHandler?(error)
         })
     }
     
     func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
-        
+        return completionHandler(assets.first, nil)
     }
 }

@@ -35,7 +35,7 @@ class PhotosAlbum: Album {
         return false
     }
     
-    func loadAssets(completionHandler: ((Error?) -> Void)?) {
+    func loadAssets(completionHandler: ((ErrorMessage?) -> Void)?) {
         DispatchQueue.global(qos: .background).async { [weak welf = self] in
             welf?.loadAssetsFromPhotoLibrary()
             DispatchQueue.main.async {

@@ -8,7 +8,6 @@
 
 import OAuthSwift
 import KeychainSwift
-import WebKit
 
 extension AssetPickerCollectionViewController {
     
@@ -26,12 +25,6 @@ extension AssetPickerCollectionViewController {
         let alertController = UIAlertController(title: NSLocalizedString("Social/LogoutConfirmationAlertTitle", value: "Log Out", comment: "Alert title asking the user to log out of social service eg Instagram/Facebook"), message: NSLocalizedString("Social/LogoutConfirmationAlertMessage", value: "Are you sure you want to log out of \(serviceName)?", comment: "Alert message asking the user to log out of social service eg Instagram/Facebook"), preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Yes", value: "Yes", comment: "Affrimative button title for alert asking the user confirmation for an action"), style: .default, handler: { _ in
             KeychainSwift().delete(keychainInstagramTokenKey)
-            
-            WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(), completionHandler: { records in
-                for record in records {
-                    WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
-                }
-            })
             
             guard let viewController = self.storyboard?.instantiateViewController(withIdentifier: "InstagramLandingViewController") else { return }
             self.navigationController?.setViewControllers([viewController, self], animated: false)

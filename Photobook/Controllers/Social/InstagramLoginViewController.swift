@@ -26,6 +26,9 @@ class InstagramLoginViewController: UIViewController {
         client.authorizeURLHandler = self
         return client
     }()
+    private lazy var emptyScreenViewController: EmptyScreenViewController = {
+        return EmptyScreenViewController.emptyScreen(parent: self)
+    }()
 
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     
@@ -42,13 +45,22 @@ class InstagramLoginViewController: UIViewController {
     private func startAuthenticatingUser() {
         activityIndicatorView.startAnimating()
         
+        // Before doing anything, clear any web data left over from a previous session
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(), completionHandler: { records in
+            for record in records {
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+            }
+        })
+        
         instagramClient.authorize(withCallbackURL: URL(string: Constants.redirectUri)!, scope: Constants.scope, state:"INSTAGRAM",
             success: { [weak welf = self] credential, response, parameters in
                 KeychainSwift().set(credential.oauthToken, forKey: keychainInstagramTokenKey)
-                
                 welf?.navigationController?.setViewControllers([AssetPickerCollectionViewController.instagramAssetPicker()], animated: false)                
-        }, failure: { error in
-                print(error.localizedDescription)
+        }, failure: { [weak welf = self] error in
+            welf?.emptyScreenViewController.show(ErrorMessage(message: error.localizedDescription, retryButtonAction: { [weak welf = self] in
+                welf?.emptyScreenViewController.hide()
+                welf?.startAuthenticatingUser()
+            }))
         })
     }
 }
@@ -72,6 +84,20 @@ extension InstagramLoginViewController: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         activityIndicatorView.stopAnimating()
+    }
+    
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        emptyScreenViewController.show(ErrorMessage(message: error.localizedDescription, retryButtonAction: { [weak welf = self] in
+            welf?.emptyScreenViewController.hide()
+            welf?.startAuthenticatingUser()
+        }))
+    }
+    
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        emptyScreenViewController.show(ErrorMessage(message: error.localizedDescription, retryButtonAction: { [weak welf = self] in
+            welf?.emptyScreenViewController.hide()
+            welf?.startAuthenticatingUser()
+        }))
     }
     
 }

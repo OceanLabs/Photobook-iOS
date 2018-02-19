@@ -24,6 +24,9 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     var assetCollectorController: AssetCollectorViewController!
     static let coverAspectRatio: CGFloat = 2.723684211
     var reloadDispatchGroup = DispatchGroup()
+    private lazy var emptyScreenViewController: EmptyScreenViewController = {
+        return EmptyScreenViewController.emptyScreen(parent: self)
+    }()
     
     var shouldFadeInImages = true
     
@@ -49,9 +52,17 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         }
         
         if album.assets.isEmpty {
-            self.album.loadAssets(completionHandler: { (_) in
-                self.collectionView?.reloadData()
-                self.postAlbumLoadSetup()
+            self.album.loadAssets(completionHandler: { [weak welf = self] errorMessage in
+                if let errorMessage = errorMessage {
+                    welf?.emptyScreenViewController.show(ErrorMessage(message: errorMessage.message, retryButtonAction: {
+                        welf?.emptyScreenViewController.hide()
+                        errorMessage.buttonAction()
+                    }))
+                    return
+                }
+                
+                welf?.collectionView?.reloadData()
+                welf?.postAlbumLoadSetup()
             })
         }
         else{
