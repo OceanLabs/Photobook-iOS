@@ -45,13 +45,8 @@ class InstagramLoginViewController: UIViewController {
         instagramClient.authorize(withCallbackURL: URL(string: Constants.redirectUri)!, scope: Constants.scope, state:"INSTAGRAM",
             success: { [weak welf = self] credential, response, parameters in
                 KeychainSwift().set(credential.oauthToken, forKey: keychainInstagramTokenKey)
-                let assetPicker = welf?.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
-                assetPicker.album = InstagramAlbum(authenticationHandler: assetPicker)
-                assetPicker.selectedAssetsManager = SelectedAssetsManager()
                 
-                welf?.navigationController?.setViewControllers([assetPicker, welf!], animated: false)
-                welf?.navigationController?.popViewController(animated: true)
-                
+                welf?.navigationController?.setViewControllers([AssetPickerCollectionViewController.instagramAssetPicker()], animated: false)                
         }, failure: { error in
                 print(error.localizedDescription)
         })

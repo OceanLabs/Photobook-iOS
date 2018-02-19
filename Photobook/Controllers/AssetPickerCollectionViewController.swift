@@ -14,7 +14,7 @@ protocol AssetPickerCollectionViewControllerDelegate: class {
 
 class AssetPickerCollectionViewController: UICollectionViewController {
 
-    @IBOutlet private weak var selectAllButton: UIBarButtonItem!
+    @IBOutlet private weak var selectAllButton: UIBarButtonItem?
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     weak var delegate: AssetPickerCollectionViewControllerDelegate?
     private let marginBetweenImages: CGFloat = 1
@@ -151,7 +151,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     func updateSelectAllButton() {
         // Hide "Select All" if current album has too many photos
         if selectedAssetsManager?.willSelectingAllExceedTotalAllowed(album) ?? false {
-            selectAllButton.title = nil
+            selectAllButton?.title = nil
             return
         }
         
@@ -160,10 +160,10 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     
     func updateSelectAllButtonTitle() {        
         if selectedAssetsManager?.count(for: album) == self.album.assets.count {
-            selectAllButton.title = NSLocalizedString("ImagePicker/Button/DeselectAll", value: "Deselect All", comment: "Button title for de-selecting all selected photos")
+            selectAllButton?.title = NSLocalizedString("ImagePicker/Button/DeselectAll", value: "Deselect All", comment: "Button title for de-selecting all selected photos")
         }
         else {
-            selectAllButton.title = NSLocalizedString("ImagePicker/Button/SelectAll", value: "Select All", comment: "Button title for selecting all selected photos")
+            selectAllButton?.title = NSLocalizedString("ImagePicker/Button/SelectAll", value: "Select All", comment: "Button title for selecting all selected photos")
         }
     }
     
