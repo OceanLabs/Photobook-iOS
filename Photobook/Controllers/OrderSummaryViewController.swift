@@ -23,6 +23,7 @@ class OrderSummaryViewController: UIViewController {
     @IBOutlet weak var previewImageView: UIImageView!
     @IBOutlet weak var previewImageActivityIndicatorView: UIActivityIndicatorView!
     @IBOutlet weak var previewImageProgressView: UIView!
+    @IBOutlet weak var coverSnapshotPageView: PhotobookPageView!
     
     private var timer: Timer?
     
@@ -43,12 +44,44 @@ class OrderSummaryViewController: UIViewController {
         emptyScreenViewController.show(message: stringLoading, activity: true)
         
         orderSummaryManager = OrderSummaryManager(withDelegate: self)
-        orderSummaryManager.refresh()
+        
+        takeCoverSnapshot { (image) in
+            self.orderSummaryManager.coverPageSnapshotImage = image
+            self.orderSummaryManager.refresh()
+        }
     }
     
     @objc private func timerTriggered(_ timer: Timer) {
         previewImageProgressView.isHidden = false
         previewImageActivityIndicatorView.startAnimating()
+    }
+    
+    private func takeCoverSnapshot(_ completion: @escaping (UIImage)->()) {
+        // Move this up to constants
+        let dimensionForPage = 100.0 * UIScreen.main.scale
+        
+        coverSnapshotPageView.alpha = 1.0
+        
+        coverSnapshotPageView.pageIndex = 0
+        coverSnapshotPageView.backgroundColor = .clear
+        coverSnapshotPageView.frame.size = CGSize(width: dimensionForPage, height: dimensionForPage / ProductManager.shared.product!.aspectRatio)
+        coverSnapshotPageView.productLayout = ProductManager.shared.productLayouts.first
+        
+        coverSnapshotPageView.color = ProductManager.shared.coverColor
+        coverSnapshotPageView.setupTextBox(mode: .userTextOnly)
+        
+        if let asset = ProductManager.shared.productLayouts.first?.asset {
+            asset.image(size: CGSize(width: dimensionForPage, height: dimensionForPage), loadThumbnailsFirst: false, completionHandler: { (image, error) in
+                guard let image = image else { return }
+                
+                self.coverSnapshotPageView.setupImageBox(with: image)
+                completion(self.coverSnapshotPageView.snapshot())
+                self.coverSnapshotPageView.alpha = 0.0
+            })
+        } else {
+            completion(coverSnapshotPageView.snapshot())
+            self.coverSnapshotPageView.alpha = 0.0
+        }
     }
     
 }

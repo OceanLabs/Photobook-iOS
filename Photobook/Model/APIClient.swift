@@ -21,6 +21,12 @@ enum APIContext {
     case pig
 }
 
+// Image types
+enum ImageType: String {
+    case jpeg = "jpeg"
+    case png = "png"
+}
+
 /// Network client for all interaction with the API
 class APIClient: NSObject {
     
@@ -90,7 +96,7 @@ class APIClient: NSObject {
         return [Int: String]()
     }()
     
-    private func createFileWith(imageData:Data, imageName:String, boundaryString:String) -> URL {
+    private func createFileWith(imageData:Data, imageName:String, imageType:ImageType, boundaryString:String) -> URL {
         
         let directoryUrl = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
         let fileUrl = directoryUrl.appendingPathComponent(NSUUID().uuidString)
@@ -101,8 +107,8 @@ class APIClient: NSObject {
         
         var header = ""
         header += "--\(boundaryString)\r\n"
-        header += "Content-Disposition: form-data; charset=utf-8; name=\"file\"; filename=\"\(imageName)\"\r\n"
-        header += "Content-Type: image/jpeg\r\n\r\n"
+        header += "Content-Disposition: form-data; charset=utf-8; name=\"file\"; filename=\"\(imageName).\(imageType)\"\r\n"
+        header += "Content-Type: image/\(imageType)\r\n\r\n"
         let headerData = header.data(using: .utf8, allowLossyConversion: false)!
         
         let footer = "\r\n--\(boundaryString)--\r\n"
@@ -116,6 +122,24 @@ class APIClient: NSObject {
         return fileUrl
     }
 
+    private func imageData(withImage image: UIImage, forType imageType: ImageType) -> Data? {
+        let imageData:Data
+        
+        switch imageType {
+        case .jpeg:
+            guard let data = UIImageJPEGRepresentation(image, 0.8) else {
+                return nil
+            }
+            imageData = data
+        case .png:
+            guard let data = UIImagePNGRepresentation(image) else {
+                return nil
+            }
+            imageData = data
+        }
+        
+        return imageData
+    }
     
     // MARK: Background tasks
     
@@ -248,9 +272,9 @@ class APIClient: NSObject {
         dataTask(context: context, endpoint: endpoint, parameters: parameters, method: .put, completion: completion)
     }
     
-    func uploadImage(_ data: Data, imageName: String, context: APIContext, endpoint: String, completion:@escaping (AnyObject?, Error?) -> ()) {
+    func uploadImage(_ data: Data, imageName: String, imageType: ImageType = .jpeg, context: APIContext, endpoint: String, completion:@escaping (AnyObject?, Error?) -> ()) {
         let boundaryString = "Boundary-\(NSUUID().uuidString)"
-        let fileUrl = createFileWith(imageData: data, imageName: imageName, boundaryString: boundaryString)
+        let fileUrl = createFileWith(imageData: data, imageName: imageName, imageType: imageType, boundaryString: boundaryString)
     
         var request = URLRequest(url: URL(string: baseURLString(for: context) + endpoint)!)
         
@@ -269,19 +293,20 @@ class APIClient: NSObject {
         }.resume()
     }
     
-    func uploadImage(_ image: UIImage, imageName: String, context: APIContext, endpoint: String, completion:@escaping (AnyObject?, Error?) -> ()) {
-        guard let data = UIImageJPEGRepresentation(image, 0.8) else {
+    func uploadImage(_ image: UIImage, imageName: String, imageType: ImageType = .jpeg, context: APIContext, endpoint: String, completion:@escaping (AnyObject?, Error?) -> ()) {
+        
+        guard let imageData = imageData(withImage: image, forType: imageType) else {
             print("Image Upload: cannot read image data")
             completion(nil, nil)
             return
         }
         
-        uploadImage(data, imageName: imageName, context: context, endpoint: endpoint, completion: completion)
+        uploadImage(imageData, imageName: imageName, context: context, endpoint: endpoint, completion: completion)
     }
     
-    func uploadImage(_ data: Data, imageName: String, reference: String?, context: APIContext, endpoint: String) {
+    func uploadImage(_ data: Data, imageName: String, imageType: ImageType = .jpeg, reference: String?, context: APIContext, endpoint: String) {
         let boundaryString = "Boundary-\(NSUUID().uuidString)"
-        let fileUrl = createFileWith(imageData: data, imageName: imageName, boundaryString: boundaryString)
+        let fileUrl = createFileWith(imageData: data, imageName: imageName, imageType: imageType, boundaryString: boundaryString)
         
         var request = URLRequest(url: URL(string: baseURLString(for: context) + endpoint)!)
         
@@ -297,13 +322,14 @@ class APIClient: NSObject {
         dataTask.resume()
     }
     
-    func uploadImage(_ image: UIImage, imageName: String, reference: String?, context: APIContext, endpoint: String) {
-        guard let data = UIImageJPEGRepresentation(image, 0.8) else {
+    func uploadImage(_ image: UIImage, imageName: String, imageType: ImageType = .jpeg, reference: String?, context: APIContext, endpoint: String) {
+        
+        guard let imageData = imageData(withImage: image, forType: imageType) else {
             print("Image Upload: cannot read image data")
             return
         }
         
-        uploadImage(data, imageName:imageName, reference: reference, context: context, endpoint: endpoint)
+        uploadImage(imageData, imageName: imageName, imageType: imageType, reference: reference, context: context, endpoint: endpoint)
     }
     
     func uploadImage(_ file: URL, reference: String?, context: APIContext, endpoint: String) {
@@ -314,7 +340,10 @@ class APIClient: NSObject {
 
         let imageName = file.lastPathComponent
         
-        uploadImage(fileData, imageName: imageName, reference: reference, context: context, endpoint: endpoint)
+        var imageType:ImageType = .jpeg
+        if imageName.lowercased().hasSuffix(".png") { imageType = .png } //it's actually a png
+        
+        uploadImage(fileData, imageName: imageName, imageType: imageType, reference: reference, context: context, endpoint: endpoint)
     }
     
     func pendingBackgroundTaskCount(_ completion: @escaping ((Int)->Void)) {

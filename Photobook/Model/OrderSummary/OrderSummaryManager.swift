@@ -42,6 +42,7 @@ class OrderSummaryManager {
     private(set) var previewImage:UIImage?
     private(set) var upsoldProduct:Photobook? //product to place the order with. Reflects user's selected upsell options.
     
+    var coverPageSnapshotImage:UIImage?
     weak var delegate:OrderSummaryManagerDelegate?
     
     init(withDelegate delegate:OrderSummaryManagerDelegate) {
@@ -124,37 +125,27 @@ class OrderSummaryManager {
     private func uploadCoverImage() {
         isUploadingCoverImage = true
         
-        guard layouts.count > 0, let asset = layouts[0].asset else {
+        guard let coverImage = coverPageSnapshotImage else {
             self.isUploadingCoverImage = false
             DispatchQueue.main.async { self.delegate?.orderSummaryManager(self, didUpdatePreviewImage: false) }
             return
         }
         
-        let imageSize = CGSize(width:300, height:300)
-        asset.image(size: imageSize, loadThumbnailsFirst: false, progressHandler: nil, completionHandler: { (image, error) in
-            if let image = image {
-                
-                APIClient.shared.uploadImage(image, imageName: "OrderSummaryPreviewImage.jpeg", context: .pig, endpoint: "upload/", completion: { (json, error) in
-                    self.isUploadingCoverImage = false
-                    
-                    if let error = error {
-                        print(error.localizedDescription)
-                    }
-                    
-                    guard let dictionary = json as? [String:AnyObject], let url = dictionary["full"] as? String else {
-                        print("OrderSummaryManager: Couldn't parse URL of uploaded image")
-                        DispatchQueue.main.async { self.delegate?.orderSummaryManager(self, didUpdatePreviewImage: false) }
-                        return
-                    }
-                    
-                    self.coverImageUrl = url
-                    self.fetchPreviewImage()
-                })
-            } else {
-                print("OrderSummaryManager: Couldn't get image for asset")
-                self.isUploadingCoverImage = false
-                DispatchQueue.main.async { self.delegate?.orderSummaryManager(self, didUpdatePreviewImage: false) }
+        APIClient.shared.uploadImage(coverImage, imageName: "OrderSummaryPreviewImage", imageType: .png, context: .pig, endpoint: "upload/", completion: { (json, error) in
+            self.isUploadingCoverImage = false
+            
+            if let error = error {
+                print(error.localizedDescription)
             }
+            
+            guard let dictionary = json as? [String:AnyObject], let url = dictionary["full"] as? String else {
+                print("OrderSummaryManager: Couldn't parse URL of uploaded image")
+                DispatchQueue.main.async { self.delegate?.orderSummaryManager(self, didUpdatePreviewImage: false) }
+                return
+            }
+            
+            self.coverImageUrl = url
+            self.fetchPreviewImage()
         })
     }
 }
