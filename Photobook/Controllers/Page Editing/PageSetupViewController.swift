@@ -60,7 +60,6 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private weak var photobookFrameView: PhotobookFrameView!  {
         didSet {
             photobookFrameView.isHidden = pageType == .cover
-            photobookFrameView.interaction = .assetAndText
         }
     }
     
@@ -174,6 +173,9 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             photobookFrameView.leftPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
             photobookFrameView.rightPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
+            
+            photobookFrameView.leftPageView.interaction = .assetAndText
+            photobookFrameView.rightPageView.interaction = .assetAndText
             
             photobookFrameView.leftPageView.delegate = self
             photobookFrameView.rightPageView.delegate = self

@@ -53,9 +53,10 @@ class PhotobookPageView: UIView {
     var productLayout: ProductLayout?
     
     var interaction: PhotobookPageViewInteraction = .disabled {
-        willSet {
-            if newValue != interaction {
+        didSet {
+            if oldValue != interaction {
                 hasSetupGestures = false
+                setupGestures()
             }
         }
     }
