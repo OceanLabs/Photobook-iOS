@@ -32,7 +32,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
         didSet {
             photobookFrameView.coverColor = ProductManager.shared.coverColor
             photobookFrameView.pageColor = ProductManager.shared.pageColor
-            photobookFrameView.leftPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
+            //photobookFrameView.aspectRatio = ProductManager.shared.product!.aspectRatio
         }
     }
     @IBOutlet private weak var plusButton: UIButton!
@@ -105,6 +105,16 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
         } else {
             photobookFrameView.isRightPageVisible = false
             photobookFrameView.rightPageView.interaction = .disabled
+        }
+        
+        let aspectRatio = ProductManager.shared.product!.aspectRatio
+        if let aspectRatio = aspectRatio, let leftIndex = leftIndex {
+            let isDoubleLayout = ProductManager.shared.productLayouts[leftIndex].layout.isDoubleLayout
+            photobookFrameView.leftPageView.aspectRatio = isDoubleLayout ? aspectRatio * 2.0 : aspectRatio
+            photobookFrameView.rightPageView.aspectRatio = isDoubleLayout ? 0.1 : aspectRatio
+        } else {
+            photobookFrameView.leftPageView.aspectRatio = aspectRatio
+            photobookFrameView.rightPageView.aspectRatio = aspectRatio
         }
         
         photobookFrameView.leftPageView.delegate = self

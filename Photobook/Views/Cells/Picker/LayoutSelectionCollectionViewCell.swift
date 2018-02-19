@@ -65,11 +65,11 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         backgroundColor = .clear
         
         let aspectRatio = ProductManager.shared.product!.aspectRatio!
-
-        photobookFrameView.leftPageView.aspectRatio = aspectRatio
-        photobookFrameView.rightPageView.aspectRatio = aspectRatio
-
+        photobookFrameView.leftPageView.aspectRatio = layout.isDoubleLayout ? aspectRatio * 2.0 : aspectRatio
+        photobookFrameView.rightPageView.aspectRatio = layout.isDoubleLayout ? 0.1 : aspectRatio
         photobookFrameView.width = (bounds.height - 2.0 * Constants.photobookVerticalMargin) * aspectRatio * 2.0
+        
+        photobookFrameView.layoutIfNeeded()
         
         let productLayoutAsset = ProductLayoutAsset()
         productLayoutAsset.asset = asset
