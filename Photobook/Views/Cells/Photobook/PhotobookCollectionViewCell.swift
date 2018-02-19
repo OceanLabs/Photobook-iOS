@@ -111,7 +111,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
         if let aspectRatio = aspectRatio, let leftIndex = leftIndex {
             let isDoubleLayout = ProductManager.shared.productLayouts[leftIndex].layout.isDoubleLayout
             photobookFrameView.leftPageView.aspectRatio = isDoubleLayout ? aspectRatio * 2.0 : aspectRatio
-            photobookFrameView.rightPageView.aspectRatio = isDoubleLayout ? 0.1 : aspectRatio
+            photobookFrameView.rightPageView.aspectRatio = isDoubleLayout ? 0.0 : aspectRatio
         } else {
             photobookFrameView.leftPageView.aspectRatio = aspectRatio
             photobookFrameView.rightPageView.aspectRatio = aspectRatio

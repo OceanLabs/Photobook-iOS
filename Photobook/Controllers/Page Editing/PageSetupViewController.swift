@@ -19,7 +19,7 @@ extension PageSetupDelegate {
 }
 
 enum PageType {
-    case cover, first, last, left, right
+    case cover, first, last, left, right, double
 }
 
 class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate {
@@ -76,7 +76,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         guard let pageType = pageType else { return nil }
         
         switch pageType {
-        case .left, .last:
+        case .left, .last, .double:
             return leftAssetContainerView
         case .right, .first:
             return rightAssetContainerView
@@ -89,7 +89,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         guard let pageType = pageType else { return nil }
         
         switch pageType {
-        case .left, .last:
+        case .left, .last, .double:
             return leftAssetImageView
         case .right, .first:
             return rightAssetImageView
@@ -103,20 +103,17 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     var selectedAssetsManager: SelectedAssetsManager!
     var pageIndex: Int! {
         didSet {
-            guard let pageIndex = pageIndex else {
+            guard pageIndex != nil else {
                 fatalError("Page editing started without a layout index")
             }
-            if pageIndex == 0 { pageType = .cover }
-            else if pageIndex == 1 { pageType = .first }
-            else if pageIndex == ProductManager.shared.productLayouts.count - 1 { pageType = .last }
-            else if pageIndex % 2 == 0 { pageType = .left }
-            else { pageType = .right }
             
             productLayout = ProductManager.shared.productLayouts[pageIndex].shallowCopy()
             
-            if pageIndex == 0 { // Cover
+            if pageType == .cover {
+                selectedColor = ProductManager.shared.coverColor
                 availableLayouts = ProductManager.shared.currentCoverLayouts()
             } else {
+                selectedColor = ProductManager.shared.pageColor
                 availableLayouts = ProductManager.shared.currentLayouts()
             }
         }
@@ -126,19 +123,19 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     private var pageSize: CGSize = .zero
     private var hasDoneSetup = false
     private var pageType: PageType! {
-        didSet {
-            if pageType == .cover {
-                selectedColor = ProductManager.shared.coverColor
-            } else {
-                selectedColor = ProductManager.shared.pageColor
-            }
-        }
+        if productLayout.layout.isDoubleLayout { return .double }
+        else if pageIndex == 0 { return .cover }
+        else if pageIndex == 1 { return .first }
+        else if pageIndex == ProductManager.shared.productLayouts.count - 1 { return .last }
+        else if pageIndex % 2 == 0 { return .left }
+        else { return .right }
     }
+    
     private var pageView: PhotobookPageView! {
         guard let pageType = pageType else { return nil }
         
         switch pageType {
-        case .left, .last:
+        case .left, .last, .double:
             return photobookFrameView.leftPageView
         case .right, .first:
             return photobookFrameView.rightPageView
@@ -170,17 +167,14 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             photobookFrameView.pageColor = ProductManager.shared.pageColor
             photobookFrameView.coverColor = ProductManager.shared.coverColor
-            
-            photobookFrameView.leftPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
-            photobookFrameView.rightPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
+
+            setupPhotobookPages()
             
             photobookFrameView.leftPageView.interaction = .assetAndText
             photobookFrameView.rightPageView.interaction = .assetAndText
             
             photobookFrameView.leftPageView.delegate = self
             photobookFrameView.rightPageView.delegate = self
-
-            photobookFrameView.width = (view.bounds.width - 2.0 * Constants.photobookSideMargin) * 2.0
             
             pageView.pageIndex = pageIndex
             pageView.productLayout = productLayout            
@@ -216,10 +210,17 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
                 break
             }
         }
-        
+    }
+    
+    private func setupPhotobookPages() {
+        let aspectRatio = ProductManager.shared.product!.aspectRatio!
+        photobookFrameView.leftPageView.aspectRatio = pageType == .double ? aspectRatio * 2.0 : aspectRatio
+        photobookFrameView.rightPageView.aspectRatio = pageType == .double ? 0.0 : aspectRatio
     }
     
     private func setupPhotobookFrame() {
+        photobookFrameView.width = (view.bounds.width - 2.0 * Constants.photobookSideMargin) * (pageType == .double ? 1.0 : 2.0)
+
         switch pageType! {
         case .last:
             photobookFrameView.isRightPageVisible = false
@@ -231,6 +232,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             fallthrough
         case .right:
             photobookHorizontalAlignmentConstraint.constant = Constants.photobookSideMargin
+        case .double:
+            photobookHorizontalAlignmentConstraint.constant = view.bounds.width * 0.5
         case .cover:
             break
         }
@@ -407,7 +410,15 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
 extension PageSetupViewController: LayoutSelectionDelegate {
     
     func didSelectLayout(_ layout: Layout) {
+        let shouldResetFrame = layout.isDoubleLayout != productLayout.layout.isDoubleLayout
+        
         productLayout.layout = layout
+        
+        if shouldResetFrame {
+            setupPhotobookPages()
+            setupPhotobookFrame()
+        }
+        
         pageView.setupLayoutBoxes()
         
         // Deselect the asset if the layout does not have an image box

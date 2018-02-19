@@ -37,7 +37,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         guard let pageType = pageType else { return nil }
         
         switch pageType {
-        case .left, .last:
+        case .left, .last, .double:
             return leftAssetContainerView
         case .right, .first:
             return rightAssetContainerView
@@ -50,7 +50,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         guard let pageType = pageType else { return nil }
         
         switch pageType {
-        case .left, .last:
+        case .left, .last, .double:
             return leftAssetImageView
         case .right, .first:
             return rightAssetImageView
@@ -80,7 +80,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         case .last:
             photobookFrameView.isRightPageVisible = false
             fallthrough
-        case .left:
+        case .left, .double:
             photobookLeftAligmentConstraint.constant = bounds.width - Constants.photobookAlignmentMargin
             
             photobookFrameView.leftPageView.pageIndex = pageIndex
