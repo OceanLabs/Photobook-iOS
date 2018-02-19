@@ -810,7 +810,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="StoryTableViewCell" rowHeight="210" id="htl-9v-aX7" customClass="StoryTableViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="StoryTableViewCell" rowHeight="210" id="htl-9v-aX7" customClass="StoryTableViewCell" customModule="Photobook" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="210"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="htl-9v-aX7" id="eJT-Z8-4Pn">
@@ -908,7 +908,7 @@
                                             <outlet property="titleLabel" destination="RjH-Ge-cK0" id="huB-q3-srx"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DoubleStoryTableViewCell" rowHeight="210" id="5UM-o8-BDz" customClass="DoubleStoryTableViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DoubleStoryTableViewCell" rowHeight="210" id="5UM-o8-BDz" customClass="DoubleStoryTableViewCell" customModule="Photobook" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="238" width="375" height="210"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="5UM-o8-BDz" id="5Nn-1m-uRn">
@@ -1097,7 +1097,7 @@
                                             <outlet property="titleLabel" destination="eOz-ny-Awi" id="GMa-bY-W7p"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="EmptyStoryTableViewCell" rowHeight="210" id="mRg-4N-YQA">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="EmptyStoryTableViewCell" rowHeight="210" id="mRg-4N-YQA">
                                         <rect key="frame" x="0.0" y="448" width="375" height="210"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mRg-4N-YQA" id="6nU-p5-hS2">
@@ -4024,7 +4024,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="PaymentMethodTableViewCell" id="ffQ-6w-9af" customClass="PaymentMethodTableViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="PaymentMethodTableViewCell" id="ffQ-6w-9af" customClass="PaymentMethodTableViewCell" customModule="Photobook" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ffQ-6w-9af" id="0ZH-eq-sN5">
@@ -4071,7 +4071,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             <outlet property="tickImageView" destination="Tbh-Fr-A3E" id="17N-e9-P4E"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="AddPaymentMethodCell" id="QKZ-tw-CMz">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="AddPaymentMethodCell" id="QKZ-tw-CMz">
                                         <rect key="frame" x="0.0" y="99.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QKZ-tw-CMz" id="lcN-zV-epN">
@@ -4279,7 +4279,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <inset key="separatorInset" minX="16" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" misplaced="YES" id="u6I-xH-x66">
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="u6I-xH-x66">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="10"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -4806,7 +4806,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ShippingMethodTableViewCell" id="oBZ-np-8oT" customClass="ShippingMethodTableViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ShippingMethodTableViewCell" id="oBZ-np-8oT" customClass="ShippingMethodTableViewCell" customModule="Photobook" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="36" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oBZ-np-8oT" id="WfL-IF-UMv">
@@ -4880,7 +4880,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             <outlet property="topSeparator" destination="mXt-bD-1yX" id="erb-an-b2x"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ShippingMethodHeaderTableViewCell" id="q1h-9m-jMh" customClass="ShippingMethodHeaderTableViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ShippingMethodHeaderTableViewCell" id="q1h-9m-jMh" customClass="ShippingMethodHeaderTableViewCell" customModule="Photobook" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="80" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="q1h-9m-jMh" id="ayj-g4-VQZ">
