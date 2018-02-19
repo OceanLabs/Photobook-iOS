@@ -11,8 +11,8 @@ import OAuthSwift
 extension OAuth2Swift {
     
     private struct Constants {
-        static let clientId = "1af4c208cbdc4d09bbe251704990638f"
-        static let secret = "c8a5b1b1806f4586afad2f277cee1d5c"
+        static let clientId = "94de981b3c744775a41c24ceac0c7609"
+        static let secret = "df7bd131253043e693c266a3b4105149"
         static let instagramAuthUrlString = "https://api.instagram.com/oauth/authorize"
     }
     

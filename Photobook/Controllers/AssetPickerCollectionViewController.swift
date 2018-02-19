@@ -23,6 +23,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     var selectedAssetsManager: SelectedAssetsManager?
     var assetCollectorController: AssetCollectorViewController!
     static let coverAspectRatio: CGFloat = 2.723684211
+    var reloadDispatchGroup = DispatchGroup()
     
     var shouldFadeInImages = true
     
@@ -89,32 +90,37 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     }
     
     @objc func albumsWereReloaded(_ notification: Notification) {
-        guard let collectionView = collectionView,
-            let albumsChanges = notification.object as? [AlbumChange]
-            else { return }
-        
-        for albumChange in albumsChanges {
-            if albumChange.album.identifier == album.identifier {
-                var indexPathsAdded = [IndexPath]()
-                for assetAdded in albumChange.assetsAdded {
-                    if let index = album.assets.index(where: { $0.identifier == assetAdded.identifier }) {
-                        indexPathsAdded.append(IndexPath(item: index, section: 0))
+        reloadDispatchGroup.notify(queue: DispatchQueue.main, execute: {
+            self.reloadDispatchGroup.enter()
+            guard let collectionView = self.collectionView,
+                let albumsChanges = notification.object as? [AlbumChange]
+                else { return }
+            
+            for albumChange in albumsChanges {
+                if albumChange.album.identifier == self.album.identifier {
+                    var indexPathsAdded = [IndexPath]()
+                    for assetAdded in albumChange.assetsAdded {
+                        if let index = self.album.assets.index(where: { $0.identifier == assetAdded.identifier }) {
+                            indexPathsAdded.append(IndexPath(item: index, section: 0))
+                        }
                     }
+                    
+                    var indexPathsRemoved = [IndexPath]()
+                    for indexRemoved in albumChange.indexesRemoved {
+                        indexPathsRemoved.append(IndexPath(item: indexRemoved, section: 0))
+                    }
+                    
+                    collectionView.performBatchUpdates({
+                        collectionView.deleteItems(at: indexPathsRemoved)
+                        collectionView.insertItems(at: indexPathsAdded)
+                    }, completion: { _ in
+                        self.reloadDispatchGroup.leave()
+                    })
+                    
+                    break
                 }
-                
-                var indexPathsRemoved = [IndexPath]()
-                for indexRemoved in albumChange.indexesRemoved {
-                    indexPathsRemoved.append(IndexPath(item: indexRemoved, section: 0))
-                }
-                
-                collectionView.performBatchUpdates({
-                    collectionView.deleteItems(at: indexPathsRemoved)
-                    collectionView.insertItems(at: indexPathsAdded)
-                }, completion: nil)
-                
-                break
             }
-        }
+        })
     }
     
     @IBAction func unwindToThisView(withUnwindSegue unwindSegue: UIStoryboardSegue) {}

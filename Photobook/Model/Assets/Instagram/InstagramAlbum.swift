@@ -28,12 +28,12 @@ class InstagramAlbum {
         instagramClient.authorizeURLHandler = authenticationHandler
     }
     
-    func fetchAssets(nextUrl: String?, completionHandler:@escaping (_ assets: [Asset], _ next: Any?, _ error: Error?)->()) {
+    func fetchAssets(url: String? = nil, completionHandler:((_ assets: [Asset], _ next: Any?, _ error: Error?)->())?) {
         guard let tokenData = KeychainSwift().getData(keychainInstagramTokenKey),
             let token = String(data: tokenData, encoding: .utf8)
             else { return }
         
-        var url = nextUrl ?? Constants.instagramMediaBaseUrl
+        var url = url ?? Constants.instagramMediaBaseUrl
         
         if !url.contains("access_token") {
             url = "\(url)?access_token=\(token)"
@@ -77,17 +77,16 @@ class InstagramAlbum {
             
             DispatchQueue.main.async {
                 // Call the completion handler only on the first request, subsequent requests will update the album
-                if nextUrl == nil {
-                    completionHandler(newAssets, nil, nil)
-                } else{
+                if completionHandler != nil {
+                    completionHandler?(newAssets, nil, nil)
+                } else {
                     NotificationCenter.default.post(name: AssetsNotificationName.albumsWereReloaded, object: [AlbumChange(album: self, assetsRemoved: [], indexesRemoved: [], assetsAdded: newAssets)])
                 }
-                
-                
-                
             }
             
-            // TODO: request next page
+            if nextUrl != nil {
+                self.fetchAssets(url: nextUrl, completionHandler: nil)
+            }
             
         }, failure: { failure in
             print(failure)
@@ -112,7 +111,7 @@ extension InstagramAlbum: Album {
     }
     
     func loadAssets(completionHandler: ((Error?) -> Void)?) {
-        fetchAssets(nextUrl: nil, completionHandler: { _,_, error in
+        fetchAssets(completionHandler: { _,_, error in
             completionHandler?(error)
         })
     }
