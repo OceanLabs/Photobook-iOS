@@ -23,8 +23,8 @@ enum APIContext {
 
 // Image types
 enum ImageType: String {
-    case jpeg = "jpeg"
-    case png = "png"
+    case jpeg
+    case png
 }
 
 /// Network client for all interaction with the API
@@ -96,7 +96,7 @@ class APIClient: NSObject {
         return [Int: String]()
     }()
     
-    private func createFileWith(imageData:Data, imageName:String, imageType:ImageType, boundaryString:String) -> URL {
+    private func createFileWith(imageData:Data, imageName:String, boundaryString:String) -> URL {
         
         let directoryUrl = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
         let fileUrl = directoryUrl.appendingPathComponent(NSUUID().uuidString)
@@ -104,6 +104,8 @@ class APIClient: NSObject {
         
         FileManager.default.createFile(atPath: filePath, contents: nil, attributes: nil)
         let fileHandle = FileHandle(forWritingAtPath: filePath)!
+        
+        let imageType = self.imageType(forFileName: imageName)
         
         var header = ""
         header += "--\(boundaryString)\r\n"
@@ -120,6 +122,11 @@ class APIClient: NSObject {
         fileHandle.closeFile()
         
         return fileUrl
+    }
+    
+    private func imageData(withImage image: UIImage, imageName: String) -> Data? {
+        let imageType = self.imageType(forFileName: imageName)
+        return imageData(withImage: image, forType: imageType)
     }
 
     private func imageData(withImage image: UIImage, forType imageType: ImageType) -> Data? {
@@ -139,6 +146,13 @@ class APIClient: NSObject {
         }
         
         return imageData
+    }
+    
+    private func imageType(forFileName fileName:String) -> ImageType {
+        if fileName.lowercased().hasSuffix(".png") {
+            return .png
+        }
+        return .jpeg
     }
     
     // MARK: Background tasks
@@ -272,9 +286,9 @@ class APIClient: NSObject {
         dataTask(context: context, endpoint: endpoint, parameters: parameters, method: .put, completion: completion)
     }
     
-    func uploadImage(_ data: Data, imageName: String, imageType: ImageType = .jpeg, context: APIContext, endpoint: String, completion:@escaping (AnyObject?, Error?) -> ()) {
+    func uploadImage(_ data: Data, imageName: String, context: APIContext, endpoint: String, completion:@escaping (AnyObject?, Error?) -> ()) {
         let boundaryString = "Boundary-\(NSUUID().uuidString)"
-        let fileUrl = createFileWith(imageData: data, imageName: imageName, imageType: imageType, boundaryString: boundaryString)
+        let fileUrl = createFileWith(imageData: data, imageName: imageName, boundaryString: boundaryString)
     
         var request = URLRequest(url: URL(string: baseURLString(for: context) + endpoint)!)
         
@@ -293,9 +307,9 @@ class APIClient: NSObject {
         }.resume()
     }
     
-    func uploadImage(_ image: UIImage, imageName: String, imageType: ImageType = .jpeg, context: APIContext, endpoint: String, completion:@escaping (AnyObject?, Error?) -> ()) {
+    func uploadImage(_ image: UIImage, imageName: String, context: APIContext, endpoint: String, completion:@escaping (AnyObject?, Error?) -> ()) {
         
-        guard let imageData = imageData(withImage: image, forType: imageType) else {
+        guard let imageData = imageData(withImage: image, imageName:imageName) else {
             print("Image Upload: cannot read image data")
             completion(nil, nil)
             return
@@ -304,9 +318,9 @@ class APIClient: NSObject {
         uploadImage(imageData, imageName: imageName, context: context, endpoint: endpoint, completion: completion)
     }
     
-    func uploadImage(_ data: Data, imageName: String, imageType: ImageType = .jpeg, reference: String?, context: APIContext, endpoint: String) {
+    func uploadImage(_ data: Data, imageName: String, reference: String?, context: APIContext, endpoint: String) {
         let boundaryString = "Boundary-\(NSUUID().uuidString)"
-        let fileUrl = createFileWith(imageData: data, imageName: imageName, imageType: imageType, boundaryString: boundaryString)
+        let fileUrl = createFileWith(imageData: data, imageName: imageName, boundaryString: boundaryString)
         
         var request = URLRequest(url: URL(string: baseURLString(for: context) + endpoint)!)
         
@@ -322,14 +336,14 @@ class APIClient: NSObject {
         dataTask.resume()
     }
     
-    func uploadImage(_ image: UIImage, imageName: String, imageType: ImageType = .jpeg, reference: String?, context: APIContext, endpoint: String) {
+    func uploadImage(_ image: UIImage, imageName: String, reference: String?, context: APIContext, endpoint: String) {
         
-        guard let imageData = imageData(withImage: image, forType: imageType) else {
+        guard let imageData = imageData(withImage: image, imageName: imageName) else {
             print("Image Upload: cannot read image data")
             return
         }
         
-        uploadImage(imageData, imageName: imageName, imageType: imageType, reference: reference, context: context, endpoint: endpoint)
+        uploadImage(imageData, imageName: imageName, reference: reference, context: context, endpoint: endpoint)
     }
     
     func uploadImage(_ file: URL, reference: String?, context: APIContext, endpoint: String) {
@@ -340,10 +354,7 @@ class APIClient: NSObject {
 
         let imageName = file.lastPathComponent
         
-        var imageType:ImageType = .jpeg
-        if imageName.lowercased().hasSuffix(".png") { imageType = .png } //it's actually a png
-        
-        uploadImage(fileData, imageName: imageName, imageType: imageType, reference: reference, context: context, endpoint: endpoint)
+        uploadImage(fileData, imageName: imageName, reference: reference, context: context, endpoint: endpoint)
     }
     
     func pendingBackgroundTaskCount(_ completion: @escaping ((Int)->Void)) {

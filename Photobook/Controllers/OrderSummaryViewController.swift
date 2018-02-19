@@ -56,7 +56,7 @@ class OrderSummaryViewController: UIViewController {
         previewImageActivityIndicatorView.startAnimating()
     }
     
-    private func takeCoverSnapshot(_ completion: @escaping (UIImage)->()) {
+    private func takeCoverSnapshot(_ completion: @escaping (UIImage?)->()) {
         // Move this up to constants
         let dimensionForPage = 100.0 * UIScreen.main.scale
         
@@ -71,12 +71,13 @@ class OrderSummaryViewController: UIViewController {
         coverSnapshotPageView.setupTextBox(mode: .userTextOnly)
         
         if let asset = ProductManager.shared.productLayouts.first?.asset {
-            asset.image(size: CGSize(width: dimensionForPage, height: dimensionForPage), loadThumbnailsFirst: false, completionHandler: { (image, error) in
+            asset.image(size: CGSize(width: dimensionForPage, height: dimensionForPage), loadThumbnailsFirst: false, completionHandler: { [weak welf = self] (image, error) in
                 guard let image = image else { return }
                 
-                self.coverSnapshotPageView.setupImageBox(with: image)
-                completion(self.coverSnapshotPageView.snapshot())
-                self.coverSnapshotPageView.alpha = 0.0
+                welf?.coverSnapshotPageView.setupImageBox(with: image)
+                let snapshot = welf?.coverSnapshotPageView.snapshot()
+                completion(snapshot)
+                welf?.coverSnapshotPageView.alpha = 0.0
             })
         } else {
             completion(coverSnapshotPageView.snapshot())

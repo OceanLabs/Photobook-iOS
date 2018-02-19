@@ -131,7 +131,7 @@ class OrderSummaryManager {
             return
         }
         
-        APIClient.shared.uploadImage(coverImage, imageName: "OrderSummaryPreviewImage", imageType: .png, context: .pig, endpoint: "upload/", completion: { (json, error) in
+        APIClient.shared.uploadImage(coverImage, imageName: "OrderSummaryPreviewImage.png", context: .pig, endpoint: "upload/", completion: { (json, error) in
             self.isUploadingCoverImage = false
             
             if let error = error {
