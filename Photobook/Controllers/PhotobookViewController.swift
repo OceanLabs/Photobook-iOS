@@ -634,10 +634,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
                 cell.isFaded = false
             }
             
-            let leftLayout: ProductLayout? = leftIndex != nil ? ProductManager.shared.productLayouts[leftIndex!] : nil
-            let rightLayout: ProductLayout? = rightIndex != nil ? ProductManager.shared.productLayouts[rightIndex!] : nil
-
-            cell.loadPages(leftIndex: leftIndex, rightIndex: rightIndex, leftLayout: leftLayout, rightLayout: rightLayout)
+            cell.loadPages(leftIndex: leftIndex, rightIndex: rightIndex)
             cell.isPlusButtonVisible = indexPath.item != 0
             
             return cell
