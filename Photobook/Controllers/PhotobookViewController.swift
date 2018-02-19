@@ -71,7 +71,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         collectionViewBottomConstraint.constant = -view.frame.height * (reverseRearrangeScale - 1)
         
         NotificationCenter.default.addObserver(self, selector: #selector(menuDidHide), name: NSNotification.Name.UIMenuControllerDidHideMenu, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereReloaded(_:)), name: AssetsNotificationName.albumsWereReloaded, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
         
         guard let photobook = ProductManager.shared.products?.first else {
             loadProducts()
@@ -248,7 +248,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         scrollingTimer = nil
     }
     
-    @objc func albumsWereReloaded(_ notification: Notification) {
+    @objc func albumsWereUpdated(_ notification: Notification) {
         guard let albumsChanges = notification.object as? [AlbumChange] else { return }
         
         var removedAssets = [Asset]()

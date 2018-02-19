@@ -10,7 +10,7 @@ import UIKit
 import Photos
 
 protocol AssetCollectorViewControllerDelegate: class {
-    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool)
+    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, willChangeHiddenStateTo hidden: Bool)
     func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController)
 }
 
@@ -91,8 +91,8 @@ class AssetCollectorViewController: UIViewController {
                     self.topContainerView.isHidden = self.isHidden
                     self.imageCollectionView.isHidden = self.isHidden
                     self.adaptHeight()
+                    self.delegate?.assetCollectorViewController(self, willChangeHiddenStateTo: self.isHidden)
                 }, completion: nil)
-                delegate?.assetCollectorViewController(self, didChangeHiddenStateTo: isHidden)
             }
         }
     }

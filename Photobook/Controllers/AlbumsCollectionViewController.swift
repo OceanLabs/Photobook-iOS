@@ -43,7 +43,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
         
         // Listen for album changes
-        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereReloaded(_:)), name: AssetsNotificationName.albumsWereReloaded, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
     }
     
     func loadAlbums() {
@@ -138,7 +138,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
         collectionView.reloadItems(at: indexPathsToReload)
     }
     
-    @objc func albumsWereReloaded(_ notification: Notification) {
+    @objc func albumsWereUpdated(_ notification: Notification) {
         guard let albumsChanges = notification.object as? [AlbumChange] else { return }
         var indexPathsChanged = [IndexPath]()
         
@@ -155,8 +155,8 @@ class AlbumsCollectionViewController: UICollectionViewController {
 extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
     // MARK: AssetCollectorViewControllerDelegate
     
-    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
-        collectionView?.collectionViewLayout.invalidateLayout()
+    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, willChangeHiddenStateTo hidden: Bool) {
+        collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: hidden ? 0 : assetCollectorViewController.viewHeight, right: 0)
     }
     
     func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
@@ -205,32 +205,6 @@ extension AlbumsCollectionViewController{
         return cell
     }
     
-    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        
-        switch kind {
-        case UICollectionElementKindSectionFooter:
-            let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Footer", for: indexPath)
-            footerView.backgroundColor = UIColor.clear
-            return footerView
-            
-        default:
-            assert(false, "Unexpected element kind")
-        }
-        
-        return UICollectionReusableView(frame: CGRect())
-
-    }
-    
-}
-
-extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        var height:CGFloat = 0
-        if let assetCollectorViewController = assetCollectorController {
-            height = assetCollectorViewController.viewHeight
-        }
-        return CGSize(width: collectionView.frame.size.width, height: height)
-    }
 }
 
 extension AlbumsCollectionViewController{

@@ -158,7 +158,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         toolbar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
         toolbarButtons[Tool.selectAsset.rawValue].isSelected = true
         
-        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereReloaded(_:)), name: AssetsNotificationName.albumsWereReloaded, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
     }
     
     override func viewDidLayoutSubviews() {
@@ -198,7 +198,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         NotificationCenter.default.removeObserver(self)
     }
     
-    @objc func albumsWereReloaded(_ notification: Notification) {
+    @objc func albumsWereUpdated(_ notification: Notification) {
         guard let albumsChanges = notification.object as? [AlbumChange] else { return }
         
         var removedAssets = [Asset]()

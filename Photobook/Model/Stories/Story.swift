@@ -16,6 +16,7 @@ class Story {
     var isWeekend = false
     var score = 0
     var assets = [Asset]()
+    var hasMoreAssetsToLoad = false
     
     // Ability to set locale in Unit Tests
     lazy var locale = Locale.current
@@ -115,6 +116,8 @@ extension Story: Album {
     func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
         collectionForCoverPhoto.coverAsset(useFirstImageInCollection: true, completionHandler: completionHandler)
     }
+    
+    func loadNextBatchOfAssets() {}
     
     
 }

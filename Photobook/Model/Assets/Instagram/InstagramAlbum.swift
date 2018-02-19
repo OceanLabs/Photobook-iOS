@@ -20,6 +20,10 @@ class InstagramAlbum {
     
     var assets: [Asset] = []
     var identifier: String = UUID.init().uuidString
+    private var nextUrl: String?
+    var hasMoreAssetsToLoad: Bool {
+        return nextUrl != nil
+    }
     
     private lazy var instagramClient: OAuth2Swift = {
         let client = OAuth2Swift.instagramClient()
@@ -30,19 +34,19 @@ class InstagramAlbum {
         instagramClient.authorizeURLHandler = authenticationHandler
     }
     
-    func fetchAssets(url: String? = nil, completionHandler:((_ error: ErrorMessage?)->())?) {
+    func fetchAssets(url: String, completionHandler:((_ error: ErrorMessage?)->())?) {
         guard let tokenData = KeychainSwift().getData(keychainInstagramTokenKey),
             let token = String(data: tokenData, encoding: .utf8)
             else { return }
         
-        var url = url ?? Constants.instagramMediaBaseUrl
+        var urlToLoad = url
         
-        if !url.contains("access_token") {
-            url = "\(url)?access_token=\(token)"
+        if !urlToLoad.contains("access_token") {
+            urlToLoad = "\(urlToLoad)?access_token=\(token)"
         }
-        url = "\(url)&count=100"
+        urlToLoad = "\(urlToLoad)&count=100"
         
-        instagramClient.startAuthorizedRequest(url, method: .GET, parameters: [:], onTokenRenewal: { credential in
+        instagramClient.startAuthorizedRequest(urlToLoad, method: .GET, parameters: [:], onTokenRenewal: { credential in
             KeychainSwift().set(credential.oauthToken, forKey: keychainInstagramTokenKey)
         }, success: { response in
             guard let json = (try? JSONSerialization.jsonObject(with: response.data, options: [])) as? [String : Any],
@@ -59,7 +63,7 @@ class InstagramAlbum {
                 return
             }
             
-            let nextUrl = pagination["next_url"] as? String
+            self.nextUrl = pagination["next_url"] as? String
             var newAssets = [Asset]()
             
             for d in data {
@@ -88,14 +92,9 @@ class InstagramAlbum {
                 if completionHandler != nil {
                     completionHandler?(nil)
                 } else {
-                    NotificationCenter.default.post(name: AssetsNotificationName.albumsWereReloaded, object: [AlbumChange(album: self, assetsRemoved: [], indexesRemoved: [], assetsAdded: newAssets)])
+                    NotificationCenter.default.post(name: AssetsNotificationName.albumsWereUpdated, object: [AlbumChange(album: self, assetsRemoved: [], indexesRemoved: [], assetsAdded: newAssets)])
                 }
             }
-            
-            if nextUrl != nil {
-                self.fetchAssets(url: nextUrl, completionHandler: nil)
-            }
-            
         }, failure: { failure in
             // Not worth showing an error if one of the later pagination requests fail
             guard self.assets.isEmpty else { return }
@@ -124,9 +123,15 @@ extension InstagramAlbum: Album {
     }
     
     func loadAssets(completionHandler: ((ErrorMessage?) -> Void)?) {
-        fetchAssets(completionHandler: {error in
+        fetchAssets(url: Constants.instagramMediaBaseUrl, completionHandler: {error in
             completionHandler?(error)
         })
+    }
+    
+    func loadNextBatchOfAssets() {
+        guard let url = nextUrl else { return }
+        nextUrl = nil
+        fetchAssets(url: url, completionHandler: nil)
     }
     
     func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
