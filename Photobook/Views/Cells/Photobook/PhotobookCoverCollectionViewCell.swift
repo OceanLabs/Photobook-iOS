@@ -35,8 +35,13 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
     }
     
     var isPageInteractionEnabled: Bool = false {
+        didSet { coverFrameView.isUserInteractionEnabled = isPageInteractionEnabled }
+    }
+    
+    var isFaded: Bool = false {
         didSet {
-            coverFrameView.isUserInteractionEnabled = isPageInteractionEnabled
+            coverFrameView.alpha = isFaded ? interactivePageFadedAlpha : 1.0
+            spineFrameView.alpha = coverFrameView.alpha
         }
     }
 
