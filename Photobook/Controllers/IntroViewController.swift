@@ -117,7 +117,7 @@ class IntroViewController: UIViewController {
         
         // Instagram
         // Depending on whether we are logged in or not show the Instagram login screen or the asset picker
-        if KeychainSwift().getData(keychainInstagramTokenKey) != nil {
+        if KeychainSwift().getData(OAuth2Swift.Constants.keychainInstagramTokenKey) != nil {
             (tabBarController.viewControllers?[Tab.instagram.rawValue] as? UINavigationController)?.setViewControllers([AssetPickerCollectionViewController.instagramAssetPicker()], animated: false)
         } else {
             let instagramLandingViewController = storyboard!.instantiateViewController(withIdentifier: "InstagramLandingViewController")

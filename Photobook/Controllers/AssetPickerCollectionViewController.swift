@@ -64,7 +64,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         if album.assets.isEmpty {
             self.album.loadAssets(completionHandler: { [weak welf = self] errorMessage in
                 if let errorMessage = errorMessage {
-                    welf?.emptyScreenViewController.show(ErrorMessage(message: errorMessage.message, retryButtonAction: {
+                    welf?.emptyScreenViewController.show(ErrorUtils.genericRetryErrorMessage(message: errorMessage.message, action: {
                         welf?.emptyScreenViewController.hide()
                         errorMessage.buttonAction()
                     }))

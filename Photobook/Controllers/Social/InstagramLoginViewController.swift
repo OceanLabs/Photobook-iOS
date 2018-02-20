@@ -51,7 +51,7 @@ class InstagramLoginViewController: UIViewController {
                 KeychainSwift().set(credential.oauthToken, forKey: OAuth2Swift.Constants.keychainInstagramTokenKey)
                 welf?.navigationController?.setViewControllers([AssetPickerCollectionViewController.instagramAssetPicker()], animated: false)                
         }, failure: { [weak welf = self] error in
-            welf?.emptyScreenViewController.show(ErrorMessage(message: error.localizedDescription, retryButtonAction: { [weak welf = self] in
+            welf?.emptyScreenViewController.show(ErrorUtils.genericRetryErrorMessage(message: error.localizedDescription, action: { [weak welf = self] in
                 welf?.emptyScreenViewController.hide()
                 welf?.startAuthenticatingUser()
             }))
@@ -81,14 +81,14 @@ extension InstagramLoginViewController: WKNavigationDelegate {
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        emptyScreenViewController.show(ErrorMessage(message: error.localizedDescription, retryButtonAction: { [weak welf = self] in
+        emptyScreenViewController.show(ErrorUtils.genericRetryErrorMessage(message: error.localizedDescription, action: { [weak welf = self] in
             welf?.emptyScreenViewController.hide()
             welf?.startAuthenticatingUser()
         }))
     }
     
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        emptyScreenViewController.show(ErrorMessage(message: error.localizedDescription, retryButtonAction: { [weak welf = self] in
+        emptyScreenViewController.show(ErrorUtils.genericRetryErrorMessage(message: error.localizedDescription, action: { [weak welf = self] in
             welf?.emptyScreenViewController.hide()
             welf?.startAuthenticatingUser()
         }))

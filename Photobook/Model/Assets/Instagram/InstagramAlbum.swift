@@ -56,7 +56,7 @@ class InstagramAlbum {
                 // Not worth showing an error if one of the later pagination requests fail
                 guard self.assets.isEmpty else { return }
                 
-                completionHandler?(ErrorMessage(message: Constants.genericErrorMessage, retryButtonAction: { [weak welf = self] in
+                completionHandler?(ErrorUtils.genericRetryErrorMessage(message: Constants.genericErrorMessage, action: { [weak welf = self] in
                     welf?.fetchAssets(url: url, completionHandler: completionHandler)
                 }))
                 
@@ -100,7 +100,7 @@ class InstagramAlbum {
             guard self.assets.isEmpty else { return }
             
             let message = failure.underlyingError?.localizedDescription ?? Constants.genericErrorMessage
-            completionHandler?(ErrorMessage(message: message, retryButtonAction: { [weak welf = self] in
+            completionHandler?(ErrorUtils.genericRetryErrorMessage(message: message, action: { [weak welf = self] in
                 welf?.fetchAssets(url: url, completionHandler: completionHandler)
             }))
         })
