@@ -11,7 +11,7 @@ import UIKit
 class ReceiptTableViewController: UITableViewController {
     
     var cost: Cost? {
-        return ProductManager.shared.cachedCost
+        return OrderManager.shared.cachedCost
     }
     
     override func viewDidLoad() {
@@ -43,11 +43,11 @@ class ReceiptTableViewController: UITableViewController {
         switch indexPath.section {
         case Section.header.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptHeaderTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptHeaderTableViewCell
-            cell.shippingMethodLabel.text = cost?.shippingMethod(id: ProductManager.shared.shippingMethod)?.name
+            cell.shippingMethodLabel.text = cost?.shippingMethod(id: OrderManager.shared.shippingMethod)?.name
             // TODO: Replace with order number
             cell.orderNumberLabel.text = "#1234"
             
-            let deliveryDetails = ProductManager.shared.deliveryDetails
+            let deliveryDetails = OrderManager.shared.deliveryDetails
             var addressString = ""
             if let name = deliveryDetails?.fullName, !name.isEmpty { addressString += "\(name)\n"}
             if let line1 = deliveryDetails?.address?.line1, !line1.isEmpty { addressString += "\(line1)\n"}
@@ -65,7 +65,7 @@ class ReceiptTableViewController: UITableViewController {
             return cell
         case Section.footer.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptFooterTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptFooterTableViewCell
-            cell.totalCostLabel.text = cost?.shippingMethod(id: ProductManager.shared.shippingMethod)?.totalCostFormatted
+            cell.totalCostLabel.text = cost?.shippingMethod(id: OrderManager.shared.shippingMethod)?.totalCostFormatted
             return cell
         default:
             return UITableViewCell()

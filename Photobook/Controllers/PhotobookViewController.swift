@@ -224,7 +224,13 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     @IBAction func didTapCheckout(_ sender: Any) {
         guard draggingView == nil else { return }
-        performSegue(withIdentifier: "CheckoutSegue", sender: nil)
+        
+        let orderSummaryViewController = self.storyboard?.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
+        self.navigationController?.pushViewController(orderSummaryViewController, animated: true)
+    }
+    
+    @IBAction private func didTapOnSpine(_ sender: UITapGestureRecognizer) {
+        print("Tapped on spine")
     }
     
     @IBAction func didTapBack() {
