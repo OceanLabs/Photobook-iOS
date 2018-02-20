@@ -28,9 +28,10 @@ protocol Asset: Codable {
     ///
     /// - Parameters:
     ///   - size: The requested image size in points. Depending on the asset type and source this size may just a guideline
+    ///   - loadThumbnailsFirst: whether loading mode will be opportunistic. Setting this to true might result in loading a thumbnail before the actual image, which will result in the completion handler being executed multiple times
     ///   - progressHandler: Handler that returns the progress, for a example of a download
     ///   - completionHandler: The completion handler that returns the image
-    func uneditedImage(size: CGSize, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)?, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void)
+    func uneditedImage(size: CGSize, loadThumbnailsFirst: Bool, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)?, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void)
 }
 
 extension Asset {
@@ -39,11 +40,12 @@ extension Asset {
     ///
     /// - Parameters:
     ///   - size: The requested image size in points. Depending on the asset type and source this size may just a guideline
+    ///   - loadThumbnail: Whether thumbnails get loaded first before the actual image. Setting this to true will result in the completion handler being executed multiple times
     ///   - progressHandler: Handler that returns the progress, for a example of a download
     ///   - completionHandler: The completion handler that returns the image
-    func image(size: CGSize, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)? = nil, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void){
+    func image(size: CGSize, loadThumbnailsFirst: Bool = true, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)? = nil, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void){
         
-        uneditedImage(size: size, progressHandler: progressHandler, completionHandler: {(image: UIImage?, error: Error?) -> Void in
+        uneditedImage(size: size, loadThumbnailsFirst: loadThumbnailsFirst, progressHandler: progressHandler, completionHandler: {(image: UIImage?, error: Error?) -> Void in
             DispatchQueue.main.async {
                 guard error == nil else{
                     completionHandler(nil, error)

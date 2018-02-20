@@ -16,7 +16,7 @@ struct FormConstants {
 
 class DeliveryDetailsTableViewController: UITableViewController {
     
-    private var details = (ProductManager.shared.deliveryDetails?.copy() as? DeliveryDetails ?? DeliveryDetails.loadLatestDetails()) ?? DeliveryDetails()
+    private var details = (OrderManager.shared.deliveryDetails?.copy() as? DeliveryDetails ?? DeliveryDetails.loadLatestDetails()) ?? DeliveryDetails()
     
     private weak var firstNameTextField: UITextField!
     private weak var lastNameTextField: UITextField!
@@ -73,7 +73,7 @@ class DeliveryDetailsTableViewController: UITableViewController {
         
         if detailsAreValid {
             details.saveDetailsAsLatest()
-            ProductManager.shared.deliveryDetails = details
+            OrderManager.shared.deliveryDetails = details
             navigationController?.popViewController(animated: true)
         }
     }
@@ -81,7 +81,7 @@ class DeliveryDetailsTableViewController: UITableViewController {
     private func check(_ textField: UITextField, type: EntryType? = nil) -> Bool {
         textField.text = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        if textField.text?.isEmpty ?? true {
+        guard let text = textField.text, !text.isEmpty, text != FormConstants.requiredText else {
             textField.text = FormConstants.requiredText
             textField.textColor = FormConstants.errorColor
             return false

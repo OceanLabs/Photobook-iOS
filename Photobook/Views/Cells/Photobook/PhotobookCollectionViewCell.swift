@@ -8,6 +8,17 @@
 
 import UIKit
 
+// Protocol cells conform to enable / disaple page interaction
+protocol InteractivePagesCell {
+    var interactivePageFadedAlpha: CGFloat { get }
+    var isPageInteractionEnabled: Bool { get set }
+    var isFaded: Bool { get set }
+}
+
+extension InteractivePagesCell {
+    var interactivePageFadedAlpha: CGFloat { return 0.5 }
+}
+
 @objc protocol PhotobookCollectionViewCellDelegate: class, UIGestureRecognizerDelegate {
     func didTapOnPlusButton(at foldIndex: Int)
     func didTapOnPage(at: Int)
@@ -15,14 +26,13 @@ import UIKit
     @objc func didPan(_ sender: UIPanGestureRecognizer)
 }
 
-class PhotobookCollectionViewCell: UICollectionViewCell {
+class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
     
     @IBOutlet private weak var photobookFrameView: PhotobookFrameView! {
         didSet {
             photobookFrameView.coverColor = ProductManager.shared.coverColor
             photobookFrameView.pageColor = ProductManager.shared.pageColor
             photobookFrameView.leftPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
-            photobookFrameView.interaction = .wholePage
         }
     }
     @IBOutlet private weak var plusButton: UIButton!
@@ -56,28 +66,45 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
         get { return !plusButton.isHidden }
         set { plusButton.isHidden = !newValue }
     }
+    
+    var isPageInteractionEnabled: Bool = false {
+        didSet {
+            photobookFrameView.leftPageView.isUserInteractionEnabled = isPageInteractionEnabled
+            photobookFrameView.rightPageView.isUserInteractionEnabled = isPageInteractionEnabled
+        }
+    }
+    
+    var isFaded: Bool = false {
+        didSet { photobookFrameView.alpha = isFaded ? interactivePageFadedAlpha : 1.0 }
+    }
 
-    func loadPages(leftIndex: Int?, rightIndex: Int?, leftLayout: ProductLayout? = nil, rightLayout: ProductLayout? = nil) {
+    func loadPages(leftIndex: Int?, rightIndex: Int?) {
         if let leftIndex = leftIndex {
-            photobookFrameView.isLeftPageVisible = true
             photobookFrameView.leftPageView.pageIndex = leftIndex
-            if leftLayout != nil { photobookFrameView.leftPageView.productLayout = leftLayout }
+            photobookFrameView.leftPageView.productLayout = ProductManager.shared.productLayouts[leftIndex]
             
             photobookFrameView.leftPageView.setupImageBox()
             photobookFrameView.leftPageView.setupTextBox(mode: .userTextOnly)
+            
+            photobookFrameView.isLeftPageVisible = true
+            photobookFrameView.leftPageView.interaction = .wholePage
         } else {
             photobookFrameView.isLeftPageVisible = false
+            photobookFrameView.leftPageView.interaction = .disabled
         }
         
         if let rightIndex = rightIndex {
-            photobookFrameView.isRightPageVisible = true
             photobookFrameView.rightPageView.pageIndex = rightIndex
-            if rightLayout != nil { photobookFrameView.rightPageView.productLayout = rightLayout }
+            photobookFrameView.rightPageView.productLayout = ProductManager.shared.productLayouts[rightIndex]
             
             photobookFrameView.rightPageView.setupImageBox()
             photobookFrameView.rightPageView.setupTextBox(mode: .userTextOnly)
+            
+            photobookFrameView.isRightPageVisible = true
+            photobookFrameView.rightPageView.interaction = .wholePage
         } else {
             photobookFrameView.isRightPageVisible = false
+            photobookFrameView.rightPageView.interaction = .disabled
         }
         
         photobookFrameView.leftPageView.delegate = self
@@ -97,11 +124,6 @@ class PhotobookCollectionViewCell: UICollectionViewCell {
             let foldIndex = ProductManager.shared.spreadIndex(for: layoutIndex)
             else { return }
         delegate?.didTapOnPlusButton(at: foldIndex)
-    }
-    
-    func setIsRearranging(_ isRearranging: Bool) {
-        photobookFrameView.leftPageView.isUserInteractionEnabled = !isRearranging
-        photobookFrameView.rightPageView.isUserInteractionEnabled = !isRearranging
     }
     
     private var hasSetUpGestures = false

@@ -130,6 +130,7 @@ class TextEditingViewController: UIViewController {
             
             view.addSubview(animatableAssetImageView)
         } else {
+            animatableAssetImageView.image = nil
             animatableAssetImageView.alpha = 0.0
         }
         
@@ -179,7 +180,6 @@ class TextEditingViewController: UIViewController {
         let backgroundColor = view.backgroundColor
 
         if !hasAnImageLayout {
-
             UIView.animate(withDuration: 0.1, animations: {
                 self.textView.alpha = 0.0
                 self.textViewBorderView.alpha = 0.0
@@ -188,6 +188,7 @@ class TextEditingViewController: UIViewController {
             UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseInOut], animations: {
                 self.view.backgroundColor = .clear
             }, completion: { _ in
+                self.animatableAssetImageView.alpha = 1.0
                 completion()
             })
             return

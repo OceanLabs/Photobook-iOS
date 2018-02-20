@@ -209,7 +209,7 @@ extension AlbumsCollectionViewController{
     
 }
 
-extension AlbumsCollectionViewController{
+extension AlbumsCollectionViewController {
     // MARK: UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

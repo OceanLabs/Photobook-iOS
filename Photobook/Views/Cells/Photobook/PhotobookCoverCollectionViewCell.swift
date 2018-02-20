@@ -13,7 +13,7 @@ protocol PhotobookCoverCollectionViewCellDelegate: class {
     func didTapOnCover()
 }
 
-class PhotobookCoverCollectionViewCell: UICollectionViewCell {
+class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
     
     static let reuseIdentifier = NSStringFromClass(PhotobookCoverCollectionViewCell.self).components(separatedBy: ".").last!
     
@@ -32,6 +32,17 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell {
     
     weak var delegate: PhotobookCoverCollectionViewCellDelegate? {
         didSet { coverFrameView.pageView.delegate = self }
+    }
+    
+    var isPageInteractionEnabled: Bool = false {
+        didSet { coverFrameView.isUserInteractionEnabled = isPageInteractionEnabled }
+    }
+    
+    var isFaded: Bool = false {
+        didSet {
+            coverFrameView.alpha = isFaded ? interactivePageFadedAlpha : 1.0
+            spineFrameView.alpha = coverFrameView.alpha
+        }
     }
 
     override func layoutSubviews() {

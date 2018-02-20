@@ -140,15 +140,21 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func setupTitleView() {
-        titleButton = UIButton()
-        titleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        titleButton.setTitleColor(.black, for: .normal)
-        titleButton.setTitle(ProductManager.shared.product?.name, for: .normal)
-        titleButton.setImage(UIImage(named:"chevron-down"), for: .normal)
-        titleButton.semanticContentAttribute = .forceRightToLeft
-        titleButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -5)
-        titleButton.addTarget(self, action: #selector(didTapOnTitle), for: .touchUpInside)
-        navigationItem.titleView = titleButton
+        if !isRearranging {
+            titleButton = UIButton()
+            titleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+            titleButton.setTitleColor(.black, for: .normal)
+            titleButton.setTitle(ProductManager.shared.product?.name, for: .normal)
+            titleButton.setImage(UIImage(named:"chevron-down"), for: .normal)
+            titleButton.semanticContentAttribute = .forceRightToLeft
+            titleButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -5)
+            titleButton.addTarget(self, action: #selector(didTapOnTitle), for: .touchUpInside)
+            navigationItem.titleView = titleButton
+            return
+        }
+        
+        navigationItem.titleView = nil
+        navigationItem.title = NSLocalizedString("Photobook/RearrangeTitle", value: "Rearranging Pages", comment: "Title of the photobook preview screen in rearrange mode")
     }
     
     @objc private func didTapOnTitle() {
@@ -174,8 +180,19 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBAction private func didTapRearrange(_ sender: UIBarButtonItem) {
         isRearranging = !isRearranging
         
-        if isRearranging{
+        // Update drag interaction enabled status
+        let interactiveCellClosure: ((Bool) -> Void) = { [weak welf = self] (isRearranging) in
+            guard let stelf = welf else { return }
+            for cell in stelf.collectionView.visibleCells {
+                guard var photobookCell = cell as? InteractivePagesCell else { continue }
+                photobookCell.isFaded = isRearranging && stelf.shouldFadeWhenRearranging(cell)
+                photobookCell.isPageInteractionEnabled = !isRearranging
+            }
+        }
+        
+        if isRearranging {
             UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
+                interactiveCellClosure(true)
                 self.collectionView.transform = CGAffineTransform(translationX: 0, y: -self.collectionView.frame.size.height * (1.0-Constants.rearrageScale)/2.0).scaledBy(x: Constants.rearrageScale, y: Constants.rearrageScale)
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
@@ -185,6 +202,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             sender.tintColor = Constants.doneBlueColor
         } else{
             UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
+                interactiveCellClosure(false)
                 self.collectionView.transform = .identity
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
@@ -194,20 +212,25 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             sender.tintColor = Constants.rearrangeGreyColor
         }
         
-        // Update drag interaction enabled status
-        for cell in collectionView.visibleCells {
-            guard let photobookCell = cell as? PhotobookCollectionViewCell else { continue }
-            photobookCell.setIsRearranging(isRearranging)
-        }
+        
+        setupTitleView()
     }
     
-    @IBAction private func didTapOnSpine(_ sender: UITapGestureRecognizer) {
-        print("Tapped on spine")
+    private func shouldFadeWhenRearranging(_ cell: UICollectionViewCell) -> Bool {
+        guard let indexPath = collectionView.indexPath(for: cell) else { return false }
+        // Cover, first & last spreads return true, false for all other spreads
+        return indexPath.row == 0 || indexPath.row == collectionView.numberOfItems(inSection: 1) - 1
     }
     
     @IBAction func didTapCheckout(_ sender: Any) {
         guard draggingView == nil else { return }
-        performSegue(withIdentifier: "CheckoutSegue", sender: nil)
+        
+        let orderSummaryViewController = self.storyboard?.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
+        self.navigationController?.pushViewController(orderSummaryViewController, animated: true)
+    }
+    
+    @IBAction private func didTapOnSpine(_ sender: UITapGestureRecognizer) {
+        print("Tapped on spine")
     }
     
     @IBAction func didTapBack() {
@@ -574,6 +597,8 @@ extension PhotobookViewController: UICollectionViewDataSource {
             cell.width = (view.bounds.size.width - Constants.cellSideMargin * 2.0) / 2.0
             cell.delegate = self
             cell.loadCoverAndSpine()
+            cell.isPageInteractionEnabled = !isRearranging
+            cell.isFaded = isRearranging
             
             return cell
         default:
@@ -594,8 +619,10 @@ extension PhotobookViewController: UICollectionViewDataSource {
             switch indexPath.item {
             case 0:
                 rightIndex = 1
+                cell.isFaded = isRearranging
             case collectionView.numberOfItems(inSection: 1) - 1: // Last page
                 leftIndex = ProductManager.shared.productLayouts.count - 1
+                cell.isFaded = isRearranging
             default:
                 let indexPathItem = indexPath.item - ((proposedDropIndexPath?.item ?? Int.max) < indexPath.item ? 1 : 0)
                 guard let index = ProductManager.shared.productLayoutIndex(for: indexPathItem) else { return cell }
@@ -604,18 +631,16 @@ extension PhotobookViewController: UICollectionViewDataSource {
                     rightIndex = index + 1
                 }
                 cell.setupGestures()
-                cell.setIsRearranging(isRearranging)
+                cell.isPageInteractionEnabled = !isRearranging
                 
                 // Get a larger image if the layout is double width
                 if ProductManager.shared.productLayouts[index].layout.isDoubleLayout {
                     cell.imageSize = CGSize(width: imageSize.width * 2.0, height: imageSize.height * 2.0)
                 }
+                cell.isFaded = false
             }
             
-            let leftLayout: ProductLayout? = leftIndex != nil ? ProductManager.shared.productLayouts[leftIndex!] : nil
-            let rightLayout: ProductLayout? = rightIndex != nil ? ProductManager.shared.productLayouts[rightIndex!] : nil
-
-            cell.loadPages(leftIndex: leftIndex, rightIndex: rightIndex, leftLayout: leftLayout, rightLayout: rightLayout)
+            cell.loadPages(leftIndex: leftIndex, rightIndex: rightIndex)
             cell.isPlusButtonVisible = indexPath.item != 0
             
             return cell
@@ -766,7 +791,6 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
             self.deleteProposalCell(enableFeedback: false)
             self.insertProposalCell(proposedIndexPath)
         })
-        
     }
     
     func autoScrollIfNeeded() {

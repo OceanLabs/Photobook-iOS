@@ -39,40 +39,40 @@ class PaymentViewController: UIViewController {
     @IBAction func payTapped(_ sender: UIButton) {
         
         var orderIsFree = false
-        if let cost = ProductManager.shared.validCost, let selectedMethod = ProductManager.shared.shippingMethod, let shippingMethod = cost.shippingMethod(id: selectedMethod){
+        if let cost = OrderManager.shared.validCost, let selectedMethod = OrderManager.shared.shippingMethod, let shippingMethod = cost.shippingMethod(id: selectedMethod){
             orderIsFree = shippingMethod.totalCost == 0.0
         }
         
-        guard (!orderIsFree && ProductManager.shared.paymentMethod == .applePay) || (ProductManager.shared.deliveryDetails?.address?.isValid ?? false) else {
+        guard (!orderIsFree && OrderManager.shared.paymentMethod == .applePay) || (OrderManager.shared.deliveryDetails?.address?.isValid ?? false) else {
             // TODO: Indicate to the user that delivery information is missing
             return
         }
         
-        guard orderIsFree || (ProductManager.shared.paymentMethod != nil && (ProductManager.shared.paymentMethod != .creditCard || Card.currentCard != nil)) else {
+        guard orderIsFree || (OrderManager.shared.paymentMethod != nil && (OrderManager.shared.paymentMethod != .creditCard || Card.currentCard != nil)) else {
             // TODO: Indicate to the user that payment method is missing
             return
         }
         
-        ProductManager.shared.updateCost { [weak welf = self] (error: Error?) in
+        OrderManager.shared.updateCost { [weak welf = self] (error: Error?) in
             guard welf != nil else { return }
-            guard let cost = ProductManager.shared.validCost, error == nil else {
+            guard let cost = OrderManager.shared.validCost, error == nil else {
                 let genericError = NSLocalizedString("UpdateCostError", value: "An error occurred while updating our products.\nPlease try again later.", comment: "Generic error when retrieving the cost for the products in the basket")
                 
                 // TODO: show error to the user
                 return
             }
             
-            if let selectedMethod = ProductManager.shared.shippingMethod, let shippingMethod = cost.shippingMethod(id: selectedMethod), shippingMethod.totalCost == 0.0 {
+            if let selectedMethod = OrderManager.shared.shippingMethod, let shippingMethod = cost.shippingMethod(id: selectedMethod), shippingMethod.totalCost == 0.0 {
                 // The user must have a promo code which reduces this order cost to nothing, lucky user :)
-                ProductManager.shared.paymentToken = nil
+                OrderManager.shared.paymentToken = nil
                 welf?.submitOrder(completionHandler: nil)
             }
             else{
-                if ProductManager.shared.paymentMethod == .applePay{
+                if OrderManager.shared.paymentMethod == .applePay{
                     welf?.modalPresentationDismissedOperation = Operation()
                 }
                 
-                guard let paymentMethod = ProductManager.shared.paymentMethod else { return }
+                guard let paymentMethod = OrderManager.shared.paymentMethod else { return }
                 welf?.paymentManager.authorizePayment(cost: cost, method: paymentMethod)
             }
         }
@@ -103,7 +103,7 @@ extension PaymentViewController: PaymentAuthorizationManagerDelegate {
             return
         }
         
-        ProductManager.shared.paymentToken = token
+        OrderManager.shared.paymentToken = token
         submitOrder(completionHandler: completionHandler)
     }
     
@@ -113,7 +113,7 @@ extension PaymentViewController: PaymentAuthorizationManagerDelegate {
     
     func modalPresentationDidFinish() {
         
-        ProductManager.shared.updateCost { [weak welf = self] (error: Error?) in
+        OrderManager.shared.updateCost { [weak welf = self] (error: Error?) in
             guard welf != nil else { return }
             
             if let applePayDismissedOperation = welf?.modalPresentationDismissedOperation{
