@@ -21,7 +21,7 @@ class SelectedAssetsManager: NSObject {
     override init() {
         super.init()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereReloaded(_:)), name: AssetsNotificationName.albumsWereReloaded, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
     }
     
     deinit {
@@ -138,7 +138,7 @@ class SelectedAssetsManager: NSObject {
         deselect(selectedAssets)
     }
     
-    @objc func albumsWereReloaded(_ notification: Notification) {
+    @objc func albumsWereUpdated(_ notification: Notification) {
         guard let albumsChanges = notification.object as? [AlbumChange] else { return }
         
         for albumChange in albumsChanges {

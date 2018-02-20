@@ -178,7 +178,7 @@ extension PhotosAlbumManager: PHPhotoLibraryChangeObserver {
                 }
                 
                 dispatchGroup.notify(queue: DispatchQueue.main, execute: {
-                   NotificationCenter.default.post(name: AssetsNotificationName.albumsWereReloaded, object: albumChanges)
+                   NotificationCenter.default.post(name: AssetsNotificationName.albumsWereUpdated, object: albumChanges)
                 })
                 
             }

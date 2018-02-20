@@ -8,8 +8,16 @@
 
 import UIKit
 import Photos
+import OAuthSwift
+import KeychainSwift
 
 class IntroViewController: UIViewController {
+    
+    enum Tab: Int {
+        case stories
+        case browse
+        case instagram
+    }
     
     var userHasDismissed:Bool {
         get {
@@ -101,16 +109,29 @@ class IntroViewController: UIViewController {
     }
     
     private func configureTabBarController(_ tabBarController: UITabBarController) {
-        // Second Tab: Browse
+        
+        // Browse
         // Set the albumManager to the AlbumsCollectionViewController
-        let albumViewController = (tabBarController.viewControllers?[1] as? UINavigationController)?.topViewController as? AlbumsCollectionViewController
+        let albumViewController = (tabBarController.viewControllers?[Tab.browse.rawValue] as? UINavigationController)?.topViewController as? AlbumsCollectionViewController
         albumViewController?.albumManager = PhotosAlbumManager()
         
-        // First Tab: Stories
+        // Instagram
+        // Depending on whether we are logged in or not show the Instagram login screen or the asset picker
+        if KeychainSwift().getData(OAuth2Swift.Constants.keychainInstagramTokenKey) != nil {
+            let instagramAssetPicker = AssetPickerCollectionViewController.instagramAssetPicker()
+            instagramAssetPicker.delegate = instagramAssetPicker
+            (tabBarController.viewControllers?[Tab.instagram.rawValue] as? UINavigationController)?.setViewControllers([instagramAssetPicker], animated: false)
+        } else {
+            let instagramLandingViewController = storyboard!.instantiateViewController(withIdentifier: "InstagramLandingViewController")
+            (tabBarController.viewControllers?[Tab.instagram.rawValue] as? UINavigationController)?.setViewControllers([instagramLandingViewController], animated: false)
+        }
+        
+        
+        // Stories
         // If there are no stories, remove the stories tab
         StoriesManager.shared.loadTopStories()
         if StoriesManager.shared.stories.isEmpty {
-            tabBarController.viewControllers?.removeFirst()
+            tabBarController.viewControllers?.remove(at: Tab.stories.rawValue)
         }
         
         // Load the products here, so that the user avoids a loading screen on PhotobookViewController
