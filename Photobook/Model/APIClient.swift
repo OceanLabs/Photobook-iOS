@@ -21,12 +21,6 @@ enum APIContext {
     case pig
 }
 
-// Image types
-enum ImageType: String {
-    case jpeg
-    case png
-}
-
 /// Network client for all interaction with the API
 class APIClient: NSObject {
     
@@ -50,6 +44,12 @@ class APIClient: NSObject {
         case get = "GET"
         case post = "POST"
         case put = "PUT"
+    }
+    
+    // Image types
+    private enum ImageType: String {
+        case jpeg
+        case png
     }
     
     private func baseURLString(for context: APIContext) -> String {
