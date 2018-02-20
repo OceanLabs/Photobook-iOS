@@ -278,7 +278,7 @@
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="Ext-3a-SVs" secondAttribute="height" multiplier="158:199" priority="750" id="WEN-cX-ArK"/>
+                                                    <constraint firstAttribute="width" secondItem="Ext-3a-SVs" secondAttribute="height" multiplier="158:199" id="WEN-cX-ArK"/>
                                                 </constraints>
                                                 <connections>
                                                     <outlet property="aspectRatioConstraint" destination="WEN-cX-ArK" id="NUu-yC-X22"/>

@@ -19,7 +19,7 @@ extension PageSetupDelegate {
 }
 
 enum PageType {
-    case cover, first, last, left, right, double
+    case cover, first, last, left, right
 }
 
 class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate {
@@ -76,7 +76,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         guard let pageType = pageType else { return nil }
         
         switch pageType {
-        case .left, .last, .double:
+        case .left, .last:
             return leftAssetContainerView
         case .right, .first:
             return rightAssetContainerView
@@ -89,7 +89,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         guard let pageType = pageType else { return nil }
         
         switch pageType {
-        case .left, .last, .double:
+        case .left, .last:
             return leftAssetImageView
         case .right, .first:
             return rightAssetImageView
@@ -123,19 +123,21 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     private var pageSize: CGSize = .zero
     private var hasDoneSetup = false
     private var pageType: PageType! {
-        if productLayout.layout.isDoubleLayout { return .double }
-        else if pageIndex == 0 { return .cover }
+        if pageIndex == 0 { return .cover }
         else if pageIndex == 1 { return .first }
         else if pageIndex == ProductManager.shared.productLayouts.count - 1 { return .last }
         else if pageIndex % 2 == 0 { return .left }
         else { return .right }
+    }
+    private var isDoublePage: Bool {
+        return productLayout.layout.isDoubleLayout
     }
     
     private var pageView: PhotobookPageView! {
         guard let pageType = pageType else { return nil }
         
         switch pageType {
-        case .left, .last, .double:
+        case .left, .last:
             return photobookFrameView.leftPageView
         case .right, .first:
             return photobookFrameView.rightPageView
@@ -214,12 +216,17 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     private func setupPhotobookPages() {
         let aspectRatio = ProductManager.shared.product!.aspectRatio!
-        photobookFrameView.leftPageView.aspectRatio = pageType == .double ? aspectRatio * 2.0 : aspectRatio
-        photobookFrameView.rightPageView.aspectRatio = pageType == .double ? 0.0 : aspectRatio
+        if isDoublePage {
+            photobookFrameView.leftPageView.aspectRatio = pageType == .left ? aspectRatio * 2.0 : 0.0
+            photobookFrameView.rightPageView.aspectRatio = pageType == .left ? 0.0 : aspectRatio * 2.0
+            return
+        }
+        photobookFrameView.leftPageView.aspectRatio = aspectRatio
+        photobookFrameView.rightPageView.aspectRatio = aspectRatio
     }
     
     private func setupPhotobookFrame() {
-        photobookFrameView.width = (view.bounds.width - 2.0 * Constants.photobookSideMargin) * (pageType == .double ? 1.0 : 2.0)
+        photobookFrameView.width = (view.bounds.width - 2.0 * Constants.photobookSideMargin) * (isDoublePage ? 1.0 : 2.0)
 
         switch pageType! {
         case .last:
@@ -232,10 +239,12 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             fallthrough
         case .right:
             photobookHorizontalAlignmentConstraint.constant = Constants.photobookSideMargin
-        case .double:
-            photobookHorizontalAlignmentConstraint.constant = view.bounds.width * 0.5
         case .cover:
             break
+        }
+        
+        if isDoublePage {
+            photobookHorizontalAlignmentConstraint.constant = view.bounds.width * 0.5
         }
     }
     
@@ -417,6 +426,7 @@ extension PageSetupViewController: LayoutSelectionDelegate {
         if shouldResetFrame {
             setupPhotobookPages()
             setupPhotobookFrame()
+            photobookFrameView.resetPageColor()
         }
         
         pageView.setupLayoutBoxes()

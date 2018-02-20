@@ -32,12 +32,13 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     var pageIndex: Int?
     var coverColor: ProductColor!
     var pageColor: ProductColor!
+    var isDoublePage: Bool!
     
     private weak var assetContainerView: UIView! {
         guard let pageType = pageType else { return nil }
         
         switch pageType {
-        case .left, .last, .double:
+        case .left, .last:
             return leftAssetContainerView
         case .right, .first:
             return rightAssetContainerView
@@ -50,7 +51,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         guard let pageType = pageType else { return nil }
         
         switch pageType {
-        case .left, .last, .double:
+        case .left, .last:
             return leftAssetImageView
         case .right, .first:
             return rightAssetImageView
@@ -65,8 +66,20 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         backgroundColor = .clear
         
         let aspectRatio = ProductManager.shared.product!.aspectRatio!
-        photobookFrameView.leftPageView.aspectRatio = layout.isDoubleLayout ? aspectRatio * 2.0 : aspectRatio
-        photobookFrameView.rightPageView.aspectRatio = layout.isDoubleLayout ? 0.1 : aspectRatio
+        let hadEqualAspectRatios = photobookFrameView.leftPageView.aspectRatio == nil || (photobookFrameView.leftPageView.aspectRatio! ~= photobookFrameView.rightPageView.aspectRatio!)
+        if layout.isDoubleLayout {
+            photobookFrameView.leftPageView.aspectRatio = pageType == .left ? aspectRatio * 2.0 : 0.0
+            photobookFrameView.rightPageView.aspectRatio = pageType == .left ? 0.0 : aspectRatio * 2.0
+            if hadEqualAspectRatios {
+                photobookFrameView.resetPageColor()
+            }
+        } else {
+            photobookFrameView.leftPageView.aspectRatio = aspectRatio
+            photobookFrameView.rightPageView.aspectRatio = aspectRatio
+            if !hadEqualAspectRatios {
+                photobookFrameView.resetPageColor()
+            }
+        }
         photobookFrameView.width = (bounds.height - 2.0 * Constants.photobookVerticalMargin) * aspectRatio * 2.0
         
         photobookFrameView.layoutIfNeeded()
@@ -80,7 +93,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         case .last:
             photobookFrameView.isRightPageVisible = false
             fallthrough
-        case .left, .double:
+        case .left:
             photobookLeftAligmentConstraint.constant = bounds.width - Constants.photobookAlignmentMargin
             
             photobookFrameView.leftPageView.pageIndex = pageIndex
