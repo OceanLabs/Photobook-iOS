@@ -395,16 +395,33 @@ class ProductManager {
         return nil
     }
     
-    func addPages(at index: Int, pages: [ProductLayout]? = nil) {
+    func addPage(at index: Int) {
+        addPages(at: index, number: 1)
+    }
+    
+    func addPages(at index: Int, pages: [ProductLayout]) {
+        addPages(at: index, pages: pages)
+    }
+    
+    func addDoubleSpread(at index: Int) {
+        addPages(at: index)
+    }
+    
+    private func addPages(at index: Int, pages: [ProductLayout]? = nil, number: Int = 2) {
         guard let product = product,
             let layouts = layouts(for: product)
             else { return }
-        let newProductLayouts = pages ?? createLayoutsForAssets(assets: [], from: layouts, placeholderLayouts: 2)
+        let newProductLayouts = pages ?? createLayoutsForAssets(assets: [], from: layouts, placeholderLayouts: number)
         
         productLayouts.insert(contentsOf: newProductLayouts, at: index)
     }
     
-    func deletePage(at productLayout: ProductLayout) {
+    func deletePage(at index: Int) {
+        guard index < productLayouts.count else { return }
+        productLayouts.remove(at: index)
+    }
+    
+    func deletePages(for productLayout: ProductLayout) {
         guard let index = productLayouts.index(where: { $0 === productLayout }) else { return }
         productLayouts.remove(at: index)
         

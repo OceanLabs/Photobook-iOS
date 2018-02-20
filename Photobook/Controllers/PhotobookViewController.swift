@@ -370,7 +370,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         let productLayout = ProductManager.shared.productLayouts[index]
         
-        ProductManager.shared.deletePage(at: productLayout)
+        ProductManager.shared.deletePages(for: productLayout)
         collectionView.performBatchUpdates({
             collectionView.deleteItems(at: [indexPath])
         }, completion: { _ in
@@ -698,10 +698,29 @@ extension PhotobookViewController: PhotobookCoverCollectionViewCellDelegate {
 extension PhotobookViewController: PageSetupDelegate {
     // MARK: PageSetupDelegate
     
-    func didFinishEditingPage(_ index: Int?, productLayout: ProductLayout?, color: ProductColor?) {
+    func didFinishEditingPage(_ index: Int?, pageType: PageType?, productLayout: ProductLayout?, color: ProductColor?) {
         if let index = index {
             if let productLayout = productLayout {
+                let previousLayout = ProductManager.shared.productLayouts[index]
                 ProductManager.shared.productLayouts[index] = productLayout
+                
+                if previousLayout.layout.isDoubleLayout != productLayout.layout.isDoubleLayout {
+                    // From single to double
+                    if productLayout.layout.isDoubleLayout {
+                        if pageType == .left {
+                            ProductManager.shared.deletePage(at: index + 1)
+                        } else if pageType == .right {
+                            ProductManager.shared.deletePage(at: index - 1)
+                        
+                        }
+                    } else {
+                        if pageType == .left {
+                            ProductManager.shared.addPage(at: index + 1)
+                        } else if pageType == .right {
+                            ProductManager.shared.addPage(at: index - 1)                            
+                        }
+                    }
+                }
             }
             if let color = color {
                 if index == 0 { // Cover
@@ -839,7 +858,7 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
         guard let index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex else { return }
         
         // Insert new page above the tapped one
-        ProductManager.shared.addPages(at: index)
+        ProductManager.shared.addDoubleSpread(at: index)
         collectionView.performBatchUpdates({
             collectionView.insertItems(at: [indexPath])
         }, completion: { _ in

@@ -9,12 +9,12 @@
 import UIKit
 
 protocol PageSetupDelegate: class {
-    func didFinishEditingPage(_ index: Int?, productLayout: ProductLayout?, color: ProductColor?)
+    func didFinishEditingPage(_ index: Int?, pageType: PageType?, productLayout: ProductLayout?, color: ProductColor?)
 }
 
 extension PageSetupDelegate {
-    func didFinishEditingPage(_ index: Int? = nil, productLayout: ProductLayout? = nil, color: ProductColor? = nil) {
-        didFinishEditingPage(index, productLayout: productLayout, color: color)
+    func didFinishEditingPage(_ index: Int? = nil, pageType: PageType? = nil, productLayout: ProductLayout? = nil, color: ProductColor? = nil) {
+        didFinishEditingPage(index, pageType: pageType, productLayout: productLayout, color: color)
     }
 }
 
@@ -359,7 +359,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         {
             productLayout.productLayoutText!.text = visibleText
         }
-        delegate?.didFinishEditingPage(pageIndex, productLayout: productLayout, color: selectedColor)
+        delegate?.didFinishEditingPage(pageIndex, pageType: pageType, productLayout: productLayout, color: selectedColor)
     }
     
     @IBAction func tappedToolButton(_ sender: UIButton) {
