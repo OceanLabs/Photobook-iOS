@@ -25,28 +25,28 @@
         </array>
     </customFonts>
     <scenes>
-        <!--View Controller-->
+        <!--Instagram Landing View Controller-->
         <scene sceneID="eeW-YJ-knS">
             <objects>
-                <viewController storyboardIdentifier="InstagramLandingViewController" id="CJe-ow-F6K" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="InstagramLandingViewController" id="CJe-ow-F6K" customClass="InstagramLandingViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="72Z-i4-Dnc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Access Instagram" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qlt-FQ-DVE">
-                                <rect key="frame" x="90" y="182" width="234" height="24"/>
+                                <rect key="frame" x="90" y="179" width="234" height="24"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign in to access your Instagram photos and start creating" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3tS-Fo-5bm">
-                                <rect key="frame" x="90" y="208" width="234" height="36"/>
+                                <rect key="frame" x="90" y="205" width="234" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HTZ-sF-ffW">
-                                <rect key="frame" x="90" y="508" width="234" height="50"/>
+                                <rect key="frame" x="90" y="505" width="234" height="50"/>
                                 <color key="backgroundColor" red="0.20543283224105835" green="0.47096657752990723" blue="0.9647943377494812" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="0y2-Os-2z2"/>
@@ -65,7 +65,7 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" image="Instagram-big" translatesAutoresizingMaskIntoConstraints="NO" id="Jdf-5N-Pfk">
-                                <rect key="frame" x="90" y="264" width="234" height="234"/>
+                                <rect key="frame" x="90" y="261" width="234" height="234"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Jdf-5N-Pfk" secondAttribute="height" id="iAJ-74-C2M"/>
                                 </constraints>
@@ -78,7 +78,7 @@
                             <constraint firstItem="HTZ-sF-ffW" firstAttribute="trailing" secondItem="Jdf-5N-Pfk" secondAttribute="trailing" id="Mbj-eS-BWd"/>
                             <constraint firstItem="Qlt-FQ-DVE" firstAttribute="leading" secondItem="Jdf-5N-Pfk" secondAttribute="leading" id="NFX-el-m5p"/>
                             <constraint firstItem="HTZ-sF-ffW" firstAttribute="leading" secondItem="Jdf-5N-Pfk" secondAttribute="leading" id="NhY-fz-DbB"/>
-                            <constraint firstItem="Jdf-5N-Pfk" firstAttribute="centerY" secondItem="72Z-i4-Dnc" secondAttribute="centerY" constant="13" id="Zld-N2-k6D"/>
+                            <constraint firstItem="Jdf-5N-Pfk" firstAttribute="centerY" secondItem="OFT-ci-Vpz" secondAttribute="centerY" id="Zld-N2-k6D"/>
                             <constraint firstItem="Qlt-FQ-DVE" firstAttribute="trailing" secondItem="Jdf-5N-Pfk" secondAttribute="trailing" id="cxj-fV-QDN"/>
                             <constraint firstItem="3tS-Fo-5bm" firstAttribute="leading" secondItem="Jdf-5N-Pfk" secondAttribute="leading" id="dI8-wb-U3h"/>
                             <constraint firstItem="HTZ-sF-ffW" firstAttribute="top" secondItem="Jdf-5N-Pfk" secondAttribute="bottom" constant="10" id="fVL-0x-Fxf"/>
@@ -88,6 +88,9 @@
                         <viewLayoutGuide key="safeArea" id="OFT-ci-Vpz"/>
                     </view>
                     <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="vk6-YZ-8Eh"/>
+                    <connections>
+                        <outlet property="instagramLogoCenterYConstraint" destination="Zld-N2-k6D" id="y3r-OW-2hd"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WGU-1F-qWZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
