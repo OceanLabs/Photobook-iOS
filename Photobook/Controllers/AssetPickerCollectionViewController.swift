@@ -296,8 +296,10 @@ class AssetPickerCollectionViewController: UICollectionViewController {
 extension AssetPickerCollectionViewController: AssetCollectorViewControllerDelegate {
     // MARK: AssetCollectorViewControllerDelegate
     
-    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, willChangeHiddenStateTo hidden: Bool) {
-        collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: hidden ? 0 : assetCollectorViewController.viewHeight, right: 0)
+    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, willChangeHiddenStateTo hidden: Bool, coordinator: AssetCollectorAnimationCoordinator) {
+        coordinator.animate { [weak welf = self] in
+            welf?.collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: hidden ? 0 : assetCollectorViewController.viewHeight, right: 0)
+        }
     }
     
     func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
