@@ -112,8 +112,8 @@ class PhotobookPageView: UIView {
         hasSetupGestures = true
     }
     
-    func setupLayoutBoxes() {
-        guard assetImageView.image != nil && productLayout?.layout.imageLayoutBox != nil else {
+    func setupLayoutBoxes(animated: Bool = true) {
+        guard assetImageView.image != nil && productLayout?.layout.imageLayoutBox != nil && animated else {
             setupImageBox()
             setupTextBox()
             return

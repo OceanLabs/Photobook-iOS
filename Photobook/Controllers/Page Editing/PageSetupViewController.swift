@@ -57,7 +57,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             coverFrameView.interaction = .assetAndText
         }
     }
-    @IBOutlet private weak var photobookFrameView: PhotobookFrameView!  {
+    @IBOutlet private weak var photobookFrameView: PhotobookFrameView! {
         didSet {
             photobookFrameView.isHidden = pageType == .cover
         }
@@ -210,6 +210,29 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
                 updateAll(with: nil)
                 assetSelectorViewController.selectedAsset = nil
                 break
+            }
+        }
+    }
+    
+    private func transitionPhotobookFrame() {
+        UIView.animate(withDuration: 0.1, animations: {
+            self.photobookFrameView.layer.shadowOpacity = 0.0
+            self.photobookFrameView.leftPageView.alpha = 0.0
+            self.photobookFrameView.rightPageView.alpha = 0.0
+        }) { _ in
+            self.setupPhotobookPages()
+            self.setupPhotobookFrame()
+            self.photobookFrameView.resetPageColor()
+            
+            UIView.animate(withDuration: 0.3, animations: {
+                self.pageView.setupLayoutBoxes(animated: false)
+                self.photobookContainerView.layoutIfNeeded()
+            }) { _ in
+                UIView.animate(withDuration: 0.1) {
+                    self.photobookFrameView.layer.shadowOpacity = 1.0
+                    self.photobookFrameView.leftPageView.alpha = 1.0
+                    self.photobookFrameView.rightPageView.alpha = 1.0
+                }
             }
         }
     }
@@ -419,17 +442,15 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
 extension PageSetupViewController: LayoutSelectionDelegate {
     
     func didSelectLayout(_ layout: Layout) {
-        let shouldResetFrame = layout.isDoubleLayout != productLayout.layout.isDoubleLayout
+        let shouldTransitionPhotobookFrame = layout.isDoubleLayout != productLayout.layout.isDoubleLayout
         
         productLayout.layout = layout
         
-        if shouldResetFrame {
-            setupPhotobookPages()
-            setupPhotobookFrame()
-            photobookFrameView.resetPageColor()
+        if shouldTransitionPhotobookFrame {
+            transitionPhotobookFrame()
+        } else {
+            pageView.setupLayoutBoxes()
         }
-        
-        pageView.setupLayoutBoxes()
         
         // Deselect the asset if the layout does not have an image box
         if productLayout.layout.imageLayoutBox == nil {
