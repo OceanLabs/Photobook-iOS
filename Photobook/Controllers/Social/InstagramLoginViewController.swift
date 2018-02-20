@@ -66,13 +66,13 @@ extension InstagramLoginViewController: WKNavigationDelegate {
         
         if url.absoluteString.hasPrefix(OAuth2Swift.Constants.redirectUri) {
             webView.stopLoading()
+            activityIndicatorView.stopAnimating()
             
             OAuthSwift.handle(url: url)
             decisionHandler(.cancel)
             return
         }
         
-        activityIndicatorView.stopAnimating()
         decisionHandler(.allow)
     }
     
