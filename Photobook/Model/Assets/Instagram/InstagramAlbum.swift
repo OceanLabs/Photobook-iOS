@@ -18,8 +18,8 @@ class InstagramAlbum {
         static let genericErrorMessage = NSLocalizedString("Social/AccessError", value: "There was an error when trying to access \(serviceName)", comment: "Generic error when trying to access a social service eg Instagram/Facebook")
     }
     
-    var assets: [Asset] = []
-    var identifier: String = UUID.init().uuidString
+    var assets = [Asset]()
+    let identifier = UUID.init().uuidString
     private var nextUrl: String?
     var hasMoreAssetsToLoad: Bool {
         return nextUrl != nil
