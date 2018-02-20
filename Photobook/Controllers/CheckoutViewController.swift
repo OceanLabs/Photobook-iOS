@@ -18,7 +18,7 @@ class CheckoutViewController: UIViewController {
     @IBOutlet weak var itemImageView: UIImageView!
     @IBOutlet weak var itemTitleLabel: UILabel!
     @IBOutlet weak var itemPriceLabel: UILabel!
-    @IBOutlet weak var itemAmountLabel: UILabel!
+    @IBOutlet weak var itemAmountButton: UIButton!
     
     @IBOutlet weak var promoCodeView: UIView!
     @IBOutlet weak var promoCodeTextField: UITextField!
@@ -33,12 +33,19 @@ class CheckoutViewController: UIViewController {
     private var applePayButton: PKPaymentButton?
     private var payButtonOriginalColor:UIColor!
     
-    
     @IBOutlet weak var optionsViewBottomContraint: NSLayoutConstraint!
     @IBOutlet weak var optionsViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var promoCodeViewHeightConstraint: NSLayoutConstraint!
     
-    private var paymentViewController:PaymentViewController!
+    lazy private var paymentManager: PaymentAuthorizationManager = {
+        let manager = PaymentAuthorizationManager()
+        manager.delegate = self
+        return manager
+    }()
+    
+    private lazy var emptyScreenViewController: EmptyScreenViewController = {
+        return EmptyScreenViewController.emptyScreen(parent: self)
+    }()
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -48,8 +55,6 @@ class CheckoutViewController: UIViewController {
         super.viewDidLoad()
         
         registerForKeyboardNotifications()
-        
-        paymentViewController = PaymentViewController()
         
         payButtonOriginalColor = payButton.backgroundColor
         
@@ -73,6 +78,13 @@ class CheckoutViewController: UIViewController {
             views: views)
         
         view.addConstraints(hConstraints + vConstraints)
+        
+        //POPULATE
+        let loadingText = NSLocalizedString("Controllers/CheckoutViewController/EmptyScreenLoadingText",
+                                            value: "Loading price details...",
+                                            comment: "Info text displayed next to a loading indicator while loading price details")
+        emptyScreenViewController.show(message: loadingText, title: nil, image: nil, activity: true, buttonTitle: nil, buttonAction: nil)
+        refresh()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -86,14 +98,23 @@ class CheckoutViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
+    func refresh() {
+        OrderManager.shared.updateCost { (error) in
+            self.populate() //TODO: error handling
+            self.emptyScreenViewController.hide()
+        }
+    }
+    
     func populate() {
         
         //product
         
         itemTitleLabel.text = ProductManager.shared.product?.name
         itemPriceLabel.text = OrderManager.shared.cachedCost?.lineItems?.first?.formattedCost
+        itemAmountButton.setTitle("\(OrderManager.shared.itemCount)", for: .normal)
         
         //payment method icon
+        paymentMethodIconImageView.image = nil
         if let paymentMethod = OrderManager.shared.paymentMethod {
             switch paymentMethod {
             case .creditCard:
@@ -112,7 +133,7 @@ class CheckoutViewController: UIViewController {
         //shipping
         shippingMethodLabel.text = ""
         if let validCost = OrderManager.shared.validCost, let selectedShippingMethod = validCost.shippingMethod(id: OrderManager.shared.shippingMethod) {
-            shippingMethodLabel.text = selectedShippingMethod.totalCostFormatted
+            shippingMethodLabel.text = selectedShippingMethod.shippingCostFormatted
         }
         
         //address
@@ -129,12 +150,25 @@ class CheckoutViewController: UIViewController {
         adaptPayButton()
     }
     
+    @IBAction public func itemAmountButtonPressed(_ sender: Any) {
+        presentAmountPicker()
+    }
+    
     func adaptPayButton() {
         //hide all
         applePayButton?.isHidden = true
         applePayButton?.isEnabled = false
         payButton.isHidden = true
         payButton.isEnabled = false
+        
+        var payButtonText = NSLocalizedString("Controllers/CheckoutViewController/PayButtonText",
+                                            value: "Pay",
+                                            comment: "Text on pay button. This is followed by the amount to pay")
+        
+        if let selectedMethod = OrderManager.shared.shippingMethod, let cost = OrderManager.shared.validCost, let shippingMethod = cost.shippingMethod(id: selectedMethod) {
+            payButtonText = payButtonText + " \(shippingMethod.totalCostFormatted)"
+        }
+        payButton.setTitle(payButtonText, for: .normal)
         
         let paymentMethod = OrderManager.shared.paymentMethod
         
@@ -151,6 +185,19 @@ class CheckoutViewController: UIViewController {
                 payButton.backgroundColor = UIColor.lightGray
             }
         }
+    }
+    
+    func presentAmountPicker() {
+        let amountPickerViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AmountPickerViewController") as! AmountPickerViewController
+        amountPickerViewController.optionName = NSLocalizedString("Controllers/CheckoutViewController/ItemAmountPickerTitle",
+                                                                              value: "Select amount",
+                                                                              comment: "The title displayed on the picker view for the amount of basket items")
+        amountPickerViewController.selectedValue = OrderManager.shared.itemCount
+        amountPickerViewController.minimum = 1
+        amountPickerViewController.maximum = 10
+        amountPickerViewController.delegate = self
+        amountPickerViewController.modalPresentationStyle = .overCurrentContext
+        self.present(amountPickerViewController, animated: false, completion: nil)
     }
     
     /*override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -174,8 +221,7 @@ class CheckoutViewController: UIViewController {
     @IBAction private func applePayButtonTapped(_ sender: PKPaymentButton) {
         
         
-        
-        paymentViewController.payTapped(sender)
+        paymentManager.authorizePayment(cost: OrderManager.shared.cachedCost!, method: .applePay)
     }
     
     //MARK: Keyboard
@@ -206,8 +252,34 @@ class CheckoutViewController: UIViewController {
     }
 }
 
+extension CheckoutViewController: AmountPickerDelegate {
+    func amountPickerDidSelectValue(_ value: Int) {
+        OrderManager.shared.itemCount = value
+        itemAmountButton.setTitle("\(value)", for: .normal)
+    }
+}
+
+extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
+    func costUpdated() {
+        
+    }
+    
+    func paymentAuthorizationDidFinish(token: String?, error: Error?, completionHandler: ((PKPaymentAuthorizationStatus) -> Void)?) {
+        
+    }
+    
+    func modalPresentationDidFinish() {
+        
+    }
+    
+    
+}
+
 extension CheckoutViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        OrderManager.shared.promoCode = textField.text
+        refresh()
         
         textField.resignFirstResponder()
         return false
