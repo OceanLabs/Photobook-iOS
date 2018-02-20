@@ -35,7 +35,7 @@ class InstagramAlbum {
     }
     
     func fetchAssets(url: String, completionHandler:((_ error: ErrorMessage?)->())?) {
-        guard let tokenData = KeychainSwift().getData(keychainInstagramTokenKey),
+        guard let tokenData = KeychainSwift().getData(OAuth2Swift.Constants.keychainInstagramTokenKey),
             let token = String(data: tokenData, encoding: .utf8)
             else { return }
         
@@ -47,7 +47,7 @@ class InstagramAlbum {
         urlToLoad = "\(urlToLoad)&count=100"
         
         instagramClient.startAuthorizedRequest(urlToLoad, method: .GET, parameters: [:], onTokenRenewal: { credential in
-            KeychainSwift().set(credential.oauthToken, forKey: keychainInstagramTokenKey)
+            KeychainSwift().set(credential.oauthToken, forKey: OAuth2Swift.Constants.keychainInstagramTokenKey)
         }, success: { response in
             guard let json = (try? JSONSerialization.jsonObject(with: response.data, options: [])) as? [String : Any],
             let pagination = json["pagination"] as? [String : Any],

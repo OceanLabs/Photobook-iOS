@@ -11,15 +11,9 @@ import OAuthSwift
 import WebKit
 import KeychainSwift
 
-let keychainInstagramTokenKey = "InstagramTokenKey"
-
 class InstagramLoginViewController: UIViewController {
     
     private var webView: WKWebView = WKWebView()
-    private struct Constants {
-        static let redirectUri = "https://kite.ly/instagram-callback"
-        static let scope = "basic"
-    }
     
     private lazy var instagramClient: OAuth2Swift = {
         let client = OAuth2Swift.instagramClient()
@@ -52,9 +46,9 @@ class InstagramLoginViewController: UIViewController {
             }
         })
         
-        instagramClient.authorize(withCallbackURL: URL(string: Constants.redirectUri)!, scope: Constants.scope, state:"INSTAGRAM",
+        instagramClient.authorize(withCallbackURL: URL(string: OAuth2Swift.Constants.redirectUri)!, scope: OAuth2Swift.Constants.scope, state:"INSTAGRAM",
             success: { [weak welf = self] credential, response, parameters in
-                KeychainSwift().set(credential.oauthToken, forKey: keychainInstagramTokenKey)
+                KeychainSwift().set(credential.oauthToken, forKey: OAuth2Swift.Constants.keychainInstagramTokenKey)
                 welf?.navigationController?.setViewControllers([AssetPickerCollectionViewController.instagramAssetPicker()], animated: false)                
         }, failure: { [weak welf = self] error in
             welf?.emptyScreenViewController.show(ErrorMessage(message: error.localizedDescription, retryButtonAction: { [weak welf = self] in
@@ -70,7 +64,7 @@ extension InstagramLoginViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         guard let url = navigationAction.request.url else { decisionHandler(.allow); return }
         
-        if url.absoluteString.hasPrefix(Constants.redirectUri) {
+        if url.absoluteString.hasPrefix(OAuth2Swift.Constants.redirectUri) {
             webView.stopLoading()
             
             OAuthSwift.handle(url: url)
