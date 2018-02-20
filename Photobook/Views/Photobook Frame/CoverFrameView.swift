@@ -26,7 +26,9 @@ class CoverFrameView: UIView {
     
     @IBOutlet private weak var coverBackgroundView: CoverBackgroundView!
     @IBOutlet private weak var widthConstraint: NSLayoutConstraint!
-    @IBOutlet weak var pageView: PhotobookPageView!
+    @IBOutlet weak var pageView: PhotobookPageView! {
+        didSet { pageView.interaction = interaction }
+    }
     
     var width: CGFloat! {
         didSet {
@@ -38,6 +40,7 @@ class CoverFrameView: UIView {
     var pageSide = PageSide.left
     var color: ProductColor = .white
     var aspectRatio: CGFloat!
+    var interaction: PhotobookPageViewInteraction = .disabled
     
     override func layoutSubviews() {
         super.layoutSubviews()

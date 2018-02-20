@@ -33,7 +33,11 @@ class LayoutSelectionViewController: UIViewController {
     var pageType: PageType!
     var asset: Asset? {
         didSet {
-            guard let asset = asset else { return }
+            guard let asset = asset else {
+                image = nil
+                collectionView.reloadData()
+                return
+            }
             
             let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
             asset.image(size: flowLayout.itemSize, completionHandler: { (image, error) in
@@ -48,16 +52,10 @@ class LayoutSelectionViewController: UIViewController {
     }
     var layouts: [Layout]! { didSet { collectionView?.reloadData() } }
     var coverColor: ProductColor! {
-        didSet {
-            if coverColor != oldValue { shouldResetColor = true }
-            collectionView.reloadData()
-        }
+        didSet { collectionView.reloadData() }
     }
     var pageColor: ProductColor! {
-        didSet {
-            if pageColor != oldValue { shouldResetColor = true }
-            collectionView.reloadData()
-        }
+        didSet { collectionView.reloadData() }
     }
     
     var selectedLayoutIndex = 0
@@ -69,8 +67,6 @@ class LayoutSelectionViewController: UIViewController {
     }
     
     weak var delegate: LayoutSelectionDelegate?
-    
-    private var shouldResetColor: Bool = false
 }
 
 extension LayoutSelectionViewController: UICollectionViewDataSource {
@@ -93,7 +89,6 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
             cell.isBorderVisible = (indexPath.row == selectedLayoutIndex)
             cell.coverColor = coverColor
             cell.setupLayout()
-            if shouldResetColor { cell.resetColor() }
             return cell
         }
         
@@ -108,14 +103,9 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
         cell.coverColor = coverColor
         cell.pageColor = pageColor
         cell.setupLayout()
-        if shouldResetColor { cell.resetColor() }
 
         return cell
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        shouldResetColor = false
-    }
+    }    
 }
 
 extension LayoutSelectionViewController: UICollectionViewDelegate {

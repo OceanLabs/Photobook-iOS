@@ -20,16 +20,18 @@ protocol Asset: Codable {
     var isLandscape: Bool { get }
     var uploadUrl: String? { get set }
     var assetType: String { get }
+    var date: Date? { get }
     
     var albumIdentifier: String { get }
     
-    /// Request the original, unedited image that this asset represents. Avoid using this method directly, instead use image(size:applyEdits:contentMode:cacheResult:progressHandler:completionHandler:)
+    /// Request the original, unedited image that this asset represents. Avoid using this method directly, instead use image(size:contentMode:cacheResult:progressHandler:completionHandler:)
     ///
     /// - Parameters:
     ///   - size: The requested image size in points. Depending on the asset type and source this size may just a guideline
+    ///   - loadThumbnailsFirst: whether loading mode will be opportunistic. Setting this to true might result in loading a thumbnail before the actual image, which will result in the completion handler being executed multiple times
     ///   - progressHandler: Handler that returns the progress, for a example of a download
     ///   - completionHandler: The completion handler that returns the image
-    func uneditedImage(size: CGSize, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)?, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void)
+    func uneditedImage(size: CGSize, loadThumbnailsFirst: Bool, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)?, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void)
 }
 
 extension Asset {
@@ -38,24 +40,22 @@ extension Asset {
     ///
     /// - Parameters:
     ///   - size: The requested image size in points. Depending on the asset type and source this size may just a guideline
-    ///   - applyEdits: Option to apply the edits that the user has made
+    ///   - loadThumbnail: Whether thumbnails get loaded first before the actual image. Setting this to true will result in the completion handler being executed multiple times
     ///   - progressHandler: Handler that returns the progress, for a example of a download
     ///   - completionHandler: The completion handler that returns the image
-    func image(size: CGSize, applyEdits: Bool = true, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)? = nil, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void){
+    func image(size: CGSize, loadThumbnailsFirst: Bool = true, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)? = nil, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void){
         
-        uneditedImage(size: size, progressHandler: progressHandler, completionHandler: {(image: UIImage?, error: Error?) -> Void in
-            guard error == nil else{
-                completionHandler(nil, error)
-                return
-            }
-            guard let image = image else{
-                completionHandler(nil, NSError()) //TODO: better error reporting
-                return
-            }
-            
-            //TODO: apply edits here if needed
-            
+        uneditedImage(size: size, loadThumbnailsFirst: loadThumbnailsFirst, progressHandler: progressHandler, completionHandler: {(image: UIImage?, error: Error?) -> Void in
             DispatchQueue.main.async {
+                guard error == nil else{
+                    completionHandler(nil, error)
+                    return
+                }
+                guard let image = image else{
+                    completionHandler(nil, NSError()) //TODO: better error reporting
+                    return
+                }
+                
                 completionHandler(image, nil)
             }
         })

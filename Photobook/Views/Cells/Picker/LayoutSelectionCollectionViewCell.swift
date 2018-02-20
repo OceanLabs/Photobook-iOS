@@ -65,13 +65,9 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         backgroundColor = .clear
         
         let aspectRatio = ProductManager.shared.product!.aspectRatio!
-        
-        photobookFrameView.coverColor = coverColor
-        photobookFrameView.pageColor = pageColor
+
         photobookFrameView.leftPageView.aspectRatio = aspectRatio
         photobookFrameView.rightPageView.aspectRatio = aspectRatio
-        photobookFrameView.leftPageView.isTapGestureEnabled = false
-        photobookFrameView.rightPageView.isTapGestureEnabled = false
 
         photobookFrameView.width = (bounds.height - 2.0 * Constants.photobookVerticalMargin) * aspectRatio * 2.0
         
@@ -87,25 +83,28 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         case .left:
             photobookLeftAligmentConstraint.constant = bounds.width - Constants.photobookAlignmentMargin
             
-            photobookFrameView.leftPageView.index = pageIndex
+            photobookFrameView.leftPageView.pageIndex = pageIndex
             photobookFrameView.leftPageView.productLayout = productLayout
             photobookFrameView.leftPageView.setupImageBox(with: image)
-            photobookFrameView.leftPageView.setupTextBox(shouldBeLegible: false)
+            photobookFrameView.leftPageView.setupTextBox(mode: .linesPlaceholder)
         case .first:
             photobookFrameView.isLeftPageVisible = false
             fallthrough
         case .right:
-            photobookFrameView.rightPageView.index = pageIndex
+            photobookFrameView.rightPageView.pageIndex = pageIndex
             photobookFrameView.rightPageView.productLayout = productLayout
             photobookFrameView.rightPageView.setupImageBox(with: image)
-            photobookFrameView.rightPageView.setupTextBox(shouldBeLegible: false)
+            photobookFrameView.rightPageView.setupTextBox(mode: .linesPlaceholder)
         default:
             break
         }
-    }
-    
-    func resetColor() {
-        photobookFrameView.resetPageColor()
+        
+        if photobookFrameView.coverColor != coverColor ||
+            photobookFrameView.pageColor != pageColor {
+                photobookFrameView.coverColor = coverColor
+                photobookFrameView.pageColor = pageColor
+                photobookFrameView.resetPageColor()
+        }
     }
 }
 

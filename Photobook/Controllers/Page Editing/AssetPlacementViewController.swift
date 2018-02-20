@@ -25,6 +25,7 @@ class AssetPlacementViewController: UIViewController {
     // Public vars
     var productLayout: ProductLayout?
     var initialContainerRect: CGRect?
+    var targetRect: CGRect?
     var assetImage: UIImage?
 
     override func viewDidLoad() {
@@ -50,13 +51,13 @@ class AssetPlacementViewController: UIViewController {
         assetEditingAreaView.layoutIfNeeded()
         assetEditingAreaView.alpha = 0.0
         
-        let targetRect = assetEditingAreaView.convert(assetContainerView.frame, to: view)
+        targetRect = assetEditingAreaView.convert(assetContainerView.frame, to: view)
         animatableAssetImageView.transform = .identity
-        animatableAssetImageView.frame = targetRect
+        animatableAssetImageView.frame = targetRect!
         animatableAssetImageView.image = assetContainerView.snapshot()
         animatableAssetImageView.center = CGPoint(x: initialContainerRect.midX, y: initialContainerRect.midY)
         
-        let initialScale = initialContainerRect.width / targetRect.width
+        let initialScale = initialContainerRect.width / targetRect!.width
         animatableAssetImageView.transform = CGAffineTransform.identity.scaledBy(x: initialScale, y: initialScale)
         
         view.addSubview(animatableAssetImageView)
@@ -70,7 +71,7 @@ class AssetPlacementViewController: UIViewController {
 
         UIView.animate(withDuration: 0.3, animations: {
             self.view.backgroundColor = backgroundColor
-            self.animatableAssetImageView.frame = targetRect
+            self.animatableAssetImageView.frame = self.targetRect!
         })
     }
     
@@ -95,7 +96,7 @@ class AssetPlacementViewController: UIViewController {
 
         UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseInOut], animations: {
             self.view.backgroundColor = .clear
-            self.animatableAssetImageView.frame = self.initialContainerRect!
+            self.animatableAssetImageView.frame = initialContainerRect
         }, completion: { _ in
             self.view.alpha = 0.0
             self.view.backgroundColor = backgroundColor
@@ -185,7 +186,7 @@ class AssetPlacementViewController: UIViewController {
         
         switch gesture.state {
         case .began:
-            if gestures.count == 0 { initialTransform = assetImageView.transform }
+            if gestures.isEmpty { initialTransform = assetImageView.transform }
             gestures.insert(gesture)
             if let gesture = gesture as? UIRotationGestureRecognizer {
                 startedRotationGesture(gesture, inView: assetImageView)
@@ -197,7 +198,7 @@ class AssetPlacementViewController: UIViewController {
             }
         case .ended:
             gestures.remove(gesture)
-            if gestures.count == 0 {
+            if gestures.isEmpty {
                 setAnchorPoint(anchorPoint: CGPoint(x: 0.5, y: 0.5), view: assetImageView)
                 
                 assetImageView.transform = LayoutUtils.centerTransform(assetImageView.transform, inParentView: assetContainerView, fromPoint: assetImageView.center)

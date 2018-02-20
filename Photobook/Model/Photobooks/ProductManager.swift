@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Stripe
 
 enum ProductColor: String, Codable {
     case white, black
@@ -73,9 +74,14 @@ class ProductManager {
     // List of all available layouts
     private(set) var layouts: [Layout]?
     
+    // List of all available upsell options
+    private(set) var upsellOptions: [UpsellOption]?
+    
     // Current photobook
     var product: Photobook?
+    var productUpsellOptions: [UpsellOption]? //TODO: Get this from the initial-data endpoint
     var spineText: String?
+    var spineFontType: FontType = .plain
     var coverColor: ProductColor = .white
     var pageColor: ProductColor = .white
     var productLayouts = [ProductLayout]()
@@ -98,7 +104,11 @@ class ProductManager {
     }
     
     func reset() {
-        // TODO: reset the product
+        productLayouts = [ProductLayout]()
+        product = nil
+        spineText = nil
+        coverColor = .white
+        pageColor = .white
     }
     
     
@@ -107,26 +117,27 @@ class ProductManager {
     /// Requests the photobook details so the user can start building their photobook
     ///
     /// - Parameter completion: Completion block with an optional error
-    func initialise(completion:@escaping (Error?)->()) {
-        apiManager.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, error) in
+    func initialise(completion:((Error?)->())?) {
+        apiManager.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, upsellOptions, error) in
             guard error == nil else {
-                completion(error!)
+                completion?(error!)
                 return
             }
             
             welf?.products = photobooks
             welf?.layouts = layouts
+            welf?.upsellOptions = upsellOptions
             
-            completion(nil)
+            completion?(nil)
         }
     }
     
     func setPhotobook(_ photobook: Photobook, withAssets assets: [Asset]? = nil) {
         guard
             let coverLayouts = coverLayouts(for: photobook),
-            coverLayouts.count > 0,
+            !coverLayouts.isEmpty,
             let layouts = layouts(for: photobook),
-            layouts.count > 0
+            !layouts.isEmpty
         else {
             print("ProductManager: Missing layouts for selected photobook")
             return
@@ -134,7 +145,7 @@ class ProductManager {
 
         var addedAssets = assets ?? {
             var assets = [Asset]()
-            for layout in ProductManager.shared.productLayouts{
+            for layout in ProductManager.shared.productLayouts {
                 guard let asset = layout.asset else { continue }
                 assets.append(asset)
             }
@@ -174,45 +185,6 @@ class ProductManager {
         // Reset the current layout since we are changing products
         currentLandscapeLayout = 0
         currentPortraitLayout = 0
-        
-        // Find if any assets were removed or added since the last time
-        var removedAssets = [Asset]()
-        var keptAssets = [Asset]()
-        
-        for productLayout in productLayouts {
-            guard let asset = productLayout.asset else { continue }
-            
-            // Check if asset is still included in the new selections
-            if let addedIndex = addedAssets.index(where: { $0 == asset }) {
-                addedAssets.remove(at: addedIndex)
-                
-                // Mark asset as kept
-                keptAssets.append(asset)
-            }
-            
-            if keptAssets.index(where: { $0 == asset }) == nil {
-                removedAssets.append(asset)
-            }
-        }
-        
-        // Update layouts with removed assets
-        for asset in removedAssets {
-            for productLayout in productLayouts {
-                guard let productLayoutAsset = productLayout.asset else { continue }
-                if productLayoutAsset == asset {
-                    productLayout.asset = nil
-                    // Not breaking because the same asset could be on more than one page
-                }
-            }
-        }
-        
-        // Create new layouts for added assets that haven't filled empty pages
-        productLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: imageOnlyLayouts))
-        
-        // We need an odd number of layouts including the cover and the 2 courtesy pages
-        if productLayouts.count % 2 == 0 {
-            productLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: imageOnlyLayouts, placeholderLayouts: 1))
-        }
         
         // Switching products
         product = photobook
@@ -373,7 +345,7 @@ class ProductManager {
     }
     
     func spreadIndex(for productLayoutIndex: Int) -> Int? {
-        var spreadIndex = 0.5 // The first page is on the right because of the courtesy page
+        var spreadIndex = 0.0
         
         var i = 0
         while i < productLayouts.count {

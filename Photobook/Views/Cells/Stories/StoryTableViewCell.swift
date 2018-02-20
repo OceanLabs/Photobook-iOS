@@ -21,7 +21,9 @@ class StoryTableViewCell: UITableViewCell {
     
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var datesLabel: UILabel!
-    @IBOutlet private weak var coverImageView: UIImageView!
+    @IBOutlet weak var coverImageView: UIImageView!
+    @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var overlayView: UIView!
     
     var title: String? {
         didSet {
@@ -30,15 +32,10 @@ class StoryTableViewCell: UITableViewCell {
         }
     }
     var dates: String? { didSet { datesLabel.text = dates } }
-    var cover: UIImage? { didSet { coverImageView.image = cover} }
     var localIdentifier: String?
     var storyIndex: Int?
     
     weak var delegate: StoryTableViewCellDelegate?
-    
-    lazy var coverSize = {
-        return self.coverImageView.bounds.size
-    }()
     
     @IBAction func tappedStory(_ sender: UIButton) {
         guard let storyIndex = storyIndex else {

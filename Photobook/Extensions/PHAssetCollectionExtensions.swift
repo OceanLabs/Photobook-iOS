@@ -10,39 +10,25 @@ import Photos
 
 extension PHAssetCollection {
     
-    func coverImage(size: CGSize, completionHandler: @escaping (UIImage?, Error?) -> Void) {
+    func coverAsset(useFirstImageInCollection: Bool, completionHandler: @escaping (Asset?, Error?) -> Void) {
         DispatchQueue.global(qos: .background).async {
             let fetchOptions = PHFetchOptions()
             fetchOptions.fetchLimit = 1
             fetchOptions.wantsIncrementalChangeDetails = false
             fetchOptions.includeHiddenAssets = false
             fetchOptions.includeAllBurstAssets = false
-            fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
+            fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: useFirstImageInCollection) ]
             
-            guard let coverAsset = PHAsset.fetchAssets(in: self, options: fetchOptions).firstObject else{
+            guard let coverAsset = PHAsset.fetchAssets(in: self, options: fetchOptions).firstObject else {
                 DispatchQueue.main.async {
                     completionHandler(nil, nil) //TODO: return an error
                 }
                 return
             }
             
-            let options = PHImageRequestOptions()
-            options.deliveryMode = .highQualityFormat
-            options.isNetworkAccessAllowed = true
-            
-            let imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())
-            PHImageManager.default().requestImage(for: coverAsset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: { (image, _) in
-                guard let image = image else {
-                    DispatchQueue.main.async {
-                        completionHandler(nil, nil) //TODO: return an error
-                    }
-                    return
-                }
-                
-                DispatchQueue.main.async {
-                    completionHandler(image, nil)
-                }
-            })
+            DispatchQueue.main.async {
+                completionHandler(PhotosAsset(coverAsset, albumIdentifier: self.localIdentifier), nil)
+            }
         }
     }
     

@@ -12,28 +12,27 @@ class StoriesManager {
     
     enum StoriesManagerError: Error {
         case unauthorized
+        case incompatibleAssetType
     }
     
     // Shared client
     static let shared = StoriesManager()
     
-    private let imageManager = PHImageManager.default()
+    private let imageManager = PHCachingImageManager()
+    private var selectedAssetsManagerPerStory = [String : SelectedAssetsManager]()
+    var stories = [Story]()
     
     private struct Constants {
-        static let photosPerBook = 20
+        static let maxStoriesToDisplay = 16
     }
     
-    func topStories(_ count: Int, completion: @escaping ([Story]?, Error?)->()) {
-        PHPhotoLibrary.requestAuthorization { (status) in
-            guard status == .authorized else {
-                completion(nil, StoriesManagerError.unauthorized)
-                return
-            }
-            
-            // Do the ordering asynchronously
-            DispatchQueue.main.async {
-                let memories = self.orderStories()
-                completion(Array<Story>(memories.prefix(count)), nil)
+    func loadTopStories(){
+        let memories = self.orderStories()
+        stories = Array<Story>(memories.prefix(Constants.maxStoriesToDisplay))
+        
+        DispatchQueue.global(qos: .background).async {
+            for story in self.stories {
+                self.prepare(story: story, completionHandler: nil)
             }
         }
     }
@@ -50,7 +49,7 @@ class StoriesManager {
         options.sortDescriptors = [ NSSortDescriptor(key: "endDate", ascending: false) ]
         
         let momentLists = PHCollectionList.fetchMomentLists(with: .momentListCluster, options: options)
-        momentLists.enumerateObjects { (list: PHCollectionList, index: Int, stop: UnsafeMutablePointer<ObjCBool>) in
+        momentLists.enumerateObjects { [weak welf = self] (list: PHCollectionList, index: Int, stop: UnsafeMutablePointer<ObjCBool>) in
             // Access individual moments and get the total estimated photo count
             var totalAssetCount = 0
             
@@ -74,11 +73,12 @@ class StoriesManager {
             }
             
             // Minimum asset count
-            guard totalAssetCount > Constants.photosPerBook else { return }
+            guard totalAssetCount > ProductManager.shared.minimumRequiredAssets else { return }
             
             let story = Story(list: list, coverCollection: moments.firstObject!)
             story.components = locationComponents
             story.photoCount = totalAssetCount
+            welf?.selectedAssetsManagerPerStory[story.identifier] = SelectedAssetsManager()
             
             stories.append(story)
         }
@@ -161,5 +161,57 @@ class StoriesManager {
         return location.components(separatedBy: CharacterSet(charactersIn: ",&")).map { (item) -> String in
             return item.trimmingCharacters(in: CharacterSet(charactersIn: " "))
         }
+    }
+    
+    func prepare(story: Story, completionHandler: ((Error?) -> Void)?) {
+        story.loadAssets(completionHandler: { [weak welf = self] error in
+            welf?.performAutoSelection(on: story)
+            completionHandler?(error)
+            
+            // Cache the first 25 thumbnails from each story so that they don't appear blank on the first animation
+            // Not bulletproof, because the user might tap on a story before the assets finish caching
+            guard !story.assets.isEmpty else { return }
+            let imageWidth = UIScreen.main.bounds.size.width / 4.0
+            welf?.imageManager.startCachingImages(for: PhotosAsset.photosAssets(from: Array(story.assets[0..<min(story.assets.count, 25)])), targetSize: CGSize(width: imageWidth, height: imageWidth), contentMode: .aspectFill, options: nil)
+        })
+    }
+    
+    func selectedAssetsManager(for story: Story) -> SelectedAssetsManager?{
+        return selectedAssetsManagerPerStory[story.identifier]
+    }
+    
+    private func performAutoSelection(on story: Story) {
+        var selectedAssets = [Asset]()
+        var unusedAssets = [Asset]()
+        
+        let minimumAssets = ProductManager.shared.minimumRequiredAssets
+        let subarrayLength = minimumAssets // For readability
+        let subarrayCount: Int = story.photoCount / subarrayLength
+        let assetsFromEachSubarray: Int = minimumAssets / subarrayCount
+        
+        for subarrayIndex in 0..<subarrayCount {
+            
+            let subarrayStartIndex = subarrayIndex * subarrayLength
+            // The last subarray will take on any leftovers resulting from integer division
+            var subarray = Array(subarrayIndex == subarrayCount - 1 ? story.assets[subarrayStartIndex...] : story.assets[subarrayStartIndex..<subarrayStartIndex + subarrayLength])
+            
+            for _ in 0..<assetsFromEachSubarray {
+                let selectedIndex = Int(arc4random()) % subarray.count
+                selectedAssets.append(subarray.remove(at: selectedIndex))
+            }
+            unusedAssets.append(contentsOf: subarray)
+        }
+        
+        // In case we have come up short because of all the integer divisions we have done above, select some more assets from the unused ones if needed.
+        while selectedAssets.count < minimumAssets {
+            let selectedIndex = Int(arc4random()) % unusedAssets.count
+            selectedAssets.append(unusedAssets.remove(at: selectedIndex))
+        }
+        
+        let selectedAssetsManager = selectedAssetsManagerPerStory[story.identifier]
+        selectedAssetsManager?.select(selectedAssets)
+        
+        // Sort
+        selectedAssetsManager?.orderAssetsByDate()
     }
 }

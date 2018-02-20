@@ -8,10 +8,14 @@
 
 import UIKit
 
+struct AssetsNotificationName {
+    static let albumsWereReloaded = Notification.Name("albumsWereReloadedNotificationName")
+}
+
 protocol AlbumManager {
     var albums:[Album] { get }
     
-    func loadAlbums(completionHandler: ((_ error: Error?) -> Void)?)
+    func loadAlbums(completionHandler: ((_ errorMessage: ErrorMessage?) -> Void)?)
     
     func stopCachingImagesForAllAssets()
     func startCachingImages(for assets: [Asset], targetSize: CGSize)

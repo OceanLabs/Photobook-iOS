@@ -16,6 +16,8 @@ class Story {
     var isWeekend = false
     var score = 0
     var assets = [Asset]()
+    
+    // Ability to set locale in Unit Tests
     lazy var locale = Locale.current
     
     var title: String {
@@ -87,6 +89,10 @@ extension Story: Album {
         return collectionList.localIdentifier
     }
     
+    var requiresExclusivePicking: Bool {
+        return true
+    }
+    
     func loadAssets(completionHandler: ((Error?) -> Void)?) {
         let fetchOptions = PHFetchOptions()
         fetchOptions.wantsIncrementalChangeDetails = false
@@ -96,7 +102,7 @@ extension Story: Album {
         let moments = PHAssetCollection.fetchMoments(inMomentList: collectionList, options: PHFetchOptions())
         moments.enumerateObjects { (collection: PHAssetCollection, index: Int,  stop: UnsafeMutablePointer<ObjCBool>) in
             
-            fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
+            fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: true) ]
             let fetchedAssets = PHAsset.fetchAssets(in: collection, options: fetchOptions)
             fetchedAssets.enumerateObjects({ (asset, _, _) in
                 self.assets.append(PhotosAsset(asset, albumIdentifier: self.identifier))
@@ -106,8 +112,10 @@ extension Story: Album {
         completionHandler?(nil)
     }
     
-    func coverImage(size: CGSize, completionHandler: @escaping (UIImage?, Error?) -> Void) {
-        collectionForCoverPhoto.coverImage(size: size, completionHandler: completionHandler)
+    func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
+        collectionForCoverPhoto.coverAsset(useFirstImageInCollection: true, completionHandler: completionHandler)
     }
+    
+    
 }
 

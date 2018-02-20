@@ -16,9 +16,9 @@ enum APIClientError: Error {
 }
 
 enum APIContext {
-    case photobookApp
-    case pdfGenerator
-    case pdfUploader
+    case none
+    case photobook
+    case pig
 }
 
 /// Network client for all interaction with the API
@@ -46,11 +46,17 @@ class APIClient: NSObject {
         case put = "PUT"
     }
     
+    // Image types
+    private enum ImageType: String {
+        case jpeg
+        case png
+    }
+    
     private func baseURLString(for context: APIContext) -> String {
         switch context {
-        case .photobookApp: return "" // TBC
-        case .pdfGenerator: return "https://photobook-builder.herokuapp.com/"
-        case .pdfUploader: return "https://piglet.kite.ly/"
+        case .none: return ""
+        case .photobook: return "https://photobook-builder.herokuapp.com/"
+        case .pig: return "https://piglet.kite.ly/"
         }
     }
 
@@ -90,6 +96,65 @@ class APIClient: NSObject {
         return [Int: String]()
     }()
     
+    private func createFileWith(imageData:Data, imageName:String, boundaryString:String) -> URL {
+        
+        let directoryUrl = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        let fileUrl = directoryUrl.appendingPathComponent(NSUUID().uuidString)
+        let filePath = fileUrl.path
+        
+        FileManager.default.createFile(atPath: filePath, contents: nil, attributes: nil)
+        let fileHandle = FileHandle(forWritingAtPath: filePath)!
+        
+        let imageType = self.imageType(forFileName: imageName)
+        
+        var header = ""
+        header += "--\(boundaryString)\r\n"
+        header += "Content-Disposition: form-data; charset=utf-8; name=\"file\"; filename=\"\(imageName).\(imageType)\"\r\n"
+        header += "Content-Type: image/\(imageType)\r\n\r\n"
+        let headerData = header.data(using: .utf8, allowLossyConversion: false)!
+        
+        let footer = "\r\n--\(boundaryString)--\r\n"
+        let footerData = footer.data(using: .utf8, allowLossyConversion: false)!
+        
+        fileHandle.write(headerData)
+        fileHandle.write(imageData)
+        fileHandle.write(footerData)
+        fileHandle.closeFile()
+        
+        return fileUrl
+    }
+    
+    private func imageData(withImage image: UIImage, imageName: String) -> Data? {
+        let imageType = self.imageType(forFileName: imageName)
+        return imageData(withImage: image, forType: imageType)
+    }
+
+    private func imageData(withImage image: UIImage, forType imageType: ImageType) -> Data? {
+        let imageData:Data
+        
+        switch imageType {
+        case .jpeg:
+            guard let data = UIImageJPEGRepresentation(image, 0.8) else {
+                return nil
+            }
+            imageData = data
+        case .png:
+            guard let data = UIImagePNGRepresentation(image) else {
+                return nil
+            }
+            imageData = data
+        }
+        
+        return imageData
+    }
+    
+    private func imageType(forFileName fileName:String) -> ImageType {
+        if fileName.lowercased().hasSuffix(".png") {
+            return .png
+        }
+        return .jpeg
+    }
+    
     // MARK: Background tasks
     
     /// Called when the app is launched by the system by pending tasks
@@ -104,7 +169,7 @@ class APIClient: NSObject {
     
     /// Save semantic references for pending upload tasks to disk
     @objc func savePendingTasks() {
-        if taskReferences.count == 0 {
+        if taskReferences.isEmpty {
             try? FileManager.default.removeItem(atPath: Storage.uploadTasksFile)
             return
         }
@@ -187,21 +252,22 @@ class APIClient: NSObject {
             }
             
             // Attempt parsing to JSON
-            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) else {
+            if let json = try? JSONSerialization.jsonObject(with: data, options: []) {
+                // Check if there's an error in the response
+                if let responseDictionary = json as? [String: AnyObject],
+                    let errorDict = responseDictionary["error"] as? [String : AnyObject],
+                    let errorMessage = (errorDict["message"] as? [AnyObject])?.last as? String {
+                    completion(nil, APIClientError.server(code: (response as? HTTPURLResponse)?.statusCode ?? 0, message: errorMessage))
+                } else {
+                    completion(json as AnyObject, nil)
+                }
+            } else if let image = UIImage(data: data) { // Attempt parsing UIImage
+                completion(image, nil)
+            } else { // Parsing error
                 if let stringData = String(data: data, encoding: String.Encoding.utf8) {
                     print("API: \(stringData)")
                 }
                 completion(nil, APIClientError.parsing)
-                return
-            }
-            
-            // Check if there's an error in the response
-            if let responseDictionary = json as? [String: AnyObject],
-                let errorDict = responseDictionary["error"] as? [String : AnyObject],
-                let errorMessage = (errorDict["message"] as? [AnyObject])?.last as? String {
-                completion(nil, APIClientError.server(code: (response as? HTTPURLResponse)?.statusCode ?? 0, message: errorMessage))
-            } else {
-                completion(json as AnyObject, nil)
             }
             
             }.resume()
@@ -220,7 +286,67 @@ class APIClient: NSObject {
         dataTask(context: context, endpoint: endpoint, parameters: parameters, method: .put, completion: completion)
     }
     
-    func uploadFile(_ file: URL, reference: String?, context: APIContext, endpoint: String) {
+    func uploadImage(_ data: Data, imageName: String, context: APIContext, endpoint: String, completion:@escaping (AnyObject?, Error?) -> ()) {
+        let boundaryString = "Boundary-\(NSUUID().uuidString)"
+        let fileUrl = createFileWith(imageData: data, imageName: imageName, boundaryString: boundaryString)
+    
+        var request = URLRequest(url: URL(string: baseURLString(for: context) + endpoint)!)
+        
+        request.httpMethod = HTTPMethod.post.rawValue
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("multipart/form-data; boundary=\(boundaryString)", forHTTPHeaderField:"content-type")
+        
+        URLSession.shared.uploadTask(with: request, fromFile: fileUrl) { (data, response, error) in
+            guard let data = data, let json = try? JSONSerialization.jsonObject(with: data, options: []) else {
+                DispatchQueue.main.async { completion(nil, error) }
+                return
+            }
+            
+            DispatchQueue.main.async { completion(json as AnyObject, nil) }
+            
+        }.resume()
+    }
+    
+    func uploadImage(_ image: UIImage, imageName: String, context: APIContext, endpoint: String, completion:@escaping (AnyObject?, Error?) -> ()) {
+        
+        guard let imageData = imageData(withImage: image, imageName:imageName) else {
+            print("Image Upload: cannot read image data")
+            completion(nil, nil)
+            return
+        }
+        
+        uploadImage(imageData, imageName: imageName, context: context, endpoint: endpoint, completion: completion)
+    }
+    
+    func uploadImage(_ data: Data, imageName: String, reference: String?, context: APIContext, endpoint: String) {
+        let boundaryString = "Boundary-\(NSUUID().uuidString)"
+        let fileUrl = createFileWith(imageData: data, imageName: imageName, boundaryString: boundaryString)
+        
+        var request = URLRequest(url: URL(string: baseURLString(for: context) + endpoint)!)
+        
+        request.httpMethod = HTTPMethod.post.rawValue
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("multipart/form-data; boundary=\(boundaryString)", forHTTPHeaderField:"content-type")
+        
+        let dataTask = backgroundUrlSession.uploadTask(with: request, fromFile: fileUrl)
+        if reference != nil {
+            taskReferences[dataTask.taskIdentifier] = reference
+        }
+        
+        dataTask.resume()
+    }
+    
+    func uploadImage(_ image: UIImage, imageName: String, reference: String?, context: APIContext, endpoint: String) {
+        
+        guard let imageData = imageData(withImage: image, imageName: imageName) else {
+            print("Image Upload: cannot read image data")
+            return
+        }
+        
+        uploadImage(imageData, imageName: imageName, reference: reference, context: context, endpoint: endpoint)
+    }
+    
+    func uploadImage(_ file: URL, reference: String?, context: APIContext, endpoint: String) {
         guard let fileData = try? Data(contentsOf: file) else {
             print("File Upload: cannot read file data")
             return
@@ -228,42 +354,7 @@ class APIClient: NSObject {
 
         let imageName = file.lastPathComponent
         
-        let boundary = "Boundary-\(NSUUID().uuidString)"
-
-        let directoryUrl = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
-        let fileUrl = directoryUrl.appendingPathComponent(NSUUID().uuidString)
-        let filePath = fileUrl.path
-        
-        FileManager.default.createFile(atPath: filePath, contents: nil, attributes: nil)
-        let fileHandle = FileHandle(forWritingAtPath: filePath)!
-        
-        var header = ""
-        header += "--\(boundary)\r\n"
-        header += "Content-Disposition: form-data; charset=utf-8; name=\"file\"; filename=\"\(imageName)\"\r\n"
-        header += "Content-Type: image/jpeg\r\n\r\n"
-        let headerData = header.data(using: .utf8, allowLossyConversion: false)!
-        
-        let footer = "\r\n--\(boundary)--\r\n"
-        let footerData = footer.data(using: .utf8, allowLossyConversion: false)!
-        
-        fileHandle.write(headerData)
-        fileHandle.write(fileData)
-        fileHandle.write(footerData)
-        fileHandle.closeFile()
-        
-        
-        var request = URLRequest(url: URL(string: baseURLString(for: context) + endpoint)!)
-        
-        request.httpMethod = HTTPMethod.post.rawValue
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
-        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField:"content-type")
-
-        let dataTask = backgroundUrlSession.uploadTask(with: request, fromFile: fileUrl)
-        if reference != nil {
-            taskReferences[dataTask.taskIdentifier] = reference
-        }
-        
-        dataTask.resume()
+        uploadImage(fileData, imageName: imageName, reference: reference, context: context, endpoint: endpoint)
     }
     
     func pendingBackgroundTaskCount(_ completion: @escaping ((Int)->Void)) {

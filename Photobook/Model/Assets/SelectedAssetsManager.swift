@@ -20,6 +20,8 @@ class SelectedAssetsManager: NSObject {
     
     override init() {
         super.init()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereReloaded(_:)), name: AssetsNotificationName.albumsWereReloaded, object: nil)
     }
     
     deinit {
@@ -34,6 +36,10 @@ class SelectedAssetsManager: NSObject {
     
     func select(_ asset:Asset) {
         select([asset])
+    }
+    
+    func orderAssetsByDate() {
+        selectedAssets.sort { ($0.date ?? .distantFuture) < ($1.date ?? .distantFuture) }
     }
     
     func select(_ assets:[Asset]) {
@@ -94,22 +100,25 @@ class SelectedAssetsManager: NSObject {
     ///
     /// - Parameters:
     ///   - asset: The asset to toggle
-    ///   - album: The album the asset is in
     /// - Returns: False if the asset is not able to be selected because of reaching the limit
     func toggleSelected(_ asset:Asset) -> Bool {
-        if isSelected(asset){
+        if isSelected(asset) {
             deselect(asset)
-        }
-        else {
+            return true
+        } else if count < ProductManager.shared.maximumAllowedAssets {
             select(asset)
+            return true
+        } else {
+            return false
         }
-        
-        //TODO: Check if we've reached the limit
-        return true
     }
     
-    func count(for album:Album) -> Int {
-        return selectedAssets(for: album).count
+    func count(for album: Album) -> Int {
+            return selectedAssets(for: album).count
+    }
+    
+    var count: Int {
+        return selectedAssets.count
     }
     
     func willSelectingAllExceedTotalAllowed(_ album:Album) -> Bool {
@@ -117,16 +126,29 @@ class SelectedAssetsManager: NSObject {
     }
     
     
-    func selectAllAssets(for album: Album){
+    func selectAllAssets(for album: Album) {
         select(album.assets)
     }
     
-    func deselectAllAssets(for album: Album){
+    func deselectAllAssets(for album: Album) {
         deselect(album.assets)
     }
     
     func deselectAllAssets(){
         deselect(selectedAssets)
+    }
+    
+    @objc func albumsWereReloaded(_ notification: Notification) {
+        guard let albumsChanges = notification.object as? [AlbumChange] else { return }
+        
+        for albumChange in albumsChanges {
+            for asset in albumChange.assetsRemoved {
+                if isSelected(asset) {
+                    deselect(asset)
+                }
+            }
+        }
+        
     }
     
 }

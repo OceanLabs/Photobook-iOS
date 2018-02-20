@@ -11,7 +11,7 @@ import Photos
 
 class IntroViewController: UIViewController {
     
-    public static var userHasDismissed:Bool {
+    var userHasDismissed:Bool {
         get {
             return UserDefaults.standard.bool(forKey: "IntroViewController.userHasDismissed")
         }
@@ -35,19 +35,24 @@ class IntroViewController: UIViewController {
         ctaInvisibleConstraint.priority = .init(751)
         
         view.layoutIfNeeded()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         
         if PHPhotoLibrary.authorizationStatus() == .authorized {
-            dismiss()
+            userHasDismissed = true
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        if userHasDismissed {
+            proceedToTabBarController()
+        } else {
+            showIntro()
+        }
+
+    }
+    
+    private func showIntro() {
         let animationDuration:Double = 0.7
         
         view.layoutIfNeeded()
@@ -60,7 +65,6 @@ class IntroViewController: UIViewController {
                 self.view.layoutIfNeeded()
             })
         })
-
     }
     
     @IBAction func askForPhotoPermission(sender: UIButton) {
@@ -72,63 +76,46 @@ class IntroViewController: UIViewController {
             PHPhotoLibrary.requestAuthorization({ status in
                 DispatchQueue.main.async {
                     self.ctaButton.isEnabled = true
-                    if status == .authorized {
-                        self.dismiss()
-                    } else {
-                        self.showPermissionDeniedDialog()
-                    }
+                    
+                    // We don't care about the outcome, the next screens will take care of showing the user an error screen if needed
+                    self.userHasDismissed = true
+                    self.proceedToTabBarController()
                 }
             })
-        case .denied: fallthrough
-        case .restricted:
-            showPermissionDeniedDialog()
-        case .authorized: fallthrough
         default:
-            dismiss()
+            userHasDismissed = true
+            proceedToTabBarController()
         }
     }
     
-    func dismiss() {
+    private func proceedToTabBarController() {
         performSegue(withIdentifier: "IntroDismiss", sender: nil)
-        IntroViewController.userHasDismissed = true
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let segueIdentifier = segue.identifier else { return }
         
         if segueIdentifier == "IntroDismiss" {
-            let tabBarController = segue.destination as? UITabBarController
-            let albumViewController = (tabBarController?.viewControllers?[1] as? UINavigationController)?.topViewController as? AlbumsCollectionViewController
-            albumViewController?.albumManager = PhotosAlbumManager()
+            configureTabBarController(segue.destination as! UITabBarController)
         }
     }
     
-    func showPermissionDeniedDialog() {
+    private func configureTabBarController(_ tabBarController: UITabBarController) {
+        // Second Tab: Browse
+        // Set the albumManager to the AlbumsCollectionViewController
+        let albumViewController = (tabBarController.viewControllers?[1] as? UINavigationController)?.topViewController as? AlbumsCollectionViewController
+        albumViewController?.albumManager = PhotosAlbumManager()
         
-        let alertText = NSLocalizedString("Controllers/IntroViewController/PermissionDeniedDialogText",
-                                                       value: "Photo access has been restricted, but it's needed to create beautiful photo books.\nYou can turn it back on in the system settings",
-                                                       comment: "Alert dialog when photo library access has been disabled")
-        let alertTitle = NSLocalizedString("Controllers/IntroViewController/PermissionDeniedDialogTitle",
-                                                       value: "Photo Access",
-                                                       comment: "Alert dialog when photo library access has been disabled")
-        let alertOpenSettings = NSLocalizedString("Controllers/PhotoPermissionController/PermissionDeniedDialogOpenSettings",
-                                                 value: "Open Settings",
-                                                 comment: "Alert dialog button when photo library access has been disabled")
-        let alertOK = NSLocalizedString("Controllers/IntroViewController/PermissionDeniedDialogOK",
-                                                  value: "OK",
-                                                  comment: "Alert dialog button when photo library access has been disabled")
+        // First Tab: Stories
+        // If there are no stories, remove the stories tab
+        StoriesManager.shared.loadTopStories()
+        if StoriesManager.shared.stories.isEmpty {
+            tabBarController.viewControllers?.removeFirst()
+        }
         
+        // Load the products here, so that the user avoids a loading screen on PhotobookViewController
+        ProductManager.shared.initialise(completion: nil)
         
-        let alert = UIAlertController(title: alertTitle, message: alertText, preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: alertOpenSettings, style: UIAlertActionStyle.default, handler: { (action) in
-            if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
-            }
-        }))
-        alert.addAction(UIAlertAction(title: alertOK, style: UIAlertActionStyle.cancel, handler: { (action) in
-            
-        }))
-        present(alert, animated: true, completion: nil)
     }
 
 }

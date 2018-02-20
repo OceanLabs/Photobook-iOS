@@ -29,18 +29,23 @@ class PhotosAsset: Asset {
         return NSStringFromClass(PhotosAsset.self)
     }
     
-    var photosAsset: PHAsset! {
+    var photosAsset: PHAsset {
         didSet {
             identifier = photosAsset.localIdentifier
         }
     }
+    
     var identifier: String! {
         didSet {
-            if photosAsset == nil || photosAsset.localIdentifier != identifier,
+            if photosAsset.localIdentifier != identifier,
                let asset = PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: PHFetchOptions()).firstObject {
                     photosAsset = asset
             }
         }
+    }
+    
+    var date: Date? {
+        return photosAsset.creationDate
     }
     
     var albumIdentifier: String
@@ -57,15 +62,14 @@ class PhotosAsset: Asset {
         self.albumIdentifier = albumIdentifier
     }
     
-    func uneditedImage(size: CGSize, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
+    func uneditedImage(size: CGSize, loadThumbnailsFirst: Bool = true, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
         let options = PHImageRequestOptions()
-        options.deliveryMode = .opportunistic
+        options.deliveryMode = loadThumbnailsFirst ? .opportunistic : .highQualityFormat
         options.isNetworkAccessAllowed = true
         
         let imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())
-        DispatchQueue.global(qos: .background).async { [weak welf = self] in
-            guard let asset = welf?.photosAsset else { return }
-            PHImageManager.default().requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options) { (image, _) in
+        DispatchQueue.global(qos: .background).async {
+            PHImageManager.default().requestImage(for: self.photosAsset, targetSize: imageSize, contentMode: .aspectFill, options: options) { (image, _) in
                 completionHandler(image, nil)
             }
         }
@@ -96,6 +100,25 @@ class PhotosAsset: Asset {
             throw AssetLoadingException.notFound
         }
         
+    }
+    
+    static func photosAssets(from assets:[Asset]) -> [PHAsset] {
+        var photosAssets = [PHAsset]()
+        for asset in assets{
+            guard let photosAsset = asset as? PhotosAsset else { continue }
+            photosAssets.append(photosAsset.photosAsset)
+        }
+        
+        return photosAssets
+    }
+    
+    static func assets(from photosAssets:[PHAsset], albumId: String) -> [Asset] {
+        var assets = [Asset]()
+        for photosAsset in photosAssets{
+            assets.append(PhotosAsset(photosAsset, albumIdentifier: albumId))
+        }
+        
+        return assets
     }
     
 }

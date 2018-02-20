@@ -16,25 +16,24 @@ class StoriesViewController: UIViewController {
         static let rowsInHeader = 4
         static let storiesPerLayoutPattern = 3
         static let rowsPerLayoutPattern = 2
-        static let maxStoriesToDisplay = 16
         static let viewStorySegueName = "ViewStorySegue"
     }
     
     @IBOutlet private weak var tableView: UITableView!
     
-    private var stories = [Story]()
-    private let selectedAssetsManager = SelectedAssetsManager()
-    private var imageCollectorController:AssetCollectorViewController?
+    private var stories: [Story] {
+        return StoriesManager.shared.stories
+    }
     
-    private lazy var emptyScreenViewController: EmptyScreenViewController = {
-        return EmptyScreenViewController.emptyScreen(parent: self)
-    }()
+    private var minimumNumberOfStories: Int {
+        return stories.count == 1 ? 4 : 3
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         loadStories()
-        setupImageCollector()
-        addObservers()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(loadStories), name: .UIApplicationDidBecomeActive, object: nil)
     }
     
     @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
@@ -51,8 +50,11 @@ class StoriesViewController: UIViewController {
                 let sourceView = sender.sourceView,
                 let asset = stories[sender.index].assets.first
                 else { return }
-            assetPickerController.album = stories[sender.index]
-            assetPickerController.selectedAssetsManager = selectedAssetsManager
+            
+            let story = stories[sender.index]
+            assetPickerController.album = story
+            assetPickerController.selectedAssetsManager = StoriesManager.shared.selectedAssetsManager(for: story)
+            assetPickerController.delegate = self
             
             segue.asset = asset
             segue.sourceView = sourceView
@@ -60,67 +62,10 @@ class StoriesViewController: UIViewController {
             break
         }
     }
-    
-    private func addObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(loadStories), name: .UIApplicationDidBecomeActive, object: nil)
-        
-        //listen to asset manager
-        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
-        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
-    }
-    
-    private func setupImageCollector() {
-        // Setup the Image Collector Controller
-        imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
-        imageCollectorController?.delegate = self
-        
-        self.tableView.tableFooterView = UIView(frame: CGRect())
-    }
 
     @objc private func loadStories() {
-        guard PHPhotoLibrary.authorizationStatus() == .authorized else {
-            emptyScreenViewController.showGalleryPermissionsScreen()
-            return
-        }
-        
-        StoriesManager.shared.topStories(Constants.maxStoriesToDisplay) { [weak welf = self] (stories, error) in
-            // Ignore error as we've already handled it before the call to the function
-            guard error == nil else { return }
-            
-            guard let stories = stories, stories.count > 0 else {
-                let title = NSLocalizedString("NoStoriesFound", value: "No Stories Found", comment: "Title shown to the user if the Photos app doesn't have any memory collections available")
-                let message = NSLocalizedString("YourPhotosApp", value: "You don't seem to have any stories yet!\nGet out there and take more photos.", comment: "Message shown to the user if the Photos app doesn't have any memory collections available")
-                welf?.emptyScreenViewController.show(message: message, title: title)
-                return
-            }
-            
-            welf?.stories = stories
-            welf?.tableView.reloadData()
-
-            // Once we are done loading the things needed to show on this screen, load the assets from each story so that they are ready if the user taps on a story
-            for story in stories {
-                story.loadAssets(completionHandler: nil)
-            }
-            
-            welf?.emptyScreenViewController.hide(animated: true)
-        }
-    }
-}
-
-extension StoriesViewController: AssetCollectorViewControllerDelegate {
-
-    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
-        var height:CGFloat = 0
-        if let imageCollectorVC = imageCollectorController {
-            height = imageCollectorVC.viewHeight
-        }
-        tableView.tableFooterView?.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: height)
-    }
-    
-    func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
-        let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
-        photobookViewController.selectedAssetsManager = selectedAssetsManager
-        navigationController?.pushViewController(photobookViewController, animated: true)
+        StoriesManager.shared.loadTopStories()
+        tableView.reloadData()
     }
 }
 
@@ -128,16 +73,17 @@ extension StoriesViewController: UITableViewDataSource {
     // MARK: UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        let numberOfStories = max(stories.count, minimumNumberOfStories)
 
-        if stories.count <= Constants.storiesInHeader {
-            switch stories.count {
-            case 1, 2: return stories.count
+        if numberOfStories <= Constants.storiesInHeader {
+            switch numberOfStories {
             case 3, 4: return Constants.rowsInHeader - 1
             case 5, 6: return Constants.rowsInHeader
             default: return 0
             }
         } else {
-            let withoutHeadStories = stories.count - Constants.storiesInHeader
+            let withoutHeadStories = numberOfStories - Constants.storiesInHeader
             let baseOffset = (withoutHeadStories - 1) / Constants.storiesPerLayoutPattern
             let repeatedLayoutIndex = withoutHeadStories % Constants.storiesPerLayoutPattern
             return baseOffset * Constants.rowsPerLayoutPattern + (repeatedLayoutIndex == 1 ? 1 : 2) + Constants.rowsInHeader
@@ -147,48 +93,57 @@ extension StoriesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var isDouble = false
         var storyIndex = 0
+        let numberOfStories = max(stories.count, minimumNumberOfStories)
         
         switch indexPath.row {
         case 0, 1: // Single cells for the first and second rows
             storyIndex = indexPath.row
         case 2, 3: // Double cells for the second and third rows
             storyIndex = indexPath.row == 2 ? 2 : 4 // Indexes corresponding to the first story of the third and fourth rows
-            isDouble = stories.count >= (indexPath.row * 2) // Check if we have enought stories for a double cell
+            isDouble = numberOfStories >= (indexPath.row * 2) // Check if we have enough stories for a double cell
         default:
             let minusHeaderRows = indexPath.row - Constants.rowsInHeader
             let numberOfLayouts = minusHeaderRows / Constants.rowsPerLayoutPattern
             let potentialDouble = minusHeaderRows % Constants.rowsPerLayoutPattern == 1 // First row in the layout pattern is a single & the second a double
             
             storyIndex = numberOfLayouts * Constants.storiesPerLayoutPattern + (potentialDouble ? 1 : 0) + Constants.storiesInHeader
-            isDouble = (potentialDouble && storyIndex < stories.count - 1)
+            isDouble = (potentialDouble && storyIndex < numberOfStories - 1)
         }
         
         if isDouble {
             // Double cell
-            let story = stories[storyIndex]
-            let secondStory = stories[storyIndex + 1]
+            let story = storyIndex < stories.count ? stories[storyIndex] : nil
+            let secondStory = storyIndex + 1 < stories.count ? stories[storyIndex + 1] : nil
             
             let doubleCell = tableView.dequeueReusableCell(withIdentifier: DoubleStoryTableViewCell.reuseIdentifier(), for: indexPath) as! DoubleStoryTableViewCell
-            doubleCell.title = story.title
-            doubleCell.dates = story.subtitle
-            doubleCell.secondTitle = secondStory.title
-            doubleCell.secondDates = secondStory.subtitle
-            doubleCell.localIdentifier = story.identifier
+            doubleCell.title = story?.title
+            doubleCell.dates = story?.subtitle
+            doubleCell.secondTitle = secondStory?.title
+            doubleCell.secondDates = secondStory?.subtitle
+            doubleCell.localIdentifier = story?.identifier
             doubleCell.storyIndex = storyIndex
             doubleCell.delegate = self
+            doubleCell.containerView.backgroundColor = story == nil ? UIColor(white: 0, alpha: 0.04) : .groupTableViewBackground
+            doubleCell.secondContainerView.backgroundColor = secondStory == nil ? UIColor(white: 0, alpha: 0.04) : .groupTableViewBackground
+            doubleCell.overlayView.isHidden = story == nil
+            doubleCell.secondOverlayView.isHidden = secondStory == nil
             
-            story.coverImage(size: doubleCell.coverSize, completionHandler:{ (image, _) in
-                if doubleCell.localIdentifier == story.identifier {
-                    doubleCell.cover = image
-                }
+            story?.coverAsset(completionHandler:{ (asset, _) in
+                doubleCell.coverImageView.setImage(from: asset, size: doubleCell.coverImageView.bounds.size, completionHandler: {
+                    return doubleCell.localIdentifier == story?.identifier
+                })
             })
-            secondStory.coverImage(size: doubleCell.coverSize, completionHandler: { (image, _) in
-                if doubleCell.localIdentifier == story.identifier {
-                    doubleCell.secondCover = image
-                }
+            secondStory?.coverAsset(completionHandler: { (asset, _) in
+                doubleCell.secondCoverImageView.setImage(from: asset, size: doubleCell.secondCoverImageView.bounds.size, completionHandler: {
+                    return doubleCell.localIdentifier == story?.identifier
+                })
             })
             
             return doubleCell
+        }
+        
+        guard storyIndex < stories.count else {
+            return tableView.dequeueReusableCell(withIdentifier: "EmptyStoryTableViewCell", for: indexPath)
         }
         
         let story = stories[storyIndex]
@@ -200,10 +155,10 @@ extension StoriesViewController: UITableViewDataSource {
         singleCell.storyIndex = storyIndex
         singleCell.delegate = self
 
-        story.coverImage(size: singleCell.coverSize, completionHandler: { (image, _) in
-            if singleCell.localIdentifier == story.identifier {
-                singleCell.cover = image
-            }
+        story.coverAsset(completionHandler: { (asset, _) in
+            singleCell.coverImageView.setImage(from: asset, size: singleCell.coverImageView.bounds.size, completionHandler: {
+                return singleCell.localIdentifier == story.identifier
+            })
         })
 
         return singleCell
@@ -214,6 +169,18 @@ extension StoriesViewController: StoryTableViewCellDelegate {
     // MARK: StoryTableViewCellDelegate
     
     func didTapOnStory(index: Int, sourceView: UIView?) {
+        guard !stories[index].assets.isEmpty else {
+            // For a moment after the app has resumed, while the stories are reloading, if the user taps on a story just ignore it. It's unlikely to happen anyway, and even if it does, it's not worth trying to handle it gracefully.
+            return
+        }
+        
         performSegue(withIdentifier: Constants.viewStorySegueName, sender: (index: index, sourceView: sourceView))
     }
+}
+
+extension StoriesViewController: AssetPickerCollectionViewControllerDelegate {
+    func viewControllerForPresentingOn() -> UIViewController? {
+        return tabBarController
+    }
+    
 }

@@ -12,7 +12,7 @@ import UIKit
 class AlbumsCollectionViewController: UICollectionViewController {
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    var imageCollectorController: AssetCollectorViewController!
+    var assetCollectorController: AssetCollectorViewController!
     
     /// The height between the bottom of the image and bottom of the cell where the labels sit
     private let albumCellLabelsHeight: CGFloat = 50
@@ -22,24 +22,40 @@ class AlbumsCollectionViewController: UICollectionViewController {
     private let selectedAssetsManager = SelectedAssetsManager()
     var collectorMode: AssetCollectorMode = .selecting
     weak var addingDelegate: AssetCollectorAddingDelegate?
+    weak var assetPickerDelegate: AssetPickerCollectionViewControllerDelegate?
+    private lazy var emptyScreenViewController: EmptyScreenViewController = {
+        return EmptyScreenViewController.emptyScreen(parent: self)
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        albumManager.loadAlbums(completionHandler: { [weak welf = self] (error) in
-            welf?.activityIndicator.stopAnimating()
-            welf?.collectionView?.reloadData()
-        })
+        loadAlbums()
         
         // Setup the Image Collector Controller
-        imageCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
-        imageCollectorController.mode = collectorMode
-        imageCollectorController.delegate = self
+        assetCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
+        assetCollectorController.mode = collectorMode
+        assetCollectorController.delegate = self
         
         calcAndSetCellSize()
         
-        //listen to asset manager
+        // Listen to asset manager
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
+        
+        // Listen for album changes
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereReloaded(_:)), name: AssetsNotificationName.albumsWereReloaded, object: nil)
+    }
+    
+    func loadAlbums() {
+        albumManager.loadAlbums(completionHandler: { [weak welf = self] (errorMessage) in
+            guard errorMessage == nil else {
+                welf?.emptyScreenViewController.show(message: errorMessage!.message, title:errorMessage!.title, buttonTitle: errorMessage!.buttonTitle, buttonAction: errorMessage?.buttonAction)
+                return
+            }
+            
+            welf?.activityIndicator.stopAnimating()
+            welf?.collectionView?.reloadData()
+        })
     }
     
     deinit {
@@ -50,7 +66,16 @@ class AlbumsCollectionViewController: UICollectionViewController {
         super.viewWillAppear(animated)
         
         // Refresh number of assets selected badges
-        collectionView?.reloadData()
+        for cell in collectionView?.visibleCells ?? [] {
+            guard let cell = cell as? AlbumCollectionViewCell,
+            let indexPath = collectionView?.indexPath(for: cell)
+            else { continue }
+            
+            let album = albumManager.albums[indexPath.item]
+            let selectedAssetsCount = selectedAssetsManager.count(for: album)
+            cell.selectedCountLabel.text = "\(selectedAssetsCount)"
+            cell.selectedCountLabel.isHidden = selectedAssetsCount == 0
+        }
     }
     
     @IBAction func searchIconTapped(_ sender: Any) {
@@ -86,6 +111,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
         assetPickerController.selectedAssetsManager = selectedAssetsManager
         assetPickerController.collectorMode = collectorMode
         assetPickerController.addingDelegate = addingDelegate
+        assetPickerController.delegate = assetPickerDelegate ?? self
         
         self.navigationController?.pushViewController(assetPickerController, animated: true)
     }
@@ -110,6 +136,18 @@ class AlbumsCollectionViewController: UICollectionViewController {
         }
         
         collectionView.reloadItems(at: indexPathsToReload)
+    }
+    
+    @objc func albumsWereReloaded(_ notification: Notification) {
+        guard let albumsChanges = notification.object as? [AlbumChange] else { return }
+        var indexPathsChanged = [IndexPath]()
+        
+        for albumChange in albumsChanges {
+            guard let index = albumManager.albums.index(where: { $0.identifier == albumChange.album.identifier }) else { continue }
+            indexPathsChanged.append(IndexPath(item: index, section: 0))
+        }
+        
+        collectionView?.reloadItems(at: indexPathsChanged)
     }
     
 }
@@ -145,12 +183,12 @@ extension AlbumsCollectionViewController{
     
         let album = albumManager.albums[indexPath.item]
         cell.albumId = album.identifier
-        cell.albumCoverImageView.image = nil
         
         let cellWidth = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize.width ?? 0
-        album.coverImage(size: CGSize(width: cellWidth, height: cellWidth), completionHandler: {(image, error) in
-            guard cell.albumId == album.identifier else { return }
-            cell.albumCoverImageView.image = image
+        album.coverAsset(completionHandler: {(asset, error) in
+            cell.albumCoverImageView.setImage(from: asset, size: CGSize(width: cellWidth, height: cellWidth), completionHandler: {
+                return cell.albumId == album.identifier
+            })
         })
         
         cell.albumNameLabel.text = album.localizedName
@@ -188,14 +226,14 @@ extension AlbumsCollectionViewController{
 extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         var height:CGFloat = 0
-        if let imageCollectorVC = imageCollectorController {
-            height = imageCollectorVC.viewHeight
+        if let assetCollectorViewController = assetCollectorController {
+            height = assetCollectorViewController.viewHeight
         }
         return CGSize(width: collectionView.frame.size.width, height: height)
     }
 }
 
-extension AlbumsCollectionViewController{
+extension AlbumsCollectionViewController {
     // MARK: UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -208,5 +246,11 @@ extension AlbumsCollectionViewController: AlbumSearchResultsTableViewControllerD
         showAlbum(album: album)
     }
     
+}
+
+extension AlbumsCollectionViewController: AssetPickerCollectionViewControllerDelegate {
+    func viewControllerForPresentingOn() -> UIViewController? {
+        return tabBarController
+    }
     
 }

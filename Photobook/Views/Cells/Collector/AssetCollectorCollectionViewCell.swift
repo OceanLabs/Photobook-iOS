@@ -1,5 +1,5 @@
 //
-//  ImageCollectorTableViewCell.swift
+//  AssetCollectorCollectionViewCell.swift
 //  Photobook
 //
 //  Created by Julian Gruber on 17/11/2017.
@@ -18,6 +18,7 @@ class AssetCollectorCollectionViewCell: BorderedCollectionViewCell {
     }
     
     private(set) var isWobbling:Bool = false
+    var assetId: String?
     var isDeletingEnabled:Bool = false {
         didSet {
             if isDeletingEnabled {
@@ -64,5 +65,6 @@ class AssetCollectorCollectionViewCell: BorderedCollectionViewCell {
         super.prepareForReuse()
         
         isDeletingEnabled = false
+        imageView.image = nil
     }
 }

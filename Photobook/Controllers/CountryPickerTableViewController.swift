@@ -51,7 +51,7 @@ class CountryPickerTableViewController: UITableViewController {
             guard let indexChar = country.name.first else { continue }
             if indexChar != lastSectionIndexChar{
                 lastSectionIndexChar = indexChar
-                if countriesInSection.count > 0{
+                if !countriesInSection.isEmpty {
                     sections.append(countriesInSection)
                 }
                 countriesInSection = [Country]()

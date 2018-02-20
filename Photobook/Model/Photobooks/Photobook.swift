@@ -13,6 +13,8 @@ import UIKit
 class Photobook: Codable {
     var id: Int
     var name: String!
+    var pageHeight: CGFloat!
+    var spineTextRatio: CGFloat!
     var aspectRatio: CGFloat!
     var coverLayouts: [Int]!
     var layouts: [Int]! // IDs of the permitted layouts
@@ -26,9 +28,11 @@ class Photobook: Codable {
         fatalError("Use parse(_:) instead")
     }
     
-    private init(id: Int, name: String, aspectRatio: CGFloat, coverLayouts: [Int], layouts: [Int]) {
+    private init(id: Int, name: String, pageHeight: CGFloat, spineTextRatio: CGFloat, aspectRatio: CGFloat, coverLayouts: [Int], layouts: [Int]) {
         self.id = id
         self.name = name
+        self.pageHeight = pageHeight
+        self.spineTextRatio = spineTextRatio
         self.aspectRatio = aspectRatio
         self.coverLayouts = coverLayouts
         self.layouts = layouts
@@ -40,11 +44,13 @@ class Photobook: Codable {
         guard
             let id = dictionary["id"] as? Int,
             let name = dictionary["name"] as? String,
+            let pageHeight = dictionary["pageHeight"] as? CGFloat, pageHeight > 0.0,
+            let spineTextRatio = dictionary["spineTextRatio"] as? CGFloat, spineTextRatio > 0.0,
             let aspectRatio = dictionary["aspectRatio"] as? CGFloat, aspectRatio > 0.0,
-            let coverLayouts = dictionary["coverLayouts"] as? [Int], coverLayouts.count > 0,
-            let layouts = dictionary["layouts"] as? [Int], layouts.count > 0
+            let coverLayouts = dictionary["coverLayouts"] as? [Int], !coverLayouts.isEmpty,
+            let layouts = dictionary["layouts"] as? [Int], !layouts.isEmpty
         else { return nil }
         
-        return Photobook(id: id, name: name, aspectRatio: aspectRatio, coverLayouts: coverLayouts, layouts: layouts)
+        return Photobook(id: id, name: name, pageHeight: pageHeight, spineTextRatio: spineTextRatio, aspectRatio: aspectRatio, coverLayouts: coverLayouts, layouts: layouts)
     }    
 }

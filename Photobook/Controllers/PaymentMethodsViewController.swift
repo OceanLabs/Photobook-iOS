@@ -135,6 +135,7 @@ extension PaymentMethodsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         Card.currentCard = nil
+        if Stripe.deviceSupportsApplePay() { OrderManager.shared.paymentMethod = .applePay }
         tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
     }
 }
