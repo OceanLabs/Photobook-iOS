@@ -64,7 +64,6 @@ class PhotobookFrameView: UIView {
     
     var coverColor: ProductColor = .white
     var pageColor: ProductColor = .white
-    var interaction: PhotobookPageViewInteraction = .disabled
     
     var isLeftPageVisible = true {
         didSet {
@@ -107,9 +106,6 @@ class PhotobookFrameView: UIView {
             layer.shadowColor = PhotobookConstants.blackShadowColor
         }
         
-        leftPageView.interaction = interaction
-        rightPageView.interaction = interaction
-
         pageDividerView.setVisible(isLeftPageVisible && isRightPageVisible)
         setPageColor()
     }

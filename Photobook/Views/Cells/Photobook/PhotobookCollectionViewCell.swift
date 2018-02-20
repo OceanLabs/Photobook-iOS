@@ -33,7 +33,6 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
             photobookFrameView.coverColor = ProductManager.shared.coverColor
             photobookFrameView.pageColor = ProductManager.shared.pageColor
             photobookFrameView.leftPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
-            photobookFrameView.interaction = .wholePage
         }
     }
     @IBOutlet private weak var plusButton: UIButton!
@@ -79,27 +78,33 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
         didSet { photobookFrameView.alpha = isFaded ? interactivePageFadedAlpha : 1.0 }
     }
 
-    func loadPages(leftIndex: Int?, rightIndex: Int?, leftLayout: ProductLayout? = nil, rightLayout: ProductLayout? = nil) {
+    func loadPages(leftIndex: Int?, rightIndex: Int?) {
         if let leftIndex = leftIndex {
-            photobookFrameView.isLeftPageVisible = true
             photobookFrameView.leftPageView.pageIndex = leftIndex
-            if leftLayout != nil { photobookFrameView.leftPageView.productLayout = leftLayout }
+            photobookFrameView.leftPageView.productLayout = ProductManager.shared.productLayouts[leftIndex]
             
             photobookFrameView.leftPageView.setupImageBox()
             photobookFrameView.leftPageView.setupTextBox(mode: .userTextOnly)
+            
+            photobookFrameView.isLeftPageVisible = true
+            photobookFrameView.leftPageView.interaction = .wholePage
         } else {
             photobookFrameView.isLeftPageVisible = false
+            photobookFrameView.leftPageView.interaction = .disabled
         }
         
         if let rightIndex = rightIndex {
-            photobookFrameView.isRightPageVisible = true
             photobookFrameView.rightPageView.pageIndex = rightIndex
-            if rightLayout != nil { photobookFrameView.rightPageView.productLayout = rightLayout }
+            photobookFrameView.rightPageView.productLayout = ProductManager.shared.productLayouts[rightIndex]
             
             photobookFrameView.rightPageView.setupImageBox()
             photobookFrameView.rightPageView.setupTextBox(mode: .userTextOnly)
+            
+            photobookFrameView.isRightPageVisible = true
+            photobookFrameView.rightPageView.interaction = .wholePage
         } else {
             photobookFrameView.isRightPageVisible = false
+            photobookFrameView.rightPageView.interaction = .disabled
         }
         
         photobookFrameView.leftPageView.delegate = self
