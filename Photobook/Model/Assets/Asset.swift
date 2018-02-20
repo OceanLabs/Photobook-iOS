@@ -8,10 +8,15 @@
 
 import UIKit
 
-let assetMaximumSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
-
 enum AssetLoadingException: Error {
     case notFound
+}
+
+enum AssetDataFileExtension: String {
+    case jpg
+    case png
+    case gif
+    case unsupported
 }
 
 protocol Asset: Codable {
@@ -32,6 +37,14 @@ protocol Asset: Codable {
     ///   - progressHandler: Handler that returns the progress, for a example of a download
     ///   - completionHandler: The completion handler that returns the image
     func uneditedImage(size: CGSize, loadThumbnailsFirst: Bool, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)?, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void)
+    
+    
+    /// Request the data representation of this asset
+    ///
+    /// - Parameters:
+    ///   - progressHandler: Handler that returns the progress, for a example of a download
+    ///   - completionHandler: The completion handler that returns the data
+    func imageData(progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)?, completionHandler: @escaping (_ data: Data?, _ fileExtension: AssetDataFileExtension?, _ error: Error?) -> Void)
 }
 
 extension Asset {

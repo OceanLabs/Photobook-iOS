@@ -23,7 +23,7 @@ protocol PhotobookAPIManagerDelegate: class {
 enum PhotobookAPIError: Error {
     case missingPhotobookInfo
     case couldNotBuildCreationParameters
-    case couldNotSaveTempImage
+    case couldNotSaveTempImageData
 }
 
 class PhotobookAPIManager {
@@ -159,16 +159,16 @@ class PhotobookAPIManager {
                 continue
             }
 
-            asset.image(size: assetMaximumSize, completionHandler: { [weak welf = self] (image, error) in
-                if error != nil || image == nil {
-                    welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImage)
+            asset.imageData(progressHandler: nil, completionHandler: { [weak welf = self] data, fileExtension, error in
+                guard error != nil, let data = data, let fileExtension = fileExtension else {
+                    welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImageData)
                     return
                 }
-                
-                if let fileUrl = welf?.saveImageToCache(image: image!, name: "\(asset.identifier).jpg") {
+
+                if let fileUrl = welf?.saveDataToCachesDirectory(data: data, name: "\(asset.identifier).\(fileExtension)") {
                     welf?.apiClient.uploadImage(fileUrl, reference: self.imageUploadIdentifierPrefix + asset.identifier, context: .pig, endpoint: EndPoints.imageUpload)
                 } else {
-                    welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImage)
+                    welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImageData)
                 }
             })
         }
@@ -254,9 +254,8 @@ class PhotobookAPIManager {
         return nil
     }
     
-    private func saveImageToCache(image: UIImage, name: String) -> URL? {
+    private func saveDataToCachesDirectory(data: Data, name: String) -> URL? {
         let fileUrl = Storage.cachesDirectory.appendingPathComponent(name)
-        let data = UIImageJPEGRepresentation(image, 0.8)!
         do {
             try data.write(to: fileUrl)
             return fileUrl

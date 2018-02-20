@@ -68,11 +68,39 @@ class PhotosAsset: Asset {
         options.isNetworkAccessAllowed = true
         
         let imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())
-        DispatchQueue.global(qos: .background).async {
-            PHImageManager.default().requestImage(for: self.photosAsset, targetSize: imageSize, contentMode: .aspectFill, options: options) { (image, _) in
-                completionHandler(image, nil)
-            }
+        PHImageManager.default().requestImage(for: photosAsset, targetSize: imageSize, contentMode: .aspectFill, options: options) { (image, _) in
+            completionHandler(image, nil)
         }
+    }
+    
+    func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension?, Error?) -> Void) {
+        let options = PHImageRequestOptions()
+        options.isNetworkAccessAllowed = true
+        
+        PHImageManager.default().requestImageData(for: photosAsset, options: options, resultHandler: { imageData, dataUti, _, info in
+            guard let data = imageData, let dataUti = dataUti else { completionHandler(nil, nil, NSError()); return }
+            
+            let fileExtension: AssetDataFileExtension
+            if dataUti.contains("png") {
+                fileExtension = .png
+            } else if dataUti.contains("jpeg") {
+                fileExtension = .jpg
+            } else if dataUti.contains("gif") {
+                fileExtension = .gif
+            } else {
+                fileExtension = .unsupported
+            }
+            
+            // Check that the image is either jpg, png or gif otherwise convert it to jpg. So no HEICs, TIFFs or RAWs get uploaded to the back end.
+            if fileExtension == .unsupported {
+                guard let ciImage = CIImage(data: data),
+                    let jpegData = CIContext().jpegRepresentation(of: ciImage, colorSpace: CGColorSpaceCreateDeviceRGB(), options: [kCGImageDestinationLossyCompressionQuality : 0.8])
+                    else { completionHandler(nil, nil, NSError()); return }
+                completionHandler(jpegData, .jpg, nil)
+            } else {
+                completionHandler(imageData, fileExtension, nil)
+            }
+        })
     }
     
     enum CodingKeys: String, CodingKey {

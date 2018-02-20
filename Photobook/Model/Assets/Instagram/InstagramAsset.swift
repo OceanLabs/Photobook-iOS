@@ -50,5 +50,11 @@ class InstagramAsset: Asset {
             completionHandler(image, error)
         })
     }
+    
+    func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension?, Error?) -> Void) {
+        SDWebImageManager.shared().loadImage(with: standardResolutionUrl, options: [], progress: nil, completed: { _, data, error, _, _, _ in
+            completionHandler(data, .jpg, error)
+        })
+    }
 
 }
