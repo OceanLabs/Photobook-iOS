@@ -49,7 +49,9 @@ class InstagramLoginViewController: UIViewController {
         instagramClient.authorize(withCallbackURL: URL(string: OAuth2Swift.Constants.redirectUri)!, scope: OAuth2Swift.Constants.scope, state:"INSTAGRAM",
             success: { [weak welf = self] credential, response, parameters in
                 KeychainSwift().set(credential.oauthToken, forKey: OAuth2Swift.Constants.keychainInstagramTokenKey)
-                welf?.navigationController?.setViewControllers([AssetPickerCollectionViewController.instagramAssetPicker()], animated: false)                
+                let instagramAssetPicker = AssetPickerCollectionViewController.instagramAssetPicker()
+                instagramAssetPicker.delegate = instagramAssetPicker
+                welf?.navigationController?.setViewControllers([instagramAssetPicker], animated: false)
         }, failure: { [weak welf = self] error in
             welf?.emptyScreenViewController.show(ErrorUtils.genericRetryErrorMessage(message: error.localizedDescription, action: { [weak welf = self] in
                 welf?.emptyScreenViewController.hide()

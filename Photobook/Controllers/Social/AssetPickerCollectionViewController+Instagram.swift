@@ -44,3 +44,10 @@ extension AssetPickerCollectionViewController: OAuthSwiftURLHandlerType {
     }
     
 }
+
+extension AssetPickerCollectionViewController: AssetPickerCollectionViewControllerDelegate {
+    func viewControllerForPresentingOn() -> UIViewController? {
+        return tabBarController
+    }
+    
+}
