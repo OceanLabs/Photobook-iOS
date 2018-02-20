@@ -10,20 +10,12 @@ import UIKit
 import Photos
 
 protocol AssetCollectorViewControllerDelegate: class {
-    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, willChangeHiddenStateTo hidden: Bool, coordinator: AssetCollectorAnimationCoordinator)
+    func actionsForAssetCollectorViewControllerHiddenStateChange(_ assetCollectorViewController: AssetCollectorViewController, willChangeTo hidden: Bool) -> () -> ()
     func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController)
 }
 
 enum AssetCollectorMode {
     case selecting, adding
-}
-
-class AssetCollectorAnimationCoordinator {
-    fileprivate var animationBlock: (() -> ())?
-    
-    func animate(animationBlock: @escaping () -> ()) {
-        self.animationBlock = animationBlock
-    }
 }
 
 class AssetCollectorViewController: UIViewController {
@@ -92,8 +84,7 @@ class AssetCollectorViewController: UIViewController {
     public var isHidden: Bool = false {
         didSet {
             if oldValue != isHidden {
-                let animationCoordinator = AssetCollectorAnimationCoordinator()
-                self.delegate?.assetCollectorViewController(self, willChangeHiddenStateTo: self.isHidden, coordinator: animationCoordinator)
+                let actions = delegate?.actionsForAssetCollectorViewControllerHiddenStateChange(self, willChangeTo: isHidden)
                 viewHeight = isHidden ? 0 : viewHeightDefault
                 let duration: TimeInterval = isHideShowAnimated ? 0.2 : 0
                 let options = isHidden ? UIViewAnimationOptions.curveEaseIn : UIViewAnimationOptions.curveEaseOut
@@ -101,7 +92,7 @@ class AssetCollectorViewController: UIViewController {
                     self.topContainerView.isHidden = self.isHidden
                     self.imageCollectionView.isHidden = self.isHidden
                     self.adaptHeight()
-                    animationCoordinator.animationBlock?()
+                    actions?()
                 }, completion: nil)
             }
         }

@@ -155,8 +155,8 @@ class AlbumsCollectionViewController: UICollectionViewController {
 extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
     // MARK: AssetCollectorViewControllerDelegate
     
-    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, willChangeHiddenStateTo hidden: Bool, coordinator: AssetCollectorAnimationCoordinator) {
-        coordinator.animate { [weak welf = self] in
+    func actionsForAssetCollectorViewControllerHiddenStateChange(_ assetCollectorViewController: AssetCollectorViewController, willChangeTo hidden: Bool) -> () -> () {
+        return { [weak welf = self] in
             welf?.collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: hidden ? 0 : assetCollectorViewController.viewHeight, right: 0)
         }
     }
