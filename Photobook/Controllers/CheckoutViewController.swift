@@ -55,6 +55,7 @@ class CheckoutViewController: UIViewController {
         super.viewDidLoad()
         
         registerForKeyboardNotifications()
+        NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryPreviewImageReady), name: OrderSummaryManager.notificationPreviewImageReady, object: nil)
         
         payButtonOriginalColor = payButton.backgroundColor
         
@@ -105,6 +106,15 @@ class CheckoutViewController: UIViewController {
         }
     }
     
+    func updateItemImage() {
+        let scaleFactor = UIScreen.main.scale
+        let size = CGSize(width: itemImageView.frame.size.width * scaleFactor, height: itemImageView.frame.size.height * scaleFactor)
+        
+        OrderSummaryManager.shared.fetchPreviewImage(withSize: size) { (image) in
+            self.itemImageView.image = image
+        }
+    }
+    
     func populate() {
         
         //product
@@ -112,6 +122,7 @@ class CheckoutViewController: UIViewController {
         itemTitleLabel.text = ProductManager.shared.product?.name
         itemPriceLabel.text = OrderManager.shared.cachedCost?.lineItems?.first?.formattedCost
         itemAmountButton.setTitle("\(OrderManager.shared.itemCount)", for: .normal)
+        updateItemImage()
         
         //payment method icon
         paymentMethodIconImageView.image = nil
@@ -222,6 +233,12 @@ class CheckoutViewController: UIViewController {
         
         
         paymentManager.authorizePayment(cost: OrderManager.shared.cachedCost!, method: .applePay)
+    }
+    
+    //MARK: Order Summary Notifications
+    
+    @objc func orderSummaryPreviewImageReady() {
+        updateItemImage()
     }
     
     //MARK: Keyboard

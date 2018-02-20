@@ -8,14 +8,11 @@
 
 import UIKit
 
-protocol OrderSummaryManagerDelegate : class {
-    func orderSummaryManagerWillUpdate(_ manager:OrderSummaryManager)
-    func orderSummaryManager(_ manager:OrderSummaryManager, didUpdatePreviewImage success:Bool)
-    func orderSummaryManager(_ manager:OrderSummaryManager, didUpdateSummary success:Bool)
-    func orderSummaryManagerSizeForPreviewImage(_ manager:OrderSummaryManager) -> CGSize
-}
-
 class OrderSummaryManager {
+    static let notificationWillUpdate = Notification.Name("OrderSummaryManager.willUpdate")
+    static let notificationPreviewImageReady = Notification.Name("OrderSummaryManager.previewImageReady")
+    static let notificationPreviewImageFailed = Notification.Name("OrderSummaryManager.previewImageFailed")
+    static let notificationDidUpdateSummary = Notification.Name("OrderSummaryManager.didUpdateSummary")
     
     //layouts configured by previous UX
     private var layouts:[ProductLayout] {
@@ -39,21 +36,18 @@ class OrderSummaryManager {
     }
     private var selectedUpsellOptions:Set<UpsellOption> = []
     private(set) var summary:OrderSummary?
-    private(set) var previewImage:UIImage?
     private(set) var upsoldProduct:Photobook? //product to place the order with. Reflects user's selected upsell options.
+    private var previewImageUrl:String?
     
     var coverPageSnapshotImage:UIImage?
-    weak var delegate:OrderSummaryManagerDelegate?
     
-    init(withDelegate delegate:OrderSummaryManagerDelegate) {
-        self.delegate = delegate
-    }
+    static let shared = OrderSummaryManager()
     
     func refresh() {
-        delegate?.orderSummaryManagerWillUpdate(self)
+        NotificationCenter.default.post(name: OrderSummaryManager.notificationWillUpdate, object: self)
         
         summary = nil
-        previewImage = nil
+        previewImageUrl = nil
         upsoldProduct = nil
         
         if coverImageUrl == nil {
@@ -77,7 +71,25 @@ class OrderSummaryManager {
         return selectedUpsellOptions.contains(option)
     }
     
-    func fetchProductDetails() {
+    func fetchPreviewImage(withSize size:CGSize, completion:@escaping (UIImage?) -> Void) {
+        
+        guard let coverImageUrl = coverImageUrl else {
+            completion(nil)
+            return
+        }
+        
+        if let summary = summary,
+            let imageUrl = summary.previewImageUrl(withCoverImageUrl: coverImageUrl, size: size) {
+            APIClient.shared.get(context: .none, endpoint: imageUrl.absoluteString, parameters: nil, completion: { (data, error) in
+                let image = data as? UIImage
+                DispatchQueue.main.async { completion(image) }
+            })
+        } else {
+            DispatchQueue.main.async { completion(nil) }
+        }
+    }
+    
+    private func fetchProductDetails() {
         
         //TODO: mock data REMOVE
         let randomInt = arc4random_uniform(3)
@@ -85,40 +97,19 @@ class OrderSummaryManager {
         print("mock file: " + filename)
         
         guard let summaryDict = JSON.parse(file: filename) as? [String:Any] else {
-            delegate?.orderSummaryManager(self, didUpdateSummary: false)
+            NotificationCenter.default.post(name: OrderSummaryManager.notificationDidUpdateSummary, object: self)
             return
         }
         
         //summary
         guard let summary = OrderSummary(summaryDict) else {
-            delegate?.orderSummaryManager(self, didUpdateSummary: false)
-            delegate?.orderSummaryManager(self, didUpdatePreviewImage: false) //no summary, no preview
+            NotificationCenter.default.post(name: OrderSummaryManager.notificationDidUpdateSummary, object: self)
             return
         }
         self.summary = summary
-        self.delegate?.orderSummaryManager(self, didUpdateSummary: true)
-        
-        //preview image
-        fetchPreviewImage()
-        
-    }
-    
-    private func fetchPreviewImage() {
-        
-        guard let coverImageUrl = coverImageUrl else {
-            return
-        }
-        
-        let size = delegate?.orderSummaryManagerSizeForPreviewImage(self) ?? CGSize.zero
-        
-        if let summary = summary,
-            let imageUrl = summary.previewImageUrl(withCoverImageUrl: coverImageUrl, size: size) {
-            APIClient.shared.get(context: .none, endpoint: imageUrl.absoluteString, parameters: nil, completion: { (data, error) in
-                self.previewImage = data as? UIImage
-                DispatchQueue.main.async { self.delegate?.orderSummaryManager(self, didUpdatePreviewImage: self.previewImage != nil) }
-            })
-        } else {
-            DispatchQueue.main.async { self.delegate?.orderSummaryManager(self, didUpdatePreviewImage: false) }
+        NotificationCenter.default.post(name: OrderSummaryManager.notificationDidUpdateSummary, object: self)
+        if coverImageUrl != nil {
+            NotificationCenter.default.post(name: OrderSummaryManager.notificationPreviewImageReady, object: self)
         }
     }
     
@@ -127,7 +118,7 @@ class OrderSummaryManager {
         
         guard let coverImage = coverPageSnapshotImage else {
             self.isUploadingCoverImage = false
-            DispatchQueue.main.async { self.delegate?.orderSummaryManager(self, didUpdatePreviewImage: false) }
+            NotificationCenter.default.post(name: OrderSummaryManager.notificationPreviewImageFailed, object: self)
             return
         }
         
@@ -140,12 +131,14 @@ class OrderSummaryManager {
             
             guard let dictionary = json as? [String:AnyObject], let url = dictionary["full"] as? String else {
                 print("OrderSummaryManager: Couldn't parse URL of uploaded image")
-                DispatchQueue.main.async { self.delegate?.orderSummaryManager(self, didUpdatePreviewImage: false) }
+                DispatchQueue.main.async { NotificationCenter.default.post(name: OrderSummaryManager.notificationPreviewImageFailed, object: self) }
                 return
             }
             
             self.coverImageUrl = url
-            self.fetchPreviewImage()
+            if self.summary != nil {
+                NotificationCenter.default.post(name: OrderSummaryManager.notificationPreviewImageReady, object: self)
+            }
         })
     }
 }
