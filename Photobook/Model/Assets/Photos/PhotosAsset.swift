@@ -62,14 +62,16 @@ class PhotosAsset: Asset {
         self.albumIdentifier = albumIdentifier
     }
     
-    func uneditedImage(size: CGSize, loadThumbnailsFirst: Bool = true, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
+    func image(size: CGSize, loadThumbnailsFirst: Bool = true, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
         let options = PHImageRequestOptions()
         options.deliveryMode = loadThumbnailsFirst ? .opportunistic : .highQualityFormat
         options.isNetworkAccessAllowed = true
         
         let imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())
         PHImageManager.default().requestImage(for: photosAsset, targetSize: imageSize, contentMode: .aspectFill, options: options) { (image, _) in
-            completionHandler(image, nil)
+            DispatchQueue.main.async {
+                completionHandler(image, nil)
+            }
         }
     }
     
