@@ -377,15 +377,15 @@ class ProductManager {
         addPages(at: index, number: 1)
     }
     
-    func addPages(at index: Int, pages: [ProductLayout]) {
-        addPages(at: index, pages: pages)
-    }
-    
     func addDoubleSpread(at index: Int) {
-        addPages(at: index)
+        addPages(at: index, number: 2)
+    }
+
+    func addPages(at index: Int, pages: [ProductLayout]) {
+        addPages(at: index, number: pages.count, pages: pages)
     }
     
-    private func addPages(at index: Int, pages: [ProductLayout]? = nil, number: Int = 2) {
+    private func addPages(at index: Int, number: Int, pages: [ProductLayout]? = nil) {
         guard let product = product,
             let layouts = layouts(for: product)
             else { return }
