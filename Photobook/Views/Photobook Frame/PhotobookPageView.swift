@@ -135,11 +135,9 @@ class PhotobookPageView: UIView {
         
         assetContainerView.alpha = 1.0
         assetContainerView.frame = imageBox.rectContained(in: bounds.size)
+        setImagePlaceholder(visible: true)
         
-        guard let index = pageIndex, let asset = productLayout?.productLayoutAsset?.asset else {
-            setImagePlaceholder(visible: true)
-            return
-        }
+        guard let index = pageIndex, let asset = productLayout?.productLayoutAsset?.asset else { return }
         
         // Avoid reloading image if not necessary
         if let assetImage = assetImage {
