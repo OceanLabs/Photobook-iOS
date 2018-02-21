@@ -92,7 +92,8 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
             photobookFrameView.leftPageView.interaction = .disabled
         }
         
-        if let rightIndex = rightIndex {
+        // If leftIndex == rightIndex, then it's a double-page layout
+        if let rightIndex = rightIndex, leftIndex != rightIndex {
             photobookFrameView.rightPageView.pageIndex = rightIndex
             photobookFrameView.rightPageView.productLayout = ProductManager.shared.productLayouts[rightIndex]
             
@@ -102,7 +103,9 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
             photobookFrameView.isRightPageVisible = true
             photobookFrameView.rightPageView.interaction = .wholePage
         } else {
-            photobookFrameView.isRightPageVisible = false
+            if rightIndex == nil {
+                photobookFrameView.isRightPageVisible = false
+            }
             photobookFrameView.rightPageView.interaction = .disabled
         }
         

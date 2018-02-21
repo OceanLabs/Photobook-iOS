@@ -626,7 +626,11 @@ extension PhotobookViewController: UICollectionViewDataSource {
                 let indexPathItem = indexPath.item - ((proposedDropIndexPath?.item ?? Int.max) < indexPath.item ? 1 : 0)
                 guard let index = ProductManager.shared.productLayoutIndex(for: indexPathItem) else { return cell }
                 leftIndex = index
-                if index + 1 < ProductManager.shared.productLayouts.count {
+                let isDoubleLayout = ProductManager.shared.productLayouts[leftIndex!].layout.isDoubleLayout
+                
+                if isDoubleLayout {
+                    rightIndex = leftIndex
+                } else if leftIndex! + 1 < ProductManager.shared.productLayouts.count {
                     rightIndex = index + 1
                 }
                 cell.setupGestures()
