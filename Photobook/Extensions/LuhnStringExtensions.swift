@@ -12,7 +12,7 @@ extension String {
     
     func isValidCardNumber() -> Bool {
         do {
-            try SwiftLuhn.performLuhnAlgorithm(with: self)
+            try SwiftLuhn.performLuhnAlgorithm(with: self.formattedCardNumber())
             return true
         }
         catch {
@@ -21,12 +21,12 @@ extension String {
     }
     
     func cardType() -> SwiftLuhn.CardType? {
-        let cardType = try? SwiftLuhn.cardType(for: self)
+        let cardType = try? SwiftLuhn.cardType(for: self.formattedCardNumber())
         return cardType
     }
     
     func suggestedCardType() -> SwiftLuhn.CardType? {
-        let cardType = try? SwiftLuhn.cardType(for: self, suggest: true)
+        let cardType = try? SwiftLuhn.cardType(for: self.formattedCardNumber(), suggest: true)
         return cardType
     }
     

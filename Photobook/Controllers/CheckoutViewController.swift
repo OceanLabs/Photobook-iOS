@@ -95,10 +95,6 @@ class CheckoutViewController: UIViewController {
         return EmptyScreenViewController.emptyScreen(parent: self)
     }()
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -141,19 +137,22 @@ class CheckoutViewController: UIViewController {
         emptyScreenViewController.show(message: Constants.loadingDetailsText, title: nil, image: nil, activity: true, buttonTitle: nil, buttonAction: nil)
     }
     
+    private func registerForKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(notification:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         updateViews()
     }
     
-    private func registerForKeyboardNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(notification:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-    }
-    
-    func refresh() {
-        
+    private func refresh() {
         progressOverlayViewController.show(message: Constants.loadingDetailsText)
         OrderManager.shared.updateCost { (error) in
             self.updateViews() //TODO: error handling
@@ -193,7 +192,6 @@ class CheckoutViewController: UIViewController {
     private func updateViews() {
         
         //product
-        
         itemTitleLabel.text = ProductManager.shared.product?.name
         itemPriceLabel.text = OrderManager.shared.cachedCost?.lineItems?.first?.formattedCost
         itemAmountButton.setTitle("\(OrderManager.shared.itemCount)", for: .normal)
@@ -298,12 +296,6 @@ class CheckoutViewController: UIViewController {
         amountPickerViewController.modalPresentationStyle = .overCurrentContext
         self.present(amountPickerViewController, animated: false, completion: nil)
     }
-    
-    /*override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == segueIdentifierDeliveryDetails, let vc = segue.destination as? DeliveryDetailsTableViewController {
-            
-        }
-    }*/
     
     @IBAction private func applePayButtonTapped(_ sender: PKPaymentButton) {
         paymentManager.authorizePayment(cost: OrderManager.shared.cachedCost!, method: .applePay)
