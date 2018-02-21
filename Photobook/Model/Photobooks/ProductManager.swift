@@ -430,6 +430,24 @@ class ProductManager {
         }
     }
     
+    func pageType(forLayoutIndex index: Int) -> PageType {
+        if index == 0 { return .cover }
+        if index == 1 { return .first }
+        if index == productLayouts.count - 1 { return .last }
+        
+        let doublePagesBeforeIndex = Array(productLayouts[0..<index]).filter { $0.layout.isDoubleLayout }.count
+        
+        if doublePagesBeforeIndex > 0 {
+            return (index - doublePagesBeforeIndex) % 2 == 0 ? .left : .right
+        }
+        if index % 2 == 0 { return .left }
+        return .right
+    }
+    
+    func moveLayout(at sourceIndex: Int, to destinationIndex: Int) {
+        guard sourceIndex < productLayouts.count && destinationIndex < productLayouts.count else { return }
+        productLayouts.move(sourceIndex, to: destinationIndex)
+    }
 }
 
 extension ProductManager: PhotobookAPIManagerDelegate {

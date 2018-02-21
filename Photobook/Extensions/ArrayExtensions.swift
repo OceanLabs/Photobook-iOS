@@ -19,7 +19,7 @@ extension Array {
     /// - Parameters:
     ///   - i: The index to move the value from.
     ///   - j: The index to move the value to.
-    public mutating func move(_ i: Int, _ j: Int){
+    public mutating func move(_ i: Int, to j: Int){
         
         let itemToMove = self[i]
         self.remove(at: i)

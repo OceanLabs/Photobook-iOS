@@ -108,6 +108,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             }
             
             productLayout = ProductManager.shared.productLayouts[pageIndex].shallowCopy()
+            pageType = ProductManager.shared.pageType(forLayoutIndex: pageIndex)
             
             if pageType == .cover {
                 selectedColor = ProductManager.shared.coverColor
@@ -122,13 +123,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     private var availableLayouts: [Layout]!
     private var pageSize: CGSize = .zero
     private var hasDoneSetup = false
-    private var pageType: PageType! {
-        if pageIndex == 0 { return .cover }
-        else if pageIndex == 1 { return .first }
-        else if pageIndex == ProductManager.shared.productLayouts.count - 1 { return .last }
-        else if pageIndex % 2 == 0 { return .left }
-        else { return .right }
-    }
+    private var pageType: PageType!
     private var isDoublePage: Bool {
         return productLayout.layout.isDoubleLayout
     }
