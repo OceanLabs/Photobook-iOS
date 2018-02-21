@@ -31,9 +31,12 @@ class PhotobookAPIManager {
     let imageUploadIdentifierPrefix = "PhotobookAPIManager-AssetUploader-"
     
     private struct EndPoints {
-        static let products = "/products/"
+        static let products = "/ios/initial-data/"
+        static let summary = "/ios/summary"
+        static let applyUpsell = "/ios/upsell.apply"
+        static let pdfCreation = "/ios/pdf.create"
         static let imageUpload = "/upload/"
-        static let pdfCreation = "" //TBC
+        static let pdfGeneration = "/ios/pdf.generate"
     }
     
     private struct Storage {
@@ -244,7 +247,7 @@ class PhotobookAPIManager {
             return
         }
         
-        apiClient.post(context: .pig, endpoint: EndPoints.pdfCreation, parameters: parameters) { ( jsonData, error) in
+        apiClient.post(context: .pig, endpoint: EndPoints.pdfGeneration, parameters: parameters) { ( jsonData, error) in
             completionHandler(error)
         }
     }
