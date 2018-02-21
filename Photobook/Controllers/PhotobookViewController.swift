@@ -714,15 +714,10 @@ extension PhotobookViewController: PageSetupDelegate {
                         if pageType == .left {
                             ProductManager.shared.deletePage(at: index + 1)
                         } else if pageType == .right {
-                            ProductManager.shared.deletePage(at: index - 1)
-                        
+                            ProductManager.shared.deletePage(at: index - 1)                        
                         }
                     } else {
-                        if pageType == .left {
-                            ProductManager.shared.addPage(at: index + 1)
-                        } else if pageType == .right {
-                            ProductManager.shared.addPage(at: index - 1)                            
-                        }
+                        ProductManager.shared.addPage(at: index + 1)
                     }
                 }
             }
