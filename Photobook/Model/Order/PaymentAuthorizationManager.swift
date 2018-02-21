@@ -86,11 +86,11 @@ class PaymentAuthorizationManager: NSObject {
     ///
     /// - Parameter cost: The total cost of the order
     private func authorizeApplePay(cost: Cost){
-        guard let currencyCode = ProductManager.shared.currencyCode else { return }
+        guard let currencyCode = OrderManager.shared.currencyCode else { return }
         
         let paymentRequest = Stripe.paymentRequest(withMerchantIdentifier: applePayMerchantId, country: "US", currency: currencyCode)
         
-        paymentRequest.paymentSummaryItems = cost.summaryItemsForApplePay(payTo: applePayPayTo, shippingMethodId: ProductManager.shared.shippingMethod!)
+        paymentRequest.paymentSummaryItems = cost.summaryItemsForApplePay(payTo: applePayPayTo, shippingMethodId: OrderManager.shared.shippingMethod!)
         paymentRequest.requiredShippingAddressFields = [.postalAddress, .name, .email, .phone]
         
         let paymentController = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest)
@@ -108,11 +108,11 @@ class PaymentAuthorizationManager: NSObject {
     ///
     /// - Parameter cost: The total cost of the order
     private func authorizePayPal(cost: Cost){
-        let details = ProductManager.shared.deliveryDetails
+        let details = OrderManager.shared.deliveryDetails
         let address = details?.address
 
-        guard let totalCost = cost.shippingMethod(id: ProductManager.shared.shippingMethod)?.totalCost,
-            let currencyCode = ProductManager.shared.currencyCode,
+        guard let totalCost = cost.shippingMethod(id: OrderManager.shared.shippingMethod)?.totalCost,
+            let currencyCode = OrderManager.shared.currencyCode,
             let firstName = details?.firstName,
             let lastName = details?.lastName,
             let line1 = address?.line1,
@@ -190,7 +190,7 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
         
         deliveryDetails.email = payment.shippingContact?.emailAddress
         deliveryDetails.phone = payment.shippingContact?.phoneNumber?.stringValue
-        ProductManager.shared.deliveryDetails = deliveryDetails
+        OrderManager.shared.deliveryDetails = deliveryDetails
         
         let client = STPAPIClient(publishableKey: Constants.stripePublicKey)
         client.createToken(with: payment, completion: {(token: STPToken?, error: Error?) in
@@ -219,24 +219,24 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
         
         let deliveryDetails = DeliveryDetails()
         deliveryDetails.address = shippingAddress
-        ProductManager.shared.deliveryDetails = deliveryDetails
+        OrderManager.shared.deliveryDetails = deliveryDetails
         
-        ProductManager.shared.updateCost { [weak welf = self] (error: Error?) in
+        OrderManager.shared.updateCost { [weak welf = self] (error: Error?) in
             
-            guard let cachedCost = ProductManager.shared.cachedCost else {
+            guard let cachedCost = OrderManager.shared.cachedCost else {
                 completion(.failure, [PKShippingMethod](), [PKPaymentSummaryItem]())
                 return
             }
 
             guard error == nil else {
-                completion(.failure, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: welf!.applePayPayTo, shippingMethodId: ProductManager.shared.shippingMethod!))
+                completion(.failure, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: welf!.applePayPayTo, shippingMethodId: OrderManager.shared.shippingMethod!))
                 return
             }
 
             //Cost is expected to change here so update views
             welf?.delegate?.costUpdated()
             
-            completion(.success, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: welf!.applePayPayTo, shippingMethodId: ProductManager.shared.shippingMethod!))
+            completion(.success, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: welf!.applePayPayTo, shippingMethodId: OrderManager.shared.shippingMethod!))
         }
     }
 }

@@ -12,7 +12,7 @@ struct ErrorMessage {
     var title: String
     var message: String
     var buttonTitle: String
-    var buttonAction: ()->()
+    var buttonAction: () -> ()
 }
 
 /// Controller to add as a child to present the empty state.
@@ -46,6 +46,14 @@ class EmptyScreenViewController: UIViewController {
         let emptyScreenViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "EmptyScreenViewController") as! EmptyScreenViewController
         emptyScreenViewController.parentController = parent
         return emptyScreenViewController
+    }
+    
+    
+    /// Factory method to create an Empty Screen from an ErrorMessage
+    ///
+    /// - Parameter errorMessage: Use this ErrorMessage to create a Empty Screen
+    func show(_ errorMessage: ErrorMessage) {
+        show(message: errorMessage.message, title:errorMessage.title, buttonTitle: errorMessage.buttonTitle, buttonAction: errorMessage.buttonAction)
     }
     
     /// Shows the Empty Screen over the parent's UI
@@ -107,6 +115,7 @@ class EmptyScreenViewController: UIViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.view.alpha = 0.0
             }, completion: { (finished) in
+                self.view.alpha = 1
                 self.view.removeFromSuperview()
                 self.removeFromParentViewController()
             })

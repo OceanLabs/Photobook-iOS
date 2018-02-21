@@ -71,7 +71,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         collectionViewBottomConstraint.constant = -view.frame.height * (reverseRearrangeScale - 1)
         
         NotificationCenter.default.addObserver(self, selector: #selector(menuDidHide), name: NSNotification.Name.UIMenuControllerDidHideMenu, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereReloaded(_:)), name: AssetsNotificationName.albumsWereReloaded, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
         
         guard let photobook = ProductManager.shared.products?.first else {
             loadProducts()
@@ -224,19 +224,25 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     @IBAction func didTapCheckout(_ sender: Any) {
         guard draggingView == nil else { return }
-        performSegue(withIdentifier: "CheckoutSegue", sender: nil)
+        
+        let orderSummaryViewController = self.storyboard?.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
+        self.navigationController?.pushViewController(orderSummaryViewController, animated: true)
+    }
+    
+    @IBAction private func didTapOnSpine(_ sender: UITapGestureRecognizer) {
+        print("Tapped on spine")
     }
     
     @IBAction func didTapBack() {
         let alertController = UIAlertController(title: NSLocalizedString("Photobook/BackAlertTitle", value: "Are you sure?", comment: "Title for alert asking the user to go back"), message: NSLocalizedString("Photobook/BackAlertMessage", value: "This will discard any changes made to your photobook", comment: "Message for alert asking the user to go back"), preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: NSLocalizedString("Photobook/BackAlertConfirmationButtonTitle", value: "Yes", comment: "Confirmation button title for alert asking the user to go back"), style: .destructive, handler: { _ in
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Yes", value: "Yes", comment: "Affrimative button title for alert asking the user confirmation for an action"), style: .destructive, handler: { _ in
             
             // Clear photobook
             ProductManager.shared.reset()
             
             self.navigationController?.popViewController(animated: true)
         }))
-        alertController.addAction(UIAlertAction(title: NSLocalizedString("Photobook/BackAlertCancelButtonTitle", value: "Cancel", comment: "Cancel button title for alert asking the user to go back"), style: .default, handler: nil))
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Cancel", value: "Cancel", comment: "Cancel button title for alert asking the user confirmation for an action"), style: .default, handler: nil))
         
         present(alertController, animated: true, completion: nil)
     }
@@ -265,7 +271,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         scrollingTimer = nil
     }
     
-    @objc func albumsWereReloaded(_ notification: Notification) {
+    @objc func albumsWereUpdated(_ notification: Notification) {
         guard let albumsChanges = notification.object as? [AlbumChange] else { return }
         
         var removedAssets = [Asset]()

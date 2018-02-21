@@ -40,7 +40,7 @@
 "layouts": [
 	{
 		"id": 1,
-        "category": "empty",
+        "category": "empty"
 	},	
 	{
 		"id": 2,
@@ -254,7 +254,7 @@
 	},
 	{
 		"id": 14,
-        "category": "empty",
+        "category": "empty"
 	},
 	{
 		"id": 15,
@@ -468,7 +468,7 @@
 	},
 	{
 		"id": 27,
-        "category": "empty",
+        "category": "empty"
 	},	
 	{
 		"id": 28,
@@ -682,7 +682,7 @@
 	},	
 	{
 		"id": 40,
-        "category": "empty",
+        "category": "empty"
 	},	
 	{
 		"id": 41,
@@ -922,5 +922,21 @@
         		}
         }
     }    
+],
+"upsellOptions": [
+    {
+        "type":"UPGRADE_PHOTOBOOK_SIZE",
+        "displayName":"Upgrade to large size (210x210)",
+        "payload": {
+            "targetTemplateId":"hd_book_210x210"
+        }
+    },
+    {
+        "type":"UPDATE_PHOTOBOOK_FINISH",
+        "displayName":"Upgrade to gloss finish",
+        "payload": {
+            "targetFinish":"gloss"
+        }
+    }
 ]
 }

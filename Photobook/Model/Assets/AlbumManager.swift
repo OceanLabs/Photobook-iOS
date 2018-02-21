@@ -9,7 +9,7 @@
 import UIKit
 
 struct AssetsNotificationName {
-    static let albumsWereReloaded = Notification.Name("albumsWereReloadedNotificationName")
+    static let albumsWereUpdated = Notification.Name("albumsWereUpdatedNotificationName")
 }
 
 protocol AlbumManager {

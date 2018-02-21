@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Stripe
 
 enum ProductColor: String, Codable {
     case white, black
@@ -74,8 +73,12 @@ class ProductManager {
     // List of all available layouts
     private(set) var layouts: [Layout]?
     
+    // List of all available upsell options
+    private(set) var upsellOptions: [UpsellOption]?
+    
     // Current photobook
     var product: Photobook?
+    var productUpsellOptions: [UpsellOption]? //TODO: Get this from the initial-data endpoint
     var spineText: String?
     var spineFontType: FontType = .plain
     var coverColor: ProductColor = .white
@@ -99,26 +102,6 @@ class ProductManager {
         return minimumRequiredAssets < productLayouts.count
     }
     
-    // Ordering (this should probably be in another class)
-    var shippingMethod: Int?
-    var currencyCode: String? = "GBP" // TODO: Get this from somewhere
-    var deliveryDetails: DeliveryDetails?
-    var paymentMethod: PaymentMethod? = Stripe.deviceSupportsApplePay() ? .applePay : nil
-    var cachedCost: Cost? // private?
-    var validCost: Cost? {
-        return hasValidCachedCost ? cachedCost : nil
-    }
-    func updateCost(forceUpdate: Bool = false, _ completionHandler: @escaping (_ error : Error?) -> Void) {
-        // TODO: update cost
-        completionHandler(nil)
-    }
-    var hasValidCachedCost: Bool {
-        // TODO: validate
-//        return cachedCost?.orderHash == self.hashValue
-        return true
-    }
-    var paymentToken: String?
-    
     func reset() {
         productLayouts = [ProductLayout]()
         product = nil
@@ -134,7 +117,7 @@ class ProductManager {
     ///
     /// - Parameter completion: Completion block with an optional error
     func initialise(completion:((Error?)->())?) {
-        apiManager.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, error) in
+        apiManager.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, upsellOptions, error) in
             guard error == nil else {
                 completion?(error!)
                 return
@@ -142,14 +125,9 @@ class ProductManager {
             
             welf?.products = photobooks
             welf?.layouts = layouts
+            welf?.upsellOptions = upsellOptions
             
             completion?(nil)
-            
-            // TODO: REMOVEME. Mock cost & shipping methods
-            let lineItem = LineItem(id: 0, name: "Clown Costume 🤡", cost: Decimal(integerLiteral: 10), formattedCost: "$10")
-            let shippingMethod = ShippingMethod(id: 1, name: "Fiesta Deliveries 🎉🚚", shippingCostFormatted: "$5", totalCost: Decimal(integerLiteral: 15), totalCostFormatted: "$15", maxDeliveryTime: 150, minDeliveryTime: 100)
-            let shippingMethod2 = ShippingMethod(id: 2, name: "Magic Unicorn ✨🦄✨", shippingCostFormatted: "$5000", totalCost: Decimal(integerLiteral: 15), totalCostFormatted: "$5010", maxDeliveryTime: 1, minDeliveryTime: 0)
-            self.cachedCost = Cost(hash: 0, lineItems: [lineItem], shippingMethods: [shippingMethod, shippingMethod2], promoDiscount: nil, promoCodeInvalidReason: nil)
         }
     }
     
@@ -166,7 +144,7 @@ class ProductManager {
 
         var addedAssets = assets ?? {
             var assets = [Asset]()
-            for layout in ProductManager.shared.productLayouts{
+            for layout in ProductManager.shared.productLayouts {
                 guard let asset = layout.asset else { continue }
                 assets.append(asset)
             }

@@ -28,6 +28,8 @@ enum PhotobookAPIError: Error {
 
 class PhotobookAPIManager {
     
+    let imageUploadIdentifierPrefix = "PhotobookAPIManager-AssetUploader-"
+    
     private struct EndPoints {
         static let products = "/products/"
         static let imageUpload = "/upload/"
@@ -62,17 +64,17 @@ class PhotobookAPIManager {
     /// Requests the information about photobook products and layouts from the API
     ///
     /// - Parameter completionHandler: Closure to be called when the request completes
-    func requestPhotobookInfo(_ completionHandler:@escaping ([Photobook]?, [Layout]?, Error?) -> ()) {
+    func requestPhotobookInfo(_ completionHandler:@escaping ([Photobook]?, [Layout]?, [UpsellOption]?, Error?) -> ()) {
         
-        apiClient.get(context: .pdfGenerator, endpoint: EndPoints.products, parameters: nil) { (jsonData, error) in
+        apiClient.get(context: .photobook, endpoint: EndPoints.products, parameters: nil) { (jsonData, error) in
             
             // TEMP: Fake api response. Don't run for tests.
             var jsonData = jsonData
             if NSClassFromString("XCTest") == nil {
-                jsonData = self.json(file: "photobooks")
+                jsonData = JSON.parse(file: "photobooks")
             } else {
                 if error != nil {
-                    completionHandler(nil, nil, error!)
+                    completionHandler(nil, nil, nil, error!)
                     return
                 }
             }
@@ -80,9 +82,10 @@ class PhotobookAPIManager {
             guard
                 let photobooksData = jsonData as? [String: AnyObject],
                 let productsData = photobooksData["products"] as? [[String: AnyObject]],
-                let layoutsData = photobooksData["layouts"] as? [[String: AnyObject]]
+                let layoutsData = photobooksData["layouts"] as? [[String: AnyObject]],
+                let upsellData = photobooksData["upsellOptions"] as? [[String: AnyObject]]
             else {
-                completionHandler(nil, nil, APIClientError.parsing)
+                completionHandler(nil, nil, nil, APIClientError.parsing)
                 return
             }
             
@@ -96,7 +99,7 @@ class PhotobookAPIManager {
             
             if tempLayouts.isEmpty {
                 print("PBAPIManager: parsing layouts failed")
-                completionHandler(nil, nil, APIClientError.parsing)
+                completionHandler(nil, nil, nil, APIClientError.parsing)
                 return
             }
             
@@ -111,11 +114,20 @@ class PhotobookAPIManager {
             
             if tempPhotobooks.isEmpty {
                 print("PBAPIManager: parsing photobook products failed")
-                completionHandler(nil, nil, APIClientError.parsing)
+                completionHandler(nil, nil, nil, APIClientError.parsing)
                 return
             }
+            
+            // Parse photobook upsell options
+            var tempUpsellOptions = [UpsellOption]()
+            
+            for upsellOptionDictionary in upsellData {
+                if let upsellOption = UpsellOption(upsellOptionDictionary) {
+                    tempUpsellOptions.append(upsellOption)
+                }
+            }
 
-            completionHandler(tempPhotobooks, tempLayouts, nil)
+            completionHandler(tempPhotobooks, tempLayouts, tempUpsellOptions, nil)
         }
     }
     
@@ -154,7 +166,7 @@ class PhotobookAPIManager {
                 }
                 
                 if let fileUrl = welf?.saveImageToCache(image: image!, name: "\(asset.identifier).jpg") {
-                    welf?.apiClient.uploadFile(fileUrl, reference: asset.identifier, context: .pdfUploader, endpoint: EndPoints.imageUpload)
+                    welf?.apiClient.uploadImage(fileUrl, reference: self.imageUploadIdentifierPrefix + asset.identifier, context: .pig, endpoint: EndPoints.imageUpload)
                 } else {
                     welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImage)
                 }
@@ -163,13 +175,20 @@ class PhotobookAPIManager {
     }
     
     @objc func imageUploadFinished(_ notification: Notification) {
-        guard let productLayouts = delegate?.productLayouts else {
-            fatalError("PBAPIManager: Layouts not available")
-        }
         
         guard let dictionary = notification.userInfo as? [String: AnyObject] else {
             print("PBAPIManager: Task finished but could not cast user info")
             return
+        }
+        
+        //check if this is a photobook api manager asset upload
+        if let reference = dictionary["task_reference"] as? String, !reference.hasPrefix(imageUploadIdentifierPrefix) {
+            //not intended for this class
+            return
+        }
+        
+        guard let productLayouts = delegate?.productLayouts else {
+            fatalError("PBAPIManager: Layouts not available")
         }
         
         if let error = dictionary["error"] as? APIClientError {
@@ -182,8 +201,9 @@ class PhotobookAPIManager {
             delegate?.didFailUpload(APIClientError.parsing)
             return
         }
+        let referenceId = reference.suffix(reference.count - imageUploadIdentifierPrefix.count)
         
-        guard let productLayout = productLayouts.first(where: { $0.asset != nil && $0.asset!.identifier == reference }) else {
+        guard let productLayout = productLayouts.first(where: { $0.asset != nil && $0.asset!.identifier == referenceId }) else {
             delegate?.didFailUpload(PhotobookAPIError.missingPhotobookInfo)
             return
         }
@@ -224,7 +244,7 @@ class PhotobookAPIManager {
             return
         }
         
-        apiClient.post(context: .pdfUploader, endpoint: EndPoints.pdfCreation, parameters: parameters) { ( jsonData, error) in
+        apiClient.post(context: .pig, endpoint: EndPoints.pdfCreation, parameters: parameters) { ( jsonData, error) in
             completionHandler(error)
         }
     }
@@ -243,17 +263,5 @@ class PhotobookAPIManager {
         } catch {
             return nil
         }
-    }
-    
-    private func json(file: String) -> AnyObject? {
-        guard let path = Bundle.main.path(forResource: file, ofType: "json") else { return nil }
-        
-        do {
-            let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
-            return try JSONSerialization.jsonObject(with: data, options: .mutableLeaves) as AnyObject
-        } catch {
-            print("JSON: Could not parse file")
-        }
-        return nil
     }
 }

@@ -51,8 +51,15 @@
 		2E876E091FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E876E081FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift */; };
 		2E876E0B1FC2FA15007CCFA2 /* ViewStorySegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E876E0A1FC2FA15007CCFA2 /* ViewStorySegue.swift */; };
 		2E8B3E441FD191AC00FB8878 /* PhotobookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8B3E431FD191AC00FB8878 /* PhotobookViewController.swift */; };
+		2EA24E4A2035ACB20069B12A /* InstagramLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA24E492035ACB20069B12A /* InstagramLoginViewController.swift */; };
+		2EA24E4F2035E05C0069B12A /* InstagramAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA24E4E2035E05C0069B12A /* InstagramAlbum.swift */; };
 		2EA2FDFE2032DF9500BD0586 /* UIImageViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA2FDFD2032DF9500BD0586 /* UIImageViewExtensions.swift */; };
+		2EA88C62203C269C00CADCAD /* InstagramLandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA88C61203C269C00CADCAD /* InstagramLandingViewController.swift */; };
+		2EA88C64203C321E00CADCAD /* ErrorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA88C63203C321E00CADCAD /* ErrorUtils.swift */; };
 		2EB39DD51FC5AE0F009EC5B2 /* PhotobookPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB39DD41FC5AE0F009EC5B2 /* PhotobookPageView.swift */; };
+		2EB9BFAB2036CCD900EED9FA /* InstagramAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB9BFAA2036CCD900EED9FA /* InstagramAsset.swift */; };
+		2EB9BFAD2036D95100EED9FA /* OAuth2Swift+Instagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB9BFAC2036D95100EED9FA /* OAuth2Swift+Instagram.swift */; };
+		2EB9BFAF2036E01F00EED9FA /* AssetPickerCollectionViewController+Instagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB9BFAE2036E01F00EED9FA /* AssetPickerCollectionViewController+Instagram.swift */; };
 		2EBBC0CD1FEBB72E00A4EF45 /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBBC0CC1FEBB72D00A4EF45 /* ArrayExtensions.swift */; };
 		2EC81602201B33180046643B /* ShippingMethodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC81601201B33180046643B /* ShippingMethodTableViewCell.swift */; };
 		2EC81604201B33230046643B /* ShippingMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC81603201B33230046643B /* ShippingMethodsViewController.swift */; };
@@ -115,7 +122,6 @@
 		6FC7E8871FC4719300D2BCDA /* LayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E8861FC4719300D2BCDA /* LayoutTests.swift */; };
 		6FC7E8891FC47B4500D2BCDA /* PhotobookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E8881FC47B4500D2BCDA /* PhotobookTests.swift */; };
 		6FC7E88B1FC574DA00D2BCDA /* photobooks.json in Resources */ = {isa = PBXBuildFile; fileRef = 6FC7E88A1FC574DA00D2BCDA /* photobooks.json */; };
-		6FCE08CE2020755500C55D2F /* TextEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE08CD2020755500C55D2F /* TextEditingViewController.swift */; };
 		6FCE08D22021E4B700C55D2F /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08CF2021E4A800C55D2F /* Montserrat-Bold.ttf */; };
 		6FCE08D32021E4B700C55D2F /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08D02021E4AD00C55D2F /* OpenSans-Regular.ttf */; };
 		6FCE08D42021E4B700C55D2F /* Lora-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08D12021E4B300C55D2F /* Lora-Regular.ttf */; };
@@ -127,10 +133,25 @@
 		6FE05DA820345C3E003C9655 /* SwiftLuhn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE05DA720345C3E003C9655 /* SwiftLuhn.swift */; };
 		6FFE21CB202CA7F9004EC0EA /* SpineTextEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFE21CA202CA7F9004EC0EA /* SpineTextEditingViewController.swift */; };
 		7CBF1FFD216E73D9ACD8E2EF /* Pods_Photobook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35185092CEAA07251E4FD67C /* Pods_Photobook.framework */; };
+		B90F287F1FFF8D1A00FF3D15 /* OrderSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90F287E1FFF8D1A00FF3D15 /* OrderSummaryViewController.swift */; };
+		B90F28822003B7A300FF3D15 /* OrderSummaryUpsellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90F28812003B7A300FF3D15 /* OrderSummaryUpsellTableViewCell.swift */; };
+		B90F288920066D1500FF3D15 /* OrderSummaryDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90F288820066D1500FF3D15 /* OrderSummaryDetailTableViewCell.swift */; };
+		B90F288B20066D3100FF3D15 /* OrderSummaryTotalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90F288A20066D3100FF3D15 /* OrderSummaryTotalTableViewCell.swift */; };
+		B939FE8C200CD18200B1084B /* OrderSummaryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B939FE8B200CD18200B1084B /* OrderSummaryManager.swift */; };
+		B986DF2D20164BDA005461A0 /* order_summary_0.json in Resources */ = {isa = PBXBuildFile; fileRef = B986DF2C20164BDA005461A0 /* order_summary_0.json */; };
+		B986DF2F201B445E005461A0 /* UpsellOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = B986DF2E201B445E005461A0 /* UpsellOption.swift */; };
+		B99536DA202DB1B80019B1AF /* order_summary_1.json in Resources */ = {isa = PBXBuildFile; fileRef = B99536D9202DB1B80019B1AF /* order_summary_1.json */; };
+		B99536DE202DB2360019B1AF /* order_summary_2.json in Resources */ = {isa = PBXBuildFile; fileRef = B99536DD202DB2360019B1AF /* order_summary_2.json */; };
+		B99536E02035D8E10019B1AF /* TextEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99536DF2035D8E00019B1AF /* TextEditingViewController.swift */; };
 		B9A1433B1FDAD278000EFE0D /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A1433A1FDAD278000EFE0D /* Random.swift */; };
 		B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */; };
 		B9BC2E271FBF195200F4AA56 /* AssetCollectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BC2E261FBF195200F4AA56 /* AssetCollectorViewController.swift */; };
 		B9BE9F941FBF33320002C459 /* AssetCollectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BE9F931FBF33320002C459 /* AssetCollectorCollectionViewCell.swift */; };
+		B9D3340220220FE7003D4338 /* OrderSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D3340120220FE7003D4338 /* OrderSummary.swift */; };
+		B9D33406202486CC003D4338 /* OrderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D33405202486CC003D4338 /* OrderManager.swift */; };
+		B9D3340C2029BF80003D4338 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D3340B2029BF80003D4338 /* JSON.swift */; };
+		B9D3340E2029FB14003D4338 /* ProgressOverlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D3340D2029FB14003D4338 /* ProgressOverlayViewController.swift */; };
+		B9D33410202C7B13003D4338 /* OrderSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D3340F202C7B13003D4338 /* OrderSummaryTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -192,8 +213,15 @@
 		2E876E081FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPickerCoverCollectionViewCell.swift; sourceTree = "<group>"; };
 		2E876E0A1FC2FA15007CCFA2 /* ViewStorySegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewStorySegue.swift; sourceTree = "<group>"; };
 		2E8B3E431FD191AC00FB8878 /* PhotobookViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotobookViewController.swift; sourceTree = "<group>"; };
+		2EA24E492035ACB20069B12A /* InstagramLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramLoginViewController.swift; sourceTree = "<group>"; };
+		2EA24E4E2035E05C0069B12A /* InstagramAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramAlbum.swift; sourceTree = "<group>"; };
 		2EA2FDFD2032DF9500BD0586 /* UIImageViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageViewExtensions.swift; sourceTree = "<group>"; };
+		2EA88C61203C269C00CADCAD /* InstagramLandingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramLandingViewController.swift; sourceTree = "<group>"; };
+		2EA88C63203C321E00CADCAD /* ErrorUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorUtils.swift; sourceTree = "<group>"; };
 		2EB39DD41FC5AE0F009EC5B2 /* PhotobookPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookPageView.swift; sourceTree = "<group>"; };
+		2EB9BFAA2036CCD900EED9FA /* InstagramAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramAsset.swift; sourceTree = "<group>"; };
+		2EB9BFAC2036D95100EED9FA /* OAuth2Swift+Instagram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OAuth2Swift+Instagram.swift"; sourceTree = "<group>"; };
+		2EB9BFAE2036E01F00EED9FA /* AssetPickerCollectionViewController+Instagram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssetPickerCollectionViewController+Instagram.swift"; sourceTree = "<group>"; };
 		2EBBC0CC1FEBB72D00A4EF45 /* ArrayExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
 		2EC81601201B33180046643B /* ShippingMethodTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShippingMethodTableViewCell.swift; sourceTree = "<group>"; };
 		2EC81603201B33230046643B /* ShippingMethodsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShippingMethodsViewController.swift; sourceTree = "<group>"; };
@@ -261,8 +289,7 @@
 		6FC7E8841FC469E600D2BCDA /* LayoutBoxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutBoxTests.swift; sourceTree = "<group>"; };
 		6FC7E8861FC4719300D2BCDA /* LayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutTests.swift; sourceTree = "<group>"; };
 		6FC7E8881FC47B4500D2BCDA /* PhotobookTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookTests.swift; sourceTree = "<group>"; };
-		6FC7E88A1FC574DA00D2BCDA /* photobooks.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = photobooks.json; sourceTree = "<group>"; };
-		6FCE08CD2020755500C55D2F /* TextEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditingViewController.swift; sourceTree = "<group>"; };
+		6FC7E88A1FC574DA00D2BCDA /* photobooks.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = photobooks.json; sourceTree = "<group>"; };
 		6FCE08CF2021E4A800C55D2F /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.ttf"; sourceTree = "<group>"; };
 		6FCE08D02021E4AD00C55D2F /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
 		6FCE08D12021E4B300C55D2F /* Lora-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lora-Regular.ttf"; sourceTree = "<group>"; };
@@ -275,10 +302,25 @@
 		6FFE21CA202CA7F9004EC0EA /* SpineTextEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpineTextEditingViewController.swift; sourceTree = "<group>"; };
 		8FBCA2FB941818489E78FF98 /* Pods-Photobook.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.debug test.xcconfig"; sourceTree = "<group>"; };
 		A9A9A5996008D1B40B2E10F9 /* Pods-PhotobookTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.release.xcconfig"; sourceTree = "<group>"; };
+		B90F287E1FFF8D1A00FF3D15 /* OrderSummaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryViewController.swift; sourceTree = "<group>"; };
+		B90F28812003B7A300FF3D15 /* OrderSummaryUpsellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryUpsellTableViewCell.swift; sourceTree = "<group>"; };
+		B90F288820066D1500FF3D15 /* OrderSummaryDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryDetailTableViewCell.swift; sourceTree = "<group>"; };
+		B90F288A20066D3100FF3D15 /* OrderSummaryTotalTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryTotalTableViewCell.swift; sourceTree = "<group>"; };
+		B939FE8B200CD18200B1084B /* OrderSummaryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryManager.swift; sourceTree = "<group>"; };
+		B986DF2C20164BDA005461A0 /* order_summary_0.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = order_summary_0.json; sourceTree = "<group>"; };
+		B986DF2E201B445E005461A0 /* UpsellOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpsellOption.swift; sourceTree = "<group>"; };
+		B99536D9202DB1B80019B1AF /* order_summary_1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = order_summary_1.json; sourceTree = "<group>"; };
+		B99536DD202DB2360019B1AF /* order_summary_2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = order_summary_2.json; sourceTree = "<group>"; };
+		B99536DF2035D8E00019B1AF /* TextEditingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextEditingViewController.swift; sourceTree = "<group>"; };
 		B9A1433A1FDAD278000EFE0D /* Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Random.swift; sourceTree = "<group>"; };
 		B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
 		B9BC2E261FBF195200F4AA56 /* AssetCollectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCollectorViewController.swift; sourceTree = "<group>"; };
 		B9BE9F931FBF33320002C459 /* AssetCollectorCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCollectorCollectionViewCell.swift; sourceTree = "<group>"; };
+		B9D3340120220FE7003D4338 /* OrderSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummary.swift; sourceTree = "<group>"; };
+		B9D33405202486CC003D4338 /* OrderManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderManager.swift; sourceTree = "<group>"; };
+		B9D3340B2029BF80003D4338 /* JSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
+		B9D3340D2029FB14003D4338 /* ProgressOverlayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressOverlayViewController.swift; sourceTree = "<group>"; };
+		B9D3340F202C7B13003D4338 /* OrderSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryTests.swift; sourceTree = "<group>"; };
 		EE165E68796AB33E673EA271 /* Pods-PhotobookTests.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.release test.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.release test.xcconfig"; sourceTree = "<group>"; };
 		FF99346143FA805B3676D912 /* Pods-PhotobookTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -360,6 +402,7 @@
 				2E0B58961FB3287900F31A9E /* Album.swift */,
 				2E0B58981FB328B800F31A9E /* Asset.swift */,
 				2E0B58A61FB32B3100F31A9E /* Photos */,
+				2EA24E4D2035E02D0069B12A /* Instagram */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -377,6 +420,7 @@
 		2E1733842010B5AA00F0D718 /* Order */ = {
 			isa = PBXGroup;
 			children = (
+				B9D33405202486CC003D4338 /* OrderManager.swift */,
 				2E17338B2010B9EE00F0D718 /* Card.swift */,
 				2E1733852010B6BA00F0D718 /* Cost.swift */,
 				2E1733872010B83100F0D718 /* ShippingMethod.swift */,
@@ -415,6 +459,25 @@
 				2E7C3696202095FB008033E7 /* ReceiptLineItemTableViewCell.swift */,
 			);
 			path = Receipt;
+			sourceTree = "<group>";
+		};
+		2EA24E482035AC940069B12A /* Social */ = {
+			isa = PBXGroup;
+			children = (
+				2EA88C61203C269C00CADCAD /* InstagramLandingViewController.swift */,
+				2EA24E492035ACB20069B12A /* InstagramLoginViewController.swift */,
+				2EB9BFAE2036E01F00EED9FA /* AssetPickerCollectionViewController+Instagram.swift */,
+			);
+			path = Social;
+			sourceTree = "<group>";
+		};
+		2EA24E4D2035E02D0069B12A /* Instagram */ = {
+			isa = PBXGroup;
+			children = (
+				2EA24E4E2035E05C0069B12A /* InstagramAlbum.swift */,
+				2EB9BFAA2036CCD900EED9FA /* InstagramAsset.swift */,
+			);
+			path = Instagram;
 			sourceTree = "<group>";
 		};
 		2ECF57BA2010D0590047094C /* Payment */ = {
@@ -472,6 +535,7 @@
 		6F139E0D1FB45E67005B937E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				B90F28832003D53A00FF3D15 /* OrderSummary */,
 				6FC7E8771FBEF49E00D2BCDA /* Photobooks */,
 				6FDF25E91FB9A07800F46BB0 /* Stories */,
 				2E0B58A51FB32B2300F31A9E /* Assets */,
@@ -491,18 +555,21 @@
 				2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */,
 				2E6B9EDE1FBF1B0D00F28C00 /* FullScreenImageViewController.swift */,
 				6F0A682D1FE0243400B7E56C /* EmptyScreenViewController.swift */,
+				B9D3340D2029FB14003D4338 /* ProgressOverlayViewController.swift */,
 				2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */,
 				B9BC2E261FBF195200F4AA56 /* AssetCollectorViewController.swift */,
 				2E8B3E431FD191AC00FB8878 /* PhotobookViewController.swift */,
 				6FFE21C9202CA7AB004EC0EA /* Page Editing */,
 				2E17337E200F4E0B00F0D718 /* PaymentMethodsViewController.swift */,
 				2ECF57C220120D2A0047094C /* CreditCardTableViewController.swift */,
+				B90F287E1FFF8D1A00FF3D15 /* OrderSummaryViewController.swift */,
 				2E5F8250201617CE002F3607 /* DeliveryDetailsTableViewController.swift */,
 				2E2563902018BBCF0096DFC5 /* AddressTableViewController.swift */,
 				2E21DB552017943500D32989 /* CountryPickerTableViewController.swift */,
 				2EC81603201B33230046643B /* ShippingMethodsViewController.swift */,
 				2E7C6F03201F4DF20071E6B8 /* PaymentViewController.swift */,
 				2E7C6F05201F4E670071E6B8 /* ReceiptTableViewController.swift */,
+				2EA24E482035AC940069B12A /* Social */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -535,6 +602,7 @@
 		6F4DE6531FB452070099A97E /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				B90F28802003B74A00FF3D15 /* OrderSummary */,
 				B9BE9F921FBF32C90002C459 /* Collector */,
 				2E0B589E1FB3295400F31A9E /* Albums */,
 				6FDF25E81FB9A05D00F46BB0 /* Stories */,
@@ -561,20 +629,21 @@
 		6FB670601FB49FDB0062D630 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				2E17338D2010BA3600F0D718 /* StringExtensions.swift */,
-				6FCE08D520221C7C00C55D2F /* NSAttributedStringExtensions.swift */,
-				2E1733952010CDC400F0D718 /* LuhnStringExtensions.swift */,
-				6FE05DA720345C3E003C9655 /* SwiftLuhn.swift */,
-				2E1733892010B85F00F0D718 /* DecimalExtensions.swift */,
-				2E6B9ED91FBDEEF400F28C00 /* UIViewExtensions.swift */,
-				6FB670611FB49FF90062D630 /* UILabelExtensions.swift */,
-				6FDF25E61FB6052A00F46BB0 /* UIImageExtensions.swift */,
-				6F34855B1FC5A52900961B32 /* CGFloatExtensions.swift */,
-				2ED79FEA1FBAEDFA0046B96C /* UIScreenExtensions.swift */,
-				2E6B9EDB1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift */,
 				2EBBC0CC1FEBB72D00A4EF45 /* ArrayExtensions.swift */,
-				6F3A731D202AFB6800EEF04C /* UITextViewExtensions.swift */,
+				6F34855B1FC5A52900961B32 /* CGFloatExtensions.swift */,
+				2E1733892010B85F00F0D718 /* DecimalExtensions.swift */,
+				2E1733952010CDC400F0D718 /* LuhnStringExtensions.swift */,
+				6FCE08D520221C7C00C55D2F /* NSAttributedStringExtensions.swift */,
+				2EB9BFAC2036D95100EED9FA /* OAuth2Swift+Instagram.swift */,
+				2E6B9EDB1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift */,
+				2E17338D2010BA3600F0D718 /* StringExtensions.swift */,
+				6FE05DA720345C3E003C9655 /* SwiftLuhn.swift */,
+				6FDF25E61FB6052A00F46BB0 /* UIImageExtensions.swift */,
 				2EA2FDFD2032DF9500BD0586 /* UIImageViewExtensions.swift */,
+				6FB670611FB49FF90062D630 /* UILabelExtensions.swift */,
+				2ED79FEA1FBAEDFA0046B96C /* UIScreenExtensions.swift */,
+				6F3A731D202AFB6800EEF04C /* UITextViewExtensions.swift */,
+				2E6B9ED91FBDEEF400F28C00 /* UIViewExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -600,6 +669,7 @@
 				6F4F02EA1FDEDC4C009D562A /* ProductManagerTests.swift */,
 				2E25272B2015EDA9004C12AF /* CreditCardTests.swift */,
 				2E25272D2015EDB1004C12AF /* CountryTests.swift */,
+				B9D3340F202C7B13003D4338 /* OrderSummaryTests.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -643,21 +713,46 @@
 		6FFE21C9202CA7AB004EC0EA /* Page Editing */ = {
 			isa = PBXGroup;
 			children = (
+				B99536DF2035D8E00019B1AF /* TextEditingViewController.swift */,
 				6F0A68311FE1291200B7E56C /* PageSetupViewController.swift */,
 				6FCE959C1FF555EE0023FC14 /* AssetPlacementViewController.swift */,
 				6F0A68351FE16D1200B7E56C /* LayoutSelectionViewController.swift */,
 				6F3920F620177FC900D6C30B /* ColorSelectionViewController.swift */,
 				6F92BD011FFE3B8100460466 /* AssetSelectorViewController.swift */,
-				6FCE08CD2020755500C55D2F /* TextEditingViewController.swift */,
 				6FFE21CA202CA7F9004EC0EA /* SpineTextEditingViewController.swift */,
 			);
 			path = "Page Editing";
+			sourceTree = "<group>";
+		};
+		B90F28802003B74A00FF3D15 /* OrderSummary */ = {
+			isa = PBXGroup;
+			children = (
+				B90F28812003B7A300FF3D15 /* OrderSummaryUpsellTableViewCell.swift */,
+				B90F288820066D1500FF3D15 /* OrderSummaryDetailTableViewCell.swift */,
+				B90F288A20066D3100FF3D15 /* OrderSummaryTotalTableViewCell.swift */,
+			);
+			path = OrderSummary;
+			sourceTree = "<group>";
+		};
+		B90F28832003D53A00FF3D15 /* OrderSummary */ = {
+			isa = PBXGroup;
+			children = (
+				B986DF2C20164BDA005461A0 /* order_summary_0.json */,
+				B99536D9202DB1B80019B1AF /* order_summary_1.json */,
+				B99536DD202DB2360019B1AF /* order_summary_2.json */,
+				B939FE8B200CD18200B1084B /* OrderSummaryManager.swift */,
+				B9D3340120220FE7003D4338 /* OrderSummary.swift */,
+				B986DF2E201B445E005461A0 /* UpsellOption.swift */,
+			);
+			path = OrderSummary;
 			sourceTree = "<group>";
 		};
 		B9A143391FDAD25D000EFE0D /* Util */ = {
 			isa = PBXGroup;
 			children = (
 				B9A1433A1FDAD278000EFE0D /* Random.swift */,
+				B9D3340B2029BF80003D4338 /* JSON.swift */,
+				2EA88C63203C321E00CADCAD /* ErrorUtils.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -770,8 +865,11 @@
 				6FCE08D42021E4B700C55D2F /* Lora-Regular.ttf in Resources */,
 				2E0B58871FB30F2100F31A9E /* Assets.xcassets in Resources */,
 				6FCE08D22021E4B700C55D2F /* Montserrat-Bold.ttf in Resources */,
+				B99536DE202DB2360019B1AF /* order_summary_2.json in Resources */,
 				6FCE08D32021E4B700C55D2F /* OpenSans-Regular.ttf in Resources */,
+				B986DF2D20164BDA005461A0 /* order_summary_0.json in Resources */,
 				2E0B58851FB30F2100F31A9E /* Main.storyboard in Resources */,
+				B99536DA202DB1B80019B1AF /* order_summary_1.json in Resources */,
 				6F4DE6511FB35B010099A97E /* LeagueGothic-Regular.otf in Resources */,
 				6FC7E88B1FC574DA00D2BCDA /* photobooks.json in Resources */,
 			);
@@ -859,10 +957,16 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/KeychainSwift/KeychainSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/OAuthSwift/OAuthSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/Stripe/Stripe.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OAuthSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -892,10 +996,16 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Photobook/Pods-Photobook-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/KeychainSwift/KeychainSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/OAuthSwift/OAuthSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/Stripe/Stripe.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OAuthSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -913,25 +1023,30 @@
 				6FC0DE791FE930B0009BB799 /* LayoutSelectionCollectionViewCell.swift in Sources */,
 				6FB670621FB49FF90062D630 /* UILabelExtensions.swift in Sources */,
 				6FCE08D82023139D00C55D2F /* FontType.swift in Sources */,
+				B90F288B20066D3100FF3D15 /* OrderSummaryTotalTableViewCell.swift in Sources */,
+				B9D33406202486CC003D4338 /* OrderManager.swift in Sources */,
 				6F2FF37F1FD05686007DB545 /* LayoutUtils.swift in Sources */,
+				B939FE8C200CD18200B1084B /* OrderSummaryManager.swift in Sources */,
 				6F34855E1FC5A9F900961B32 /* ProductManager.swift in Sources */,
 				2EA2FDFE2032DF9500BD0586 /* UIImageViewExtensions.swift in Sources */,
 				2EC81604201B33230046643B /* ShippingMethodsViewController.swift in Sources */,
 				6F139E0F1FB45EFC005B937E /* Story.swift in Sources */,
 				2E6B9EE51FBF1CFB00F28C00 /* FullScreenImageUnwindSegue.swift in Sources */,
 				2E6B9EDC1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift in Sources */,
+				B9D3340220220FE7003D4338 /* OrderSummary.swift in Sources */,
 				2E2563932018C3950096DFC5 /* AddressFieldTableViewCell.swift in Sources */,
 				2E1733812010B50400F0D718 /* PaymentAuthorizationManager.swift in Sources */,
 				6FA189331FFF976200E6D0AB /* AssetSelectorAddMoreCollectionViewCell.swift in Sources */,
-				6FCE08CE2020755500C55D2F /* TextEditingViewController.swift in Sources */,
 				2E876E091FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift in Sources */,
 				2E1733882010B83100F0D718 /* ShippingMethod.swift in Sources */,
+				2EA88C62203C269C00CADCAD /* InstagramLandingViewController.swift in Sources */,
 				6F4DE6571FB452390099A97E /* DoubleStoryTableViewCell.swift in Sources */,
 				6F3C4ACD1FC880F100DA0196 /* ProductLayoutAsset.swift in Sources */,
 				6F4DE64E1FB323540099A97E /* StoriesViewController.swift in Sources */,
 				6FDF25E51FB604E100F46BB0 /* PhotobookTabBar.swift in Sources */,
 				2E1733962010CDC400F0D718 /* LuhnStringExtensions.swift in Sources */,
 				6F0A682E1FE0243400B7E56C /* EmptyScreenViewController.swift in Sources */,
+				B9D3340E2029FB14003D4338 /* ProgressOverlayViewController.swift in Sources */,
 				6F3920F9201881AE00D6C30B /* BorderedViewProtocol.swift in Sources */,
 				6FC7E87F1FC3329400D2BCDA /* Layout.swift in Sources */,
 				6F6B7A77200E137B002E2FC2 /* PhotobookCoverCollectionViewCell.swift in Sources */,
@@ -944,6 +1059,7 @@
 				6F3A731E202AFB6800EEF04C /* UITextViewExtensions.swift in Sources */,
 				6FC7E8761FBD985900D2BCDA /* APIClient.swift in Sources */,
 				6FC7E8791FBEF4BB00D2BCDA /* Photobook.swift in Sources */,
+				B90F28822003B7A300FF3D15 /* OrderSummaryUpsellTableViewCell.swift in Sources */,
 				2ED79FE91FBAEDE90046B96C /* AssetPickerCollectionViewController.swift in Sources */,
 				6F3920F320175D7300D6C30B /* TextLabelPlaceholderBoxView.swift in Sources */,
 				2E0B58801FB30F2100F31A9E /* AppDelegate.swift in Sources */,
@@ -963,11 +1079,14 @@
 				6F3C4ACF1FC8811C00DA0196 /* ProductLayoutText.swift in Sources */,
 				6F3C4AC91FC8804300DA0196 /* ProductLayout.swift in Sources */,
 				6F4DE6591FB453090099A97E /* PhotobookNavigationBar.swift in Sources */,
+				2EB9BFAB2036CCD900EED9FA /* InstagramAsset.swift in Sources */,
 				2E8B3E441FD191AC00FB8878 /* PhotobookViewController.swift in Sources */,
+				B90F287F1FFF8D1A00FF3D15 /* OrderSummaryViewController.swift in Sources */,
 				6F139E0C1FB45DD8005B937E /* StoriesManager.swift in Sources */,
 				2E17338A2010B85F00F0D718 /* DecimalExtensions.swift in Sources */,
 				6F92BD021FFE3B8100460466 /* AssetSelectorViewController.swift in Sources */,
 				2E17338C2010B9EE00F0D718 /* Card.swift in Sources */,
+				B99536E02035D8E10019B1AF /* TextEditingViewController.swift in Sources */,
 				2ED79FEE1FBAEE630046B96C /* AssetPickerCollectionViewCell.swift in Sources */,
 				2E0B58A41FB32ADD00F31A9E /* PhotosAlbumManager.swift in Sources */,
 				2E7C3697202095FB008033E7 /* ReceiptLineItemTableViewCell.swift in Sources */,
@@ -976,7 +1095,9 @@
 				2ECB5A991FDFE71200FF39A5 /* OutOfBoundsTouchCollectionView.swift in Sources */,
 				2E5F8251201617CE002F3607 /* DeliveryDetailsTableViewController.swift in Sources */,
 				2E876E0B1FC2FA15007CCFA2 /* ViewStorySegue.swift in Sources */,
+				B9D3340C2029BF80003D4338 /* JSON.swift in Sources */,
 				2ED79FEB1FBAEDFA0046B96C /* UIScreenExtensions.swift in Sources */,
+				2EA88C64203C321E00CADCAD /* ErrorUtils.swift in Sources */,
 				B9BE9F941FBF33320002C459 /* AssetCollectorCollectionViewCell.swift in Sources */,
 				2E0B58A01FB3297300F31A9E /* AlbumCollectionViewCell.swift in Sources */,
 				2E0B58991FB328B800F31A9E /* Asset.swift in Sources */,
@@ -985,6 +1106,7 @@
 				2E0B58951FB3280000F31A9E /* AlbumManager.swift in Sources */,
 				2E21DB5220177E5400D32989 /* DeliveryDetails.swift in Sources */,
 				6F4606DC201886BD00C7583E /* BorderedRoundedView.swift in Sources */,
+				2EA24E4A2035ACB20069B12A /* InstagramLoginViewController.swift in Sources */,
 				B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */,
 				6FCE08D620221C7C00C55D2F /* NSAttributedStringExtensions.swift in Sources */,
 				2E17337F200F4E0B00F0D718 /* PaymentMethodsViewController.swift in Sources */,
@@ -1002,15 +1124,20 @@
 				6F18154A2009042E00D7082D /* CoverFrameView.swift in Sources */,
 				B9BC2E271FBF195200F4AA56 /* AssetCollectorViewController.swift in Sources */,
 				2E7C3693202095DC008033E7 /* ReceiptFooterTableViewCell.swift in Sources */,
+				2EB9BFAF2036E01F00EED9FA /* AssetPickerCollectionViewController+Instagram.swift in Sources */,
 				2EC81602201B33180046643B /* ShippingMethodTableViewCell.swift in Sources */,
 				2E1733942010CD0B00F0D718 /* Address.swift in Sources */,
 				2ED5B3831FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift in Sources */,
+				B90F288920066D1500FF3D15 /* OrderSummaryDetailTableViewCell.swift in Sources */,
 				2E6B9EDA1FBDEEF500F28C00 /* UIViewExtensions.swift in Sources */,
+				B986DF2F201B445E005461A0 /* UpsellOption.swift in Sources */,
 				2E3E6A5420036FB60044EDFC /* PhotobookCollectionViewCell.swift in Sources */,
 				2ED5B3811FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift in Sources */,
 				6FC7E8811FC332A500D2BCDA /* LayoutBox.swift in Sources */,
+				2EB9BFAD2036D95100EED9FA /* OAuth2Swift+Instagram.swift in Sources */,
 				2E0B58921FB325FF00F31A9E /* AlbumsCollectionViewController.swift in Sources */,
 				2EB39DD51FC5AE0F009EC5B2 /* PhotobookPageView.swift in Sources */,
+				2EA24E4F2035E05C0069B12A /* InstagramAlbum.swift in Sources */,
 				2E0B58971FB3287900F31A9E /* Album.swift in Sources */,
 				B9A1433B1FDAD278000EFE0D /* Random.swift in Sources */,
 				6F3920F720177FCA00D6C30B /* ColorSelectionViewController.swift in Sources */,
@@ -1026,6 +1153,7 @@
 				6FC7E8891FC47B4500D2BCDA /* PhotobookTests.swift in Sources */,
 				6FC7E8871FC4719300D2BCDA /* LayoutTests.swift in Sources */,
 				6F4F02EB1FDEDC4C009D562A /* ProductManagerTests.swift in Sources */,
+				B9D33410202C7B13003D4338 /* OrderSummaryTests.swift in Sources */,
 				6FC7E8851FC469E600D2BCDA /* LayoutBoxTests.swift in Sources */,
 				2E25272E2015EDB1004C12AF /* CountryTests.swift in Sources */,
 				6F2F30081FDE9EA3003543E2 /* ProductLayoutAssetTests.swift in Sources */,

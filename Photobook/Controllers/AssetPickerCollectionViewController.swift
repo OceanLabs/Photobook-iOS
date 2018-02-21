@@ -13,8 +13,12 @@ protocol AssetPickerCollectionViewControllerDelegate: class {
 }
 
 class AssetPickerCollectionViewController: UICollectionViewController {
+    
+    private struct Constants {
+        static let loadingCellReuseIdentifier = "LoadingCell"
+    }
 
-    @IBOutlet private weak var selectAllButton: UIBarButtonItem!
+    @IBOutlet private weak var selectAllButton: UIBarButtonItem?
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     weak var delegate: AssetPickerCollectionViewControllerDelegate?
     private let marginBetweenImages: CGFloat = 1
@@ -23,6 +27,16 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     var selectedAssetsManager: SelectedAssetsManager?
     var assetCollectorController: AssetCollectorViewController!
     static let coverAspectRatio: CGFloat = 2.723684211
+    private lazy var imageCellSize: CGSize = {
+        guard let collectionView = collectionView else { return .zero }
+        var usableSpace = collectionView.frame.size.width
+        usableSpace -= (numberOfCellsPerRow - 1.0) * marginBetweenImages
+        let cellWidth = usableSpace / numberOfCellsPerRow
+        return CGSize(width: cellWidth, height: cellWidth)
+    }()
+    private lazy var emptyScreenViewController: EmptyScreenViewController = {
+        return EmptyScreenViewController.emptyScreen(parent: self)
+    }()
     
     var shouldFadeInImages = true
     
@@ -48,16 +62,22 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         }
         
         if album.assets.isEmpty {
-            self.album.loadAssets(completionHandler: { (_) in
-                self.collectionView?.reloadData()
-                self.postAlbumLoadSetup()
+            self.album.loadAssets(completionHandler: { [weak welf = self] errorMessage in
+                if let errorMessage = errorMessage {
+                    welf?.emptyScreenViewController.show(ErrorUtils.genericRetryErrorMessage(message: errorMessage.message, action: {
+                        welf?.emptyScreenViewController.hide()
+                        errorMessage.buttonAction()
+                    }))
+                    return
+                }
+                
+                welf?.collectionView?.reloadData()
+                welf?.postAlbumLoadSetup()
             })
         }
         else{
             postAlbumLoadSetup()
         }
-        
-        calcAndSetCellSize()
         
         if traitCollection.forceTouchCapability == .available{
             registerForPreviewing(with: self, sourceView: collectionView!)
@@ -75,7 +95,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
         
         // Listen for album changes
-        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereReloaded(_:)), name: AssetsNotificationName.albumsWereReloaded, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
     }
     
     deinit {
@@ -88,16 +108,22 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         updateCachedAssets()
     }
     
-    @objc func albumsWereReloaded(_ notification: Notification) {
-        guard let collectionView = collectionView,
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        loadNextBatchOfAssetIfNeeded()
+    }
+    
+    @objc func albumsWereUpdated(_ notification: Notification) {
+        guard let collectionView = self.collectionView,
             let albumsChanges = notification.object as? [AlbumChange]
             else { return }
         
         for albumChange in albumsChanges {
-            if albumChange.album.identifier == album.identifier {
+            if albumChange.album.identifier == self.album.identifier {
                 var indexPathsAdded = [IndexPath]()
                 for assetAdded in albumChange.assetsAdded {
-                    if let index = album.assets.index(where: { $0.identifier == assetAdded.identifier }) {
+                    if let index = self.album.assets.index(where: { $0.identifier == assetAdded.identifier }) {
                         indexPathsAdded.append(IndexPath(item: index, section: 0))
                     }
                 }
@@ -110,6 +136,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
                 collectionView.performBatchUpdates({
                     collectionView.deleteItems(at: indexPathsRemoved)
                     collectionView.insertItems(at: indexPathsAdded)
+                    collectionView.reloadSections(IndexSet(integer: 1))
                 }, completion: nil)
                 
                 break
@@ -145,7 +172,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     func updateSelectAllButton() {
         // Hide "Select All" if current album has too many photos
         if selectedAssetsManager?.willSelectingAllExceedTotalAllowed(album) ?? false {
-            selectAllButton.title = nil
+            selectAllButton?.title = nil
             return
         }
         
@@ -154,19 +181,11 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     
     func updateSelectAllButtonTitle() {        
         if selectedAssetsManager?.count(for: album) == self.album.assets.count {
-            selectAllButton.title = NSLocalizedString("ImagePicker/Button/DeselectAll", value: "Deselect All", comment: "Button title for de-selecting all selected photos")
+            selectAllButton?.title = NSLocalizedString("ImagePicker/Button/DeselectAll", value: "Deselect All", comment: "Button title for de-selecting all selected photos")
         }
         else {
-            selectAllButton.title = NSLocalizedString("ImagePicker/Button/SelectAll", value: "Select All", comment: "Button title for selecting all selected photos")
+            selectAllButton?.title = NSLocalizedString("ImagePicker/Button/SelectAll", value: "Select All", comment: "Button title for selecting all selected photos")
         }
-    }
-    
-    private func calcAndSetCellSize() {
-        guard let collectionView = collectionView else { return }
-        var usableSpace = collectionView.frame.size.width
-        usableSpace -= (numberOfCellsPerRow - 1.0) * marginBetweenImages
-        let cellWidth = usableSpace / numberOfCellsPerRow
-        (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize = CGSize(width: cellWidth, height: cellWidth)
     }
     
     private func updateSelectedStatus(cell: AssetPickerCollectionViewCell? = nil, indexPath: IndexPath, asset: Asset? = nil) {
@@ -177,6 +196,16 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         cell.selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
     }
     
+    private func loadNextBatchOfAssetIfNeeded() {
+        guard let collectionView = collectionView else { return }
+        for cell in collectionView.visibleCells {
+            if cell.reuseIdentifier == Constants.loadingCellReuseIdentifier {
+                album.loadNextBatchOfAssets()
+                break
+            }
+        }
+    }
+    
     // MARK: UIScrollView
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -185,12 +214,12 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     
     // MARK: Asset Caching
     
-    fileprivate func resetCachedAssets() {
+    private func resetCachedAssets() {
         albumManager?.stopCachingImagesForAllAssets()
         previousPreheatRect = .zero
     }
     
-    fileprivate func updateCachedAssets() {
+    private func updateCachedAssets() {
         // Update only if the view is visible.
         guard isViewLoaded && view.window != nil else { return }
         
@@ -212,17 +241,16 @@ class AssetPickerCollectionViewController: UICollectionViewController {
             .map { indexPath in album.assets[indexPath.item] }
         
         // Update the assets the PHCachingImageManager is caching.
-        let thumbnailSize = (collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize ?? .zero
         albumManager?.startCachingImages(for: addedAssets,
-                                        targetSize: thumbnailSize)
+                                        targetSize: imageCellSize)
         albumManager?.stopCachingImages(for: removedAssets,
-                                       targetSize: thumbnailSize)
+                                       targetSize: imageCellSize)
         
         // Store the preheat rect to compare against in the future.
         previousPreheatRect = preheatRect
     }
     
-    fileprivate func differencesBetweenRects(_ old: CGRect, _ new: CGRect) -> (added: [CGRect], removed: [CGRect]) {
+    private func differencesBetweenRects(_ old: CGRect, _ new: CGRect) -> (added: [CGRect], removed: [CGRect]) {
         if old.intersects(new) {
             var added = [CGRect]()
             if new.maxY > old.maxY {
@@ -268,8 +296,10 @@ class AssetPickerCollectionViewController: UICollectionViewController {
 extension AssetPickerCollectionViewController: AssetCollectorViewControllerDelegate {
     // MARK: AssetCollectorViewControllerDelegate
     
-    func assetCollectorViewController(_ assetCollectorViewController: AssetCollectorViewController, didChangeHiddenStateTo hidden: Bool) {
-        collectionView?.collectionViewLayout.invalidateLayout()
+    func actionsForAssetCollectorViewControllerHiddenStateChange(_ assetCollectorViewController: AssetCollectorViewController, willChangeTo hidden: Bool) -> () -> () {
+        return { [weak welf = self] in
+            welf?.collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: hidden ? 0 : assetCollectorViewController.viewHeight, right: 0)
+        }
     }
     
     func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
@@ -289,24 +319,40 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
 extension AssetPickerCollectionViewController {
     //MARK: UICollectionViewDataSource
     
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return album.assets.count
+        switch section {
+        case 0:
+            return album.assets.count
+        case 1:
+            return album.hasMoreAssetsToLoad ? 1 : 0
+        default:
+            return 0
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AssetPickerCollectionViewCell", for: indexPath) as? AssetPickerCollectionViewCell else { return UICollectionViewCell() }
+        switch indexPath.section {
+        case 0:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AssetPickerCollectionViewCell", for: indexPath) as? AssetPickerCollectionViewCell else { return UICollectionViewCell() }
+            
+            let asset = album.assets[indexPath.item]
+            cell.assetId = asset.identifier
+            
+            cell.imageView.setImage(from: asset, fadeIn: shouldFadeInImages, size: imageCellSize, completionHandler: {
+                return cell.assetId == asset.identifier
+            })
+            
+            return cell
+        case 1:
+            return collectionView.dequeueReusableCell(withReuseIdentifier: Constants.loadingCellReuseIdentifier, for: indexPath)
+        default:
+            return UICollectionViewCell()
+        }
         
-        let asset = album.assets[indexPath.item]
-        cell.assetId = asset.identifier
-        
-        updateSelectedStatus(cell: cell, indexPath: indexPath, asset: asset)
-        
-        let size = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize ?? .zero
-        cell.imageView.setImage(from: asset, fadeIn: shouldFadeInImages, size: size, completionHandler: {
-            return cell.assetId == asset.identifier
-        })
-        
-        return cell
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -326,9 +372,6 @@ extension AssetPickerCollectionViewController {
             cell.dates = story.subtitle
             
             return cell
-        case UICollectionElementKindSectionFooter:
-            let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Footer", for: indexPath)
-            return cell
         default:
             return UICollectionReusableView(frame: CGRect())
         }
@@ -341,17 +384,20 @@ extension AssetPickerCollectionViewController: UICollectionViewDelegateFlowLayou
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         // We only show covers for Stories
-        guard (album as? Story) != nil else { return .zero }
+        guard (album as? Story) != nil, section == 0 else { return .zero }
         
         return CGSize(width: view.bounds.size.width, height: view.bounds.size.width / AssetPickerCollectionViewController.coverAspectRatio)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        var height:CGFloat = 0
-        if let assetCollectorViewController = assetCollectorController {
-            height = assetCollectorViewController.viewHeight
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        switch indexPath.section {
+        case 0:
+            return imageCellSize
+        case 1:
+            return CGSize(width: collectionView.frame.size.width, height: 40)
+        default:
+            return .zero
         }
-        return CGSize(width: collectionView.frame.size.width, height: height)
     }
 }
 
@@ -372,6 +418,14 @@ extension AssetPickerCollectionViewController {
         updateSelectedStatus(indexPath: indexPath, asset: asset)
         
         updateSelectAllButton()
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard indexPath.section == 0,
+            let cell = cell as? AssetPickerCollectionViewCell
+            else { return }
+        
+        updateSelectedStatus(cell: cell, indexPath: indexPath, asset: album.assets[indexPath.item])
     }
     
 }

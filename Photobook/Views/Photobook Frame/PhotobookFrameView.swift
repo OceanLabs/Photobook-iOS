@@ -96,7 +96,6 @@ class PhotobookFrameView: UIView {
         layer.shadowOffset = PhotobookConstants.shadowOffset
         layer.shadowRadius = PhotobookConstants.shadowRadius
         layer.masksToBounds = false
-        layer.shadowPath = UIBezierPath(rect: bounds).cgPath
         layer.shouldRasterize = true
         layer.rasterizationScale = UIScreen.main.scale
     }
@@ -109,6 +108,8 @@ class PhotobookFrameView: UIView {
             hasDoneInitialSetup = true
         }
         
+        layer.shadowPath = UIBezierPath(rect: bounds).cgPath
+
         switch coverColor {
         case .white:
             layer.shadowColor = PhotobookConstants.whiteShadowColor

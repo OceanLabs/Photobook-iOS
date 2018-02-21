@@ -33,7 +33,7 @@ class PhotobookAPIManagerTests: XCTestCase {
     func testRequestPhotobookInfo_ReturnsServerError() {
         apiClient.error = APIClientError.server(code: 500, message: "")
         
-        photobookAPIManager.requestPhotobookInfo { (_, _, error) in
+        photobookAPIManager.requestPhotobookInfo { (_, _, _, error) in
             XCTAssertTrue(APIClientError.isError(error, ofType: self.apiClient.error as! APIClientError), "PhotobookInfo: Should return a server error")
         }
     }
@@ -41,31 +41,31 @@ class PhotobookAPIManagerTests: XCTestCase {
     func testRequestPhotobookInfo_ReturnsConnectionError() {
         apiClient.error = APIClientError.connection
         
-        photobookAPIManager.requestPhotobookInfo { (_, _, error) in
+        photobookAPIManager.requestPhotobookInfo { (_, _, _, error) in
             XCTAssertTrue(APIClientError.isError(error, ofType: .connection), "PhotobookInfo: Should return a server error")
         }
     }
 
     func testRequestPhotobookInfo_ReturnsParsingError() {
 
-        photobookAPIManager.requestPhotobookInfo { (_, _, error) in
+        photobookAPIManager.requestPhotobookInfo { (_, _, _, error) in
             XCTAssertTrue(APIClientError.isError(error, ofType: .parsing), "PhotobookInfo: Should return a parsing error")
         }
     }
 
     func testRequestPhotobookInfo_ReturnsParsingErrorWithNilObjects() {
     
-        apiClient.response = [ "products": nil, "layouts": nil ] as AnyObject
+        apiClient.response = [ "products": nil, "layouts": nil, "upsellOptions": nil ] as AnyObject
         
-        photobookAPIManager.requestPhotobookInfo { (_, _, error) in
+        photobookAPIManager.requestPhotobookInfo { (_, _, _, error) in
             XCTAssertTrue(APIClientError.isError(error, ofType: .parsing), "PhotobookInfo: Should return a parsing error")
         }
     }
     
     func testRequestPhotobookInfo_ReturnsParsingErrorWithZeroCounts() {
-        apiClient.response = [ "products": [], "layouts": [] ] as AnyObject
+        apiClient.response = [ "products": [], "layouts": [], "upsellOptions": [] ] as AnyObject
         
-        photobookAPIManager.requestPhotobookInfo { (_, _, error) in
+        photobookAPIManager.requestPhotobookInfo { (_, _, _, error) in
             XCTAssertTrue(APIClientError.isError(error, ofType: .parsing), "PhotobookInfo: Should return a parsing error")
         }
     }
@@ -74,31 +74,20 @@ class PhotobookAPIManagerTests: XCTestCase {
         
         apiClient.response = [ "products": 10, "layouts": "Not a layout" ] as AnyObject
         
-        photobookAPIManager.requestPhotobookInfo { (_, _, error) in
+        photobookAPIManager.requestPhotobookInfo { (_, _, _, error) in
             XCTAssertTrue(APIClientError.isError(error, ofType: .parsing), "PhotobookInfo: Should return a parsing error")
         }
     }
     
     func testRequestPhotobookInfo_ShouldParseValidObjects() {
-        apiClient.response = self.json(file: "photobooks")
+        apiClient.response = JSON.parse(file: "photobooks")
         
-        photobookAPIManager.requestPhotobookInfo { (photobooks, layouts, error) in
+        photobookAPIManager.requestPhotobookInfo { (photobooks, layouts, upsellOptions, error) in
             XCTAssertNil(error, "PhotobookInfo: Error should be nil with a valid response")
             XCTAssertTrue((photobooks ?? []).count == 4, "PhotobookInfo: Photobooks should include layouts products")
             XCTAssertTrue((layouts ?? []).count == 52, "PhotobookInfo: Layouts should include 26 layouts")
+            XCTAssertTrue((upsellOptions ?? []).count == 2, "PhotobookInfo: Layouts should include 26 layouts")
         }
-    }
-    
-    func json(file: String) -> AnyObject? {
-        guard let path = Bundle.main.path(forResource: file, ofType: "json") else { return nil }
-        
-        do {
-            let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
-            return try JSONSerialization.jsonObject(with: data, options: .mutableLeaves) as AnyObject
-        } catch {
-            print("JSON: Could not parse file")
-        }
-        return nil
     }
 }
 
