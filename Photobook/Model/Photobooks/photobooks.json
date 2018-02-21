@@ -7,7 +7,7 @@
         "spineTextRatio": 0.72,
 		"aspectRatio": 1.38157681,
         "coverLayouts": [ 1, 2, 3, 4, 5 ],
-		"layouts": [ 6, 7, 8, 9, 10, 11, 12, 13, 53 ]
+		"layouts": [ 6, 7, 8, 9, 10, 11, 12, 13, 54 ]
 	},
 	{
 		"id": 2,
@@ -25,7 +25,7 @@
         "spineTextRatio": 0.76,
 		"aspectRatio": 1.41427563,
         "coverLayouts": [ 27, 28, 29, 30, 31 ],
-		"layouts": [ 32, 33, 34, 35, 36, 37, 38, 39, 53 ]
+		"layouts": [ 32, 33, 34, 35, 36, 37, 38, 39, 54 ]
 	},
 	{
 		"id": 4,
@@ -907,6 +907,20 @@
         			"height": 1.0
         		}
         }
-    }
+    },
+    {
+        "id": 54,
+        "category": "doublePage",
+        "doubleLayout": true,
+        "imageLayoutBox": {
+        		"id": 170,
+        		"rect": {
+        			"x": 0.05,
+        			"y": 0.0,
+        			"width": 0.9,
+        			"height": 1.0
+        		}
+        }
+    }    
 ]
 }
