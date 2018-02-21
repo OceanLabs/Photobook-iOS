@@ -14,6 +14,7 @@ class PhotosAlbum: Album {
     let assetCollection: PHAssetCollection
     var assets = [Asset]()
     var fetchedAssets: PHFetchResult<PHAsset>?
+    var hasMoreAssetsToLoad = false
 
     init(_ assetCollection: PHAssetCollection) {
         self.assetCollection = assetCollection
@@ -35,7 +36,7 @@ class PhotosAlbum: Album {
         return false
     }
     
-    func loadAssets(completionHandler: ((Error?) -> Void)?) {
+    func loadAssets(completionHandler: ((ErrorMessage?) -> Void)?) {
         DispatchQueue.global(qos: .background).async { [weak welf = self] in
             welf?.loadAssetsFromPhotoLibrary()
             DispatchQueue.main.async {
@@ -63,5 +64,7 @@ class PhotosAlbum: Album {
     func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
         assetCollection.coverAsset(useFirstImageInCollection: false, completionHandler: completionHandler)
     }
+    
+    func loadNextBatchOfAssets() {}
     
 }

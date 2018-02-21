@@ -200,6 +200,9 @@ class CheckoutViewController: UIViewController {
         updateItemImage()
         
         //payment method icon
+        showDeliveryDetailsConstraint.priority = .defaultHigh
+        hideDeliveryDetailsConstraint.priority = .defaultLow
+        deliveryDetailsView.isHidden = false
         paymentMethodIconImageView.image = nil
         if let paymentMethod = OrderManager.shared.paymentMethod {
             switch paymentMethod {
@@ -229,10 +232,6 @@ class CheckoutViewController: UIViewController {
         }
         
         //address
-        showDeliveryDetailsConstraint.priority = .defaultHigh
-        hideDeliveryDetailsConstraint.priority = .defaultLow
-        deliveryDetailsView.isHidden = false
-        
         var addressString = ""
         if let address = OrderManager.shared.deliveryDetails?.address, let line1 = address.line1 {
             

@@ -7,13 +7,14 @@
 //
 
 import UIKit
+import Stripe
 
 class OrderManager {
     
     var currencyCode: String? = Locale.current.currencyCode ?? "USD" //USD if locale unavailable
     var deliveryDetails: DeliveryDetails?
     var shippingMethod: Int?
-    var paymentMethod: PaymentMethod?
+    var paymentMethod: PaymentMethod? = Stripe.deviceSupportsApplePay() ? .applePay : nil
     var itemCount: Int = 1
     var promoCode: String?
     

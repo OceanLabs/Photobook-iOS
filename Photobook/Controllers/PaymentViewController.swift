@@ -99,6 +99,7 @@ extension PaymentViewController: PaymentAuthorizationManagerDelegate {
     
     func paymentAuthorizationDidFinish(token: String?, error: Error?, completionHandler: ((PKPaymentAuthorizationStatus) -> Void)?) {
         if let error = error {
+            print(error)
             // TODO: show the error to the user
             return
         }
