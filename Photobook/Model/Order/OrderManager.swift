@@ -10,7 +10,7 @@ import UIKit
 
 class OrderManager {
 
-    var currencyCode: String? // TODO: Get this from somewhere
+    var currencyCode: String? = "GBP" // TODO: Get this from somewhere
     var deliveryDetails: DeliveryDetails?
     var shippingMethod: Int?
     var paymentMethod: PaymentMethod?
