@@ -7,13 +7,14 @@
 //
 
 import UIKit
+import Stripe
 
 class OrderManager {
 
-    var currencyCode: String? // TODO: Get this from somewhere
+    var currencyCode: String? = "GBP" // TODO: Get this from somewhere
     var deliveryDetails: DeliveryDetails?
     var shippingMethod: Int?
-    var paymentMethod: PaymentMethod?
+    var paymentMethod: PaymentMethod? = Stripe.deviceSupportsApplePay() ? .applePay : nil
     
     var cachedCost: Cost?
     var validCost: Cost? {

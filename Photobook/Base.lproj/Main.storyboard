@@ -2557,33 +2557,24 @@
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xc0-UV-1wk">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="600"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="asg-dE-veS">
-                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="198"/>
-                                                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" secondItem="asg-dE-veS" secondAttribute="height" multiplier="414:198" id="mTU-1B-wSU"/>
-                                                    </constraints>
-                                                </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Order Complete" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jmZ-fn-23V">
-                                                    <rect key="frame" x="103" y="219" width="208.5" height="33.5"/>
+                                                    <rect key="frame" x="103" y="30" width="208.5" height="33.5"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="28"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="frG-wg-ocW">
-                                                    <rect key="frame" x="65" y="268.5" width="24" height="16"/>
+                                                    <rect key="frame" x="65" y="79.5" width="24" height="16"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fyw-hs-778">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cloud" translatesAutoresizingMaskIntoConstraints="NO" id="fyw-hs-778">
                                                             <rect key="frame" x="0.0" y="0.0" width="24" height="16"/>
-                                                            <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="24" id="Pg2-VS-QNM"/>
                                                                 <constraint firstAttribute="height" constant="16" id="uog-oy-ZAV"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="f3Q-6g-A23">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="uploading-spinner" translatesAutoresizingMaskIntoConstraints="NO" id="f3Q-6g-A23">
                                                             <rect key="frame" x="7" y="3" width="10" height="10"/>
-                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="10" id="8fZ-IA-9om"/>
                                                                 <constraint firstAttribute="width" constant="10" id="xkF-W3-Xmo"/>
@@ -2601,13 +2592,13 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" text="1/18" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TFq-BK-2Aj">
-                                                    <rect key="frame" x="96" y="270" width="21.5" height="13.5"/>
+                                                    <rect key="frame" x="96" y="81" width="21.5" height="13.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                                     <color key="textColor" red="0.42745983600616455" green="0.42319035530090332" blue="0.44706451892852783" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lUG-hH-G4B">
-                                                    <rect key="frame" x="143.5" y="270" width="203.5" height="57.5"/>
+                                                    <rect key="frame" x="143.5" y="81" width="203.5" height="57.5"/>
                                                     <string key="text">Your photos are being uploaded to our print shop over Wifi.
 We will begin processing your book once your photos are uploaded.</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
@@ -2615,14 +2606,14 @@ We will begin processing your book once your photos are uploaded.</string>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QRJ-ym-gnp">
-                                                    <rect key="frame" x="20" y="360.5" width="374" height="1"/>
+                                                    <rect key="frame" x="20" y="171.5" width="374" height="1"/>
                                                     <color key="backgroundColor" red="0.42745983599999998" green="0.42319035529999999" blue="0.44706451889999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="xWF-d9-wnO"/>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DPa-vP-Po0">
-                                                    <rect key="frame" x="43" y="389.5" width="152.5" height="160"/>
+                                                    <rect key="frame" x="43" y="200.5" width="152.5" height="160"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="SHIPPING ADDRESS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lku-4W-wR0">
                                                             <rect key="frame" x="0.0" y="0.0" width="140" height="17"/>
@@ -2668,7 +2659,7 @@ United Kingdom</string>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tfj-5p-Wbv">
-                                                    <rect key="frame" x="215.5" y="389.5" width="152.5" height="160"/>
+                                                    <rect key="frame" x="215.5" y="200.5" width="152.5" height="160"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ORDER NUMBER" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BY5-g7-Mdn">
                                                             <rect key="frame" x="8" y="123" width="114" height="17"/>
@@ -2691,7 +2682,7 @@ United Kingdom</string>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pij-tH-xuJ">
-                                                    <rect key="frame" x="20" y="577.5" width="374" height="1"/>
+                                                    <rect key="frame" x="20" y="388.5" width="374" height="1"/>
                                                     <color key="backgroundColor" red="0.42745983599999998" green="0.42319035529999999" blue="0.44706451889999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="tOS-mr-Qvv"/>
@@ -2701,7 +2692,6 @@ United Kingdom</string>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="0qf-Zl-tHB" secondAttribute="trailing" constant="5" id="1hR-sD-Rcs"/>
                                                 <constraint firstItem="BY5-g7-Mdn" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Rrq-Tu-d4Y" secondAttribute="trailing" constant="5" id="22E-AQ-DEh"/>
-                                                <constraint firstAttribute="trailing" secondItem="asg-dE-veS" secondAttribute="trailing" id="4Fz-Hf-42F"/>
                                                 <constraint firstItem="qOB-Nd-uRD" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="99D-Eb-VKk" secondAttribute="trailing" constant="5" id="4y8-av-ge0"/>
                                                 <constraint firstItem="Tfj-5p-Wbv" firstAttribute="top" secondItem="DPa-vP-Po0" secondAttribute="top" id="6Bh-FD-3Z3"/>
                                                 <constraint firstItem="Tfj-5p-Wbv" firstAttribute="leading" secondItem="DPa-vP-Po0" secondAttribute="trailing" constant="20" id="6gK-Pf-V5I"/>
@@ -2711,7 +2701,6 @@ United Kingdom</string>
                                                 <constraint firstItem="QRJ-ym-gnp" firstAttribute="top" secondItem="lUG-hH-G4B" secondAttribute="bottom" constant="33" id="Fld-bZ-iWg"/>
                                                 <constraint firstItem="lUG-hH-G4B" firstAttribute="top" secondItem="TFq-BK-2Aj" secondAttribute="top" id="ICu-Jd-KfE"/>
                                                 <constraint firstItem="DPa-vP-Po0" firstAttribute="top" secondItem="QRJ-ym-gnp" secondAttribute="bottom" constant="28" id="IW7-6n-erg"/>
-                                                <constraint firstItem="asg-dE-veS" firstAttribute="top" secondItem="Xc0-UV-1wk" secondAttribute="top" id="Itr-dH-Zcg"/>
                                                 <constraint firstAttribute="trailing" secondItem="Tfj-5p-Wbv" secondAttribute="trailing" constant="46" id="OpO-Kl-3nf"/>
                                                 <constraint firstItem="TFq-BK-2Aj" firstAttribute="leading" secondItem="frG-wg-ocW" secondAttribute="trailing" constant="7" id="SGu-DK-sZs"/>
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Lku-4W-wR0" secondAttribute="trailing" constant="5" id="STc-DJ-ODV"/>
@@ -2724,12 +2713,11 @@ United Kingdom</string>
                                                 <constraint firstItem="jmZ-fn-23V" firstAttribute="centerX" secondItem="Xc0-UV-1wk" secondAttribute="centerX" id="ik6-aV-HNf"/>
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="BY5-g7-Mdn" secondAttribute="trailing" constant="5" id="kBf-kK-bb6"/>
                                                 <constraint firstItem="pij-tH-xuJ" firstAttribute="leading" secondItem="QRJ-ym-gnp" secondAttribute="leading" id="o3C-wz-A6I"/>
+                                                <constraint firstItem="jmZ-fn-23V" firstAttribute="top" secondItem="Xc0-UV-1wk" secondAttribute="top" constant="30" id="o4I-x6-eOH"/>
                                                 <constraint firstItem="DPa-vP-Po0" firstAttribute="leading" secondItem="Xc0-UV-1wk" secondAttribute="leading" constant="43" id="oLy-kg-jSf"/>
                                                 <constraint firstAttribute="trailing" secondItem="QRJ-ym-gnp" secondAttribute="trailing" constant="20" id="p4G-Kb-VPM"/>
                                                 <constraint firstItem="TFq-BK-2Aj" firstAttribute="centerY" secondItem="frG-wg-ocW" secondAttribute="centerY" id="r3F-UN-hIx"/>
                                                 <constraint firstItem="BY5-g7-Mdn" firstAttribute="centerY" secondItem="Rrq-Tu-d4Y" secondAttribute="centerY" id="rDJ-eI-Mx6"/>
-                                                <constraint firstItem="jmZ-fn-23V" firstAttribute="top" secondItem="asg-dE-veS" secondAttribute="bottom" constant="21" id="spP-4a-hzG"/>
-                                                <constraint firstItem="asg-dE-veS" firstAttribute="leading" secondItem="Xc0-UV-1wk" secondAttribute="leading" id="tjc-mW-uHg"/>
                                                 <constraint firstItem="Tfj-5p-Wbv" firstAttribute="width" secondItem="DPa-vP-Po0" secondAttribute="width" id="w2n-JC-LLi"/>
                                                 <constraint firstItem="Tfj-5p-Wbv" firstAttribute="bottom" secondItem="DPa-vP-Po0" secondAttribute="bottom" id="xH5-Zm-xlU"/>
                                                 <constraint firstItem="frG-wg-ocW" firstAttribute="top" secondItem="jmZ-fn-23V" secondAttribute="bottom" constant="16" id="zy7-az-tuI"/>
@@ -2745,7 +2733,6 @@ United Kingdom</string>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="orderNumberLabel" destination="qOB-Nd-uRD" id="vcA-ZL-2qM"/>
-                                    <outlet property="previewImageView" destination="asg-dE-veS" id="nTf-DU-VCl"/>
                                     <outlet property="shippingAddressLabel" destination="0qf-Zl-tHB" id="WVY-fU-Ry8"/>
                                     <outlet property="shippingMethodLabel" destination="99D-Eb-VKk" id="A0p-qf-P6b"/>
                                     <outlet property="uploadingProgressLabel" destination="TFq-BK-2Aj" id="mQY-r6-XOB"/>
@@ -3606,7 +3593,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <segue destination="bDf-a2-yFE" kind="show" id="Vg8-vv-fyP"/>
+                                            <segue destination="bDf-a2-yFE" kind="show" id="Vaj-Gq-cbl"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -5105,6 +5092,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <image name="apple-pay-method" width="45" height="29"/>
         <image name="assetPlaceholder" width="18" height="18"/>
         <image name="back-chevron" width="13" height="21"/>
+        <image name="cloud" width="25" height="17"/>
         <image name="editColor_off" width="29" height="29"/>
         <image name="editColor_on" width="29" height="29"/>
         <image name="editLayout_off" width="29" height="29"/>
@@ -5116,5 +5104,6 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <image name="plusButton" width="26" height="26"/>
         <image name="selectPhoto_off" width="29" height="29"/>
         <image name="selectPhoto_on" width="29" height="29"/>
+        <image name="uploading-spinner" width="9" height="9"/>
     </resources>
 </document>

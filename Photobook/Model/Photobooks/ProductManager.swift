@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Stripe
 
 enum ProductColor: String, Codable {
     case white, black
