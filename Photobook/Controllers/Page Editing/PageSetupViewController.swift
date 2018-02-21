@@ -173,16 +173,17 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             photobookFrameView.leftPageView.delegate = self
             photobookFrameView.rightPageView.delegate = self
             
-            pageView.pageIndex = pageIndex
-            pageView.productLayout = productLayout            
-            pageView.setupLayoutBoxes()
-
             setupPhotobookFrame()
             setupAssetPlacement()
             setupAssetSelection()
             setupLayoutSelection()
             setupColorSelection()
             setupTextEditing()
+            
+            pageView.pageIndex = pageIndex
+            pageView.productLayout = productLayout
+            pageView.setupLayoutBoxes()
+
             hasDoneSetup = true
         }
     }

@@ -113,14 +113,14 @@ class PhotobookPageView: UIView {
     }
     
     func setupLayoutBoxes(animated: Bool = true) {
-        guard assetImageView.image != nil && productLayout?.layout.imageLayoutBox != nil && animated else {
+        guard assetImageView.image == nil && productLayout?.layout.imageLayoutBox != nil && animated else {
             setupImageBox()
             setupTextBox()
             return
         }
         
         UIView.animate(withDuration: 0.1, animations: {
-            self.assetContainerView.alpha = 0.0
+            self.assetImageView.alpha = 0.0
         }, completion: { _ in
             self.setupImageBox()
             self.setupTextBox()
@@ -133,6 +133,7 @@ class PhotobookPageView: UIView {
             return
         }
         
+        assetContainerView.alpha = 1.0
         assetContainerView.frame = imageBox.rectContained(in: bounds.size)
         
         guard let index = pageIndex, let asset = productLayout?.productLayoutAsset?.asset else {
@@ -151,7 +152,7 @@ class PhotobookPageView: UIView {
             welf?.setImage(image: image)
             
             UIView.animate(withDuration: 0.1) {
-                welf?.assetContainerView.alpha = 1.0
+                welf?.assetImageView.alpha = 1.0
             }
         })
     }
@@ -164,7 +165,6 @@ class PhotobookPageView: UIView {
         
         setImagePlaceholder(visible: false)
         
-        assetContainerView.alpha = 1.0
         assetImageView.image = image
         assetImageView.transform = .identity
         assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: asset.size.width, height: asset.size.height)
