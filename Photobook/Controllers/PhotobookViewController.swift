@@ -550,7 +550,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 let cell = cell as? PhotobookCollectionViewCell
                 else { continue }
 
-            cell.loadPages(leftIndex: productLayoutIndex, rightIndex: productLayoutIndex + 1)
+            let rightIndex = productLayoutIndex < ProductManager.shared.productLayouts.count - 1 ? productLayoutIndex + 1 : nil
+            cell.loadPages(leftIndex: productLayoutIndex, rightIndex: rightIndex)
         }
     }
     
