@@ -30,7 +30,7 @@ class OrderManager {
         self.cachedCost = Cost(hash: 0, lineItems: [lineItem], shippingMethods: [shippingMethod, shippingMethod2], promoDiscount: nil, promoCodeInvalidReason: nil)
         if self.shippingMethod == nil { self.shippingMethod = 1 }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             completionHandler(nil)
         }
     }
