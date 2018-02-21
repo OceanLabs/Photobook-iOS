@@ -89,15 +89,26 @@ class PhotobookFrameView: UIView {
         }
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
+    private var hasDoneInitialSetup = false
+    
+    private func setup() {
+        layer.shadowOpacity = 1.0
         layer.shadowOffset = PhotobookConstants.shadowOffset
         layer.shadowRadius = PhotobookConstants.shadowRadius
         layer.masksToBounds = false
         layer.shadowPath = UIBezierPath(rect: bounds).cgPath
         layer.shouldRasterize = true
         layer.rasterizationScale = UIScreen.main.scale
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
 
+        if !hasDoneInitialSetup {
+            setup()
+            hasDoneInitialSetup = true
+        }
+        
         switch coverColor {
         case .white:
             layer.shadowColor = PhotobookConstants.whiteShadowColor
