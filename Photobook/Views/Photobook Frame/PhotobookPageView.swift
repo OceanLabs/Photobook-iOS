@@ -77,7 +77,7 @@ class PhotobookPageView: UIView {
         super.layoutSubviews()
         
         guard let imageBox = productLayout?.layout.imageLayoutBox else { return }
-        assetContainerView.frame = imageBox.rectContained(in: CGSize(width: frame.width, height: frame.height))
+        assetContainerView.frame = imageBox.rectContained(in: bounds.size)
         
         let iconSize = min(assetContainerView.bounds.width, assetContainerView.bounds.height)
         assetPlaceholderIconImageView.bounds.size = CGSize(width: iconSize * 0.2, height: iconSize * 0.2)
@@ -114,7 +114,7 @@ class PhotobookPageView: UIView {
     
     func setupLayoutBoxes(animated: Bool = true) {
         guard assetImageView.image == nil && productLayout?.layout.imageLayoutBox != nil && animated else {
-            setupImageBox()
+            setupImageBox(animated: false)
             setupTextBox()
             return
         }
@@ -127,7 +127,7 @@ class PhotobookPageView: UIView {
         })
     }
     
-    func setupImageBox(with assetImage: UIImage? = nil) {
+    func setupImageBox(with assetImage: UIImage? = nil, animated: Bool = true) {
         guard let imageBox = productLayout?.layout.imageLayoutBox else {
             assetContainerView.alpha = 0.0
             return
@@ -149,7 +149,7 @@ class PhotobookPageView: UIView {
             guard welf?.pageIndex == index, let image = image else { return }
             welf?.setImage(image: image)
             
-            UIView.animate(withDuration: 0.1) {
+            UIView.animate(withDuration: animated ? 0.1 : 0.0) {
                 welf?.assetImageView.alpha = 1.0
             }
         })

@@ -182,7 +182,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             pageView.pageIndex = pageIndex
             pageView.productLayout = productLayout
-            pageView.setupLayoutBoxes()
+            pageView.setupLayoutBoxes(animated: false)
 
             hasDoneSetup = true
         }
