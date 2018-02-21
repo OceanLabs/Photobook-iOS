@@ -32,7 +32,6 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     var pageIndex: Int?
     var coverColor: ProductColor!
     var pageColor: ProductColor!
-    var isDoublePage: Bool!
     
     private weak var assetContainerView: UIView! {
         guard let pageType = pageType else { return nil }

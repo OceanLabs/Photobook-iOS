@@ -276,7 +276,11 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         layoutSelectionViewController.pageIndex = pageIndex
         layoutSelectionViewController.pageType = pageType
         layoutSelectionViewController.asset = productLayout.asset
-        layoutSelectionViewController.layouts = availableLayouts
+        if pageType == .first || pageType == .last {
+            layoutSelectionViewController.layouts = availableLayouts.filter { !$0.isDoubleLayout }
+        } else {
+            layoutSelectionViewController.layouts = availableLayouts
+        }
         layoutSelectionViewController.selectedLayout = productLayout!.layout
         layoutSelectionViewController.coverColor = ProductManager.shared.coverColor
         layoutSelectionViewController.pageColor = ProductManager.shared.pageColor
