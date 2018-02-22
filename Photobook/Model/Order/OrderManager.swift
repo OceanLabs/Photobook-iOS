@@ -15,6 +15,7 @@ class OrderManager {
     var deliveryDetails: DeliveryDetails?
     var shippingMethod: Int?
     var paymentMethod: PaymentMethod? = Stripe.deviceSupportsApplePay() ? .applePay : nil
+    var photobookId: String?
     
     var cachedCost: Cost?
     var validCost: Cost? {
