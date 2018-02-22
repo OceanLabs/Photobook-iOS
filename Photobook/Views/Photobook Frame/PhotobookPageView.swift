@@ -77,7 +77,7 @@ class PhotobookPageView: UIView {
         super.layoutSubviews()
         
         guard let imageBox = productLayout?.layout.imageLayoutBox else { return }
-        assetContainerView.frame = imageBox.rectContained(in: CGSize(width: frame.width, height: frame.height))
+        assetContainerView.frame = imageBox.rectContained(in: bounds.size)
         
         let iconSize = min(assetContainerView.bounds.width, assetContainerView.bounds.height)
         assetPlaceholderIconImageView.bounds.size = CGSize(width: iconSize * 0.2, height: iconSize * 0.2)
@@ -112,33 +112,32 @@ class PhotobookPageView: UIView {
         hasSetupGestures = true
     }
     
-    func setupLayoutBoxes() {
-        guard assetImageView.image != nil && productLayout?.layout.imageLayoutBox != nil else {
-            setupImageBox()
+    func setupLayoutBoxes(animated: Bool = true) {
+        guard assetImageView.image == nil && productLayout?.layout.imageLayoutBox != nil && animated else {
+            setupImageBox(animated: false)
             setupTextBox()
             return
         }
         
         UIView.animate(withDuration: 0.1, animations: {
-            self.assetContainerView.alpha = 0.0
+            self.assetImageView.alpha = 0.0
         }, completion: { _ in
             self.setupImageBox()
             self.setupTextBox()
         })
     }
     
-    func setupImageBox(with assetImage: UIImage? = nil) {
+    func setupImageBox(with assetImage: UIImage? = nil, animated: Bool = true) {
         guard let imageBox = productLayout?.layout.imageLayoutBox else {
             assetContainerView.alpha = 0.0
             return
         }
         
+        assetContainerView.alpha = 1.0
         assetContainerView.frame = imageBox.rectContained(in: bounds.size)
+        setImagePlaceholder(visible: true)
         
-        guard let index = pageIndex, let asset = productLayout?.productLayoutAsset?.asset else {
-            setImagePlaceholder(visible: true)
-            return
-        }
+        guard let index = pageIndex, let asset = productLayout?.productLayoutAsset?.asset else { return }
         
         // Avoid reloading image if not necessary
         if let assetImage = assetImage {
@@ -150,8 +149,8 @@ class PhotobookPageView: UIView {
             guard welf?.pageIndex == index, let image = image else { return }
             welf?.setImage(image: image)
             
-            UIView.animate(withDuration: 0.1) {
-                welf?.assetContainerView.alpha = 1.0
+            UIView.animate(withDuration: animated ? 0.1 : 0.0) {
+                welf?.assetImageView.alpha = 1.0
             }
         })
     }
@@ -164,7 +163,6 @@ class PhotobookPageView: UIView {
         
         setImagePlaceholder(visible: false)
         
-        assetContainerView.alpha = 1.0
         assetImageView.image = image
         assetImageView.transform = .identity
         assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: asset.size.width, height: asset.size.height)

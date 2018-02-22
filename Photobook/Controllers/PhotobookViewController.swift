@@ -376,7 +376,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         let productLayout = ProductManager.shared.productLayouts[index]
         
-        ProductManager.shared.deletePage(at: productLayout)
+        ProductManager.shared.deletePages(for: productLayout)
         collectionView.performBatchUpdates({
             collectionView.deleteItems(at: [indexPath])
         }, completion: { _ in
@@ -475,51 +475,49 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             }
         })
         
-        if destinationIndexPath != sourceIndexPath,
-            var sourceProductLayoutIndex = ProductManager.shared.productLayoutIndex(for: sourceIndexPath.item + (movingDown ? 0 : -1)) {
-            
-            let sourceProductLayout = ProductManager.shared.productLayouts[sourceProductLayoutIndex]
-            
-            // Because we show a placeholder graphic where the drop proposal is, we get the destination index from the previous page
-            let previousIndexPath = IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 1), section: destinationIndexPath.section)
-            let previousCell = (collectionView.cellForItem(at: previousIndexPath) as? PhotobookCollectionViewCell)
-            
-            guard let destinationProductLayoutIndex = previousCell?.leftIndex ?? previousCell?.rightIndex else { return }
-            
-            // Depending of if we're moving up or down, we will have to move either the left layout first or the second so that we don't mess up the indexes
-            if  movingDown{
-                if !sourceProductLayout.layout.isDoubleLayout {
-                    ProductManager.shared.productLayouts.move(sourceProductLayoutIndex + 1, destinationProductLayoutIndex + 1)
-                }
-                ProductManager.shared.productLayouts.move(sourceProductLayoutIndex, destinationProductLayoutIndex)
+        guard destinationIndexPath != sourceIndexPath,
+              let sourceProductLayoutIndex = ProductManager.shared.productLayoutIndex(for: sourceIndexPath.item)
+        else { return }
+
+        let sourceProductLayout = ProductManager.shared.productLayouts[sourceProductLayoutIndex]
+
+        // Because we show a placeholder graphic where the drop proposal is, we get the destination index from the previous page
+        let previousIndexPath = IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 1), section: destinationIndexPath.section)
+        let previousCell = (collectionView.cellForItem(at: previousIndexPath) as? PhotobookCollectionViewCell)
+        
+        guard let destinationProductLayoutIndex = previousCell?.leftIndex else { return }
+        let destinationProductLayout = ProductManager.shared.productLayouts[destinationProductLayoutIndex]
+        
+        if movingDown {
+            if sourceProductLayout.layout.isDoubleLayout {
+                let destinationIndex = destinationProductLayout.layout.isDoubleLayout ? destinationProductLayoutIndex : destinationProductLayoutIndex + 1
+                ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationIndex)
+            } else {
+                // Move right page layout first to avoid messing up the indexes
+                ProductManager.shared.moveLayout(at: sourceProductLayoutIndex + 1, to: destinationProductLayoutIndex + 1)
+                ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
             }
-            else {
-                if let previousCellIndex = previousCell?.leftIndex, ProductManager.shared.productLayouts[previousCellIndex].layout.isDoubleLayout {
-                    sourceProductLayoutIndex += 1
-                }
-                else {
-                    sourceProductLayoutIndex += 2
-                }
-                
-                ProductManager.shared.productLayouts.move(sourceProductLayoutIndex, destinationProductLayoutIndex)
-                if !sourceProductLayout.layout.isDoubleLayout {
-                    ProductManager.shared.productLayouts.move(sourceProductLayoutIndex + 1, destinationProductLayoutIndex + 1)
-                }
+        } else {
+            if sourceProductLayout.layout.isDoubleLayout {
+                ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
+            } else {
+                ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
+                ProductManager.shared.moveLayout(at: sourceProductLayoutIndex + 1, to: destinationProductLayoutIndex + 1)
             }
-            
-            self.interactingItemIndexPath = nil
-            
-            let insertingIndexPath = IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 0), section: destinationIndexPath.section)
-            self.insertingIndexPath = insertingIndexPath
-            
-            collectionView.performBatchUpdates({
-                collectionView.insertItems(at: [insertingIndexPath])
-                deleteProposalCell(enableFeedback: false)
-                collectionView.deleteItems(at: [IndexPath(item: sourceIndexPath.item + (movingDown ? 0 : 1), section: sourceIndexPath.section)])
-            }, completion: { _ in
-                self.updateVisibleCells()
-            })
         }
+        
+        self.interactingItemIndexPath = nil
+        
+        let insertingIndexPath = IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 0), section: destinationIndexPath.section)
+        self.insertingIndexPath = insertingIndexPath
+        
+        collectionView.performBatchUpdates({
+            collectionView.insertItems(at: [insertingIndexPath])
+            deleteProposalCell(enableFeedback: false)
+            collectionView.deleteItems(at: [IndexPath(item: sourceIndexPath.item + (movingDown ? 0 : 1), section: sourceIndexPath.section)])
+        }, completion: { _ in
+            self.updateVisibleCells()
+        })
     }
     
     func liftView(_ photobookFrameView: PhotobookFrameView) {
@@ -552,7 +550,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 let cell = cell as? PhotobookCollectionViewCell
                 else { continue }
 
-            cell.loadPages(leftIndex: productLayoutIndex, rightIndex: productLayoutIndex + 1)
+            let rightIndex = productLayoutIndex < ProductManager.shared.productLayouts.count - 1 ? productLayoutIndex + 1 : nil
+            cell.loadPages(leftIndex: productLayoutIndex, rightIndex: rightIndex)
         }
     }
     
@@ -627,7 +626,11 @@ extension PhotobookViewController: UICollectionViewDataSource {
                 let indexPathItem = indexPath.item - ((proposedDropIndexPath?.item ?? Int.max) < indexPath.item ? 1 : 0)
                 guard let index = ProductManager.shared.productLayoutIndex(for: indexPathItem) else { return cell }
                 leftIndex = index
-                if index + 1 < ProductManager.shared.productLayouts.count {
+                let isDoubleLayout = ProductManager.shared.productLayouts[leftIndex!].layout.isDoubleLayout
+                
+                if isDoubleLayout {
+                    rightIndex = leftIndex
+                } else if leftIndex! + 1 < ProductManager.shared.productLayouts.count {
                     rightIndex = index + 1
                 }
                 cell.setupGestures()
@@ -704,10 +707,24 @@ extension PhotobookViewController: PhotobookCoverCollectionViewCellDelegate {
 extension PhotobookViewController: PageSetupDelegate {
     // MARK: PageSetupDelegate
     
-    func didFinishEditingPage(_ index: Int?, productLayout: ProductLayout?, color: ProductColor?) {
+    func didFinishEditingPage(_ index: Int?, pageType: PageType?, productLayout: ProductLayout?, color: ProductColor?) {
         if let index = index {
             if let productLayout = productLayout {
+                let previousLayout = ProductManager.shared.productLayouts[index]
                 ProductManager.shared.productLayouts[index] = productLayout
+                
+                if previousLayout.layout.isDoubleLayout != productLayout.layout.isDoubleLayout {
+                    // From single to double
+                    if productLayout.layout.isDoubleLayout {
+                        if pageType == .left {
+                            ProductManager.shared.deletePage(at: index + 1)
+                        } else if pageType == .right {
+                            ProductManager.shared.deletePage(at: index - 1)                        
+                        }
+                    } else {
+                        ProductManager.shared.addPage(at: index + 1)
+                    }
+                }
             }
             if let color = color {
                 if index == 0 { // Cover
@@ -845,7 +862,7 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
         guard let index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex else { return }
         
         // Insert new page above the tapped one
-        ProductManager.shared.addPages(at: index)
+        ProductManager.shared.addDoubleSpread(at: index)
         collectionView.performBatchUpdates({
             collectionView.insertItems(at: [indexPath])
         }, completion: { _ in
