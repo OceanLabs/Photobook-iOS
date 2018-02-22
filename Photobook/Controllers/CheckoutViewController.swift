@@ -55,6 +55,7 @@ class CheckoutViewController: UIViewController {
     @IBOutlet weak var promoCodeActivityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var promoCodeView: UIView!
     @IBOutlet weak var promoCodeTextField: UITextField!
+    @IBOutlet weak var promoCodeClearButton: UIButton!
     @IBOutlet weak var deliveryDetailsView: UIView!
     @IBOutlet weak var deliveryDetailsLabel: UILabel!
     @IBOutlet weak var shippingMethodView: UIView!
@@ -73,7 +74,7 @@ class CheckoutViewController: UIViewController {
     @IBOutlet weak var optionsViewBottomContraint: NSLayoutConstraint!
     @IBOutlet weak var optionsViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var promoCodeViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var promoCodeLoadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var promoCodeAccessoryConstraint: NSLayoutConstraint!
     @IBOutlet weak var promoCodeNormalConstraint: NSLayoutConstraint!
     
     private var previousPromoText: String? //stores previously entered promo string to determine if it has changed
@@ -128,6 +129,8 @@ class CheckoutViewController: UIViewController {
         applePayButton.addTarget(self, action: #selector(CheckoutViewController.applePayButtonTapped(_:)), for: .touchUpInside)
         self.applePayButton = applePayButton
         payButtonContainerView.addSubview(applePayButton)
+        payButtonContainerView.clipsToBounds = true
+        payButtonContainerView.cornerRadius = 10
         
         let views: [String: Any] = ["applePayButton": applePayButton]
         
@@ -142,6 +145,7 @@ class CheckoutViewController: UIViewController {
             views: views)
         
         view.addConstraints(hConstraints + vConstraints)
+        applePayButton.titleLabel?.font = UIFont.systemFont(ofSize: 13)
         
         //POPULATE
         refresh()
@@ -178,12 +182,13 @@ class CheckoutViewController: UIViewController {
                 return
             }
             
-            self.updateViews()
             self.emptyScreenViewController.hide()
             self.progressOverlayViewController.hide()
             self.promoCodeActivityIndicator.stopAnimating()
-            self.promoCodeLoadingConstraint.priority = .defaultLow
+            self.promoCodeAccessoryConstraint.priority = .defaultLow
             self.promoCodeNormalConstraint.priority = .defaultHigh
+            
+            self.updateViews()
         }
     }
     
@@ -207,6 +212,10 @@ class CheckoutViewController: UIViewController {
         //promo code
         if let promoDiscount = OrderManager.shared.validCost?.promoDiscount {
             promoCodeTextField.text = promoDiscount
+            previousPromoText = promoDiscount
+            promoCodeClearButton.isHidden = false
+            promoCodeAccessoryConstraint.priority = .defaultHigh
+            promoCodeNormalConstraint.priority = .defaultLow
         }
         checkPromoCode()
         
@@ -322,10 +331,46 @@ class CheckoutViewController: UIViewController {
         }
     }
     
+    private func handlePromoCodeChanges() {
+        
+        guard let text = promoCodeTextField.text else {
+            return
+        }
+        
+        //textfield is empty
+        if text.isEmpty {
+            if !promoCodeTextField.isFirstResponder {
+                promoCodeClearButton.isHidden = true
+                promoCodeAccessoryConstraint.priority = .defaultLow
+                promoCodeNormalConstraint.priority = .defaultHigh
+            }
+            if OrderManager.shared.promoCode != nil { //it wasn't empty before
+                OrderManager.shared.promoCode = nil
+                refresh(false)
+            }
+            return
+        }
+        
+        //textfield is not empty
+        if previousPromoText != text { //and it has changed
+            OrderManager.shared.promoCode = text
+            promoCodeAccessoryConstraint.priority = .defaultHigh
+            promoCodeNormalConstraint.priority = .defaultLow
+            promoCodeActivityIndicator.startAnimating()
+            promoCodeClearButton.isHidden = true
+            refresh(false)
+        }
+    }
+    
     //MARK: - Actions
     
     @IBAction public func itemAmountButtonPressed(_ sender: Any) {
         presentAmountPicker()
+    }
+    
+    @IBAction func promoCodeClearButtonPressed(_ sender: Any) {
+        promoCodeTextField.text = ""
+        handlePromoCodeChanges()
     }
     
     @IBAction private func presentAmountPicker() {
@@ -445,27 +490,28 @@ class CheckoutViewController: UIViewController {
 
 extension CheckoutViewController: UITextFieldDelegate {
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         previousPromoText = textField.text
         promoCodeTextField.placeholder = Constants.promoPlaceholder
+        //display delete button
+        promoCodeClearButton.isHidden = false
+        promoCodeAccessoryConstraint.priority = .defaultHigh
+        promoCodeNormalConstraint.priority = .defaultLow
+        
+        textField.setNeedsLayout()
+        textField.layoutIfNeeded()
+        
+        return true
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
-        if previousPromoText != textField.text { //only reset promo code if user has changed the textfield
-            OrderManager.shared.promoCode = nil
-            
-            if let text = textField.text, !text.isEmpty {
-                OrderManager.shared.promoCode = textField.text
-                promoCodeActivityIndicator.startAnimating()
-                promoCodeLoadingConstraint.priority = .defaultHigh
-                promoCodeNormalConstraint.priority = .defaultLow
-                refresh(false)
-            }
-            
-        }
-        
         textField.resignFirstResponder()
+        
+        handlePromoCodeChanges()
+        
+        textField.setNeedsLayout()
+        textField.layoutIfNeeded()
+        
         return false
     }
 }

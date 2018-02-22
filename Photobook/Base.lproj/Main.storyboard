@@ -2479,7 +2479,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QrE-ug-05V">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
                                         <subviews>
-                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="None" textAlignment="right" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="XZ1-hM-Xzz">
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="None" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XZ1-hM-Xzz">
                                                 <rect key="frame" x="124.5" y="0.0" width="234.5" height="45"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="alphabet" returnKeyType="done"/>
@@ -2496,10 +2496,22 @@
                                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Oxp-hX-5vJ">
                                                 <rect key="frame" x="342" y="13" width="20" height="20"/>
                                             </activityIndicatorView>
+                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LNv-Iw-alh">
+                                                <rect key="frame" x="336" y="0.0" width="30" height="45"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="30" id="vjw-sD-232"/>
+                                                </constraints>
+                                                <state key="normal" image="textfield-clear"/>
+                                                <connections>
+                                                    <action selector="promoCodeClearButtonPressed:" destination="9J6-1w-1sY" eventType="touchUpInside" id="sLm-bh-2pH"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="LNv-Iw-alh" secondAttribute="bottom" id="G9H-6x-W0N"/>
                                             <constraint firstItem="fSF-Qp-4EQ" firstAttribute="centerY" secondItem="QrE-ug-05V" secondAttribute="centerY" id="KMw-oa-O6Z"/>
+                                            <constraint firstAttribute="trailing" secondItem="LNv-Iw-alh" secondAttribute="trailing" constant="9" id="MQI-6p-ow4"/>
                                             <constraint firstItem="Oxp-hX-5vJ" firstAttribute="centerY" secondItem="QrE-ug-05V" secondAttribute="centerY" id="SjR-yR-IpC"/>
                                             <constraint firstAttribute="height" constant="45" id="TyB-AT-c0N"/>
                                             <constraint firstItem="fSF-Qp-4EQ" firstAttribute="leading" secondItem="QrE-ug-05V" secondAttribute="leading" constant="15" id="auD-fb-nbt"/>
@@ -2508,6 +2520,8 @@
                                             <constraint firstItem="Oxp-hX-5vJ" firstAttribute="leading" secondItem="XZ1-hM-Xzz" secondAttribute="trailing" priority="250" constant="13" id="bVo-rv-SxA"/>
                                             <constraint firstItem="Oxp-hX-5vJ" firstAttribute="leading" secondItem="QrE-ug-05V" secondAttribute="trailing" constant="-33" id="gXS-gh-UC3"/>
                                             <constraint firstAttribute="trailing" secondItem="XZ1-hM-Xzz" secondAttribute="trailing" priority="750" constant="16" id="gxw-q2-8G2"/>
+                                            <constraint firstItem="LNv-Iw-alh" firstAttribute="centerY" secondItem="QrE-ug-05V" secondAttribute="centerY" id="oCN-aF-1tw"/>
+                                            <constraint firstItem="LNv-Iw-alh" firstAttribute="top" secondItem="QrE-ug-05V" secondAttribute="top" id="oqT-5I-GEE"/>
                                             <constraint firstAttribute="bottom" secondItem="XZ1-hM-Xzz" secondAttribute="bottom" id="yNw-db-pI7"/>
                                         </constraints>
                                     </view>
@@ -2710,7 +2724,7 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="345" height="50"/>
                                                 <color key="backgroundColor" red="0.13185417652130127" green="0.52277827262878418" blue="0.96682602167129517" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
-                                                <state key="normal" title="Pay £XX.XX">
+                                                <state key="normal" title="Pay">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
                                                 <userDefinedRuntimeAttributes>
@@ -2765,7 +2779,7 @@
                                                 <real key="value" value="4"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                <color key="value" red="0.81999999999999995" green="0.83999999999999997" blue="0.85999999999999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="value" red="0.93318068980000002" green="0.93361777069999996" blue="0.93681669239999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
                                                 <real key="value" value="1"/>
@@ -2854,8 +2868,9 @@
                         <outlet property="paymentMethodLabel" destination="AvW-ih-enk" id="xxl-kp-25a"/>
                         <outlet property="paymentMethodTitleLabel" destination="XKU-uH-msU" id="LJY-Rx-fbC"/>
                         <outlet property="paymentMethodView" destination="FSQ-QJ-mz3" id="pLy-Fb-9Oe"/>
+                        <outlet property="promoCodeAccessoryConstraint" destination="bVo-rv-SxA" id="1BZ-OK-cUV"/>
                         <outlet property="promoCodeActivityIndicator" destination="Oxp-hX-5vJ" id="H5Y-Km-jje"/>
-                        <outlet property="promoCodeLoadingConstraint" destination="bVo-rv-SxA" id="1BZ-OK-cUV"/>
+                        <outlet property="promoCodeClearButton" destination="LNv-Iw-alh" id="Cks-1j-sam"/>
                         <outlet property="promoCodeNormalConstraint" destination="gxw-q2-8G2" id="uft-kC-yky"/>
                         <outlet property="promoCodeTextField" destination="XZ1-hM-Xzz" id="KrN-em-xvm"/>
                         <outlet property="promoCodeView" destination="QrE-ug-05V" id="z8q-2f-7Rh"/>
@@ -5550,6 +5565,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <image name="plusButton" width="26" height="26"/>
         <image name="selectPhoto_off" width="29" height="29"/>
         <image name="selectPhoto_on" width="29" height="29"/>
+        <image name="textfield-clear" width="16" height="16"/>
         <image name="uploading-spinner" width="9" height="9"/>
     </resources>
 </document>
