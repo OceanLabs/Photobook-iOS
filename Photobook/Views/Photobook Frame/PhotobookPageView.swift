@@ -65,7 +65,10 @@ class PhotobookPageView: UIView {
     @IBOutlet private weak var assetPlaceholderIconImageView: UIImageView!
     @IBOutlet private weak var assetImageView: UIImageView!
     @IBOutlet private weak var pageTextLabel: UILabel? {
-        didSet { pageTextLabel!.alpha = 0.0 }
+        didSet {
+            pageTextLabel!.alpha = 0.0
+            pageTextLabel!.layer.anchorPoint = CGPoint(x: 0.0, y: 0.0)
+        }
     }
     @IBOutlet private weak var textLabelPlaceholderBoxView: TextLabelPlaceholderBoxView? {
         didSet { textLabelPlaceholderBoxView!.alpha = 0.0 }
@@ -206,27 +209,28 @@ class PhotobookPageView: UIView {
         guard let pageTextLabel = pageTextLabel, let textBox = productLayout?.layout.textLayoutBox else { return }
 
         let finalFrame = textBox.rectContained(in: bounds.size)
-        let finalCentre =  CGPoint(x: finalFrame.midX, y: finalFrame.midY)
         
         let scale: CGFloat = 1.55
-        let fakeSize = CGSize(width: finalFrame.width * scale, height: finalFrame.height * scale)
+        let scaledUpSize = CGSize(width: finalFrame.width * scale, height: finalFrame.height * scale)
         
         pageTextLabel.transform = .identity
-        pageTextLabel.frame = CGRect(x: finalFrame.minX, y: finalFrame.minY, width: finalFrame.width * scale, height: finalFrame.height * scale)
-        pageTextLabel.center = finalCentre
-        pageTextLabel.transform = pageTextLabel.transform.scaledBy(x: 1/scale, y: 1/scale)
+        pageTextLabel.frame = CGRect(x: finalFrame.minX, y: finalFrame.minY, width: scaledUpSize.width, height: scaledUpSize.height)
         
-        guard pageTextLabel.text != nil else { return }
+        let layoutContainerSize = textBox.containerSize(for: scaledUpSize)
         
-        let layoutContainerSize = textBox.containerSize(for: fakeSize)
+        guard pageTextLabel.text != nil else {
+            pageTextLabel.transform = pageTextLabel.transform.scaledBy(x: 1/scale, y: 1/scale)
+            return
+        }
         
+        let textHeight = pageTextLabel.attributedText!.height(for: scaledUpSize.width)
+        if textHeight < scaledUpSize.height { pageTextLabel.frame.size.height = textHeight }
+
         let fontType = productLayout!.fontType ?? .plain
         let fontSize = fontType.sizeForScreenHeight(layoutContainerSize.height)
-
-        pageTextLabel.attributedText = fontType.attributedText(with: pageTextLabel.text!, fontSize: fontSize, fontColor: color.fontColor())
         
-        let textHeight = pageTextLabel.attributedText!.height(for: fakeSize.width)
-        if textHeight < fakeSize.height { pageTextLabel.frame.size.height = textHeight }
+        pageTextLabel.attributedText = fontType.attributedText(with: pageTextLabel.text!, fontSize: fontSize, fontColor: color.fontColor())
+        pageTextLabel.transform = pageTextLabel.transform.scaledBy(x: 1/scale, y: 1/scale)
     }
     
     private func setImagePlaceholder(visible: Bool) {
