@@ -364,6 +364,11 @@ class CheckoutViewController: UIViewController {
             return
         }
         
+        //TODO: REMOVE, this is just to make the receipt screen testable
+        let viewController = storyboard?.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
+        navigationController?.pushViewController(viewController, animated: true)
+        return
+        
         progressOverlayViewController.show(message: Constants.loadingPaymentText)
         OrderManager.shared.updateCost { [weak welf = self] (error: Error?) in
             self.progressOverlayViewController.hide()

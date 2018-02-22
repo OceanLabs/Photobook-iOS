@@ -52,6 +52,10 @@ class OrderManager {
     
     static let shared = OrderManager()
     
+    init() {
+        reset()
+    }
+    
     func reset() {
         deliveryDetails = nil
         shippingMethod = nil

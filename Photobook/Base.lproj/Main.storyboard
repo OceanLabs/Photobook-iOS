@@ -1562,7 +1562,7 @@
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-536" y="747"/>
+            <point key="canvasLocation" x="-1240" y="564"/>
         </scene>
         <!--Modal Albums Collection View Controller-->
         <scene sceneID="B0s-Zk-nrB">
@@ -1986,7 +1986,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9c0-ya-fD9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1795.6521739130437" y="790.76086956521749"/>
+            <point key="canvasLocation" x="1831" y="806"/>
         </scene>
         <!--Photobook View Controller-->
         <scene sceneID="suS-5G-9Zz">
@@ -3225,7 +3225,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gyq-3W-xk4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2715" y="-914"/>
+            <point key="canvasLocation" x="6098" y="-134"/>
         </scene>
         <!--Item-->
         <scene sceneID="c5L-BD-S21">
@@ -3611,7 +3611,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     </connections>
                 </panGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2726" y="-1145"/>
+            <point key="canvasLocation" x="2721" y="-1160"/>
         </scene>
         <!--Progress Overlay View Controller-->
         <scene sceneID="dLC-iX-1EH">
@@ -3975,7 +3975,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AmM-zD-PVQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2935" y="61"/>
+            <point key="canvasLocation" x="2980" y="61"/>
         </scene>
         <!--Empty Screen View Controller-->
         <scene sceneID="ij0-dd-Rvf">
@@ -5475,7 +5475,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="4791" y="81"/>
+            <point key="canvasLocation" x="4839" y="61"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="wh3-Mz-mVO">
