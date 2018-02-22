@@ -373,16 +373,33 @@ class ProductManager {
         return nil
     }
     
-    func addPages(at index: Int, pages: [ProductLayout]? = nil) {
+    func addPage(at index: Int) {
+        addPages(at: index, number: 1)
+    }
+    
+    func addDoubleSpread(at index: Int) {
+        addPages(at: index, number: 2)
+    }
+
+    func addPages(at index: Int, pages: [ProductLayout]) {
+        addPages(at: index, number: pages.count, pages: pages)
+    }
+    
+    private func addPages(at index: Int, number: Int, pages: [ProductLayout]? = nil) {
         guard let product = product,
             let layouts = layouts(for: product)
             else { return }
-        let newProductLayouts = pages ?? createLayoutsForAssets(assets: [], from: layouts, placeholderLayouts: 2)
+        let newProductLayouts = pages ?? createLayoutsForAssets(assets: [], from: layouts, placeholderLayouts: number)
         
         productLayouts.insert(contentsOf: newProductLayouts, at: index)
     }
     
-    func deletePage(at productLayout: ProductLayout) {
+    func deletePage(at index: Int) {
+        guard index < productLayouts.count else { return }
+        productLayouts.remove(at: index)
+    }
+    
+    func deletePages(for productLayout: ProductLayout) {
         guard let index = productLayouts.index(where: { $0 === productLayout }) else { return }
         productLayouts.remove(at: index)
         
@@ -391,6 +408,24 @@ class ProductManager {
         }
     }
     
+    func pageType(forLayoutIndex index: Int) -> PageType {
+        if index == 0 { return .cover }
+        if index == 1 { return .first }
+        if index == productLayouts.count - 1 { return .last }
+        
+        let doublePagesBeforeIndex = Array(productLayouts[0..<index]).filter { $0.layout.isDoubleLayout }.count
+        
+        if doublePagesBeforeIndex > 0 {
+            return (index - doublePagesBeforeIndex) % 2 == 0 ? .left : .right
+        }
+        if index % 2 == 0 { return .left }
+        return .right
+    }
+    
+    func moveLayout(at sourceIndex: Int, to destinationIndex: Int) {
+        guard sourceIndex < productLayouts.count && destinationIndex < productLayouts.count else { return }
+        productLayouts.move(sourceIndex, to: destinationIndex)
+    }
 }
 
 extension ProductManager: PhotobookAPIManagerDelegate {

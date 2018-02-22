@@ -32,7 +32,6 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
         didSet {
             photobookFrameView.coverColor = ProductManager.shared.coverColor
             photobookFrameView.pageColor = ProductManager.shared.pageColor
-            photobookFrameView.leftPageView.aspectRatio = ProductManager.shared.product!.aspectRatio
         }
     }
     @IBOutlet private weak var plusButton: UIButton!
@@ -93,7 +92,8 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
             photobookFrameView.leftPageView.interaction = .disabled
         }
         
-        if let rightIndex = rightIndex {
+        // If leftIndex == rightIndex, then it's a double-page layout
+        if let rightIndex = rightIndex, leftIndex != rightIndex {
             photobookFrameView.rightPageView.pageIndex = rightIndex
             photobookFrameView.rightPageView.productLayout = ProductManager.shared.productLayouts[rightIndex]
             
@@ -103,8 +103,20 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
             photobookFrameView.isRightPageVisible = true
             photobookFrameView.rightPageView.interaction = .wholePage
         } else {
-            photobookFrameView.isRightPageVisible = false
+            if rightIndex == nil {
+                photobookFrameView.isRightPageVisible = false
+            }
             photobookFrameView.rightPageView.interaction = .disabled
+        }
+        
+        let aspectRatio = ProductManager.shared.product!.aspectRatio
+        if let aspectRatio = aspectRatio, let leftIndex = leftIndex {
+            let isDoubleLayout = ProductManager.shared.productLayouts[leftIndex].layout.isDoubleLayout
+            photobookFrameView.leftPageView.aspectRatio = isDoubleLayout ? aspectRatio * 2.0 : aspectRatio
+            photobookFrameView.rightPageView.aspectRatio = isDoubleLayout ? 0.0 : aspectRatio
+        } else {
+            photobookFrameView.leftPageView.aspectRatio = aspectRatio
+            photobookFrameView.rightPageView.aspectRatio = aspectRatio
         }
         
         photobookFrameView.leftPageView.delegate = self
