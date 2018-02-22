@@ -11,10 +11,10 @@ import Stripe
 
 class OrderManager {
     
-    var currencyCode: String? = Locale.current.currencyCode ?? "USD" //USD if locale unavailable
+    let currencyCode = Locale.current.currencyCode ?? "USD" //USD if locale unavailable
     var deliveryDetails: DeliveryDetails?
     var shippingMethod: Int?
-    var paymentMethod: PaymentMethod? = Stripe.deviceSupportsApplePay() ? .applePay : nil
+    var paymentMethod: PaymentMethod?
     var itemCount: Int = 1
     var promoCode: String?
     
@@ -52,12 +52,13 @@ class OrderManager {
     
     static let shared = OrderManager()
     
-    init() {
-        
-    }
-    
     func reset() {
-        
+        deliveryDetails = nil
+        shippingMethod = nil
+        paymentMethod = Stripe.deviceSupportsApplePay() ? .applePay : nil
+        itemCount = 1
+        promoCode = nil
+        cachedCost = nil
     }
 }
 

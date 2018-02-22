@@ -42,6 +42,9 @@ class CheckoutViewController: UIViewController {
         static let promoPlaceholder = NSLocalizedString("Controllers/CheckoutViewController/PromoPlaceholderText",
                                                          value: "None",
                                                          comment: "Promo textfield placeholder")
+        static let alertOkText = NSLocalizedString("Controllers/CheckoutViewController/OK",
+                                                        value: "OK",
+                                                        comment: "OK string for alerts")
     }
     
     @IBOutlet weak var itemImageView: UIImageView!
@@ -164,8 +167,18 @@ class CheckoutViewController: UIViewController {
         if showProgress {
             progressOverlayViewController.show(message: Constants.loadingDetailsText)
         }
+        
         OrderManager.shared.updateCost { (error) in
-            self.updateViews() //TODO: error handling
+            
+            if let error = error {
+                let alert = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .alert)
+                let okAction = UIAlertAction(title: Constants.alertOkText, style: .default)
+                alert.addAction(okAction)
+                self.present(alert, animated: true)
+                return
+            }
+            
+            self.updateViews()
             self.emptyScreenViewController.hide()
             self.progressOverlayViewController.hide()
             self.promoCodeActivityIndicator.stopAnimating()
@@ -180,35 +193,6 @@ class CheckoutViewController: UIViewController {
         
         OrderSummaryManager.shared.fetchPreviewImage(withSize: size) { (image) in
             self.itemImageView.image = image
-        }
-    }
-    
-    private func checkDetailFields() {
-        let requiredText = Constants.labelRequiredText
-        
-        //payment method
-        if OrderManager.shared.paymentMethod == nil {
-            paymentMethodIconImageView.isHidden = true
-            paymentMethodLabel.isHidden = false
-            paymentMethodLabel.text = requiredText
-            paymentMethodLabel.textColor = Constants.detailsLabelColorRequired
-            paymentMethodTitleLabel.text = Constants.paymentMethodText
-        }
-        
-        //delivery details
-        if OrderManager.shared.deliveryDetails == nil {
-            deliveryDetailsLabel.text = requiredText
-            deliveryDetailsLabel.textColor = Constants.detailsLabelColorRequired
-        }
-        
-    }
-    
-    private func checkPromoCode() {
-        //promo code
-        if let invalidReason = OrderManager.shared.validCost?.promoCodeInvalidReason {
-            promoCodeTextField.attributedPlaceholder = NSAttributedString(string: invalidReason, attributes: [NSAttributedStringKey.foregroundColor: Constants.detailsLabelColorRequired])
-            promoCodeTextField.text = nil
-            promoCodeTextField.placeholder = invalidReason
         }
     }
     
@@ -276,10 +260,6 @@ class CheckoutViewController: UIViewController {
         adaptPayButton()
     }
     
-    @IBAction public func itemAmountButtonPressed(_ sender: Any) {
-        presentAmountPicker()
-    }
-    
     private func adaptPayButton() {
         //hide all
         applePayButton?.isHidden = true
@@ -288,8 +268,8 @@ class CheckoutViewController: UIViewController {
         payButton.isEnabled = false
         
         var payButtonText = NSLocalizedString("Controllers/CheckoutViewController/PayButtonText",
-                                            value: "Pay",
-                                            comment: "Text on pay button. This is followed by the amount to pay")
+                                              value: "Pay",
+                                              comment: "Text on pay button. This is followed by the amount to pay")
         
         if let selectedMethod = OrderManager.shared.shippingMethod, let cost = OrderManager.shared.validCost, let shippingMethod = cost.shippingMethod(id: selectedMethod) {
             payButtonText = payButtonText + " \(shippingMethod.totalCostFormatted)"
@@ -313,7 +293,42 @@ class CheckoutViewController: UIViewController {
         }
     }
     
-    private func presentAmountPicker() {
+    private func checkDetailFields() {
+        let requiredText = Constants.labelRequiredText
+        
+        //payment method
+        if OrderManager.shared.paymentMethod == nil {
+            paymentMethodIconImageView.isHidden = true
+            paymentMethodLabel.isHidden = false
+            paymentMethodLabel.text = requiredText
+            paymentMethodLabel.textColor = Constants.detailsLabelColorRequired
+            paymentMethodTitleLabel.text = Constants.paymentMethodText
+        }
+        
+        //delivery details
+        if OrderManager.shared.deliveryDetails == nil {
+            deliveryDetailsLabel.text = requiredText
+            deliveryDetailsLabel.textColor = Constants.detailsLabelColorRequired
+        }
+        
+    }
+    
+    private func checkPromoCode() {
+        //promo code
+        if let invalidReason = OrderManager.shared.validCost?.promoCodeInvalidReason {
+            promoCodeTextField.attributedPlaceholder = NSAttributedString(string: invalidReason, attributes: [NSAttributedStringKey.foregroundColor: Constants.detailsLabelColorRequired])
+            promoCodeTextField.text = nil
+            promoCodeTextField.placeholder = invalidReason
+        }
+    }
+    
+    //MARK: - Actions
+    
+    @IBAction public func itemAmountButtonPressed(_ sender: Any) {
+        presentAmountPicker()
+    }
+    
+    @IBAction private func presentAmountPicker() {
         let amountPickerViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AmountPickerViewController") as! AmountPickerViewController
         amountPickerViewController.optionName = NSLocalizedString("Controllers/CheckoutViewController/ItemAmountPickerTitle",
                                                                               value: "Select amount",
@@ -340,12 +355,12 @@ class CheckoutViewController: UIViewController {
         checkDetailFields() //indicate to user if something is missing
         
         guard (!orderIsFree && OrderManager.shared.paymentMethod == .applePay) || (OrderManager.shared.deliveryDetails?.address?.isValid ?? false) else {
-            //TODO: Indicate to the user that delivery information is missing
+            //delivery information is missing
             return
         }
         
         guard orderIsFree || (OrderManager.shared.paymentMethod != nil && (OrderManager.shared.paymentMethod != .creditCard || Card.currentCard != nil)) else {
-            //TODO: Indicate to the user that payment method is missing
+            //payment method is missing
             return
         }
         
@@ -356,7 +371,10 @@ class CheckoutViewController: UIViewController {
             guard let cost = OrderManager.shared.validCost, error == nil else {
                 let genericError = NSLocalizedString("UpdateCostError", value: "An error occurred while updating our products.\nPlease try again later.", comment: "Generic error when retrieving the cost for the products in the basket")
                 
-                // TODO: show error to the user
+                let alert = UIAlertController(title: nil, message: genericError.description, preferredStyle: .alert)
+                let okAction = UIAlertAction(title: Constants.alertOkText, style: .default)
+                alert.addAction(okAction)
+                self.present(alert, animated: true)
                 return
             }
             
@@ -382,7 +400,7 @@ class CheckoutViewController: UIViewController {
         updateItemImage()
     }
     
-    //MARK: Keyboard
+    //MARK: Keyboard Notifications
     
     @objc func keyboardWillChangeFrame(notification: Notification) {
         let userInfo = notification.userInfo
@@ -420,47 +438,6 @@ class CheckoutViewController: UIViewController {
     }
 }
 
-extension CheckoutViewController: AmountPickerDelegate {
-    func amountPickerDidSelectValue(_ value: Int) {
-        OrderManager.shared.itemCount = value
-        itemAmountButton.setTitle("\(value)", for: .normal)
-    }
-}
-
-extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
-    func costUpdated() {
-        updateViews()
-    }
-    
-    func paymentAuthorizationDidFinish(token: String?, error: Error?, completionHandler: ((PKPaymentAuthorizationStatus) -> Void)?) {
-        if let error = error {
-            // TODO: show the error to the user
-            return
-        }
-        
-        OrderManager.shared.paymentToken = token
-        submitOrder(completionHandler: completionHandler)
-    }
-    
-    func modalPresentationDidFinish() {
-        OrderManager.shared.updateCost { [weak welf = self] (error: Error?) in
-            guard welf != nil else { return }
-            
-            if let applePayDismissedOperation = welf?.modalPresentationDismissedOperation{
-                if !applePayDismissedOperation.isFinished{
-                    OperationQueue.main.addOperation(applePayDismissedOperation)
-                }
-            }
-            
-            if error != nil {
-                // TODO: show the error to the user
-                return
-            }
-        }
-    }
-    
-}
-
 extension CheckoutViewController: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -482,8 +459,57 @@ extension CheckoutViewController: UITextFieldDelegate {
             }
             
         }
-
+        
         textField.resignFirstResponder()
         return false
     }
+}
+
+extension CheckoutViewController: AmountPickerDelegate {
+    func amountPickerDidSelectValue(_ value: Int) {
+        OrderManager.shared.itemCount = value
+        itemAmountButton.setTitle("\(value)", for: .normal)
+    }
+}
+
+extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
+    func costUpdated() {
+        updateViews()
+    }
+    
+    func paymentAuthorizationDidFinish(token: String?, error: Error?, completionHandler: ((PKPaymentAuthorizationStatus) -> Void)?) {
+        if let error = error {
+            let alert = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: Constants.alertOkText, style: .default)
+            alert.addAction(okAction)
+            self.present(alert, animated: true)
+            
+            return
+        }
+        
+        OrderManager.shared.paymentToken = token
+        submitOrder(completionHandler: completionHandler)
+    }
+    
+    func modalPresentationDidFinish() {
+        OrderManager.shared.updateCost { [weak welf = self] (error: Error?) in
+            guard welf != nil else { return }
+            
+            if let applePayDismissedOperation = welf?.modalPresentationDismissedOperation{
+                if !applePayDismissedOperation.isFinished{
+                    OperationQueue.main.addOperation(applePayDismissedOperation)
+                }
+            }
+            
+            if let error = error {
+                let alert = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .alert)
+                let okAction = UIAlertAction(title: Constants.alertOkText, style: .default)
+                alert.addAction(okAction)
+                self.present(alert, animated: true)
+                
+                return
+            }
+        }
+    }
+    
 }
