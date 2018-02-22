@@ -83,11 +83,11 @@ class PhotosAsset: Asset {
             guard let data = imageData, let dataUti = dataUti else { completionHandler(nil, nil, NSError()); return }
             
             let fileExtension: AssetDataFileExtension
-            if dataUti.contains("png") {
+            if dataUti.contains(".png") {
                 fileExtension = .png
-            } else if dataUti.contains("jpeg") {
+            } else if dataUti.contains(".jpeg") {
                 fileExtension = .jpg
-            } else if dataUti.contains("gif") {
+            } else if dataUti.contains(".gif") {
                 fileExtension = .gif
             } else {
                 fileExtension = .unsupported
