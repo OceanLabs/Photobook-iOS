@@ -253,8 +253,44 @@ class PhotobookAPIManager {
     }
     
     private func photobookCreationParameters() -> [String: Any]? {
+        guard let photobookId = OrderManager.shared.photobookId else { return nil }
+        
         // TODO: confirm schema
-        return nil
+        var photobook = [String: Any]()
+        
+        var pages = [[String: Any]]()
+        for productLayout in ProductManager.shared.productLayouts {
+            var page = [String: Any]()
+            
+            if let asset = productLayout.asset,
+                let imageLayoutBox = productLayout.layout.imageLayoutBox,
+                let productLayoutAsset = productLayout.productLayoutAsset {
+                
+                page["contentType"] = "image"
+                page["dimensionsPercentages"] = ["height": imageLayoutBox.rect.height, "width": imageLayoutBox.rect.width]
+                page["relativeStartPoint"] = ["x": imageLayoutBox.rect.origin.x, "y": imageLayoutBox.rect.origin.y]
+                
+                // Set the container size to 1,1 so that the transform is relativized
+                productLayoutAsset.containerSize = CGSize(width: 1, height: 1)
+                productLayoutAsset.adjustTransform()
+                
+                var containedItem = [String: Any]()
+                var picture = [String: Any]()
+                picture["url"] = asset.uploadUrl
+                picture["relativeStartPoint"] = ["x": productLayoutAsset.transform.tx, "y": productLayoutAsset.transform.ty]
+                picture["rotation"] = atan2(productLayoutAsset.transform.b, productLayoutAsset.transform.a)
+                picture["zoom"] = productLayoutAsset.transform.a // X & Y axes scale should be the same, use the scale for X axis
+                
+                containedItem["picture"] = picture
+                page["containedItem"] = containedItem
+                
+            }
+            pages.append(page)
+        }
+        photobook["pages"] = pages
+        photobook["id"] = photobookId
+        
+        return photobook
     }
     
     private func saveDataToCachesDirectory(data: Data, name: String) -> URL? {
