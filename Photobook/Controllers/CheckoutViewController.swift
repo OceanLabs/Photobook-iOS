@@ -8,6 +8,7 @@
 
 import UIKit
 import PassKit
+import Stripe
 
 class CheckoutViewController: UIViewController {
     
@@ -124,6 +125,16 @@ class CheckoutViewController: UIViewController {
         paymentMethodLabel.text = nil
         
         //APPLE PAY
+        if Stripe.deviceSupportsApplePay() {
+            setupApplePayButton()
+        }
+        
+        //POPULATE
+        refresh()
+        emptyScreenViewController.show(message: Constants.loadingDetailsText, title: nil, image: nil, activity: true, buttonTitle: nil, buttonAction: nil)
+    }
+    
+    private func setupApplePayButton() {
         let applePayButton = PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .black)
         applePayButton.translatesAutoresizingMaskIntoConstraints = false
         applePayButton.addTarget(self, action: #selector(CheckoutViewController.applePayButtonTapped(_:)), for: .touchUpInside)
@@ -145,11 +156,6 @@ class CheckoutViewController: UIViewController {
             views: views)
         
         view.addConstraints(hConstraints + vConstraints)
-        applePayButton.titleLabel?.font = UIFont.systemFont(ofSize: 13)
-        
-        //POPULATE
-        refresh()
-        emptyScreenViewController.show(message: Constants.loadingDetailsText, title: nil, image: nil, activity: true, buttonTitle: nil, buttonAction: nil)
     }
     
     private func registerForKeyboardNotifications() {
@@ -286,7 +292,7 @@ class CheckoutViewController: UIViewController {
         
         let paymentMethod = OrderManager.shared.paymentMethod
         
-        if paymentMethod == .applePay && PKPaymentAuthorizationViewController.canMakePayments() {
+        if paymentMethod == .applePay {
             applePayButton?.isHidden = false
             applePayButton?.isEnabled = true
         } else {
@@ -459,6 +465,7 @@ class CheckoutViewController: UIViewController {
     @objc func keyboardWillChangeFrame(notification: Notification) {
         let userInfo = notification.userInfo
         guard let size = (userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.size else { return }
+        let time = (userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0.5
         
         guard promoCodeTextField.isFirstResponder else { return }
         
@@ -466,17 +473,19 @@ class CheckoutViewController: UIViewController {
         
         self.optionsViewBottomContraint.priority = .defaultLow
         self.optionsViewTopConstraint.priority = .defaultHigh
-        UIView.animate(withDuration: 0.5) {
+        UIView.animate(withDuration: time) {
             self.view.layoutIfNeeded()
         }
     }
     
     @objc func keyboardWillHide(notification: Notification){
         guard promoCodeTextField.isFirstResponder else { return }
+        let userInfo = notification.userInfo
+        let time = (userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0.5
         
         self.optionsViewBottomContraint.priority = .defaultHigh
         self.optionsViewTopConstraint.priority = .defaultLow
-        UIView.animate(withDuration: 0.5) {
+        UIView.animate(withDuration: time) {
             self.view.layoutIfNeeded()
         }
     }
