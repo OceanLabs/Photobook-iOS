@@ -112,7 +112,7 @@ class CreditCardTableViewController: UITableViewController {
             cell.textField.text = FormConstants.requiredText
             cell.textField.textColor = FormConstants.errorColor
         }
-        else if !cardNumberTextField.text!.isValidCardNumber() || cardNumberTextField.text!.cardType() == nil {
+        else if !cardNumberTextField.text!.isValidCardNumber() || cardNumberTextField.text!.cardType() != nil {
             tableView.beginUpdates()
             let cell = (tableView.cellForRow(at: IndexPath(row: Constants.creditCardRow, section: 0)) as! UserInputTableViewCell)
             cell.errorMessage = NSLocalizedString("CardNumberError", value: "This doesn't seem to be a valid card number", comment: "Error displayed when the card number field is missing or invalid")

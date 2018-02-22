@@ -19,7 +19,7 @@ class CheckoutViewController: UIViewController {
         static let segueIdentifierPaymentMethods = "seguePaymentMethods"
         
         static let detailsLabelColor = UIColor.black
-        static let detailsLabelColorRequired = UIColor.red
+        static let detailsLabelColorRequired = UIColor.red.withAlphaComponent(0.6)
         
         static let titleText = NSLocalizedString("Controllers/CheckoutViewController/titleText",
                                                                  value: "Payment",
@@ -39,6 +39,9 @@ class CheckoutViewController: UIViewController {
         static let paymentMethodText = NSLocalizedString("Controllers/CheckoutViewController/PaymentMethodRequiredText",
                                                                  value: "Payment Method",
                                                                  comment: "Left side of payment method row if required hint is displayed")
+        static let promoPlaceholder = NSLocalizedString("Controllers/CheckoutViewController/PromoPlaceholderText",
+                                                         value: "None",
+                                                         comment: "Promo textfield placeholder")
     }
     
     @IBOutlet weak var itemImageView: UIImageView!
@@ -46,6 +49,7 @@ class CheckoutViewController: UIViewController {
     @IBOutlet weak var itemPriceLabel: UILabel!
     @IBOutlet weak var itemAmountButton: UIButton!
     
+    @IBOutlet weak var promoCodeActivityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var promoCodeView: UIView!
     @IBOutlet weak var promoCodeTextField: UITextField!
     @IBOutlet weak var deliveryDetailsView: UIView!
@@ -66,6 +70,10 @@ class CheckoutViewController: UIViewController {
     @IBOutlet weak var optionsViewBottomContraint: NSLayoutConstraint!
     @IBOutlet weak var optionsViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var promoCodeViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var promoCodeLoadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var promoCodeNormalConstraint: NSLayoutConstraint!
+    
+    private var previousPromoText: String? //stores previously entered promo string to determine if it has changed
     
     private var modalPresentationDismissedOperation : Operation?
     lazy private var paymentManager: PaymentAuthorizationManager = {
@@ -152,12 +160,17 @@ class CheckoutViewController: UIViewController {
         updateViews()
     }
     
-    private func refresh() {
-        progressOverlayViewController.show(message: Constants.loadingDetailsText)
+    private func refresh(_ showProgress: Bool = true) {
+        if showProgress {
+            progressOverlayViewController.show(message: Constants.loadingDetailsText)
+        }
         OrderManager.shared.updateCost { (error) in
             self.updateViews() //TODO: error handling
             self.emptyScreenViewController.hide()
             self.progressOverlayViewController.hide()
+            self.promoCodeActivityIndicator.stopAnimating()
+            self.promoCodeLoadingConstraint.priority = .defaultLow
+            self.promoCodeNormalConstraint.priority = .defaultHigh
         }
     }
     
@@ -187,6 +200,16 @@ class CheckoutViewController: UIViewController {
             deliveryDetailsLabel.text = requiredText
             deliveryDetailsLabel.textColor = Constants.detailsLabelColorRequired
         }
+        
+    }
+    
+    private func checkPromoCode() {
+        //promo code
+        if let invalidReason = OrderManager.shared.validCost?.promoCodeInvalidReason {
+            promoCodeTextField.attributedPlaceholder = NSAttributedString(string: invalidReason, attributes: [NSAttributedStringKey.foregroundColor: Constants.detailsLabelColorRequired])
+            promoCodeTextField.text = nil
+            promoCodeTextField.placeholder = invalidReason
+        }
     }
     
     private func updateViews() {
@@ -196,6 +219,12 @@ class CheckoutViewController: UIViewController {
         itemPriceLabel.text = OrderManager.shared.cachedCost?.lineItems?.first?.formattedCost
         itemAmountButton.setTitle("\(OrderManager.shared.itemCount)", for: .normal)
         updateItemImage()
+        
+        //promo code
+        if let promoDiscount = OrderManager.shared.validCost?.promoDiscount {
+            promoCodeTextField.text = promoDiscount
+        }
+        checkPromoCode()
         
         //payment method icon
         showDeliveryDetailsConstraint.priority = .defaultHigh
@@ -433,11 +462,27 @@ extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
 }
 
 extension CheckoutViewController: UITextFieldDelegate {
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        previousPromoText = textField.text
+        promoCodeTextField.placeholder = Constants.promoPlaceholder
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
-        OrderManager.shared.promoCode = textField.text
-        refresh()
-        
+        if previousPromoText != textField.text { //only reset promo code if user has changed the textfield
+            OrderManager.shared.promoCode = nil
+            
+            if let text = textField.text, !text.isEmpty {
+                OrderManager.shared.promoCode = textField.text
+                promoCodeActivityIndicator.startAnimating()
+                promoCodeLoadingConstraint.priority = .defaultHigh
+                promoCodeNormalConstraint.priority = .defaultLow
+                refresh(false)
+            }
+            
+        }
+
         textField.resignFirstResponder()
         return false
     }

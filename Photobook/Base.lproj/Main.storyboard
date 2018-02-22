@@ -2488,8 +2488,8 @@
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
                                         <subviews>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="None" textAlignment="right" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="XZ1-hM-Xzz">
-                                                <rect key="frame" x="124.5" y="0.0" width="235.5" height="45"/>
-                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                                <rect key="frame" x="124.5" y="0.0" width="234.5" height="45"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="alphabet" returnKeyType="done"/>
                                                 <connections>
                                                     <outlet property="delegate" destination="9J6-1w-1sY" id="fGt-6s-mqZ"/>
@@ -2501,15 +2501,21 @@
                                                 <color key="textColor" red="0.18220192190000001" green="0.18219646810000001" blue="0.1821995676" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Oxp-hX-5vJ">
+                                                <rect key="frame" x="342" y="13" width="20" height="20"/>
+                                            </activityIndicatorView>
                                         </subviews>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstItem="fSF-Qp-4EQ" firstAttribute="centerY" secondItem="QrE-ug-05V" secondAttribute="centerY" id="KMw-oa-O6Z"/>
+                                            <constraint firstItem="Oxp-hX-5vJ" firstAttribute="centerY" secondItem="QrE-ug-05V" secondAttribute="centerY" id="SjR-yR-IpC"/>
                                             <constraint firstAttribute="height" constant="45" id="TyB-AT-c0N"/>
                                             <constraint firstItem="fSF-Qp-4EQ" firstAttribute="leading" secondItem="QrE-ug-05V" secondAttribute="leading" constant="15" id="auD-fb-nbt"/>
                                             <constraint firstItem="XZ1-hM-Xzz" firstAttribute="top" secondItem="QrE-ug-05V" secondAttribute="top" id="bJT-x7-huV"/>
                                             <constraint firstItem="XZ1-hM-Xzz" firstAttribute="leading" secondItem="fSF-Qp-4EQ" secondAttribute="trailing" constant="15" id="bLG-S3-7IO"/>
-                                            <constraint firstAttribute="trailing" secondItem="XZ1-hM-Xzz" secondAttribute="trailing" constant="15" id="bVo-rv-SxA"/>
+                                            <constraint firstItem="Oxp-hX-5vJ" firstAttribute="leading" secondItem="XZ1-hM-Xzz" secondAttribute="trailing" priority="250" constant="13" id="bVo-rv-SxA"/>
+                                            <constraint firstItem="Oxp-hX-5vJ" firstAttribute="leading" secondItem="QrE-ug-05V" secondAttribute="trailing" constant="-33" id="gXS-gh-UC3"/>
+                                            <constraint firstAttribute="trailing" secondItem="XZ1-hM-Xzz" secondAttribute="trailing" priority="750" constant="16" id="gxw-q2-8G2"/>
                                             <constraint firstAttribute="bottom" secondItem="XZ1-hM-Xzz" secondAttribute="bottom" id="yNw-db-pI7"/>
                                         </constraints>
                                     </view>
@@ -2856,6 +2862,9 @@
                         <outlet property="paymentMethodLabel" destination="AvW-ih-enk" id="xxl-kp-25a"/>
                         <outlet property="paymentMethodTitleLabel" destination="XKU-uH-msU" id="LJY-Rx-fbC"/>
                         <outlet property="paymentMethodView" destination="FSQ-QJ-mz3" id="pLy-Fb-9Oe"/>
+                        <outlet property="promoCodeActivityIndicator" destination="Oxp-hX-5vJ" id="H5Y-Km-jje"/>
+                        <outlet property="promoCodeLoadingConstraint" destination="bVo-rv-SxA" id="1BZ-OK-cUV"/>
+                        <outlet property="promoCodeNormalConstraint" destination="gxw-q2-8G2" id="uft-kC-yky"/>
                         <outlet property="promoCodeTextField" destination="XZ1-hM-Xzz" id="KrN-em-xvm"/>
                         <outlet property="promoCodeView" destination="QrE-ug-05V" id="z8q-2f-7Rh"/>
                         <outlet property="promoCodeViewHeightConstraint" destination="TyB-AT-c0N" id="13n-35-AHg"/>
