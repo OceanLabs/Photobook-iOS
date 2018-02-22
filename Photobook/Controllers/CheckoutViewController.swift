@@ -185,8 +185,7 @@ class CheckoutViewController: UIViewController {
             self.emptyScreenViewController.hide()
             self.progressOverlayViewController.hide()
             self.promoCodeActivityIndicator.stopAnimating()
-            self.promoCodeAccessoryConstraint.priority = .defaultLow
-            self.promoCodeNormalConstraint.priority = .defaultHigh
+            self.promoCodeTextField.isUserInteractionEnabled = true
             
             self.updateViews()
         }
@@ -328,6 +327,10 @@ class CheckoutViewController: UIViewController {
             promoCodeTextField.attributedPlaceholder = NSAttributedString(string: invalidReason, attributes: [NSAttributedStringKey.foregroundColor: Constants.detailsLabelColorRequired])
             promoCodeTextField.text = nil
             promoCodeTextField.placeholder = invalidReason
+            
+            self.promoCodeClearButton.isHidden = true
+            self.promoCodeAccessoryConstraint.priority = .defaultLow
+            self.promoCodeNormalConstraint.priority = .defaultHigh
         }
     }
     
@@ -357,6 +360,7 @@ class CheckoutViewController: UIViewController {
             promoCodeAccessoryConstraint.priority = .defaultHigh
             promoCodeNormalConstraint.priority = .defaultLow
             promoCodeActivityIndicator.startAnimating()
+            promoCodeTextField.isUserInteractionEnabled = false
             promoCodeClearButton.isHidden = true
             refresh(false)
         }
