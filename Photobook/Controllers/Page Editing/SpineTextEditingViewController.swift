@@ -197,6 +197,10 @@ class SpineTextEditingViewController: UIViewController {
     }
     
     @IBAction func tappedDoneButton(_ sender: UIBarButtonItem) {
+        dismissSpineTextEditing()
+    }
+    
+    private func dismissSpineTextEditing() {
         // Check that the text still fits the bounds
         var attributedString: NSMutableAttributedString? = nil
         if textField.attributedText != nil {
@@ -229,6 +233,11 @@ extension SpineTextEditingViewController: UITextFieldDelegate {
         attributedString.replaceCharacters(in: range, with: string)
 
         return textFitsBounds(attributedString)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        dismissSpineTextEditing()
+        return true
     }
 }
 
