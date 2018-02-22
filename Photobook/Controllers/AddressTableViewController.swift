@@ -63,8 +63,8 @@ class AddressTableViewController: UITableViewController {
         }
     }
     
-    private func check(_ textField: UITextField) -> Bool {
-        if textField.text?.isEmpty ?? true {
+    private func check(_ textField: UITextField) -> Bool {        
+        guard let text = textField.text, !text.isEmpty, text != FormConstants.requiredText else {
             textField.text = FormConstants.requiredText
             textField.textColor = FormConstants.errorColor
             return false

@@ -169,7 +169,7 @@ extension StoriesViewController: StoryTableViewCellDelegate {
     // MARK: StoryTableViewCellDelegate
     
     func didTapOnStory(index: Int, sourceView: UIView?) {
-        guard !stories[index].assets.isEmpty else {
+        guard index < stories.count, !stories[index].assets.isEmpty else {
             // For a moment after the app has resumed, while the stories are reloading, if the user taps on a story just ignore it. It's unlikely to happen anyway, and even if it does, it's not worth trying to handle it gracefully.
             return
         }
