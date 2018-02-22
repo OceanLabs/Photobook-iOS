@@ -39,7 +39,6 @@ class PhotobookPageView: UIView {
             self.addConstraint(aspectRatioConstraint)
         }
     }
-    var imageSize = CGSize(width: Int.max, height: Int.max)
     var isVisible: Bool = false {
         didSet {
             for subview in subviews {
@@ -148,7 +147,7 @@ class PhotobookPageView: UIView {
             return
         }
         
-        asset.image(size: imageSize, completionHandler: { [weak welf = self] (image, _) in
+        asset.image(size: assetContainerView.frame.size, completionHandler: { [weak welf = self] (image, _) in
             guard welf?.pageIndex == index, let image = image else { return }
             welf?.setImage(image: image)
             

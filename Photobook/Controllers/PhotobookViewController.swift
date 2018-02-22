@@ -606,12 +606,12 @@ extension PhotobookViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         // Don't bother calculating the exact size, request a slightly larger size
-        let imageSize = CGSize(width: collectionView.frame.size.width / 2.0, height: collectionView.frame.size.width / 2.0)
+        let width = (collectionView.frame.size.width / 2.0) * UIScreen.main.scale
+        let imageSize = CGSize(width: width, height: width)
         
         switch indexPath.section {
         case 0:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotobookCoverCollectionViewCell.reuseIdentifier, for: indexPath) as! PhotobookCoverCollectionViewCell
-            cell.imageSize = imageSize
             cell.width = (view.bounds.size.width - Constants.cellSideMargin * 2.0) / 2.0
             cell.delegate = self
             cell.loadCoverAndSpine()
@@ -626,7 +626,6 @@ extension PhotobookViewController: UICollectionViewDataSource {
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotobookCollectionViewCell.reuseIdentifier, for: indexPath) as! PhotobookCollectionViewCell
             cell.isVisible = indexPath != interactingItemIndexPath && indexPath != insertingIndexPath
-            cell.imageSize = imageSize
             cell.width = view.bounds.size.width - Constants.cellSideMargin * 2.0
             cell.clipsToBounds = false
             cell.delegate = self
@@ -654,11 +653,6 @@ extension PhotobookViewController: UICollectionViewDataSource {
                 }
                 cell.setupGestures()
                 cell.isPageInteractionEnabled = !isRearranging
-                
-                // Get a larger image if the layout is double width
-                if ProductManager.shared.productLayouts[index].layout.isDoubleLayout {
-                    cell.imageSize = CGSize(width: imageSize.width * 2.0, height: imageSize.height * 2.0)
-                }
                 cell.isFaded = false
             }
             
