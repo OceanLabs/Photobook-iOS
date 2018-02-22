@@ -119,6 +119,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             }
         }
     }
+    
     private var productLayout: ProductLayout!
     private var availableLayouts: [Layout]!
     private var pageSize: CGSize = .zero
@@ -140,6 +141,17 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             return coverFrameView.pageView
         }
     }
+    private var oppositePageView: PhotobookPageView? {
+        switch pageType {
+        case .left:
+            return photobookFrameView.rightPageView
+        case .right:
+            return photobookFrameView.leftPageView
+        default:
+            return nil
+        }
+    }
+    
     private var selectedColor: ProductColor!
     private var pageColor = ProductManager.shared.pageColor
     
@@ -183,6 +195,13 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             pageView.pageIndex = pageIndex
             pageView.productLayout = productLayout
             pageView.setupLayoutBoxes(animated: false)
+            
+            if !isDoublePage && (pageType == .left || pageType == .right) {
+                let oppositeIndex = pageIndex! + (pageType == .left ? 1 : -1)
+                oppositePageView!.pageIndex = oppositeIndex
+                oppositePageView!.productLayout = ProductManager.shared.productLayouts[oppositeIndex]
+                oppositePageView!.setupLayoutBoxes(animated: false)
+            }
 
             hasDoneSetup = true
         }
