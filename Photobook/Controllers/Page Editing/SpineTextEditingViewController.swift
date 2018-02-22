@@ -34,7 +34,6 @@ class SpineTextEditingViewController: UIViewController {
 
     private struct Constants {
         static let textFieldSafetyPadding: CGFloat = 4.0
-        static let textFieldPadding: CGFloat = 16.0
     }
     
     var initialRect: CGRect!
@@ -153,7 +152,7 @@ class SpineTextEditingViewController: UIViewController {
         spineFrameView.color = ProductManager.shared.coverColor
         spineFrameView.resetSpineColor()
         
-        textFieldHeightConstraint.constant = width - Constants.textFieldPadding // since the cover will be on its side
+        textFieldHeightConstraint.constant = width // Since the cover will be on its side
         
         textViewBorderView.alpha = 0.0
         textField.alpha = 0.0
