@@ -22,9 +22,6 @@ class CheckoutViewController: UIViewController {
         static let detailsLabelColor = UIColor.black
         static let detailsLabelColorRequired = UIColor.red.withAlphaComponent(0.6)
         
-        static let titleText = NSLocalizedString("Controllers/CheckoutViewController/titleText",
-                                                                 value: "Payment",
-                                                                 comment: "Title of the checkout/basket screen")
         static let loadingDetailsText = NSLocalizedString("Controllers/CheckoutViewController/EmptyScreenLoadingText",
                                                     value: "Loading price details...",
                                                     comment: "Info text displayed next to a loading indicator while loading price details")
@@ -35,14 +32,14 @@ class CheckoutViewController: UIViewController {
                                                           value: "Required",
                                                           comment: "Hint on empty but required order text fields if user clicks on pay")
         static let payingWithText = NSLocalizedString("Controllers/CheckoutViewController/PaymentMethodText",
-                                                         value: "Paying with",
+                                                         value: "Paying With",
                                                          comment: "Left side of payment method row if a payment method is selected")
         static let paymentMethodText = NSLocalizedString("Controllers/CheckoutViewController/PaymentMethodRequiredText",
                                                                  value: "Payment Method",
                                                                  comment: "Left side of payment method row if required hint is displayed")
-        static let promoPlaceholder = NSLocalizedString("Controllers/CheckoutViewController/PromoPlaceholderText",
-                                                         value: "None",
-                                                         comment: "Promo textfield placeholder")
+        static let promoCodePlaceholderText = NSLocalizedString("Controllers/CheckoutViewController/PromoCodePlaceholderText",
+                                                         value: "Add here",
+                                                         comment: "Placeholder text for promo code")
         static let alertOkText = NSLocalizedString("Controllers/CheckoutViewController/OK",
                                                         value: "OK",
                                                         comment: "OK string for alerts")
@@ -69,6 +66,8 @@ class CheckoutViewController: UIViewController {
     @IBOutlet weak var payButton: UIButton!
     private var applePayButton: PKPaymentButton?
     private var payButtonOriginalColor:UIColor!
+
+    @IBOutlet var promoCodeDismissGestureRecognizer: UITapGestureRecognizer!
     
     @IBOutlet weak var hideDeliveryDetailsConstraint: NSLayoutConstraint!
     @IBOutlet weak var showDeliveryDetailsConstraint: NSLayoutConstraint!
@@ -111,8 +110,6 @@ class CheckoutViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = Constants.titleText
-        
         registerForKeyboardNotifications()
         NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryPreviewImageReady), name: OrderSummaryManager.notificationPreviewImageReady, object: nil)
         
@@ -120,6 +117,8 @@ class CheckoutViewController: UIViewController {
         deliveryDetailsLabel.text = nil
         shippingMethodLabel.text = nil
         paymentMethodLabel.text = nil
+        
+        promoCodeTextField.placeholder = Constants.promoCodePlaceholderText
         
         payButtonOriginalColor = payButton.backgroundColor
         payButton.addTarget(self, action: #selector(CheckoutViewController.payButtonTapped(_:)), for: .touchUpInside)
@@ -374,11 +373,24 @@ class CheckoutViewController: UIViewController {
     
     //MARK: - Actions
     
-    @IBAction public func itemAmountButtonPressed(_ sender: Any) {
+    @IBAction func promoCodeDismissViewTapped(_ sender: Any) {
+        promoCodeTextField.resignFirstResponder()
+        promoCodeDismissGestureRecognizer.isEnabled = false
+        
+        handlePromoCodeChanges()
+        promoCodeTextField.setNeedsLayout()
+        promoCodeTextField.layoutIfNeeded()
+    }
+    
+    @IBAction func promoCodeViewTapped(_ sender: Any) {
+        promoCodeTextField.becomeFirstResponder()
+    }
+    
+    @IBAction public func itemAmountButtonTapped(_ sender: Any) {
         presentAmountPicker()
     }
     
-    @IBAction func promoCodeClearButtonPressed(_ sender: Any) {
+    @IBAction func promoCodeClearButtonTapped(_ sender: Any) {
         promoCodeTextField.text = ""
         handlePromoCodeChanges()
     }
@@ -504,8 +516,10 @@ class CheckoutViewController: UIViewController {
 extension CheckoutViewController: UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        promoCodeDismissGestureRecognizer.isEnabled = true
+        
         previousPromoText = textField.text
-        promoCodeTextField.placeholder = Constants.promoPlaceholder
+        promoCodeTextField.placeholder = Constants.promoCodePlaceholderText
         //display delete button
         promoCodeClearButton.isHidden = false
         promoCodeAccessoryConstraint.priority = .defaultHigh
@@ -517,11 +531,14 @@ extension CheckoutViewController: UITextFieldDelegate {
         return true
     }
     
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        promoCodeDismissGestureRecognizer.isEnabled = false
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         
         handlePromoCodeChanges()
-        
         textField.setNeedsLayout()
         textField.layoutIfNeeded()
         

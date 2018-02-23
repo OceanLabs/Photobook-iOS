@@ -18,7 +18,6 @@ class OrderSummaryViewController: UIViewController {
         static let stringLoading = NSLocalizedString("OrderSummary/Loading", value: "Loading order details", comment: "Loading product summary")
         static let stringLoadingFail = NSLocalizedString("OrderSummary/LoadingFail", value: "Couldn't load order details", comment: "When loading order details fails")
         static let stringLoadingRetry = NSLocalizedString("OrderSummary/LoadingFailRetry", value: "Retry", comment: "Retry button title when loading order details fails")
-        static let stringTitle = NSLocalizedString("OrderSummary/Title", value: "Your order", comment: "Title of the screen that displays order details and upsell options")
     }
     
     @IBOutlet weak var tableView: UITableView!
@@ -43,8 +42,6 @@ class OrderSummaryViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryManagerDidUpdateSummary), name: OrderSummaryManager.notificationDidUpdateSummary, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryManagerPreviewImageReady), name: OrderSummaryManager.notificationPreviewImageReady, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryManagerPreviewImageFailed), name: OrderSummaryManager.notificationPreviewImageFailed, object: nil)
-        
-        self.title = Constants.stringTitle
         
         emptyScreenViewController.show(message: Constants.stringLoading, activity: true)
         
