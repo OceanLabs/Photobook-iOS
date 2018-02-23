@@ -23,9 +23,14 @@ import Foundation
     
     private func paragraphStyle(isSpineText: Bool) -> NSParagraphStyle {
         let paragraphStyle = NSMutableParagraphStyle()
-        if !isSpineText {
-            paragraphStyle.lineHeightMultiple = 1.2
-        } else {
+
+        switch self {
+        case .plain: paragraphStyle.lineHeightMultiple = 1.25
+        case .classic: paragraphStyle.lineHeightMultiple = 1.27
+        case .solid: paragraphStyle.lineHeightMultiple = 1.23
+        }
+        
+        if isSpineText {
             paragraphStyle.alignment = .center
         }
 
@@ -34,9 +39,9 @@ import Foundation
     
     private func photobookFontSize(isSpineText: Bool) -> CGFloat {
         switch self {
-        case .plain: return isSpineText ? 8.0 : 14.0
-        case .classic: return isSpineText ? 11.0 : 14.0
-        case .solid: return isSpineText ? 13.0 : 16.0
+        case .plain: return 8.0
+        case .classic: return 11.0
+        case .solid: return 13.0
         }
     }
     
@@ -56,6 +61,6 @@ import Foundation
     
     func sizeForScreenHeight(_ screenHeight: CGFloat, isSpineText: Bool = false) -> CGFloat {
         let photobookToOnScreenScale = screenHeight / ProductManager.shared.product!.pageHeight
-        return round(self.photobookFontSize(isSpineText: isSpineText) * photobookToOnScreenScale)
+        return photobookFontSize(isSpineText: isSpineText) * photobookToOnScreenScale
     }
 }
