@@ -116,13 +116,13 @@ class CheckoutViewController: UIViewController {
         registerForKeyboardNotifications()
         NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryPreviewImageReady), name: OrderSummaryManager.notificationPreviewImageReady, object: nil)
         
-        payButtonOriginalColor = payButton.backgroundColor
-        payButton.addTarget(self, action: #selector(CheckoutViewController.payButtonTapped(_:)), for: .touchUpInside)
-        
         //clear fields
         deliveryDetailsLabel.text = nil
         shippingMethodLabel.text = nil
         paymentMethodLabel.text = nil
+        
+        payButtonOriginalColor = payButton.backgroundColor
+        payButton.addTarget(self, action: #selector(CheckoutViewController.payButtonTapped(_:)), for: .touchUpInside)
         
         //APPLE PAY
         if Stripe.deviceSupportsApplePay() {

@@ -82,10 +82,10 @@ class OrderSummaryManager {
             let imageUrl = summary.previewImageUrl(withCoverImageUrl: coverImageUrl, size: size) {
             APIClient.shared.get(context: .none, endpoint: imageUrl.absoluteString, parameters: nil, completion: { (data, error) in
                 let image = data as? UIImage
-                DispatchQueue.main.async { completion(image) }
+                completion(image)
             })
         } else {
-            DispatchQueue.main.async { completion(nil) }
+            completion(nil)
         }
     }
     
@@ -131,7 +131,7 @@ class OrderSummaryManager {
             
             guard let dictionary = json as? [String:AnyObject], let url = dictionary["full"] as? String else {
                 print("OrderSummaryManager: Couldn't parse URL of uploaded image")
-                DispatchQueue.main.async { NotificationCenter.default.post(name: OrderSummaryManager.notificationPreviewImageFailed, object: self) }
+                NotificationCenter.default.post(name: OrderSummaryManager.notificationPreviewImageFailed, object: self)
                 return
             }
             
