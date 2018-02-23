@@ -569,8 +569,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 let cell = cell as? PhotobookCollectionViewCell
                 else { continue }
 
-            let rightIndex = productLayoutIndex < ProductManager.shared.productLayouts.count - 1 ? productLayoutIndex + 1 : nil
-            cell.loadPages(leftIndex: productLayoutIndex, rightIndex: rightIndex)
+            if ProductManager.shared.productLayouts[productLayoutIndex].layout.isDoubleLayout {
+                cell.loadPages(leftIndex: productLayoutIndex, rightIndex: productLayoutIndex)
+            } else {
+                let rightIndex = productLayoutIndex < ProductManager.shared.productLayouts.count - 1 ? productLayoutIndex + 1 : nil
+                cell.loadPages(leftIndex: productLayoutIndex, rightIndex: rightIndex)
+            }
         }
     }
     
