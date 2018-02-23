@@ -478,7 +478,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         if destinationIndexPath != sourceIndexPath,
             let sourceProductLayoutIndex = ProductManager.shared.productLayoutIndex(for: sourceIndexPath.item) {
             
-            var sourceProductLayout = ProductManager.shared.productLayouts[sourceProductLayoutIndex]
+            let sourceProductLayout = ProductManager.shared.productLayouts[sourceProductLayoutIndex]
             
             // Because we show a placeholder graphic where the drop proposal is, we get the destination index from the previous page
             let previousIndexPath = IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 1), section: destinationIndexPath.section)
@@ -503,7 +503,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 
             }
             else {
-                sourceProductLayout = ProductManager.shared.productLayouts[sourceProductLayoutIndex]
                 if sourceProductLayout.layout.isDoubleLayout {
                     ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
                 } else {
