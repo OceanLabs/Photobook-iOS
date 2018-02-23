@@ -476,7 +476,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         })
         
         if destinationIndexPath != sourceIndexPath,
-            var sourceProductLayoutIndex = ProductManager.shared.productLayoutIndex(for: sourceIndexPath.item + (movingDown ? 0 : -1)) {
+            var sourceProductLayoutIndex = ProductManager.shared.productLayoutIndex(for: sourceIndexPath.item) {
             
             var sourceProductLayout = ProductManager.shared.productLayouts[sourceProductLayoutIndex]
             
@@ -503,13 +503,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 
             }
             else {
-                if let previousCellIndex = previousCell?.leftIndex, ProductManager.shared.productLayouts[previousCellIndex].layout.isDoubleLayout {
-                    sourceProductLayoutIndex += 1
-                }
-                else {
-                    sourceProductLayoutIndex += 2
-                }
-                
                 sourceProductLayout = ProductManager.shared.productLayouts[sourceProductLayoutIndex]
                 if sourceProductLayout.layout.isDoubleLayout && destinationProductLayout.layout.isDoubleLayout {
                     ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
@@ -517,7 +510,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                     ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
                 } else if destinationProductLayout.layout.isDoubleLayout {
                     ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
-                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
+                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex + 1, to: destinationProductLayoutIndex + 1)
                 } else {
                     ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
                     ProductManager.shared.moveLayout(at: sourceProductLayoutIndex + 1, to: destinationProductLayoutIndex + 1)
