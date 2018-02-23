@@ -126,6 +126,7 @@ class PhotosAsset: Asset {
         let assetId = try values.decode(String.self, forKey: .identifier)
         if let asset = PHAsset.fetchAssets(withLocalIdentifiers: [assetId], options: nil).firstObject {
             photosAsset = asset
+            identifier = assetId
         }
         else {
             throw AssetLoadingException.notFound
