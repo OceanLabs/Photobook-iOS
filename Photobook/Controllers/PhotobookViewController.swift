@@ -504,7 +504,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             }
             else {
                 sourceProductLayout = ProductManager.shared.productLayouts[sourceProductLayoutIndex]
-                if sourceProductLayout.layout.isDoubleLayout || (sourceProductLayout.layout.isDoubleLayout && destinationProductLayout.layout.isDoubleLayout) {
+                if sourceProductLayout.layout.isDoubleLayout {
                     ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
                 } else {
                     ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
