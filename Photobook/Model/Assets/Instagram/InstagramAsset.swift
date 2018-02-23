@@ -43,8 +43,11 @@ class InstagramAsset: Asset {
     
     func image(size: CGSize, loadThumbnailsFirst: Bool, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
         
+        // Convert points to pixels
+        let imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())
+        
         // Ignore loadThumbnailsFirst. Since we are doing a network request for both thumnbails and the full resolution, there's no benefit to getting the thumbnail first
-        let url = size.width <= Constants.instagramThumbnailWidth ? thumbnailUrl : standardResolutionUrl
+        let url = imageSize.width <= Constants.instagramThumbnailWidth ? thumbnailUrl : standardResolutionUrl
         
         SDWebImageManager.shared().loadImage(with: url, options: [], progress: nil, completed: { image, _, error, _, _, _ in
             DispatchQueue.main.async {

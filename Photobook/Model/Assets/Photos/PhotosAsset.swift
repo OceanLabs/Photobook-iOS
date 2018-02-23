@@ -67,6 +67,7 @@ class PhotosAsset: Asset {
         options.deliveryMode = loadThumbnailsFirst ? .opportunistic : .highQualityFormat
         options.isNetworkAccessAllowed = true
         
+        // Convert points to pixels
         let imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())
         PHImageManager.default().requestImage(for: photosAsset, targetSize: imageSize, contentMode: .aspectFill, options: options) { (image, _) in
             DispatchQueue.main.async {
@@ -125,6 +126,7 @@ class PhotosAsset: Asset {
         let assetId = try values.decode(String.self, forKey: .identifier)
         if let asset = PHAsset.fetchAssets(withLocalIdentifiers: [assetId], options: nil).firstObject {
             photosAsset = asset
+            identifier = assetId
         }
         else {
             throw AssetLoadingException.notFound
