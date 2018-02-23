@@ -2678,6 +2678,7 @@
                                             <constraint firstItem="vdH-53-tRh" firstAttribute="top" secondItem="FSQ-QJ-mz3" secondAttribute="top" id="s8f-Rj-hkp"/>
                                             <constraint firstItem="d2G-D9-1PL" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="XKU-uH-msU" secondAttribute="trailing" constant="10" id="wyb-sd-evR"/>
                                             <constraint firstItem="AvW-ih-enk" firstAttribute="centerY" secondItem="FSQ-QJ-mz3" secondAttribute="centerY" id="xTB-5H-acE"/>
+                                            <constraint firstItem="AvW-ih-enk" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="XKU-uH-msU" secondAttribute="trailing" constant="5" id="zTh-ST-Uiy"/>
                                         </constraints>
                                         <connections>
                                             <outletCollection property="gestureRecognizers" destination="cId-PD-G2W" appends="YES" id="DtU-aS-ql7"/>
@@ -2830,6 +2831,7 @@
                                     <constraint firstItem="ATQ-7e-lXt" firstAttribute="height" secondItem="SvK-He-g1Z" secondAttribute="height" id="E1f-1p-mBf"/>
                                     <constraint firstAttribute="trailing" secondItem="T6M-C9-pKv" secondAttribute="trailing" constant="15" id="Mjl-0F-vJE"/>
                                     <constraint firstItem="ATQ-7e-lXt" firstAttribute="top" secondItem="SvK-He-g1Z" secondAttribute="top" id="Stk-XX-Ycr"/>
+                                    <constraint firstItem="T6M-C9-pKv" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ekw-fg-lyA" secondAttribute="trailing" constant="5" id="Xn0-VO-EgT"/>
                                     <constraint firstItem="ATQ-7e-lXt" firstAttribute="leading" secondItem="SvK-He-g1Z" secondAttribute="leading" id="aou-2s-CYG"/>
                                     <constraint firstItem="ekw-fg-lyA" firstAttribute="top" secondItem="SvK-He-g1Z" secondAttribute="top" constant="10" id="eal-eF-cD5"/>
                                     <constraint firstAttribute="bottom" secondItem="hoc-bX-veU" secondAttribute="bottom" id="g9W-f5-oVl"/>
@@ -3859,16 +3861,13 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dej-Vr-jGL">
-                                                    <rect key="frame" x="15" y="10" width="265" height="21"/>
+                                                    <rect key="frame" x="15" y="10" width="270" height="21"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="£XX.XX" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IKR-2j-7EN">
-                                                    <rect key="frame" x="290" y="10" width="70" height="21"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="70" id="Jdh-3M-Ql7"/>
-                                                    </constraints>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="251" text="£XX.XX" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IKR-2j-7EN">
+                                                    <rect key="frame" x="295" y="10" width="65" height="21"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
