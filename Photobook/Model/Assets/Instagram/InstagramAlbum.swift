@@ -68,22 +68,34 @@ class InstagramAlbum {
             var newAssets = [Asset]()
             
             for d in data {
-                guard let images = d["images"] as? [String : Any],
-                    let thumbnailImage = images["thumbnail"] as? [String : Any],
-                    let thumbnailResolutionImageUrlString = thumbnailImage["url"] as? String,
-                    let thumbnailResolutionImageUrl = URL(string: thumbnailResolutionImageUrlString),
-                    
-                    let standardResolutionImage = images["standard_resolution"] as? [String : Any],
-                    let standardResolutionImageUrlString = standardResolutionImage["url"] as? String,
-                    let standardResolutionImageUrl = URL(string: standardResolutionImageUrlString),
-                    
-                    let width = standardResolutionImage["width"] as? Int,
-                    let height = standardResolutionImage["height"] as? Int,
-                    
-                    let identifier = d["id"] as? String
-                    else { continue }
                 
-                newAssets.append(InstagramAsset(thumbnailUrl: thumbnailResolutionImageUrl, standardResolutionUrl: standardResolutionImageUrl, albumIdentifier: self.identifier, size: CGSize(width: width, height: height), identifier: identifier))
+                var media = [[String : Any]]()
+                if let array = d["carousel_media"] as? [[String : Any]] {
+                    for imagesDict in array {
+                        guard let images = imagesDict["images"] as? [String : Any] else { continue}
+                        media.append(images)
+                    }
+                } else if let images = d["images"] as? [String : Any] {
+                    media.append(images)
+                }
+                
+                for images in media {
+                    guard let thumbnailImage = images["thumbnail"] as? [String : Any],
+                        let thumbnailResolutionImageUrlString = thumbnailImage["url"] as? String,
+                        let thumbnailResolutionImageUrl = URL(string: thumbnailResolutionImageUrlString),
+                        
+                        let standardResolutionImage = images["standard_resolution"] as? [String : Any],
+                        let standardResolutionImageUrlString = standardResolutionImage["url"] as? String,
+                        let standardResolutionImageUrl = URL(string: standardResolutionImageUrlString),
+                        
+                        let width = standardResolutionImage["width"] as? Int,
+                        let height = standardResolutionImage["height"] as? Int,
+                        
+                        let identifier = d["id"] as? String
+                        else { continue }
+                    
+                    newAssets.append(InstagramAsset(thumbnailUrl: thumbnailResolutionImageUrl, standardResolutionUrl: standardResolutionImageUrl, albumIdentifier: self.identifier, size: CGSize(width: width, height: height), identifier: identifier))
+                }
             }
             
             self.assets.append(contentsOf: newAssets)
