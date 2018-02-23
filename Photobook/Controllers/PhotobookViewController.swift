@@ -568,7 +568,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         if #available(iOS 11.0, *) {
             modalNavigationController.navigationBar.prefersLargeTitles = false
         }
+        modalNavigationController.modalPresentationStyle = .overFullScreen
         modalNavigationController.viewControllers = [ pageSetupViewController ]
+        
+        UIView.animate(withDuration: 0.1) {
+            self.navigationController!.navigationBar.alpha = 0.0
+        }
         
         present(modalNavigationController, animated: false) {
             let containerRect = pageSetupViewController.view.convert(frame, from: containerView)
@@ -681,7 +686,7 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
             return CGSize(width: collectionView.bounds.width, height: Constants.proposalCellHeight)
         }
 
-        let pageWidth = ceil((view.bounds.width - Constants.cellSideMargin * 2.0 - PhotobookConstants.horizontalPageToCoverMargin * 2.0 - PhotobookConstants.pageDividerWidth) / 2.0)
+        let pageWidth = ceil((view.bounds.width - Constants.cellSideMargin * 2.0 - PhotobookConstants.horizontalPageToCoverMargin * 2.0) / 2.0)
         let pageHeight = ceil(pageWidth / product.aspectRatio)
 
         // PhotoboookCollectionViewCell works when the collectionView uses dynamic heights by setting up the aspect ratio of its pages.
@@ -748,6 +753,8 @@ extension PhotobookViewController: PageSetupDelegate {
             collectionView.reloadData()
         }
 
+        navigationController!.navigationBar.alpha = 1.0
+        
         dismiss(animated: false) {
             // TODO
         }

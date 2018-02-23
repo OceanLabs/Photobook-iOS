@@ -194,23 +194,53 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             pageView.pageIndex = pageIndex
             pageView.productLayout = productLayout
-            pageView.setupLayoutBoxes(animated: false)
+            pageView.setupImageBox(with: nil, animated: false)
+            pageView.setupTextBox(mode: .userTextOnly)
             
             if !isDoublePage && (pageType == .left || pageType == .right) {
                 let oppositeIndex = pageIndex! + (pageType == .left ? 1 : -1)
                 oppositePageView!.pageIndex = oppositeIndex
                 oppositePageView!.productLayout = ProductManager.shared.productLayouts[oppositeIndex]
-                oppositePageView!.setupLayoutBoxes(animated: false)
+                oppositePageView!.setupImageBox(with: nil, animated: false)
+                oppositePageView!.setupTextBox(mode: .userTextOnly)
             }
 
             hasDoneSetup = true
+            
+            
+            
+            
+            storyboardBackgroundColor = view.backgroundColor
+            view.backgroundColor = .clear
+            assetSelectionContainerView.alpha = 0.0
+            photobookContainerView.alpha = 0.0
+            toolbar.alpha = 0.0
         }
     }
     
+    private lazy var animatableAssetImageView = UIImageView()
+    private var storyboardBackgroundColor: UIColor!
+    
     func animateFromPhotobook(frame: CGRect) {
-        let testView = UIView(frame: frame)
-        testView.backgroundColor = .red
-        view.addSubview(testView)
+        animatableAssetImageView.transform = .identity
+        animatableAssetImageView.frame = photobookFrameView.frame
+        animatableAssetImageView.image = photobookFrameView.snapshot()
+        animatableAssetImageView.center = CGPoint(x: frame.midX, y: frame.midY)
+
+        let initialScale = frame.width / photobookFrameView.bounds.width
+        animatableAssetImageView.transform = CGAffineTransform.identity.scaledBy(x: initialScale, y: initialScale)
+
+        view.addSubview(animatableAssetImageView)
+        
+        UIView.animate(withDuration: 0.16) {
+            self.view.backgroundColor = self.storyboardBackgroundColor
+        }
+        
+        UIView.animateKeyframes(withDuration: 0.3, delay: 0.0, options: [ .calculationModeCubicPaced ], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1.0, animations: {
+                self.animatableAssetImageView.frame = self.photobookFrameView.frame
+            })
+        }, completion: nil)
     }
     
     deinit {
