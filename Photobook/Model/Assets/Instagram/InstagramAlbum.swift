@@ -16,6 +16,7 @@ class InstagramAlbum {
         static let instagramMediaBaseUrl = "https://api.instagram.com/v1/users/self/media/recent"
         static let serviceName = "Instagram"
         static let genericErrorMessage = NSLocalizedString("Social/AccessError", value: "There was an error when trying to access \(serviceName)", comment: "Generic error when trying to access a social service eg Instagram/Facebook")
+        static let pageSize = 100
     }
     
     var assets = [Asset]()
@@ -44,7 +45,7 @@ class InstagramAlbum {
         if !urlToLoad.contains("access_token") {
             urlToLoad = "\(urlToLoad)?access_token=\(token)"
         }
-        urlToLoad = "\(urlToLoad)&count=100"
+        urlToLoad = "\(urlToLoad)&count=\(Constants.pageSize)"
         
         instagramClient.startAuthorizedRequest(urlToLoad, method: .GET, parameters: [:], onTokenRenewal: { credential in
             KeychainSwift().set(credential.oauthToken, forKey: OAuth2Swift.Constants.keychainInstagramTokenKey)
