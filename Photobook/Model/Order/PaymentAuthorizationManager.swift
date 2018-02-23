@@ -85,10 +85,8 @@ class PaymentAuthorizationManager: NSObject {
     /// Present the Apple Pay authorization sheet
     ///
     /// - Parameter cost: The total cost of the order
-    private func authorizeApplePay(cost: Cost){
-        guard let currencyCode = OrderManager.shared.currencyCode else { return }
-        
-        let paymentRequest = Stripe.paymentRequest(withMerchantIdentifier: applePayMerchantId, country: "US", currency: currencyCode)
+    private func authorizeApplePay(cost: Cost) {
+        let paymentRequest = Stripe.paymentRequest(withMerchantIdentifier: applePayMerchantId, country: "US", currency: OrderManager.shared.currencyCode)
         
         paymentRequest.paymentSummaryItems = cost.summaryItemsForApplePay(payTo: applePayPayTo, shippingMethodId: OrderManager.shared.shippingMethod!)
         paymentRequest.requiredShippingAddressFields = [.postalAddress, .name, .email, .phone]
@@ -112,7 +110,6 @@ class PaymentAuthorizationManager: NSObject {
         let address = details?.address
 
         guard let totalCost = cost.shippingMethod(id: OrderManager.shared.shippingMethod)?.totalCost,
-            let currencyCode = OrderManager.shared.currencyCode,
             let firstName = details?.firstName,
             let lastName = details?.lastName,
             let line1 = address?.line1,
@@ -123,7 +120,7 @@ class PaymentAuthorizationManager: NSObject {
             else { return }
 
         let paypalAddress = PayPalShippingAddress(recipientName: String(format: "%@ %@", firstName, lastName), withLine1: line1, withLine2: address?.line2 ?? "", withCity: city, withState: address?.stateOrCounty ?? "", withPostalCode: postalCode, withCountryCode: country.codeAlpha2)
-        let payment = PayPalPayment(amount: totalCost as NSDecimalNumber, currencyCode: currencyCode, shortDescription: product.name, intent: .authorize)
+        let payment = PayPalPayment(amount: totalCost as NSDecimalNumber, currencyCode: OrderManager.shared.currencyCode, shortDescription: product.name, intent: .authorize)
         payment.shippingAddress = paypalAddress
 
         let config = PayPalConfiguration()

@@ -64,7 +64,7 @@ extension Card {
     
     var cardIcon: UIImage {
         guard let cardType = number.cardType() else {
-            return UIImage(named: "add-payment")!
+            return UIImage(named: "generic-card")!
         }
         
         switch cardType {
