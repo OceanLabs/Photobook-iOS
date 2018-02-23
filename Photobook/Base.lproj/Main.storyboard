@@ -5124,7 +5124,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mwj-KF-u0a">
-                                <rect key="frame" x="14.5" y="209.5" width="347" height="132"/>
+                                <rect key="frame" x="16.5" y="215.5" width="343" height="120"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -5161,8 +5161,8 @@ Copyright © 2018 Kite. All right reserverd.</string>
                             <constraint firstItem="Puf-aO-D14" firstAttribute="leading" secondItem="ftA-yg-YCE" secondAttribute="leading" constant="26" id="OPw-Kk-Sl1"/>
                             <constraint firstItem="kNP-gA-dkt" firstAttribute="centerY" secondItem="Puf-aO-D14" secondAttribute="centerY" id="TB7-dM-Ubm"/>
                             <constraint firstItem="kNP-gA-dkt" firstAttribute="top" secondItem="ftA-yg-YCE" secondAttribute="top" id="URc-tV-2HB"/>
-                            <constraint firstItem="Mwj-KF-u0a" firstAttribute="width" secondItem="Puf-aO-D14" secondAttribute="width" constant="24" id="ctY-qB-ozb"/>
-                            <constraint firstItem="Mwj-KF-u0a" firstAttribute="height" secondItem="Puf-aO-D14" secondAttribute="height" constant="32" id="dmT-vo-QD2"/>
+                            <constraint firstItem="Mwj-KF-u0a" firstAttribute="width" secondItem="Puf-aO-D14" secondAttribute="width" constant="20" id="ctY-qB-ozb"/>
+                            <constraint firstItem="Mwj-KF-u0a" firstAttribute="height" secondItem="Puf-aO-D14" secondAttribute="height" constant="20" id="dmT-vo-QD2"/>
                             <constraint firstItem="ftA-yg-YCE" firstAttribute="trailing" secondItem="kNP-gA-dkt" secondAttribute="trailing" id="kco-Oh-2eb"/>
                             <constraint firstItem="Puf-aO-D14" firstAttribute="centerX" secondItem="Mwj-KF-u0a" secondAttribute="centerX" id="qA2-Me-ikw"/>
                             <constraint firstItem="kNP-gA-dkt" firstAttribute="leading" secondItem="ftA-yg-YCE" secondAttribute="leading" id="tCb-Ka-hew"/>

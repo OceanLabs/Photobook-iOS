@@ -17,6 +17,7 @@ class OrderManager {
     var paymentMethod: PaymentMethod?
     var itemCount: Int = 1
     var promoCode: String?
+    var photobookId: String?
     
     var cachedCost: Cost?
     var validCost: Cost? {
