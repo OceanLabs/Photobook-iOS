@@ -207,6 +207,12 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
     }
     
+    func animateFromPhotobook(frame: CGRect) {
+        let testView = UIView(frame: frame)
+        testView.backgroundColor = .red
+        view.addSubview(testView)
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }

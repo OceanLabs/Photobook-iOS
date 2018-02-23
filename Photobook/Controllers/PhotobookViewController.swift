@@ -555,13 +555,25 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
     }
     
-    func editPage(at index: Int) {
+    private func editPage(at index: Int, frame: CGRect, containerView: UIView) {
         let pageSetupViewController = storyboard?.instantiateViewController(withIdentifier: "PageSetupViewController") as! PageSetupViewController
         pageSetupViewController.selectedAssetsManager = selectedAssetsManager
         pageSetupViewController.pageIndex = index
-        pageSetupViewController.delegate = self
         pageSetupViewController.albumForPicker = albumForEditingPicker
-        navigationController?.pushViewController(pageSetupViewController, animated: true)
+        pageSetupViewController.delegate = self
+        
+        // TODO: Move to storyboard
+        let modalNavigationController = UINavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
+        (modalNavigationController.navigationBar as! PhotobookNavigationBar).setBarType(.clear)
+        if #available(iOS 11.0, *) {
+            modalNavigationController.navigationBar.prefersLargeTitles = false
+        }
+        modalNavigationController.viewControllers = [ pageSetupViewController ]
+        
+        present(modalNavigationController, animated: false) {
+            let containerRect = pageSetupViewController.view.convert(frame, from: containerView)
+            pageSetupViewController.animateFromPhotobook(frame: containerRect)
+        }
     }
 }
 
@@ -699,8 +711,8 @@ extension PhotobookViewController: PhotobookCoverCollectionViewCellDelegate {
         navigationController?.present(spineTextEditingNavigationController, animated: false, completion: nil)
     }
     
-    func didTapOnCover() {
-        editPage(at: 0)
+    func didTapOnCover(with frame: CGRect, in containerView: UIView) {
+        editPage(at: 0, frame: frame, containerView: containerView)
     }
 }
 
@@ -719,7 +731,7 @@ extension PhotobookViewController: PageSetupDelegate {
                         if pageType == .left {
                             ProductManager.shared.deletePage(at: index + 1)
                         } else if pageType == .right {
-                            ProductManager.shared.deletePage(at: index - 1)                        
+                            ProductManager.shared.deletePage(at: index - 1)
                         }
                     } else {
                         ProductManager.shared.addPage(at: index + 1)
@@ -735,15 +747,18 @@ extension PhotobookViewController: PageSetupDelegate {
             }
             collectionView.reloadData()
         }
-        navigationController?.popViewController(animated: true)
+
+        dismiss(animated: false) {
+            // TODO
+        }
     }
 }
 
 extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
     // MARK: PhotobookCollectionViewCellDelegate
     
-    func didTapOnPage(at index: Int) {
-        editPage(at: index)
+    func didTapOnPage(at index: Int, frame: CGRect, in containerView: UIView) {
+        editPage(at: index, frame: frame, containerView: containerView)
     }
 
     func didLongPress(_ sender: UILongPressGestureRecognizer) {
