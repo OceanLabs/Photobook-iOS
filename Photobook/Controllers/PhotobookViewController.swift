@@ -605,10 +605,6 @@ extension PhotobookViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        // Don't bother calculating the exact size, request a slightly larger size
-        let width = (collectionView.frame.size.width / 2.0) * UIScreen.main.scale
-        let imageSize = CGSize(width: width, height: width)
-        
         switch indexPath.section {
         case 0:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotobookCoverCollectionViewCell.reuseIdentifier, for: indexPath) as! PhotobookCoverCollectionViewCell
