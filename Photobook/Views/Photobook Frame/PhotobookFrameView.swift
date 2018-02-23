@@ -16,9 +16,8 @@ struct PhotobookConstants {
     static let cornerRadius: CGFloat = 1.0
     static let borderWidth: CGFloat = 0.5
     
-    static let horizontalPageToCoverMargin: CGFloat = 20.0
+    static let horizontalPageToCoverMargin: CGFloat = 16.0 //20.0
     static let verticalPageToCoverMargin: CGFloat = 5.0
-    static let pageDividerWidth: CGFloat = 1.0
 }
 
 fileprivate struct ColorConstants {
@@ -50,7 +49,7 @@ class PhotobookFrameView: UIView {
     @IBOutlet private weak var coverInsideImageView: UIImageView! { didSet { coverInsideImageView.backgroundColor = PhotobookFrameView.insideColor } }
     @IBOutlet private weak var spreadBackgroundView: PhotobookFrameSpreadBackgroundView!
     @IBOutlet private weak var leftPagesBehindView: PhotobookFramePagesBehindView? { didSet { leftPagesBehindView!.pageSide = .left } }
-    @IBOutlet private weak var rightPagesBehindView: PhotobookFramePagesBehindView? { didSet { rightPagesBehindView!.pageSide = .left } }
+    @IBOutlet private weak var rightPagesBehindView: PhotobookFramePagesBehindView? { didSet { rightPagesBehindView!.pageSide = .right } }
     @IBOutlet private weak var leftPageBackgroundView: PhotobookFramePageBackgroundView! { didSet { leftPageBackgroundView.pageSide = .left } }
     @IBOutlet private weak var rightPageBackgroundView: PhotobookFramePageBackgroundView! { didSet { rightPageBackgroundView.pageSide = .right } }
     @IBOutlet private weak var pageDividerView: PhotobookFramePageDividerView!
@@ -318,17 +317,22 @@ class PhotobookFramePagesBehindView: UIView {
         }
         context.fill(rect)
         
-        var coordX: CGFloat = 0.5
-        
         // Pages behind
         context.setStrokeColor(pagesEffectColor)
-        context.setLineWidth(1.0)
-        while coordX < rect.maxX {
+        context.setLineWidth(0.5)
+        
+        var coordX: CGFloat = pageSide == .right ? 0.5 : rect.maxX - 0.5
+        let step: CGFloat = (pageSide == .right ? 1.0 : -1.0) * max((rect.maxX - 1.0) / 5.0, 1.5)
+        
+        let numberOfLines = 5
+        for _ in 0 ..< numberOfLines {
             context.move(to: CGPoint(x: coordX, y: 0.0))
             context.addLine(to: CGPoint(x: coordX, y: rect.maxY))
-            coordX = coordX + 2.5
+            
+            coordX += step
         }
-        context.strokePath()        
+        
+        context.strokePath()
     }
 }
 
