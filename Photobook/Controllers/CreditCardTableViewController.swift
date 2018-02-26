@@ -123,7 +123,7 @@ class CreditCardTableViewController: UITableViewController {
         }
         
         var cvvIsValid = false
-        if cvvTextField.text?.isEmpty ?? true {
+        if cvvTextField.text?.isEmpty ?? true || cvvTextField.text == FormConstants.requiredText {
             let cell = (tableView.cellForRow(at: IndexPath(row: Constants.cvvRow, section: 0)) as! UserInputTableViewCell)
             cell.textField.text = FormConstants.requiredText
             cell.textField.textColor = FormConstants.errorColor
