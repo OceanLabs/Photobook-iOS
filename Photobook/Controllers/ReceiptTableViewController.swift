@@ -32,6 +32,7 @@ class ReceiptTableViewController: UITableViewController {
 
     @IBAction private func continueTapped(_ sender: UIBarButtonItem) {
         ProductManager.shared.reset()
+        OrderManager.shared.reset()
         NotificationCenter.default.post(name: ReceiptNotificationName.receiptWillDismiss, object: nil)
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         navigationController?.popToRootViewController(animated: true)

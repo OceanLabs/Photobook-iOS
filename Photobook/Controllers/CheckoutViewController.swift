@@ -383,12 +383,10 @@ class CheckoutViewController: UIViewController {
     
     private func showReceipt() {
         if self.presentedViewController == nil{
-            OrderManager.shared.reset()
             self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
         }
         else {
             self.dismiss(animated: true, completion: {
-                OrderManager.shared.reset()
                 self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
             })
         }
@@ -501,11 +499,21 @@ class CheckoutViewController: UIViewController {
     }
     
     private func submitOrder(completionHandler: ((_ status: PKPaymentAuthorizationStatus) -> Void)?) {
-        completionHandler?(.success)
-        
-        // It's possible that we are done submitting the order before the Apple Pay (or other) modal has dismissed, so wait for that to finish.
-        modalPresentationDismissedGroup.notify(queue: DispatchQueue.main, execute: { [weak welf = self] in
-            welf?.showReceipt()
+        OrderManager.shared.submitOrder(completionHandler: { [weak welf = self] error in
+            guard error == nil else {
+                completionHandler?(.failure)
+                
+                // TODO: show error
+                
+                return
+            }
+            
+            completionHandler?(.success)
+            
+            // It's possible that we are done submitting the order before the Apple Pay (or other) modal has dismissed, so wait for that to finish.
+            welf?.modalPresentationDismissedGroup.notify(queue: DispatchQueue.main, execute: {
+                welf?.showReceipt()
+            })
         })
     }
 }

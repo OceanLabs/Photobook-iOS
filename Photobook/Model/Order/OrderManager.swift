@@ -18,11 +18,13 @@ class OrderManager {
     var itemCount: Int = 1
     var promoCode: String?
     var photobookId: String?
+    var orderId: String?
     
     var cachedCost: Cost?
     var validCost: Cost? {
         return hasValidCachedCost ? cachedCost : nil
     }
+    
     func updateCost(forceUpdate: Bool = false, _ completionHandler: @escaping (_ error : Error?) -> Void) {
         
         // TODO: REMOVEME. Mock cost & shipping methods
@@ -44,6 +46,7 @@ class OrderManager {
             completionHandler(nil)
         }
     }
+    
     var hasValidCachedCost: Bool {
         // TODO: validate
         //        return cachedCost?.orderHash == self.hashValue
@@ -73,6 +76,42 @@ class OrderManager {
         itemCount = 1
         promoCode = nil
         cachedCost = nil
+        photobookId = nil
+        orderId = nil
     }
+    
+    func submitOrder(completionHandler: @escaping (_ error: Error?) -> Void) {
+        // First create a Photobook PDF Id
+        ProductManager.shared.initializePhotobookPdf(completionHandler: { [weak welf = self] pdfId, error in
+//            guard error == nil else { completionHandler(error); return } //TODO uncomment
+            
+            welf?.photobookId = pdfId
+            KiteAPIClient.shared.submitOrder(parameters: welf!.orderParameters(), completionHandler: { orderId, error in
+                welf?.orderId = orderId
+                completionHandler(error)
+            })
+        })
+    }
+    
+    private func orderParameters() -> [String: Any] {
+        var shippingAddress = deliveryDetails?.address?.jsonRepresentation()
+        shippingAddress?["recipient_first_name"] = deliveryDetails?.firstName
+        shippingAddress?["recipient_last_name"] = deliveryDetails?.lastName
+        
+        var parameters = [String: Any]()
+        parameters["payment_charge_token"] = paymentToken
+        parameters["shipping_address"] = shippingAddress
+        parameters["customer_email"] = deliveryDetails?.email
+        parameters["customer_phone"] = deliveryDetails?.phone
+        parameters["promo_code"] = promoCode
+        parameters["shipping_method"] = shippingMethod
+        parameters["line_items"] = [[
+            "quantity": itemCount,
+            "pdfId": photobookId ?? ""
+            ]]
+        
+        return parameters
+    }
+    
 }
 

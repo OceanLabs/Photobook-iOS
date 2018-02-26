@@ -34,9 +34,9 @@ class PhotobookAPIManager {
         static let products = "/ios/initial-data/"
         static let summary = "/ios/summary"
         static let applyUpsell = "/ios/upsell.apply"
-        static let pdfCreation = "/ios/pdf.create"
+        static let initialisePdf = "/ios/initialisePhotobookPdf"
         static let imageUpload = "/upload/"
-        static let pdfGeneration = "/ios/pdf.generate"
+        static let setPdfData = "/ios/setPhotobookPdfData"
     }
     
     private struct Storage {
@@ -132,6 +132,13 @@ class PhotobookAPIManager {
 
             completionHandler(tempPhotobooks, tempLayouts, tempUpsellOptions, nil)
         }
+    }
+    
+    func initializePhotobookPdf(completionHandler: @escaping (_ photobookId: String?, _ error: Error?) -> Void) {
+        apiClient.post(context: .photobook, endpoint: EndPoints.initialisePdf, parameters: nil, completion: { response, error in
+            let photobookId = (response as? [String: Any])?["pdfId"] as? String ?? "I am a dummy Id, Remove Me" // TODO: Remove
+            completionHandler(photobookId, nil) // TODO: send the error
+        })
     }
     
     /// Uploads the photobook images and the user's photobook choices
@@ -242,17 +249,17 @@ class PhotobookAPIManager {
 
     // MARK: Private methods
     private func submitPhotobookDetails(_ completionHandler: @escaping (Error?) -> Void) {
-        guard let parameters = photobookCreationParameters() else {
+        guard let parameters = photobookParameters() else {
             completionHandler(PhotobookAPIError.couldNotBuildCreationParameters)
             return
         }
         
-        apiClient.post(context: .pig, endpoint: EndPoints.pdfGeneration, parameters: parameters) { ( jsonData, error) in
+        apiClient.post(context: .pig, endpoint: EndPoints.initialisePdf, parameters: parameters) { ( jsonData, error) in
             completionHandler(error)
         }
     }
     
-    private func photobookCreationParameters() -> [String: Any]? {
+    private func photobookParameters() -> [String: Any]? {
         guard let photobookId = OrderManager.shared.photobookId else { return nil }
         
         // TODO: confirm schema
