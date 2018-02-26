@@ -41,8 +41,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     @IBOutlet private var toolbarButtons: [UIButton]!
     @IBOutlet private weak var toolbar: UIToolbar!
-    @IBOutlet var cancelBarButtonItem: UIBarButtonItem!
-    
+    @IBOutlet private var cancelBarButtonItem: UIBarButtonItem!    
     
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
     var albumForPicker: Album?
