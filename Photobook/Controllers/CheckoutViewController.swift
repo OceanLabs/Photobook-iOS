@@ -43,6 +43,7 @@ class CheckoutViewController: UIViewController {
         static let alertOkText = NSLocalizedString("Controllers/CheckoutViewController/OK",
                                                         value: "OK",
                                                         comment: "OK string for alerts")
+        static let title = NSLocalizedString("Controllers/CheckoutViewController/Title", value: "Payment", comment: "Payment screen title")
     }
     
     @IBOutlet weak var itemImageView: UIImageView!
@@ -109,6 +110,12 @@ class CheckoutViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        #if TEST_ENVIRONMENT
+            title = Constants.title + " (TEST)"
+        #else
+            title = Constants.title
+        #endif
         
         registerForKeyboardNotifications()
         NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryPreviewImageReady), name: OrderSummaryManager.notificationPreviewImageReady, object: nil)
