@@ -163,27 +163,27 @@
                                             </connections>
                                         </button>
                                     </barButtonItem>
-                                    <barButtonItem style="plain" id="JLv-mV-icp">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0YB-mk-uec">
-                                            <rect key="frame" x="163.5" y="7.5" width="48" height="29"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" image="editPhoto_off"/>
-                                            <state key="selected" image="editPhoto_on"/>
-                                            <state key="highlighted" image="editPhoto_on"/>
-                                            <connections>
-                                                <action selector="tappedToolButton:" destination="sIe-n5-8hl" eventType="touchUpInside" id="xF5-91-IU0"/>
-                                            </connections>
-                                        </button>
-                                    </barButtonItem>
                                     <barButtonItem style="plain" id="KIJ-ys-Kjd">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="z11-V0-D9v">
-                                            <rect key="frame" x="211.5" y="7.5" width="48" height="29"/>
+                                            <rect key="frame" x="163.5" y="7.5" width="48" height="29"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="editColor_off"/>
                                             <state key="selected" image="editColor_on"/>
                                             <state key="highlighted" image="editColor_on"/>
                                             <connections>
                                                 <action selector="tappedToolButton:" destination="sIe-n5-8hl" eventType="touchUpInside" id="OYi-46-PXC"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" id="JLv-mV-icp">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0YB-mk-uec">
+                                            <rect key="frame" x="211.5" y="7.5" width="48" height="29"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" image="editPhoto_off"/>
+                                            <state key="selected" image="editPhoto_on"/>
+                                            <state key="highlighted" image="editPhoto_on"/>
+                                            <connections>
+                                                <action selector="tappedToolButton:" destination="sIe-n5-8hl" eventType="touchUpInside" id="xF5-91-IU0"/>
                                             </connections>
                                         </button>
                                     </barButtonItem>
@@ -559,11 +559,11 @@
                         <outlet property="rightAssetImageView" destination="Nye-J2-uSX" id="rkf-Vs-Rh9"/>
                         <outlet property="textEditingContainerView" destination="2pz-wa-Psx" id="aMd-lC-v6U"/>
                         <outlet property="toolbar" destination="3pJ-D7-Ell" id="uQT-TA-1GG"/>
-                        <outletCollection property="toolbarButtons" destination="IiS-nN-9sR" collectionClass="NSMutableArray" id="EM4-V5-3FP"/>
-                        <outletCollection property="toolbarButtons" destination="B62-6k-8NO" collectionClass="NSMutableArray" id="CGJ-aW-s5j"/>
-                        <outletCollection property="toolbarButtons" destination="0YB-mk-uec" collectionClass="NSMutableArray" id="IxL-Ce-Aff"/>
-                        <outletCollection property="toolbarButtons" destination="z11-V0-D9v" collectionClass="NSMutableArray" id="1Z8-py-9f5"/>
-                        <outletCollection property="toolbarButtons" destination="kmD-zJ-1We" collectionClass="NSMutableArray" id="JZ8-ny-ge8"/>
+                        <outletCollection property="toolbarButtons" destination="IiS-nN-9sR" collectionClass="NSMutableArray" id="Ghn-6i-tC2"/>
+                        <outletCollection property="toolbarButtons" destination="B62-6k-8NO" collectionClass="NSMutableArray" id="7ZM-9r-eqd"/>
+                        <outletCollection property="toolbarButtons" destination="z11-V0-D9v" collectionClass="NSMutableArray" id="jAb-3R-aSG"/>
+                        <outletCollection property="toolbarButtons" destination="0YB-mk-uec" collectionClass="NSMutableArray" id="D7l-Hc-mGk"/>
+                        <outletCollection property="toolbarButtons" destination="kmD-zJ-1We" collectionClass="NSMutableArray" id="7em-3U-8cD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lpf-Fw-lQz" userLabel="First Responder" sceneMemberID="firstResponder"/>

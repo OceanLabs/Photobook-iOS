@@ -29,7 +29,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private enum Tool: Int {
-        case selectAsset, selectLayout, placeAsset, selectColor, editText
+        case selectAsset, selectLayout, selectColor, placeAsset, editText
     }
     
     @IBOutlet private weak var photobookContainerView: UIView!
@@ -526,7 +526,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             textEditingViewController.animateOn()
         }
         
-        setTopBars(hidden: tool == .editText)
+        setTopBars(hidden: tool == .placeAsset || tool == .editText)
     }
     
     private func setTopBars(hidden: Bool) {
