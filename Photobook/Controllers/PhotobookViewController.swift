@@ -58,6 +58,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     // Scrolling at 60Hz when we are dragging looks good enough and avoids having to normalize the scroll offset
     private lazy var screenRefreshRate: Double = 1.0 / 60.0
     
+    private var pageSetupViewController: PageSetupViewController!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -556,7 +558,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func editPage(at index: Int, frame: CGRect, containerView: UIView) {
-        let pageSetupViewController = storyboard?.instantiateViewController(withIdentifier: "PageSetupViewController") as! PageSetupViewController
+        pageSetupViewController = storyboard?.instantiateViewController(withIdentifier: "PageSetupViewController") as! PageSetupViewController
         pageSetupViewController.selectedAssetsManager = selectedAssetsManager
         pageSetupViewController.pageIndex = index
         pageSetupViewController.albumForPicker = albumForEditingPicker
@@ -576,8 +578,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         
         present(modalNavigationController, animated: false) {
-            let containerRect = pageSetupViewController.view.convert(frame, from: containerView)
-            pageSetupViewController.animateFromPhotobook(frame: containerRect)
+            let containerRect = self.pageSetupViewController.view.convert(frame, from: containerView)
+            self.pageSetupViewController.animateFromPhotobook(frame: containerRect)
         }
     }
 }
@@ -755,8 +757,8 @@ extension PhotobookViewController: PageSetupDelegate {
 
         navigationController!.navigationBar.alpha = 1.0
         
-        dismiss(animated: false) {
-            // TODO
+        pageSetupViewController.animateBackToPhotobook {
+            self.dismiss(animated: false)
         }
     }
 }

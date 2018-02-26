@@ -205,42 +205,82 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
                 oppositePageView!.setupTextBox(mode: .userTextOnly)
             }
 
+            hideViewsBeforeAnimation()
+            
             hasDoneSetup = true
-            
-            
-            
-            
-            storyboardBackgroundColor = view.backgroundColor
-            view.backgroundColor = .clear
-            assetSelectionContainerView.alpha = 0.0
-            photobookContainerView.alpha = 0.0
-            toolbar.alpha = 0.0
         }
     }
     
+    private func hideViewsBeforeAnimation() {
+        storyboardBackgroundColor = view.backgroundColor
+        view.backgroundColor = .clear
+        
+        assetSelectionContainerView.alpha = 0.0
+        photobookContainerView.alpha = 0.0
+        toolbar.alpha = 0.0
+    }
+
     private lazy var animatableAssetImageView = UIImageView()
+    private var containerRect: CGRect!
     private var storyboardBackgroundColor: UIColor!
     
     func animateFromPhotobook(frame: CGRect) {
+        containerRect = frame
+        
         animatableAssetImageView.transform = .identity
-        animatableAssetImageView.frame = photobookFrameView.frame
+        animatableAssetImageView.frame = photobookFrameView.bounds //photobookFrameView.frame
+        animatableAssetImageView.center = photobookFrameView.center
         animatableAssetImageView.image = photobookFrameView.snapshot()
-        animatableAssetImageView.center = CGPoint(x: frame.midX, y: frame.midY)
+        animatableAssetImageView.center = CGPoint(x: containerRect.midX, y: containerRect.midY)
 
-        let initialScale = frame.width / photobookFrameView.bounds.width
+        let initialScale = containerRect.width / photobookFrameView.bounds.width
         animatableAssetImageView.transform = CGAffineTransform.identity.scaledBy(x: initialScale, y: initialScale)
 
         view.addSubview(animatableAssetImageView)
         
-        UIView.animate(withDuration: 0.16) {
+        UIView.animate(withDuration: 0.2) {
             self.view.backgroundColor = self.storyboardBackgroundColor
         }
+        
+        UIView.animate(withDuration: 0.3, delay: 0.1, options: [], animations: {
+            self.assetSelectionContainerView.alpha = 1.0
+            self.toolbar.alpha = 1.0
+        }, completion: nil)
         
         UIView.animateKeyframes(withDuration: 0.3, delay: 0.0, options: [ .calculationModeCubicPaced ], animations: {
             UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1.0, animations: {
                 self.animatableAssetImageView.frame = self.photobookFrameView.frame
             })
+        }, completion: { _ in
+            self.photobookContainerView.alpha = 1.0
+            self.animatableAssetImageView.alpha = 0.0
+        })
+    }
+    
+    func animateBackToPhotobook(_ completion: @escaping (() -> Void)) {
+        animatableAssetImageView.transform = .identity
+        animatableAssetImageView.frame = photobookFrameView.frame
+        animatableAssetImageView.image = photobookFrameView.snapshot()
+        
+        animatableAssetImageView.alpha = 1.0
+        photobookFrameView.alpha = 0.0
+        
+        UIView.animate(withDuration: 0.1, animations: {
+            self.assetSelectionContainerView.alpha = 0.0
+            self.layoutSelectionContainerView.alpha = 0.0
+            self.colorSelectionContainerView.alpha = 0.0
+            self.toolbar.alpha = 0.0
+        })
+        
+        UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseInOut], animations: {
+            self.animatableAssetImageView.frame = self.containerRect
         }, completion: nil)
+
+        UIView.animate(withDuration: 0.1, delay: 0.2, options: [.curveEaseInOut], animations: {
+            self.view.backgroundColor = .clear
+        }, completion: { _ in
+            completion()
+        })
     }
     
     deinit {
@@ -264,7 +304,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             }
         }
     }
-    
+
     private func transitionPhotobookFrame() {
         UIView.animate(withDuration: 0.1, animations: {
             self.photobookFrameView.layer.shadowOpacity = 0.0
@@ -272,10 +312,11 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             self.photobookFrameView.rightPageView.alpha = 0.0
         }) { _ in
             self.setupPhotobookPages()
-            self.setupPhotobookFrame()
             self.photobookFrameView.resetPageColor()
             
             UIView.animate(withDuration: 0.3, animations: {
+                self.setupPhotobookFrame()
+
                 self.pageView.setupLayoutBoxes(animated: false)
                 self.photobookContainerView.layoutIfNeeded()
             }) { _ in
@@ -300,7 +341,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func setupPhotobookFrame() {
-        photobookFrameView.width = (view.bounds.width - 2.0 * Constants.photobookSideMargin) * (isDoublePage ? 1.0 : 2.0)
+        photobookFrameView.width = (view.bounds.width - 2.0 * Constants.photobookSideMargin) * 2.0
+        photobookFrameView.transform = isDoublePage ? CGAffineTransform.identity.scaledBy(x: 0.5, y: 0.5) : .identity
 
         switch pageType! {
         case .last:
