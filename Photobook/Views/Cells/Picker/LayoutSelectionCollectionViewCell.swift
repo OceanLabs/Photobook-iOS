@@ -29,10 +29,35 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     var layout: Layout?
     var asset: Asset!
     var image: UIImage!
+    var oppositeImage: UIImage!
     var pageIndex: Int?
     var coverColor: ProductColor!
     var pageColor: ProductColor!
     
+    private var pageView: PhotobookPageView! {
+        guard let pageType = pageType else { return nil }
+        
+        switch pageType {
+        case .left, .last:
+            return photobookFrameView.leftPageView
+        case .right, .first:
+            return photobookFrameView.rightPageView
+        default:
+            return nil
+        }
+    }
+    
+    private var oppositePageView: PhotobookPageView? {
+        switch pageType {
+        case .left:
+            return photobookFrameView.rightPageView
+        case .right:
+            return photobookFrameView.leftPageView
+        default:
+            return nil
+        }
+    }
+
     private weak var assetContainerView: UIView! {
         guard let pageType = pageType else { return nil }
         
@@ -58,7 +83,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
             return nil
         }
     }
-        
+    
     func setupLayout() {
         guard let pageIndex = pageIndex, let layout = layout else { return }
 
@@ -94,23 +119,26 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
             fallthrough
         case .left:
             photobookLeftAligmentConstraint.constant = bounds.width - Constants.photobookAlignmentMargin
-            
-            photobookFrameView.leftPageView.pageIndex = pageIndex
-            photobookFrameView.leftPageView.productLayout = productLayout
-            photobookFrameView.leftPageView.setupImageBox(with: image)
-            photobookFrameView.leftPageView.setupTextBox(mode: .linesPlaceholder)
         case .first:
             photobookFrameView.isLeftPageVisible = false
-            fallthrough
-        case .right:
-            photobookFrameView.rightPageView.pageIndex = pageIndex
-            photobookFrameView.rightPageView.productLayout = productLayout
-            photobookFrameView.rightPageView.setupImageBox(with: image)
-            photobookFrameView.rightPageView.setupTextBox(mode: .linesPlaceholder)
         default:
             break
         }
         
+        pageView.pageIndex = pageIndex
+        pageView.productLayout = productLayout
+        pageView.setupImageBox(with: image)
+        pageView.setupTextBox(mode: .linesPlaceholder)
+        
+        // Setup the opposite layout if necessary
+        if !layout.isDoubleLayout && (pageType == .left || pageType == .right) {
+            let oppositeIndex = pageIndex + (pageType == .left ? 1 : -1)
+            oppositePageView!.pageIndex = oppositeIndex
+            oppositePageView!.productLayout = ProductManager.shared.productLayouts[oppositeIndex]
+            oppositePageView!.setupImageBox(with: oppositeImage, animated: false)
+            oppositePageView!.setupTextBox(mode: .userTextOnly)
+        }
+
         if photobookFrameView.coverColor != coverColor ||
             photobookFrameView.pageColor != pageColor {
                 photobookFrameView.coverColor = coverColor
