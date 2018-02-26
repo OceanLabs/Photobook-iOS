@@ -197,6 +197,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             pageView.setupImageBox(with: nil, animated: false)
             pageView.setupTextBox(mode: .userTextOnly)
             
+            // Setup the opposite layout if necessary
             if !isDoublePage && (pageType == .left || pageType == .right) {
                 let oppositeIndex = pageIndex! + (pageType == .left ? 1 : -1)
                 oppositePageView!.pageIndex = oppositeIndex
@@ -223,22 +224,24 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     private lazy var animatableAssetImageView = UIImageView()
     private var containerRect: CGRect!
     private var storyboardBackgroundColor: UIColor!
+    private var frameView: UIView {
+        return pageType == .cover ? coverFrameView : photobookFrameView
+    }
     
     func animateFromPhotobook(frame: CGRect) {
         containerRect = frame
         
         animatableAssetImageView.transform = .identity
-        animatableAssetImageView.frame = photobookFrameView.bounds //photobookFrameView.frame
-        animatableAssetImageView.center = photobookFrameView.center
-        animatableAssetImageView.image = photobookFrameView.snapshot()
+        animatableAssetImageView.frame = frameView.bounds
         animatableAssetImageView.center = CGPoint(x: containerRect.midX, y: containerRect.midY)
+        animatableAssetImageView.image = frameView.snapshot()
 
-        let initialScale = containerRect.width / photobookFrameView.bounds.width
+        let initialScale = containerRect.width / frameView.bounds.width
         animatableAssetImageView.transform = CGAffineTransform.identity.scaledBy(x: initialScale, y: initialScale)
 
         view.addSubview(animatableAssetImageView)
         
-        UIView.animate(withDuration: 0.2) {
+        UIView.animate(withDuration: 0.1) {
             self.view.backgroundColor = self.storyboardBackgroundColor
         }
         
@@ -249,7 +252,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         UIView.animateKeyframes(withDuration: 0.3, delay: 0.0, options: [ .calculationModeCubicPaced ], animations: {
             UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1.0, animations: {
-                self.animatableAssetImageView.frame = self.photobookFrameView.frame
+                self.animatableAssetImageView.frame = self.frameView.frame
             })
         }, completion: { _ in
             self.photobookContainerView.alpha = 1.0
@@ -259,11 +262,11 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     func animateBackToPhotobook(_ completion: @escaping (() -> Void)) {
         animatableAssetImageView.transform = .identity
-        animatableAssetImageView.frame = photobookFrameView.frame
-        animatableAssetImageView.image = photobookFrameView.snapshot()
+        animatableAssetImageView.frame = frameView.frame
+        animatableAssetImageView.image = frameView.snapshot()
         
         animatableAssetImageView.alpha = 1.0
-        photobookFrameView.alpha = 0.0
+        frameView.alpha = 0.0
         
         UIView.animate(withDuration: 0.1, animations: {
             self.assetSelectionContainerView.alpha = 0.0
