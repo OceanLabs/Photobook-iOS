@@ -25,12 +25,12 @@ class PaymentViewController: UIViewController {
     private lazy var transitionOperation : BlockOperation = BlockOperation(block: { [unowned self] in
         if self.presentedViewController == nil{
             self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
-            ProductManager.shared.reset()
+            OrderManager.shared.reset()
         }
-        else{
+        else {
             self.dismiss(animated: true, completion: {
                 self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
-                ProductManager.shared.reset()
+                OrderManager.shared.reset()
             })
         }
     })

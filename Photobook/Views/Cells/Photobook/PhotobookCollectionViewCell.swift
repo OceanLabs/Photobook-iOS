@@ -38,13 +38,6 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
 
     static let reuseIdentifier = NSStringFromClass(PhotobookCollectionViewCell.self).components(separatedBy: ".").last!
     
-    var imageSize = CGSize(width: Int.max, height: Int.max) {
-        didSet {
-            photobookFrameView.leftPageView.imageSize = imageSize
-            photobookFrameView.rightPageView.imageSize = imageSize
-        }
-    }
-    
     var leftIndex: Int? { return photobookFrameView.leftPageView.pageIndex }
     var rightIndex: Int? { return photobookFrameView.rightPageView.pageIndex }
     var width: CGFloat! { didSet { photobookFrameView.width = width } }

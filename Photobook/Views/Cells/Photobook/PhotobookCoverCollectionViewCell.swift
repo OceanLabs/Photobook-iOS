@@ -21,10 +21,6 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
     @IBOutlet private weak var coverFrameView: CoverFrameView! {
         didSet { coverFrameView.interaction = .wholePage }
     }
-    
-    var imageSize = CGSize(width: Int.max, height: Int.max) {
-        didSet { coverFrameView.pageView.imageSize = imageSize }
-    }
 
     var width: CGFloat! {
         didSet { coverFrameView.width = width }

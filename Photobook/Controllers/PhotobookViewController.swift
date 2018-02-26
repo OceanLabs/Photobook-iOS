@@ -477,49 +477,55 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             }
         })
         
-        guard destinationIndexPath != sourceIndexPath,
-              let sourceProductLayoutIndex = ProductManager.shared.productLayoutIndex(for: sourceIndexPath.item)
-        else { return }
-
-        let sourceProductLayout = ProductManager.shared.productLayouts[sourceProductLayoutIndex]
-
-        // Because we show a placeholder graphic where the drop proposal is, we get the destination index from the previous page
-        let previousIndexPath = IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 1), section: destinationIndexPath.section)
-        let previousCell = (collectionView.cellForItem(at: previousIndexPath) as? PhotobookCollectionViewCell)
-        
-        guard let destinationProductLayoutIndex = previousCell?.leftIndex else { return }
-        let destinationProductLayout = ProductManager.shared.productLayouts[destinationProductLayoutIndex]
-        
-        if movingDown {
-            if sourceProductLayout.layout.isDoubleLayout {
-                let destinationIndex = destinationProductLayout.layout.isDoubleLayout ? destinationProductLayoutIndex : destinationProductLayoutIndex + 1
-                ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationIndex)
-            } else {
-                // Move right page layout first to avoid messing up the indexes
-                ProductManager.shared.moveLayout(at: sourceProductLayoutIndex + 1, to: destinationProductLayoutIndex + 1)
-                ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
+        if destinationIndexPath != sourceIndexPath,
+            let sourceProductLayoutIndex = ProductManager.shared.productLayoutIndex(for: sourceIndexPath.item) {
+            
+            let sourceProductLayout = ProductManager.shared.productLayouts[sourceProductLayoutIndex]
+            
+            // Because we show a placeholder graphic where the drop proposal is, we get the destination index from the previous page
+            let previousIndexPath = IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 1), section: destinationIndexPath.section)
+            let previousCell = (collectionView.cellForItem(at: previousIndexPath) as? PhotobookCollectionViewCell)
+            
+            guard let destinationProductLayoutIndex = previousCell?.leftIndex ?? previousCell?.rightIndex else { return }
+            let destinationProductLayout = ProductManager.shared.productLayouts[destinationProductLayoutIndex]
+            
+            // Depending of if we're moving up or down, we will have to move either the left layout first or the second so that we don't mess up the indexes
+            if  movingDown{
+                if sourceProductLayout.layout.isDoubleLayout && destinationProductLayout.layout.isDoubleLayout {
+                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
+                } else if sourceProductLayout.layout.isDoubleLayout {
+                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex + 1)
+                } else if destinationProductLayout.layout.isDoubleLayout {
+                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex + 1, to: destinationProductLayoutIndex)
+                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex - 1)
+                } else {
+                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex + 1, to: destinationProductLayoutIndex + 1)
+                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
+                }
+                
             }
-        } else {
-            if sourceProductLayout.layout.isDoubleLayout {
-                ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
-            } else {
-                ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
-                ProductManager.shared.moveLayout(at: sourceProductLayoutIndex + 1, to: destinationProductLayoutIndex + 1)
+            else {
+                if sourceProductLayout.layout.isDoubleLayout {
+                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
+                } else {
+                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
+                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex + 1, to: destinationProductLayoutIndex + 1)
+                }
             }
+            
+            self.interactingItemIndexPath = nil
+            
+            let insertingIndexPath = IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 0), section: destinationIndexPath.section)
+            self.insertingIndexPath = insertingIndexPath
+            
+            collectionView.performBatchUpdates({
+                collectionView.insertItems(at: [insertingIndexPath])
+                deleteProposalCell(enableFeedback: false)
+                collectionView.deleteItems(at: [IndexPath(item: sourceIndexPath.item + (movingDown ? 0 : 1), section: sourceIndexPath.section)])
+            }, completion: { _ in
+                self.updateVisibleCells()
+            })
         }
-        
-        self.interactingItemIndexPath = nil
-        
-        let insertingIndexPath = IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 0), section: destinationIndexPath.section)
-        self.insertingIndexPath = insertingIndexPath
-        
-        collectionView.performBatchUpdates({
-            collectionView.insertItems(at: [insertingIndexPath])
-            deleteProposalCell(enableFeedback: false)
-            collectionView.deleteItems(at: [IndexPath(item: sourceIndexPath.item + (movingDown ? 0 : 1), section: sourceIndexPath.section)])
-        }, completion: { _ in
-            self.updateVisibleCells()
-        })
     }
     
     func liftView(_ photobookFrameView: PhotobookFrameView) {
@@ -552,8 +558,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 let cell = cell as? PhotobookCollectionViewCell
                 else { continue }
 
-            let rightIndex = productLayoutIndex < ProductManager.shared.productLayouts.count - 1 ? productLayoutIndex + 1 : nil
-            cell.loadPages(leftIndex: productLayoutIndex, rightIndex: rightIndex)
+            if ProductManager.shared.productLayouts[productLayoutIndex].layout.isDoubleLayout {
+                cell.loadPages(leftIndex: productLayoutIndex, rightIndex: productLayoutIndex)
+            } else {
+                let rightIndex = productLayoutIndex < ProductManager.shared.productLayouts.count - 1 ? productLayoutIndex + 1 : nil
+                cell.loadPages(leftIndex: productLayoutIndex, rightIndex: rightIndex)
+            }
         }
     }
     
@@ -605,13 +615,9 @@ extension PhotobookViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        // Don't bother calculating the exact size, request a slightly larger size
-        let imageSize = CGSize(width: collectionView.frame.size.width / 2.0, height: collectionView.frame.size.width / 2.0)
-        
         switch indexPath.section {
         case 0:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotobookCoverCollectionViewCell.reuseIdentifier, for: indexPath) as! PhotobookCoverCollectionViewCell
-            cell.imageSize = imageSize
             cell.width = (view.bounds.size.width - Constants.cellSideMargin * 2.0) / 2.0
             cell.delegate = self
             cell.loadCoverAndSpine()
@@ -626,7 +632,6 @@ extension PhotobookViewController: UICollectionViewDataSource {
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotobookCollectionViewCell.reuseIdentifier, for: indexPath) as! PhotobookCollectionViewCell
             cell.isVisible = indexPath != interactingItemIndexPath && indexPath != insertingIndexPath
-            cell.imageSize = imageSize
             cell.width = view.bounds.size.width - Constants.cellSideMargin * 2.0
             cell.clipsToBounds = false
             cell.delegate = self
@@ -654,11 +659,6 @@ extension PhotobookViewController: UICollectionViewDataSource {
                 }
                 cell.setupGestures()
                 cell.isPageInteractionEnabled = !isRearranging
-                
-                // Get a larger image if the layout is double width
-                if ProductManager.shared.productLayouts[index].layout.isDoubleLayout {
-                    cell.imageSize = CGSize(width: imageSize.width * 2.0, height: imageSize.height * 2.0)
-                }
                 cell.isFaded = false
             }
             

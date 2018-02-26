@@ -19,6 +19,7 @@ enum APIContext {
     case none
     case photobook
     case pig
+    case kite
 }
 
 /// Network client for all interaction with the API
@@ -56,7 +57,8 @@ class APIClient: NSObject {
         switch context {
         case .none: return ""
         case .photobook: return "https://photobook-builder.herokuapp.com/"
-        case .pig: return "https://piglet.kite.ly/"
+        case .pig: return "https://piglet.kite.ly/" // TODO: live endpoint is "https://image.kite.ly"
+        case .kite: return "https://api.kite.ly/"
         }
     }
 

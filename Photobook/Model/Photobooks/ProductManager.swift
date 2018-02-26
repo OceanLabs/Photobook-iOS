@@ -441,7 +441,7 @@ extension ProductManager: PhotobookAPIManagerDelegate {
             switch error {
             case .missingPhotobookInfo:
                 fatalError("ProductManager: incorrect or missing photobook info")
-            case .couldNotSaveTempImage:
+            case .couldNotSaveTempImageData:
                 let info = [ "pending": apiManager.pendingUploads ]
                 NotificationCenter.default.post(name: ProductManager.pendingUploadStatusUpdated, object: info)
                 

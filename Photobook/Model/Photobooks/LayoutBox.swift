@@ -21,10 +21,10 @@ struct LayoutBox: Codable {
     }
     
     func rectContained(in size: CGSize) -> CGRect {
-        let x = ceil(rect.minX * size.width)
-        let y = ceil(rect.minY * size.height)
-        let width = ceil(rect.width * size.width)
-        let height = ceil(rect.height * size.height)
+        let x = rect.minX * size.width
+        let y = rect.minY * size.height
+        let width = rect.width * size.width
+        let height = rect.height * size.height
         return CGRect(x: x, y: y, width: width, height: height)
     }
     
@@ -32,14 +32,14 @@ struct LayoutBox: Codable {
         let containerWidth: CGFloat = 1000.0
         let containerHeight = containerWidth / ratio
         
-        let width = ceil(containerWidth * rect.width)
-        let height = ceil(containerHeight * rect.height)
+        let width = containerWidth * rect.width
+        let height = containerHeight * rect.height
         return width / height
     }
     
     func containerSize(for size: CGSize) -> CGSize {
-        let width = ceil(size.width / rect.width)
-        let height = ceil(size.height / rect.height)
+        let width = size.width / rect.width
+        let height = size.height / rect.height
         return CGSize(width: width, height: height)
     }
         
