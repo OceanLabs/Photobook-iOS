@@ -39,7 +39,6 @@ class PhotobookPageView: UIView {
             self.addConstraint(aspectRatioConstraint)
         }
     }
-    var imageSize = CGSize(width: Int.max, height: Int.max)
     var isVisible: Bool = false {
         didSet {
             for subview in subviews {
@@ -60,6 +59,8 @@ class PhotobookPageView: UIView {
             }
         }
     }
+    
+    private var isShowingTextPlaceholder = false
     
     @IBOutlet private weak var assetContainerView: UIView!
     @IBOutlet private weak var assetPlaceholderIconImageView: UIImageView!
@@ -148,7 +149,7 @@ class PhotobookPageView: UIView {
             return
         }
         
-        asset.image(size: imageSize, completionHandler: { [weak welf = self] (image, _) in
+        asset.image(size: assetContainerView.frame.size, completionHandler: { [weak welf = self] (image, _) in
             guard welf?.pageIndex == index, let image = image else { return }
             welf?.setImage(image: image)
             
@@ -197,8 +198,10 @@ class PhotobookPageView: UIView {
             pageTextLabel.text = NSLocalizedString("Views/Photobook Frame/PhotobookPageView/pageTextLabel/placeholder",
                                      value: "Add your own text",
                                      comment: "Placeholder text to show on a cover / page")
+            isShowingTextPlaceholder = true
         } else {
             pageTextLabel.text = productLayout?.text
+            isShowingTextPlaceholder = false
         }
 
         adjustTextLabel()
@@ -208,29 +211,19 @@ class PhotobookPageView: UIView {
     private func adjustTextLabel() {
         guard let pageTextLabel = pageTextLabel, let textBox = productLayout?.layout.textLayoutBox else { return }
 
-        let finalFrame = textBox.rectContained(in: bounds.size)
-        
-        let scale: CGFloat = 1.55
-        let scaledUpSize = CGSize(width: finalFrame.width * scale, height: finalFrame.height * scale)
-        
         pageTextLabel.transform = .identity
-        pageTextLabel.frame = CGRect(x: finalFrame.minX, y: finalFrame.minY, width: scaledUpSize.width, height: scaledUpSize.height)
-        
-        let layoutContainerSize = textBox.containerSize(for: scaledUpSize)
-        
-        guard pageTextLabel.text != nil else {
-            pageTextLabel.transform = pageTextLabel.transform.scaledBy(x: 1/scale, y: 1/scale)
-            return
-        }
-        
-        let textHeight = pageTextLabel.attributedText!.height(for: scaledUpSize.width)
-        if textHeight < scaledUpSize.height { pageTextLabel.frame.size.height = textHeight }
+        pageTextLabel.frame = textBox.rectContained(in: bounds.size)
 
-        let fontType = productLayout!.fontType ?? .plain
-        let fontSize = fontType.sizeForScreenHeight(layoutContainerSize.height)
+        guard pageTextLabel.text != nil else { return }
+
+        let fontType = isShowingTextPlaceholder ? .plain : (productLayout!.fontType ?? .plain)
+        var fontSize = fontType.sizeForScreenHeight(bounds.height)
+        if isShowingTextPlaceholder { fontSize *= 2.0 } // Make text larger so the placeholder can be read
         
         pageTextLabel.attributedText = fontType.attributedText(with: pageTextLabel.text!, fontSize: fontSize, fontColor: color.fontColor())
-        pageTextLabel.transform = pageTextLabel.transform.scaledBy(x: 1/scale, y: 1/scale)
+        
+        let textHeight = pageTextLabel.attributedText!.height(for: pageTextLabel.bounds.width)
+        if textHeight < pageTextLabel.bounds.height { pageTextLabel.frame.size.height = textHeight }
     }
     
     private func setImagePlaceholder(visible: Bool) {

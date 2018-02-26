@@ -14,7 +14,6 @@ class SpineFrameView: UIView {
     // TEMP
     private struct Constants {
         static let spineThickness: CGFloat = 20.0
-        static let spineTextPadding: CGFloat = 100.0
     }
     
     @IBOutlet private weak var textLabel: UILabel! {
@@ -33,9 +32,8 @@ class SpineFrameView: UIView {
         super.layoutSubviews()
 
         // Figure out the available width of the spine frame
-        let paddingRatio = Constants.spineTextPadding / ProductManager.shared.product!.pageHeight
-        textLabelWidthConstraint.constant = bounds.height * (1.0 - paddingRatio * 2.0)
-        
+        textLabelWidthConstraint.constant = bounds.height * ProductManager.shared.product!.spineTextRatio
+
         if !(text ?? "").isEmpty {
             let fontSize = fontType.sizeForScreenHeight(bounds.height, isSpineText: true)
             textLabel.attributedText = fontType.attributedText(with: text!, fontSize: fontSize, fontColor: color.fontColor(), isSpineText: true)

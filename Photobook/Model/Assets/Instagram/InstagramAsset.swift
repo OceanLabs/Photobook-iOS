@@ -41,13 +41,24 @@ class InstagramAsset: Asset {
     
     var albumIdentifier: String
     
-    func uneditedImage(size: CGSize, loadThumbnailsFirst: Bool, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
+    func image(size: CGSize, loadThumbnailsFirst: Bool, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
+        
+        // Convert points to pixels
+        let imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())
         
         // Ignore loadThumbnailsFirst. Since we are doing a network request for both thumnbails and the full resolution, there's no benefit to getting the thumbnail first
-        let url = size.width <= Constants.instagramThumbnailWidth ? thumbnailUrl : standardResolutionUrl
+        let url = imageSize.width <= Constants.instagramThumbnailWidth ? thumbnailUrl : standardResolutionUrl
         
         SDWebImageManager.shared().loadImage(with: url, options: [], progress: nil, completed: { image, _, error, _, _, _ in
-            completionHandler(image, error)
+            DispatchQueue.main.async {
+                completionHandler(image, error)
+            }
+        })
+    }
+    
+    func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension?, Error?) -> Void) {
+        SDWebImageManager.shared().loadImage(with: standardResolutionUrl, options: [], progress: nil, completed: { _, data, error, _, _, _ in
+            completionHandler(data, .jpg, error)
         })
     }
 

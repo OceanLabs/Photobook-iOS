@@ -23,7 +23,7 @@ protocol PhotobookAPIManagerDelegate: class {
 enum PhotobookAPIError: Error {
     case missingPhotobookInfo
     case couldNotBuildCreationParameters
-    case couldNotSaveTempImage
+    case couldNotSaveTempImageData
 }
 
 class PhotobookAPIManager {
@@ -31,9 +31,12 @@ class PhotobookAPIManager {
     let imageUploadIdentifierPrefix = "PhotobookAPIManager-AssetUploader-"
     
     private struct EndPoints {
-        static let products = "/products/"
+        static let products = "/ios/initial-data/"
+        static let summary = "/ios/summary"
+        static let applyUpsell = "/ios/upsell.apply"
+        static let pdfCreation = "/ios/pdf.create"
         static let imageUpload = "/upload/"
-        static let pdfCreation = "" //TBC
+        static let pdfGeneration = "/ios/pdf.generate"
     }
     
     private struct Storage {
@@ -159,16 +162,16 @@ class PhotobookAPIManager {
                 continue
             }
 
-            asset.image(size: assetMaximumSize, completionHandler: { [weak welf = self] (image, error) in
-                if error != nil || image == nil {
-                    welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImage)
+            asset.imageData(progressHandler: nil, completionHandler: { [weak welf = self] data, fileExtension, error in
+                guard error != nil, let data = data, let fileExtension = fileExtension else {
+                    welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImageData)
                     return
                 }
-                
-                if let fileUrl = welf?.saveImageToCache(image: image!, name: "\(asset.identifier).jpg") {
+
+                if let fileUrl = welf?.saveDataToCachesDirectory(data: data, name: "\(asset.identifier).\(fileExtension)") {
                     welf?.apiClient.uploadImage(fileUrl, reference: self.imageUploadIdentifierPrefix + asset.identifier, context: .pig, endpoint: EndPoints.imageUpload)
                 } else {
-                    welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImage)
+                    welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImageData)
                 }
             })
         }
@@ -244,19 +247,54 @@ class PhotobookAPIManager {
             return
         }
         
-        apiClient.post(context: .pig, endpoint: EndPoints.pdfCreation, parameters: parameters) { ( jsonData, error) in
+        apiClient.post(context: .pig, endpoint: EndPoints.pdfGeneration, parameters: parameters) { ( jsonData, error) in
             completionHandler(error)
         }
     }
     
     private func photobookCreationParameters() -> [String: Any]? {
+        guard let photobookId = OrderManager.shared.photobookId else { return nil }
+        
         // TODO: confirm schema
-        return nil
+        var photobook = [String: Any]()
+        
+        var pages = [[String: Any]]()
+        for productLayout in ProductManager.shared.productLayouts {
+            var page = [String: Any]()
+            
+            if let asset = productLayout.asset,
+                let imageLayoutBox = productLayout.layout.imageLayoutBox,
+                let productLayoutAsset = productLayout.productLayoutAsset {
+                
+                page["contentType"] = "image"
+                page["dimensionsPercentages"] = ["height": imageLayoutBox.rect.height, "width": imageLayoutBox.rect.width]
+                page["relativeStartPoint"] = ["x": imageLayoutBox.rect.origin.x, "y": imageLayoutBox.rect.origin.y]
+                
+                // Set the container size to 1,1 so that the transform is relativized
+                productLayoutAsset.containerSize = CGSize(width: 1, height: 1)
+                productLayoutAsset.adjustTransform()
+                
+                var containedItem = [String: Any]()
+                var picture = [String: Any]()
+                picture["url"] = asset.uploadUrl
+                picture["relativeStartPoint"] = ["x": productLayoutAsset.transform.tx, "y": productLayoutAsset.transform.ty]
+                picture["rotation"] = atan2(productLayoutAsset.transform.b, productLayoutAsset.transform.a)
+                picture["zoom"] = productLayoutAsset.transform.a // X & Y axes scale should be the same, use the scale for X axis
+                
+                containedItem["picture"] = picture
+                page["containedItem"] = containedItem
+                
+            }
+            pages.append(page)
+        }
+        photobook["pages"] = pages
+        photobook["id"] = photobookId
+        
+        return photobook
     }
     
-    private func saveImageToCache(image: UIImage, name: String) -> URL? {
+    private func saveDataToCachesDirectory(data: Data, name: String) -> URL? {
         let fileUrl = Storage.cachesDirectory.appendingPathComponent(name)
-        let data = UIImageJPEGRepresentation(image, 0.8)!
         do {
             try data.write(to: fileUrl)
             return fileUrl
