@@ -41,7 +41,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     @IBOutlet private var toolbarButtons: [UIButton]!
     @IBOutlet private weak var toolbar: UIToolbar!
-    @IBOutlet private var cancelBarButtonItem: UIBarButtonItem!    
+    @IBOutlet private var cancelBarButtonItem: UIBarButtonItem!
     
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
     var albumForPicker: Album?
@@ -163,6 +163,10 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         toolbar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
         toolbarButtons[Tool.selectAsset.rawValue].isSelected = true
+        
+        if let navigationController = navigationController {
+            (navigationController.navigationBar as! PhotobookNavigationBar).setBarType(.clear)
+        }
         
         NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
     }

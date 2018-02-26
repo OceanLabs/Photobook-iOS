@@ -568,20 +568,16 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func editPage(at index: Int, frame: CGRect, containerView: UIView) {
-        pageSetupViewController = storyboard?.instantiateViewController(withIdentifier: "PageSetupViewController") as! PageSetupViewController
+        let modalNavigationController = storyboard?.instantiateViewController(withIdentifier: "PageSetupNavigationController") as! UINavigationController
+        if #available(iOS 11.0, *) {
+            modalNavigationController.navigationBar.prefersLargeTitles = false
+        }
+
+        pageSetupViewController = modalNavigationController.viewControllers.first as! PageSetupViewController
         pageSetupViewController.selectedAssetsManager = selectedAssetsManager
         pageSetupViewController.pageIndex = index
         pageSetupViewController.albumForPicker = albumForEditingPicker
         pageSetupViewController.delegate = self
-        
-        // TODO: Move to storyboard
-        let modalNavigationController = UINavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
-        (modalNavigationController.navigationBar as! PhotobookNavigationBar).setBarType(.clear)
-        if #available(iOS 11.0, *) {
-            modalNavigationController.navigationBar.prefersLargeTitles = false
-        }
-        modalNavigationController.modalPresentationStyle = .overFullScreen
-        modalNavigationController.viewControllers = [ pageSetupViewController ]
         
         UIView.animate(withDuration: 0.1) {
             self.navigationController!.navigationBar.alpha = 0.0
@@ -754,11 +750,12 @@ extension PhotobookViewController: PageSetupDelegate {
             }
             collectionView.reloadData()
         }
-
-        navigationController!.navigationBar.alpha = 1.0
         
         pageSetupViewController.animateBackToPhotobook {
             self.dismiss(animated: false)
+            UIView.animate(withDuration: 0.1, animations: {
+                self.navigationController!.navigationBar.alpha = 1.0
+            })
         }
     }
 }
