@@ -33,19 +33,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Access Instagram" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qlt-FQ-DVE">
-                                <rect key="frame" x="70.5" y="144.5" width="234" height="24"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Access Instagram" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qlt-FQ-DVE">
+                                <rect key="frame" x="70.5" y="144.5" width="234.5" height="24"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign in to access your Instagram photos and start creating" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3tS-Fo-5bm">
-                                <rect key="frame" x="70.5" y="170.5" width="234" height="36"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Sign in to access your Instagram photos and start creating" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3tS-Fo-5bm">
+                                <rect key="frame" x="70.5" y="170.5" width="234.5" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HTZ-sF-ffW">
+                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HTZ-sF-ffW">
                                 <rect key="frame" x="70.5" y="470.5" width="234" height="50"/>
                                 <color key="backgroundColor" red="0.20543283224105835" green="0.47096657752990723" blue="0.9647943377494812" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
@@ -64,7 +64,7 @@
                                     <segue destination="mCf-Vp-0wQ" kind="show" id="xQl-VW-9vr"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" image="Instagram-big" translatesAutoresizingMaskIntoConstraints="NO" id="Jdf-5N-Pfk">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" image="Instagram-big" translatesAutoresizingMaskIntoConstraints="NO" id="Jdf-5N-Pfk">
                                 <rect key="frame" x="70.5" y="226.5" width="234" height="234"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Jdf-5N-Pfk" secondAttribute="height" id="iAJ-74-C2M"/>
@@ -73,16 +73,20 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="3tS-Fo-5bm" firstAttribute="trailing" secondItem="Jdf-5N-Pfk" secondAttribute="trailing" id="0Zt-4m-YZm"/>
+                            <constraint firstItem="3tS-Fo-5bm" firstAttribute="leading" secondItem="OFT-ci-Vpz" secondAttribute="leading" constant="70" id="0Mg-vE-2do"/>
+                            <constraint firstItem="3tS-Fo-5bm" firstAttribute="trailing" secondItem="Jdf-5N-Pfk" secondAttribute="trailing" priority="750" id="0Zt-4m-YZm"/>
                             <constraint firstItem="3tS-Fo-5bm" firstAttribute="top" secondItem="Qlt-FQ-DVE" secondAttribute="bottom" constant="2" id="IiJ-CP-oDx"/>
-                            <constraint firstItem="HTZ-sF-ffW" firstAttribute="trailing" secondItem="Jdf-5N-Pfk" secondAttribute="trailing" id="Mbj-eS-BWd"/>
-                            <constraint firstItem="Qlt-FQ-DVE" firstAttribute="leading" secondItem="Jdf-5N-Pfk" secondAttribute="leading" id="NFX-el-m5p"/>
-                            <constraint firstItem="HTZ-sF-ffW" firstAttribute="leading" secondItem="Jdf-5N-Pfk" secondAttribute="leading" id="NhY-fz-DbB"/>
+                            <constraint firstItem="HTZ-sF-ffW" firstAttribute="trailing" secondItem="Jdf-5N-Pfk" secondAttribute="trailing" priority="750" id="Mbj-eS-BWd"/>
+                            <constraint firstItem="HTZ-sF-ffW" firstAttribute="leading" secondItem="Jdf-5N-Pfk" secondAttribute="leading" priority="750" id="NhY-fz-DbB"/>
+                            <constraint firstItem="Qlt-FQ-DVE" firstAttribute="leading" secondItem="3tS-Fo-5bm" secondAttribute="leading" id="VFB-ek-Owh"/>
+                            <constraint firstItem="Qlt-FQ-DVE" firstAttribute="top" relation="greaterThanOrEqual" secondItem="OFT-ci-Vpz" secondAttribute="top" constant="5" id="VPD-4J-x7s"/>
+                            <constraint firstItem="Qlt-FQ-DVE" firstAttribute="trailing" secondItem="3tS-Fo-5bm" secondAttribute="trailing" id="WPq-TX-cLN"/>
+                            <constraint firstItem="3tS-Fo-5bm" firstAttribute="centerX" secondItem="OFT-ci-Vpz" secondAttribute="centerX" id="WbC-Zx-ZMm"/>
                             <constraint firstItem="Jdf-5N-Pfk" firstAttribute="centerY" secondItem="OFT-ci-Vpz" secondAttribute="centerY" id="Zld-N2-k6D"/>
-                            <constraint firstItem="Qlt-FQ-DVE" firstAttribute="trailing" secondItem="Jdf-5N-Pfk" secondAttribute="trailing" id="cxj-fV-QDN"/>
-                            <constraint firstItem="3tS-Fo-5bm" firstAttribute="leading" secondItem="Jdf-5N-Pfk" secondAttribute="leading" id="dI8-wb-U3h"/>
+                            <constraint firstItem="3tS-Fo-5bm" firstAttribute="leading" secondItem="Jdf-5N-Pfk" secondAttribute="leading" priority="750" id="dI8-wb-U3h"/>
                             <constraint firstItem="HTZ-sF-ffW" firstAttribute="top" secondItem="Jdf-5N-Pfk" secondAttribute="bottom" constant="10" id="fVL-0x-Fxf"/>
                             <constraint firstItem="Jdf-5N-Pfk" firstAttribute="centerX" secondItem="72Z-i4-Dnc" secondAttribute="centerX" id="iCQ-lj-4kd"/>
+                            <constraint firstItem="OFT-ci-Vpz" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="3tS-Fo-5bm" secondAttribute="trailing" constant="70" id="qLL-T9-ua9"/>
                             <constraint firstItem="Jdf-5N-Pfk" firstAttribute="top" secondItem="3tS-Fo-5bm" secondAttribute="bottom" constant="20" id="sN6-Zf-GS1"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="OFT-ci-Vpz"/>
