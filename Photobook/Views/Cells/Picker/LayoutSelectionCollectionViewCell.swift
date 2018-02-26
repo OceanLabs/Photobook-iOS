@@ -13,7 +13,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     static let reuseIdentifier = NSStringFromClass(LayoutSelectionCollectionViewCell.self).components(separatedBy: ".").last!
     
     private struct Constants {
-        static let photobookAlignmentMargin: CGFloat = 6.0
+        static let photobookAlignmentMargin: CGFloat = 10.0
         static let photobookVerticalMargin: CGFloat = 6.0
     }
     
