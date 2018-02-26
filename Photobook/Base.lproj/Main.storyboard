@@ -478,9 +478,9 @@
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p5s-6j-6B3" userLabel="Layout Selection Container View">
-                                <rect key="frame" x="0.0" y="549" width="375" height="74"/>
+                                <rect key="frame" x="0.0" y="533" width="375" height="90"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="74" id="OZu-U6-ioz"/>
+                                    <constraint firstAttribute="height" constant="90" id="OZu-U6-ioz"/>
                                 </constraints>
                                 <connections>
                                     <segue destination="lKF-NC-kTc" kind="embed" identifier="LayoutSelectionSegue" id="IFv-p0-wUB"/>
@@ -575,49 +575,49 @@
             <objects>
                 <viewController modalPresentationStyle="overCurrentContext" id="lKF-NC-kTc" customClass="LayoutSelectionViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9cr-Df-svs">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="74"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="90"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="65P-Rb-rBt">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="74"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="90"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="6" minimumInteritemSpacing="0.0" id="cls-2Q-OPO">
-                                    <size key="itemSize" width="85" height="64"/>
+                                    <size key="itemSize" width="110" height="74"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="LayoutSelectionCollectionViewCell" id="Zvy-Yk-9hm" customClass="LayoutSelectionCollectionViewCell" customModule="Photobook" customModuleProvider="target">
-                                        <rect key="frame" x="10" y="5" width="85" height="64"/>
+                                        <rect key="frame" x="10" y="8" width="110" height="74"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                            <rect key="frame" x="0.0" y="0.0" width="85" height="64"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="110" height="74"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="blQ-JN-Gqo">
-                                                    <rect key="frame" x="0.0" y="0.0" width="85" height="64"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="110" height="74"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H9U-f1-gmU" customClass="PhotobookFrameView" customModule="Photobook" customModuleProvider="target">
-                                                            <rect key="frame" x="-49" y="6" width="108" height="52"/>
+                                                            <rect key="frame" x="-54" y="6" width="128" height="62"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mEH-0m-viF" userLabel="Cover View" customClass="PhotobookFrameCoverView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="-0.5" y="0.5" width="108.5" height="51.5"/>
+                                                                    <rect key="frame" x="-0.5" y="0.5" width="128.5" height="61.5"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </view>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SHb-GE-xgn" userLabel="Cover Inside Image View">
-                                                                    <rect key="frame" x="1.5" y="2.5" width="104.5" height="47.5"/>
+                                                                    <rect key="frame" x="1.5" y="2.5" width="124.5" height="57.5"/>
                                                                 </imageView>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UQ5-Ef-1Lx" userLabel="Spread Background View" customClass="PhotobookFrameSpreadBackgroundView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="5.5" y="2" width="96.5" height="48"/>
+                                                                    <rect key="frame" x="5.5" y="2" width="116.5" height="58"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </view>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FTd-ye-Hey" customClass="PhotobookFramePageBackgroundView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="5.5" y="2" width="48" height="48"/>
+                                                                    <rect key="frame" x="5.5" y="2" width="58" height="58"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </view>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CqD-yK-VxZ" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="5.5" y="2.5" width="48" height="47.5"/>
+                                                                    <rect key="frame" x="5.5" y="2.5" width="58" height="57.5"/>
                                                                     <subviews>
                                                                         <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1kq-DX-noZ">
                                                                             <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
@@ -652,11 +652,11 @@
                                                                     </connections>
                                                                 </view>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dNZ-05-dgZ" customClass="PhotobookFramePageBackgroundView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="53.5" y="1.5" width="48.5" height="48"/>
+                                                                    <rect key="frame" x="63.5" y="1.5" width="58.5" height="58"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </view>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qiS-EF-1C4" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="53.5" y="1.5" width="48.5" height="48.5"/>
+                                                                    <rect key="frame" x="63.5" y="1.5" width="58.5" height="58.5"/>
                                                                     <subviews>
                                                                         <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dzW-J6-cYK">
                                                                             <rect key="frame" x="30" y="0.0" width="20" height="20"/>
@@ -691,7 +691,7 @@
                                                                     </connections>
                                                                 </view>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kCn-Ht-0Ja" userLabel="Page Divider View" customClass="PhotobookFramePageDividerView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="53.5" y="2.5" width="1" height="47.5"/>
+                                                                    <rect key="frame" x="63.5" y="2.5" width="1" height="57.5"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="1" id="NHW-0P-jCS"/>
@@ -751,7 +751,7 @@
                                                     <color key="backgroundColor" red="0.74901960779999999" green="0.75686274509999996" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="bottom" secondItem="H9U-f1-gmU" secondAttribute="bottom" constant="6" id="Tae-qg-vy2"/>
-                                                        <constraint firstItem="H9U-f1-gmU" firstAttribute="centerX" secondItem="blQ-JN-Gqo" secondAttribute="leading" constant="5" id="q0S-io-lMX"/>
+                                                        <constraint firstItem="H9U-f1-gmU" firstAttribute="centerX" secondItem="blQ-JN-Gqo" secondAttribute="leading" constant="10" id="q0S-io-lMX"/>
                                                         <constraint firstItem="H9U-f1-gmU" firstAttribute="top" secondItem="blQ-JN-Gqo" secondAttribute="top" constant="6" id="vmU-lY-4np"/>
                                                     </constraints>
                                                 </view>
@@ -774,23 +774,23 @@
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CoverLayoutSelectionCollectionViewCell" id="VZv-GM-JM4" customClass="CoverLayoutSelectionCollectionViewCell" customModule="Photobook" customModuleProvider="target">
-                                        <rect key="frame" x="101" y="5" width="85" height="64"/>
+                                        <rect key="frame" x="126" y="8" width="110" height="74"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                            <rect key="frame" x="0.0" y="0.0" width="85" height="64"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="110" height="74"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="15n-jN-NjV">
-                                                    <rect key="frame" x="0.0" y="0.0" width="85" height="64"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="110" height="74"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SFY-NV-7VF" customClass="CoverFrameView" customModule="Photobook" customModuleProvider="target">
-                                                            <rect key="frame" x="6.5" y="6" width="72" height="52"/>
+                                                            <rect key="frame" x="18.5" y="10.5" width="73" height="53"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pxt-5T-2O8" customClass="CoverBackgroundView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="72" height="52"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="73" height="53"/>
                                                                     <subviews>
                                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oC0-Mt-wgy" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
-                                                                            <rect key="frame" x="3.5" y="0.0" width="68.5" height="52"/>
+                                                                            <rect key="frame" x="3.5" y="0.0" width="69.5" height="53"/>
                                                                             <subviews>
                                                                                 <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Cd-Db-cE8">
                                                                                     <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
