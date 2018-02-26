@@ -57,6 +57,15 @@ class OrderManager {
         reset()
     }
     
+    var orderIsFree: Bool {
+        var orderIsFree = false
+        if let cost = OrderManager.shared.validCost, let selectedMethod = OrderManager.shared.shippingMethod, let shippingMethod = cost.shippingMethod(id: selectedMethod){
+            orderIsFree = shippingMethod.totalCost == 0.0
+        }
+        
+        return orderIsFree
+    }
+    
     func reset() {
         deliveryDetails = nil
         shippingMethod = nil

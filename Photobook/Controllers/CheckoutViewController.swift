@@ -306,24 +306,40 @@ class CheckoutViewController: UIViewController {
         }
     }
     
-    private func checkDetailFields() {
-        let requiredText = Constants.labelRequiredText
-        
-        //payment method
-        if OrderManager.shared.paymentMethod == nil {
-            paymentMethodIconImageView.isHidden = true
-            paymentMethodLabel.isHidden = false
-            paymentMethodLabel.text = requiredText
-            paymentMethodLabel.textColor = Constants.detailsLabelColorRequired
-            paymentMethodTitleLabel.text = Constants.paymentMethodText
+    private func paymentMethodIsValid() -> Bool {
+        guard OrderManager.shared.orderIsFree || (OrderManager.shared.paymentMethod != nil && (OrderManager.shared.paymentMethod != .creditCard || Card.currentCard != nil)) else {
+            indicatePaymentMethodError()
+            return false
         }
         
-        //delivery details
-        if OrderManager.shared.deliveryDetails == nil {
-            deliveryDetailsLabel.text = requiredText
-            deliveryDetailsLabel.textColor = Constants.detailsLabelColorRequired
+        return true
+    }
+    
+    private func indicatePaymentMethodError() {
+        paymentMethodIconImageView.isHidden = true
+        paymentMethodLabel.isHidden = false
+        paymentMethodLabel.text = Constants.labelRequiredText
+        paymentMethodLabel.textColor = Constants.detailsLabelColorRequired
+        paymentMethodTitleLabel.text = Constants.paymentMethodText
+    }
+    
+    private func deliveryDetailsAreValid() -> Bool {
+        guard (!OrderManager.shared.orderIsFree && OrderManager.shared.paymentMethod == .applePay) || (OrderManager.shared.deliveryDetails?.address?.isValid ?? false) else {
+            indicateDeliveryDetailsError()
+            return false
         }
         
+        return true
+    }
+    
+    private func indicateDeliveryDetailsError() {
+        deliveryDetailsLabel.text = Constants.labelRequiredText
+        deliveryDetailsLabel.textColor = Constants.detailsLabelColorRequired
+    }
+    
+    private func detailFieldsAreValid() -> Bool {
+        let paymentMethodIsValid = self.paymentMethodIsValid()
+        return deliveryDetailsAreValid() && paymentMethodIsValid
     }
     
     private func checkPromoCode() {
@@ -413,28 +429,7 @@ class CheckoutViewController: UIViewController {
     }
     
     @IBAction func payButtonTapped(_ sender: UIButton) {
-        
-        var orderIsFree = false
-        if let cost = OrderManager.shared.validCost, let selectedMethod = OrderManager.shared.shippingMethod, let shippingMethod = cost.shippingMethod(id: selectedMethod){
-            orderIsFree = shippingMethod.totalCost == 0.0
-        }
-        
-        checkDetailFields() //indicate to user if something is missing
-        
-        guard (!orderIsFree && OrderManager.shared.paymentMethod == .applePay) || (OrderManager.shared.deliveryDetails?.address?.isValid ?? false) else {
-            //delivery information is missing
-            return
-        }
-        
-        guard orderIsFree || (OrderManager.shared.paymentMethod != nil && (OrderManager.shared.paymentMethod != .creditCard || Card.currentCard != nil)) else {
-            //payment method is missing
-            return
-        }
-        
-        //TODO: REMOVE, this is just to make the receipt screen testable
-        let viewController = storyboard?.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
-        navigationController?.pushViewController(viewController, animated: true)
-        return
+        guard detailFieldsAreValid() else { return }
         
         progressOverlayViewController.show(message: Constants.loadingPaymentText)
         OrderManager.shared.updateCost { [weak welf = self] (error: Error?) in
