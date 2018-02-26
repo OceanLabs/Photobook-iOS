@@ -235,11 +235,13 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         animatableAssetImageView.frame = frameView.bounds
         animatableAssetImageView.center = CGPoint(x: containerRect.midX, y: containerRect.midY)
         animatableAssetImageView.image = frameView.snapshot()
-
+        
         let initialScale = containerRect.width / frameView.bounds.width
         animatableAssetImageView.transform = CGAffineTransform.identity.scaledBy(x: initialScale, y: initialScale)
 
         view.addSubview(animatableAssetImageView)
+        
+        pageView.setupTextBox(mode: .placeHolder)
         
         UIView.animate(withDuration: 0.1) {
             self.view.backgroundColor = self.storyboardBackgroundColor
@@ -277,13 +279,17 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseInOut], animations: {
             self.animatableAssetImageView.frame = self.containerRect
-        }, completion: nil)
+        }, completion: { _ in
+            UIView.animate(withDuration: 0.14, delay: 0.0, options: [], animations: {
+                self.animatableAssetImageView.alpha = 0.0
+            }, completion: { _ in
+                completion()
+            })
+        })
 
         UIView.animate(withDuration: 0.1, delay: 0.2, options: [.curveEaseInOut], animations: {
             self.view.backgroundColor = .clear
-        }, completion: { _ in
-            completion()
-        })
+        }, completion: nil)
     }
     
     deinit {
