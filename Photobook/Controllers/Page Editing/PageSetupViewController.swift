@@ -39,8 +39,10 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private weak var colorSelectionContainerView: UIView!
     @IBOutlet private weak var textEditingContainerView: UIView!
     
-    @IBOutlet var toolbarButtons: [UIButton]!
-    @IBOutlet weak var toolbar: UIToolbar!
+    @IBOutlet private var toolbarButtons: [UIButton]!
+    @IBOutlet private weak var toolbar: UIToolbar!
+    @IBOutlet var cancelBarButtonItem: UIBarButtonItem!
+    
     
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
     var albumForPicker: Album?
@@ -452,6 +454,12 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     @IBAction func tappedDoneButton(_ sender: UIBarButtonItem) {
+        // If in the asset placement tool, go back to the previous tool
+        if toolbarButtons[Tool.placeAsset.rawValue].isSelected {
+            tappedToolButton(previouslySelectedButton)
+            return
+        }
+        
         if productLayout.layout.imageLayoutBox == nil {
             // Remove the asset if the layout doesn't have an image box
             productLayout.asset = nil
@@ -503,6 +511,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
                 self.layoutSelectionContainerView.alpha = tool.rawValue == Tool.selectLayout.rawValue ? 1.0 : 0.0
                 self.colorSelectionContainerView.alpha = tool.rawValue == Tool.selectColor.rawValue ? 1.0 : 0.0
             })
+            
+            setCancelButton(hidden: false)
         case .placeAsset:
             let containerRect = placementContainerView.convert(assetContainerView.frame, from: pageView)
             assetPlacementViewController.productLayout = productLayout
@@ -516,6 +526,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
                 view.bringSubview(toFront: placementContainerView)
                 assetPlacementViewController.animateFromPhotobook()
             }
+            setCancelButton(hidden: true)
         case .editText:
             view.bringSubview(toFront: textEditingContainerView)
             self.textEditingContainerView.alpha = 1.0
@@ -532,12 +543,16 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             textEditingViewController.animateOn()
         }
         
-        setTopBars(hidden: tool == .placeAsset || tool == .editText)
+        setTopBars(hidden: tool == .editText)
     }
     
     private func setTopBars(hidden: Bool) {
         navigationController?.setNavigationBarHidden(hidden, animated: true)
         setNeedsStatusBarAppearanceUpdate()
+    }
+    
+    private func setCancelButton(hidden: Bool) {
+        navigationItem.setLeftBarButton(hidden ? nil : cancelBarButtonItem, animated: true)
     }
     
     override var prefersStatusBarHidden: Bool {

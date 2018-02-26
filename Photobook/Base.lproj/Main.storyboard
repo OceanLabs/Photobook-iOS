@@ -548,6 +548,7 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="assetSelectionContainerView" destination="rjg-CR-QNN" id="90F-4o-IBf"/>
+                        <outlet property="cancelBarButtonItem" destination="O4y-Bw-r0Y" id="xB2-VR-E0H"/>
                         <outlet property="colorSelectionContainerView" destination="KHP-IW-R1o" id="aVB-IM-8bg"/>
                         <outlet property="coverAssetContainerView" destination="gqm-5A-oWZ" id="mMN-4G-cs6"/>
                         <outlet property="coverAssetImageView" destination="u2H-X3-aav" id="wq8-dd-lC4"/>
