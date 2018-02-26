@@ -89,12 +89,10 @@ class CheckoutViewController: UIViewController {
     private lazy var transitionOperation : BlockOperation = BlockOperation(block: { [unowned self] in
         if self.presentedViewController == nil{
             self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
-            OrderManager.shared.reset()
         }
         else {
             self.dismiss(animated: true, completion: {
                 self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
-                OrderManager.shared.reset()
             })
         }
     })

@@ -23,6 +23,7 @@ class ReceiptTableViewController: UITableViewController {
     }
 
     @IBAction func continueTapped(_ sender: UIBarButtonItem) {
+        OrderManager.shared.reset()
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         navigationController?.popToRootViewController(animated: true)
     }

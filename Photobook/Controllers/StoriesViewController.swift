@@ -36,6 +36,12 @@ class StoriesViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(loadStories), name: .UIApplicationDidBecomeActive, object: nil)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        (tabBarController?.tabBar as? PhotobookTabBar)?.isBackgroundHidden = false
+    }
+    
     @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
         tableView.reloadData()
     }

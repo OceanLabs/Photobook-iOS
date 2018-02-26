@@ -2894,6 +2894,7 @@
                         <outlet property="shippingMethodLabel" destination="9Ly-Ux-QDk" id="NEw-mD-Fgz"/>
                         <outlet property="shippingMethodView" destination="Dfm-Yd-PFG" id="uCT-lD-sKI"/>
                         <outlet property="showDeliveryDetailsConstraint" destination="m6y-9C-sCO" id="8ej-vo-xVP"/>
+                        <segue destination="Ak1-TW-jZH" kind="show" identifier="ReceiptSegue" id="oO7-2H-0Ki"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KDv-Mn-msH" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3266,7 +3267,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gyq-3W-xk4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6098" y="-134"/>
+            <point key="canvasLocation" x="4715" y="-134"/>
         </scene>
         <!--Item-->
         <scene sceneID="c5L-BD-S21">
@@ -5429,11 +5430,11 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <viewControllerLayoutGuide type="bottom" id="Ztc-aU-Khy"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="E5w-mv-kh8">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="300"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cSO-Mv-yrW">
-                                <rect key="frame" x="0.0" y="407" width="375" height="260"/>
+                                <rect key="frame" x="0.0" y="40" width="375" height="260"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yfr-DB-4is">
                                         <rect key="frame" x="0.0" y="31.5" width="375" height="328.5"/>
@@ -5466,7 +5467,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eGL-DM-nQa">
-                                        <rect key="frame" x="0.0" y="44" width="375" height="216"/>
+                                        <rect key="frame" x="0.0" y="98" width="375" height="162"/>
                                         <connections>
                                             <outlet property="dataSource" destination="auk-5U-w4y" id="yxP-In-b8q"/>
                                             <outlet property="delegate" destination="auk-5U-w4y" id="Jat-0f-ZW4"/>
@@ -5503,6 +5504,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                             <outletCollection property="gestureRecognizers" destination="TQQ-PR-Pvp" appends="YES" id="PKE-IV-lhH"/>
                         </connections>
                     </view>
+                    <size key="freeformSize" width="375" height="300"/>
                     <connections>
                         <outlet property="contentViewBottomConstraint" destination="gzc-Zp-wKY" id="LcJ-6k-TIK"/>
                         <outlet property="contentViewHeightConstraint" destination="AL2-Ti-FC4" id="WYL-US-0fI"/>
@@ -5517,7 +5519,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="4839" y="61"/>
+            <point key="canvasLocation" x="3838" y="-478"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="wh3-Mz-mVO">
