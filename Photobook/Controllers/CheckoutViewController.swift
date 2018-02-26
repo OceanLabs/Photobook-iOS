@@ -80,25 +80,12 @@ class CheckoutViewController: UIViewController {
     
     private var previousPromoText: String? //stores previously entered promo string to determine if it has changed
     
-    private var modalPresentationDismissedOperation : Operation?
+    private var modalPresentationDismissedGroup = DispatchGroup()
     lazy private var paymentManager: PaymentAuthorizationManager = {
         let manager = PaymentAuthorizationManager()
         manager.delegate = self
         return manager
     }()
-    
-    private lazy var transitionOperation : BlockOperation = BlockOperation(block: { [unowned self] in
-        if self.presentedViewController == nil{
-            OrderManager.shared.reset()
-            self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
-        }
-        else {
-            self.dismiss(animated: true, completion: {
-                OrderManager.shared.reset()
-                self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
-            })
-        }
-    })
     
     private lazy var progressOverlayViewController: ProgressOverlayViewController = {
         return ProgressOverlayViewController.progressOverlay(parent: self)
@@ -143,7 +130,7 @@ class CheckoutViewController: UIViewController {
     private func setupApplePayButton() {
         let applePayButton = PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .black)
         applePayButton.translatesAutoresizingMaskIntoConstraints = false
-        applePayButton.addTarget(self, action: #selector(CheckoutViewController.applePayButtonTapped(_:)), for: .touchUpInside)
+        applePayButton.addTarget(self, action: #selector(payButtonTapped(_:)), for: .touchUpInside)
         self.applePayButton = applePayButton
         payButtonContainerView.addSubview(applePayButton)
         payButtonContainerView.clipsToBounds = true
@@ -394,6 +381,19 @@ class CheckoutViewController: UIViewController {
         }
     }
     
+    private func showReceipt() {
+        if self.presentedViewController == nil{
+            OrderManager.shared.reset()
+            self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
+        }
+        else {
+            self.dismiss(animated: true, completion: {
+                OrderManager.shared.reset()
+                self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
+            })
+        }
+    }
+    
     //MARK: - Actions
     
     @IBAction func promoCodeDismissViewTapped(_ sender: Any) {
@@ -431,10 +431,6 @@ class CheckoutViewController: UIViewController {
         self.present(amountPickerViewController, animated: false, completion: nil)
     }
     
-    @IBAction private func applePayButtonTapped(_ sender: PKPaymentButton) {
-        paymentManager.authorizePayment(cost: OrderManager.shared.cachedCost!, method: .applePay)
-    }
-    
     @IBAction func payButtonTapped(_ sender: UIButton) {
         guard detailFieldsAreValid() else { return }
         
@@ -459,7 +455,7 @@ class CheckoutViewController: UIViewController {
             }
             else{
                 if OrderManager.shared.paymentMethod == .applePay{
-                    welf?.modalPresentationDismissedOperation = Operation()
+                    welf?.modalPresentationDismissedGroup.enter()
                 }
                 
                 guard let paymentMethod = OrderManager.shared.paymentMethod else { return }
@@ -505,13 +501,12 @@ class CheckoutViewController: UIViewController {
     }
     
     private func submitOrder(completionHandler: ((_ status: PKPaymentAuthorizationStatus) -> Void)?) {
-        
-        if let applePayDismissedOperation = modalPresentationDismissedOperation {
-            self.transitionOperation.addDependency(applePayDismissedOperation)
-        }
         completionHandler?(.success)
         
-        OperationQueue.main.addOperation(transitionOperation)
+        // It's possible that we are done submitting the order before the Apple Pay (or other) modal has dismissed, so wait for that to finish.
+        modalPresentationDismissedGroup.notify(queue: DispatchQueue.main, execute: { [weak welf = self] in
+            welf?.showReceipt()
+        })
     }
 }
 
@@ -578,11 +573,7 @@ extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
         OrderManager.shared.updateCost { [weak welf = self] (error: Error?) in
             guard welf != nil else { return }
             
-            if let applePayDismissedOperation = welf?.modalPresentationDismissedOperation{
-                if !applePayDismissedOperation.isFinished{
-                    OperationQueue.main.addOperation(applePayDismissedOperation)
-                }
-            }
+            welf?.modalPresentationDismissedGroup.leave()
             
             if let error = error {
                 let alert = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .alert)
