@@ -26,6 +26,14 @@ class StoriesManager {
         static let maxStoriesToDisplay = 16
     }
     
+    init() {
+        NotificationCenter.default.addObserver(self, selector: #selector(resetStoriesSelections), name: ReceiptNotificationName.receiptWillDismiss, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     func loadTopStories(){
         let memories = self.orderStories()
         stories = Array<Story>(memories.prefix(Constants.maxStoriesToDisplay))
@@ -213,5 +221,12 @@ class StoriesManager {
         
         // Sort
         selectedAssetsManager?.orderAssetsByDate()
+    }
+    
+    @objc private func resetStoriesSelections() {
+        for story in stories {
+            selectedAssetsManagerPerStory[story.identifier] = SelectedAssetsManager()
+            performAutoSelection(on: story)
+        }
     }
 }

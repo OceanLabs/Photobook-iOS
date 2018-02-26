@@ -166,7 +166,7 @@ class AssetCollectorViewController: UIViewController {
     //MARK: - API
     
     @IBAction public func clearAssets() {
-        selectedAssetsManager?.deselectAllAssets()
+        selectedAssetsManager?.deselectAllAssetsForAllAlbums()
     }
     
     @IBAction private func turnOnDeletingMode() {
