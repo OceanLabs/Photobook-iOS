@@ -13,9 +13,10 @@ import UIKit
 class Photobook: Codable {
     var id: Int
     var name: String!
-    var pageHeight: CGFloat!
-    var spineTextRatio: CGFloat!
     var aspectRatio: CGFloat!
+    var pageHeight: CGFloat!
+    lazy var pageWidth: CGFloat! = { return pageHeight! * aspectRatio! }()
+    var spineTextRatio: CGFloat!
     var coverLayouts: [Int]!
     var layouts: [Int]! // IDs of the permitted layouts
     
