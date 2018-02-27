@@ -164,9 +164,6 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         toolbar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
         toolbarButtons[Tool.selectAsset.rawValue].isSelected = true
         
-        if let navigationController = navigationController {
-            (navigationController.navigationBar as! PhotobookNavigationBar).setBarType(.clear)
-        }
         (navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(photobookNavigationBarType)
         
         NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
@@ -234,7 +231,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         return pageType == .cover ? coverFrameView : photobookFrameView
     }
     
-    func animateFromPhotobook(frame: CGRect) {
+    func animateFromPhotobook(frame: CGRect, completion: @escaping (() -> Void)) {
         containerRect = frame
         
         animatableAssetImageView.transform = .identity
@@ -256,6 +253,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         UIView.animate(withDuration: 0.3, delay: 0.1, options: [], animations: {
             self.assetSelectionContainerView.alpha = 1.0
             self.toolbar.alpha = 1.0
+            
+            (self.navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(.clear)
         }, completion: nil)
         
         UIView.animateKeyframes(withDuration: 0.3, delay: 0.0, options: [ .calculationModeCubicPaced ], animations: {
@@ -265,6 +264,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         }, completion: { _ in
             self.photobookContainerView.alpha = 1.0
             self.animatableAssetImageView.alpha = 0.0
+            
+            completion()
         })
     }
     
@@ -281,6 +282,9 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             self.layoutSelectionContainerView.alpha = 0.0
             self.colorSelectionContainerView.alpha = 0.0
             self.toolbar.alpha = 0.0
+            if let navigationController = self.navigationController {
+                navigationController.navigationBar.alpha = 0.0
+            }
         })
         
         UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseInOut], animations: {

@@ -573,19 +573,27 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             modalNavigationController.navigationBar.prefersLargeTitles = false
         }
 
+        let barType = (navigationController?.navigationBar as? PhotobookNavigationBar)?.barType
+        
         pageSetupViewController = modalNavigationController.viewControllers.first as! PageSetupViewController
         pageSetupViewController.selectedAssetsManager = selectedAssetsManager
         pageSetupViewController.pageIndex = index
         pageSetupViewController.albumForPicker = albumForEditingPicker
+        if barType != nil {
+            pageSetupViewController.photobookNavigationBarType = barType!
+        }
         pageSetupViewController.delegate = self
         
-        UIView.animate(withDuration: 0.1) {
-            self.navigationController!.navigationBar.alpha = 0.0
+        if barType == .clear {
+            UIView.animate(withDuration: 0.1) {
+                self.navigationController!.navigationBar.alpha = 0.0
+            }
         }
-        
         present(modalNavigationController, animated: false) {
             let containerRect = self.pageSetupViewController.view.convert(frame, from: containerView)
-            self.pageSetupViewController.animateFromPhotobook(frame: containerRect)
+            self.pageSetupViewController.animateFromPhotobook(frame: containerRect) {
+                self.navigationController!.navigationBar.alpha = 0.0
+            }
         }
     }
 }
@@ -751,11 +759,14 @@ extension PhotobookViewController: PageSetupDelegate {
             collectionView.reloadData()
         }
         
+        let barType = (navigationController?.navigationBar as? PhotobookNavigationBar)?.barType
+
+        UIView.animate(withDuration: barType == .white ? 0.3 : 0.1, delay: barType == .white ? 0.0 : 0.2, options: [], animations: {
+            self.navigationController!.navigationBar.alpha = 1.0
+        }, completion: nil)
+
         pageSetupViewController.animateBackToPhotobook {
             self.dismiss(animated: false)
-            UIView.animate(withDuration: 0.1, animations: {
-                self.navigationController!.navigationBar.alpha = 1.0
-            })
         }
     }
 }
