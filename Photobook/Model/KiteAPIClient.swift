@@ -40,15 +40,18 @@ class KiteAPIClient {
             let orderId = (response as? [String: Any])?["print_order_id"] as? String
             
             if let responseError = (response as? [String: Any])?["error"] as? [String: Any] {
-                if let errorCode = responseError["code"] as? String {
-                    if errorCode == "20" {
-                        // This is not actually an error, we can report success.
-                        completionHandler(orderId, nil)
-                        return
-                    }
+                guard let message = responseError["message"] as? String,
+                    let errorCodeString = responseError["code"] as? String,
+                    let errorCode = Int(errorCodeString)
+                    else { completionHandler(nil, APIClientError.parsing); return }
+                
+                if errorCode == 20 {
+                    // This is not actually an error, we can report success.
+                    completionHandler(orderId, nil)
+                    return
                 }
-                let message = responseError["message"] as? String
-                completionHandler(nil, NSError()) // TODO: use error message
+                
+                completionHandler(nil, APIClientError.server(code: errorCode, message: message))
             }
             
             if orderId != nil {

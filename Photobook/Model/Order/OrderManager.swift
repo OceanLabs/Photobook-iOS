@@ -97,6 +97,7 @@ class OrderManager {
         var shippingAddress = deliveryDetails?.address?.jsonRepresentation()
         shippingAddress?["recipient_first_name"] = deliveryDetails?.firstName
         shippingAddress?["recipient_last_name"] = deliveryDetails?.lastName
+        shippingAddress?["recipient_name"] = deliveryDetails?.fullName
         
         var parameters = [String: Any]()
         parameters["payment_charge_token"] = paymentToken
@@ -105,9 +106,10 @@ class OrderManager {
         parameters["customer_phone"] = deliveryDetails?.phone
         parameters["promo_code"] = promoCode
         parameters["shipping_method"] = shippingMethod
-        parameters["line_items"] = [[
-            "quantity": itemCount,
-            "pdfId": photobookId ?? ""
+        parameters["jobs"] = [[
+//            "template_id" = ProductManager.shared.product.id //TODO get this from the product
+            "multiples": itemCount,
+            "job_id": photobookId ?? ""
             ]]
         
         return parameters
