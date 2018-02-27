@@ -68,7 +68,6 @@ class InstagramAlbum {
             var newAssets = [Asset]()
             
             for d in data {
-                
                 var media = [[String : Any]]()
                 if let array = d["carousel_media"] as? [[String : Any]] {
                     for imagesDict in array {
@@ -89,10 +88,11 @@ class InstagramAlbum {
                         let standardResolutionImageUrl = URL(string: standardResolutionImageUrlString),
                         
                         let width = standardResolutionImage["width"] as? Int,
-                        let height = standardResolutionImage["height"] as? Int,
-                        
-                        let identifier = d["id"] as? String
+                        let height = standardResolutionImage["height"] as? Int
+    
                         else { continue }
+                    
+                    let identifier = UUID().uuidString
                     
                     newAssets.append(InstagramAsset(thumbnailUrl: thumbnailResolutionImageUrl, standardResolutionUrl: standardResolutionImageUrl, albumIdentifier: self.identifier, size: CGSize(width: width, height: height), identifier: identifier))
                 }
