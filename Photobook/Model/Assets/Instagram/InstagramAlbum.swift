@@ -34,7 +34,7 @@ class InstagramAlbum {
         instagramClient.authorizeURLHandler = authenticationHandler
     }
     
-    func fetchAssets(url: String, completionHandler:((_ error: ErrorMessage?)->())?) {
+    func fetchAssets(url: String, completionHandler:((_ error: ActionableErrorMessage?)->())?) {
         guard let token = KeychainSwift().get(OAuth2Swift.Constants.keychainInstagramTokenKey) else { return }
         
         var urlToLoad = url
@@ -120,7 +120,7 @@ extension InstagramAlbum: Album {
         return "Instagram"
     }
     
-    func loadAssets(completionHandler: ((ErrorMessage?) -> Void)?) {
+    func loadAssets(completionHandler: ((ActionableErrorMessage?) -> Void)?) {
         fetchAssets(url: Constants.instagramMediaBaseUrl, completionHandler: {error in
             completionHandler?(error)
         })

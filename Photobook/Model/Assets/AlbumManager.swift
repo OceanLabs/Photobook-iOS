@@ -15,7 +15,7 @@ struct AssetsNotificationName {
 protocol AlbumManager {
     var albums:[Album] { get }
     
-    func loadAlbums(completionHandler: ((_ errorMessage: ErrorMessage?) -> Void)?)
+    func loadAlbums(completionHandler: ((_ errorMessage: ActionableErrorMessage?) -> Void)?)
     
     func stopCachingImagesForAllAssets()
     func startCachingImages(for assets: [Asset], targetSize: CGSize)

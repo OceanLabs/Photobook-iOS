@@ -129,7 +129,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             guard let photobook = ProductManager.shared.products?.first,
                 error == nil
                 else {
-                    welf?.emptyScreenViewController.show(message: error?.localizedDescription ?? "Error", buttonTitle: NSLocalizedString("Photobook/RetryLoading", value: "Retry", comment: "Retry loading products button"), buttonAction: {
+                    welf?.emptyScreenViewController.show(message: error?.localizedDescription ?? "Error", buttonTitle: CommonLocalizedStrings.retry, buttonAction: {
                         welf?.loadProducts()
                     })
                     return
@@ -172,7 +172,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             }))
         }
         
-        alertController.addAction(UIAlertAction(title: NSLocalizedString("General/UI", value: "Cancel", comment: "Cancel a change"), style: .default, handler: nil))
+        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .default, handler: nil))
         
         present(alertController, animated: true, completion: nil)
     }
@@ -242,7 +242,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             self.navigationController?.popViewController(animated: true)
         }))
-        alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Cancel", value: "Cancel", comment: "Cancel button title for alert asking the user confirmation for an action"), style: .default, handler: nil))
+        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
         
         present(alertController, animated: true, completion: nil)
     }
@@ -847,7 +847,7 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
     
     private func showNotAllowedToAddMorePagesAlert() {
         let alertController = UIAlertController(title: NSLocalizedString("Photobook/TooManyPagesAlertTitle", value: "Too many pages", comment: "Alert title informing the user that they have reached the maximum number of pages"), message: NSLocalizedString("Photobook/TooManyPagesAlertMessage", value: "You cannot add any more pages to your photobook", comment: "Alert message informing the user that they have reached the maximum number of pages"), preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: NSLocalizedString("GenericAlert/OK", value: "OK", comment: "Acknowledgement to an alert dialog"), style: .default, handler: nil))
+        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
         present(alertController, animated: true, completion: nil)
     }
     

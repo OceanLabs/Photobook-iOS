@@ -80,7 +80,7 @@ class OrderManager {
         orderId = nil
     }
     
-    func submitOrder(completionHandler: @escaping (_ error: Error?) -> Void) {
+    func submitOrder(completionHandler: @escaping (_ error: ErrorMessage?) -> Void) {
         // First create a Photobook PDF Id
         ProductManager.shared.initializePhotobookPdf(completionHandler: { [weak welf = self] pdfId, error in
 //            guard error == nil else { completionHandler(error); return } //TODO uncomment

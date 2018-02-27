@@ -35,7 +35,7 @@ class KiteAPIClient {
         ]
     }
     
-    func submitOrder(parameters: [String: Any], completionHandler: @escaping (_ orderId: String?, _ error: Error?) -> Void) {
+    func submitOrder(parameters: [String: Any], completionHandler: @escaping (_ orderId: String?, _ error: ErrorMessage?) -> Void) {
         APIClient.shared.post(context: .kite, endpoint: Endpoints.orderSubmission, parameters: parameters, headers: kiteHeaders, completion: { response, error in
             let orderId = (response as? [String: Any])?["print_order_id"] as? String
             
@@ -43,7 +43,7 @@ class KiteAPIClient {
                 guard let message = responseError["message"] as? String,
                     let errorCodeString = responseError["code"] as? String,
                     let errorCode = Int(errorCodeString)
-                    else { completionHandler(nil, APIClientError.parsing); return }
+                    else { completionHandler(nil, ErrorMessage(APIClientError.parsing)); return }
                 
                 if errorCode == 20 {
                     // This is not actually an error, we can report success.
@@ -51,13 +51,15 @@ class KiteAPIClient {
                     return
                 }
                 
-                completionHandler(nil, APIClientError.server(code: errorCode, message: message))
+                completionHandler(nil, ErrorMessage(APIClientError.server(code: errorCode, message: message)))
             }
             
             if orderId != nil {
                 completionHandler(orderId, nil)
+            } else if let error = error {
+                completionHandler(nil, ErrorMessage(error))
             } else {
-                completionHandler(nil, error)
+                completionHandler(nil, ErrorMessage(message: CommonLocalizedStrings.somethingWentWrong))
             }
         })
     }

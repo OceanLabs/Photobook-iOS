@@ -8,10 +8,10 @@
 
 class ErrorUtils {
     
-    static func genericRetryErrorMessage(message: String, action: @escaping () -> ()) -> ErrorMessage {
-        let title = NSLocalizedString("GenericError/Something Went Wrong", value: "Something went wrong", comment: "Generic error message")
-        let buttonTitle = NSLocalizedString("General/RetryButtonTitle", value: "Retry", comment: "Button title to retry operation")
-        return ErrorMessage(title: title, message: message, buttonTitle: buttonTitle, buttonAction: action)
+    static func genericRetryErrorMessage(message: String, action: @escaping () -> ()) -> ActionableErrorMessage {
+        let title = CommonLocalizedStrings.somethingWentWrong
+        let buttonTitle = CommonLocalizedStrings.retry
+        return ActionableErrorMessage(title: title, message: message, buttonTitle: buttonTitle, buttonAction: action)
     }
 
 }

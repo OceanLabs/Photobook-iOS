@@ -171,7 +171,7 @@ class StoriesManager {
         }
     }
     
-    func prepare(story: Story, completionHandler: ((ErrorMessage?) -> Void)?) {
+    func prepare(story: Story, completionHandler: ((ActionableErrorMessage?) -> Void)?) {
         story.loadAssets(completionHandler: { [weak welf = self] error in
             welf?.performAutoSelection(on: story)
             completionHandler?(error)

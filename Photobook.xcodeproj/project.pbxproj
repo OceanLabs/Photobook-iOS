@@ -49,6 +49,8 @@
 		2E7C6F06201F4E670071E6B8 /* ReceiptTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C6F05201F4E670071E6B8 /* ReceiptTableViewController.swift */; };
 		2E876E091FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E876E081FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift */; };
 		2E876E0B1FC2FA15007CCFA2 /* ViewStorySegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E876E0A1FC2FA15007CCFA2 /* ViewStorySegue.swift */; };
+		2E8B27F72045A44800A0B403 /* ErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8B27F62045A44800A0B403 /* ErrorMessage.swift */; };
+		2E8B27F92045A6C000A0B403 /* UIAlertControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8B27F82045A6C000A0B403 /* UIAlertControllerExtensions.swift */; };
 		2E8B3E441FD191AC00FB8878 /* PhotobookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8B3E431FD191AC00FB8878 /* PhotobookViewController.swift */; };
 		2EA00E4520443ACB00371B88 /* KiteAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA00E4420443ACB00371B88 /* KiteAPIClient.swift */; };
 		2EA00E472044464E00371B88 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA00E462044464E00371B88 /* Analytics.swift */; };
@@ -214,6 +216,8 @@
 		2E7C6F05201F4E670071E6B8 /* ReceiptTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptTableViewController.swift; sourceTree = "<group>"; };
 		2E876E081FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPickerCoverCollectionViewCell.swift; sourceTree = "<group>"; };
 		2E876E0A1FC2FA15007CCFA2 /* ViewStorySegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewStorySegue.swift; sourceTree = "<group>"; };
+		2E8B27F62045A44800A0B403 /* ErrorMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorMessage.swift; sourceTree = "<group>"; };
+		2E8B27F82045A6C000A0B403 /* UIAlertControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExtensions.swift; sourceTree = "<group>"; };
 		2E8B3E431FD191AC00FB8878 /* PhotobookViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotobookViewController.swift; sourceTree = "<group>"; };
 		2EA00E4420443ACB00371B88 /* KiteAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KiteAPIClient.swift; sourceTree = "<group>"; };
 		2EA00E462044464E00371B88 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
@@ -653,6 +657,7 @@
 				2ED79FEA1FBAEDFA0046B96C /* UIScreenExtensions.swift */,
 				6F3A731D202AFB6800EEF04C /* UITextViewExtensions.swift */,
 				2E6B9ED91FBDEEF400F28C00 /* UIViewExtensions.swift */,
+				2E8B27F82045A6C000A0B403 /* UIAlertControllerExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -762,6 +767,7 @@
 				B9A1433A1FDAD278000EFE0D /* Random.swift */,
 				B9D3340B2029BF80003D4338 /* JSON.swift */,
 				2EA88C63203C321E00CADCAD /* ErrorUtils.swift */,
+				2E8B27F62045A44800A0B403 /* ErrorMessage.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -1087,6 +1093,7 @@
 				6FDF25E71FB6052A00F46BB0 /* UIImageExtensions.swift in Sources */,
 				6FA189371FFFA07500E6D0AB /* BorderedCollectionViewCell.swift in Sources */,
 				6F3C4ACF1FC8811C00DA0196 /* ProductLayoutText.swift in Sources */,
+				2E8B27F92045A6C000A0B403 /* UIAlertControllerExtensions.swift in Sources */,
 				6F3C4AC91FC8804300DA0196 /* ProductLayout.swift in Sources */,
 				6F4DE6591FB453090099A97E /* PhotobookNavigationBar.swift in Sources */,
 				2EB9BFAB2036CCD900EED9FA /* InstagramAsset.swift in Sources */,
@@ -1111,6 +1118,7 @@
 				B9BE9F941FBF33320002C459 /* AssetCollectorCollectionViewCell.swift in Sources */,
 				2E0B58A01FB3297300F31A9E /* AlbumCollectionViewCell.swift in Sources */,
 				2E0B58991FB328B800F31A9E /* Asset.swift in Sources */,
+				2E8B27F72045A44800A0B403 /* ErrorMessage.swift in Sources */,
 				2E17338E2010BA3600F0D718 /* StringExtensions.swift in Sources */,
 				2E6B9EDF1FBF1B0D00F28C00 /* FullScreenImageViewController.swift in Sources */,
 				2E0B58951FB3280000F31A9E /* AlbumManager.swift in Sources */,

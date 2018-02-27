@@ -46,9 +46,6 @@ class CheckoutViewController: UIViewController {
         static let promoCodePlaceholderText = NSLocalizedString("Controllers/CheckoutViewController/PromoCodePlaceholderText",
                                                          value: "Add here",
                                                          comment: "Placeholder text for promo code")
-        static let alertOkText = NSLocalizedString("Controllers/CheckoutViewController/OK",
-                                                        value: "OK",
-                                                        comment: "OK string for alerts")
         static let title = NSLocalizedString("Controllers/CheckoutViewController/Title", value: "Payment", comment: "Payment screen title")
     }
     
@@ -181,7 +178,7 @@ class CheckoutViewController: UIViewController {
             
             if let error = error {
                 let alert = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .alert)
-                let okAction = UIAlertAction(title: Constants.alertOkText, style: .default)
+                let okAction = UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default)
                 alert.addAction(okAction)
                 self.present(alert, animated: true)
                 return
@@ -444,8 +441,8 @@ class CheckoutViewController: UIViewController {
                 guard error == nil else {
                     let genericError = NSLocalizedString("UpdateCostError", value: "An error occurred while updating our products.\nPlease try again later.", comment: "Generic error when retrieving the cost for the products in the basket")
                     
-                    let alert = UIAlertController(title: nil, message: genericError.description, preferredStyle: .alert)
-                    let okAction = UIAlertAction(title: Constants.alertOkText, style: .default)
+                    let alert = UIAlertController(title: nil, message: genericError, preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default)
                     alert.addAction(okAction)
                     self.present(alert, animated: true)
                     return
@@ -512,25 +509,18 @@ class CheckoutViewController: UIViewController {
     
     private func submitOrder(completionHandler: ((_ status: PKPaymentAuthorizationStatus) -> Void)?) {
         progressOverlayViewController.show(message: Constants.submittingOrderText)
-        OrderManager.shared.submitOrder(completionHandler: { [weak welf = self] error in
+        OrderManager.shared.submitOrder(completionHandler: { [weak welf = self] errorMessage in
             welf?.progressOverlayViewController.hide()
-            guard error == nil else {
+            
+            if let errorMessage = errorMessage {
                 completionHandler?(.failure)
-                
-                let showAlert = {
-                    let alertController = UIAlertController(title: NSLocalizedString("Checkout/SubmissionErrorTitle", value: "Could not submit your order", comment: "Error alert title letting the user know that the order submission has failed"), message: error?.localizedDescription, preferredStyle: .alert)
-                    alertController.addAction(UIAlertAction(title: NSLocalizedString("GenericAlert/OK", value: "OK", comment: "Acknowledgement to an alert dialog"), style: .default, handler: nil))
-                    welf?.present(alertController, animated: true, completion: nil)
-                }
-                
                 if welf?.presentedViewController != nil {
                     welf?.presentedViewController?.dismiss(animated: true, completion: {
-                        showAlert()
+                        welf?.present(UIAlertController(errorMessage: errorMessage), animated: true, completion: nil)
                     })
                 } else {
-                    showAlert()
+                    welf?.present(UIAlertController(errorMessage: errorMessage), animated: true, completion: nil)
                 }
-                
                 return
             }
             
@@ -597,7 +587,7 @@ extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
     func paymentAuthorizationDidFinish(token: String?, error: Error?, completionHandler: ((PKPaymentAuthorizationStatus) -> Void)?) {
         if let error = error {
             let alert = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: Constants.alertOkText, style: .default)
+            let okAction = UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default)
             alert.addAction(okAction)
             self.present(alert, animated: true)
             
@@ -616,7 +606,7 @@ extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
             
             if let error = error {
                 let alert = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .alert)
-                let okAction = UIAlertAction(title: Constants.alertOkText, style: .default)
+                let okAction = UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default)
                 alert.addAction(okAction)
                 self.present(alert, animated: true)
                 
