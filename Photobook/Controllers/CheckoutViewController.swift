@@ -586,11 +586,8 @@ extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
     
     func paymentAuthorizationDidFinish(token: String?, error: Error?, completionHandler: ((PKPaymentAuthorizationStatus) -> Void)?) {
         if let error = error {
-            let alert = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default)
-            alert.addAction(okAction)
-            self.present(alert, animated: true)
-            
+            progressOverlayViewController.hide()
+            self.present(UIAlertController(errorMessage: ErrorMessage(error)), animated: true)
             return
         }
         
@@ -605,11 +602,7 @@ extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
             welf?.modalPresentationDismissedGroup.leave()
             
             if let error = error {
-                let alert = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .alert)
-                let okAction = UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default)
-                alert.addAction(okAction)
-                self.present(alert, animated: true)
-                
+                self.present(UIAlertController(errorMessage: ErrorMessage(error)), animated: true)
                 return
             }
         }

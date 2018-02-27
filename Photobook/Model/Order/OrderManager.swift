@@ -107,9 +107,9 @@ class OrderManager {
         parameters["promo_code"] = promoCode
         parameters["shipping_method"] = shippingMethod
         parameters["jobs"] = [[
-//            "template_id" = ProductManager.shared.product.id //TODO get this from the product
-            "multiples": itemCount,
-            "job_id": photobookId ?? ""
+            "template_id" : ProductManager.shared.product?.productTemplateId ?? "",
+            "multiples" : itemCount,
+            "assets": [["inside_pdf" : photobookId ?? ""]]
             ]]
         
         return parameters
