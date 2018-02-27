@@ -167,6 +167,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         if let navigationController = navigationController {
             (navigationController.navigationBar as! PhotobookNavigationBar).setBarType(.clear)
         }
+        (navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(photobookNavigationBarType)
         
         NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
     }
