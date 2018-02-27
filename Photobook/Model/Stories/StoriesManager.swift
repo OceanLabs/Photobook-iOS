@@ -173,7 +173,6 @@ class StoriesManager {
     
     func prepare(story: Story, completionHandler: ((ActionableErrorMessage?) -> Void)?) {
         story.loadAssets(completionHandler: { [weak welf = self] error in
-            welf?.performAutoSelection(on: story)
             completionHandler?(error)
             
             // Cache the first 25 thumbnails from each story so that they don't appear blank on the first animation
@@ -186,6 +185,12 @@ class StoriesManager {
     
     func selectedAssetsManager(for story: Story) -> SelectedAssetsManager?{
         return selectedAssetsManagerPerStory[story.identifier]
+    }
+    
+    func performAutoSelectionIfNeeded(on story: Story) {
+        if !story.hasPerformedAutoSelection {
+            performAutoSelection(on: story)
+        }
     }
     
     private func performAutoSelection(on story: Story) {
@@ -221,12 +226,14 @@ class StoriesManager {
         
         // Sort
         selectedAssetsManager?.orderAssetsByDate()
+        
+        story.hasPerformedAutoSelection = true
     }
     
     @objc private func resetStoriesSelections() {
         for story in stories {
-            selectedAssetsManagerPerStory[story.identifier] = SelectedAssetsManager()
-            performAutoSelection(on: story)
+            selectedAssetsManagerPerStory[story.identifier]?.deselectAllAssetsForAllAlbums()
+            story.hasPerformedAutoSelection = false
         }
     }
 }

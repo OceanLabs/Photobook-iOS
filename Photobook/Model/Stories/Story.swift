@@ -17,6 +17,7 @@ class Story {
     var score = 0
     var assets = [Asset]()
     var hasMoreAssetsToLoad = false
+    var hasPerformedAutoSelection = false
     
     // Ability to set locale in Unit Tests
     lazy var locale = Locale.current
