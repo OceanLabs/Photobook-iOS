@@ -16,7 +16,7 @@ struct PhotobookConstants {
     static let cornerRadius: CGFloat = 1.0
     static let borderWidth: CGFloat = 0.5
     
-    static let horizontalPageToCoverMargin: CGFloat = 16.0 //20.0
+    static let horizontalPageToCoverMargin: CGFloat = 16.0
     static let verticalPageToCoverMargin: CGFloat = 5.0
 }
 
