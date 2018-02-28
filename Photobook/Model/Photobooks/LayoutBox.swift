@@ -20,11 +20,39 @@ struct LayoutBox: Codable {
         return rect.height > rect.width
     }
     
-    func rectContained(in size: CGSize) -> CGRect {
-        let x = rect.minX * size.width
-        let y = rect.minY * size.height
-        let width = rect.width * size.width
-        let height = rect.height * size.height
+    func rectContained(in pageSize: CGSize) -> CGRect {
+        let x = rect.minX * pageSize.width
+        let y = rect.minY * pageSize.height
+        let width = rect.width * pageSize.width
+        let height = rect.height * pageSize.height
+        return CGRect(x: x, y: y, width: width, height: height)
+    }
+    
+    func bleedRect(in containerSize: CGSize, withBleed bleed: CGFloat?) -> CGRect {
+        guard let bleed = bleed else {
+            return CGRect(x: 0.0, y: 0.0, width: containerSize.width, height: containerSize.height)
+        }
+        
+        var x: CGFloat = 0.0
+        var y: CGFloat = 0.0
+        var width: CGFloat = containerSize.width
+        var height: CGFloat = containerSize.height
+        
+        if rect.minX ~= 0.0 { // Left bleed
+            x = -bleed
+            width += bleed
+        }
+        if rect.maxX ~= 1.0 { // Right bleed
+            width += bleed
+        }
+        if rect.minY ~= 0.0 { // Tob bleed
+            y = -bleed
+            height += bleed
+        }
+        if rect.maxY ~= 1.0 { // Bottom bleed
+            height += bleed
+        }
+        
         return CGRect(x: x, y: y, width: width, height: height)
     }
     
