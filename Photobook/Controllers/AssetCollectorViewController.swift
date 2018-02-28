@@ -89,8 +89,8 @@ class AssetCollectorViewController: UIViewController {
                 let duration: TimeInterval = isHideShowAnimated ? 0.2 : 0
                 let options = isHidden ? UIViewAnimationOptions.curveEaseIn : UIViewAnimationOptions.curveEaseOut
                 UIView.animate(withDuration: duration, delay: 0, options: options, animations: {
-                    self.topContainerView.isHidden = self.isHidden
-                    self.imageCollectionView.isHidden = self.isHidden
+                    self.topContainerView.alpha = self.isHidden ? 0 : 1
+                    self.imageCollectionView.alpha = self.isHidden ? 0 : 1
                     self.adaptHeight()
                     actions?()
                 }, completion: nil)
@@ -224,23 +224,30 @@ class AssetCollectorViewController: UIViewController {
     }
     
     private func adaptHeight() {
-        var height: CGFloat = viewHeight
+        var bottomInset: CGFloat = 0
+        
+        var height: CGFloat = viewHeightDefault
         if let tabBar = tabBar {
             height += tabBar.frame.size.height
         } else if #available(iOS 11.0, *) {
-            height += isHidden ? 0 : parentController!.view.safeAreaInsets.bottom
+            bottomInset += parentController!.view.safeAreaInsets.bottom
+            height += bottomInset
         }
         
         view.translatesAutoresizingMaskIntoConstraints = false
         
         if heightConstraint == nil {
             //create new contraint
-            heightConstraint = NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 0)
+            heightConstraint = NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: height)
             view.addConstraint(heightConstraint!)
         }
         
-        //set constraint value
-        heightConstraint?.constant = height
+        if isHidden {
+            view.transform = CGAffineTransform(translationX: 0, y: viewHeightDefault + bottomInset)
+        } else {
+            view.transform = .identity
+            heightConstraint?.constant = height
+        }
         view.setNeedsLayout()
         view.layoutIfNeeded()
         
