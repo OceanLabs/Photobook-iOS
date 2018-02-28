@@ -42,6 +42,8 @@ class ProductManager {
     static let shouldRetryUploadingImages = Notification.Name("ProductManagerShouldRetryUploadingImages")
     static let finishedPhotobookCreation = Notification.Name("ProductManagerFinishedPhotobookCreation")
     
+    private let bleed: CGFloat = 8.5
+
     var currentPortraitLayout = 0
     var currentLandscapeLayout = 0
     
@@ -425,6 +427,12 @@ class ProductManager {
     func moveLayout(at sourceIndex: Int, to destinationIndex: Int) {
         guard sourceIndex < productLayouts.count && destinationIndex < productLayouts.count else { return }
         productLayouts.move(sourceIndex, to: destinationIndex)
+    }
+    
+    func bleed(forPageSize size: CGSize) -> CGFloat {
+        guard let product = product else { return 0.0 }
+        let scaleFactor = size.width / product.pageWidth
+        return bleed * scaleFactor
     }
 }
 
