@@ -93,11 +93,7 @@ class AssetCollectorViewController: UIViewController {
                     self.imageCollectionView.isHidden = self.isHidden
                     self.adaptHeight()
                     actions?()
-                }, completion: { _ in
-                    UIView.animate(withDuration: 0.1, animations: {
-                        self.tabBar?.isBackgroundHidden = true
-                    })
-                })
+                }, completion: nil)
             }
         }
     }
@@ -247,6 +243,8 @@ class AssetCollectorViewController: UIViewController {
         heightConstraint?.constant = height
         view.setNeedsLayout()
         view.layoutIfNeeded()
+        
+        tabBar?.isBackgroundHidden = true
     }
     
     private func adaptToNewAssetCount() {
