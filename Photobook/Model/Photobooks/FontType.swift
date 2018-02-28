@@ -45,12 +45,27 @@ import Foundation
         }
     }
     
+    /// Typing attributes for a photobook input field
+    ///
+    /// - Parameters:
+    ///   - fontSize: Font size for the input text
+    ///   - fontColor: Font colour for the input text
+    ///   - isSpineText: Whether the text will show on the spine of the book
+    /// - Returns: Typing attributes using the provided parameters
     func typingAttributes(fontSize: CGFloat, fontColor: UIColor, isSpineText: Bool = false) -> [String: Any] {
         let paragraphStyle = self.paragraphStyle(isSpineText: isSpineText)
         let font = fontWithSize(fontSize)
         return [ NSAttributedStringKey.font.rawValue: font, NSAttributedStringKey.foregroundColor.rawValue: fontColor, NSAttributedStringKey.paragraphStyle.rawValue: paragraphStyle ]
     }
     
+    /// Attributed text to show on a photobook page or spine
+    ///
+    /// - Parameters:
+    ///   - text: The plain text to use
+    ///   - fontSize: Font size for the text
+    ///   - fontColor: Font colour for the text
+    ///   - isSpineText: Whether the text will show on the spine of the book
+    /// - Returns: Attributed text using the provided parameters
     func attributedText(with text: String!, fontSize: CGFloat, fontColor: UIColor, isSpineText: Bool = false) -> NSAttributedString {
         let paragraphStyle = self.paragraphStyle(isSpineText: isSpineText)
         let font = fontWithSize(fontSize)
@@ -59,8 +74,14 @@ import Foundation
         return NSAttributedString(string: text, attributes: attributes)
     }
     
-    func sizeForScreenHeight(_ screenHeight: CGFloat, isSpineText: Bool = false) -> CGFloat {
-        let photobookToOnScreenScale = screenHeight / ProductManager.shared.product!.pageHeight
+    /// Font size for the specified page height on screen in relation to the original book size in points
+    ///
+    /// - Parameters:
+    ///   - screenHeight: The height of the page on screen
+    ///   - isSpineText: Whether the text will show on the spine of the book
+    /// - Returns: The scaled font size. If screenHeight is not provided, it returns the original font size.
+    func sizeForScreenHeight(_ screenHeight: CGFloat? = nil, isSpineText: Bool = false) -> CGFloat {
+        let photobookToOnScreenScale = screenHeight != nil ? screenHeight! / ProductManager.shared.product!.pageHeight : 1.0
         return photobookFontSize(isSpineText: isSpineText) * photobookToOnScreenScale
     }
 }
