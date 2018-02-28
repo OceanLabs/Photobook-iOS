@@ -66,7 +66,6 @@ class InstagramAlbum {
             var newAssets = [Asset]()
             
             for d in data {
-                
                 var media = [[String : Any]]()
                 if let array = d["carousel_media"] as? [[String : Any]] {
                     for imagesDict in array {
@@ -77,7 +76,8 @@ class InstagramAlbum {
                     media.append(images)
                 }
                 
-                for images in media {
+                for i in 0..<media.count {
+                    let images = media[i]
                     guard let thumbnailImage = images["thumbnail"] as? [String : Any],
                         let thumbnailResolutionImageUrlString = thumbnailImage["url"] as? String,
                         let thumbnailResolutionImageUrl = URL(string: thumbnailResolutionImageUrlString),
@@ -90,9 +90,10 @@ class InstagramAlbum {
                         let height = standardResolutionImage["height"] as? Int,
                         
                         let identifier = d["id"] as? String
+    
                         else { continue }
                     
-                    newAssets.append(InstagramAsset(thumbnailUrl: thumbnailResolutionImageUrl, standardResolutionUrl: standardResolutionImageUrl, albumIdentifier: self.identifier, size: CGSize(width: width, height: height), identifier: identifier))
+                    newAssets.append(InstagramAsset(thumbnailUrl: thumbnailResolutionImageUrl, standardResolutionUrl: standardResolutionImageUrl, albumIdentifier: self.identifier, size: CGSize(width: width, height: height), identifier: "\(identifier)-\(i)"))
                 }
             }
             

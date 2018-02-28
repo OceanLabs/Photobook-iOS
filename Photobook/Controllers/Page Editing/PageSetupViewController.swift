@@ -29,7 +29,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private enum Tool: Int {
-        case selectAsset, selectLayout, placeAsset, selectColor, editText
+        case selectAsset, selectLayout, selectColor, placeAsset, editText
     }
     
     @IBOutlet private weak var photobookContainerView: UIView!
@@ -39,8 +39,9 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private weak var colorSelectionContainerView: UIView!
     @IBOutlet private weak var textEditingContainerView: UIView!
     
-    @IBOutlet var toolbarButtons: [UIButton]!
-    @IBOutlet weak var toolbar: UIToolbar!
+    @IBOutlet private var toolbarButtons: [UIButton]!
+    @IBOutlet private weak var toolbar: UIToolbar!
+    @IBOutlet private var cancelBarButtonItem: UIBarButtonItem!
     
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
     var albumForPicker: Album?
@@ -119,6 +120,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             }
         }
     }
+    
     private var productLayout: ProductLayout!
     private var availableLayouts: [Layout]!
     private var pageSize: CGSize = .zero
@@ -140,6 +142,17 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             return coverFrameView.pageView
         }
     }
+    private var oppositePageView: PhotobookPageView? {
+        switch pageType {
+        case .left:
+            return photobookFrameView.rightPageView
+        case .right:
+            return photobookFrameView.leftPageView
+        default:
+            return nil
+        }
+    }
+    
     private var selectedColor: ProductColor!
     private var pageColor = ProductManager.shared.pageColor
     
@@ -150,6 +163,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         toolbar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
         toolbarButtons[Tool.selectAsset.rawValue].isSelected = true
+        
+        (navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(photobookNavigationBarType)
         
         NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
     }
@@ -182,10 +197,115 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             pageView.pageIndex = pageIndex
             pageView.productLayout = productLayout
-            pageView.setupLayoutBoxes(animated: false)
+            pageView.setupImageBox(with: nil, animated: false)
+            pageView.setupTextBox(mode: .userTextOnly)
+            
+            // Setup the opposite layout if necessary
+            if !isDoublePage && (pageType == .left || pageType == .right) {
+                let oppositeIndex = pageIndex! + (pageType == .left ? 1 : -1)
+                oppositePageView!.pageIndex = oppositeIndex
+                oppositePageView!.productLayout = ProductManager.shared.productLayouts[oppositeIndex]
+                oppositePageView!.setupImageBox(with: nil, animated: false)
+                oppositePageView!.setupTextBox(mode: .userTextOnly)
+            }
 
+            hideViewsBeforeAnimation()
+            
             hasDoneSetup = true
         }
+    }
+    
+    private func hideViewsBeforeAnimation() {
+        storyboardBackgroundColor = view.backgroundColor
+        view.backgroundColor = .clear
+        
+        assetSelectionContainerView.alpha = 0.0
+        photobookContainerView.alpha = 0.0
+        toolbar.alpha = 0.0
+    }
+
+    private lazy var animatableAssetImageView = UIImageView()
+    private var containerRect: CGRect!
+    private var storyboardBackgroundColor: UIColor!
+    private var frameView: UIView {
+        return pageType == .cover ? coverFrameView : photobookFrameView
+    }
+    
+    func animateFromPhotobook(frame: CGRect, completion: @escaping (() -> Void)) {
+        containerRect = frame
+        
+        animatableAssetImageView.transform = .identity
+        animatableAssetImageView.frame = frameView.bounds
+        animatableAssetImageView.center = CGPoint(x: containerRect.midX, y: containerRect.midY)
+        animatableAssetImageView.image = frameView.snapshot()
+        
+        let initialScale = containerRect.width / frameView.bounds.width
+        animatableAssetImageView.transform = CGAffineTransform.identity.scaledBy(x: initialScale, y: initialScale)
+
+        view.addSubview(animatableAssetImageView)
+        
+        pageView.setupTextBox(mode: .placeHolder)
+        
+        UIView.animate(withDuration: 0.1) {
+            self.view.backgroundColor = self.storyboardBackgroundColor
+        }
+        
+        UIView.animate(withDuration: 0.3, delay: 0.1, options: [], animations: {
+            self.assetSelectionContainerView.alpha = 1.0
+            self.toolbar.alpha = 1.0
+            
+            (self.navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(.clear)
+        }, completion: nil)
+        
+        UIView.animateKeyframes(withDuration: 0.3, delay: 0.0, options: [ .calculationModeCubicPaced ], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1.0) {
+                self.animatableAssetImageView.transform = .identity
+                self.animatableAssetImageView.center = self.frameView.center
+            }
+        }, completion: { _ in
+            self.photobookContainerView.alpha = 1.0
+            self.animatableAssetImageView.alpha = 0.0
+
+            completion()
+        })
+    }
+    
+    func animateBackToPhotobook(_ completion: @escaping (() -> Void)) {
+        animatableAssetImageView.transform = .identity
+        animatableAssetImageView.frame = frameView.frame
+        animatableAssetImageView.image = frameView.snapshot()
+        
+        animatableAssetImageView.alpha = 1.0
+        frameView.alpha = 0.0
+        
+        UIView.animate(withDuration: 0.1, animations: {
+            self.assetSelectionContainerView.alpha = 0.0
+            self.layoutSelectionContainerView.alpha = 0.0
+            self.colorSelectionContainerView.alpha = 0.0
+            self.toolbar.alpha = 0.0
+            if let navigationController = self.navigationController {
+                navigationController.navigationBar.alpha = 0.0
+            }
+        })
+
+        let initialScale = containerRect.width / frameView.bounds.width
+        let containerCenter = CGPoint(x: containerRect.midX, y: containerRect.midY)
+
+        UIView.animateKeyframes(withDuration: 0.3, delay: 0.0, options: [ .calculationModeCubicPaced ], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1.0) {
+                self.animatableAssetImageView.transform = CGAffineTransform.identity.scaledBy(x: initialScale, y: initialScale)
+                self.animatableAssetImageView.center = containerCenter
+            }
+        }, completion: { _ in
+            UIView.animate(withDuration: 0.3, animations: {
+                self.animatableAssetImageView.alpha = 0.0
+            })
+            UIView.animate(withDuration: 0.2, animations: {
+                self.view.backgroundColor = .clear
+            }, completion: { _ in
+                completion()
+            })
+        })
     }
     
     deinit {
@@ -209,7 +329,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             }
         }
     }
-    
+
     private func transitionPhotobookFrame() {
         UIView.animate(withDuration: 0.1, animations: {
             self.photobookFrameView.layer.shadowOpacity = 0.0
@@ -217,10 +337,11 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             self.photobookFrameView.rightPageView.alpha = 0.0
         }) { _ in
             self.setupPhotobookPages()
-            self.setupPhotobookFrame()
             self.photobookFrameView.resetPageColor()
             
             UIView.animate(withDuration: 0.3, animations: {
+                self.setupPhotobookFrame()
+
                 self.pageView.setupLayoutBoxes(animated: false)
                 self.photobookContainerView.layoutIfNeeded()
             }) { _ in
@@ -245,7 +366,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func setupPhotobookFrame() {
-        photobookFrameView.width = (view.bounds.width - 2.0 * Constants.photobookSideMargin) * (isDoublePage ? 1.0 : 2.0)
+        photobookFrameView.width = (view.bounds.width - 2.0 * Constants.photobookSideMargin) * 2.0
+        photobookFrameView.transform = isDoublePage ? CGAffineTransform.identity.scaledBy(x: 0.5, y: 0.5) : .identity
 
         switch pageType! {
         case .last:
@@ -346,6 +468,12 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     @IBAction func tappedDoneButton(_ sender: UIBarButtonItem) {
+        // If in the asset placement tool, go back to the previous tool
+        if toolbarButtons[Tool.placeAsset.rawValue].isSelected {
+            tappedToolButton(previouslySelectedButton)
+            return
+        }
+        
         if productLayout.layout.imageLayoutBox == nil {
             // Remove the asset if the layout doesn't have an image box
             productLayout.asset = nil
@@ -397,6 +525,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
                 self.layoutSelectionContainerView.alpha = tool.rawValue == Tool.selectLayout.rawValue ? 1.0 : 0.0
                 self.colorSelectionContainerView.alpha = tool.rawValue == Tool.selectColor.rawValue ? 1.0 : 0.0
             })
+            
+            setCancelButton(hidden: false)
         case .placeAsset:
             let containerRect = placementContainerView.convert(assetContainerView.frame, from: pageView)
             assetPlacementViewController.productLayout = productLayout
@@ -410,6 +540,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
                 view.bringSubview(toFront: placementContainerView)
                 assetPlacementViewController.animateFromPhotobook()
             }
+            setCancelButton(hidden: true)
         case .editText:
             view.bringSubview(toFront: textEditingContainerView)
             self.textEditingContainerView.alpha = 1.0
@@ -432,6 +563,10 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     private func setTopBars(hidden: Bool) {
         navigationController?.setNavigationBarHidden(hidden, animated: true)
         setNeedsStatusBarAppearanceUpdate()
+    }
+    
+    private func setCancelButton(hidden: Bool) {
+        navigationItem.setLeftBarButton(hidden ? nil : cancelBarButtonItem, animated: true)
     }
     
     override var prefersStatusBarHidden: Bool {

@@ -21,7 +21,7 @@ extension InteractivePagesCell {
 
 @objc protocol PhotobookCollectionViewCellDelegate: class, UIGestureRecognizerDelegate {
     func didTapOnPlusButton(at foldIndex: Int)
-    func didTapOnPage(at: Int)
+    func didTapOnPage(at: Int, frame: CGRect, in containerView: UIView)
     @objc func didLongPress(_ sender: UILongPressGestureRecognizer)
     @objc func didPan(_ sender: UIPanGestureRecognizer)
 }
@@ -150,7 +150,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
 extension PhotobookCollectionViewCell: PhotobookPageViewDelegate {
     
     func didTapOnPage(at index: Int) {
-        delegate?.didTapOnPage(at: index)
+        delegate?.didTapOnPage(at: index, frame: photobookFrameView.frame, in: self)
     }
     
 }
