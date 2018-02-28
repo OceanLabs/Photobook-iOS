@@ -39,7 +39,7 @@ class OrderManager {
             promoCodeInvalidReason = "Invalid code 🤷"
         }
         
-        self.cachedCost = Cost(hash: 0, lineItems: [lineItem], shippingMethods: [shippingMethod, shippingMethod2], promoDiscount: promoDiscount, promoCodeInvalidReason: promoCodeInvalidReason)
+        self.cachedCost = Cost(hash: orderHash, lineItems: [lineItem], shippingMethods: [shippingMethod, shippingMethod2], promoDiscount: promoDiscount, promoCodeInvalidReason: promoCodeInvalidReason)
         if self.shippingMethod == nil { self.shippingMethod = 1 }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -47,10 +47,26 @@ class OrderManager {
         }
     }
     
+    var orderHash: Int {
+        
+        var stringHash = ""
+        if let deliveryDetails = deliveryDetails { stringHash += "ad:\(deliveryDetails.hashValue)," }
+        if let paymentMethod = paymentMethod { stringHash += "pm:\(paymentMethod.hashValue)," }
+        if let promoCode = promoCode { stringHash += "pc:\(promoCode)," }
+        if let productName = ProductManager.shared.product?.name { stringHash += "jb:\(productName)," }
+        stringHash += "qt:\(ProductManager.shared.productLayouts.count),"
+        
+        stringHash += "up:("
+        for upsell in OrderSummaryManager.shared.selectedUpsellOptions {
+            stringHash += "\(upsell.hashValue),"
+        }
+        stringHash += ")"
+        
+        return stringHash.hashValue
+    }
+    
     var hasValidCachedCost: Bool {
-        // TODO: validate
-        //        return cachedCost?.orderHash == self.hashValue
-        return true
+        return cachedCost?.orderHash == orderHash
     }
     var paymentToken: String?
     

@@ -34,7 +34,7 @@ class OrderSummaryManager {
             return ProductManager.shared.upsellOptions
         }
     }
-    private var selectedUpsellOptions:Set<UpsellOption> = []
+    var selectedUpsellOptions:Set<UpsellOption> = []
     private(set) var summary:OrderSummary?
     private(set) var upsoldProduct:Photobook? //product to place the order with. Reflects user's selected upsell options.
     private var previewImageUrl:String?
