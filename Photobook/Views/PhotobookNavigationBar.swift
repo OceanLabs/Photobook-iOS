@@ -15,6 +15,7 @@ class PhotobookNavigationBar: UINavigationBar {
     
     private var hasAddedBlur = false
     private var effectView: UIVisualEffectView!
+    private(set) var barType: PhotobookNavigationBarType = .white
     
     var willShowPrompt = false {
         didSet {
@@ -63,7 +64,9 @@ class PhotobookNavigationBar: UINavigationBar {
     }
     
     func setBarType(_ type: PhotobookNavigationBarType) {
-        switch type {
+        barType = type
+        
+        switch barType {
         case .clear:
             barTintColor = .clear
             effectView.alpha = 0.0
