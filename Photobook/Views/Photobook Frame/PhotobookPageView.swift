@@ -182,9 +182,9 @@ class PhotobookPageView: UIView {
         assetImageView.image = image
         assetImageView.transform = .identity
         assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: asset.size.width, height: asset.size.height)
-        assetImageView.center = CGPoint(x: bleedAssetContainerView.bounds.midX, y: bleedAssetContainerView.bounds.midY)
-        
-        productLayout!.productLayoutAsset!.containerSize = bleedAssetContainerView.bounds.size
+        let containerView = bleedAssetContainerView != nil ? bleedAssetContainerView! : assetContainerView!
+        assetImageView.center = CGPoint(x: containerView.bounds.midX, y: containerView.bounds.midY)
+        productLayout!.productLayoutAsset!.containerSize = containerView.bounds.size
         assetImageView.transform = productLayout!.productLayoutAsset!.transform
     }
     
