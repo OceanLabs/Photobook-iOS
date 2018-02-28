@@ -49,6 +49,7 @@ class ViewStorySegue: UIStoryboardSegue {
         destination.view.frame = CGRect(x: calculateBeginPosition(), y: imageView.frame.origin.y, width: source.view.frame.width, height: source.view.frame.height)
         destination.view.alpha = 0
         navigationController.view.insertSubview(destination.view, belowSubview: navigationController.navigationBar)
+        destination.assetCollectorController.delayAppearance = true
         
         // Add label snapshots that we'll be crossfading during the animation
         let sourceLabelsContainerSnapShot = sourceLabelsContainerView?.snapshotView(afterScreenUpdates: true)

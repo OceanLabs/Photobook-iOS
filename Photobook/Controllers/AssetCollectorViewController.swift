@@ -98,6 +98,8 @@ class AssetCollectorViewController: UIViewController {
         }
     }
     
+    var delayAppearance: Bool = false
+    
     private var horizontalConstraints: [NSLayoutConstraint]?
     private var verticalConstraints: [NSLayoutConstraint]?
     private var heightConstraint: NSLayoutConstraint?
@@ -147,13 +149,20 @@ class AssetCollectorViewController: UIViewController {
         isHideShowAnimated = false
         
         imageCollectionView.reloadData()
-        adaptToNewAssetCount()
+        if !delayAppearance {
+            adaptToNewAssetCount()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         isHideShowAnimated = true //enable animation for hidden state changes
+        
+        if delayAppearance {
+            delayAppearance = false
+            adaptToNewAssetCount()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
