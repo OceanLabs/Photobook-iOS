@@ -97,6 +97,8 @@ class ViewStorySegue: UIStoryboardSegue {
             navigationStack.append(destination)
             navigationController.setViewControllers(navigationStack, animated: false)
             imageView.removeFromSuperview()
+            
+            destination.registerFor3DTouch()
         })
         
     }

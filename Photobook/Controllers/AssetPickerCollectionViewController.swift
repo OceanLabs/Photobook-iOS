@@ -77,9 +77,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
             postAlbumLoadSetup()
         }
         
-        if traitCollection.forceTouchCapability == .available{
-            registerForPreviewing(with: self, sourceView: collectionView!)
-        }
+        registerFor3DTouch()
         
         // Setup the Image Collector Controller
         if let manager = selectedAssetsManager {
@@ -110,6 +108,12 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         super.viewDidLayoutSubviews()
         
         loadNextBatchOfAssetIfNeeded()
+    }
+    
+    func registerFor3DTouch() {
+        if traitCollection.forceTouchCapability == .available{
+            registerForPreviewing(with: self, sourceView: collectionView!)
+        }
     }
     
     @objc func albumsWereUpdated(_ notification: Notification) {
