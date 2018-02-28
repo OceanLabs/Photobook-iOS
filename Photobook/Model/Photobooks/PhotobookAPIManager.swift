@@ -136,8 +136,15 @@ class PhotobookAPIManager {
     
     func initializePhotobookPdf(completionHandler: @escaping (_ photobookId: String?, _ error: Error?) -> Void) {
         apiClient.post(context: .photobook, endpoint: EndPoints.initialisePdf, parameters: nil, completion: { response, error in
-            let photobookId = (response as? [String: Any])?["pdfId"] as? String ?? "I am a dummy Id, Remove Me" // TODO: Remove
-            completionHandler(photobookId, nil) // TODO: send the error
+            guard error == nil else {
+                completionHandler("I am a dummy Id, Remove Me", nil) // completionHandler(nil, error) // TODO: Remove dummy data
+                return
+            }
+            guard let photobookId = (response as? [String: Any])?["pdfId"] as? String else {
+                completionHandler(nil, APIClientError.parsing)
+                return
+            }
+            completionHandler(photobookId, nil)
         })
     }
     

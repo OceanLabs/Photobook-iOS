@@ -24,7 +24,9 @@ struct ErrorMessage {
         self.message = message
     }
     
-    init(_ error: Error, _ title: String? = nil) {
+    init?(_ error: Error?, _ title: String? = nil) {
+        guard let error = error else { return nil }
+        
         if let apiError = error as? APIClientError {
             self.init(apiError, title)
         } else {
@@ -32,7 +34,9 @@ struct ErrorMessage {
         }
     }
     
-    init(_ error: APIClientError, _ title: String? = nil) {
+    init?(_ error: APIClientError?, _ title: String? = nil) {
+        guard let error = error else { return nil }
+        
         self.title = title
         switch error {
         case .connection:
