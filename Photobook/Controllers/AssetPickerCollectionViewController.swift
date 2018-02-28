@@ -38,8 +38,6 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         return EmptyScreenViewController.emptyScreen(parent: self)
     }()
     
-    var shouldFadeInImages = true
-    
     var albumManager: AlbumManager?
     var album: Album! {
         didSet{
@@ -206,6 +204,12 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         }
     }
     
+    func coverImageLabelsContainerView() -> UIView? {
+        guard let cell = collectionView?.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? AssetPickerCoverCollectionViewCell else { return nil }
+        
+        return cell.labelsContainerView
+    }
+    
     // MARK: UIScrollView
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -342,7 +346,7 @@ extension AssetPickerCollectionViewController {
             let asset = album.assets[indexPath.item]
             cell.assetId = asset.identifier
             
-            cell.imageView.setImage(from: asset, fadeIn: shouldFadeInImages, size: imageCellSize, completionHandler: {
+            cell.imageView.setImage(from: asset, size: imageCellSize, completionHandler: {
                 return cell.assetId == asset.identifier
             })
             

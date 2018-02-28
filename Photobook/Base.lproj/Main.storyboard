@@ -1967,6 +1967,7 @@
                             <connections>
                                 <outlet property="coverImageView" destination="d9f-gl-KYC" id="eFs-cX-0Rq"/>
                                 <outlet property="datesLabel" destination="yUf-VW-H99" id="vCA-Cw-oJ3"/>
+                                <outlet property="labelsContainerView" destination="PIT-lO-Hem" id="qOp-sD-BHR"/>
                                 <outlet property="titleLabel" destination="L2H-2t-uck" id="4Ax-ay-Rrm"/>
                             </connections>
                         </collectionReusableView>
