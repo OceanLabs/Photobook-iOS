@@ -258,10 +258,10 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         }, completion: nil)
         
         UIView.animateKeyframes(withDuration: 0.3, delay: 0.0, options: [ .calculationModeCubicPaced ], animations: {
-            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1.0, animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1.0) {
                 self.animatableAssetImageView.transform = .identity
                 self.animatableAssetImageView.center = self.frameView.center
-            })
+            }
         }, completion: { _ in
             self.photobookContainerView.alpha = 1.0
             self.animatableAssetImageView.alpha = 0.0
@@ -292,13 +292,15 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         let containerCenter = CGPoint(x: containerRect.midX, y: containerRect.midY)
 
         UIView.animateKeyframes(withDuration: 0.3, delay: 0.0, options: [ .calculationModeCubicPaced ], animations: {
-            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1.0, animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1.0) {
                 self.animatableAssetImageView.transform = CGAffineTransform.identity.scaledBy(x: initialScale, y: initialScale)
                 self.animatableAssetImageView.center = containerCenter
-            })
+            }
         }, completion: { _ in
-            UIView.animate(withDuration: 0.2, animations: {
+            UIView.animate(withDuration: 0.3, animations: {
                 self.animatableAssetImageView.alpha = 0.0
+            })
+            UIView.animate(withDuration: 0.2, animations: {
                 self.view.backgroundColor = .clear
             }, completion: { _ in
                 completion()

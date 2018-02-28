@@ -123,14 +123,13 @@ class PhotobookPageView: UIView {
             return
         }
         
-        UIView.animate(withDuration: 0.1, animations: {
-            self.assetImageView.alpha = 0.0
-        }, completion: { _ in
-            self.setupImageBox()
-            self.setupTextBox()
-        })
+        self.setupImageBox()
+        self.setupTextBox()
     }
     
+    var previousIdentifier: String?
+    var previousImage: UIImage?
+
     func setupImageBox(with assetImage: UIImage? = nil, animated: Bool = true) {
         guard let imageBox = productLayout?.layout.imageLayoutBox else {
             assetContainerView.alpha = 0.0
@@ -149,10 +148,18 @@ class PhotobookPageView: UIView {
             return
         }
         
+        if previousIdentifier != nil && asset.identifier == previousIdentifier {
+            setImage(image: previousImage!)
+            return
+        }
+        
         asset.image(size: assetContainerView.frame.size, completionHandler: { [weak welf = self] (image, _) in
             guard welf?.pageIndex == index, let image = image else { return }
             welf?.setImage(image: image)
             
+            welf?.previousIdentifier = asset.identifier
+            welf?.previousImage = image
+
             UIView.animate(withDuration: animated ? 0.1 : 0.0) {
                 welf?.assetImageView.alpha = 1.0
             }
