@@ -59,9 +59,11 @@ class PhotobookPageView: UIView {
             }
         }
     }
+    var bleed: CGFloat?
     
     private var isShowingTextPlaceholder = false
     
+    @IBOutlet private weak var bleedAssetContainerView: UIView! // Hierarchical order: assetContainerView, bleedingAssetContainerView & assetImageView
     @IBOutlet private weak var assetContainerView: UIView!
     @IBOutlet private weak var assetPlaceholderIconImageView: UIImageView!
     @IBOutlet private weak var assetImageView: UIImageView!
@@ -78,11 +80,11 @@ class PhotobookPageView: UIView {
     @IBOutlet private var aspectRatioConstraint: NSLayoutConstraint!
     
     override func layoutSubviews() {
-        super.layoutSubviews()
-        
         guard let imageBox = productLayout?.layout.imageLayoutBox else { return }
         assetContainerView.frame = imageBox.rectContained(in: bounds.size)
-        
+        if bleedAssetContainerView != nil {
+            bleedAssetContainerView.frame = imageBox.bleedRect(in: assetContainerView.bounds.size, withBleed: bleed)
+        }
         let iconSize = min(assetContainerView.bounds.width, assetContainerView.bounds.height)
         assetPlaceholderIconImageView.bounds.size = CGSize(width: iconSize * 0.2, height: iconSize * 0.2)
         assetPlaceholderIconImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
@@ -138,6 +140,9 @@ class PhotobookPageView: UIView {
         
         assetContainerView.alpha = 1.0
         assetContainerView.frame = imageBox.rectContained(in: bounds.size)
+        if bleedAssetContainerView != nil {
+            bleedAssetContainerView.frame = imageBox.bleedRect(in: assetContainerView.bounds.size, withBleed: bleed)
+        }
         setImagePlaceholder(visible: true)
         
         guard let index = pageIndex, let asset = productLayout?.productLayoutAsset?.asset else { return }
@@ -177,9 +182,9 @@ class PhotobookPageView: UIView {
         assetImageView.image = image
         assetImageView.transform = .identity
         assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: asset.size.width, height: asset.size.height)
-        assetImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
+        assetImageView.center = CGPoint(x: bleedAssetContainerView.bounds.midX, y: bleedAssetContainerView.bounds.midY)
         
-        productLayout!.productLayoutAsset!.containerSize = assetContainerView.bounds.size
+        productLayout!.productLayoutAsset!.containerSize = bleedAssetContainerView.bounds.size
         assetImageView.transform = productLayout!.productLayoutAsset!.transform
     }
     
