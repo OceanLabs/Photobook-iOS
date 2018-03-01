@@ -8,7 +8,7 @@
 
 import Photos
 
-class Story {
+class Story: NSObject {
     let collectionList: PHCollectionList
     let collectionForCoverPhoto: PHAssetCollection
     var components: [String]!
@@ -36,6 +36,8 @@ class Story {
     init(list: PHCollectionList, coverCollection: PHAssetCollection) {
         collectionList = list
         collectionForCoverPhoto = coverCollection
+        super.init()
+        PHPhotoLibrary.shared().register(self)
     }
     
     private func dateString() -> String {
@@ -119,6 +121,40 @@ extension Story: Album {
     
     func loadNextBatchOfAssets() {}
     
+    
+}
+
+extension Story: PHPhotoLibraryChangeObserver {
+    
+    func photoLibraryDidChange(_ changeInstance: PHChange) {
+        var albumChanges = [AlbumChange]()
+        
+        DispatchQueue.main.sync {
+            var assetsRemoved = [Asset]()
+            var indexesRemoved = [Int]()
+            for asset in assets {
+                guard let asset = asset as? PhotosAsset else { continue }
+                if let changeDetails = changeInstance.changeDetails(for: asset.photosAsset),
+                    changeDetails.objectWasDeleted {
+                    assetsRemoved.append(asset)
+                    
+                    if let index = assets.index(where: { $0.identifier == asset.identifier}) {
+                        indexesRemoved.append(index)
+                    }
+                }
+            }
+            albumChanges.append(AlbumChange(album: self, assetsRemoved: assetsRemoved, indexesRemoved: indexesRemoved, assetsAdded: []))
+            
+            // Remove assets from this story from the end as to not mess up the indexes
+            for assetIndex in indexesRemoved.reversed() {
+                assets.remove(at: assetIndex)
+            }
+            
+            if !albumChanges.isEmpty {
+                NotificationCenter.default.post(name: AssetsNotificationName.albumsWereUpdated, object: albumChanges)
+            }
+        }
+    }
     
 }
 
