@@ -111,7 +111,7 @@ class ViewStorySegue: UIStoryboardSegue {
             
             if sourceView.frame.origin.x < source.view.frame.width / 2 {
                 // Left story
-                return sourceView.frame.origin.x + sourceView.frame.width - source.view.frame.width
+                return sourceView.frame.maxX - source.view.frame.width
             } else {
                 // Right story
                 return sourceView.frame.origin.x
