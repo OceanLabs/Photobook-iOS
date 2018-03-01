@@ -127,7 +127,7 @@ class CheckoutViewController: UIViewController {
         
         //POPULATE
         refresh()
-        emptyScreenViewController.show(message: Constants.loadingDetailsText, title: nil, image: nil, activity: true, buttonTitle: nil, buttonAction: nil)
+        emptyScreenViewController.show(message: Constants.loadingDetailsText)
     }
     
     private func setupApplePayButton() {
@@ -166,7 +166,11 @@ class CheckoutViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        updateViews()
+        if !OrderManager.shared.hasValidCachedCost {
+            refresh(false)
+        } else {
+            updateViews()
+        }
     }
     
     private func refresh(_ showProgress: Bool = true) {
