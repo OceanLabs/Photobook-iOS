@@ -17,6 +17,7 @@ class IntroViewController: UIViewController {
         case stories
         case browse
         case instagram
+        case facebook
     }
     
     var userHasDismissed:Bool {
@@ -125,6 +126,17 @@ class IntroViewController: UIViewController {
             let instagramLandingViewController = storyboard!.instantiateViewController(withIdentifier: "InstagramLandingViewController")
             (tabBarController.viewControllers?[Tab.instagram.rawValue] as? UINavigationController)?.setViewControllers([instagramLandingViewController], animated: false)
         }
+        
+        // Facebook
+        // Depending on whether we are logged in or not show the Facebook login screen or the album picker
+//        if KeychainSwift().getData(OAuth2Swift.Constants.keychainInstagramTokenKey) != nil {
+//            let instagramAssetPicker = AssetPickerCollectionViewController.instagramAssetPicker()
+//            instagramAssetPicker.delegate = instagramAssetPicker
+//            (tabBarController.viewControllers?[Tab.facebook.rawValue] as? UINavigationController)?.setViewControllers([instagramAssetPicker], animated: false)
+//        } else {
+            let facebookLandingViewController = storyboard!.instantiateViewController(withIdentifier: "FacebookLandingViewController")
+            (tabBarController.viewControllers?[Tab.facebook.rawValue] as? UINavigationController)?.setViewControllers([facebookLandingViewController], animated: false)
+//        }
         
         
         // Stories

@@ -128,7 +128,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Z9r-VZ-mKm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1077" y="-1351"/>
+            <point key="canvasLocation" x="2006" y="-643"/>
         </scene>
         <!--Edit Page-->
         <scene sceneID="f9T-ty-1Xu">
@@ -572,7 +572,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lpf-Fw-lQz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2240.8000000000002" y="-708.39580209895053"/>
+            <point key="canvasLocation" x="2980" y="-722"/>
         </scene>
         <!--Layout Selection View Controller-->
         <scene sceneID="epH-6D-bxV">
@@ -897,7 +897,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uX0-TK-al1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3063.1999999999998" y="-779.0104947526238"/>
+            <point key="canvasLocation" x="3802" y="-793"/>
         </scene>
         <!--Stories-->
         <scene sceneID="tne-QT-ifu">
@@ -1310,6 +1310,7 @@
                         <segue destination="hhS-Lc-qF3" kind="relationship" relationship="viewControllers" id="RNg-LV-Iuv"/>
                         <segue destination="mcv-na-BVN" kind="relationship" relationship="viewControllers" id="MX7-xb-oNn"/>
                         <segue destination="Cam-IB-Kkn" kind="relationship" relationship="viewControllers" id="9ZH-wH-4RZ"/>
+                        <segue destination="xtK-fB-QMj" kind="relationship" relationship="viewControllers" id="mez-Qy-Vy8"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KS4-Ss-yFr" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3658,7 +3659,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     </connections>
                 </panGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3060" y="-1160.8695652173915"/>
+            <point key="canvasLocation" x="3799" y="-1174"/>
         </scene>
         <!--Progress Overlay View Controller-->
         <scene sceneID="dLC-iX-1EH">
@@ -4248,7 +4249,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="idM-b3-baB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3060" y="-665.6671664167917"/>
+            <point key="canvasLocation" x="3799" y="-679"/>
         </scene>
         <!--Delivery Details-->
         <scene sceneID="Ngh-G3-0w2">
@@ -4918,7 +4919,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q8Q-kp-527" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3063.1999999999998" y="-514.54272863568224"/>
+            <point key="canvasLocation" x="3802" y="-528"/>
         </scene>
         <!--Text Editing View Controller-->
         <scene sceneID="yDx-rM-yq1">
@@ -5078,7 +5079,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     </connections>
                 </view>
             </objects>
-            <point key="canvasLocation" x="3770.4000000000001" y="-1136.5817091454273"/>
+            <point key="canvasLocation" x="4510" y="-1150"/>
         </scene>
         <!--Spine Text Editing View Controller-->
         <scene sceneID="p5U-cd-YVD">
@@ -5281,7 +5282,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     </connections>
                 </view>
             </objects>
-            <point key="canvasLocation" x="4570.3999999999996" y="-1118.5907046476761"/>
+            <point key="canvasLocation" x="5310" y="-1132"/>
         </scene>
         <!--SHIPPING-->
         <scene sceneID="vWB-oI-iEP">
@@ -5544,7 +5545,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Apc-9k-4PA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4232" y="-1873"/>
+            <point key="canvasLocation" x="4970" y="-1887"/>
         </scene>
         <!--Instagram-->
         <scene sceneID="I0K-2M-eov">
@@ -5585,13 +5586,112 @@ Copyright © 2018 Kite. All right reserverd.</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rhS-n4-2ga" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2241" y="-1469"/>
+            <point key="canvasLocation" x="2980" y="-1483"/>
+        </scene>
+        <!--Facebook Landing View Controller-->
+        <scene sceneID="rhQ-gv-ywl">
+            <objects>
+                <viewController storyboardIdentifier="FacebookLandingViewController" id="B0N-RZ-Y3E" customClass="FacebookLandingViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="14C-ea-asI">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Access Facebook" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FRC-sM-ebC">
+                                <rect key="frame" x="70.5" y="144.5" width="234.5" height="24"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Sign in to access your Facebook photos and start creating" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gZ8-2E-uyJ">
+                                <rect key="frame" x="70.5" y="170.5" width="234.5" height="36"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zfA-1O-hGS">
+                                <rect key="frame" x="70.5" y="470.5" width="234" height="50"/>
+                                <color key="backgroundColor" red="0.2054328322" green="0.47096657749999998" blue="0.9647943377" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="PIZ-bT-lyd"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                <state key="normal" title="SIGN IN">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="facebookSignInTapped:" destination="B0N-RZ-Y3E" eventType="touchUpInside" id="wQF-lp-48Q"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" image="Facebook-big" translatesAutoresizingMaskIntoConstraints="NO" id="eR2-kc-5sU">
+                                <rect key="frame" x="70.5" y="226.5" width="234" height="234"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="eR2-kc-5sU" secondAttribute="height" id="cDl-sB-SCT"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="FRC-sM-ebC" firstAttribute="leading" secondItem="gZ8-2E-uyJ" secondAttribute="leading" id="32N-l3-zNV"/>
+                            <constraint firstItem="gZ8-2E-uyJ" firstAttribute="trailing" secondItem="eR2-kc-5sU" secondAttribute="trailing" priority="750" id="8p5-Kf-Le5"/>
+                            <constraint firstItem="7nA-4G-AIx" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="gZ8-2E-uyJ" secondAttribute="trailing" constant="70" id="Ewg-wb-INN"/>
+                            <constraint firstItem="gZ8-2E-uyJ" firstAttribute="top" secondItem="FRC-sM-ebC" secondAttribute="bottom" constant="2" id="MDq-7w-pzp"/>
+                            <constraint firstItem="zfA-1O-hGS" firstAttribute="trailing" secondItem="eR2-kc-5sU" secondAttribute="trailing" priority="750" id="TSk-DT-Oms"/>
+                            <constraint firstItem="gZ8-2E-uyJ" firstAttribute="leading" secondItem="eR2-kc-5sU" secondAttribute="leading" priority="750" id="XOz-nA-ioG"/>
+                            <constraint firstItem="gZ8-2E-uyJ" firstAttribute="centerX" secondItem="7nA-4G-AIx" secondAttribute="centerX" id="ev6-zf-ocb"/>
+                            <constraint firstItem="eR2-kc-5sU" firstAttribute="centerX" secondItem="14C-ea-asI" secondAttribute="centerX" id="gwK-kb-pbU"/>
+                            <constraint firstItem="FRC-sM-ebC" firstAttribute="top" relation="greaterThanOrEqual" secondItem="7nA-4G-AIx" secondAttribute="top" constant="5" id="jm5-eT-yO7"/>
+                            <constraint firstItem="zfA-1O-hGS" firstAttribute="top" secondItem="eR2-kc-5sU" secondAttribute="bottom" constant="10" id="qqs-e5-jRr"/>
+                            <constraint firstItem="zfA-1O-hGS" firstAttribute="leading" secondItem="eR2-kc-5sU" secondAttribute="leading" priority="750" id="rRY-M5-sOm"/>
+                            <constraint firstItem="eR2-kc-5sU" firstAttribute="top" secondItem="gZ8-2E-uyJ" secondAttribute="bottom" constant="20" id="rgi-PT-La9"/>
+                            <constraint firstItem="eR2-kc-5sU" firstAttribute="centerY" secondItem="7nA-4G-AIx" secondAttribute="centerY" id="rqt-gk-Tex"/>
+                            <constraint firstItem="FRC-sM-ebC" firstAttribute="trailing" secondItem="gZ8-2E-uyJ" secondAttribute="trailing" id="xY9-4Z-xfW"/>
+                            <constraint firstItem="gZ8-2E-uyJ" firstAttribute="leading" secondItem="7nA-4G-AIx" secondAttribute="leading" constant="70" id="xsl-5r-Ive"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="7nA-4G-AIx"/>
+                    </view>
+                    <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="eXY-7p-RZV"/>
+                    <connections>
+                        <outlet property="facebookLogoCenterYConstraint" destination="rqt-gk-Tex" id="hHh-H6-eKx"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hfW-ae-ki8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1070" y="-1374"/>
+        </scene>
+        <!--Facebook-->
+        <scene sceneID="nu1-Zs-hcg">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xtK-fB-QMj" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Facebook" image="Facebook" selectedImage="Facebook" id="e4B-vw-73n">
+                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="-3"/>
+                    </tabBarItem>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="FtP-3P-qdb" customClass="PhotobookNavigationBar" customModule="Photobook" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <outlet property="delegate" destination="FtP-3P-qdb" id="SNS-GH-Ckh"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dVy-yF-UeV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="244" y="-1374"/>
         </scene>
     </scenes>
     <resources>
         <image name="Albums" width="22" height="22"/>
         <image name="Canon" width="177" height="37"/>
         <image name="Drag-down-arrow" width="36" height="12"/>
+        <image name="Facebook" width="25" height="24"/>
+        <image name="Facebook-big" width="234" height="234"/>
         <image name="Instagram" width="25" height="24"/>
         <image name="Instagram-big" width="234" height="234"/>
         <image name="IntroTitle" width="285" height="100"/>
