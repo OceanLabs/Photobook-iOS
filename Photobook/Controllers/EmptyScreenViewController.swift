@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct ErrorMessage {
+struct ActionableErrorMessage {
     var title: String
     var message: String
     var buttonTitle: String
@@ -52,7 +52,7 @@ class EmptyScreenViewController: UIViewController {
     /// Factory method to create an Empty Screen from an ErrorMessage
     ///
     /// - Parameter errorMessage: Use this ErrorMessage to create a Empty Screen
-    func show(_ errorMessage: ErrorMessage) {
+    func show(_ errorMessage: ActionableErrorMessage) {
         show(message: errorMessage.message, title:errorMessage.title, buttonTitle: errorMessage.buttonTitle, buttonAction: errorMessage.buttonAction)
     }
     

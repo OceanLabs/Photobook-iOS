@@ -36,6 +36,12 @@ class StoriesViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(loadStories), name: .UIApplicationDidBecomeActive, object: nil)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        (tabBarController?.tabBar as? PhotobookTabBar)?.isBackgroundHidden = false
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -57,6 +63,8 @@ class StoriesViewController: UIViewController {
                 else { return }
             
             let story = stories[sender.index]
+            StoriesManager.shared.performAutoSelectionIfNeeded(on: story)
+            
             assetPickerController.album = story
             assetPickerController.selectedAssetsManager = StoriesManager.shared.selectedAssetsManager(for: story)
             assetPickerController.delegate = self

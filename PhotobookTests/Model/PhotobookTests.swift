@@ -14,6 +14,7 @@ class PhotobookTests: XCTestCase {
     let validDictionary = ([
         "id": 10,
         "name": "210 x 210",
+        "productTemplateId": "RPI_WRAP_210X210_SM",
         "pageHeight": 400.34,
         "spineTextRatio": 0.8,
         "aspectRatio": 1.38,

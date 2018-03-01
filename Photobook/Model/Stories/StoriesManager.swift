@@ -30,6 +30,11 @@ class StoriesManager: NSObject {
     override init() {
         super.init()
         PHPhotoLibrary.shared().register(self)
+        NotificationCenter.default.addObserver(self, selector: #selector(resetStoriesSelections), name: ReceiptNotificationName.receiptWillDismiss, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     func loadTopStories(){
@@ -169,15 +174,20 @@ class StoriesManager: NSObject {
         }
     }
     
-    func prepare(story: Story, completionHandler: ((ErrorMessage?) -> Void)?) {
+    func prepare(story: Story, completionHandler: ((ActionableErrorMessage?) -> Void)?) {
         story.loadAssets(completionHandler: { [weak welf = self] error in
-            welf?.performAutoSelection(on: story)
             completionHandler?(error)
         })
     }
     
     func selectedAssetsManager(for story: Story) -> SelectedAssetsManager?{
         return selectedAssetsManagerPerStory[story.identifier]
+    }
+    
+    func performAutoSelectionIfNeeded(on story: Story) {
+        if !story.hasPerformedAutoSelection {
+            performAutoSelection(on: story)
+        }
     }
     
     private func performAutoSelection(on story: Story) {
@@ -213,6 +223,15 @@ class StoriesManager: NSObject {
         
         // Sort
         selectedAssetsManager?.orderAssetsByDate()
+        
+        story.hasPerformedAutoSelection = true
+    }
+    
+    @objc private func resetStoriesSelections() {
+        for story in stories {
+            selectedAssetsManagerPerStory[story.identifier]?.deselectAllAssetsForAllAlbums()
+            story.hasPerformedAutoSelection = false
+        }
     }
 }
 
