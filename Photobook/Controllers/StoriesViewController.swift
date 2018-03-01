@@ -36,6 +36,12 @@ class StoriesViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(loadStories), name: .UIApplicationDidBecomeActive, object: nil)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        StoriesManager.shared.currentlySelectedStory = nil
+    }
+    
     @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
         tableView.reloadData()
     }
@@ -174,6 +180,7 @@ extension StoriesViewController: StoryTableViewCellDelegate {
             return
         }
         
+        StoriesManager.shared.currentlySelectedStory = stories[index]
         performSegue(withIdentifier: Constants.viewStorySegueName, sender: (index: index, sourceView: sourceView))
     }
 }

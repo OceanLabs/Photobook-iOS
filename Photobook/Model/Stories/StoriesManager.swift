@@ -8,7 +8,7 @@
 
 import Photos
 
-class StoriesManager {
+class StoriesManager: NSObject {
     
     enum StoriesManagerError: Error {
         case unauthorized
@@ -21,9 +21,15 @@ class StoriesManager {
     private let imageManager = PHCachingImageManager()
     private var selectedAssetsManagerPerStory = [String : SelectedAssetsManager]()
     var stories = [Story]()
+    var currentlySelectedStory: Story?
     
     private struct Constants {
         static let maxStoriesToDisplay = 16
+    }
+    
+    override init() {
+        super.init()
+        PHPhotoLibrary.shared().register(self)
     }
     
     func loadTopStories(){
@@ -214,4 +220,41 @@ class StoriesManager {
         // Sort
         selectedAssetsManager?.orderAssetsByDate()
     }
+}
+
+extension StoriesManager: PHPhotoLibraryChangeObserver {
+    
+    func photoLibraryDidChange(_ changeInstance: PHChange) {
+        // We only care for the currently selected story
+        guard let story = currentlySelectedStory else { return }
+        
+        var albumChanges = [AlbumChange]()
+        
+        DispatchQueue.main.sync {
+            var assetsRemoved = [Asset]()
+            var indexesRemoved = [Int]()
+            for asset in story.assets {
+                guard let asset = asset as? PhotosAsset else { continue }
+                if let changeDetails = changeInstance.changeDetails(for: asset.photosAsset),
+                    changeDetails.objectWasDeleted {
+                    assetsRemoved.append(asset)
+                    
+                    if let index = story.assets.index(where: { $0.identifier == asset.identifier}) {
+                        indexesRemoved.append(index)
+                    }
+                }
+            }
+            albumChanges.append(AlbumChange(album: story, assetsRemoved: assetsRemoved, indexesRemoved: indexesRemoved, assetsAdded: []))
+            
+            // Remove assets from this story from the end as to not mess up the indexes
+            for assetIndex in indexesRemoved.reversed() {
+                story.assets.remove(at: assetIndex)
+            }
+            
+            if !albumChanges.isEmpty {
+                NotificationCenter.default.post(name: AssetsNotificationName.albumsWereUpdated, object: albumChanges)
+            }
+        }
+    }
+    
 }
