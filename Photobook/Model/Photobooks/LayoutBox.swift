@@ -45,7 +45,7 @@ struct LayoutBox: Codable {
         if rect.maxX ~= 1.0 { // Right bleed
             width += bleed
         }
-        if rect.minY ~= 0.0 { // Tob bleed
+        if rect.minY ~= 0.0 { // Top bleed
             y = -bleed
             height += bleed
         }
