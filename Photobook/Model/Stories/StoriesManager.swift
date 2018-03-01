@@ -8,7 +8,7 @@
 
 import Photos
 
-class StoriesManager {
+class StoriesManager: NSObject {
     
     enum StoriesManagerError: Error {
         case unauthorized
@@ -21,12 +21,15 @@ class StoriesManager {
     private let imageManager = PHCachingImageManager()
     private var selectedAssetsManagerPerStory = [String : SelectedAssetsManager]()
     var stories = [Story]()
+    var currentlySelectedStory: Story?
     
     private struct Constants {
         static let maxStoriesToDisplay = 16
     }
     
-    init() {
+    override init() {
+        super.init()
+        PHPhotoLibrary.shared().register(self)
         NotificationCenter.default.addObserver(self, selector: #selector(resetStoriesSelections), name: ReceiptNotificationName.receiptWillDismiss, object: nil)
     }
     
@@ -174,12 +177,6 @@ class StoriesManager {
     func prepare(story: Story, completionHandler: ((ActionableErrorMessage?) -> Void)?) {
         story.loadAssets(completionHandler: { [weak welf = self] error in
             completionHandler?(error)
-            
-            // Cache the first 25 thumbnails from each story so that they don't appear blank on the first animation
-            // Not bulletproof, because the user might tap on a story before the assets finish caching
-            guard !story.assets.isEmpty else { return }
-            let imageWidth = UIScreen.main.bounds.size.width / 4.0
-            welf?.imageManager.startCachingImages(for: PhotosAsset.photosAssets(from: Array(story.assets[0..<min(story.assets.count, 25)])), targetSize: CGSize(width: imageWidth, height: imageWidth), contentMode: .aspectFill, options: nil)
         })
     }
     
@@ -236,4 +233,41 @@ class StoriesManager {
             story.hasPerformedAutoSelection = false
         }
     }
+}
+
+extension StoriesManager: PHPhotoLibraryChangeObserver {
+    
+    func photoLibraryDidChange(_ changeInstance: PHChange) {
+        // We only care for the currently selected story
+        guard let story = currentlySelectedStory else { return }
+        
+        var albumChanges = [AlbumChange]()
+        
+        DispatchQueue.main.sync {
+            var assetsRemoved = [Asset]()
+            var indexesRemoved = [Int]()
+            for asset in story.assets {
+                guard let asset = asset as? PhotosAsset else { continue }
+                if let changeDetails = changeInstance.changeDetails(for: asset.photosAsset),
+                    changeDetails.objectWasDeleted {
+                    assetsRemoved.append(asset)
+                    
+                    if let index = story.assets.index(where: { $0.identifier == asset.identifier}) {
+                        indexesRemoved.append(index)
+                    }
+                }
+            }
+            albumChanges.append(AlbumChange(album: story, assetsRemoved: assetsRemoved, indexesRemoved: indexesRemoved, assetsAdded: []))
+            
+            // Remove assets from this story from the end as to not mess up the indexes
+            for assetIndex in indexesRemoved.reversed() {
+                story.assets.remove(at: assetIndex)
+            }
+            
+            if !albumChanges.isEmpty {
+                NotificationCenter.default.post(name: AssetsNotificationName.albumsWereUpdated, object: albumChanges)
+            }
+        }
+    }
+    
 }
