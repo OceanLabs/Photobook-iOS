@@ -98,7 +98,7 @@ class AssetCollectorViewController: UIViewController {
         }
     }
     
-    var delayAppearance: Bool = false
+    var delayAppearance = false
     
     private var horizontalConstraints: [NSLayoutConstraint]?
     private var verticalConstraints: [NSLayoutConstraint]?
@@ -353,7 +353,7 @@ extension AssetCollectorViewController: UICollectionViewDataSource, UICollection
         
         let asset = assets[indexPath.row]
         cell.assetId = asset.identifier
-        cell.imageView.setImage(from: asset, size: cell.imageView.frame.size, completionHandler: {
+        cell.imageView.setImage(from: asset, fadeIn: false, size: cell.imageView.frame.size, completionHandler: {
             return asset.identifier == cell.assetId
         })
         cell.isDeletingEnabled = isDeletingEnabled
