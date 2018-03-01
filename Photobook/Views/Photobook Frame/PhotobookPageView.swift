@@ -33,9 +33,10 @@ class PhotobookPageView: UIView {
     var aspectRatio: CGFloat? {
         didSet {
             guard let aspectRatio = aspectRatio else { return }
+            let priority = self.aspectRatioConstraint.priority
             self.removeConstraint(self.aspectRatioConstraint)
             aspectRatioConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: self, attribute: .height, multiplier: aspectRatio, constant: 0)
-            aspectRatioConstraint.priority = UILayoutPriority(1000)
+            aspectRatioConstraint.priority = priority
             self.addConstraint(aspectRatioConstraint)
         }
     }
