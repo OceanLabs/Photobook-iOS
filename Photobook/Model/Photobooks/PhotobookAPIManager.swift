@@ -69,7 +69,7 @@ class PhotobookAPIManager {
     /// - Parameter completionHandler: Closure to be called when the request completes
     func requestPhotobookInfo(_ completionHandler:@escaping ([Photobook]?, [Layout]?, [UpsellOption]?, Error?) -> ()) {
         
-        apiClient.get(context: .photobook, endpoint: EndPoints.products, parameters: nil) { (jsonData, error) in
+        apiClient.get(context: .photobook, endpoint: EndPoints.products) { (jsonData, error) in
             
             // TEMP: Fake api response. Don't run for tests.
             var jsonData = jsonData
@@ -135,7 +135,7 @@ class PhotobookAPIManager {
     }
     
     func initializePhotobookPdf(completionHandler: @escaping (_ photobookId: String?, _ error: Error?) -> Void) {
-        apiClient.post(context: .photobook, endpoint: EndPoints.initialisePdf, parameters: nil, completion: { response, error in
+        apiClient.post(context: .photobook, endpoint: EndPoints.initialisePdf, completion: { response, error in
             guard error == nil else {
                 completionHandler("I am a dummy Id, Remove Me", nil) // completionHandler(nil, error) // TODO: Remove dummy data
                 return
