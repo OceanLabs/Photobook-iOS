@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class OrderSummaryManager {
     static let notificationWillUpdate = Notification.Name("OrderSummaryManager.willUpdate")
@@ -80,9 +81,10 @@ class OrderSummaryManager {
         
         if let summary = summary,
             let imageUrl = summary.previewImageUrl(withCoverImageUrl: coverImageUrl, size: size) {
-            APIClient.shared.get(context: .none, endpoint: imageUrl.absoluteString, parameters: nil, completion: { (data, error) in
-                let image = data as? UIImage
-                completion(image)
+            SDWebImageManager.shared().loadImage(with: imageUrl, options: [], progress: nil, completed: { image, _, error, _, _, _ in
+                DispatchQueue.main.async {
+                    completion(image)
+                }
             })
         } else {
             completion(nil)
