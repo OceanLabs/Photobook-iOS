@@ -13,6 +13,7 @@ class AssetPickerCoverCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var datesLabel: UILabel!
     @IBOutlet private weak var coverImageView: UIImageView!
+    @IBOutlet weak var labelsContainerView: UIView!
     
     var title: String? {
         didSet {
