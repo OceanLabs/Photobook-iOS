@@ -46,9 +46,8 @@ class StoriesViewController: UIViewController {
         case Constants.viewStorySegueName:
             guard let assetPickerController = segue.destination as? AssetPickerCollectionViewController,
                 let segue = segue as? ViewStorySegue,
-                let sender = sender as? (index: Int, sourceView: UIView?),
-                let sourceView = sender.sourceView,
-                let asset = stories[sender.index].assets.first
+                let sender = sender as? (index: Int, coverImage: UIImage?, sourceView: UIView?, labelsContainerView: UIView?),
+                let sourceView = sender.sourceView
                 else { return }
             
             let story = stories[sender.index]
@@ -56,8 +55,9 @@ class StoriesViewController: UIViewController {
             assetPickerController.selectedAssetsManager = StoriesManager.shared.selectedAssetsManager(for: story)
             assetPickerController.delegate = self
             
-            segue.asset = asset
+            segue.coverImage = sender.coverImage
             segue.sourceView = sourceView
+            segue.sourceLabelsContainerView = sender.labelsContainerView
         default:
             break
         }
@@ -168,13 +168,13 @@ extension StoriesViewController: UITableViewDataSource {
 extension StoriesViewController: StoryTableViewCellDelegate {
     // MARK: StoryTableViewCellDelegate
     
-    func didTapOnStory(index: Int, sourceView: UIView?) {
+    func didTapOnStory(index: Int, coverImage: UIImage?, sourceView: UIView?, labelsContainerView: UIView?) {
         guard index < stories.count, !stories[index].assets.isEmpty else {
             // For a moment after the app has resumed, while the stories are reloading, if the user taps on a story just ignore it. It's unlikely to happen anyway, and even if it does, it's not worth trying to handle it gracefully.
             return
         }
         
-        performSegue(withIdentifier: Constants.viewStorySegueName, sender: (index: index, sourceView: sourceView))
+        performSegue(withIdentifier: Constants.viewStorySegueName, sender: (index: index, coverImage: coverImage, sourceView: sourceView, labelsContainerView: labelsContainerView))
     }
 }
 
