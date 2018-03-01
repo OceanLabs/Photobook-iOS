@@ -51,7 +51,6 @@ class OrderManager {
         
         var stringHash = ""
         if let deliveryDetails = deliveryDetails { stringHash += "ad:\(deliveryDetails.hashValue)," }
-        if let paymentMethod = paymentMethod { stringHash += "pm:\(paymentMethod.hashValue)," }
         if let promoCode = promoCode { stringHash += "pc:\(promoCode)," }
         if let productName = ProductManager.shared.product?.name { stringHash += "jb:\(productName)," }
         stringHash += "qt:\(ProductManager.shared.productLayouts.count),"
