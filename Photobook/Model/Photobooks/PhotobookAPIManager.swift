@@ -302,7 +302,7 @@ class PhotobookAPIManager {
             pages.append(page)
         }
         photobook["pages"] = pages
-        photobook["id"] = photobookId
+        photobook["pdfId"] = photobookId
         
         return photobook
     }
