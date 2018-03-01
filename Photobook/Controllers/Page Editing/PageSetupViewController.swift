@@ -384,6 +384,10 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             break
         }
         
+        let bleed = ProductManager.shared.bleed(forPageSize: pageView.bounds.size)
+        photobookFrameView.leftPageView.bleed = bleed
+        photobookFrameView.rightPageView.bleed = bleed
+        
         if isDoublePage {
             photobookHorizontalAlignmentConstraint.constant = view.bounds.width * 0.5
         }

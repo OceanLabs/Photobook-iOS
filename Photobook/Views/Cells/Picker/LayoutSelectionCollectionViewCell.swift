@@ -104,8 +104,6 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
                 photobookFrameView.resetPageColor()
             }
         }
-        photobookFrameView.width = (bounds.height - 2.0 * Constants.photobookVerticalMargin) * aspectRatio * 2.0
-        
         photobookFrameView.layoutIfNeeded()
         
         let productLayoutAsset = ProductLayoutAsset()
