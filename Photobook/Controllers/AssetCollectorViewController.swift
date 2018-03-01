@@ -151,6 +151,7 @@ class AssetCollectorViewController: UIViewController {
         imageCollectionView.reloadData()
         if !delayAppearance {
             adaptToNewAssetCount()
+            adaptHeight()
         }
     }
     
