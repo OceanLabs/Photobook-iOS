@@ -125,7 +125,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         if !layout.isDoubleLayout && (pageType == .left || pageType == .right) {
             let oppositeIndex = pageIndex + (pageType == .left ? 1 : -1)
             oppositePageView!.pageIndex = oppositeIndex
-            oppositePageView!.productLayout = ProductManager.shared.productLayouts[oppositeIndex]
+            oppositePageView!.productLayout = ProductManager.shared.productLayouts[oppositeIndex].shallowCopy()
             oppositePageView!.setupImageBox(with: oppositeImage, animated: false)
             oppositePageView!.setupTextBox(mode: .userTextOnly)
         }
