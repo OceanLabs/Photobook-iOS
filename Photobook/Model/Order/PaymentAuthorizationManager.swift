@@ -25,6 +25,7 @@ protocol PaymentAuthorizationManagerDelegate: class {
     func costUpdated()
     func paymentAuthorizationDidFinish(token: String?, error: Error?, completionHandler: ((PKPaymentAuthorizationStatus) -> Void)?)
     func modalPresentationDidFinish()
+    func modalPresentationWillBegin()
 }
 
 class PaymentAuthorizationManager: NSObject {
@@ -40,7 +41,7 @@ class PaymentAuthorizationManager: NSObject {
         #endif
     }
     
-    weak var delegate : PaymentAuthorizationManagerDelegate?
+    weak var delegate : (PaymentAuthorizationManagerDelegate & UIViewController)?
     
     var applePayPayTo: String {
         get{
@@ -91,14 +92,11 @@ class PaymentAuthorizationManager: NSObject {
         paymentRequest.paymentSummaryItems = cost.summaryItemsForApplePay(payTo: applePayPayTo, shippingMethodId: OrderManager.shared.shippingMethod!)
         paymentRequest.requiredShippingAddressFields = [.postalAddress, .name, .email, .phone]
         
-        let paymentController = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest)
-        paymentController?.delegate = self
+        guard let paymentController = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) else { return }
+        paymentController.delegate = self
         
-        guard
-            let delegate = delegate as? UIViewController,
-            paymentController != nil
-        else { return }
-        delegate.present(paymentController!, animated: true, completion: nil)
+        delegate?.modalPresentationWillBegin()
+        delegate?.present(paymentController, animated: true, completion: nil)
     }
     
     
@@ -128,8 +126,8 @@ class PaymentAuthorizationManager: NSObject {
         config.payPalShippingAddressOption = .provided
 
         guard let paymentController = PayPalPaymentViewController(payment: payment, configuration: config, delegate: self) else { return }
-        guard let delegate = delegate as? UIViewController else { return }
-        delegate.present(paymentController, animated: true, completion: nil)
+        delegate?.modalPresentationWillBegin()
+        delegate?.present(paymentController, animated: true, completion: nil)
     }
 }
 
@@ -202,7 +200,6 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
     
     func paymentAuthorizationViewControllerDidFinish(_ controller: PKPaymentAuthorizationViewController) {
         controller.dismiss(animated: true, completion: {
-            guard (self.delegate as? UIViewController) != nil else { return }
             self.delegate?.modalPresentationDidFinish()
         })
     }

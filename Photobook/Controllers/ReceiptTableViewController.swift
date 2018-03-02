@@ -8,7 +8,15 @@
 
 import UIKit
 
+struct ReceiptNotificationName {
+    static let receiptWillDismiss = Notification.Name("receiptWillDismissNotificationName")
+}
+
 class ReceiptTableViewController: UITableViewController {
+    
+    enum Section: Int {
+        case header, lineItems, footer
+    }
     
     var cost: Cost? {
         return OrderManager.shared.cachedCost
@@ -22,13 +30,12 @@ class ReceiptTableViewController: UITableViewController {
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     }
 
-    @IBAction func continueTapped(_ sender: UIBarButtonItem) {
+    @IBAction private func continueTapped(_ sender: UIBarButtonItem) {
+        ProductManager.shared.reset()
+        OrderManager.shared.reset()
+        NotificationCenter.default.post(name: ReceiptNotificationName.receiptWillDismiss, object: nil)
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         navigationController?.popToRootViewController(animated: true)
-    }
-    
-    enum Section: Int {
-        case header, lineItems, footer
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {

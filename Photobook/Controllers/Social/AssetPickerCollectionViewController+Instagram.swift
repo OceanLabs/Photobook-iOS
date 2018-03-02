@@ -31,7 +31,7 @@ extension AssetPickerCollectionViewController {
             self.navigationController?.popViewController(animated: true)
         }))
         
-        alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Cancel", value: "Cancel", comment: "Cancel button title for alert asking the user confirmation for an action?"), style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
         present(alertController, animated: true, completion: nil)
     }
     

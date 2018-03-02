@@ -3,6 +3,7 @@
 	{
 		"id": 1,
 		"name": "Landscape 210x152",
+        "productTemplateId": "RPI_WRAP_210X210_SM",
         "pageHeight": 430.87,
         "spineTextRatio": 0.72,
 		"aspectRatio": 1.38157681,
@@ -12,6 +13,7 @@
 	{
 		"id": 2,
 		"name": "Square 127x127",
+        "productTemplateId": "RPI_WRAP_210X210_SM",
         "pageHeight": 360.0,
         "spineTextRatio": 0.87,
 		"aspectRatio": 1.0,
@@ -21,6 +23,7 @@
 	{
 		"id": 3,
 		"name": "Landscape 297x210",
+        "productTemplateId": "RPI_WRAP_210X210_SM",
         "pageHeight": 595.28,
         "spineTextRatio": 0.76,
 		"aspectRatio": 1.41427563,
@@ -30,6 +33,7 @@
 	{
 		"id": 4,
 		"name": "Square 210x210",
+        "productTemplateId": "RPI_WRAP_210X210_SM",
         "pageHeight": 595.28,
         "spineTextRatio": 0.76,
 		"aspectRatio": 1.0,

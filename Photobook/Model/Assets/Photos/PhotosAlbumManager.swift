@@ -31,9 +31,9 @@ class PhotosAlbumManager: NSObject, AlbumManager {
         PHPhotoLibrary.shared().register(self)
     }
     
-    func loadAlbums(completionHandler: ((ErrorMessage?) -> Void)?) {
+    func loadAlbums(completionHandler: ((ActionableErrorMessage?) -> Void)?) {
         guard PHPhotoLibrary.authorizationStatus() == .authorized else {
-            let errorMessage = ErrorMessage(title: Constants.permissionsTitle, message: Constants.permissionsMessage, buttonTitle: Constants.permissionsButtonTitle, buttonAction: {
+            let errorMessage = ActionableErrorMessage(title: Constants.permissionsTitle, message: Constants.permissionsMessage, buttonTitle: Constants.permissionsButtonTitle, buttonAction: {
                 if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
                     UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
                 }
