@@ -15,7 +15,6 @@ protocol Album {
     var localizedName: String? { get }
     var identifier: String { get }
     var assets: [Asset] { get }
-    var requiresExclusivePicking: Bool { get }
     var hasMoreAssetsToLoad: Bool { get }
     
     func loadAssets(completionHandler: ((_ error: Error?) -> Void)?)

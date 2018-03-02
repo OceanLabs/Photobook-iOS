@@ -12,7 +12,6 @@ extension AlbumsCollectionViewController {
     
     static func facebookAlbumsCollectionViewController() -> AlbumsCollectionViewController {
         let albumViewController = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AlbumsCollectionViewController") as! AlbumsCollectionViewController
-        albumViewController.screenTitle = NSLocalizedString("Albums/Facebook/Title", value: "Facebook Albums", comment: "Facebook Albums screen title")
         albumViewController.albumManager = FacebookAlbumManager()
         albumViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Social/Logout", value: "Log Out", comment: "Button title for loggin out of social accounts, eg Facebook, Instagram"), style: .plain, target: albumViewController, action: #selector(facebookLogout))
         return albumViewController

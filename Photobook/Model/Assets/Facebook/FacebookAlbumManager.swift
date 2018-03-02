@@ -18,6 +18,7 @@ class FacebookAlbumManager {
     }
     
     var albums =  [Album]()
+    let title = NSLocalizedString("Albums/Facebook/Title", value: "Facebook Albums", comment: "Facebook Albums screen title")
     
     private var after: String?
     

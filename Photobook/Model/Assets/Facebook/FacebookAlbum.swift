@@ -30,9 +30,7 @@ class FacebookAlbum {
     var identifier: String
     
     var assets = [Asset]()
-    
-    var requiresExclusivePicking: Bool = false
-    
+        
     var coverPhotoUrl: URL
     
     var after: String?

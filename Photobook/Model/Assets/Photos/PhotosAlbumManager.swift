@@ -25,6 +25,7 @@ class PhotosAlbumManager: NSObject, AlbumManager {
     
     var albums:[Album] = [Album]()
     var hasMoreAlbumsToLoad = false
+    let title = NSLocalizedString("Albums/Title", value: "Albums", comment: "Title for the Albums screen")
     static let imageManager = PHCachingImageManager()
     
     override init() {

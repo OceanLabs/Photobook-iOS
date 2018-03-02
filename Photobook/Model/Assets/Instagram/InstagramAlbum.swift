@@ -126,9 +126,6 @@ extension InstagramAlbum: Album {
     var numberOfAssets: Int {
         return assets.count
     }
-    var requiresExclusivePicking: Bool {
-        return true
-    }
     
     var localizedName: String? {
         return "Instagram"

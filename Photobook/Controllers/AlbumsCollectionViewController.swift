@@ -27,7 +27,6 @@ class AlbumsCollectionViewController: UICollectionViewController {
     var collectorMode: AssetCollectorMode = .selecting
     weak var addingDelegate: AssetCollectorAddingDelegate?
     weak var assetPickerDelegate: AssetPickerCollectionViewControllerDelegate?
-    lazy var screenTitle = NSLocalizedString("Albums/Title", value: "Albums", comment: "Title for the Albums screen")
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
     }()
@@ -45,7 +44,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
         super.viewDidLoad()
         loadAlbums()
         
-        navigationItem.title = screenTitle
+        navigationItem.title = albumManager.title
         
         // Setup the Image Collector Controller
         assetCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)

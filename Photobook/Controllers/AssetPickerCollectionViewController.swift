@@ -321,7 +321,7 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
         default:
             let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
             photobookViewController.selectedAssetsManager = selectedAssetsManager
-            photobookViewController.albumForEditingPicker = album.requiresExclusivePicking ? album : nil
+            photobookViewController.selectedAssetsSource = SelectedAssetsSource(album: album, albumManager: albumManager)
             navigationController?.pushViewController(photobookViewController, animated: true)
         }
         selectedAssetsManager?.orderAssetsByDate()
