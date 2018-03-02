@@ -28,6 +28,7 @@ class LayoutSelectionViewController: UIViewController {
     }
     
     private var image: UIImage?
+    private var oppositeImage: UIImage?
     
     var pageIndex: Int!
     var pageType: PageType!
@@ -48,15 +49,31 @@ class LayoutSelectionViewController: UIViewController {
                 self.image = image
                 self.collectionView?.reloadData()
             })
+            
+            if pageType == .left || pageType == .right {
+                let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+                let oppositeIndex = pageIndex + (pageType == .left ? 1 : -1)
+                let oppositeLayout = ProductManager.shared.productLayouts[oppositeIndex]
+                
+                guard let oppositeAsset = oppositeLayout.asset else { return }
+                
+                oppositeAsset.image(size: flowLayout.itemSize, completionHandler: { (image, error) in
+                    guard error == nil else {
+                        print("Layouts: error retrieving opposite image")
+                        return
+                    }
+                    self.oppositeImage = image
+                    self.collectionView?.reloadData()
+                })
+
+            }
         }
     }
+    private var oppositeAsset: Asset?
+    
     var layouts: [Layout]! { didSet { collectionView?.reloadData() } }
-    var coverColor: ProductColor! {
-        didSet { collectionView.reloadData() }
-    }
-    var pageColor: ProductColor! {
-        didSet { collectionView.reloadData() }
-    }
+    var coverColor: ProductColor! { didSet { collectionView.reloadData() } }
+    var pageColor: ProductColor! { didSet { collectionView.reloadData() } }
     
     var selectedLayoutIndex = 0
     var selectedLayout: Layout! {
@@ -97,6 +114,7 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
         cell.pageIndex = pageIndex
         cell.layout = layouts[indexPath.row]
         cell.image = image // Pass the image to avoid reloading
+        cell.oppositeImage = oppositeImage
         cell.asset = asset
         cell.pageType = pageType
         cell.isBorderVisible = (indexPath.row == selectedLayoutIndex)

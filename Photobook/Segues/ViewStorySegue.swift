@@ -11,11 +11,11 @@ import UIKit
 class ViewStorySegue: UIStoryboardSegue {
     
     var sourceView: UIView?
-    var asset: Asset?
+    var coverImage: UIImage?
+    var sourceLabelsContainerView: UIView?
 
     override func perform() {
         guard let sourceView = sourceView,
-            let asset = asset,
             let navigationController = source.navigationController,
             let sourceViewSuperView = sourceView.superview,
             let destination = destination as? AssetPickerCollectionViewController
@@ -24,7 +24,6 @@ class ViewStorySegue: UIStoryboardSegue {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.alpha = 0
         imageView.cornerRadius = 4
         
         navigationController.view.addSubview(imageView)
@@ -36,67 +35,91 @@ class ViewStorySegue: UIStoryboardSegue {
         shadeView.frame = imageView.bounds
         imageView.addSubview(shadeView)
         
-        destination.shouldFadeInImages = false
+        imageView.image = coverImage
         
-        let size = CGSize(width: source.view.frame.size.width, height: source.view.frame.size.width / AssetPickerCollectionViewController.coverAspectRatio)
-        asset.image(size: size, completionHandler: {(image, _) in
-            imageView.image = image
+        // Hide the sourceView so that it appears to transform itself and it leaves an empty space where it was
+        sourceView.alpha = 0
+        
+        // Snapshot the source vc to use in the animation
+        let sourceSnapShot = self.source.view.snapshotView(afterScreenUpdates: true)
+        if sourceSnapShot != nil{
+            navigationController.view.insertSubview(sourceSnapShot!, belowSubview: navigationController.navigationBar)
+        }
+        
+        destination.view.frame = CGRect(x: calculateBeginPosition(), y: imageView.frame.origin.y, width: source.view.frame.width, height: source.view.frame.height)
+        destination.view.alpha = 0
+        navigationController.view.insertSubview(destination.view, belowSubview: navigationController.navigationBar)
+        destination.assetCollectorController.delayAppearance = true
+        
+        // Add label snapshots that we'll be crossfading during the animation
+        let sourceLabelsContainerSnapShot = sourceLabelsContainerView?.snapshotView(afterScreenUpdates: true)
+        if  sourceLabelsContainerSnapShot != nil {
+            imageView.addSubview(sourceLabelsContainerSnapShot!)
+            sourceLabelsContainerSnapShot?.center = CGPoint(x: imageView.frame.width/2, y: imageView.frame.height/2)
+            sourceLabelsContainerSnapShot?.autoresizingMask = [.flexibleBottomMargin, .flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin]
+        }
+        
+        let destinationLabelsContainerSnapshot = destination.coverImageLabelsContainerView()?.snapshotView(afterScreenUpdates: true)
+        if  destinationLabelsContainerSnapshot != nil{
+            destinationLabelsContainerSnapshot?.alpha = 0
+            imageView.addSubview(destinationLabelsContainerSnapshot!)
+            destinationLabelsContainerSnapshot?.center = CGPoint(x: imageView.frame.width/2, y: imageView.frame.height/2)
+            destinationLabelsContainerSnapshot?.autoresizingMask = [.flexibleBottomMargin, .flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin]
+        }
+        
+        // Push a dummy view controller so that the nav bar changes height
+        let dummyViewController = UIViewController()
+        dummyViewController.view.backgroundColor = .white
+        if #available(iOS 11.0, *) {
+            dummyViewController.navigationItem.largeTitleDisplayMode = .never
+        }
+        navigationController.pushViewController(dummyViewController, animated: false)
+        
+        UIView.animate(withDuration: 0.45, delay: 0, options: [.curveEaseInOut], animations: {
+            
+            // Animate the banner image and dest vc to their final frame, as well as fade in the dest vc
+            let size = CGSize(width: self.source.view.frame.size.width, height: self.source.view.frame.size.width / AssetPickerCollectionViewController.coverAspectRatio)
+            imageView.frame = CGRect(x: 0, y: navigationController.navigationBar.frame.maxY, width: size.width, height: size.height)
+            shadeView.frame = imageView.bounds
+            imageView.layer.cornerRadius = 0
+            destination.view.frame.origin = imageView.frame.origin
+            destination.view.alpha = 1
+            
+            sourceLabelsContainerSnapShot?.alpha = 0
+            destinationLabelsContainerSnapshot?.alpha = 1
+            
+        }, completion: { (_) in
+            sourceSnapShot?.removeFromSuperview()
+            sourceView.alpha = 1
+            
+            var navigationStack = navigationController.viewControllers
+            navigationStack.removeLast()
+            navigationStack.append(destination)
+            navigationController.setViewControllers(navigationStack, animated: false)
+            imageView.removeFromSuperview()
+            
+            destination.registerFor3DTouch()
         })
         
-        // Let's animate all the views! 🙋‍♂️
-        UIView.animate(withDuration: 0.1, animations: {
-            // Creates the effect that the text fades out
-            imageView.alpha = 1
-        }, completion: {(_) in
-            // Hide the sourceView so that it appears to transform itself and it leaves an empty space where it was
-            sourceView.alpha = 0
+    }
+    
+    private func calculateBeginPosition() -> CGFloat {
+        guard let sourceView = sourceView else { return 0 }
+        
+        if sourceView.frame.width < source.view.frame.width / 2 {
+            // Two stories
             
-            // Snapshot the source vc to use in the animation
-            let sourceSnapShot = self.source.view.snapshotView(afterScreenUpdates: true)
-            if sourceSnapShot != nil{
-                navigationController.view.insertSubview(sourceSnapShot!, belowSubview: navigationController.navigationBar)
+            if sourceView.frame.origin.x < source.view.frame.width / 2 {
+                // Left story
+                return sourceView.frame.maxX - source.view.frame.width
+            } else {
+                // Right story
+                return sourceView.frame.origin.x
             }
-            navigationController.pushViewController(destination, animated: false)
-            
-            // Need to wait a slight bit because push seems to happen asynchronously. Also because we want the dest vc to load its high quality thumbnails otherwise there's an unpleasant effect where they all seem to update at once. The delay is imperceptible.
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.05, execute: {
-                
-                // Snapshot the destination vc to animate, so that we avoid scaling the live vc. It starts from the frame of the sourceView
-                let destSnapShot = destination.view.snapshotView(afterScreenUpdates: true)
-                destSnapShot?.alpha = 0
-                destSnapShot?.frame = imageView.frame
-                if destSnapShot != nil{
-                    navigationController.view.insertSubview(destSnapShot!, belowSubview: navigationController.navigationBar)
-                }
-                destination.shouldFadeInImages = true
-                
-                UIView.animate(withDuration: 0.45, animations: {
-                    
-                    // Animate the banner image and dest vc to their final frame, as well as fade in the dest vc
-                    imageView.frame = CGRect(x: 0, y: navigationController.navigationBar.frame.maxY, width: size.width, height: size.height)
-                    shadeView.frame = imageView.bounds
-                    imageView.layer.cornerRadius = 0
-                    destSnapShot?.frame = destination.view.frame
-                    destSnapShot?.alpha = 1
-                }, completion: { (_) in
-                    
-                    // Do away with the illusions
-                    sourceSnapShot?.removeFromSuperview()
-                    destSnapShot?.removeFromSuperview()
-                    sourceView.alpha = 1
-                    
-                    UIView.animate(withDuration: 0.1, animations: {
-                        (destination.tabBarController?.tabBar as? PhotobookTabBar)?.isBackgroundHidden = true
-                        
-                        // Creates the effect that the text fades in
-                        imageView.alpha = 0
-                    }, completion: { (_) in
-                        imageView.removeFromSuperview()
-                    })
-                })
-            })
-        })
+        }
         
+        // Single Story
+        return 0
     }
     
     

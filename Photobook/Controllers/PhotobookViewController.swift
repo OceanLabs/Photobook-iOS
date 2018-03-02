@@ -58,6 +58,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     // Scrolling at 60Hz when we are dragging looks good enough and avoids having to normalize the scroll offset
     private lazy var screenRefreshRate: Double = 1.0 / 60.0
     
+    private var pageSetupViewController: PageSetupViewController!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -129,7 +131,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             guard let photobook = ProductManager.shared.products?.first,
                 error == nil
                 else {
-                    welf?.emptyScreenViewController.show(message: error?.localizedDescription ?? "Error", buttonTitle: NSLocalizedString("Photobook/RetryLoading", value: "Retry", comment: "Retry loading products button"), buttonAction: {
+                    welf?.emptyScreenViewController.show(message: error?.localizedDescription ?? "Error", buttonTitle: CommonLocalizedStrings.retry, buttonAction: {
                         welf?.loadProducts()
                     })
                     return
@@ -172,7 +174,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             }))
         }
         
-        alertController.addAction(UIAlertAction(title: NSLocalizedString("General/UI", value: "Cancel", comment: "Cancel a change"), style: .default, handler: nil))
+        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .default, handler: nil))
         
         present(alertController, animated: true, completion: nil)
     }
@@ -242,7 +244,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             self.navigationController?.popViewController(animated: true)
         }))
-        alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Cancel", value: "Cancel", comment: "Cancel button title for alert asking the user confirmation for an action"), style: .default, handler: nil))
+        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
         
         present(alertController, animated: true, completion: nil)
     }
@@ -565,13 +567,34 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
     }
     
-    func editPage(at index: Int) {
-        let pageSetupViewController = storyboard?.instantiateViewController(withIdentifier: "PageSetupViewController") as! PageSetupViewController
+    private func editPage(at index: Int, frame: CGRect, containerView: UIView) {
+        let modalNavigationController = storyboard?.instantiateViewController(withIdentifier: "PageSetupNavigationController") as! UINavigationController
+        if #available(iOS 11.0, *) {
+            modalNavigationController.navigationBar.prefersLargeTitles = false
+        }
+
+        let barType = (navigationController?.navigationBar as? PhotobookNavigationBar)?.barType
+        
+        pageSetupViewController = modalNavigationController.viewControllers.first as! PageSetupViewController
         pageSetupViewController.selectedAssetsManager = selectedAssetsManager
         pageSetupViewController.pageIndex = index
-        pageSetupViewController.delegate = self
         pageSetupViewController.albumForPicker = albumForEditingPicker
-        navigationController?.pushViewController(pageSetupViewController, animated: true)
+        if barType != nil {
+            pageSetupViewController.photobookNavigationBarType = barType!
+        }
+        pageSetupViewController.delegate = self
+        
+        if barType == .clear {
+            UIView.animate(withDuration: 0.1) {
+                self.navigationController!.navigationBar.alpha = 0.0
+            }
+        }
+        present(modalNavigationController, animated: false) {
+            let containerRect = self.pageSetupViewController.view.convert(frame, from: containerView)
+            self.pageSetupViewController.animateFromPhotobook(frame: containerRect) {
+                self.navigationController!.navigationBar.alpha = 0.0
+            }
+        }
     }
 }
 
@@ -669,7 +692,7 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
             return CGSize(width: collectionView.bounds.width, height: Constants.proposalCellHeight)
         }
 
-        let pageWidth = ceil((view.bounds.width - Constants.cellSideMargin * 2.0 - PhotobookConstants.horizontalPageToCoverMargin * 2.0 - PhotobookConstants.pageDividerWidth) / 2.0)
+        let pageWidth = ceil((view.bounds.width - Constants.cellSideMargin * 2.0 - PhotobookConstants.horizontalPageToCoverMargin * 2.0) / 2.0)
         let pageHeight = ceil(pageWidth / product.aspectRatio)
 
         // PhotoboookCollectionViewCell works when the collectionView uses dynamic heights by setting up the aspect ratio of its pages.
@@ -699,8 +722,8 @@ extension PhotobookViewController: PhotobookCoverCollectionViewCellDelegate {
         navigationController?.present(spineTextEditingNavigationController, animated: false, completion: nil)
     }
     
-    func didTapOnCover() {
-        editPage(at: 0)
+    func didTapOnCover(with frame: CGRect, in containerView: UIView) {
+        editPage(at: 0, frame: frame, containerView: containerView)
     }
 }
 
@@ -719,7 +742,7 @@ extension PhotobookViewController: PageSetupDelegate {
                         if pageType == .left {
                             ProductManager.shared.deletePage(at: index + 1)
                         } else if pageType == .right {
-                            ProductManager.shared.deletePage(at: index - 1)                        
+                            ProductManager.shared.deletePage(at: index - 1)
                         }
                     } else {
                         ProductManager.shared.addPage(at: index + 1)
@@ -735,15 +758,24 @@ extension PhotobookViewController: PageSetupDelegate {
             }
             collectionView.reloadData()
         }
-        navigationController?.popViewController(animated: true)
+        
+        let barType = (navigationController?.navigationBar as? PhotobookNavigationBar)?.barType
+
+        UIView.animate(withDuration: barType == .white ? 0.3 : 0.1, delay: barType == .white ? 0.0 : 0.2, options: [], animations: {
+            self.navigationController!.navigationBar.alpha = 1.0
+        }, completion: nil)
+
+        pageSetupViewController.animateBackToPhotobook {
+            self.dismiss(animated: false)
+        }
     }
 }
 
 extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
     // MARK: PhotobookCollectionViewCellDelegate
     
-    func didTapOnPage(at index: Int) {
-        editPage(at: index)
+    func didTapOnPage(at index: Int, frame: CGRect, in containerView: UIView) {
+        editPage(at: index, frame: frame, containerView: containerView)
     }
 
     func didLongPress(_ sender: UILongPressGestureRecognizer) {
@@ -847,7 +879,7 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
     
     private func showNotAllowedToAddMorePagesAlert() {
         let alertController = UIAlertController(title: NSLocalizedString("Photobook/TooManyPagesAlertTitle", value: "Too many pages", comment: "Alert title informing the user that they have reached the maximum number of pages"), message: NSLocalizedString("Photobook/TooManyPagesAlertMessage", value: "You cannot add any more pages to your photobook", comment: "Alert message informing the user that they have reached the maximum number of pages"), preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: NSLocalizedString("GenericAlert/OK", value: "OK", comment: "Acknowledgement to an alert dialog"), style: .default, handler: nil))
+        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
         present(alertController, animated: true, completion: nil)
     }
     

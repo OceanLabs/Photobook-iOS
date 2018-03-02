@@ -17,7 +17,6 @@ class OrderSummaryViewController: UIViewController {
         
         static let stringLoading = NSLocalizedString("OrderSummary/Loading", value: "Loading order details", comment: "Loading product summary")
         static let stringLoadingFail = NSLocalizedString("OrderSummary/LoadingFail", value: "Couldn't load order details", comment: "When loading order details fails")
-        static let stringLoadingRetry = NSLocalizedString("OrderSummary/LoadingFailRetry", value: "Retry", comment: "Retry button title when loading order details fails")
     }
     
     @IBOutlet weak var tableView: UITableView!
@@ -111,7 +110,7 @@ extension OrderSummaryViewController {
             tableView.reloadData()
         } else {
             
-            emptyScreenViewController.show(message: Constants.stringLoadingFail, title: nil, image: nil, activity: false, buttonTitle: Constants.stringLoadingRetry, buttonAction: {
+            emptyScreenViewController.show(message: Constants.stringLoadingFail, title: nil, image: nil, activity: false, buttonTitle: CommonLocalizedStrings.retry, buttonAction: {
                 self.emptyScreenViewController.show(message: Constants.stringLoading, activity: true)
                 OrderSummaryManager.shared.refresh()
             })

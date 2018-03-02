@@ -18,11 +18,13 @@ class OrderManager {
     var itemCount: Int = 1
     var promoCode: String?
     var photobookId: String?
+    var orderId: String?
     
     var cachedCost: Cost?
     var validCost: Cost? {
         return hasValidCachedCost ? cachedCost : nil
     }
+    
     func updateCost(forceUpdate: Bool = false, _ completionHandler: @escaping (_ error : Error?) -> Void) {
         
         // TODO: REMOVEME. Mock cost & shipping methods
@@ -37,17 +39,33 @@ class OrderManager {
             promoCodeInvalidReason = "Invalid code 🤷"
         }
         
-        self.cachedCost = Cost(hash: 0, lineItems: [lineItem], shippingMethods: [shippingMethod, shippingMethod2], promoDiscount: promoDiscount, promoCodeInvalidReason: promoCodeInvalidReason)
+        self.cachedCost = Cost(hash: orderHash, lineItems: [lineItem], shippingMethods: [shippingMethod, shippingMethod2], promoDiscount: promoDiscount, promoCodeInvalidReason: promoCodeInvalidReason)
         if self.shippingMethod == nil { self.shippingMethod = 1 }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             completionHandler(nil)
         }
     }
+    
+    var orderHash: Int {
+        
+        var stringHash = ""
+        if let deliveryDetails = deliveryDetails { stringHash += "ad:\(deliveryDetails.hashValue)," }
+        if let promoCode = promoCode { stringHash += "pc:\(promoCode)," }
+        if let productName = ProductManager.shared.product?.name { stringHash += "jb:\(productName)," }
+        stringHash += "qt:\(ProductManager.shared.productLayouts.count),"
+        
+        stringHash += "up:("
+        for upsell in OrderSummaryManager.shared.selectedUpsellOptions {
+            stringHash += "\(upsell.hashValue),"
+        }
+        stringHash += ")"
+        
+        return stringHash.hashValue
+    }
+    
     var hasValidCachedCost: Bool {
-        // TODO: validate
-        //        return cachedCost?.orderHash == self.hashValue
-        return true
+        return cachedCost?.orderHash == orderHash
     }
     var paymentToken: String?
     
@@ -57,6 +75,15 @@ class OrderManager {
         reset()
     }
     
+    var orderIsFree: Bool {
+        var orderIsFree = false
+        if let cost = OrderManager.shared.validCost, let selectedMethod = OrderManager.shared.shippingMethod, let shippingMethod = cost.shippingMethod(id: selectedMethod){
+            orderIsFree = shippingMethod.totalCost == 0.0
+        }
+        
+        return orderIsFree
+    }
+    
     func reset() {
         deliveryDetails = nil
         shippingMethod = nil
@@ -64,6 +91,44 @@ class OrderManager {
         itemCount = 1
         promoCode = nil
         cachedCost = nil
+        photobookId = nil
+        orderId = nil
     }
+    
+    func submitOrder(completionHandler: @escaping (_ error: ErrorMessage?) -> Void) {
+        // First create a Photobook PDF Id
+        ProductManager.shared.initializePhotobookPdf(completionHandler: { [weak welf = self] pdfId, error in
+            guard error == nil else { completionHandler(ErrorMessage(error)); return }
+            
+            welf?.photobookId = pdfId
+            KiteAPIClient.shared.submitOrder(parameters: welf!.orderParameters(), completionHandler: { orderId, error in
+                welf?.orderId = orderId
+                completionHandler(error)
+            })
+        })
+    }
+    
+    private func orderParameters() -> [String: Any] {
+        var shippingAddress = deliveryDetails?.address?.jsonRepresentation()
+        shippingAddress?["recipient_first_name"] = deliveryDetails?.firstName
+        shippingAddress?["recipient_last_name"] = deliveryDetails?.lastName
+        shippingAddress?["recipient_name"] = deliveryDetails?.fullName
+        
+        var parameters = [String: Any]()
+        parameters["payment_charge_token"] = paymentToken
+        parameters["shipping_address"] = shippingAddress
+        parameters["customer_email"] = deliveryDetails?.email
+        parameters["customer_phone"] = deliveryDetails?.phone
+        parameters["promo_code"] = promoCode
+        parameters["shipping_method"] = shippingMethod
+        parameters["jobs"] = [[
+            "template_id" : ProductManager.shared.product?.productTemplateId ?? "",
+            "multiples" : itemCount,
+            "assets": [["inside_pdf" : photobookId ?? ""]]
+            ]]
+        
+        return parameters
+    }
+    
 }
 

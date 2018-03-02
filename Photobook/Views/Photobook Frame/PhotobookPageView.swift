@@ -123,14 +123,13 @@ class PhotobookPageView: UIView {
             return
         }
         
-        UIView.animate(withDuration: 0.1, animations: {
-            self.assetImageView.alpha = 0.0
-        }, completion: { _ in
-            self.setupImageBox()
-            self.setupTextBox()
-        })
+        self.setupImageBox()
+        self.setupTextBox()
     }
     
+    var previousIdentifier: String?
+    var previousImage: UIImage?
+
     func setupImageBox(with assetImage: UIImage? = nil, animated: Bool = true) {
         guard let imageBox = productLayout?.layout.imageLayoutBox else {
             assetContainerView.alpha = 0.0
@@ -149,10 +148,18 @@ class PhotobookPageView: UIView {
             return
         }
         
+        if previousIdentifier != nil && asset.identifier == previousIdentifier {
+            setImage(image: previousImage!)
+            return
+        }
+        
         asset.image(size: assetContainerView.frame.size, completionHandler: { [weak welf = self] (image, _) in
             guard welf?.pageIndex == index, let image = image else { return }
             welf?.setImage(image: image)
             
+            welf?.previousIdentifier = asset.identifier
+            welf?.previousImage = image
+
             UIView.animate(withDuration: animated ? 0.1 : 0.0) {
                 welf?.assetImageView.alpha = 1.0
             }
@@ -210,22 +217,33 @@ class PhotobookPageView: UIView {
     
     private func adjustTextLabel() {
         guard let pageTextLabel = pageTextLabel, let textBox = productLayout?.layout.textLayoutBox else { return }
-
+        
+        let finalFrame = textBox.rectContained(in: bounds.size)
+        
+        let originalWidth = ProductManager.shared.product!.pageWidth!
+        let originalHeight = ProductManager.shared.product!.pageHeight!
+        
         pageTextLabel.transform = .identity
-        pageTextLabel.frame = textBox.rectContained(in: bounds.size)
-
-        guard pageTextLabel.text != nil else { return }
-
+        pageTextLabel.frame = CGRect(x: finalFrame.minX, y: finalFrame.minY, width: originalWidth * textBox.rect.width, height: originalHeight * textBox.rect.height)
+        
+        let scale = finalFrame.width / (originalWidth * textBox.rect.width)
+        guard pageTextLabel.text != nil else {
+            pageTextLabel.transform = pageTextLabel.transform.scaledBy(x: scale, y: scale)            
+            return
+        }
+        
         let fontType = isShowingTextPlaceholder ? .plain : (productLayout!.fontType ?? .plain)
-        var fontSize = fontType.sizeForScreenHeight(bounds.height)
+        var fontSize = fontType.sizeForScreenHeight()
         if isShowingTextPlaceholder { fontSize *= 2.0 } // Make text larger so the placeholder can be read
         
         pageTextLabel.attributedText = fontType.attributedText(with: pageTextLabel.text!, fontSize: fontSize, fontColor: color.fontColor())
         
         let textHeight = pageTextLabel.attributedText!.height(for: pageTextLabel.bounds.width)
         if textHeight < pageTextLabel.bounds.height { pageTextLabel.frame.size.height = textHeight }
+        
+        pageTextLabel.transform = pageTextLabel.transform.scaledBy(x: scale, y: scale)
     }
-    
+        
     private func setImagePlaceholder(visible: Bool) {
         if visible {
             assetImageView.image = nil

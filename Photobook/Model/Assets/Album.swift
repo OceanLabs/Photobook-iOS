@@ -18,7 +18,7 @@ protocol Album {
     var requiresExclusivePicking: Bool { get }
     var hasMoreAssetsToLoad: Bool { get }
     
-    func loadAssets(completionHandler: ((_ error: ErrorMessage?) -> Void)?)
+    func loadAssets(completionHandler: ((_ error: ActionableErrorMessage?) -> Void)?)
     func loadNextBatchOfAssets()
     func coverAsset(completionHandler: @escaping (_ asset: Asset?, _ error: Error?) -> Void)
     

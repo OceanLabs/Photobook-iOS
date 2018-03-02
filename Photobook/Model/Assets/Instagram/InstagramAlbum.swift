@@ -16,6 +16,7 @@ class InstagramAlbum {
         static let instagramMediaBaseUrl = "https://api.instagram.com/v1/users/self/media/recent"
         static let serviceName = "Instagram"
         static let genericErrorMessage = NSLocalizedString("Social/AccessError", value: "There was an error when trying to access \(serviceName)", comment: "Generic error when trying to access a social service eg Instagram/Facebook")
+        static let pageSize = 100
     }
     
     var assets = [Asset]()
@@ -34,17 +35,15 @@ class InstagramAlbum {
         instagramClient.authorizeURLHandler = authenticationHandler
     }
     
-    func fetchAssets(url: String, completionHandler:((_ error: ErrorMessage?)->())?) {
-        guard let tokenData = KeychainSwift().getData(OAuth2Swift.Constants.keychainInstagramTokenKey),
-            let token = String(data: tokenData, encoding: .utf8)
-            else { return }
+    func fetchAssets(url: String, completionHandler:((_ error: ActionableErrorMessage?)->())?) {
+        guard let token = KeychainSwift().get(OAuth2Swift.Constants.keychainInstagramTokenKey) else { return }
         
         var urlToLoad = url
         
         if !urlToLoad.contains("access_token") {
             urlToLoad = "\(urlToLoad)?access_token=\(token)"
         }
-        urlToLoad = "\(urlToLoad)&count=100"
+        urlToLoad = "\(urlToLoad)&count=\(Constants.pageSize)"
         
         instagramClient.startAuthorizedRequest(urlToLoad, method: .GET, parameters: [:], onTokenRenewal: { credential in
             KeychainSwift().set(credential.oauthToken, forKey: OAuth2Swift.Constants.keychainInstagramTokenKey)
@@ -67,22 +66,35 @@ class InstagramAlbum {
             var newAssets = [Asset]()
             
             for d in data {
-                guard let images = d["images"] as? [String : Any],
-                    let thumbnailImage = images["thumbnail"] as? [String : Any],
-                    let thumbnailResolutionImageUrlString = thumbnailImage["url"] as? String,
-                    let thumbnailResolutionImageUrl = URL(string: thumbnailResolutionImageUrlString),
-                    
-                    let standardResolutionImage = images["standard_resolution"] as? [String : Any],
-                    let standardResolutionImageUrlString = standardResolutionImage["url"] as? String,
-                    let standardResolutionImageUrl = URL(string: standardResolutionImageUrlString),
-                    
-                    let width = standardResolutionImage["width"] as? Int,
-                    let height = standardResolutionImage["height"] as? Int,
-                    
-                    let identifier = d["id"] as? String
-                    else { continue }
+                var media = [[String : Any]]()
+                if let array = d["carousel_media"] as? [[String : Any]] {
+                    for imagesDict in array {
+                        guard let images = imagesDict["images"] as? [String : Any] else { continue}
+                        media.append(images)
+                    }
+                } else if let images = d["images"] as? [String : Any] {
+                    media.append(images)
+                }
                 
-                newAssets.append(InstagramAsset(thumbnailUrl: thumbnailResolutionImageUrl, standardResolutionUrl: standardResolutionImageUrl, albumIdentifier: self.identifier, size: CGSize(width: width, height: height), identifier: identifier))
+                for i in 0..<media.count {
+                    let images = media[i]
+                    guard let thumbnailImage = images["thumbnail"] as? [String : Any],
+                        let thumbnailResolutionImageUrlString = thumbnailImage["url"] as? String,
+                        let thumbnailResolutionImageUrl = URL(string: thumbnailResolutionImageUrlString),
+                        
+                        let standardResolutionImage = images["standard_resolution"] as? [String : Any],
+                        let standardResolutionImageUrlString = standardResolutionImage["url"] as? String,
+                        let standardResolutionImageUrl = URL(string: standardResolutionImageUrlString),
+                        
+                        let width = standardResolutionImage["width"] as? Int,
+                        let height = standardResolutionImage["height"] as? Int,
+                        
+                        let identifier = d["id"] as? String
+    
+                        else { continue }
+                    
+                    newAssets.append(InstagramAsset(thumbnailUrl: thumbnailResolutionImageUrl, standardResolutionUrl: standardResolutionImageUrl, albumIdentifier: self.identifier, size: CGSize(width: width, height: height), identifier: "\(identifier)-\(i)"))
+                }
             }
             
             self.assets.append(contentsOf: newAssets)
@@ -122,7 +134,7 @@ extension InstagramAlbum: Album {
         return "Instagram"
     }
     
-    func loadAssets(completionHandler: ((ErrorMessage?) -> Void)?) {
+    func loadAssets(completionHandler: ((ActionableErrorMessage?) -> Void)?) {
         fetchAssets(url: Constants.instagramMediaBaseUrl, completionHandler: {error in
             completionHandler?(error)
         })

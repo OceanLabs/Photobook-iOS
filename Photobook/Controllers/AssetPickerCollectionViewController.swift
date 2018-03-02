@@ -38,8 +38,6 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         return EmptyScreenViewController.emptyScreen(parent: self)
     }()
     
-    var shouldFadeInImages = true
-    
     var albumManager: AlbumManager?
     var album: Album! {
         didSet{
@@ -79,9 +77,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
             postAlbumLoadSetup()
         }
         
-        if traitCollection.forceTouchCapability == .available{
-            registerForPreviewing(with: self, sourceView: collectionView!)
-        }
+        registerFor3DTouch()
         
         // Setup the Image Collector Controller
         if let manager = selectedAssetsManager {
@@ -112,6 +108,12 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         super.viewDidLayoutSubviews()
         
         loadNextBatchOfAssetIfNeeded()
+    }
+    
+    func registerFor3DTouch() {
+        if traitCollection.forceTouchCapability == .available{
+            registerForPreviewing(with: self, sourceView: collectionView!)
+        }
     }
     
     @objc func albumsWereUpdated(_ notification: Notification) {
@@ -204,6 +206,12 @@ class AssetPickerCollectionViewController: UICollectionViewController {
                 break
             }
         }
+    }
+    
+    func coverImageLabelsContainerView() -> UIView? {
+        guard let cell = collectionView?.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? AssetPickerCoverCollectionViewCell else { return nil }
+        
+        return cell.labelsContainerView
     }
     
     // MARK: UIScrollView
@@ -342,7 +350,7 @@ extension AssetPickerCollectionViewController {
             let asset = album.assets[indexPath.item]
             cell.assetId = asset.identifier
             
-            cell.imageView.setImage(from: asset, fadeIn: shouldFadeInImages, size: imageCellSize, completionHandler: {
+            cell.imageView.setImage(from: asset, size: imageCellSize, completionHandler: {
                 return cell.assetId == asset.identifier
             })
             
@@ -410,7 +418,7 @@ extension AssetPickerCollectionViewController {
         
         guard selectedAssetsManager.toggleSelected(asset) else {
             let alertController = UIAlertController(title: NSLocalizedString("ImagePicker/TooManyPicturesAlertTitle", value: "Too many pictures", comment: "Alert title informing the user that they have reached the maximum number of images"), message: NSLocalizedString("ImagePicker/TooManyPicturesAlertMessage", value: "Your photobook cannot contain more than \(ProductManager.shared.maximumAllowedAssets) pictures", comment: "Alert message informing the user that they have reached the maximum number of images"), preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: NSLocalizedString("GenericAlert/OK", value: "OK", comment: "Acknowledgement to an alert dialog"), style: .default, handler: nil))
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
             present(alertController, animated: true, completion: nil)
             return
         }
