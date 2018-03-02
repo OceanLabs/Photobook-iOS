@@ -37,6 +37,10 @@
 		2E2563912018BBCF0096DFC5 /* AddressTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2563902018BBCF0096DFC5 /* AddressTableViewController.swift */; };
 		2E2563932018C3950096DFC5 /* AddressFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2563922018C3950096DFC5 /* AddressFieldTableViewCell.swift */; };
 		2E3E6A5420036FB60044EDFC /* PhotobookCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3E6A5220036FB60044EDFC /* PhotobookCollectionViewCell.swift */; };
+		2E4C9E882049492400F5AD48 /* FacebookAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E872049492400F5AD48 /* FacebookAlbum.swift */; };
+		2E4C9E8A20494D6B00F5AD48 /* AlbumsCollectionViewController+Facebook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8920494D6B00F5AD48 /* AlbumsCollectionViewController+Facebook.swift */; };
+		2E4C9E8C2049527900F5AD48 /* FacebookAlbumManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8B2049527900F5AD48 /* FacebookAlbumManager.swift */; };
+		2E4C9E8E204979EA00F5AD48 /* URLAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8D204979EA00F5AD48 /* URLAsset.swift */; };
 		2E5F8251201617CE002F3607 /* DeliveryDetailsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F8250201617CE002F3607 /* DeliveryDetailsTableViewController.swift */; };
 		2E5F825320162855002F3607 /* DeliveryAddressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F825220162855002F3607 /* DeliveryAddressTableViewCell.swift */; };
 		2E6B9EDA1FBDEEF500F28C00 /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9ED91FBDEEF400F28C00 /* UIViewExtensions.swift */; };
@@ -205,6 +209,10 @@
 		2E2563902018BBCF0096DFC5 /* AddressTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressTableViewController.swift; sourceTree = "<group>"; };
 		2E2563922018C3950096DFC5 /* AddressFieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressFieldTableViewCell.swift; sourceTree = "<group>"; };
 		2E3E6A5220036FB60044EDFC /* PhotobookCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotobookCollectionViewCell.swift; sourceTree = "<group>"; };
+		2E4C9E872049492400F5AD48 /* FacebookAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookAlbum.swift; sourceTree = "<group>"; };
+		2E4C9E8920494D6B00F5AD48 /* AlbumsCollectionViewController+Facebook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlbumsCollectionViewController+Facebook.swift"; sourceTree = "<group>"; };
+		2E4C9E8B2049527900F5AD48 /* FacebookAlbumManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookAlbumManager.swift; sourceTree = "<group>"; };
+		2E4C9E8D204979EA00F5AD48 /* URLAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLAsset.swift; sourceTree = "<group>"; };
 		2E5F8250201617CE002F3607 /* DeliveryDetailsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryDetailsTableViewController.swift; sourceTree = "<group>"; };
 		2E5F825220162855002F3607 /* DeliveryAddressTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryAddressTableViewCell.swift; sourceTree = "<group>"; };
 		2E6B9ED91FBDEEF400F28C00 /* UIViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
@@ -415,6 +423,8 @@
 				2E0B58981FB328B800F31A9E /* Asset.swift */,
 				2E0B58A61FB32B3100F31A9E /* Photos */,
 				2EA24E4D2035E02D0069B12A /* Instagram */,
+				2E4C9E862049490400F5AD48 /* Facebook */,
+				2E4C9E8D204979EA00F5AD48 /* URLAsset.swift */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -454,6 +464,15 @@
 			path = Photobook;
 			sourceTree = "<group>";
 		};
+		2E4C9E862049490400F5AD48 /* Facebook */ = {
+			isa = PBXGroup;
+			children = (
+				2E4C9E8B2049527900F5AD48 /* FacebookAlbumManager.swift */,
+				2E4C9E872049492400F5AD48 /* FacebookAlbum.swift */,
+			);
+			path = Facebook;
+			sourceTree = "<group>";
+		};
 		2E6B9EE11FBF1CCF00F28C00 /* Segues */ = {
 			isa = PBXGroup;
 			children = (
@@ -480,6 +499,7 @@
 				2EA24E492035ACB20069B12A /* InstagramLoginViewController.swift */,
 				2EB9BFAE2036E01F00EED9FA /* AssetPickerCollectionViewController+Instagram.swift */,
 				2E971E1620481FF300A49F21 /* FacebookLandingViewController.swift */,
+				2E4C9E8920494D6B00F5AD48 /* AlbumsCollectionViewController+Facebook.swift */,
 			);
 			path = Social;
 			sourceTree = "<group>";
@@ -1079,6 +1099,7 @@
 				6F0A682E1FE0243400B7E56C /* EmptyScreenViewController.swift in Sources */,
 				B9D3340E2029FB14003D4338 /* ProgressOverlayViewController.swift in Sources */,
 				6F3920F9201881AE00D6C30B /* BorderedViewProtocol.swift in Sources */,
+				2E4C9E8C2049527900F5AD48 /* FacebookAlbumManager.swift in Sources */,
 				6FC7E87F1FC3329400D2BCDA /* Layout.swift in Sources */,
 				6F6B7A77200E137B002E2FC2 /* PhotobookCoverCollectionViewCell.swift in Sources */,
 				2E21DB562017943500D32989 /* CountryPickerTableViewController.swift in Sources */,
@@ -1097,6 +1118,7 @@
 				6FFE21CB202CA7F9004EC0EA /* SpineTextEditingViewController.swift in Sources */,
 				2ECB5A971FDFE01100FF39A5 /* OutOfBoundsTouchView.swift in Sources */,
 				6F4DE6551FB4522A0099A97E /* StoryTableViewCell.swift in Sources */,
+				2E4C9E8A20494D6B00F5AD48 /* AlbumsCollectionViewController+Facebook.swift in Sources */,
 				2E5F825320162855002F3607 /* DeliveryAddressTableViewCell.swift in Sources */,
 				6FCE959D1FF555EE0023FC14 /* AssetPlacementViewController.swift in Sources */,
 				6FC7E87B1FBEF7FC00D2BCDA /* PhotobookAPIManager.swift in Sources */,
@@ -1129,8 +1151,10 @@
 				2E5F8251201617CE002F3607 /* DeliveryDetailsTableViewController.swift in Sources */,
 				2E876E0B1FC2FA15007CCFA2 /* ViewStorySegue.swift in Sources */,
 				B9D3340C2029BF80003D4338 /* JSON.swift in Sources */,
+				2E4C9E8E204979EA00F5AD48 /* URLAsset.swift in Sources */,
 				2ED79FEB1FBAEDFA0046B96C /* UIScreenExtensions.swift in Sources */,
 				2EA88C64203C321E00CADCAD /* ErrorUtils.swift in Sources */,
+				2E4C9E882049492400F5AD48 /* FacebookAlbum.swift in Sources */,
 				B9BE9F941FBF33320002C459 /* AssetCollectorCollectionViewCell.swift in Sources */,
 				2E0B58A01FB3297300F31A9E /* AlbumCollectionViewCell.swift in Sources */,
 				2E0B58991FB328B800F31A9E /* Asset.swift in Sources */,

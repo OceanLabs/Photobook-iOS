@@ -24,6 +24,7 @@ class PhotosAlbumManager: NSObject, AlbumManager {
     }
     
     var albums:[Album] = [Album]()
+    var hasMoreAlbumsToLoad = false
     static let imageManager = PHCachingImageManager()
     
     override init() {
@@ -31,7 +32,7 @@ class PhotosAlbumManager: NSObject, AlbumManager {
         PHPhotoLibrary.shared().register(self)
     }
     
-    func loadAlbums(completionHandler: ((ActionableErrorMessage?) -> Void)?) {
+    func loadAlbums(completionHandler: ((Error?) -> Void)?) {
         guard PHPhotoLibrary.authorizationStatus() == .authorized else {
             let errorMessage = ActionableErrorMessage(title: Constants.permissionsTitle, message: Constants.permissionsMessage, buttonTitle: Constants.permissionsButtonTitle, buttonAction: {
                 if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
@@ -123,6 +124,10 @@ class PhotosAlbumManager: NSObject, AlbumManager {
                 completionHandler?(nil)
             })
         }
+    }
+    
+    func loadNextBatchOfAlbums() {
+        // Maybe we can use this to load user albums after showing the system ones
     }
     
     func stopCachingImagesForAllAssets() {

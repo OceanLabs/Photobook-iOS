@@ -101,8 +101,8 @@ class InstagramAlbum {
             
             DispatchQueue.main.async {
                 // Call the completion handler only on the first request, subsequent requests will update the album
-                if completionHandler != nil {
-                    completionHandler?(nil)
+                if let completionHandler = completionHandler {
+                    completionHandler(nil)
                 } else {
                     NotificationCenter.default.post(name: AssetsNotificationName.albumsWereUpdated, object: [AlbumChange(album: self, assetsRemoved: [], indexesRemoved: [], assetsAdded: newAssets)])
                 }
@@ -135,9 +135,7 @@ extension InstagramAlbum: Album {
     }
     
     func loadAssets(completionHandler: ((ActionableErrorMessage?) -> Void)?) {
-        fetchAssets(url: Constants.instagramMediaBaseUrl, completionHandler: {error in
-            completionHandler?(error)
-        })
+        fetchAssets(url: Constants.instagramMediaBaseUrl, completionHandler: completionHandler)
     }
     
     func loadNextBatchOfAssets() {

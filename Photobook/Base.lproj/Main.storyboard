@@ -1628,7 +1628,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nQq-ZK-b1Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-511" y="808"/>
+            <point key="canvasLocation" x="244" y="806"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Vk2-Uq-zhi">
@@ -1734,6 +1734,24 @@
                                     <outlet property="selectedCountLabel" destination="qS3-bO-f7J" id="MXU-SY-hNb"/>
                                 </connections>
                             </collectionViewCell>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="LoadingCell" id="oGF-Pz-fpC">
+                                <rect key="frame" x="28" y="247" width="319" height="81"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                    <rect key="frame" x="0.0" y="0.0" width="319" height="81"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="wtF-hX-XGK">
+                                            <rect key="frame" x="149.5" y="30.5" width="20" height="20"/>
+                                        </activityIndicatorView>
+                                    </subviews>
+                                </view>
+                                <constraints>
+                                    <constraint firstItem="wtF-hX-XGK" firstAttribute="centerX" secondItem="oGF-Pz-fpC" secondAttribute="centerX" id="TJo-ad-dz7"/>
+                                    <constraint firstItem="wtF-hX-XGK" firstAttribute="centerY" secondItem="oGF-Pz-fpC" secondAttribute="centerY" id="s8m-3s-Erq"/>
+                                </constraints>
+                                <size key="customSize" width="319" height="81"/>
+                            </collectionViewCell>
                         </cells>
                         <connections>
                             <outlet property="dataSource" destination="dnn-z5-0C4" id="rhO-jq-XSh"/>
@@ -1754,7 +1772,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="unX-Oh-deq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="314" y="808"/>
+            <point key="canvasLocation" x="1077.5999999999999" y="805.54722638680664"/>
         </scene>
         <!--Album Search Results Table View Controller-->
         <scene sceneID="K2G-GY-hbo">
@@ -1818,7 +1836,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gfR-7k-TaO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1070" y="807"/>
+            <point key="canvasLocation" x="1070" y="1458"/>
         </scene>
         <!--Asset Picker Collection View Controller-->
         <scene sceneID="SlZ-pU-WSS">
@@ -1841,7 +1859,7 @@
                         </activityIndicatorView>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AssetPickerCollectionViewCell" id="UJr-go-DIA" customClass="AssetPickerCollectionViewCell" customModule="Photobook" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="211" width="134" height="131"/>
+                                <rect key="frame" x="120.5" y="211" width="134" height="131"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                     <rect key="frame" x="0.0" y="0.0" width="134" height="131"/>
@@ -1872,22 +1890,23 @@
                                     <outlet property="selectedStatusImageView" destination="3Vh-Ph-w7D" id="oew-vR-rgQ"/>
                                 </connections>
                             </collectionViewCell>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="LoadingCell" id="LH8-pl-2xJ">
-                                <rect key="frame" x="241" y="211" width="134" height="131"/>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="LoadingCell" id="f2x-ln-hgN">
+                                <rect key="frame" x="28" y="343" width="319" height="81"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                    <rect key="frame" x="0.0" y="0.0" width="134" height="131"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="319" height="81"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="nNa-1A-bxm">
-                                            <rect key="frame" x="57" y="55" width="20" height="20"/>
+                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="vnY-tn-YQ2">
+                                            <rect key="frame" x="149.5" y="30.5" width="20" height="20"/>
                                         </activityIndicatorView>
                                     </subviews>
                                 </view>
                                 <constraints>
-                                    <constraint firstItem="nNa-1A-bxm" firstAttribute="centerY" secondItem="LH8-pl-2xJ" secondAttribute="centerY" id="PMV-Fb-e4D"/>
-                                    <constraint firstItem="nNa-1A-bxm" firstAttribute="centerX" secondItem="LH8-pl-2xJ" secondAttribute="centerX" id="YF1-uq-p8J"/>
+                                    <constraint firstItem="vnY-tn-YQ2" firstAttribute="centerY" secondItem="f2x-ln-hgN" secondAttribute="centerY" id="Eog-cQ-Txd"/>
+                                    <constraint firstItem="vnY-tn-YQ2" firstAttribute="centerX" secondItem="f2x-ln-hgN" secondAttribute="centerX" id="Pz8-o9-tbH"/>
                                 </constraints>
+                                <size key="customSize" width="319" height="81"/>
                             </collectionViewCell>
                         </cells>
                         <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="coverCell" id="Z1i-T8-49g" customClass="AssetPickerCoverCollectionViewCell" customModule="Photobook" customModuleProvider="target">

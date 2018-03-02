@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct ActionableErrorMessage {
+struct ActionableErrorMessage: Error {
     var title: String
     var message: String
     var buttonTitle: String

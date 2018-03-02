@@ -30,3 +30,8 @@ struct AlbumChange {
     var indexesRemoved: [Int]
     var assetsAdded: [Asset]
 }
+
+struct AlbumAddition {
+    var album: Album
+    var index: Int
+}

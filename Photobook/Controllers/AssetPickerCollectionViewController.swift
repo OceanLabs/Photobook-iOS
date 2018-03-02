@@ -107,7 +107,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        loadNextBatchOfAssetIfNeeded()
+        loadNextBatchOfAssetsIfNeeded()
     }
     
     func registerFor3DTouch() {
@@ -198,8 +198,8 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         cell.selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
     }
     
-    private func loadNextBatchOfAssetIfNeeded() {
-        guard let collectionView = collectionView else { return }
+    private func loadNextBatchOfAssetsIfNeeded() {
+        guard album.hasMoreAssetsToLoad, let collectionView = collectionView else { return }
         for cell in collectionView.visibleCells {
             if cell.reuseIdentifier == Constants.loadingCellReuseIdentifier {
                 album.loadNextBatchOfAssets()
@@ -506,4 +506,11 @@ private extension UICollectionView {
         let allLayoutAttributes = collectionViewLayout.layoutAttributesForElements(in: rect)!
         return allLayoutAttributes.map { $0.indexPath }
     }
+}
+
+extension AssetPickerCollectionViewController: AssetPickerCollectionViewControllerDelegate {
+    func viewControllerForPresentingOn() -> UIViewController? {
+        return tabBarController
+    }
+    
 }

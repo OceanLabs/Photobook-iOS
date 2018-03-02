@@ -15,7 +15,7 @@ struct CommonLocalizedStrings {
 
 
 /// Simplifies error handling at VC level keeping messages independent from the API client.
-struct ErrorMessage {
+struct ErrorMessage: Error {
     private(set) var title: String?
     private(set) var message: String!
     

@@ -10,6 +10,7 @@ import UIKit
 import Photos
 import OAuthSwift
 import KeychainSwift
+import FBSDKLoginKit
 
 class IntroViewController: UIViewController {
     
@@ -129,14 +130,14 @@ class IntroViewController: UIViewController {
         
         // Facebook
         // Depending on whether we are logged in or not show the Facebook login screen or the album picker
-//        if KeychainSwift().getData(OAuth2Swift.Constants.keychainInstagramTokenKey) != nil {
-//            let instagramAssetPicker = AssetPickerCollectionViewController.instagramAssetPicker()
-//            instagramAssetPicker.delegate = instagramAssetPicker
-//            (tabBarController.viewControllers?[Tab.facebook.rawValue] as? UINavigationController)?.setViewControllers([instagramAssetPicker], animated: false)
-//        } else {
+        if FBSDKAccessToken.current() != nil {
+            let facebookAssetPicker = AlbumsCollectionViewController.facebookAlbumsCollectionViewController()
+            facebookAssetPicker.assetPickerDelegate = facebookAssetPicker
+            (tabBarController.viewControllers?[Tab.facebook.rawValue] as? UINavigationController)?.setViewControllers([facebookAssetPicker], animated: false)
+        } else {
             let facebookLandingViewController = storyboard!.instantiateViewController(withIdentifier: "FacebookLandingViewController")
             (tabBarController.viewControllers?[Tab.facebook.rawValue] as? UINavigationController)?.setViewControllers([facebookLandingViewController], animated: false)
-//        }
+        }
         
         
         // Stories

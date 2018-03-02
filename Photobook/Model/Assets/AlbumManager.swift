@@ -10,12 +10,15 @@ import UIKit
 
 struct AssetsNotificationName {
     static let albumsWereUpdated = Notification.Name("albumsWereUpdatedNotificationName")
+    static let albumsWereAdded = Notification.Name("albumsWereAddedNotificationName")
 }
 
 protocol AlbumManager {
     var albums:[Album] { get }
     
-    func loadAlbums(completionHandler: ((_ errorMessage: ActionableErrorMessage?) -> Void)?)
+    func loadAlbums(completionHandler: ((_ errorMessage: Error?) -> Void)?)
+    var hasMoreAlbumsToLoad: Bool { get }
+    func loadNextBatchOfAlbums()
     
     func stopCachingImagesForAllAssets()
     func startCachingImages(for assets: [Asset], targetSize: CGSize)
