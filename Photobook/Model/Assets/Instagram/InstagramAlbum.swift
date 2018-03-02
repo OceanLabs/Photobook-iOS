@@ -15,8 +15,8 @@ class InstagramAlbum {
     private struct Constants {
         static let instagramMediaBaseUrl = "https://api.instagram.com/v1/users/self/media/recent"
         static let serviceName = "Instagram"
-        static let genericErrorMessage = NSLocalizedString("Social/AccessError", value: "There was an error when trying to access \(serviceName)", comment: "Generic error when trying to access a social service eg Instagram/Facebook")
         static let pageSize = 100
+        static let instagramThumbnailSize = CGSize(width: 150, height: 150)
     }
     
     var assets = [Asset]()
@@ -35,7 +35,7 @@ class InstagramAlbum {
         instagramClient.authorizeURLHandler = authenticationHandler
     }
     
-    func fetchAssets(url: String, completionHandler:((_ error: ActionableErrorMessage?)->())?) {
+    func fetchAssets(url: String, completionHandler:((_ error: Error?)->())?) {
         guard let token = KeychainSwift().get(OAuth2Swift.Constants.keychainInstagramTokenKey) else { return }
         
         var urlToLoad = url
@@ -55,7 +55,7 @@ class InstagramAlbum {
                 // Not worth showing an error if one of the later pagination requests fail
                 guard self.assets.isEmpty else { return }
                 
-                completionHandler?(ErrorUtils.genericRetryErrorMessage(message: Constants.genericErrorMessage, action: { [weak welf = self] in
+                completionHandler?(ErrorUtils.genericRetryErrorMessage(message: CommonLocalizedStrings.serviceAccessError(serviceName: Constants.serviceName), action: { [weak welf = self] in
                     welf?.fetchAssets(url: url, completionHandler: completionHandler)
                 }))
                 
@@ -93,7 +93,7 @@ class InstagramAlbum {
     
                         else { continue }
                     
-                    newAssets.append(InstagramAsset(thumbnailUrl: thumbnailResolutionImageUrl, standardResolutionUrl: standardResolutionImageUrl, albumIdentifier: self.identifier, size: CGSize(width: width, height: height), identifier: "\(identifier)-\(i)"))
+                    newAssets.append(URLAsset(thumbnailUrl: thumbnailResolutionImageUrl, fullResolutionUrl: standardResolutionImageUrl, albumIdentifier: self.identifier, thumbnailSize: Constants.instagramThumbnailSize , size: CGSize(width: width, height: height), identifier: "\(identifier)-\(i)"))
                 }
             }
             
@@ -111,7 +111,7 @@ class InstagramAlbum {
             // Not worth showing an error if one of the later pagination requests fail
             guard self.assets.isEmpty else { return }
             
-            let message = failure.underlyingError?.localizedDescription ?? Constants.genericErrorMessage
+            let message = failure.underlyingError?.localizedDescription ?? CommonLocalizedStrings.serviceAccessError(serviceName: Constants.serviceName)
             completionHandler?(ErrorUtils.genericRetryErrorMessage(message: message, action: { [weak welf = self] in
                 welf?.fetchAssets(url: url, completionHandler: completionHandler)
             }))
@@ -134,7 +134,7 @@ extension InstagramAlbum: Album {
         return "Instagram"
     }
     
-    func loadAssets(completionHandler: ((ActionableErrorMessage?) -> Void)?) {
+    func loadAssets(completionHandler: ((Error?) -> Void)?) {
         fetchAssets(url: Constants.instagramMediaBaseUrl, completionHandler: completionHandler)
     }
     

@@ -45,7 +45,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
         super.viewDidLoad()
         loadAlbums()
         
-        title = screenTitle
+        navigationItem.title = screenTitle
         
         // Setup the Image Collector Controller
         assetCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)

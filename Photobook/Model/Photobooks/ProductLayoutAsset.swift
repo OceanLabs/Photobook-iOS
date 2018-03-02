@@ -60,7 +60,7 @@ class ProductLayoutAsset: Codable {
         
         if let asset = asset as? PhotosAsset {
             try container.encode(asset, forKey: .asset)
-        } else if let asset = asset as? InstagramAsset {
+        } else if let asset = asset as? URLAsset {
             try container.encode(asset, forKey: .asset)
         } else if let asset = asset as? TestPhotosAsset {
             try container.encode(asset, forKey: .asset)
@@ -77,7 +77,7 @@ class ProductLayoutAsset: Codable {
         
         if let loadedAsset = try? values.decodeIfPresent(PhotosAsset.self, forKey: .asset) {
             asset = loadedAsset
-        } else if let loadedAsset = try? values.decodeIfPresent(InstagramAsset.self, forKey: .asset){
+        } else if let loadedAsset = try? values.decodeIfPresent(URLAsset.self, forKey: .asset){
             asset = loadedAsset
         } else if let loadedAsset = try? values.decodeIfPresent(TestPhotosAsset.self, forKey: .asset) {
             asset = loadedAsset

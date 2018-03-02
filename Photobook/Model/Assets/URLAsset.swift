@@ -11,21 +11,19 @@ import SDWebImage
 
 class URLAsset: Asset {
     
-    private struct Constants {
-        static let instagramThumbnailWidth: CGFloat = 150
-    }
-    
-    init(thumbnailUrl: URL, standardResolutionUrl: URL, albumIdentifier: String, size: CGSize, identifier: String) {
+    init(thumbnailUrl: URL? = nil, fullResolutionUrl: URL, albumIdentifier: String, thumbnailSize: CGSize = .zero, size: CGSize = .zero, identifier: String) {
         self.thumbnailUrl = thumbnailUrl
-        self.standardResolutionUrl = standardResolutionUrl
+        self.fullResolutionUrl = fullResolutionUrl
         self.albumIdentifier = albumIdentifier
+        self.thumbnailSize = thumbnailSize
         self.size = size
         self.identifier = identifier
     }
     
-    let thumbnailUrl: URL
-    let standardResolutionUrl: URL
+    let thumbnailUrl: URL?
+    let fullResolutionUrl: URL
     var identifier: String!
+    var thumbnailSize: CGSize
     var size: CGSize
     var uploadUrl: String?
     
@@ -34,7 +32,7 @@ class URLAsset: Asset {
     }
     
     var assetType: String {
-        return NSStringFromClass(InstagramAsset.self)
+        return NSStringFromClass(URLAsset.self)
     }
     
     var date: Date?
@@ -47,7 +45,7 @@ class URLAsset: Asset {
         let imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())
         
         // Ignore loadThumbnailsFirst. Since we are doing a network request for both thumnbails and the full resolution, there's no benefit to getting the thumbnail first
-        let url = imageSize.width <= Constants.instagramThumbnailWidth ? thumbnailUrl : standardResolutionUrl
+        let url = imageSize.width <= thumbnailSize.width ? thumbnailUrl : fullResolutionUrl
         
         SDWebImageManager.shared().loadImage(with: url, options: [], progress: nil, completed: { image, _, error, _, _, _ in
             DispatchQueue.main.async {
@@ -57,7 +55,7 @@ class URLAsset: Asset {
     }
     
     func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension?, Error?) -> Void) {
-        SDWebImageManager.shared().loadImage(with: standardResolutionUrl, options: [], progress: nil, completed: { _, data, error, _, _, _ in
+        SDWebImageManager.shared().loadImage(with: fullResolutionUrl, options: [], progress: nil, completed: { _, data, error, _, _, _ in
             completionHandler(data, .jpg, error)
         })
     }

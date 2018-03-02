@@ -15,7 +15,6 @@ class FacebookAlbumManager {
         static let pageSize = 100
         static let graphPath = "me/albums?limit=\(pageSize)&fields=id,name,count,cover_photo"
         static let serviceName = "Facebook"
-        static let genericErrorMessage = NSLocalizedString("Social/AccessError", value: "There was an error when trying to access \(serviceName)", comment: "Generic error when trying to access a social service eg Instagram/Facebook")
     }
     
     var albums =  [Album]()
@@ -24,7 +23,7 @@ class FacebookAlbumManager {
     
     func fetchAlbums(graphPath: String, completionHandler: ((Error?) -> Void)?) {
         guard let token = FBSDKAccessToken.current() else {
-            completionHandler?(ErrorMessage(message: Constants.genericErrorMessage))
+            completionHandler?(ErrorMessage(message: CommonLocalizedStrings.serviceAccessError(serviceName: Constants.serviceName)))
             return
         }
         
@@ -33,7 +32,7 @@ class FacebookAlbumManager {
             if let error = error {
                 // Not worth showing an error if one of the later pagination requests fail
                 guard self.albums.isEmpty else { return }
-                welf?.handleFacebookError(facebookError: error as NSError, completionHandler: completionHandler)
+                ErrorUtils.handleFacebookError(facebookError: error as NSError, completionHandler: completionHandler)
                 return
             }
             
@@ -41,7 +40,7 @@ class FacebookAlbumManager {
                 else {
                     // Not worth showing an error if one of the later pagination requests fail
                     guard self.albums.isEmpty else { return }
-                    completionHandler?(ErrorMessage(message: Constants.genericErrorMessage))
+                    completionHandler?(ErrorMessage(message: CommonLocalizedStrings.serviceAccessError(serviceName: Constants.serviceName)))
                     return
             }
             
@@ -76,11 +75,6 @@ class FacebookAlbumManager {
             }
             
         })
-    }
-    
-    func handleFacebookError(facebookError: NSError, completionHandler: ((Error?) -> Void)?) {
-        let message = facebookError.userInfo["FBSDKErrorLocalizedDescriptionKey"] as? String ?? NSLocalizedString("Generic/CheckConnection", value: "Please check your internet connectivity and try again.", comment: "Message instructing the user to check their Internet connection.")
-        completionHandler?(ErrorMessage(title: Constants.genericErrorMessage, message: message))
     }
 
 }

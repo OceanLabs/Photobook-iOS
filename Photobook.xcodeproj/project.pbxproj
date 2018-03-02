@@ -65,7 +65,6 @@
 		2EA88C62203C269C00CADCAD /* InstagramLandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA88C61203C269C00CADCAD /* InstagramLandingViewController.swift */; };
 		2EA88C64203C321E00CADCAD /* ErrorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA88C63203C321E00CADCAD /* ErrorUtils.swift */; };
 		2EB39DD51FC5AE0F009EC5B2 /* PhotobookPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB39DD41FC5AE0F009EC5B2 /* PhotobookPageView.swift */; };
-		2EB9BFAB2036CCD900EED9FA /* InstagramAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB9BFAA2036CCD900EED9FA /* InstagramAsset.swift */; };
 		2EB9BFAD2036D95100EED9FA /* OAuth2Swift+Instagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB9BFAC2036D95100EED9FA /* OAuth2Swift+Instagram.swift */; };
 		2EB9BFAF2036E01F00EED9FA /* AssetPickerCollectionViewController+Instagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB9BFAE2036E01F00EED9FA /* AssetPickerCollectionViewController+Instagram.swift */; };
 		2EBBC0CD1FEBB72E00A4EF45 /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBBC0CC1FEBB72D00A4EF45 /* ArrayExtensions.swift */; };
@@ -237,7 +236,6 @@
 		2EA88C61203C269C00CADCAD /* InstagramLandingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramLandingViewController.swift; sourceTree = "<group>"; };
 		2EA88C63203C321E00CADCAD /* ErrorUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorUtils.swift; sourceTree = "<group>"; };
 		2EB39DD41FC5AE0F009EC5B2 /* PhotobookPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookPageView.swift; sourceTree = "<group>"; };
-		2EB9BFAA2036CCD900EED9FA /* InstagramAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramAsset.swift; sourceTree = "<group>"; };
 		2EB9BFAC2036D95100EED9FA /* OAuth2Swift+Instagram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OAuth2Swift+Instagram.swift"; sourceTree = "<group>"; };
 		2EB9BFAE2036E01F00EED9FA /* AssetPickerCollectionViewController+Instagram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssetPickerCollectionViewController+Instagram.swift"; sourceTree = "<group>"; };
 		2EBBC0CC1FEBB72D00A4EF45 /* ArrayExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
@@ -508,7 +506,6 @@
 			isa = PBXGroup;
 			children = (
 				2EA24E4E2035E05C0069B12A /* InstagramAlbum.swift */,
-				2EB9BFAA2036CCD900EED9FA /* InstagramAsset.swift */,
 			);
 			path = Instagram;
 			sourceTree = "<group>";
@@ -1134,7 +1131,6 @@
 				2E8B27F92045A6C000A0B403 /* UIAlertControllerExtensions.swift in Sources */,
 				6F3C4AC91FC8804300DA0196 /* ProductLayout.swift in Sources */,
 				6F4DE6591FB453090099A97E /* PhotobookNavigationBar.swift in Sources */,
-				2EB9BFAB2036CCD900EED9FA /* InstagramAsset.swift in Sources */,
 				2E8B3E441FD191AC00FB8878 /* PhotobookViewController.swift in Sources */,
 				B90F287F1FFF8D1A00FF3D15 /* OrderSummaryViewController.swift in Sources */,
 				6F139E0C1FB45DD8005B937E /* StoriesManager.swift in Sources */,

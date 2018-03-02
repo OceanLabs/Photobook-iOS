@@ -174,8 +174,8 @@ class StoriesManager: NSObject {
         }
     }
     
-    func prepare(story: Story, completionHandler: ((ActionableErrorMessage?) -> Void)?) {
-        story.loadAssets(completionHandler: { [weak welf = self] error in
+    func prepare(story: Story, completionHandler: ((Error?) -> Void)?) {
+        story.loadAssets(completionHandler: { error in
             completionHandler?(error)
         })
     }

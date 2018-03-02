@@ -95,7 +95,7 @@ extension Story: Album {
         return true
     }
     
-    func loadAssets(completionHandler: ((ActionableErrorMessage?) -> Void)?) {
+    func loadAssets(completionHandler: ((Error?) -> Void)?) {
         let fetchOptions = PHFetchOptions()
         fetchOptions.wantsIncrementalChangeDetails = false
         fetchOptions.includeHiddenAssets = false
