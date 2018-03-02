@@ -70,7 +70,12 @@ class AlbumsCollectionViewController: UICollectionViewController {
     func loadAlbums() {
         albumManager.loadAlbums(completionHandler: { [weak welf = self] (error) in
             if let errorMessage = error as? ActionableErrorMessage {
-                welf?.emptyScreenViewController.show(errorMessage)
+                welf?.emptyScreenViewController.show(ErrorUtils.genericRetryErrorMessage(message: errorMessage.message, action: {
+                    errorMessage.buttonAction()
+                    if errorMessage.dismissErrorPromptAfterAction {
+                        welf?.emptyScreenViewController.hide()
+                    }
+                }))
                 return
             } else if let errorMessage = error as? ErrorMessage {
                 welf?.present(UIAlertController(errorMessage: errorMessage), animated: true, completion: nil)

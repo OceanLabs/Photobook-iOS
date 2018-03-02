@@ -38,7 +38,7 @@ class PhotosAlbumManager: NSObject, AlbumManager {
                 if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
                     UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
                 }
-            })
+            }, dismissErrorPromptAfterAction: false)
             completionHandler?(errorMessage)
             return
         }

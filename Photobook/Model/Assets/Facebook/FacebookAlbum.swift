@@ -47,7 +47,9 @@ class FacebookAlbum {
             if let error = error {
                 // Not worth showing an error if one of the later pagination requests fail
                 guard self.assets.isEmpty else { return }
-                ErrorUtils.handleFacebookError(facebookError: error as NSError, completionHandler: completionHandler)
+                completionHandler?(ErrorUtils.genericRetryErrorMessage(message: error.localizedDescription, action: {
+                    welf?.fetchAssets(graphPath: graphPath, completionHandler: completionHandler)
+                }))
                 return
             }
             

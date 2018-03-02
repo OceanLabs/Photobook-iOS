@@ -11,12 +11,7 @@ class ErrorUtils {
     static func genericRetryErrorMessage(message: String, action: @escaping () -> ()) -> ActionableErrorMessage {
         let title = CommonLocalizedStrings.somethingWentWrong
         let buttonTitle = CommonLocalizedStrings.retry
-        return ActionableErrorMessage(title: title, message: message, buttonTitle: buttonTitle, buttonAction: action)
-    }
-    
-    static func handleFacebookError(facebookError: NSError, completionHandler: ((Error?) -> Void)?) {
-        let message = facebookError.userInfo["FBSDKErrorLocalizedDescriptionKey"] as? String ?? CommonLocalizedStrings.checkConnectionAndRetry
-        completionHandler?(ErrorMessage(title: CommonLocalizedStrings.serviceAccessError(serviceName: "Facebook"), message: message))
+        return ActionableErrorMessage(title: title, message: message, buttonTitle: buttonTitle, buttonAction: action, dismissErrorPromptAfterAction: true)
     }
 
 }
