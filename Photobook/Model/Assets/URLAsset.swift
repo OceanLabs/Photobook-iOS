@@ -17,18 +17,18 @@ struct URLAssetMetadata: Codable {
 class URLAsset: Asset {
     
     init(metadata: [URLAssetMetadata], albumIdentifier: String, thumbnailSize: CGSize = .zero, size: CGSize = .zero, identifier: String) {
-        self.metadata = metadata.sorted(by: { $0.size.width > $1.size.width })
+        self.metadata = metadata.sorted(by: { $0.size.width < $1.size.width })
         self.albumIdentifier = albumIdentifier
         self.identifier = identifier
     }
     
     
-    /// An array of image URL per size, sorted by descending width
+    /// An array of image URL per size, sorted by ascending width
     private let metadata: [URLAssetMetadata]
     var identifier: String!
     var uploadUrl: String?
     var size: CGSize {
-        return metadata.first?.size ?? .zero
+        return metadata.last?.size ?? .zero
     }
     
     var isLandscape: Bool {
@@ -49,16 +49,8 @@ class URLAsset: Asset {
         let imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())
         
         // Find the smallest image that is larger than what we want
-        var url = metadata.first?.url
-        for pair in metadata {
-            if pair.size.width >= imageSize.width {
-                url = pair.url
-            } else {
-                break
-            }
-        }
-        
-        guard url != nil else {
+        let metadata = self.metadata.first { $0.size.width >= imageSize.width } ?? self.metadata.last
+        guard let url = metadata?.url else {
             completionHandler(nil, ErrorMessage(message: CommonLocalizedStrings.somethingWentWrong))
             return
         }
@@ -72,7 +64,7 @@ class URLAsset: Asset {
     }
     
     func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension?, Error?) -> Void) {
-        guard let url = metadata.first?.url else {
+        guard let url = metadata.last?.url else {
             completionHandler(nil, nil, ErrorMessage(message: CommonLocalizedStrings.somethingWentWrong))
             return
         }
