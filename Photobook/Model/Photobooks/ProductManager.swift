@@ -141,7 +141,7 @@ class ProductManager {
             return
         }
 
-        var addedAssets = assets ?? {
+        let addedAssets = assets ?? {
             var assets = [Asset]()
             for layout in ProductManager.shared.productLayouts {
                 guard let asset = layout.asset else { continue }
@@ -158,7 +158,7 @@ class ProductManager {
 
             // Use first photo for the cover
             let productLayoutAsset = ProductLayoutAsset()
-            productLayoutAsset.asset = addedAssets.remove(at: 0)
+            productLayoutAsset.asset = addedAssets.first
             let coverLayout = coverLayouts.first(where: { $0.imageLayoutBox != nil } )
             let productLayout = ProductLayout(layout: coverLayout!, productLayoutAsset: productLayoutAsset)
             tempLayouts.append(productLayout)
@@ -167,12 +167,7 @@ class ProductManager {
             tempLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: imageOnlyLayouts))
             
             // Fill minimum pages with Placeholder assets if needed
-            var numberOfPlaceholderLayoutsNeeded = max(photobook.minimumRequiredAssets - tempLayouts.count, 0)
-            
-            // We need an odd number of layouts including the cover and the 2 courtesy pages
-            if tempLayouts.count % 2 == 0 {
-                numberOfPlaceholderLayoutsNeeded += 1
-            }
+            let numberOfPlaceholderLayoutsNeeded = max(photobook.minimumRequiredAssets - tempLayouts.count, 0)            
             tempLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: imageOnlyLayouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
             
             productLayouts = tempLayouts
@@ -204,16 +199,35 @@ class ProductManager {
     func createLayoutsForAssets(assets: [Asset], from layouts:[Layout], placeholderLayouts: Int = 0) -> [ProductLayout] {
         var portraitLayouts = layouts.filter { !$0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
         var landscapeLayouts = layouts.filter { $0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
+        let doubleLayout = layouts.first { $0.isDoubleLayout }
     
         var productLayouts = [ProductLayout]()
         
-        for asset in assets {
-            // FIXME: Logic TBC
+        // If assets count is an odd number, use a double layout close to the middle of the photobook
+        var doubleAssetIndex: Int?
+        if doubleLayout != nil, placeholderLayouts == 0 && assets.count % 2 != 0 {
+            let middleIndex = (assets.count / 2) + 1
+            for i in stride(from: 0, to: middleIndex-1, by: 2) { // Exclude first and last assets
+                if assets[middleIndex - i].isLandscape {
+                    doubleAssetIndex = middleIndex - i
+                    break
+                }
+                if assets[middleIndex + i].isLandscape {
+                    doubleAssetIndex = middleIndex + i
+                    break
+                }
+            }
+            doubleAssetIndex = doubleAssetIndex ?? middleIndex // Use middle index even though it is a portrait photo
+        }
+        
+        for (index, asset) in assets.enumerated() {
             let productLayoutAsset = ProductLayoutAsset()
             productLayoutAsset.asset = asset
             
             var layout: Layout
-            if asset.isLandscape {
+            if let doubleAssetIndex = doubleAssetIndex, index == doubleAssetIndex {
+                layout = doubleLayout!
+            } else if asset.isLandscape {
                 layout = landscapeLayouts[currentLandscapeLayout]
                 currentLandscapeLayout = currentLandscapeLayout < landscapeLayouts.count - 1 ? currentLandscapeLayout + 1 : 0
             } else {
