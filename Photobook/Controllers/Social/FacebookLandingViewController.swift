@@ -16,6 +16,23 @@ class FacebookLandingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // If we are logged in show the Facebook album picker
+        if FBSDKAccessToken.current() != nil {
+            
+            // Hide all views because this screen will be shown for a split second
+            for view in view.subviews {
+                view.isHidden = true
+            }
+            
+            let facebookAssetPicker = AlbumsCollectionViewController.facebookAlbumsCollectionViewController()
+            facebookAssetPicker.assetPickerDelegate = facebookAssetPicker
+            
+            // Animated: needs to be true or else it won't show the title
+            navigationController?.setViewControllers([facebookAssetPicker], animated: true)
+            
+            return
+        } 
+        
         if let navigationController = navigationController {
             facebookLogoCenterYConstraint.constant = -(navigationController.navigationBar.frame.height / 2.0)
         }

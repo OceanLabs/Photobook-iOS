@@ -34,19 +34,19 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Access Instagram" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qlt-FQ-DVE">
-                                <rect key="frame" x="70.5" y="144.5" width="234.5" height="24"/>
+                                <rect key="frame" x="70.5" y="142" width="234.5" height="24"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Sign in to access your Instagram photos and start creating" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3tS-Fo-5bm">
-                                <rect key="frame" x="70.5" y="170.5" width="234.5" height="36"/>
+                                <rect key="frame" x="70.5" y="168" width="234.5" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HTZ-sF-ffW">
-                                <rect key="frame" x="70.5" y="470.5" width="234" height="50"/>
+                                <rect key="frame" x="70.5" y="468" width="234" height="50"/>
                                 <color key="backgroundColor" red="0.20543283224105835" green="0.47096657752990723" blue="0.9647943377494812" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="0y2-Os-2z2"/>
@@ -65,7 +65,7 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" image="Instagram-big" translatesAutoresizingMaskIntoConstraints="NO" id="Jdf-5N-Pfk">
-                                <rect key="frame" x="70.5" y="226.5" width="234" height="234"/>
+                                <rect key="frame" x="70.5" y="224" width="234" height="234"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Jdf-5N-Pfk" secondAttribute="height" id="iAJ-74-C2M"/>
                                 </constraints>
@@ -109,7 +109,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="GJF-dH-hU4">
-                                <rect key="frame" x="169" y="347" width="37" height="37"/>
+                                <rect key="frame" x="169" y="322.5" width="37" height="37"/>
                                 <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </activityIndicatorView>
                         </subviews>
@@ -5584,6 +5584,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     <nil name="viewControllers"/>
                     <connections>
                         <outlet property="delegate" destination="95M-V6-bH2" id="bVg-fS-UdG"/>
+                        <segue destination="CJe-ow-F6K" kind="relationship" relationship="rootViewController" id="Bu9-ZL-r6a"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sGR-sj-BQW" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -5618,19 +5619,19 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Access Facebook" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FRC-sM-ebC">
-                                <rect key="frame" x="70.5" y="144.5" width="234.5" height="24"/>
+                                <rect key="frame" x="70.5" y="142" width="234.5" height="24"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Sign in to access your Facebook photos and start creating" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gZ8-2E-uyJ">
-                                <rect key="frame" x="70.5" y="170.5" width="234.5" height="36"/>
+                                <rect key="frame" x="70.5" y="168" width="234.5" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zfA-1O-hGS">
-                                <rect key="frame" x="70.5" y="470.5" width="234" height="50"/>
+                                <rect key="frame" x="70.5" y="468" width="234" height="50"/>
                                 <color key="backgroundColor" red="0.2054328322" green="0.47096657749999998" blue="0.9647943377" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="PIZ-bT-lyd"/>
@@ -5649,7 +5650,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" image="Facebook-big" translatesAutoresizingMaskIntoConstraints="NO" id="eR2-kc-5sU">
-                                <rect key="frame" x="70.5" y="226.5" width="234" height="234"/>
+                                <rect key="frame" x="70.5" y="224" width="234" height="234"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="eR2-kc-5sU" secondAttribute="height" id="cDl-sB-SCT"/>
                                 </constraints>
@@ -5700,6 +5701,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     <nil name="viewControllers"/>
                     <connections>
                         <outlet property="delegate" destination="FtP-3P-qdb" id="SNS-GH-Ckh"/>
+                        <segue destination="B0N-RZ-Y3E" kind="relationship" relationship="rootViewController" id="fQ5-Yn-2NM"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dVy-yF-UeV" userLabel="First Responder" sceneMemberID="firstResponder"/>
