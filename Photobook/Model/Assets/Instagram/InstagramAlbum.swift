@@ -79,7 +79,7 @@ class InstagramAlbum {
                 
                 for i in 0..<media.count {
                     let images = media[i]
-                    var imageUrlsPerSize = [(size: CGSize, url: URL)]()
+                    var metadata = [URLAssetMetadata]()
                     for key in ["standard_resolution", "low_resolution", "thumbnail"]{
                     guard let image = images[key] as? [String : Any],
                         let width = image["width"] as? Int,
@@ -88,10 +88,10 @@ class InstagramAlbum {
                         let standardResolutionImageUrl = URL(string: standardResolutionImageUrlString)
                      else { continue }
                     
-                     imageUrlsPerSize.append((size: CGSize(width: width, height: height), url: standardResolutionImageUrl))
+                     metadata.append(URLAssetMetadata(size: CGSize(width: width, height: height), url: standardResolutionImageUrl))
                     }
         
-                    newAssets.append(URLAsset(imageUrlsPerSize: imageUrlsPerSize , albumIdentifier: self.identifier, identifier: "\(identifier)-\(i)"))
+                    newAssets.append(URLAsset(metadata: metadata , albumIdentifier: self.identifier, identifier: "\(identifier)-\(i)"))
                 }
             }
             

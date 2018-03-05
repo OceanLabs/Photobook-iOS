@@ -65,17 +65,17 @@ class FacebookAlbum {
                     let images = photo["images"] as? [[String: Any]]
                     else { continue }
                 
-                var imageUrlsPerSize = [(size: CGSize, url: URL)]()
+                var metadata = [URLAssetMetadata]()
                 for image in images {
                     guard let source = image["source"] as? String,
                         let url = URL(string: source),
                         let width = image["width"] as? Int,
                         let height = image["height"] as? Int
                         else { continue }
-                    imageUrlsPerSize.append((size: CGSize(width: width, height: height), url: url))
+                    metadata.append(URLAssetMetadata(size: CGSize(width: width, height: height), url: url))
                 }
                 
-                let newAsset = URLAsset(imageUrlsPerSize: imageUrlsPerSize, albumIdentifier: self.identifier, identifier: identifier)
+                let newAsset = URLAsset(metadata: metadata, albumIdentifier: self.identifier, identifier: identifier)
                 
                 newAssets.append(newAsset)
                 welf?.assets.append(newAsset)
@@ -119,6 +119,6 @@ extension FacebookAlbum: Album {
     }
     
     func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
-        completionHandler(URLAsset(imageUrlsPerSize: [(size: .zero, url: coverPhotoUrl)], albumIdentifier: identifier, identifier: coverPhotoUrl.absoluteString), nil)
+        completionHandler(URLAsset(metadata: [URLAssetMetadata(size: .zero, url: coverPhotoUrl)], albumIdentifier: identifier, identifier: coverPhotoUrl.absoluteString), nil)
     }
 }

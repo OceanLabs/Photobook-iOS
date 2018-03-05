@@ -9,22 +9,26 @@
 import UIKit
 import SDWebImage
 
+struct URLAssetMetadata: Codable {
+    var size: CGSize
+    let url: URL
+}
+
 class URLAsset: Asset {
     
-    
-    init(imageUrlsPerSize: [(size: CGSize, url: URL)], albumIdentifier: String, thumbnailSize: CGSize = .zero, size: CGSize = .zero, identifier: String) {
-        sortedImageUrlsPerSize = imageUrlsPerSize.sorted(by: { $0.size.width > $1.size.width })
+    init(metadata: [URLAssetMetadata], albumIdentifier: String, thumbnailSize: CGSize = .zero, size: CGSize = .zero, identifier: String) {
+        self.metadata = metadata.sorted(by: { $0.size.width > $1.size.width })
         self.albumIdentifier = albumIdentifier
         self.identifier = identifier
     }
     
     
     /// An array of image URL per size, sorted by descending width
-    private let sortedImageUrlsPerSize: [(size: CGSize, url: URL)]
+    private let metadata: [URLAssetMetadata]
     var identifier: String!
     var uploadUrl: String?
     var size: CGSize {
-        return sortedImageUrlsPerSize.first?.size ?? .zero
+        return metadata.first?.size ?? .zero
     }
     
     var isLandscape: Bool {
@@ -45,8 +49,8 @@ class URLAsset: Asset {
         let imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())
         
         // Find the smallest image that is larger than what we want
-        var url = sortedImageUrlsPerSize.first?.url
-        for pair in sortedImageUrlsPerSize {
+        var url = metadata.first?.url
+        for pair in metadata {
             if pair.size.width >= imageSize.width {
                 url = pair.url
             } else {
@@ -68,7 +72,7 @@ class URLAsset: Asset {
     }
     
     func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension?, Error?) -> Void) {
-        guard let url = sortedImageUrlsPerSize.first?.url else {
+        guard let url = metadata.first?.url else {
             completionHandler(nil, nil, ErrorMessage(message: CommonLocalizedStrings.somethingWentWrong))
             return
         }
@@ -79,12 +83,12 @@ class URLAsset: Asset {
     }
     
     enum CodingKeys: String, CodingKey {
-        case sortedImageUrlsPerSize, identifier, uploadUrl, date, albumIdentifier
+        case metadata, identifier, uploadUrl, date, albumIdentifier
     }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(sortedImageUrlsPerSize, forKey: .sortedImageUrlsPerSize)
+        try container.encode(metadata, forKey: .metadata)
         try container.encode(identifier, forKey: .identifier)
         try container.encode(uploadUrl, forKey: .uploadUrl)
         try container.encode(date, forKey: .date)
@@ -94,7 +98,7 @@ class URLAsset: Asset {
     required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         
-        sortedImageUrlsPerSize = try values.decode([(size: CGSize, url: URL)].self, forKey: .sortedImageUrlsPerSize)
+        metadata = try values.decode([URLAssetMetadata].self, forKey: .metadata)
         identifier = try values.decodeIfPresent(String.self, forKey: .identifier)
         uploadUrl = try values.decodeIfPresent(String.self, forKey: .uploadUrl)
         date = try values.decodeIfPresent(Date.self, forKey: .date)
