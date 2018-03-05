@@ -143,12 +143,12 @@ extension StoriesViewController: UITableViewDataSource {
             doubleCell.secondOverlayView.isHidden = secondStory == nil
             
             story?.coverAsset(completionHandler:{ (asset, _) in
-                doubleCell.coverImageView.setImage(from: asset, size: doubleCell.coverImageView.bounds.size, completionHandler: {
+                doubleCell.coverImageView.setImage(from: asset, size: doubleCell.coverImageView.bounds.size, validCellCheck: {
                     return doubleCell.localIdentifier == story?.identifier
                 })
             })
             secondStory?.coverAsset(completionHandler: { (asset, _) in
-                doubleCell.secondCoverImageView.setImage(from: asset, size: doubleCell.secondCoverImageView.bounds.size, completionHandler: {
+                doubleCell.secondCoverImageView.setImage(from: asset, size: doubleCell.secondCoverImageView.bounds.size, validCellCheck: {
                     return doubleCell.localIdentifier == story?.identifier
                 })
             })
@@ -170,7 +170,7 @@ extension StoriesViewController: UITableViewDataSource {
         singleCell.delegate = self
 
         story.coverAsset(completionHandler: { (asset, _) in
-            singleCell.coverImageView.setImage(from: asset, size: singleCell.coverImageView.bounds.size, completionHandler: {
+            singleCell.coverImageView.setImage(from: asset, size: singleCell.coverImageView.bounds.size, validCellCheck: {
                 return singleCell.localIdentifier == story.identifier
             })
         })

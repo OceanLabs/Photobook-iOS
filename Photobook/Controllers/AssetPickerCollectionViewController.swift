@@ -354,7 +354,7 @@ extension AssetPickerCollectionViewController {
             let asset = album.assets[indexPath.item]
             cell.assetId = asset.identifier
             
-            cell.imageView.setImage(from: asset, size: imageCellSize, completionHandler: {
+            cell.imageView.setImage(from: asset, size: imageCellSize, validCellCheck: {
                 return cell.assetId == asset.identifier
             })
             
