@@ -70,3 +70,12 @@ func ==(lhs: DeliveryDetails, rhs: DeliveryDetails) -> Bool{
         && lhs.address == rhs.address
 }
 
+extension DeliveryDetails: Hashable {
+    
+    /// Only the address matters
+    var hashValue: Int {
+        return address?.hashValue ?? 0
+    }
+    
+}
+

@@ -190,7 +190,7 @@ class APIClient: NSObject {
     
     // MARK: Generic dataTask handling
     
-    private func dataTask(context: APIContext, endpoint: String, parameters: [String : Any]?, method: HTTPMethod, completion:@escaping (AnyObject?, Error?) -> ()) {
+    private func dataTask(context: APIContext, endpoint: String, parameters: [String : Any]?, headers: [String : String]?, method: HTTPMethod, completion:@escaping (AnyObject?, Error?) -> ()) {
         
         var request = URLRequest(url: URL(string: baseURLString(for: context) + endpoint)!)
         
@@ -199,12 +199,16 @@ class APIClient: NSObject {
         request.setValue("gzip", forHTTPHeaderField: "Accept-Encoding")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         
+        for header in headers ?? [:] {
+            request.setValue(header.value, forHTTPHeaderField: header.key)
+        }
+        
         switch method {
         case .get:
-            if parameters != nil {
+            if let parameters = parameters {
                 var components = URLComponents(string: request.url!.absoluteString)
                 var items = [URLQueryItem]()
-                for (key, value) in parameters! {
+                for (key, value) in parameters {
                     var itemValue = ""
                     if let value = value as? String {
                         itemValue = value
@@ -276,16 +280,16 @@ class APIClient: NSObject {
     }
 
     // MARK: - Public methods
-    func post(context: APIContext, endpoint: String, parameters: [String : Any]?, completion:@escaping (AnyObject?, Error?) -> ()) {
-        dataTask(context: context, endpoint: endpoint, parameters: parameters, method: .post, completion: completion)
+    func post(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion:@escaping (AnyObject?, Error?) -> ()) {
+        dataTask(context: context, endpoint: endpoint, parameters: parameters, headers: headers, method: .post, completion: completion)
     }
     
-    func get(context: APIContext, endpoint: String, parameters: [String : Any]?, completion:@escaping (AnyObject?, Error?) -> ()) {
-        dataTask(context: context, endpoint: endpoint, parameters: parameters, method: .get, completion: completion)
+    func get(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion:@escaping (AnyObject?, Error?) -> ()) {
+        dataTask(context: context, endpoint: endpoint, parameters: parameters, headers: headers, method: .get, completion: completion)
     }
     
-    func put(context: APIContext, endpoint: String, parameters: [String : Any]?, completion:@escaping (AnyObject?, Error?) -> ()) {
-        dataTask(context: context, endpoint: endpoint, parameters: parameters, method: .put, completion: completion)
+    func put(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion:@escaping (AnyObject?, Error?) -> ()) {
+        dataTask(context: context, endpoint: endpoint, parameters: parameters, headers: headers, method: .put, completion: completion)
     }
     
     func uploadImage(_ data: Data, imageName: String, context: APIContext, endpoint: String, completion:@escaping (AnyObject?, Error?) -> ()) {

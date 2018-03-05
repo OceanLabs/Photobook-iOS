@@ -112,9 +112,6 @@ class ProductManager {
         pageColor = .white
     }
     
-    
-    // TODO: Spine
-    
     /// Requests the photobook details so the user can start building their photobook
     ///
     /// - Parameter completion: Completion block with an optional error
@@ -433,6 +430,10 @@ class ProductManager {
         guard let product = product else { return 0.0 }
         let scaleFactor = size.width / product.pageWidth
         return bleed * scaleFactor
+    }
+    
+    func initializePhotobookPdf(completionHandler: @escaping (_ photobookId: String?, _ error: Error?) -> Void) {
+        apiManager.initializePhotobookPdf(completionHandler: completionHandler)
     }
 }
 

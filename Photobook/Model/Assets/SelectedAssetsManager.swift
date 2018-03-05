@@ -22,6 +22,9 @@ class SelectedAssetsManager: NSObject {
         super.init()
         
         NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
+        
+        // Listen for the receipt dismissed notification so that we deselect all selected assets
+        NotificationCenter.default.addObserver(self, selector: #selector(deselectAllAssetsForAllAlbums), name: ReceiptNotificationName.receiptWillDismiss, object: nil)
     }
     
     deinit {
@@ -134,7 +137,7 @@ class SelectedAssetsManager: NSObject {
         deselect(album.assets)
     }
     
-    func deselectAllAssets(){
+    @objc func deselectAllAssetsForAllAlbums(){
         deselect(selectedAssets)
     }
     

@@ -10,7 +10,7 @@ import UIKit
 import Photos
 
 protocol StoryTableViewCellDelegate: class {
-    func didTapOnStory(index: Int, sourceView: UIView?) -> ()
+    func didTapOnStory(index: Int, coverImage: UIImage?, sourceView: UIView?, labelsContainerView: UIView?) -> ()
 }
 
 class StoryTableViewCell: UITableViewCell {
@@ -41,7 +41,7 @@ class StoryTableViewCell: UITableViewCell {
         guard let storyIndex = storyIndex else {
             fatalError("Story index not set")
         }
-        delegate?.didTapOnStory(index: storyIndex, sourceView: coverImageView.superview)
+        delegate?.didTapOnStory(index: storyIndex, coverImage: coverImageView.image, sourceView: coverImageView.superview, labelsContainerView: titleLabel.superview)
     }
     
 }
