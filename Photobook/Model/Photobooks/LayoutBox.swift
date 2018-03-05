@@ -17,7 +17,7 @@ struct LayoutBox: Codable {
     let rect: CGRect!
     
     func isLandscape() -> Bool {
-        return rect.height > rect.width
+        return rect.width > rect.height
     }
     
     func rectContained(in size: CGSize) -> CGRect {
