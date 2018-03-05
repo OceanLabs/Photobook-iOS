@@ -490,9 +490,10 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         delegate?.didFinishEditingPage(pageIndex, pageType: pageType, productLayout: productLayout, color: selectedColor)
     }
     
+    private var isAnimatingTool = false
     @IBAction func tappedToolButton(_ sender: UIButton) {
         
-        guard let index = toolbarButtons.index(of: sender),
+        guard !isAnimatingTool, let index = toolbarButtons.index(of: sender),
             !toolbarButtons[index].isSelected,
             let tool = Tool(rawValue: index) else { return }
 
@@ -504,19 +505,23 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         for button in toolbarButtons { button.isSelected = (button === sender) }
         
+        isAnimatingTool = true
+
         switch tool {
         case .selectAsset, .selectLayout, .selectColor:
             if placeAssetWasSelected {
                 assetPlacementViewController.animateBackToPhotobook {
                     self.assetImageView.transform = self.productLayout!.productLayoutAsset!.transform
                     self.view.sendSubview(toBack: self.placementContainerView)
+                    self.isAnimatingTool = false
                 }
-            }
-            
-            if textEditingWasSelected {
+            } else if textEditingWasSelected {
                 textEditingViewController.animateOff {
                     self.view.sendSubview(toBack: self.textEditingContainerView)
+                    self.isAnimatingTool = false
                 }
+            } else {
+                isAnimatingTool = false
             }
 
             UIView.animate(withDuration: 0.1, animations: {
@@ -532,13 +537,17 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             assetPlacementViewController.productLayout = productLayout
             assetPlacementViewController.initialContainerRect = containerRect
             assetPlacementViewController.assetImage = assetImageView.image
+            
             if textEditingWasSelected {
                 textEditingViewController.animateOff {
                     self.view.sendSubview(toBack: self.textEditingContainerView)
+                    self.isAnimatingTool = false
                 }
             } else {
                 view.bringSubview(toFront: placementContainerView)
-                assetPlacementViewController.animateFromPhotobook()
+                assetPlacementViewController.animateFromPhotobook() {
+                    self.isAnimatingTool = false
+                }
             }
             setCancelButton(hidden: true)
         case .editText:
@@ -554,7 +563,9 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             } else {
                 textEditingViewController.initialContainerRect = textEditingContainerView.convert(assetContainerView.frame, from: pageView)
             }
-            textEditingViewController.animateOn()
+            textEditingViewController.animateOn {
+                self.isAnimatingTool = false
+            }
         }
         
         setTopBars(hidden: tool == .editText)

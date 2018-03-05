@@ -33,7 +33,7 @@ class AssetPlacementViewController: UIViewController {
         view.alpha = 0.0
     }
     
-    func animateFromPhotobook() {
+    func animateFromPhotobook(_ completion: @escaping (() -> Void)) {
         guard let productLayout = productLayout,
             let containerSize = productLayout.productLayoutAsset?.containerSize else { return }
         
@@ -72,6 +72,7 @@ class AssetPlacementViewController: UIViewController {
         UIView.animate(withDuration: 0.3, animations: {
             self.view.backgroundColor = backgroundColor
             self.animatableAssetImageView.frame = self.targetRect!
+            completion()
         })
     }
     
