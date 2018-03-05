@@ -49,7 +49,8 @@ class URLAsset: Asset {
         let imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())
         
         // Find the smallest image that is larger than what we want
-        let metadata = self.metadata.first { $0.size.width >= imageSize.width } ?? self.metadata.last
+        let sortingFunction: (URLAssetMetadata) -> Bool = size.width >= size.height ? { $0.size.width >= imageSize.width } : { $0.size.height >= imageSize.height }
+        let metadata = self.metadata.first (where: sortingFunction) ?? self.metadata.last
         guard let url = metadata?.url else {
             completionHandler(nil, ErrorMessage(message: CommonLocalizedStrings.somethingWentWrong))
             return
