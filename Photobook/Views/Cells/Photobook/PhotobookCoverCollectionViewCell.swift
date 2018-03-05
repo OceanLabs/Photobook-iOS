@@ -49,6 +49,7 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
     func loadCoverAndSpine() {
         coverFrameView.pageView.pageIndex = 0
         coverFrameView.pageView.productLayout = ProductManager.shared.productLayouts.first
+        coverFrameView.pageView.bleed = ProductManager.shared.bleed(forPageSize: coverFrameView.pageView.bounds.size)
         coverFrameView.pageView.setupImageBox()
         coverFrameView.pageView.setupTextBox(mode: .userTextOnly)
         

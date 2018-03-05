@@ -33,9 +33,10 @@ class PhotobookPageView: UIView {
     var aspectRatio: CGFloat? {
         didSet {
             guard let aspectRatio = aspectRatio else { return }
+            let priority = self.aspectRatioConstraint.priority
             self.removeConstraint(self.aspectRatioConstraint)
             aspectRatioConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: self, attribute: .height, multiplier: aspectRatio, constant: 0)
-            aspectRatioConstraint.priority = UILayoutPriority(750)
+            aspectRatioConstraint.priority = priority
             self.addConstraint(aspectRatioConstraint)
         }
     }
@@ -59,9 +60,11 @@ class PhotobookPageView: UIView {
             }
         }
     }
+    var bleed: CGFloat?
     
     private var isShowingTextPlaceholder = false
     
+    @IBOutlet private weak var bleedAssetContainerView: UIView! // Hierarchical order: assetContainerView, bleedingAssetContainerView & assetImageView
     @IBOutlet private weak var assetContainerView: UIView!
     @IBOutlet private weak var assetPlaceholderIconImageView: UIImageView!
     @IBOutlet private weak var assetImageView: UIImageView!
@@ -78,15 +81,7 @@ class PhotobookPageView: UIView {
     @IBOutlet private var aspectRatioConstraint: NSLayoutConstraint!
     
     override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        guard let imageBox = productLayout?.layout.imageLayoutBox else { return }
-        assetContainerView.frame = imageBox.rectContained(in: bounds.size)
-        
-        let iconSize = min(assetContainerView.bounds.width, assetContainerView.bounds.height)
-        assetPlaceholderIconImageView.bounds.size = CGSize(width: iconSize * 0.2, height: iconSize * 0.2)
-        assetPlaceholderIconImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
-        
+        setupImageBox()
         adjustTextLabel()
         setupGestures()
     }
@@ -138,9 +133,15 @@ class PhotobookPageView: UIView {
         
         assetContainerView.alpha = 1.0
         assetContainerView.frame = imageBox.rectContained(in: bounds.size)
-        setImagePlaceholder(visible: true)
+        if bleedAssetContainerView != nil {
+            bleedAssetContainerView.frame = imageBox.bleedRect(in: assetContainerView.bounds.size, withBleed: bleed)
+        }
+        setImagePlaceholder()
         
-        guard let index = pageIndex, let asset = productLayout?.productLayoutAsset?.asset else { return }
+        guard let index = pageIndex, let asset = productLayout?.productLayoutAsset?.asset else {
+            assetImageView.image = nil
+            return
+        }
         
         // Avoid reloading image if not necessary
         if let assetImage = assetImage {
@@ -167,19 +168,14 @@ class PhotobookPageView: UIView {
     }
     
     func setImage(image: UIImage) {
-        guard let asset = productLayout?.productLayoutAsset?.asset else {
-            setImagePlaceholder(visible: true)
-            return
-        }
-        
-        setImagePlaceholder(visible: false)
-        
+        guard let asset = productLayout?.productLayoutAsset?.asset else { return }
+
         assetImageView.image = image
         assetImageView.transform = .identity
         assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: asset.size.width, height: asset.size.height)
-        assetImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
-        
-        productLayout!.productLayoutAsset!.containerSize = assetContainerView.bounds.size
+        let containerView = bleedAssetContainerView != nil ? bleedAssetContainerView! : assetContainerView!
+        assetImageView.center = CGPoint(x: containerView.bounds.midX, y: containerView.bounds.midY)
+        productLayout!.productLayoutAsset!.containerSize = containerView.bounds.size
         assetImageView.transform = productLayout!.productLayoutAsset!.transform
     }
     
@@ -244,16 +240,13 @@ class PhotobookPageView: UIView {
         pageTextLabel.transform = pageTextLabel.transform.scaledBy(x: scale, y: scale)
     }
         
-    private func setImagePlaceholder(visible: Bool) {
-        if visible {
-            assetImageView.image = nil
-            assetContainerView.backgroundColor = UIColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1.0)
-            assetPlaceholderIconImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
-            assetPlaceholderIconImageView.alpha = 1.0
-        } else {
-            assetContainerView.backgroundColor = .clear
-            assetPlaceholderIconImageView.alpha = 0.0
-        }
+    private func setImagePlaceholder() {
+        let iconSize = min(assetContainerView.bounds.width, assetContainerView.bounds.height)
+
+        assetContainerView.backgroundColor = UIColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1.0)
+        assetPlaceholderIconImageView.bounds.size = CGSize(width: iconSize * 0.2, height: iconSize * 0.2)
+        assetPlaceholderIconImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
+        assetPlaceholderIconImageView.alpha = 1.0
     }
     
     func setTextColor() {

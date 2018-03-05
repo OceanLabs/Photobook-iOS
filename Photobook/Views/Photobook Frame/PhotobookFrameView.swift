@@ -63,9 +63,10 @@ class PhotobookFrameView: UIView {
     
     var coverColor: ProductColor = .white
     var pageColor: ProductColor = .white
-    
+        
     var isLeftPageVisible = true {
         didSet {
+            guard isLeftPageVisible != oldValue else { return }
             leftPageBackgroundView.isHidden = !isLeftPageVisible
             leftPagesBehindView?.isHidden = !isLeftPageVisible
             leftPageView.isVisible = isLeftPageVisible
@@ -74,6 +75,7 @@ class PhotobookFrameView: UIView {
     }
     var isRightPageVisible = true {
         didSet {
+            guard isRightPageVisible != oldValue else { return }
             rightPageBackgroundView.isHidden = !isRightPageVisible
             rightPagesBehindView?.isHidden = !isRightPageVisible
             rightPageView.isVisible = isRightPageVisible
@@ -100,8 +102,6 @@ class PhotobookFrameView: UIView {
     }
     
     override func layoutSubviews() {
-        super.layoutSubviews()
-
         if !hasDoneInitialSetup {
             setup()
             hasDoneInitialSetup = true
@@ -235,7 +235,6 @@ class PhotobookFrameSpreadBackgroundView: UIView {
         layer.shadowOpacity = 0.2
         layer.shadowRadius = 1.0
         layer.shadowOffset = CGSize(width: 0.0, height: 1.0)
-        super.layoutSubviews()
     }
 }
 

@@ -15,6 +15,7 @@ class AssetPlacementViewController: UIViewController {
     }
     
     @IBOutlet private weak var assetContainerView: UIView!
+    @IBOutlet private weak var bleedContainerView: UIView!
     @IBOutlet private weak var assetImageView: UIImageView!
     @IBOutlet private weak var assetContainerViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var assetContainerViewHeightConstraint: NSLayoutConstraint!
@@ -84,8 +85,13 @@ class AssetPlacementViewController: UIViewController {
         }
 
         // Re-calculate transform for the photobook's container size
-        productLayoutAsset.containerSize = CGSize(width: initialContainerRect.width, height: initialContainerRect.height)
-
+        if productLayout!.layout.isDoubleLayout {
+            // Account for double page layouts being scaled down by 0.5
+            productLayoutAsset.containerSize = CGSize(width: initialContainerRect.width * 2.0, height: initialContainerRect.height * 2.0)
+        } else {
+            productLayoutAsset.containerSize = CGSize(width: initialContainerRect.width, height: initialContainerRect.height)
+        }
+            
         animatableAssetImageView.image = assetContainerView.snapshot()
         animatableAssetImageView.alpha = 1.0
         
@@ -128,7 +134,7 @@ class AssetPlacementViewController: UIViewController {
     }
     
     private func setUpImageView(withProductLayout productLayout: ProductLayout) {
-        guard let asset = productLayout.asset else {
+        guard let imageBox = productLayout.layout.imageLayoutBox, let asset = productLayout.asset else {
             assetImageView.alpha = 0.0
             return
         }
@@ -140,9 +146,15 @@ class AssetPlacementViewController: UIViewController {
         assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: asset.size.width, height: asset.size.height)
 
         // Should trigger a transform recalculation
-        productLayout.productLayoutAsset?.containerSize = CGSize(width: assetContainerViewWidthConstraint.constant, height: assetContainerViewHeightConstraint.constant)
+        let imageBoxSize = CGSize(width: assetContainerViewWidthConstraint.constant, height: assetContainerViewHeightConstraint.constant)
+        let pageSize = imageBox.containerSize(for: imageBoxSize)
+        let bleed = ProductManager.shared.bleed(forPageSize: pageSize)
+        
+        bleedContainerView.frame = imageBox.bleedRect(in: imageBoxSize, withBleed: bleed)
+        
+        productLayout.productLayoutAsset?.containerSize = bleedContainerView.bounds.size
         assetImageView.transform = productLayout.productLayoutAsset!.transform
-        assetImageView.center = CGPoint(x: assetContainerViewWidthConstraint.constant * 0.5, y: assetContainerViewHeightConstraint.constant * 0.5)
+        assetImageView.center = CGPoint(x: bleedContainerView.bounds.width * 0.5, y: bleedContainerView.bounds.height * 0.5)
         
         assetImageView.image = assetImage
     }
@@ -153,7 +165,7 @@ class AssetPlacementViewController: UIViewController {
             let angle = atan2(transform.b, transform.a)
             let rotateTo = LayoutUtils.nextCCWCuadrantAngle(to: angle)
             
-            let scale = LayoutUtils.scaleToFill(containerSize: assetContainerView.bounds.size, withSize: productLayoutAsset.asset!.size, atAngle: rotateTo)
+            let scale = LayoutUtils.scaleToFill(containerSize: bleedContainerView.bounds.size, withSize: productLayoutAsset.asset!.size, atAngle: rotateTo)
             productLayoutAsset.transform = CGAffineTransform.identity.rotated(by: rotateTo).scaledBy(x: scale, y: scale)
             UIView.animateKeyframes(withDuration: 0.3, delay: 0.0, options: [ .calculationModeCubicPaced ], animations: {
                 UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1.0, animations: {
@@ -194,7 +206,7 @@ class AssetPlacementViewController: UIViewController {
             }
         case .changed:
             if var initial = initialTransform {
-                gestures.forEach({ (gesture) in initial = LayoutUtils.adjustTransform(initial, withRecognizer: gesture, inParentView: assetContainerView) })
+                gestures.forEach({ (gesture) in initial = LayoutUtils.adjustTransform(initial, withRecognizer: gesture, inParentView: bleedContainerView) })
                 assetImageView.transform = initial
             }
         case .ended:
@@ -202,8 +214,8 @@ class AssetPlacementViewController: UIViewController {
             if gestures.isEmpty {
                 setAnchorPoint(anchorPoint: CGPoint(x: 0.5, y: 0.5), view: assetImageView)
                 
-                assetImageView.transform = LayoutUtils.centerTransform(assetImageView.transform, inParentView: assetContainerView, fromPoint: assetImageView.center)
-                assetImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
+                assetImageView.transform = LayoutUtils.centerTransform(assetImageView.transform, inParentView: bleedContainerView, fromPoint: assetImageView.center)
+                assetImageView.center = CGPoint(x: bleedContainerView.bounds.midX, y: bleedContainerView.bounds.midY)
                 
                 productLayoutAsset.transform = assetImageView.transform
                 productLayoutAsset.adjustTransform()

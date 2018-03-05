@@ -38,8 +38,10 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
 
     static let reuseIdentifier = NSStringFromClass(PhotobookCollectionViewCell.self).components(separatedBy: ".").last!
     
-    var leftIndex: Int? { return photobookFrameView.leftPageView.pageIndex }
-    var rightIndex: Int? { return photobookFrameView.rightPageView.pageIndex }
+    var leftPageView: PhotobookPageView { return photobookFrameView.leftPageView }
+    var rightPageView: PhotobookPageView { return photobookFrameView.rightPageView }
+    var leftIndex: Int? { return leftPageView.pageIndex }
+    var rightIndex: Int? { return rightPageView.pageIndex }
     var width: CGFloat! { didSet { photobookFrameView.width = width } }
     var isVisible: Bool {
         get { return !photobookFrameView.isHidden }
@@ -47,12 +49,6 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
     }
     
     weak var delegate: PhotobookCollectionViewCellDelegate?
-    weak var pageDelegate: PhotobookPageViewDelegate? {
-        didSet {
-            photobookFrameView.leftPageView.delegate = pageDelegate
-            photobookFrameView.rightPageView.delegate = pageDelegate
-        }
-    }
     
     var isPlusButtonVisible: Bool {
         get { return !plusButton.isHidden }
@@ -61,8 +57,8 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
     
     var isPageInteractionEnabled: Bool = false {
         didSet {
-            photobookFrameView.leftPageView.isUserInteractionEnabled = isPageInteractionEnabled
-            photobookFrameView.rightPageView.isUserInteractionEnabled = isPageInteractionEnabled
+            leftPageView.isUserInteractionEnabled = isPageInteractionEnabled
+            rightPageView.isUserInteractionEnabled = isPageInteractionEnabled
         }
     }
     
@@ -72,48 +68,50 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
 
     func loadPages(leftIndex: Int?, rightIndex: Int?) {
         if let leftIndex = leftIndex {
-            photobookFrameView.leftPageView.pageIndex = leftIndex
-            photobookFrameView.leftPageView.productLayout = ProductManager.shared.productLayouts[leftIndex]
+            leftPageView.pageIndex = leftIndex
+            leftPageView.productLayout = ProductManager.shared.productLayouts[leftIndex]
+            leftPageView.bleed = ProductManager.shared.bleed(forPageSize: leftPageView.bounds.size)
             
-            photobookFrameView.leftPageView.setupImageBox()
-            photobookFrameView.leftPageView.setupTextBox(mode: .userTextOnly)
+            leftPageView.setupImageBox()
+            leftPageView.setupTextBox(mode: .userTextOnly)
             
             photobookFrameView.isLeftPageVisible = true
-            photobookFrameView.leftPageView.interaction = .wholePage
+            leftPageView.interaction = .wholePage
         } else {
             photobookFrameView.isLeftPageVisible = false
-            photobookFrameView.leftPageView.interaction = .disabled
+            leftPageView.interaction = .disabled
         }
         
         // If leftIndex == rightIndex, then it's a double-page layout
         if let rightIndex = rightIndex, leftIndex != rightIndex {
-            photobookFrameView.rightPageView.pageIndex = rightIndex
-            photobookFrameView.rightPageView.productLayout = ProductManager.shared.productLayouts[rightIndex]
+            rightPageView.pageIndex = rightIndex
+            rightPageView.productLayout = ProductManager.shared.productLayouts[rightIndex]
+            rightPageView.bleed = ProductManager.shared.bleed(forPageSize: rightPageView.bounds.size)
             
-            photobookFrameView.rightPageView.setupImageBox()
-            photobookFrameView.rightPageView.setupTextBox(mode: .userTextOnly)
+            rightPageView.setupImageBox()
+            rightPageView.setupTextBox(mode: .userTextOnly)
             
             photobookFrameView.isRightPageVisible = true
-            photobookFrameView.rightPageView.interaction = .wholePage
+            rightPageView.interaction = .wholePage
         } else {
             if rightIndex == nil {
                 photobookFrameView.isRightPageVisible = false
             }
-            photobookFrameView.rightPageView.interaction = .disabled
+            rightPageView.interaction = .disabled
         }
         
         let aspectRatio = ProductManager.shared.product!.aspectRatio
         if let aspectRatio = aspectRatio, let leftIndex = leftIndex {
             let isDoubleLayout = ProductManager.shared.productLayouts[leftIndex].layout.isDoubleLayout
-            photobookFrameView.leftPageView.aspectRatio = isDoubleLayout ? aspectRatio * 2.0 : aspectRatio
-            photobookFrameView.rightPageView.aspectRatio = isDoubleLayout ? 0.0 : aspectRatio
+            leftPageView.aspectRatio = isDoubleLayout ? aspectRatio * 2.0 : aspectRatio
+            rightPageView.aspectRatio = isDoubleLayout ? 0.0 : aspectRatio
         } else {
-            photobookFrameView.leftPageView.aspectRatio = aspectRatio
-            photobookFrameView.rightPageView.aspectRatio = aspectRatio
+            leftPageView.aspectRatio = aspectRatio
+            rightPageView.aspectRatio = aspectRatio
         }
         
-        photobookFrameView.leftPageView.delegate = self
-        photobookFrameView.rightPageView.delegate = self
+        leftPageView.delegate = self
+        rightPageView.delegate = self
         
         if photobookFrameView.coverColor != ProductManager.shared.coverColor ||
             photobookFrameView.pageColor != ProductManager.shared.pageColor {

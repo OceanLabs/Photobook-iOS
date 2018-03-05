@@ -43,8 +43,6 @@ class CoverFrameView: UIView {
     var interaction: PhotobookPageViewInteraction = .disabled
     
     override func layoutSubviews() {
-        super.layoutSubviews()
-        
         layer.shadowOffset = PhotobookConstants.shadowOffset
         layer.shadowOpacity = 1.0
         layer.shadowRadius = PhotobookConstants.shadowRadius

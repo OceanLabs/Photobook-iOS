@@ -15,22 +15,18 @@ class ProductLayoutAsset: Codable {
     
     var transform = CGAffineTransform.identity
 
+    // Should be set to true before assigning a new container size if the layout has changed.
+    var shouldFitAsset: Bool = false
+    
     var containerSize: CGSize! {
         didSet {
-            if oldValue != nil {
-                let oldRatio = oldValue.width / oldValue.height
-                let newRatio = containerSize.width / containerSize.height
-            
-                // Check if we have the same layout
-                let ratioDiff = round(abs(oldRatio - newRatio) * 100.0) / 100.0
-                if ratioDiff <= CGFloat.minPrecision {
-                    // Scales in both axes should be the same
-                    let relativeScale = containerSize.width / oldValue.width
-
-                    transform = LayoutUtils.adjustTransform(transform, byFactor: relativeScale)
-                    return
-                }
+            if !shouldFitAsset && oldValue != nil {
+                let relativeScale = containerSize.width / oldValue.width
+                transform = LayoutUtils.adjustTransform(transform, byFactor: relativeScale)
+                return
             }
+            
+            shouldFitAsset = false
             
             if transform == .identity {
                 fitAssetToContainer()

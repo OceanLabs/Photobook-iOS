@@ -90,22 +90,13 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         backgroundColor = .clear
         
         let aspectRatio = ProductManager.shared.product!.aspectRatio!
-        let hadEqualAspectRatios = photobookFrameView.leftPageView.aspectRatio == nil || (photobookFrameView.leftPageView.aspectRatio! ~= photobookFrameView.rightPageView.aspectRatio!)
         if layout.isDoubleLayout {
             photobookFrameView.leftPageView.aspectRatio = pageType == .left ? aspectRatio * 2.0 : 0.0
             photobookFrameView.rightPageView.aspectRatio = pageType == .left ? 0.0 : aspectRatio * 2.0
-            if hadEqualAspectRatios {
-                photobookFrameView.resetPageColor()
-            }
         } else {
             photobookFrameView.leftPageView.aspectRatio = aspectRatio
             photobookFrameView.rightPageView.aspectRatio = aspectRatio
-            if !hadEqualAspectRatios {
-                photobookFrameView.resetPageColor()
-            }
         }
-        photobookFrameView.width = (bounds.height - 2.0 * Constants.photobookVerticalMargin) * aspectRatio * 2.0
-        
         photobookFrameView.layoutIfNeeded()
         
         let productLayoutAsset = ProductLayoutAsset()
@@ -134,7 +125,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         if !layout.isDoubleLayout && (pageType == .left || pageType == .right) {
             let oppositeIndex = pageIndex + (pageType == .left ? 1 : -1)
             oppositePageView!.pageIndex = oppositeIndex
-            oppositePageView!.productLayout = ProductManager.shared.productLayouts[oppositeIndex]
+            oppositePageView!.productLayout = ProductManager.shared.productLayouts[oppositeIndex].shallowCopy()
             oppositePageView!.setupImageBox(with: oppositeImage, animated: false)
             oppositePageView!.setupTextBox(mode: .userTextOnly)
         }
