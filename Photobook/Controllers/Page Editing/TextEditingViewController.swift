@@ -87,7 +87,11 @@ class TextEditingViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
     }
     
+    private var hasPlacedPageView = false
     @objc private func keyboardWillShow(notification: NSNotification) {
+        guard !hasPlacedPageView else { return }
+        hasPlacedPageView = true
+        
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             // Code placed here animate along with the keyboard, hence the closure
             UIView.performWithoutAnimation {
