@@ -52,7 +52,8 @@ class FacebookAlbumManager {
                 guard let albumId = album["id"] as? String,
                 let photoCount = album["count"] as? Int,
                 let name = album["name"] as? String,
-                let coverPhotoUrl = URL(string: "https://graph.facebook.com/\(albumId)/picture?type=album&access_token=\(token.tokenString!)")
+                let coverPhoto = (album["cover_photo"] as? [String: Any])?["id"] as? String,
+                let coverPhotoUrl = URL(string: "https://graph.facebook.com/\(coverPhoto)/picture?access_token=\(token.tokenString!)")
                     else { continue }
                 
                 if let stelf = welf {
