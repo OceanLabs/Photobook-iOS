@@ -239,7 +239,7 @@ class PhotobookPageView: UIView {
         pageTextLabel.attributedText = fontType.attributedText(with: pageTextLabel.text!, fontSize: fontSize, fontColor: color.fontColor())
         
         let textHeight = pageTextLabel.attributedText!.height(for: pageTextLabel.bounds.width)
-        if textHeight < pageTextLabel.bounds.height { pageTextLabel.frame.size.height = textHeight }
+        if textHeight < pageTextLabel.bounds.height { pageTextLabel.frame.size.height = ceil(textHeight) }
         
         pageTextLabel.transform = pageTextLabel.transform.scaledBy(x: scale, y: scale)
     }
