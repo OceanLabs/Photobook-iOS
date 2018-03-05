@@ -16,7 +16,6 @@ class InstagramAlbum {
         static let instagramMediaBaseUrl = "https://api.instagram.com/v1/users/self/media/recent"
         static let serviceName = "Instagram"
         static let pageSize = 100
-        static let instagramThumbnailSize = CGSize(width: 150, height: 150)
     }
     
     var assets = [Asset]()
@@ -76,24 +75,23 @@ class InstagramAlbum {
                     media.append(images)
                 }
                 
+                guard let identifier = d["id"] as? String else { continue }
+                
                 for i in 0..<media.count {
                     let images = media[i]
-                    guard let thumbnailImage = images["thumbnail"] as? [String : Any],
-                        let thumbnailResolutionImageUrlString = thumbnailImage["url"] as? String,
-                        let thumbnailResolutionImageUrl = URL(string: thumbnailResolutionImageUrlString),
-                        
-                        let standardResolutionImage = images["standard_resolution"] as? [String : Any],
-                        let standardResolutionImageUrlString = standardResolutionImage["url"] as? String,
-                        let standardResolutionImageUrl = URL(string: standardResolutionImageUrlString),
-                        
-                        let width = standardResolutionImage["width"] as? Int,
-                        let height = standardResolutionImage["height"] as? Int,
-                        
-                        let identifier = d["id"] as? String
-    
-                        else { continue }
+                    var imageUrlsPerSize = [(size: CGSize, url: URL)]()
+                    for key in ["standard_resolution", "low_resolution", "thumbnail"]{
+                    guard let image = images[key] as? [String : Any],
+                        let width = image["width"] as? Int,
+                        let height = image["height"] as? Int,
+                        let standardResolutionImageUrlString = image["url"] as? String,
+                        let standardResolutionImageUrl = URL(string: standardResolutionImageUrlString)
+                     else { continue }
                     
-                    newAssets.append(URLAsset(thumbnailUrl: thumbnailResolutionImageUrl, fullResolutionUrl: standardResolutionImageUrl, albumIdentifier: self.identifier, thumbnailSize: Constants.instagramThumbnailSize , size: CGSize(width: width, height: height), identifier: "\(identifier)-\(i)"))
+                     imageUrlsPerSize.append((size: CGSize(width: width, height: height), url: standardResolutionImageUrl))
+                    }
+        
+                    newAssets.append(URLAsset(imageUrlsPerSize: imageUrlsPerSize , albumIdentifier: self.identifier, identifier: "\(identifier)-\(i)"))
                 }
             }
             

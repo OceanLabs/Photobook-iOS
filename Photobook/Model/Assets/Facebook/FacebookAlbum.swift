@@ -61,27 +61,21 @@ class FacebookAlbum {
             
             var newAssets = [Asset]()
             for photo in data {
-                guard let thumbnailUrlString = photo["picture"] as? String,
-                    let thumbnailUrl = URL(string: thumbnailUrlString),
-                    let fullResolutionUrlString = photo["source"] as? String,
-                    let fullResolutionUrl = URL(string: fullResolutionUrlString),
-                    let identifier = photo["id"] as? String,
+                guard let identifier = photo["id"] as? String,
                     let images = photo["images"] as? [[String: Any]]
                     else { continue }
                 
-                let newAsset = URLAsset(thumbnailUrl: thumbnailUrl, fullResolutionUrl: fullResolutionUrl, albumIdentifier: self.identifier, identifier: identifier)
-                
+                var imageUrlsPerSize = [(size: CGSize, url: URL)]()
                 for image in images {
                     guard let source = image["source"] as? String,
+                        let url = URL(string: source),
                         let width = image["width"] as? Int,
                         let height = image["height"] as? Int
                         else { continue }
-                    if source == fullResolutionUrlString {
-                        newAsset.size = CGSize(width: width, height: height)
-                    } else if source == thumbnailUrlString {
-                        newAsset.thumbnailSize = CGSize(width: width, height: height)
-                    }
+                    imageUrlsPerSize.append((size: CGSize(width: width, height: height), url: url))
                 }
+                
+                let newAsset = URLAsset(imageUrlsPerSize: imageUrlsPerSize, albumIdentifier: self.identifier, identifier: identifier)
                 
                 newAssets.append(newAsset)
                 welf?.assets.append(newAsset)
@@ -125,6 +119,6 @@ extension FacebookAlbum: Album {
     }
     
     func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
-        completionHandler(URLAsset(fullResolutionUrl: coverPhotoUrl, albumIdentifier: identifier, identifier: coverPhotoUrl.absoluteString), nil)
+        completionHandler(URLAsset(imageUrlsPerSize: [(size: .zero, url: coverPhotoUrl)], albumIdentifier: identifier, identifier: coverPhotoUrl.absoluteString), nil)
     }
 }
