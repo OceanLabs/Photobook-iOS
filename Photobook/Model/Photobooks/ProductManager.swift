@@ -103,6 +103,9 @@ class ProductManager {
         // TODO: Use pages count instead of assets/layout count
         return minimumRequiredAssets < productLayouts.count
     }
+    var hasLayoutWithoutAsset: Bool {
+        return productLayouts.first { $0.layout.imageLayoutBox != nil && $0.productLayoutAsset?.asset == nil } != nil
+    }
     
     func reset() {
         productLayouts = [ProductLayout]()
