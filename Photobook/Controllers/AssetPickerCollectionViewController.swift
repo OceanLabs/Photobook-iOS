@@ -60,13 +60,17 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         }
         
         if album.assets.isEmpty {
-            self.album.loadAssets(completionHandler: { [weak welf = self] errorMessage in
-                if let errorMessage = errorMessage {
+            self.album.loadAssets(completionHandler: { [weak welf = self] error in
+                if let errorMessage = error as? ActionableErrorMessage {
                     welf?.emptyScreenViewController.show(ErrorUtils.genericRetryErrorMessage(message: errorMessage.message, action: {
-                        welf?.emptyScreenViewController.hide()
                         errorMessage.buttonAction()
+                        if errorMessage.dismissErrorPromptAfterAction {
+                            welf?.emptyScreenViewController.hide()
+                        }
                     }))
                     return
+                } else if let errorMessage = error as? ErrorMessage {
+                    welf?.present(UIAlertController(errorMessage: errorMessage), animated: true, completion: nil)
                 }
                 
                 welf?.collectionView?.reloadData()
@@ -107,7 +111,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        loadNextBatchOfAssetIfNeeded()
+        loadNextBatchOfAssetsIfNeeded()
     }
     
     func registerFor3DTouch() {
@@ -198,8 +202,8 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         cell.selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
     }
     
-    private func loadNextBatchOfAssetIfNeeded() {
-        guard let collectionView = collectionView else { return }
+    private func loadNextBatchOfAssetsIfNeeded() {
+        guard album.hasMoreAssetsToLoad, let collectionView = collectionView else { return }
         for cell in collectionView.visibleCells {
             if cell.reuseIdentifier == Constants.loadingCellReuseIdentifier {
                 album.loadNextBatchOfAssets()
@@ -317,7 +321,7 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
         default:
             let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
             photobookViewController.selectedAssetsManager = selectedAssetsManager
-            photobookViewController.albumForEditingPicker = album.requiresExclusivePicking ? album : nil
+            photobookViewController.selectedAssetsSource = SelectedAssetsSource(album: album, albumManager: albumManager)
             navigationController?.pushViewController(photobookViewController, animated: true)
         }
         selectedAssetsManager?.orderAssetsByDate()
@@ -350,7 +354,7 @@ extension AssetPickerCollectionViewController {
             let asset = album.assets[indexPath.item]
             cell.assetId = asset.identifier
             
-            cell.imageView.setImage(from: asset, size: imageCellSize, completionHandler: {
+            cell.imageView.setImage(from: asset, size: imageCellSize, validCellCheck: {
                 return cell.assetId == asset.identifier
             })
             
@@ -506,4 +510,11 @@ private extension UICollectionView {
         let allLayoutAttributes = collectionViewLayout.layoutAttributesForElements(in: rect)!
         return allLayoutAttributes.map { $0.indexPath }
     }
+}
+
+extension AssetPickerCollectionViewController: AssetPickerCollectionViewControllerDelegate {
+    func viewControllerForPresentingOn() -> UIViewController? {
+        return tabBarController
+    }
+    
 }

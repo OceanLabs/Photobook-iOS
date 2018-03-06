@@ -39,7 +39,7 @@ class AssetSelectorViewController: UIViewController {
     private var selectedAssetIndex = -1
     
     var selectedAssetsManager: SelectedAssetsManager!
-    var albumForPicker: Album?
+    var selectedAssetsSource: SelectedAssetsSource?
     weak var delegate: AssetSelectorDelegate?
     
     var selectedAsset: Asset? {
@@ -94,7 +94,7 @@ extension AssetSelectorViewController: UICollectionViewDataSource {
         cell.assetIdentifier = asset.identifier
         let itemSize = (collectionView.collectionViewLayout as! UICollectionViewFlowLayout).itemSize
         
-        cell.assetImageView.setImage(from: asset, size: itemSize, completionHandler: {
+        cell.assetImageView.setImage(from: asset, size: itemSize, validCellCheck: {
             return cell.assetIdentifier == asset.identifier
         })
         
@@ -107,8 +107,7 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == assets.count {
             let modalAlbumsCollectionViewController = storyboard?.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
-            modalAlbumsCollectionViewController.albumManager = PhotosAlbumManager() // FIXME: Could be a different source
-            modalAlbumsCollectionViewController.albumForPicker = albumForPicker
+            modalAlbumsCollectionViewController.selectedAssetsSource = selectedAssetsSource
             modalAlbumsCollectionViewController.addingDelegate = self
             
             present(modalAlbumsCollectionViewController, animated: false, completion: nil)

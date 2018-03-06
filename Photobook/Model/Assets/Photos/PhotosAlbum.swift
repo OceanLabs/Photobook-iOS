@@ -32,11 +32,7 @@ class PhotosAlbum: Album {
         return assetCollection.localIdentifier
     }
     
-    var requiresExclusivePicking: Bool {
-        return false
-    }
-    
-    func loadAssets(completionHandler: ((ActionableErrorMessage?) -> Void)?) {
+    func loadAssets(completionHandler: ((Error?) -> Void)?) {
         DispatchQueue.global(qos: .background).async { [weak welf = self] in
             welf?.loadAssetsFromPhotoLibrary()
             DispatchQueue.main.async {
