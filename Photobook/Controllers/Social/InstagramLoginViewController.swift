@@ -66,12 +66,26 @@ extension InstagramLoginViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         guard let url = navigationAction.request.url else { decisionHandler(.allow); return }
         
-        if url.absoluteString.hasPrefix(OAuth2Swift.Constants.redirectUri) {
+        // Intercept the redirectUri. User has logged in successfully
+        guard !url.absoluteString.hasPrefix(OAuth2Swift.Constants.redirectUri) else {
             webView.stopLoading()
             activityIndicatorView.stopAnimating()
             
             OAuthSwift.handle(url: url)
             decisionHandler(.cancel)
+            return
+        }
+        
+        // Intercept the password reset link and open in it Safari. Currently redirects to https://www.instagram.com/accounts/password/reset/
+        guard !(url.absoluteString.contains("password") && url.absoluteString.contains("reset")) else {
+            decisionHandler(.cancel)
+            
+            let alertController = UIAlertController(title: NSLocalizedString("Social/Instagram/ResetPasswordTitle", value: "Reset Instagram Password?", comment: "Alert title asking to reset the user's Instagram password"), message: NSLocalizedString("Social/Instagram/ResetPasswordMessage", value: "This will open Safari so you can reset your password. Please return here when you are done.", comment: "Instructions for resetting the user's Instagram password"), preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: { _ in
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }))
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
+            present(alertController, animated: true, completion: nil)
             return
         }
         
