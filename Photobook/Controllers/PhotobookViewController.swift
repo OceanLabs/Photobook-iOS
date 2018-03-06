@@ -227,6 +227,13 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBAction func didTapCheckout(_ sender: Any) {
         guard draggingView == nil else { return }
         
+        guard !ProductManager.shared.hasLayoutWithoutAsset else {
+            let alertController = UIAlertController(title: NSLocalizedString("Photobook/MissingAssetsTitle", value: "Missing Photos", comment: "Alert title informing the user that at least one page is missing a photo"), message: NSLocalizedString("Photobook/MissingAssetsMessage", value: "At least one of your pages has an empty photo frame. Please edit the page by tapping on it and pick a photo from your selection.", comment: "Alert message informing the user that at least one page is missing a photo"), preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
+            present(alertController, animated: true, completion: nil)
+            return
+        }
+        
         let orderSummaryViewController = self.storyboard?.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
         self.navigationController?.pushViewController(orderSummaryViewController, animated: true)
     }
@@ -237,7 +244,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     @IBAction func didTapBack() {
         let alertController = UIAlertController(title: NSLocalizedString("Photobook/BackAlertTitle", value: "Are you sure?", comment: "Title for alert asking the user to go back"), message: NSLocalizedString("Photobook/BackAlertMessage", value: "This will discard any changes made to your photobook", comment: "Message for alert asking the user to go back"), preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Yes", value: "Yes", comment: "Affrimative button title for alert asking the user confirmation for an action"), style: .destructive, handler: { _ in
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Yes", value: "Yes", comment: "Affirmative button title for alert asking the user confirmation for an action"), style: .destructive, handler: { _ in
             
             // Clear photobook
             ProductManager.shared.reset()

@@ -103,6 +103,9 @@ class ProductManager {
         // TODO: Use pages count instead of assets/layout count
         return minimumRequiredAssets < productLayouts.count
     }
+    var hasLayoutWithoutAsset: Bool {
+        return productLayouts.first { $0.layout.imageLayoutBox != nil && $0.productLayoutAsset?.asset == nil } != nil
+    }
     
     func reset() {
         productLayouts = [ProductLayout]()
@@ -203,6 +206,16 @@ class ProductManager {
     
         var productLayouts = [ProductLayout]()
         
+        func nextLandscapeLayout() -> Layout {
+            defer { currentLandscapeLayout = currentLandscapeLayout < landscapeLayouts.count - 1 ? currentLandscapeLayout + 1 : 0 }
+            return landscapeLayouts[currentLandscapeLayout]
+        }
+
+        func nextPortraitLayout() -> Layout {
+            defer { currentPortraitLayout = currentPortraitLayout < portraitLayouts.count - 1 ? currentPortraitLayout + 1 : 0 }
+            return portraitLayouts[currentPortraitLayout]
+        }
+
         // If assets count is an odd number, use a double layout close to the middle of the photobook
         var doubleAssetIndex: Int?
         if doubleLayout != nil, placeholderLayouts == 0 && assets.count % 2 != 0 {
@@ -219,20 +232,18 @@ class ProductManager {
             }
             doubleAssetIndex = doubleAssetIndex ?? middleIndex // Use middle index even though it is a portrait photo
         }
-        
+
         for (index, asset) in assets.enumerated() {
             let productLayoutAsset = ProductLayoutAsset()
             productLayoutAsset.asset = asset
             
-            var layout: Layout
+            let layout: Layout
             if let doubleAssetIndex = doubleAssetIndex, index == doubleAssetIndex {
                 layout = doubleLayout!
             } else if asset.isLandscape {
-                layout = landscapeLayouts[currentLandscapeLayout]
-                currentLandscapeLayout = currentLandscapeLayout < landscapeLayouts.count - 1 ? currentLandscapeLayout + 1 : 0
+                layout = nextLandscapeLayout()
             } else {
-                layout = portraitLayouts[currentPortraitLayout]
-                currentPortraitLayout = currentPortraitLayout < portraitLayouts.count - 1 ? currentPortraitLayout + 1 : 0
+                layout = nextPortraitLayout()
             }
             let productLayoutText = layout.textLayoutBox != nil ? ProductLayoutText() : nil
             let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset, productLayoutText: productLayoutText)
@@ -241,8 +252,7 @@ class ProductManager {
         
         var placeholderLayouts = placeholderLayouts
         while placeholderLayouts > 0 {
-            let layout = landscapeLayouts[currentLandscapeLayout]
-            currentLandscapeLayout = currentLandscapeLayout < landscapeLayouts.count - 1 ? currentLandscapeLayout + 1 : 0
+            let layout = placeholderLayouts % 2 == 0 ? nextLandscapeLayout() : nextPortraitLayout()
             let productLayout = ProductLayout(layout: layout, productLayoutAsset: nil)
             productLayouts.append(productLayout)
             placeholderLayouts -= 1
