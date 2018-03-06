@@ -230,11 +230,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let orderSummaryViewController = self.storyboard?.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
         self.navigationController?.pushViewController(orderSummaryViewController, animated: true)
     }
-    
-    @IBAction private func didTapOnSpine(_ sender: UITapGestureRecognizer) {
-        print("Tapped on spine")
-    }
-    
+        
     @IBAction func didTapBack() {
         let alertController = UIAlertController(title: NSLocalizedString("Photobook/BackAlertTitle", value: "Are you sure?", comment: "Title for alert asking the user to go back"), message: NSLocalizedString("Photobook/BackAlertMessage", value: "This will discard any changes made to your photobook", comment: "Message for alert asking the user to go back"), preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Yes", value: "Yes", comment: "Affrimative button title for alert asking the user confirmation for an action"), style: .destructive, handler: { _ in

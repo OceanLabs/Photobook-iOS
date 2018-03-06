@@ -10,7 +10,7 @@
 class ProductLayout: Codable {
     var layout: Layout! {
         didSet {
-            self.fitItemsInLayout()
+            self.fitItemsInLayout(reset: oldValue.category != layout.category)
         }
     }
     var productLayoutAsset: ProductLayoutAsset?
@@ -87,11 +87,11 @@ class ProductLayout: Codable {
         productLayoutText = try values.decodeIfPresent(ProductLayoutText.self, forKey: .productLayoutText)
     }
     
-    private func fitItemsInLayout() {
+    private func fitItemsInLayout(reset: Bool = true) {
         guard layout != nil else { return }
         
         if productLayoutAsset != nil && layout.imageLayoutBox != nil {
-            productLayoutAsset!.shouldFitAsset = true
+            productLayoutAsset!.shouldFitAsset = reset
             productLayoutAsset!.containerSize = layout.imageLayoutBox!.rect.size
         }
         if productLayoutText != nil && layout.textLayoutBox != nil {

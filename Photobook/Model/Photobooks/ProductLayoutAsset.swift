@@ -24,18 +24,8 @@ class ProductLayoutAsset: Codable {
                 let relativeScale = containerSize.width / oldValue.width
                 transform = LayoutUtils.adjustTransform(transform, byFactor: relativeScale)
                 return
-            }
-            
-            shouldFitAsset = false
-            
-            if transform == .identity {
-                fitAssetToContainer()
-                return
-            }
-            
-            // The asset was assigned a different layout. Scale the image down to force a fit to container effect.
-            transform = transform.scaledBy(x: 0.001, y: 0.001)
-            adjustTransform()
+            }            
+            fitAssetToContainer()
         }
     }
     
