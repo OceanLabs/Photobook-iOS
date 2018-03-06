@@ -19,6 +19,10 @@ enum AssetCollectorMode {
 }
 
 class AssetCollectorViewController: UIViewController {
+    
+    private struct Constants {
+        static let inset: CGFloat = 12
+    }
 
     weak var delegate: AssetCollectorViewControllerDelegate?
     var mode: AssetCollectorMode = .selecting {
@@ -136,7 +140,7 @@ class AssetCollectorViewController: UIViewController {
         isHideShowAnimated = false //disable animation for this hidden state change
         isHidden = true
         
-        imageCollectionView.contentInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
+        imageCollectionView.contentInset = UIEdgeInsets(top: 0, left: Constants.inset, bottom: 0, right: Constants.inset)
     }
     
     deinit {
@@ -341,7 +345,7 @@ class AssetCollectorViewController: UIViewController {
     }
 }
 
-extension AssetCollectorViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension AssetCollectorViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     //MARK: Collection View Delegate & DataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -368,5 +372,15 @@ extension AssetCollectorViewController: UICollectionViewDataSource, UICollection
             //remove
             selectedAssetsManager?.deselect(assets[indexPath.row])
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        guard let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
+        let itemWidth = layout.itemSize.width
+        let numberOfItems = CGFloat(collectionView.numberOfItems(inSection: section))
+        let interitemSpacing = layout.minimumInteritemSpacing
+        let usedSpace = itemWidth * numberOfItems + interitemSpacing * (numberOfItems - 1)
+        let margin = max((collectionView.frame.size.width - usedSpace) / 2.0, Constants.inset)
+        return UIEdgeInsets(top: 0, left: margin - Constants.inset, bottom: 0, right: margin - Constants.inset)
     }
 }
