@@ -341,7 +341,7 @@ class AssetCollectorViewController: UIViewController {
     }
 }
 
-extension AssetCollectorViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension AssetCollectorViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     //MARK: Collection View Delegate & DataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -368,5 +368,15 @@ extension AssetCollectorViewController: UICollectionViewDataSource, UICollection
             //remove
             selectedAssetsManager?.deselect(assets[indexPath.row])
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        guard let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else { return .zero }
+        let itemWidth = layout.itemSize.width
+        let numberOfItems = CGFloat(collectionView.numberOfItems(inSection: section))
+        let interitemSpacing = layout.minimumInteritemSpacing
+        let usedSpace = itemWidth * numberOfItems + interitemSpacing * (numberOfItems - 1)
+        let margin = max((collectionView.frame.size.width - usedSpace) / 2.0, 0)
+        return UIEdgeInsets(top: 0, left: margin - collectionView.contentInset.left, bottom: 0, right: margin - collectionView.contentInset.right)
     }
 }
