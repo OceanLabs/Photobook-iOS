@@ -84,7 +84,10 @@ class FacebookAlbumManager {
 }
 
 extension FacebookAlbumManager: AlbumManager {
+    
     func loadAlbums(completionHandler: ((Error?) -> Void)?) {
+        guard albums.isEmpty else { completionHandler?(nil); return }
+        
         fetchAlbums(graphPath: Constants.graphPath, completionHandler: completionHandler)
     }
     
