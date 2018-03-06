@@ -210,19 +210,21 @@ class ProductManager {
     
         var productLayouts = [ProductLayout]()
         
+        func nextLandscapeLayout() -> Layout {
+            defer { currentLandscapeLayout = currentLandscapeLayout < landscapeLayouts.count - 1 ? currentLandscapeLayout + 1 : 0 }
+            return landscapeLayouts[currentLandscapeLayout]
+        }
+
+        func nextPortraitLayout() -> Layout {
+            defer { currentPortraitLayout = currentPortraitLayout < portraitLayouts.count - 1 ? currentPortraitLayout + 1 : 0 }
+            return portraitLayouts[currentPortraitLayout]
+        }
+
         for asset in assets {
-            // FIXME: Logic TBC
             let productLayoutAsset = ProductLayoutAsset()
             productLayoutAsset.asset = asset
             
-            var layout: Layout
-            if asset.isLandscape {
-                layout = landscapeLayouts[currentLandscapeLayout]
-                currentLandscapeLayout = currentLandscapeLayout < landscapeLayouts.count - 1 ? currentLandscapeLayout + 1 : 0
-            } else {
-                layout = portraitLayouts[currentPortraitLayout]
-                currentPortraitLayout = currentPortraitLayout < portraitLayouts.count - 1 ? currentPortraitLayout + 1 : 0
-            }
+            let layout = asset.isLandscape ? nextLandscapeLayout() : nextPortraitLayout()
             let productLayoutText = layout.textLayoutBox != nil ? ProductLayoutText() : nil
             let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset, productLayoutText: productLayoutText)
             productLayouts.append(productLayout)
@@ -230,8 +232,7 @@ class ProductManager {
         
         var placeholderLayouts = placeholderLayouts
         while placeholderLayouts > 0 {
-            let layout = landscapeLayouts[currentLandscapeLayout]
-            currentLandscapeLayout = currentLandscapeLayout < landscapeLayouts.count - 1 ? currentLandscapeLayout + 1 : 0
+            let layout = placeholderLayouts % 2 == 0 ? nextLandscapeLayout() : nextPortraitLayout()
             let productLayout = ProductLayout(layout: layout, productLayoutAsset: nil)
             productLayouts.append(productLayout)
             placeholderLayouts -= 1
