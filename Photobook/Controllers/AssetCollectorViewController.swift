@@ -19,6 +19,10 @@ enum AssetCollectorMode {
 }
 
 class AssetCollectorViewController: UIViewController {
+    
+    private struct Constants {
+        static let inset: CGFloat = 12
+    }
 
     weak var delegate: AssetCollectorViewControllerDelegate?
     var mode: AssetCollectorMode = .selecting {
@@ -136,7 +140,7 @@ class AssetCollectorViewController: UIViewController {
         isHideShowAnimated = false //disable animation for this hidden state change
         isHidden = true
         
-        imageCollectionView.contentInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
+        imageCollectionView.contentInset = UIEdgeInsets(top: 0, left: Constants.inset, bottom: 0, right: Constants.inset)
     }
     
     deinit {
@@ -376,7 +380,7 @@ extension AssetCollectorViewController: UICollectionViewDataSource, UICollection
         let numberOfItems = CGFloat(collectionView.numberOfItems(inSection: section))
         let interitemSpacing = layout.minimumInteritemSpacing
         let usedSpace = itemWidth * numberOfItems + interitemSpacing * (numberOfItems - 1)
-        let margin = max((collectionView.frame.size.width - usedSpace) / 2.0, 0)
-        return UIEdgeInsets(top: 0, left: margin - collectionView.contentInset.left, bottom: 0, right: margin - collectionView.contentInset.right)
+        let margin = max((collectionView.frame.size.width - usedSpace) / 2.0, Constants.inset)
+        return UIEdgeInsets(top: 0, left: margin - Constants.inset, bottom: 0, right: margin - Constants.inset)
     }
 }
