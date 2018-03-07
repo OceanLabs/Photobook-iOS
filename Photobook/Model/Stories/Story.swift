@@ -84,7 +84,7 @@ extension Story: Album {
     }
     
     var localizedName: String? {
-        return title
+        return ""
     }
     
     var identifier: String {
