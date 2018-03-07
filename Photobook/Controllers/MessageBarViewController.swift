@@ -24,8 +24,8 @@ enum MessageType {
             return UIColor(red: 0.8, green: 0.0, blue: 0.0, alpha: 1.0)
         case .warning:
             return UIColor(red: 1.0, green: 0.65, blue: 0.0, alpha: 1.0)
-        default:
-            return UIColor(red: 0.2, green: 0.6, blue: 1.0, alpha: 1.0)
+        case .info:
+            return UIColor(red: 0.64, green: 0.64, blue: 0.64, alpha: 1.0)
         }
     }
 }
@@ -41,11 +41,8 @@ class MessageBarViewController: UIViewController {
     static let identifier = NSStringFromClass(MessageBarViewController.self).components(separatedBy: ".").last!
     
     // Outlets
-    @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var containerView: UIView!
-    @IBOutlet weak var imageWidthConstraint: NSLayoutConstraint!
-    @IBOutlet weak var topMarginContainerConstraint: NSLayoutConstraint!
     var messageViewHeightConstraint: NSLayoutConstraint?
     
     // Vars
@@ -69,12 +66,7 @@ class MessageBarViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.alpha = 0
-        
-        containerView.layer.shadowRadius = 4.0
-        containerView.layer.shadowOpacity = 0.6
         containerView.backgroundColor = type.backgroundColor()
-        
         label.textColor = UIColor.white
         
         // Subscribe to notifications
@@ -91,11 +83,8 @@ class MessageBarViewController: UIViewController {
             view.superview?.removeConstraint(messageViewHeightConstraint!)
             messageViewHeightConstraint = nil
         }
-        
-        imageWidthConstraint.constant = imageView.image != nil ? 48.0 : 0.0
-        
+
         guard !hasSetConstraints else { return }
-        
         hasSetConstraints = true
         
         label.text = message
@@ -103,11 +92,11 @@ class MessageBarViewController: UIViewController {
         
         view.translatesAutoresizingMaskIntoConstraints = false
         
-        let viewDictionary : [ String : UIView ] = [ "messageView" : view ]
-        let metrics = [ "offsetTop" : offsetTop ]
+        let viewDictionary : [ String: UIView ] = [ "messageView" : view ]
+        let metrics = [ "offsetTop": offsetTop ]
         
         let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[messageView]|", options: [], metrics: nil, views: viewDictionary)
-        let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[messageView]", options: [], metrics: metrics, views: viewDictionary)
+        let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(offsetTop)-[messageView]", options: [], metrics: metrics, views: viewDictionary)
         
         view.superview?.addConstraints(horizontalConstraints + verticalConstraints)
         view.superview?.layoutIfNeeded()
@@ -115,23 +104,16 @@ class MessageBarViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        // Start off-screen
-        topMarginContainerConstraint.constant = -containerView.bounds.height
-        
-        view.superview?.layoutIfNeeded()
+        containerView.alpha = 0.0
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        topMarginContainerConstraint.constant = 0.0
-        
         // Animate on screen
         UIView.animate(withDuration: Constants.animateOnScreenTime, delay: 0.0, options: .curveEaseOut, animations: {
-            self.view.alpha = 1.0
-            self.view.superview?.layoutIfNeeded()
-        }, completion: { (finished) in
+            self.containerView.alpha = 1.0
+        }, completion: { _ in
             guard let dismissAfter = self.dismissAfter else { return }
             
             // Set timer for auto-dismissal
@@ -142,14 +124,12 @@ class MessageBarViewController: UIViewController {
     }
     
     @IBAction private func hide() {
-        topMarginContainerConstraint.constant = -containerView.bounds.height
         UIView.animate(withDuration: Constants.animateOffScreenTime, animations: {
-            self.view.alpha = 0.0
-            self.view.superview?.layoutIfNeeded()
+            self.containerView.alpha = 0.0
         }) { (finished) in
             self.view.removeFromSuperview()
             self.removeFromParentViewController()
-            
+
             // Run the action
             if let action = self.action {
                 action()
@@ -176,7 +156,6 @@ class MessageBarViewController: UIViewController {
     ///   - dismissAfter: The time after which the message should dismiss. If ignored or nil, it will stay on screen till dismissed by the user.
     ///   - centred: whether the text should be centred in the dialog
     static func show(message: String, type: MessageType, parentViewController: UIViewController, offsetTop: CGFloat? = nil, centred: Bool = false, dismissAfter: TimeInterval? = nil, action : (() -> Void)? = nil) {
-        
         // Check if a message is already present
         if sharedController != nil {
             sharedController.view.removeFromSuperview()
@@ -188,16 +167,8 @@ class MessageBarViewController: UIViewController {
         sharedController.message = message
         sharedController.type = type
         sharedController.dismissAfter = dismissAfter
-        
-        if let offsetTop = offsetTop {
-            sharedController.offsetTop = offsetTop
-        } else if let offsetTop = parentViewController.navigationController?.navigationBar.frame.maxY {
-            sharedController.offsetTop = offsetTop
-        } else {
-            sharedController.offsetTop = 0.0
-        }
-        
         sharedController.alignment = centred ? .center : .left
+        sharedController.offsetTop = offsetTop ?? 0.0
         
         parentViewController.view.addSubview(sharedController.view)
         

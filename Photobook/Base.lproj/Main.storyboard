@@ -1629,7 +1629,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="z71-M7-c2z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-510" y="1458"/>
+            <point key="canvasLocation" x="-511" y="1465"/>
         </scene>
         <!--Browse-->
         <scene sceneID="F3Q-q1-ZX1">
@@ -1671,7 +1671,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0m7-JT-V6R" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="252" y="1458"/>
+            <point key="canvasLocation" x="244" y="1483"/>
         </scene>
         <!--Albums-->
         <scene sceneID="4ka-Hw-RNb">
@@ -5763,6 +5763,72 @@ Copyright © 2018 Kite. All right reserverd.</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dVy-yF-UeV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="244" y="-1374"/>
+        </scene>
+        <!--Message Bar View Controller-->
+        <scene sceneID="POV-eX-U0F">
+            <objects>
+                <viewController storyboardIdentifier="MessageBarViewController" id="UrS-Bj-P8X" customClass="MessageBarViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="wNy-Sg-tvS"/>
+                        <viewControllerLayoutGuide type="bottom" id="pQ1-cc-BJk"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="J8g-PE-hpt">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SO4-MG-hfO">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="26.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N6e-ku-yem">
+                                        <rect key="frame" x="10" y="6" width="355" height="14.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="N6e-ku-yem" firstAttribute="top" secondItem="SO4-MG-hfO" secondAttribute="top" constant="6" id="3gI-Et-s5g"/>
+                                    <constraint firstAttribute="trailing" secondItem="N6e-ku-yem" secondAttribute="trailing" constant="10" id="D9b-Qd-y6M"/>
+                                    <constraint firstItem="N6e-ku-yem" firstAttribute="leading" secondItem="SO4-MG-hfO" secondAttribute="leading" constant="10" id="WTQ-VG-wIr"/>
+                                    <constraint firstAttribute="bottom" secondItem="N6e-ku-yem" secondAttribute="bottom" constant="6" id="cfC-XU-7Fl"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="SO4-MG-hfO" secondAttribute="trailing" id="ALx-JW-Pts"/>
+                            <constraint firstItem="SO4-MG-hfO" firstAttribute="top" secondItem="J8g-PE-hpt" secondAttribute="top" id="Ing-uc-lcp"/>
+                            <constraint firstItem="SO4-MG-hfO" firstAttribute="leading" secondItem="J8g-PE-hpt" secondAttribute="leading" id="rnV-3W-AK0"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Dqs-VF-XxE"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="xWG-fa-khu" appends="YES" id="e8y-LQ-cHT"/>
+                            <outletCollection property="gestureRecognizers" destination="JeR-Hx-p0t" appends="YES" id="JbN-uq-08E"/>
+                        </connections>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="375" height="667"/>
+                    <connections>
+                        <outlet property="containerView" destination="SO4-MG-hfO" id="yFe-ne-gQw"/>
+                        <outlet property="label" destination="N6e-ku-yem" id="VKs-HM-21e"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2X2-5o-e4f" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="up" id="xWG-fa-khu">
+                    <connections>
+                        <action selector="hide" destination="UrS-Bj-P8X" id="nJe-Nm-LWM"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <tapGestureRecognizer id="JeR-Hx-p0t">
+                    <connections>
+                        <action selector="hide" destination="UrS-Bj-P8X" id="gq0-RJ-Xad"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="-2002" y="1475"/>
         </scene>
     </scenes>
     <resources>
