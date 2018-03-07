@@ -25,7 +25,8 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     weak var delegate: AssetPickerCollectionViewControllerDelegate?
     private var previousPreheatRect = CGRect.zero
     var selectedAssetsManager: SelectedAssetsManager?
-    var assetCollectorController: AssetCollectorViewController!
+    private var assetCollectorController: AssetCollectorViewController!
+    var delayCollectorAppearance = false
     static let coverAspectRatio: CGFloat = 2.723684211
     private lazy var imageCellSize: CGSize = {
         guard let collectionView = collectionView else { return .zero }
@@ -104,9 +105,15 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         
         loadNextBatchOfAssetsIfNeeded()
         
-        // Setup the Image Collector Controller
+        if !delayCollectorAppearance {
+            setupCollector()
+        }
+    }
+    
+    func setupCollector() {
+        // Setup the Asset Collector Controller
         if assetCollectorController == nil, let manager = selectedAssetsManager {
-            assetCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: manager)
+            assetCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: manager, delayAppearance: delayCollectorAppearance)
             assetCollectorController.mode = collectorMode
             assetCollectorController.delegate = self
         }
