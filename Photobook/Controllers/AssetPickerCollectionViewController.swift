@@ -39,7 +39,11 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     }()
     
     var albumManager: AlbumManager?
-    var album: Album!
+    var album: Album! {
+        didSet{
+            self.title = album.localizedName
+        }
+    }
     
     var collectorMode: AssetCollectorMode = .selecting
     weak var addingDelegate: AssetCollectorAddingDelegate?
