@@ -8,6 +8,10 @@
 
 import OAuthSwift
 
+enum OAuthError: Error {
+    case accessTokenException (logoutAction: Selector)
+}
+
 extension OAuth2Swift {
     
     struct Constants {

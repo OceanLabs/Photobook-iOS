@@ -109,6 +109,11 @@ class InstagramAlbum {
             // Not worth showing an error if one of the later pagination requests fail
             guard self.assets.isEmpty else { return }
             
+            if ((failure.underlyingError as NSError?)?.userInfo["Response-Body"] as? String)?.contains("OAuthAccessTokenException") == true {
+                completionHandler?(OAuthError.accessTokenException(logoutAction: #selector(AssetPickerCollectionViewController.performInstagramLogout)))
+                return
+            }
+            
             let message = failure.underlyingError?.localizedDescription ?? CommonLocalizedStrings.serviceAccessError(serviceName: Constants.serviceName)
             completionHandler?(ErrorUtils.genericRetryErrorMessage(message: message, action: { [weak welf = self] in
                 welf?.fetchAssets(url: url, completionHandler: completionHandler)

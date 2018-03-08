@@ -71,6 +71,13 @@ class AssetPickerCollectionViewController: UICollectionViewController {
                     return
                 } else if let errorMessage = error as? ErrorMessage {
                     welf?.present(UIAlertController(errorMessage: errorMessage), animated: true, completion: nil)
+                } else if let error = error as? OAuthError {
+                    switch error {
+                    case .accessTokenException(logoutAction: let selector):
+                        if self.responds(to: selector) {
+                            self.perform(selector)
+                        }
+                    }
                 }
                 
                 welf?.collectionView?.reloadData()
