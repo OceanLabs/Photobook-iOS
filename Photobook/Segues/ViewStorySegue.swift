@@ -21,6 +21,8 @@ class ViewStorySegue: UIStoryboardSegue {
             let destination = destination as? AssetPickerCollectionViewController
             else { source.navigationController?.pushViewController(self.destination, animated: true); return }
         
+        destination.delayCollectorAppearance = true
+        
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -46,10 +48,11 @@ class ViewStorySegue: UIStoryboardSegue {
             navigationController.view.insertSubview(sourceSnapShot!, belowSubview: navigationController.navigationBar)
         }
         
+        // Add the destination view controller view to the view hierachy to animate it
+        destination.setupCollector()
         destination.view.frame = CGRect(x: calculateBeginPosition(), y: imageView.frame.origin.y, width: source.view.frame.width, height: source.view.frame.height)
         destination.view.alpha = 0
         navigationController.view.insertSubview(destination.view, belowSubview: navigationController.navigationBar)
-        destination.assetCollectorController.delayAppearance = true
         
         // Add label snapshots that we'll be crossfading during the animation
         let sourceLabelsContainerSnapShot = sourceLabelsContainerView?.snapshotView(afterScreenUpdates: true)

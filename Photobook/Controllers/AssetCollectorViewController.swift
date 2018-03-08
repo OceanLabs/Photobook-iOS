@@ -102,7 +102,7 @@ class AssetCollectorViewController: UIViewController {
         }
     }
     
-    var delayAppearance = false
+    private var delayAppearance = false
     
     private var horizontalConstraints: [NSLayoutConstraint]?
     private var verticalConstraints: [NSLayoutConstraint]?
@@ -123,9 +123,10 @@ class AssetCollectorViewController: UIViewController {
         }
     }
     
-    public static func instance(fromStoryboardWithParent parent: UIViewController, selectedAssetsManager: SelectedAssetsManager) -> AssetCollectorViewController {
+    public static func instance(fromStoryboardWithParent parent: UIViewController, selectedAssetsManager: SelectedAssetsManager, delayAppearance: Bool = false) -> AssetCollectorViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "AssetCollectorViewController") as! AssetCollectorViewController
+        vc.delayAppearance = delayAppearance
         vc.parentController = parent
         vc.selectedAssetsManager = selectedAssetsManager
         
