@@ -135,6 +135,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
         loadAlbums()
         
         // Refresh number of assets selected badges
+        guard albumManager.albums.count > 0 else { return }
         for cell in collectionView?.visibleCells ?? [] {
             guard let cell = cell as? AlbumCollectionViewCell,
             let indexPath = collectionView?.indexPath(for: cell)
@@ -255,7 +256,7 @@ extension AlbumsCollectionViewController{
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return albumManager.albums.count
+            return albumManager.albums.count > 0 ? albumManager.albums.count : 6
         case 1:
             return albumManager.hasMoreAlbumsToLoad ? 1 : 0
         default:
@@ -267,6 +268,13 @@ extension AlbumsCollectionViewController{
         switch indexPath.section {
         case 0:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumCollectionViewCell", for: indexPath) as? AlbumCollectionViewCell else { return UICollectionViewCell() }
+            
+            guard albumManager.albums.count > 0 else {
+                cell.albumNameLabel.text = ""
+                cell.albumAssetsCountLabel.text = ""
+                cell.selectedCountLabel.isHidden = true
+                return cell
+            }
             
             let album = albumManager.albums[indexPath.item]
             cell.albumId = album.identifier
@@ -322,6 +330,7 @@ extension AlbumsCollectionViewController {
     // MARK: UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard albumManager.albums.count > 0 else { return }
         showAlbum(album: albumManager.albums[indexPath.item])
     }
     
