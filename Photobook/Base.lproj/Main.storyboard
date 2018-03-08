@@ -5777,10 +5777,10 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SO4-MG-hfO">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="26.5"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="30.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N6e-ku-yem">
-                                        <rect key="frame" x="10" y="6" width="355" height="14.5"/>
+                                        <rect key="frame" x="10" y="8" width="355" height="14.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -5788,10 +5788,10 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="N6e-ku-yem" firstAttribute="top" secondItem="SO4-MG-hfO" secondAttribute="top" constant="6" id="3gI-Et-s5g"/>
+                                    <constraint firstItem="N6e-ku-yem" firstAttribute="top" secondItem="SO4-MG-hfO" secondAttribute="top" constant="8" id="3gI-Et-s5g"/>
                                     <constraint firstAttribute="trailing" secondItem="N6e-ku-yem" secondAttribute="trailing" constant="10" id="D9b-Qd-y6M"/>
                                     <constraint firstItem="N6e-ku-yem" firstAttribute="leading" secondItem="SO4-MG-hfO" secondAttribute="leading" constant="10" id="WTQ-VG-wIr"/>
-                                    <constraint firstAttribute="bottom" secondItem="N6e-ku-yem" secondAttribute="bottom" constant="6" id="cfC-XU-7Fl"/>
+                                    <constraint firstAttribute="bottom" secondItem="N6e-ku-yem" secondAttribute="bottom" constant="8" id="cfC-XU-7Fl"/>
                                 </constraints>
                             </view>
                         </subviews>

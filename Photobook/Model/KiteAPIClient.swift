@@ -59,7 +59,7 @@ class KiteAPIClient {
             } else if let error = error {
                 completionHandler(nil, ErrorMessage(error))
             } else {
-                completionHandler(nil, ErrorMessage(message: CommonLocalizedStrings.somethingWentWrong))
+                completionHandler(nil, ErrorMessage(text: CommonLocalizedStrings.somethingWentWrong))
             }
         })
     }

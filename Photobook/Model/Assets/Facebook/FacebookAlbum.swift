@@ -55,7 +55,7 @@ class FacebookAlbum {
                 else {
                     // Not worth showing an error if one of the later pagination requests fail
                     guard self.assets.isEmpty else { return }
-                    completionHandler?(ErrorMessage(message: CommonLocalizedStrings.serviceAccessError(serviceName: Constants.serviceName)))
+                    completionHandler?(ErrorMessage(text: CommonLocalizedStrings.serviceAccessError(serviceName: Constants.serviceName)))
                     return
             }
             

@@ -46,8 +46,7 @@ class MessageBarViewController: UIViewController {
     var messageViewHeightConstraint: NSLayoutConstraint?
     
     // Vars
-    private var message: String!
-    private var type: MessageType!
+    private var message: ErrorMessage!
     private var dismissAfter: TimeInterval?
     private var action: (() -> ())?
     
@@ -66,7 +65,7 @@ class MessageBarViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        containerView.backgroundColor = type.backgroundColor()
+        containerView.backgroundColor = message.type.backgroundColor()
         label.textColor = UIColor.white
         
         // Subscribe to notifications
@@ -87,7 +86,7 @@ class MessageBarViewController: UIViewController {
         guard !hasSetConstraints else { return }
         hasSetConstraints = true
         
-        label.text = message
+        label.text = message.text
         label.textAlignment = alignment
         
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -102,25 +101,15 @@ class MessageBarViewController: UIViewController {
         view.superview?.layoutIfNeeded()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        containerView.alpha = 0.0
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        // Animate on screen
-        UIView.animate(withDuration: Constants.animateOnScreenTime, delay: 0.0, options: .curveEaseOut, animations: {
-            self.containerView.alpha = 1.0
-        }, completion: { _ in
-            guard let dismissAfter = self.dismissAfter else { return }
+        guard let dismissAfter = self.dismissAfter else { return }
             
-            // Set timer for auto-dismissal
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(dismissAfter)) {
-                self.hide()
-            }
-        })
+        // Set timer for auto-dismissal
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(dismissAfter)) {
+            self.hide()
+        }
     }
     
     @IBAction private func hide() {
@@ -149,13 +138,12 @@ class MessageBarViewController: UIViewController {
     /// Animates a message on screen
     ///
     /// - Parameters:
-    ///   - message: Text to display
-    ///   - type: Type of message
+    ///   - message: The message to display
     ///   - parentViewController: The viewController on whose view the message show display
     ///   - offsetTop: The Y position the message should animate from
     ///   - dismissAfter: The time after which the message should dismiss. If ignored or nil, it will stay on screen till dismissed by the user.
     ///   - centred: whether the text should be centred in the dialog
-    static func show(message: String, type: MessageType, parentViewController: UIViewController, offsetTop: CGFloat? = nil, centred: Bool = false, dismissAfter: TimeInterval? = nil, action : (() -> Void)? = nil) {
+    static func show(message: ErrorMessage, parentViewController: UIViewController, offsetTop: CGFloat? = nil, centred: Bool = false, dismissAfter: TimeInterval? = nil, action : (() -> Void)? = nil) {
         // Check if a message is already present
         if sharedController != nil {
             sharedController.view.removeFromSuperview()
@@ -165,7 +153,6 @@ class MessageBarViewController: UIViewController {
         sharedController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: MessageBarViewController.identifier) as! MessageBarViewController
         sharedController.action = action
         sharedController.message = message
-        sharedController.type = type
         sharedController.dismissAfter = dismissAfter
         sharedController.alignment = centred ? .center : .left
         sharedController.offsetTop = offsetTop ?? 0.0
