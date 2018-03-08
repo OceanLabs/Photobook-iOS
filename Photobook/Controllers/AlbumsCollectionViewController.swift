@@ -13,6 +13,8 @@ class AlbumsCollectionViewController: UICollectionViewController {
     
     private struct Constants {
         static let loadingCellReuseIdentifier = "LoadingCell"
+        static let numberOfAlbumPlaceholders = 6
+        static let timeToDismissMessages: TimeInterval = 3.0
     }
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -83,7 +85,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
             if cell.reuseIdentifier == Constants.loadingCellReuseIdentifier {
                 albumManager.loadNextBatchOfAlbums() { [weak welf = self] (error) in
                     if let error = error {
-                        welf?.showErrorMessage(error: error, dismissAfter: 3.0) {}
+                        welf?.showErrorMessage(error: error, dismissAfter: Constants.timeToDismissMessages) {}
                     }
                 }
                 break
@@ -256,7 +258,7 @@ extension AlbumsCollectionViewController{
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return albumManager.albums.count > 0 ? albumManager.albums.count : 6
+            return albumManager.albums.count > 0 ? albumManager.albums.count : Constants.numberOfAlbumPlaceholders
         case 1:
             return albumManager.hasMoreAlbumsToLoad ? 1 : 0
         default:
