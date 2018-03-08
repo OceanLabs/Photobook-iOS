@@ -44,8 +44,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //loadAlbums()
-        
+
         navigationItem.title = albumManager.title
         
         // Setup the Image Collector Controller
