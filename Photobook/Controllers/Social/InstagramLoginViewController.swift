@@ -81,6 +81,14 @@ extension InstagramLoginViewController: WKNavigationDelegate {
         
         // Intercept the redirectUri. User has logged in successfully
         guard !url.absoluteString.hasPrefix(OAuth2Swift.Constants.redirectUri) else {
+            
+            // Handle the case where the user has denied authorization after logging in
+            if url.absoluteString.contains("user_denied") {
+                decisionHandler(.cancel)
+                navigationController?.popViewController(animated: true)
+                return
+            }
+            
             webView.stopLoading()
             activityIndicatorView.stopAnimating()
             
