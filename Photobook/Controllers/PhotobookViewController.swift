@@ -227,15 +227,42 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBAction func didTapCheckout(_ sender: Any) {
         guard draggingView == nil else { return }
         
+        let goToCheckout = {
+            let orderSummaryViewController = self.storyboard?.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
+            self.navigationController?.pushViewController(orderSummaryViewController, animated: true)
+        }
+        
         guard !ProductManager.shared.hasLayoutWithoutAsset else {
-            let alertController = UIAlertController(title: NSLocalizedString("Photobook/MissingAssetsTitle", value: "Missing Photos", comment: "Alert title informing the user that at least one page is missing a photo"), message: NSLocalizedString("Photobook/MissingAssetsMessage", value: "At least one of your pages has an empty photo frame. Please edit the page by tapping on it and pick a photo from your selection.", comment: "Alert message informing the user that at least one page is missing a photo"), preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
+            var indices = ProductManager.shared.emptyLayoutIndices
+            var pageList = ""
+            var message = ""
+            
+            if indices.first == 0 {
+                message = NSLocalizedString("Photobook/MissingAssetsCover", value: "The cover is blank.", comment: "")
+                indices.removeFirst()
+                if indices.count > 0 { message += " " }
+            }
+            for index in indices {
+                if !pageList.isEmpty { pageList += ", " }
+                pageList += String(index)
+            }
+            
+            if !pageList.isEmpty {
+                if indices.count == 1 {
+                    message += String(format: NSLocalizedString("Photobook/MissingAssetsMessageOnePage", value: "Page %@ is blank.", comment: "Alert message informing the user that they have one blank page"), pageList)
+                } else {
+                    message += String(format: NSLocalizedString("Photobook/MissingAssetsMessageMultiplePages", value: "Pages %@ are blank.", comment: "Alert message informing the user that they have multiple blank pages"), pageList)
+                }
+            }
+            let alertController = UIAlertController(title: NSLocalizedString("Photobook/MissingAssetsTitle", value: "Continue to checkout?", comment: "Alert title informing the user that they have blank pages"), message: message, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .default, handler: nil))
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default) { _ in
+                goToCheckout()
+            })
             present(alertController, animated: true, completion: nil)
             return
         }
-        
-        let orderSummaryViewController = self.storyboard?.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
-        self.navigationController?.pushViewController(orderSummaryViewController, animated: true)
+        goToCheckout()
     }
     
     @IBAction private func didTapOnSpine(_ sender: UITapGestureRecognizer) {
