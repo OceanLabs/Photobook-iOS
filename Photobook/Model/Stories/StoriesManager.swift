@@ -43,7 +43,7 @@ class StoriesManager: NSObject {
         
         DispatchQueue.global(qos: .background).async {
             for story in self.stories {
-                self.prepare(story: story, completionHandler: nil)
+                story.loadAssets(completionHandler: nil)
             }
         }
     }
@@ -172,12 +172,6 @@ class StoriesManager: NSObject {
         return location.components(separatedBy: CharacterSet(charactersIn: ",&")).map { (item) -> String in
             return item.trimmingCharacters(in: CharacterSet(charactersIn: " "))
         }
-    }
-    
-    func prepare(story: Story, completionHandler: ((ActionableErrorMessage?) -> Void)?) {
-        story.loadAssets(completionHandler: { [weak welf = self] error in
-            completionHandler?(error)
-        })
     }
     
     func selectedAssetsManager(for story: Story) -> SelectedAssetsManager?{

@@ -34,18 +34,17 @@ class StoriesViewController: UIViewController {
         loadStories()
         
         NotificationCenter.default.addObserver(self, selector: #selector(loadStories), name: .UIApplicationDidBecomeActive, object: nil)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        (tabBarController?.tabBar as? PhotobookTabBar)?.isBackgroundHidden = false
+        NotificationCenter.default.addObserver(self, selector: #selector(receiptWillDismiss), name: ReceiptNotificationName.receiptWillDismiss, object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         StoriesManager.shared.currentlySelectedStory = nil
+    }
+    
+    @objc private func receiptWillDismiss() {
+         (tabBarController?.tabBar as? PhotobookTabBar)?.isBackgroundHidden = false
     }
     
     @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
@@ -143,12 +142,12 @@ extension StoriesViewController: UITableViewDataSource {
             doubleCell.secondOverlayView.isHidden = secondStory == nil
             
             story?.coverAsset(completionHandler:{ (asset, _) in
-                doubleCell.coverImageView.setImage(from: asset, size: doubleCell.coverImageView.bounds.size, completionHandler: {
+                doubleCell.coverImageView.setImage(from: asset, size: doubleCell.coverImageView.bounds.size, validCellCheck: {
                     return doubleCell.localIdentifier == story?.identifier
                 })
             })
             secondStory?.coverAsset(completionHandler: { (asset, _) in
-                doubleCell.secondCoverImageView.setImage(from: asset, size: doubleCell.secondCoverImageView.bounds.size, completionHandler: {
+                doubleCell.secondCoverImageView.setImage(from: asset, size: doubleCell.secondCoverImageView.bounds.size, validCellCheck: {
                     return doubleCell.localIdentifier == story?.identifier
                 })
             })
@@ -170,7 +169,7 @@ extension StoriesViewController: UITableViewDataSource {
         singleCell.delegate = self
 
         story.coverAsset(completionHandler: { (asset, _) in
-            singleCell.coverImageView.setImage(from: asset, size: singleCell.coverImageView.bounds.size, completionHandler: {
+            singleCell.coverImageView.setImage(from: asset, size: singleCell.coverImageView.bounds.size, validCellCheck: {
                 return singleCell.localIdentifier == story.identifier
             })
         })

@@ -21,21 +21,11 @@ class ProductLayoutAsset: Codable {
     var containerSize: CGSize! {
         didSet {
             if !shouldFitAsset && oldValue != nil {
-                let relativeScale = containerSize.width / oldValue.width
+                let relativeScale = containerSize.height / oldValue.height
                 transform = LayoutUtils.adjustTransform(transform, byFactor: relativeScale)
                 return
-            }
-            
-            shouldFitAsset = false
-            
-            if transform == .identity {
-                fitAssetToContainer()
-                return
-            }
-            
-            // The asset was assigned a different layout. Scale the image down to force a fit to container effect.
-            transform = transform.scaledBy(x: 0.001, y: 0.001)
-            adjustTransform()
+            }            
+            fitAssetToContainer()
         }
     }
     
@@ -56,7 +46,7 @@ class ProductLayoutAsset: Codable {
         
         if let asset = asset as? PhotosAsset {
             try container.encode(asset, forKey: .asset)
-        } else if let asset = asset as? InstagramAsset {
+        } else if let asset = asset as? URLAsset {
             try container.encode(asset, forKey: .asset)
         } else if let asset = asset as? TestPhotosAsset {
             try container.encode(asset, forKey: .asset)
@@ -73,7 +63,7 @@ class ProductLayoutAsset: Codable {
         
         if let loadedAsset = try? values.decodeIfPresent(PhotosAsset.self, forKey: .asset) {
             asset = loadedAsset
-        } else if let loadedAsset = try? values.decodeIfPresent(InstagramAsset.self, forKey: .asset){
+        } else if let loadedAsset = try? values.decodeIfPresent(URLAsset.self, forKey: .asset){
             asset = loadedAsset
         } else if let loadedAsset = try? values.decodeIfPresent(TestPhotosAsset.self, forKey: .asset) {
             asset = loadedAsset

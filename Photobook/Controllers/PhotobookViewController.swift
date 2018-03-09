@@ -40,7 +40,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
     
     var selectedAssetsManager: SelectedAssetsManager?
-    var albumForEditingPicker: Album?
+    var selectedAssetsSource: SelectedAssetsSource?
     private var titleButton = UIButton()
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
@@ -143,13 +143,14 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     private func setupTitleView() {
         if !isRearranging {
-            titleButton = UIButton()
+            titleButton = UIButton(type: .custom)
             titleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
             titleButton.setTitleColor(.black, for: .normal)
             titleButton.setTitle(ProductManager.shared.product?.name, for: .normal)
             titleButton.setImage(UIImage(named:"chevron-down"), for: .normal)
             titleButton.semanticContentAttribute = .forceRightToLeft
             titleButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -5)
+            titleButton.sizeToFit()
             titleButton.addTarget(self, action: #selector(didTapOnTitle), for: .touchUpInside)
             navigationItem.titleView = titleButton
             return
@@ -264,11 +265,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         goToCheckout()
     }
-    
-    @IBAction private func didTapOnSpine(_ sender: UITapGestureRecognizer) {
-        print("Tapped on spine")
-    }
-    
+        
     @IBAction func didTapBack() {
         let alertController = UIAlertController(title: NSLocalizedString("Photobook/BackAlertTitle", value: "Are you sure?", comment: "Title for alert asking the user to go back"), message: NSLocalizedString("Photobook/BackAlertMessage", value: "This will discard any changes made to your photobook", comment: "Message for alert asking the user to go back"), preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Yes", value: "Yes", comment: "Affirmative button title for alert asking the user confirmation for an action"), style: .destructive, handler: { _ in
@@ -612,7 +609,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         pageSetupViewController = modalNavigationController.viewControllers.first as! PageSetupViewController
         pageSetupViewController.selectedAssetsManager = selectedAssetsManager
         pageSetupViewController.pageIndex = index
-        pageSetupViewController.albumForPicker = albumForEditingPicker
+        pageSetupViewController.selectedAssetsSource = selectedAssetsSource
         if barType != nil {
             pageSetupViewController.photobookNavigationBarType = barType!
         }

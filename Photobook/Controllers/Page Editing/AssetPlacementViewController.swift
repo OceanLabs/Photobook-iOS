@@ -85,6 +85,7 @@ class AssetPlacementViewController: UIViewController {
         }
 
         // Re-calculate transform for the photobook's container size
+        productLayoutAsset.shouldFitAsset = false
         if productLayout!.layout.isDoubleLayout {
             // Account for double page layouts being scaled down by 0.5
             productLayoutAsset.containerSize = CGSize(width: initialContainerRect.width * 2.0, height: initialContainerRect.height * 2.0)
