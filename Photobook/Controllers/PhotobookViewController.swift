@@ -143,13 +143,14 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     private func setupTitleView() {
         if !isRearranging {
-            titleButton = UIButton()
+            titleButton = UIButton(type: .custom)
             titleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
             titleButton.setTitleColor(.black, for: .normal)
             titleButton.setTitle(ProductManager.shared.product?.name, for: .normal)
             titleButton.setImage(UIImage(named:"chevron-down"), for: .normal)
             titleButton.semanticContentAttribute = .forceRightToLeft
             titleButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -5)
+            titleButton.sizeToFit()
             titleButton.addTarget(self, action: #selector(didTapOnTitle), for: .touchUpInside)
             navigationItem.titleView = titleButton
             return
