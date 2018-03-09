@@ -164,7 +164,7 @@ class PhotobookAPIManager {
     ///
     /// - Parameter completionHandler: Closure to be called with PDF URLs if successful, or an error if it fails
     func createPhotobookPdf(completionHandler: @escaping (_ urls: [String]?, _ error: Error?) -> Void) {
-        completionHandler(nil, nil)
+        completionHandler(["https://kite.ly/someurl", "https://kite.ly/someotherurl"], nil)
         //TODO: send request
     }
     
@@ -185,17 +185,29 @@ class PhotobookAPIManager {
         
         // Set upload counts
         totalUploads = 0
+        var processedAssets = [Asset]()
         for layout in productLayouts {
-            if layout.asset != nil { totalUploads += 1 }
+            if let asset = layout.asset {
+                var isAssetAlreadyProcessed = false
+                //check if the asset is already processed for upload in another layout
+                for processedAsset in processedAssets {
+                    if processedAsset == asset {
+                        isAssetAlreadyProcessed = true
+                    }
+                }
+                
+                if !isAssetAlreadyProcessed {
+                    processedAssets.append(asset)
+                    totalUploads += 1
+                }
+            }
         }
         pendingUploads = totalUploads
         isUploading = true
         completionHandler(totalUploads, nil)
         
         // Upload images
-        for layout in productLayouts {
-            // Some layouts don't have assets
-            guard let asset = layout.asset else { continue }
+        for asset in processedAssets {
             
             // This might be a retry.
             guard asset.uploadUrl == nil else {

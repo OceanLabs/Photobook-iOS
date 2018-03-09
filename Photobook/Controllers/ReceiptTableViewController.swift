@@ -277,7 +277,7 @@ class ReceiptTableViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptDetailsTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptDetailsTableViewCell
             cell.shippingMethodLabel.text = cost?.shippingMethod(id: OrderManager.shared.shippingMethod)?.name
             
-            cell.orderNumberLabel.alpha = 0.5
+            cell.orderNumberLabel.alpha = 0.35
             switch state {
             case .uploading:
                 cell.orderNumberLabel.text = NSLocalizedString("ReceiptTableViewController/OrderNumberPending", value: "Pending", comment: "Placeholder for order number while images are being uploaded")
