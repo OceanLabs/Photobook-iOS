@@ -45,7 +45,7 @@ class ModalAlbumsCollectionViewController: UIViewController {
         if #available(iOS 11.0, *) {
             containerViewHeightConstraint.constant = view.bounds.height - Constants.topMargin - view.safeAreaInsets.top
         } else {
-            containerViewHeightConstraint.constant = view.bounds.height - Constants.topMargin
+            containerViewHeightConstraint.constant = view.bounds.height - Constants.topMargin - UIApplication.shared.statusBarFrame.height
         }
         containerViewBottomConstraint.constant = 0
         UIView.animate(withDuration: 0.3) {
