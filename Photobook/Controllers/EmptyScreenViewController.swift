@@ -8,11 +8,12 @@
 
 import UIKit
 
-struct ActionableErrorMessage {
+struct ActionableErrorMessage: Error {
     var title: String
     var message: String
     var buttonTitle: String
     var buttonAction: () -> ()
+    var dismissErrorPromptAfterAction: Bool
 }
 
 /// Controller to add as a child to present the empty state.

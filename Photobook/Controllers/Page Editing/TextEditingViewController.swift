@@ -87,7 +87,11 @@ class TextEditingViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
     }
     
+    private var hasPlacedPageView = false
     @objc private func keyboardWillShow(notification: NSNotification) {
+        guard !hasPlacedPageView else { return }
+        hasPlacedPageView = true
+        
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             // Code placed here animate along with the keyboard, hence the closure
             UIView.performWithoutAnimation {
@@ -98,15 +102,21 @@ class TextEditingViewController: UIViewController {
         }
     }
     
-    func animateOn() {
+    private var animateOnFinishedCompletion: (() -> Void)!
+    func animateOn(_ completion: @escaping (() -> Void)) {
+        animateOnFinishedCompletion = completion
+        
         // Place views according to layout
         setup()
         
         textView.becomeFirstResponder()
     }
     
+    private var isAnimatingOnScreen = false
     private func performAnimations() {
         guard let initialContainerRect = initialContainerRect else { return }
+        
+        isAnimatingOnScreen = true
         
         textViewBorderView.alpha = 0.0
         textView.alpha = 0.0
@@ -161,7 +171,10 @@ class TextEditingViewController: UIViewController {
         UIView.animate(withDuration: 0.15, delay: 0.28, options: [.curveEaseInOut], animations: {
             self.textViewBorderView.alpha = 1.0
             self.textView.alpha = 1.0
-        }, completion: nil)
+        }, completion: { _ in
+            self.isAnimatingOnScreen = false
+            self.animateOnFinishedCompletion()
+        })
 
     }
     
@@ -170,7 +183,7 @@ class TextEditingViewController: UIViewController {
     }
     
     func animateOff(completion: @escaping () -> Void) {
-        guard let initialContainerRect = initialContainerRect else { return }
+        guard !isAnimatingOnScreen, let initialContainerRect = initialContainerRect else { return }
 
         if hasAnImageLayout {
             animatableAssetImageView.alpha = 1.0
@@ -206,6 +219,8 @@ class TextEditingViewController: UIViewController {
         }, completion: { _ in
             self.view.alpha = 0.0
             self.view.backgroundColor = backgroundColor
+            
+            self.hasPlacedPageView = false
             completion()
         })
     }
@@ -316,6 +331,8 @@ extension TextEditingViewController: UITextViewDelegate {
         
         // Dismiss on line break
         guard text.rangeOfCharacter(from: CharacterSet.newlines) == nil else {
+            guard !isAnimatingOnScreen else { return false }
+            
             textView.resignFirstResponder()
             delegate?.didChangeText(to: textView.text)
             return false

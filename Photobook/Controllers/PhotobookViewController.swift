@@ -40,7 +40,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
     
     var selectedAssetsManager: SelectedAssetsManager?
-    var albumForEditingPicker: Album?
+    var selectedAssetsSource: SelectedAssetsSource?
     private var titleButton = UIButton()
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
@@ -227,17 +227,20 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBAction func didTapCheckout(_ sender: Any) {
         guard draggingView == nil else { return }
         
+        guard !ProductManager.shared.hasLayoutWithoutAsset else {
+            let alertController = UIAlertController(title: NSLocalizedString("Photobook/MissingAssetsTitle", value: "Missing Photos", comment: "Alert title informing the user that at least one page is missing a photo"), message: NSLocalizedString("Photobook/MissingAssetsMessage", value: "At least one of your pages has an empty photo frame. Please edit the page by tapping on it and pick a photo from your selection.", comment: "Alert message informing the user that at least one page is missing a photo"), preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
+            present(alertController, animated: true, completion: nil)
+            return
+        }
+        
         let orderSummaryViewController = self.storyboard?.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
         self.navigationController?.pushViewController(orderSummaryViewController, animated: true)
     }
-    
-    @IBAction private func didTapOnSpine(_ sender: UITapGestureRecognizer) {
-        print("Tapped on spine")
-    }
-    
+        
     @IBAction func didTapBack() {
         let alertController = UIAlertController(title: NSLocalizedString("Photobook/BackAlertTitle", value: "Are you sure?", comment: "Title for alert asking the user to go back"), message: NSLocalizedString("Photobook/BackAlertMessage", value: "This will discard any changes made to your photobook", comment: "Message for alert asking the user to go back"), preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Yes", value: "Yes", comment: "Affrimative button title for alert asking the user confirmation for an action"), style: .destructive, handler: { _ in
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Yes", value: "Yes", comment: "Affirmative button title for alert asking the user confirmation for an action"), style: .destructive, handler: { _ in
             
             // Clear photobook
             ProductManager.shared.reset()
@@ -578,7 +581,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         pageSetupViewController = modalNavigationController.viewControllers.first as! PageSetupViewController
         pageSetupViewController.selectedAssetsManager = selectedAssetsManager
         pageSetupViewController.pageIndex = index
-        pageSetupViewController.albumForPicker = albumForEditingPicker
+        pageSetupViewController.selectedAssetsSource = selectedAssetsSource
         if barType != nil {
             pageSetupViewController.photobookNavigationBarType = barType!
         }
@@ -692,8 +695,8 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
             return CGSize(width: collectionView.bounds.width, height: Constants.proposalCellHeight)
         }
 
-        let pageWidth = ceil((view.bounds.width - Constants.cellSideMargin * 2.0 - PhotobookConstants.horizontalPageToCoverMargin * 2.0) / 2.0)
-        let pageHeight = ceil(pageWidth / product.aspectRatio)
+        let pageWidth = (view.bounds.width - Constants.cellSideMargin * 2.0 - PhotobookConstants.horizontalPageToCoverMargin * 2.0) / 2.0
+        let pageHeight = pageWidth / product.aspectRatio
 
         // PhotoboookCollectionViewCell works when the collectionView uses dynamic heights by setting up the aspect ratio of its pages.
         // This however, causes problems with the drag & drop functionality and that is why the cell height is calculated by using the measurements set on the storyboard.

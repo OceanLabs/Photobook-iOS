@@ -15,10 +15,9 @@ protocol Album {
     var localizedName: String? { get }
     var identifier: String { get }
     var assets: [Asset] { get }
-    var requiresExclusivePicking: Bool { get }
     var hasMoreAssetsToLoad: Bool { get }
     
-    func loadAssets(completionHandler: ((_ error: ActionableErrorMessage?) -> Void)?)
+    func loadAssets(completionHandler: ((_ error: Error?) -> Void)?)
     func loadNextBatchOfAssets()
     func coverAsset(completionHandler: @escaping (_ asset: Asset?, _ error: Error?) -> Void)
     
@@ -29,4 +28,9 @@ struct AlbumChange {
     var assetsRemoved: [Asset]
     var indexesRemoved: [Int]
     var assetsAdded: [Asset]
+}
+
+struct AlbumAddition {
+    var album: Album
+    var index: Int
 }

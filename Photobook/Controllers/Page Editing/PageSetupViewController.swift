@@ -44,7 +44,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private var cancelBarButtonItem: UIBarButtonItem!
     
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
-    var albumForPicker: Album?
+    var selectedAssetsSource: SelectedAssetsSource?
     
     private var assetSelectorViewController: AssetSelectorViewController!
     private var layoutSelectionViewController: LayoutSelectionViewController!
@@ -259,8 +259,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         UIView.animateKeyframes(withDuration: 0.3, delay: 0.0, options: [ .calculationModeCubicPaced ], animations: {
             UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1.0) {
-                self.animatableAssetImageView.transform = .identity
-                self.animatableAssetImageView.center = self.frameView.center
+                self.animatableAssetImageView.frame = self.frameView.frame
             }
         }, completion: { _ in
             self.photobookContainerView.alpha = 1.0
@@ -288,13 +287,9 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             }
         })
 
-        let initialScale = containerRect.width / frameView.bounds.width
-        let containerCenter = CGPoint(x: containerRect.midX, y: containerRect.midY)
-
         UIView.animateKeyframes(withDuration: 0.3, delay: 0.0, options: [ .calculationModeCubicPaced ], animations: {
             UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1.0) {
-                self.animatableAssetImageView.transform = CGAffineTransform.identity.scaledBy(x: initialScale, y: initialScale)
-                self.animatableAssetImageView.center = containerCenter
+                self.animatableAssetImageView.frame = self.containerRect
             }
         }, completion: { _ in
             UIView.animate(withDuration: 0.3, animations: {
@@ -384,6 +379,10 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             break
         }
         
+        let bleed = ProductManager.shared.bleed(forPageSize: pageView.bounds.size)
+        photobookFrameView.leftPageView.bleed = bleed
+        photobookFrameView.rightPageView.bleed = bleed
+        
         if isDoublePage {
             photobookHorizontalAlignmentConstraint.constant = view.bounds.width * 0.5
         }
@@ -391,7 +390,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     private func setupAssetSelection() {
         assetSelectorViewController.selectedAssetsManager = selectedAssetsManager
-        assetSelectorViewController.albumForPicker = albumForPicker
+        assetSelectorViewController.selectedAssetsSource = selectedAssetsSource
         assetSelectorViewController.selectedAsset = productLayout.asset
     }
     
@@ -490,9 +489,10 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         delegate?.didFinishEditingPage(pageIndex, pageType: pageType, productLayout: productLayout, color: selectedColor)
     }
     
+    private var isAnimatingTool = false
     @IBAction func tappedToolButton(_ sender: UIButton) {
         
-        guard let index = toolbarButtons.index(of: sender),
+        guard !isAnimatingTool, let index = toolbarButtons.index(of: sender),
             !toolbarButtons[index].isSelected,
             let tool = Tool(rawValue: index) else { return }
 
@@ -504,19 +504,23 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         for button in toolbarButtons { button.isSelected = (button === sender) }
         
+        isAnimatingTool = true
+
         switch tool {
         case .selectAsset, .selectLayout, .selectColor:
             if placeAssetWasSelected {
                 assetPlacementViewController.animateBackToPhotobook {
                     self.assetImageView.transform = self.productLayout!.productLayoutAsset!.transform
                     self.view.sendSubview(toBack: self.placementContainerView)
+                    self.isAnimatingTool = false
                 }
-            }
-            
-            if textEditingWasSelected {
+            } else if textEditingWasSelected {
                 textEditingViewController.animateOff {
                     self.view.sendSubview(toBack: self.textEditingContainerView)
+                    self.isAnimatingTool = false
                 }
+            } else {
+                isAnimatingTool = false
             }
 
             UIView.animate(withDuration: 0.1, animations: {
@@ -532,13 +536,17 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             assetPlacementViewController.productLayout = productLayout
             assetPlacementViewController.initialContainerRect = containerRect
             assetPlacementViewController.assetImage = assetImageView.image
+            
             if textEditingWasSelected {
                 textEditingViewController.animateOff {
                     self.view.sendSubview(toBack: self.textEditingContainerView)
+                    self.isAnimatingTool = false
                 }
             } else {
                 view.bringSubview(toFront: placementContainerView)
-                assetPlacementViewController.animateFromPhotobook()
+                assetPlacementViewController.animateFromPhotobook() {
+                    self.isAnimatingTool = false
+                }
             }
             setCancelButton(hidden: true)
         case .editText:
@@ -554,7 +562,9 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             } else {
                 textEditingViewController.initialContainerRect = textEditingContainerView.convert(assetContainerView.frame, from: pageView)
             }
-            textEditingViewController.animateOn()
+            textEditingViewController.animateOn {
+                self.isAnimatingTool = false
+            }
         }
         
         setTopBars(hidden: tool == .editText)

@@ -15,7 +15,6 @@ class InstagramAlbum {
     private struct Constants {
         static let instagramMediaBaseUrl = "https://api.instagram.com/v1/users/self/media/recent"
         static let serviceName = "Instagram"
-        static let genericErrorMessage = NSLocalizedString("Social/AccessError", value: "There was an error when trying to access \(serviceName)", comment: "Generic error when trying to access a social service eg Instagram/Facebook")
         static let pageSize = 100
     }
     
@@ -35,7 +34,7 @@ class InstagramAlbum {
         instagramClient.authorizeURLHandler = authenticationHandler
     }
     
-    func fetchAssets(url: String, completionHandler:((_ error: ActionableErrorMessage?)->())?) {
+    func fetchAssets(url: String, completionHandler:((_ error: Error?)->())?) {
         guard let token = KeychainSwift().get(OAuth2Swift.Constants.keychainInstagramTokenKey) else { return }
         
         var urlToLoad = url
@@ -55,7 +54,7 @@ class InstagramAlbum {
                 // Not worth showing an error if one of the later pagination requests fail
                 guard self.assets.isEmpty else { return }
                 
-                completionHandler?(ErrorUtils.genericRetryErrorMessage(message: Constants.genericErrorMessage, action: { [weak welf = self] in
+                completionHandler?(ErrorUtils.genericRetryErrorMessage(message: CommonLocalizedStrings.serviceAccessError(serviceName: Constants.serviceName), action: { [weak welf = self] in
                     welf?.fetchAssets(url: url, completionHandler: completionHandler)
                 }))
                 
@@ -76,24 +75,23 @@ class InstagramAlbum {
                     media.append(images)
                 }
                 
+                guard let identifier = d["id"] as? String else { continue }
+                
                 for i in 0..<media.count {
                     let images = media[i]
-                    guard let thumbnailImage = images["thumbnail"] as? [String : Any],
-                        let thumbnailResolutionImageUrlString = thumbnailImage["url"] as? String,
-                        let thumbnailResolutionImageUrl = URL(string: thumbnailResolutionImageUrlString),
-                        
-                        let standardResolutionImage = images["standard_resolution"] as? [String : Any],
-                        let standardResolutionImageUrlString = standardResolutionImage["url"] as? String,
-                        let standardResolutionImageUrl = URL(string: standardResolutionImageUrlString),
-                        
-                        let width = standardResolutionImage["width"] as? Int,
-                        let height = standardResolutionImage["height"] as? Int,
-                        
-                        let identifier = d["id"] as? String
-    
-                        else { continue }
+                    var metadata = [URLAssetMetadata]()
+                    for key in ["standard_resolution", "low_resolution", "thumbnail"]{
+                    guard let image = images[key] as? [String : Any],
+                        let width = image["width"] as? Int,
+                        let height = image["height"] as? Int,
+                        let standardResolutionImageUrlString = image["url"] as? String,
+                        let standardResolutionImageUrl = URL(string: standardResolutionImageUrlString)
+                     else { continue }
                     
-                    newAssets.append(InstagramAsset(thumbnailUrl: thumbnailResolutionImageUrl, standardResolutionUrl: standardResolutionImageUrl, albumIdentifier: self.identifier, size: CGSize(width: width, height: height), identifier: "\(identifier)-\(i)"))
+                     metadata.append(URLAssetMetadata(size: CGSize(width: width, height: height), url: standardResolutionImageUrl))
+                    }
+        
+                    newAssets.append(URLAsset(metadata: metadata , albumIdentifier: self.identifier, identifier: "\(identifier)-\(i)"))
                 }
             }
             
@@ -101,8 +99,8 @@ class InstagramAlbum {
             
             DispatchQueue.main.async {
                 // Call the completion handler only on the first request, subsequent requests will update the album
-                if completionHandler != nil {
-                    completionHandler?(nil)
+                if let completionHandler = completionHandler {
+                    completionHandler(nil)
                 } else {
                     NotificationCenter.default.post(name: AssetsNotificationName.albumsWereUpdated, object: [AlbumChange(album: self, assetsRemoved: [], indexesRemoved: [], assetsAdded: newAssets)])
                 }
@@ -111,7 +109,7 @@ class InstagramAlbum {
             // Not worth showing an error if one of the later pagination requests fail
             guard self.assets.isEmpty else { return }
             
-            let message = failure.underlyingError?.localizedDescription ?? Constants.genericErrorMessage
+            let message = failure.underlyingError?.localizedDescription ?? CommonLocalizedStrings.serviceAccessError(serviceName: Constants.serviceName)
             completionHandler?(ErrorUtils.genericRetryErrorMessage(message: message, action: { [weak welf = self] in
                 welf?.fetchAssets(url: url, completionHandler: completionHandler)
             }))
@@ -126,18 +124,13 @@ extension InstagramAlbum: Album {
     var numberOfAssets: Int {
         return assets.count
     }
-    var requiresExclusivePicking: Bool {
-        return true
-    }
     
     var localizedName: String? {
         return "Instagram"
     }
     
-    func loadAssets(completionHandler: ((ActionableErrorMessage?) -> Void)?) {
-        fetchAssets(url: Constants.instagramMediaBaseUrl, completionHandler: {error in
-            completionHandler?(error)
-        })
+    func loadAssets(completionHandler: ((Error?) -> Void)?) {
+        fetchAssets(url: Constants.instagramMediaBaseUrl, completionHandler: completionHandler)
     }
     
     func loadNextBatchOfAssets() {

@@ -11,6 +11,10 @@ import UIKit
 /// View Controller to show albums. It doesn't care about the source of those albums as long as they conform to the Album protocol.
 class AlbumsCollectionViewController: UICollectionViewController {
     
+    private struct Constants {
+        static let loadingCellReuseIdentifier = "LoadingCell"
+    }
+    
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     var assetCollectorController: AssetCollectorViewController!
     
@@ -26,17 +30,26 @@ class AlbumsCollectionViewController: UICollectionViewController {
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
     }()
+    private lazy var albumCellSize: CGSize = {
+        guard let collectionView = collectionView else { return .zero }
+        var usableSpace = collectionView.frame.size.width - marginBetweenAlbums
+        if let insets = (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset{
+            usableSpace -= insets.left + insets.right
+        }
+        let cellWidth = usableSpace / 2.0
+        return CGSize(width: cellWidth, height: cellWidth + albumCellLabelsHeight)
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         loadAlbums()
         
+        navigationItem.title = albumManager.title
+        
         // Setup the Image Collector Controller
         assetCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
         assetCollectorController.mode = collectorMode
         assetCollectorController.delegate = self
-        
-        calcAndSetCellSize()
         
         // Listen to asset manager
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
@@ -44,18 +57,42 @@ class AlbumsCollectionViewController: UICollectionViewController {
         
         // Listen for album changes
         NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereAdded(_:)), name: AssetsNotificationName.albumsWereAdded, object: nil)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        loadNextBatchOfAlbumsIfNeeded()
     }
     
     func loadAlbums() {
-        albumManager.loadAlbums(completionHandler: { [weak welf = self] (errorMessage) in
-            if let errorMessage = errorMessage {
-                welf?.emptyScreenViewController.show(errorMessage)
+        albumManager.loadAlbums(completionHandler: { [weak welf = self] (error) in
+            if let errorMessage = error as? ActionableErrorMessage {
+                welf?.emptyScreenViewController.show(ErrorUtils.genericRetryErrorMessage(message: errorMessage.message, action: {
+                    errorMessage.buttonAction()
+                    if errorMessage.dismissErrorPromptAfterAction {
+                        welf?.emptyScreenViewController.hide()
+                    }
+                }))
                 return
+            } else if let errorMessage = error as? ErrorMessage {
+                welf?.present(UIAlertController(errorMessage: errorMessage), animated: true, completion: nil)
             }
             
             welf?.activityIndicator.stopAnimating()
             welf?.collectionView?.reloadData()
         })
+    }
+    
+    private func loadNextBatchOfAlbumsIfNeeded() {
+        guard albumManager.hasMoreAlbumsToLoad, let collectionView = collectionView else { return }
+        for cell in collectionView.visibleCells {
+            if cell.reuseIdentifier == Constants.loadingCellReuseIdentifier {
+                albumManager.loadNextBatchOfAlbums()
+                break
+            }
+        }
     }
     
     deinit {
@@ -91,17 +128,6 @@ class AlbumsCollectionViewController: UICollectionViewController {
         
         definesPresentationContext = true
         present(searchController, animated: true, completion: nil)
-    }
-    
-    func calcAndSetCellSize(){
-        // Calc the cell size
-        guard let collectionView = collectionView else { return }
-        var usableSpace = collectionView.frame.size.width - marginBetweenAlbums
-        if let insets = (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset{
-            usableSpace -= insets.left + insets.right
-        }
-        let cellWidth = usableSpace / 2.0
-        (collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize = CGSize(width: cellWidth, height: cellWidth + albumCellLabelsHeight)
     }
     
     func showAlbum(album: Album){
@@ -150,6 +176,20 @@ class AlbumsCollectionViewController: UICollectionViewController {
         collectionView?.reloadItems(at: indexPathsChanged)
     }
     
+    @objc func albumsWereAdded(_ notification: Notification) {
+        guard let albumAdditions = notification.object as? [AlbumAddition] else { return }
+        
+        var indexPaths = [IndexPath]()
+        for albumAddition in albumAdditions {
+            indexPaths.append(IndexPath(item: albumAddition.index, section: 0))
+        }
+        
+        collectionView?.performBatchUpdates({
+            collectionView?.insertItems(at: indexPaths)
+            collectionView?.reloadSections(IndexSet(integer: 1))
+        }, completion: nil)
+    }
+    
 }
 
 extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
@@ -175,38 +215,71 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
 
 extension AlbumsCollectionViewController{
     // MARK: UICollectionViewDataSource
+    
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2
+    }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return albumManager.albums.count
+        switch section {
+        case 0:
+            return albumManager.albums.count
+        case 1:
+            return albumManager.hasMoreAlbumsToLoad ? 1 : 0
+        default:
+            return 0
+        }
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumCollectionViewCell", for: indexPath) as? AlbumCollectionViewCell else { return UICollectionViewCell() }
-    
-        let album = albumManager.albums[indexPath.item]
-        cell.albumId = album.identifier
-        
-        let cellWidth = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize.width ?? 0
-        album.coverAsset(completionHandler: {(asset, error) in
-            cell.albumCoverImageView.setImage(from: asset, size: CGSize(width: cellWidth, height: cellWidth), completionHandler: {
-                return cell.albumId == album.identifier
+        switch indexPath.section {
+        case 0:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumCollectionViewCell", for: indexPath) as? AlbumCollectionViewCell else { return UICollectionViewCell() }
+            
+            let album = albumManager.albums[indexPath.item]
+            cell.albumId = album.identifier
+            
+            let cellWidth = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize.width ?? 0
+            album.coverAsset(completionHandler: {(asset, error) in
+                cell.albumCoverImageView.setImage(from: asset, size: CGSize(width: cellWidth, height: cellWidth), validCellCheck: {
+                    return cell.albumId == album.identifier
+                })
             })
-        })
-        
-        cell.albumNameLabel.text = album.localizedName
-        
-        let totalNumberOfAssets = album.numberOfAssets
-        cell.albumAssetsCountLabel.isHidden = totalNumberOfAssets == NSNotFound
-        cell.albumAssetsCountLabel.text = "\(totalNumberOfAssets)"
-        
-        let selectedAssetsCount = selectedAssetsManager.count(for: album)
-        cell.selectedCountLabel.text = "\(selectedAssetsCount)"
-        cell.selectedCountLabel.isHidden = selectedAssetsCount == 0
-        cell.selectedCountLabel.cornerRadius = cell.selectedCountLabel.frame.size.height / 2.0
-    
-        return cell
+            
+            cell.albumNameLabel.text = album.localizedName
+            
+            let totalNumberOfAssets = album.numberOfAssets
+            cell.albumAssetsCountLabel.isHidden = totalNumberOfAssets == NSNotFound
+            cell.albumAssetsCountLabel.text = "\(totalNumberOfAssets)"
+            
+            let selectedAssetsCount = selectedAssetsManager.count(for: album)
+            cell.selectedCountLabel.text = "\(selectedAssetsCount)"
+            cell.selectedCountLabel.isHidden = selectedAssetsCount == 0
+            cell.selectedCountLabel.cornerRadius = cell.selectedCountLabel.frame.size.height / 2.0
+            
+            return cell
+        case 1:
+            return collectionView.dequeueReusableCell(withReuseIdentifier: Constants.loadingCellReuseIdentifier, for: indexPath)
+        default:
+            return UICollectionViewCell()
+        }
     }
     
+}
+
+extension AlbumsCollectionViewController: UICollectionViewDelegateFlowLayout {
+    //MARK: UICollectionViewDelegateFlowLayout
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        switch indexPath.section {
+        case 0:
+            return albumCellSize
+        case 1:
+            return CGSize(width: collectionView.frame.size.width, height: 40)
+        default:
+            return .zero
+        }
+    }
 }
 
 extension AlbumsCollectionViewController {

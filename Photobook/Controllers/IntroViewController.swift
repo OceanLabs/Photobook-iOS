@@ -8,8 +8,6 @@
 
 import UIKit
 import Photos
-import OAuthSwift
-import KeychainSwift
 
 class IntroViewController: UIViewController {
     
@@ -17,6 +15,7 @@ class IntroViewController: UIViewController {
         case stories
         case browse
         case instagram
+        case facebook
     }
     
     var userHasDismissed:Bool {
@@ -114,18 +113,6 @@ class IntroViewController: UIViewController {
         // Set the albumManager to the AlbumsCollectionViewController
         let albumViewController = (tabBarController.viewControllers?[Tab.browse.rawValue] as? UINavigationController)?.topViewController as? AlbumsCollectionViewController
         albumViewController?.albumManager = PhotosAlbumManager()
-        
-        // Instagram
-        // Depending on whether we are logged in or not show the Instagram login screen or the asset picker
-        if KeychainSwift().getData(OAuth2Swift.Constants.keychainInstagramTokenKey) != nil {
-            let instagramAssetPicker = AssetPickerCollectionViewController.instagramAssetPicker()
-            instagramAssetPicker.delegate = instagramAssetPicker
-            (tabBarController.viewControllers?[Tab.instagram.rawValue] as? UINavigationController)?.setViewControllers([instagramAssetPicker], animated: false)
-        } else {
-            let instagramLandingViewController = storyboard!.instantiateViewController(withIdentifier: "InstagramLandingViewController")
-            (tabBarController.viewControllers?[Tab.instagram.rawValue] as? UINavigationController)?.setViewControllers([instagramLandingViewController], animated: false)
-        }
-        
         
         // Stories
         // If there are no stories, remove the stories tab

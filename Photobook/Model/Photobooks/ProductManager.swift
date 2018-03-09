@@ -44,6 +44,8 @@ class ProductManager {
     static let finishedPhotobookUpload = Notification.Name("ProductManagerFinishedPhotobookUpload")
     static let failedPhotobookUpload = Notification.Name("ProductManagerFailedPhotobookUpload")
     
+    private let bleed: CGFloat = 8.5
+
     var currentPortraitLayout = 0
     var currentLandscapeLayout = 0
     
@@ -103,6 +105,9 @@ class ProductManager {
         // TODO: Use pages count instead of assets/layout count
         return minimumRequiredAssets < productLayouts.count
     }
+    var hasLayoutWithoutAsset: Bool {
+        return productLayouts.first { $0.layout.imageLayoutBox != nil && $0.productLayoutAsset?.asset == nil } != nil
+    }
     
     //upload
     var isUploading:Bool {
@@ -157,7 +162,7 @@ class ProductManager {
             return
         }
 
-        var addedAssets = assets ?? {
+        let addedAssets = assets ?? {
             var assets = [Asset]()
             for layout in ProductManager.shared.productLayouts {
                 guard let asset = layout.asset else { continue }
@@ -174,7 +179,7 @@ class ProductManager {
 
             // Use first photo for the cover
             let productLayoutAsset = ProductLayoutAsset()
-            productLayoutAsset.asset = addedAssets.remove(at: 0)
+            productLayoutAsset.asset = addedAssets.first
             let coverLayout = coverLayouts.first(where: { $0.imageLayoutBox != nil } )
             let productLayout = ProductLayout(layout: coverLayout!, productLayoutAsset: productLayoutAsset)
             tempLayouts.append(productLayout)
@@ -183,12 +188,7 @@ class ProductManager {
             tempLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: imageOnlyLayouts))
             
             // Fill minimum pages with Placeholder assets if needed
-            var numberOfPlaceholderLayoutsNeeded = max(photobook.minimumRequiredAssets - tempLayouts.count, 0)
-            
-            // We need an odd number of layouts including the cover and the 2 courtesy pages
-            if tempLayouts.count % 2 == 0 {
-                numberOfPlaceholderLayoutsNeeded += 1
-            }
+            let numberOfPlaceholderLayoutsNeeded = max(photobook.minimumRequiredAssets - tempLayouts.count, 0)            
             tempLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: imageOnlyLayouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
             
             productLayouts = tempLayouts
@@ -220,21 +220,48 @@ class ProductManager {
     func createLayoutsForAssets(assets: [Asset], from layouts:[Layout], placeholderLayouts: Int = 0) -> [ProductLayout] {
         var portraitLayouts = layouts.filter { !$0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
         var landscapeLayouts = layouts.filter { $0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
+        let doubleLayout = layouts.first { $0.isDoubleLayout }
     
         var productLayouts = [ProductLayout]()
         
-        for asset in assets {
-            // FIXME: Logic TBC
+        func nextLandscapeLayout() -> Layout {
+            defer { currentLandscapeLayout = currentLandscapeLayout < landscapeLayouts.count - 1 ? currentLandscapeLayout + 1 : 0 }
+            return landscapeLayouts[currentLandscapeLayout]
+        }
+
+        func nextPortraitLayout() -> Layout {
+            defer { currentPortraitLayout = currentPortraitLayout < portraitLayouts.count - 1 ? currentPortraitLayout + 1 : 0 }
+            return portraitLayouts[currentPortraitLayout]
+        }
+
+        // If assets count is an odd number, use a double layout close to the middle of the photobook
+        var doubleAssetIndex: Int?
+        if doubleLayout != nil, placeholderLayouts == 0 && assets.count % 2 != 0 {
+            let middleIndex = (assets.count / 2) + 1
+            for i in stride(from: 0, to: middleIndex-1, by: 2) { // Exclude first and last assets
+                if assets[middleIndex - i].isLandscape {
+                    doubleAssetIndex = middleIndex - i
+                    break
+                }
+                if assets[middleIndex + i].isLandscape {
+                    doubleAssetIndex = middleIndex + i
+                    break
+                }
+            }
+            doubleAssetIndex = doubleAssetIndex ?? middleIndex // Use middle index even though it is a portrait photo
+        }
+
+        for (index, asset) in assets.enumerated() {
             let productLayoutAsset = ProductLayoutAsset()
             productLayoutAsset.asset = asset
             
-            var layout: Layout
-            if asset.isLandscape {
-                layout = landscapeLayouts[currentLandscapeLayout]
-                currentLandscapeLayout = currentLandscapeLayout < landscapeLayouts.count - 1 ? currentLandscapeLayout + 1 : 0
+            let layout: Layout
+            if let doubleAssetIndex = doubleAssetIndex, index == doubleAssetIndex {
+                layout = doubleLayout!
+            } else if asset.isLandscape {
+                layout = nextLandscapeLayout()
             } else {
-                layout = portraitLayouts[currentPortraitLayout]
-                currentPortraitLayout = currentPortraitLayout < portraitLayouts.count - 1 ? currentPortraitLayout + 1 : 0
+                layout = nextPortraitLayout()
             }
             let productLayoutText = layout.textLayoutBox != nil ? ProductLayoutText() : nil
             let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset, productLayoutText: productLayoutText)
@@ -243,8 +270,7 @@ class ProductManager {
         
         var placeholderLayouts = placeholderLayouts
         while placeholderLayouts > 0 {
-            let layout = landscapeLayouts[currentLandscapeLayout]
-            currentLandscapeLayout = currentLandscapeLayout < landscapeLayouts.count - 1 ? currentLandscapeLayout + 1 : 0
+            let layout = placeholderLayouts % 2 == 0 ? nextLandscapeLayout() : nextPortraitLayout()
             let productLayout = ProductLayout(layout: layout, productLayoutAsset: nil)
             productLayouts.append(productLayout)
             placeholderLayouts -= 1
@@ -441,6 +467,12 @@ class ProductManager {
     func moveLayout(at sourceIndex: Int, to destinationIndex: Int) {
         guard sourceIndex < productLayouts.count && destinationIndex < productLayouts.count else { return }
         productLayouts.move(sourceIndex, to: destinationIndex)
+    }
+    
+    func bleed(forPageSize size: CGSize) -> CGFloat {
+        guard let product = product else { return 0.0 }
+        let scaleFactor = size.width / product.pageWidth
+        return bleed * scaleFactor
     }
     
     func createPhotobookPdf(completionHandler: @escaping (_ urls: [String]?, _ error: Error?) -> Void) {

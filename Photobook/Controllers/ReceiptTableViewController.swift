@@ -30,11 +30,21 @@ class ReceiptTableViewController: UITableViewController {
         return OrderManager.shared.cachedCost
     }
     
-    var state:State = .uploading {
+    var state:State = .error {
         didSet {
             if state != oldValue {
                 updateViews()
             }
+        }
+    }
+    
+    static var isProcessingOrder:Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "ReceiptTableViewController.isProcessingOrder")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "ReceiptTableViewController.isProcessingOrder")
+            UserDefaults.standard.synchronize()
         }
     }
     
@@ -70,13 +80,16 @@ class ReceiptTableViewController: UITableViewController {
         let loadingString =  NSLocalizedString("ReceiptTableViewController/LoadingData", value: "Loading info...", comment: "description for a loading indicator")
         emptyScreenViewController.show(message: loadingString, activity: true)
         
-        if ProductManager.shared.isUploading {
-            //load and resume upload
+        if ReceiptTableViewController.isProcessingOrder {
+            //re entered app, load and resume upload
             ProductManager.shared.loadUserPhotobook {}
             self.emptyScreenViewController.hide(animated: true)
         } else {
+            //start processing
+            ReceiptTableViewController.isProcessingOrder = true
             //start upload
             ProductManager.shared.startPhotobookUpload { (totalUploads, error) in
+                self.state = .uploading
                 if totalUploads == 0, error == nil {
                     self.state = .error
                 }
@@ -178,7 +191,7 @@ class ReceiptTableViewController: UITableViewController {
                 })
             }
         case .paymentFailed:
-        //TODO: push payment method screen
+            let paymentViewController = storyboard?.instantiateViewController(withIdentifier: "PaymentMethodViewController")
             break
         case .cancelled:
             dismiss()
@@ -204,6 +217,7 @@ class ReceiptTableViewController: UITableViewController {
     
     private func dismiss() {
         ProductManager.shared.cancelPhotobookUpload {
+            ReceiptTableViewController.isProcessingOrder = false
             ProductManager.shared.reset()
             OrderManager.shared.reset()
             NotificationCenter.default.post(name: ReceiptNotificationName.receiptWillDismiss, object: nil)
@@ -326,6 +340,7 @@ class ReceiptTableViewController: UITableViewController {
             //Submit Order
             OrderManager.shared.submitOrder(urls) { [weak welf = self] (errorMessage) in
                 if let errorMessage = errorMessage {
+                    //TODO: determine if payment failed
                     print("ReceiptTableViewController: \(errorMessage.message)")
                     welf?.progressOverlayViewController.hide()
                     welf?.state = .error

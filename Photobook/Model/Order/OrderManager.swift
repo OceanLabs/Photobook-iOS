@@ -124,7 +124,7 @@ class OrderManager {
     }
     
     func submitOrder(_ urls:[String], completionHandler: @escaping (_ error: ErrorMessage?) -> Void) {
-        //TODO: change
+        //TODO: change to accept two pdf urls
         KiteAPIClient.shared.submitOrder(parameters: orderParameters(), completionHandler: { [weak welf = self] orderId, error in
             welf?.orderId = orderId
             completionHandler(error)

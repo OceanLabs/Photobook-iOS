@@ -30,9 +30,8 @@ class ModalAlbumsCollectionViewController: UIViewController {
     private var hasAppliedMask = false
     
     var collectorMode: AssetCollectorMode = .adding
-    var albumManager: AlbumManager?
     weak var addingDelegate: AssetCollectorAddingDelegate?
-    var albumForPicker: Album?
+    var selectedAssetsSource: SelectedAssetsSource?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,7 +90,14 @@ class ModalAlbumsCollectionViewController: UIViewController {
             let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didPanOnNavigationBar(_:)))
             navigationBar.addGestureRecognizer(panGestureRecognizer)
 
-            if let album = albumForPicker {
+            if let albumManager = selectedAssetsSource?.albumManager {
+                let albumsCollectionViewController = storyboard?.instantiateViewController(withIdentifier: "AlbumsCollectionViewController") as! AlbumsCollectionViewController
+                albumsCollectionViewController.albumManager = albumManager
+                albumsCollectionViewController.collectorMode = collectorMode
+                albumsCollectionViewController.addingDelegate = self
+                albumsCollectionViewController.assetPickerDelegate = self
+                rootNavigationController.setViewControllers([albumsCollectionViewController], animated: false)
+            } else if let album = selectedAssetsSource?.album {
                 let assetPickerCollectionViewController = storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
                 assetPickerCollectionViewController.collectorMode = collectorMode
                 assetPickerCollectionViewController.addingDelegate = self
@@ -100,13 +106,6 @@ class ModalAlbumsCollectionViewController: UIViewController {
                 assetPickerCollectionViewController.selectedAssetsManager = SelectedAssetsManager()
                 
                 rootNavigationController.setViewControllers([assetPickerCollectionViewController], animated: false)
-            } else {
-                let albumsCollectionViewController = storyboard?.instantiateViewController(withIdentifier: "AlbumsCollectionViewController") as! AlbumsCollectionViewController
-                albumsCollectionViewController.albumManager = albumManager
-                albumsCollectionViewController.collectorMode = collectorMode
-                albumsCollectionViewController.addingDelegate = self
-                albumsCollectionViewController.assetPickerDelegate = self
-                rootNavigationController.setViewControllers([albumsCollectionViewController], animated: false)
             }
         }
     }

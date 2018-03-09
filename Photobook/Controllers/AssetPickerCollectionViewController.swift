@@ -16,22 +16,23 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     
     private struct Constants {
         static let loadingCellReuseIdentifier = "LoadingCell"
+        static let marginBetweenImages: CGFloat = 1
+        static let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
     }
 
     @IBOutlet private weak var selectAllButton: UIBarButtonItem?
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     weak var delegate: AssetPickerCollectionViewControllerDelegate?
-    private let marginBetweenImages: CGFloat = 1
-    private let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
     private var previousPreheatRect = CGRect.zero
     var selectedAssetsManager: SelectedAssetsManager?
-    var assetCollectorController: AssetCollectorViewController!
+    private var assetCollectorController: AssetCollectorViewController!
+    var delayCollectorAppearance = false
     static let coverAspectRatio: CGFloat = 2.723684211
     private lazy var imageCellSize: CGSize = {
         guard let collectionView = collectionView else { return .zero }
-        var usableSpace = collectionView.frame.size.width
-        usableSpace -= (numberOfCellsPerRow - 1.0) * marginBetweenImages
-        let cellWidth = usableSpace / numberOfCellsPerRow
+        var usableSpace = collectionView.frame.width
+        usableSpace -= (Constants.numberOfCellsPerRow - 1.0) * Constants.marginBetweenImages
+        let cellWidth = usableSpace / Constants.numberOfCellsPerRow
         return CGSize(width: cellWidth, height: cellWidth)
     }()
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
@@ -41,8 +42,6 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     var albumManager: AlbumManager?
     var album: Album! {
         didSet{
-            // We don't want a title for stories
-            guard album as? Story == nil else { return }
             self.title = album.localizedName
         }
     }
@@ -60,13 +59,17 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         }
         
         if album.assets.isEmpty {
-            self.album.loadAssets(completionHandler: { [weak welf = self] errorMessage in
-                if let errorMessage = errorMessage {
+            self.album.loadAssets(completionHandler: { [weak welf = self] error in
+                if let errorMessage = error as? ActionableErrorMessage {
                     welf?.emptyScreenViewController.show(ErrorUtils.genericRetryErrorMessage(message: errorMessage.message, action: {
-                        welf?.emptyScreenViewController.hide()
                         errorMessage.buttonAction()
+                        if errorMessage.dismissErrorPromptAfterAction {
+                            welf?.emptyScreenViewController.hide()
+                        }
                     }))
                     return
+                } else if let errorMessage = error as? ErrorMessage {
+                    welf?.present(UIAlertController(errorMessage: errorMessage), animated: true, completion: nil)
                 }
                 
                 welf?.collectionView?.reloadData()
@@ -78,13 +81,6 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         }
         
         registerFor3DTouch()
-        
-        // Setup the Image Collector Controller
-        if let manager = selectedAssetsManager {
-            assetCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: manager)
-            assetCollectorController.mode = collectorMode
-            assetCollectorController.delegate = self
-        }
         
         // Listen to asset manager
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
@@ -107,7 +103,20 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        loadNextBatchOfAssetIfNeeded()
+        loadNextBatchOfAssetsIfNeeded()
+        
+        if !delayCollectorAppearance {
+            setupCollector()
+        }
+    }
+    
+    func setupCollector() {
+        // Setup the Asset Collector Controller
+        if assetCollectorController == nil, let manager = selectedAssetsManager {
+            assetCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: manager, delayAppearance: delayCollectorAppearance)
+            assetCollectorController.mode = collectorMode
+            assetCollectorController.delegate = self
+        }
     }
     
     func registerFor3DTouch() {
@@ -198,8 +207,8 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         cell.selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
     }
     
-    private func loadNextBatchOfAssetIfNeeded() {
-        guard let collectionView = collectionView else { return }
+    private func loadNextBatchOfAssetsIfNeeded() {
+        guard album.hasMoreAssetsToLoad, let collectionView = collectionView else { return }
         for cell in collectionView.visibleCells {
             if cell.reuseIdentifier == Constants.loadingCellReuseIdentifier {
                 album.loadNextBatchOfAssets()
@@ -229,10 +238,14 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     
     private func updateCachedAssets() {
         // Update only if the view is visible.
-        guard isViewLoaded && view.window != nil else { return }
+        guard let collectionView = collectionView,
+            isViewLoaded,
+            view.window != nil,
+            !collectionView.visibleCells.isEmpty
+            else { return }
         
         // The preheat window is twice the height of the visible rect.
-        let visibleRect = CGRect(origin: collectionView!.contentOffset, size: collectionView!.bounds.size)
+        let visibleRect = CGRect(origin: collectionView.contentOffset, size: collectionView.bounds.size)
         let preheatRect = visibleRect.insetBy(dx: 0, dy: -0.5 * visibleRect.height)
         
         // Update only if the visible area is significantly different from the last preheated area.
@@ -242,10 +255,10 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         // Compute the assets to start caching and to stop caching.
         let (addedRects, removedRects) = differencesBetweenRects(previousPreheatRect, preheatRect)
         let addedAssets = addedRects
-            .flatMap { rect in collectionView!.indexPathsForElements(in: rect) }
+            .flatMap { rect in collectionView.indexPathsForElements(in: rect) }
             .map { indexPath in album.assets[indexPath.item] }
         let removedAssets = removedRects
-            .flatMap { rect in collectionView!.indexPathsForElements(in: rect) }
+            .flatMap { rect in collectionView.indexPathsForElements(in: rect) }
             .map { indexPath in album.assets[indexPath.item] }
         
         // Update the assets the PHCachingImageManager is caching.
@@ -317,7 +330,7 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
         default:
             let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
             photobookViewController.selectedAssetsManager = selectedAssetsManager
-            photobookViewController.albumForEditingPicker = album.requiresExclusivePicking ? album : nil
+            photobookViewController.selectedAssetsSource = SelectedAssetsSource(album: album, albumManager: albumManager)
             navigationController?.pushViewController(photobookViewController, animated: true)
         }
         selectedAssetsManager?.orderAssetsByDate()
@@ -350,7 +363,7 @@ extension AssetPickerCollectionViewController {
             let asset = album.assets[indexPath.item]
             cell.assetId = asset.identifier
             
-            cell.imageView.setImage(from: asset, size: imageCellSize, completionHandler: {
+            cell.imageView.setImage(from: asset, size: imageCellSize, validCellCheck: {
                 return cell.assetId == asset.identifier
             })
             
@@ -506,4 +519,11 @@ private extension UICollectionView {
         let allLayoutAttributes = collectionViewLayout.layoutAttributesForElements(in: rect)!
         return allLayoutAttributes.map { $0.indexPath }
     }
+}
+
+extension AssetPickerCollectionViewController: AssetPickerCollectionViewControllerDelegate {
+    func viewControllerForPresentingOn() -> UIViewController? {
+        return tabBarController
+    }
+    
 }

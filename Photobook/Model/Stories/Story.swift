@@ -84,18 +84,14 @@ extension Story: Album {
     }
     
     var localizedName: String? {
-        return title
+        return ""
     }
     
     var identifier: String {
         return collectionList.localIdentifier
     }
     
-    var requiresExclusivePicking: Bool {
-        return true
-    }
-    
-    func loadAssets(completionHandler: ((ActionableErrorMessage?) -> Void)?) {
+    func loadAssets(completionHandler: ((Error?) -> Void)?) {
         let fetchOptions = PHFetchOptions()
         fetchOptions.wantsIncrementalChangeDetails = false
         fetchOptions.includeHiddenAssets = false

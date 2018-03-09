@@ -29,8 +29,6 @@ class SpineFrameView: UIView {
     var fontType: FontType = .plain
     
     override func layoutSubviews() {
-        super.layoutSubviews()
-
         // Figure out the available width of the spine frame
         textLabelWidthConstraint.constant = bounds.height * ProductManager.shared.product!.spineTextRatio
 
