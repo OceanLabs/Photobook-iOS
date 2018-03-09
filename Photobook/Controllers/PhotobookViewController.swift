@@ -33,6 +33,9 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet weak var collectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var collectionViewBottomConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var ctaContainerBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var ctaButton: UIButton!
+    
     @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var ctaButtonContainer: UIView!
     @IBOutlet weak var backButton: UIButton!
@@ -83,6 +86,14 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         setup(with: photobook)
         
         backButton.setTitleColor(navigationController?.navigationBar.tintColor, for: .normal)
+        
+        if #available(iOS 11, *) {
+        } else {
+            let constant = ctaContainerBottomConstraint.constant
+            ctaContainerBottomConstraint.isActive = false
+            ctaContainerBottomConstraint = NSLayoutConstraint(item: view, attribute: .bottom, relatedBy: .equal, toItem: ctaButton, attribute: .bottom, multiplier: 1, constant: constant)
+            ctaContainerBottomConstraint.isActive = true
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
