@@ -115,18 +115,15 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let bottomInset = isRearranging ? ctaButtonContainer.frame.size.height * reverseRearrangeScale - insets.bottom : ctaButtonContainer.frame.size.height - insets.bottom - collectionViewBottomConstraint.constant
         
         let normalTopInset: CGFloat
-        if #available(iOS 11, *) {
-            normalTopInset = 0
-        } else {
-            normalTopInset = navigationController?.navigationBar.frame.maxY ?? 0
-        }
-        
         let multiplier: CGFloat
         if #available(iOS 11, *) {
+            normalTopInset = 0
             multiplier = 1 - Constants.rearrageScale
         } else {
+            normalTopInset = navigationController?.navigationBar.frame.maxY ?? 0
             multiplier = 1 + Constants.rearrageScale
         }
+        
         let rearrangingTopInset = (navigationController?.navigationBar.frame.maxY ?? 0) * multiplier
                 
         collectionView.contentInset = UIEdgeInsets(top: isRearranging ? rearrangingTopInset : normalTopInset, left: collectionView.contentInset.left, bottom: bottomInset, right: collectionView.contentInset.right)
