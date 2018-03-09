@@ -41,6 +41,8 @@ class ProductManager {
     static let pendingUploadStatusUpdated = Notification.Name("ProductManagerPendingUploadStatusUpdated")
     static let shouldRetryUploadingImages = Notification.Name("ProductManagerShouldRetryUploadingImages")
     static let finishedPhotobookCreation = Notification.Name("ProductManagerFinishedPhotobookCreation")
+    static let finishedPhotobookUpload = Notification.Name("ProductManagerFinishedPhotobookUpload")
+    static let failedPhotobookUpload = Notification.Name("ProductManagerFailedPhotobookUpload")
     
     var currentPortraitLayout = 0
     var currentLandscapeLayout = 0
@@ -100,6 +102,22 @@ class ProductManager {
     var isRemovingPagesAllowed: Bool {
         // TODO: Use pages count instead of assets/layout count
         return minimumRequiredAssets < productLayouts.count
+    }
+    
+    //upload
+    var isUploading:Bool {
+        get {
+            return apiManager.isUploading
+        }
+        set {
+            apiManager.isUploading = newValue
+        }
+    }
+    var pendingUploads:Int {
+        return apiManager.pendingUploads
+    }
+    var totalUploads:Int {
+        return apiManager.totalUploads
     }
     
     func reset() {
@@ -285,9 +303,15 @@ class ProductManager {
     /// Initiates the uploading of the user's photobook
     ///
     /// - Parameter completionHandler: Executed when the uploads are on the way or failed to initiate them. The Int parameter provides the total upload count.
-    func startPhotobookUpload(_ completionHandler: (Int, Error?) -> Void) {
+    func startPhotobookUpload(_ completionHandler: @escaping (Int, Error?) -> Void) {
         self.saveUserPhotobook()
         apiManager.uploadPhotobook(completionHandler)
+    }
+    
+    func cancelPhotobookUpload(_ completionHandler: @escaping () -> Void) {
+        apiManager.cancelUpload {
+            completionHandler()
+        }
     }
     
     /// Loads the user's photobook details from disk
@@ -298,20 +322,15 @@ class ProductManager {
             print("ProductManager: failed to unarchive product")
             return
         }
-        guard let unarchivedProduct = try? PropertyListDecoder().decode([String: Any].self, from: unarchivedData) else {
+        guard let unarchivedProduct = try? PropertyListDecoder().decode(PhotobookBackUp.self, from: unarchivedData) else {
             print("ProductManager: decoding of product failed")
             return
         }
         
-        if let product = unarchivedProduct["product"] as? Photobook,
-           let coverColor = unarchivedProduct["coverColor"] as? ProductColor,
-           let pageColor = unarchivedProduct["pageColor"] as? ProductColor,
-           let productLayouts = unarchivedProduct["productLayouts"] as? [ProductLayout] {
-                self.product = product
-                self.coverColor = coverColor
-                self.pageColor = pageColor
-                self.productLayouts = productLayouts
-        }
+        self.product = unarchivedProduct.product
+        self.coverColor = unarchivedProduct.coverColor
+        self.pageColor = unarchivedProduct.pageColor
+        self.productLayouts = unarchivedProduct.productLayouts
         apiManager.restoreUploads(completionHandler)
     }
     
@@ -424,8 +443,8 @@ class ProductManager {
         productLayouts.move(sourceIndex, to: destinationIndex)
     }
     
-    func initializePhotobookPdf(completionHandler: @escaping (_ photobookId: String?, _ error: Error?) -> Void) {
-        apiManager.initializePhotobookPdf(completionHandler: completionHandler)
+    func createPhotobookPdf(completionHandler: @escaping (_ urls: [String]?, _ error: Error?) -> Void) {
+        apiManager.createPhotobookPdf(completionHandler: completionHandler)
     }
 }
 
@@ -434,25 +453,32 @@ extension ProductManager: PhotobookAPIManagerDelegate {
     func didFinishUploading(asset: Asset) {
         let info: [String: Any] = [ "asset": asset, "pending": apiManager.pendingUploads ]
         NotificationCenter.default.post(name: ProductManager.pendingUploadStatusUpdated, object: info)
+        saveUserPhotobook()
     }
     
     func didFailUpload(_ error: Error) {
         if let error = error as? PhotobookAPIError {
             switch error {
             case .missingPhotobookInfo:
-                fatalError("ProductManager: incorrect or missing photobook info")
+                print("ProductManager: incorrect or missing photobook info")
+                NotificationCenter.default.post(name: ProductManager.failedPhotobookUpload, object: nil) //not resolvable
             case .couldNotSaveTempImageData:
                 let info = [ "pending": apiManager.pendingUploads ]
                 NotificationCenter.default.post(name: ProductManager.pendingUploadStatusUpdated, object: info)
-                
-                NotificationCenter.default.post(name: ProductManager.shouldRetryUploadingImages, object: nil)
+                NotificationCenter.default.post(name: ProductManager.shouldRetryUploadingImages, object: nil) //resolvable
             case .couldNotBuildCreationParameters:
-                fatalError("PhotobookManager: could not build PDF creation request parameters")
+                print("PhotobookManager: could not build PDF creation request parameters")
+                NotificationCenter.default.post(name: ProductManager.failedPhotobookUpload, object: nil) //not resolvable
             }
         } else if let _ = error as? APIClientError {
             // Connection / server errors are handled by the system. This can only be a parsing error.
-            fatalError("ProductManager: could not parse upload response")
+            print("ProductManager: could not parse upload response")
+            NotificationCenter.default.post(name: ProductManager.shouldRetryUploadingImages, object: nil) //resolvable
         }
+    }
+    
+    func didFinishUploadingPhotobook() {
+        NotificationCenter.default.post(name: ProductManager.finishedPhotobookUpload, object: nil)
     }
     
     func didFinishCreatingPdf(error: Error?) {

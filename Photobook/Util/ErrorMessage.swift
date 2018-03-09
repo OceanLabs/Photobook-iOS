@@ -11,6 +11,8 @@ struct CommonLocalizedStrings {
     static let alertOK = NSLocalizedString("Generic/OKButtonTitle", value: "OK", comment: "Acknowledgement to an alert dialog")
     static let retry = NSLocalizedString("General/RetryButtonTitle", value: "Retry", comment: "Button title to retry operation")
     static let cancel = NSLocalizedString("General/CancelButtonTitle", value: "Cancel", comment: "Cancel an action")
+    static let yes = NSLocalizedString("General/YesButtonTitle", value: "Yes", comment: "Agree to an action")
+    static let no = NSLocalizedString("General/NoButtonTitle", value: "No", comment: "Don't agree to an action")
 }
 
 

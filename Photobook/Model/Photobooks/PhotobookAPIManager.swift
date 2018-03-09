@@ -17,6 +17,7 @@ protocol PhotobookAPIManagerDelegate: class {
 
     func didFinishUploading(asset: Asset)
     func didFailUpload(_ error: Error)
+    func didFinishUploadingPhotobook()
     func didFinishCreatingPdf(error: Error?)
 }
 
@@ -34,9 +35,8 @@ class PhotobookAPIManager {
         static let products = "/ios/initial-data/"
         static let summary = "/ios/summary"
         static let applyUpsell = "/ios/upsell.apply"
-        static let initialisePdf = "/ios/initialisePhotobookPdf"
+        static let createPdf = "/ios/generate_photobook_pdf"
         static let imageUpload = "/upload/"
-        static let setPdfData = "/ios/setPhotobookPdfData"
     }
     
     private struct Storage {
@@ -45,8 +45,33 @@ class PhotobookAPIManager {
 
     private var apiClient = APIClient.shared
     
-    var pendingUploads = 0
-    var totalUploads = 0
+    var pendingUploads:Int {
+        get {
+            return UserDefaults.standard.integer(forKey: "PhotobookAPIManager.pendingUploads")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "PhotobookAPIManager.pendingUploads")
+            UserDefaults.standard.synchronize()
+        }
+    }
+    var totalUploads:Int {
+        get {
+            return UserDefaults.standard.integer(forKey: "PhotobookAPIManager.totalUploads")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "PhotobookAPIManager.totalUploads")
+            UserDefaults.standard.synchronize()
+        }
+    }
+    var isUploading:Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "PhotobookAPIManager.isUploading")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "PhotobookAPIManager.isUploading")
+            UserDefaults.standard.synchronize()
+        }
+    }
     weak var delegate: PhotobookAPIManagerDelegate?
     
     init() {
@@ -134,18 +159,13 @@ class PhotobookAPIManager {
         }
     }
     
-    func initializePhotobookPdf(completionHandler: @escaping (_ photobookId: String?, _ error: Error?) -> Void) {
-        apiClient.post(context: .photobook, endpoint: EndPoints.initialisePdf, completion: { response, error in
-            guard error == nil else {
-                completionHandler("I am a dummy Id, Remove Me", nil) // completionHandler(nil, error) // TODO: Remove dummy data
-                return
-            }
-            guard let photobookId = (response as? [String: Any])?["pdfId"] as? String else {
-                completionHandler(nil, APIClientError.parsing)
-                return
-            }
-            completionHandler(photobookId, nil)
-        })
+    /// Creates a PDF representation of current photobook. Two PDFs for cover and pages are provided as a URL.
+    /// Note that those get generated asynchronously on the server and when the server returns 200 the process might still fail, affecting the placement of orders using them
+    ///
+    /// - Parameter completionHandler: Closure to be called with PDF URLs if successful, or an error if it fails
+    func createPhotobookPdf(completionHandler: @escaping (_ urls: [String]?, _ error: Error?) -> Void) {
+        completionHandler(nil, nil)
+        //TODO: send request
     }
     
     /// Uploads the photobook images and the user's photobook choices
@@ -153,16 +173,23 @@ class PhotobookAPIManager {
     ///
     /// - Parameter completionHandler: Closure to be called with a total upload count, if the process successfully starts, or an error if it fails
     func uploadPhotobook(_ completionHandler: (Int, Error?) -> Void) {
+        if isUploading {
+            completionHandler(0, nil) //don't start uploading if upload in progress
+            return
+        }
+        
         guard delegate?.product != nil, let productLayouts = delegate?.productLayouts else {
             completionHandler(0, PhotobookAPIError.missingPhotobookInfo)
             return
         }
         
         // Set upload counts
+        totalUploads = 0
         for layout in productLayouts {
             if layout.asset != nil { totalUploads += 1 }
         }
         pendingUploads = totalUploads
+        isUploading = true
         completionHandler(totalUploads, nil)
         
         // Upload images
@@ -172,17 +199,18 @@ class PhotobookAPIManager {
             
             // This might be a retry.
             guard asset.uploadUrl == nil else {
-                delegate?.didFinishUploading(asset: asset)
+                handleFinishedUploadingAsset(asset: asset)
                 continue
             }
 
             asset.imageData(progressHandler: nil, completionHandler: { [weak welf = self] data, fileExtension, error in
-                guard error != nil, let data = data, let fileExtension = fileExtension else {
+                guard error == nil, let data = data, let fileExtension = fileExtension else {
                     welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImageData)
                     return
                 }
-
-                if let fileUrl = welf?.saveDataToCachesDirectory(data: data, name: "\(asset.identifier).\(fileExtension)") {
+                
+                let assetIdentifier = asset.identifier.replacingOccurrences(of: "/", with: "") //remove slashes because it'd result in an invalid path
+                if let fileUrl = welf?.saveDataToCachesDirectory(data: data, name: "\(assetIdentifier).\(fileExtension)") {
                     welf?.apiClient.uploadImage(fileUrl, reference: self.imageUploadIdentifierPrefix + asset.identifier, context: .pig, endpoint: EndPoints.imageUpload)
                 } else {
                     welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImageData)
@@ -204,14 +232,11 @@ class PhotobookAPIManager {
             return
         }
         
-        guard let productLayouts = delegate?.productLayouts else {
-            fatalError("PBAPIManager: Layouts not available")
-        }
-        
         if let error = dictionary["error"] as? APIClientError {
             delegate?.didFailUpload(error)
+            return
         }
-            
+        
         guard let reference = dictionary["task_reference"] as? String,
             let url = dictionary["full"] as? String else {
                 
@@ -220,7 +245,7 @@ class PhotobookAPIManager {
         }
         let referenceId = reference.suffix(reference.count - imageUploadIdentifierPrefix.count)
         
-        guard let productLayout = productLayouts.first(where: { $0.asset != nil && $0.asset!.identifier == referenceId }) else {
+        guard let productLayout = delegate?.productLayouts.first(where: { $0.asset != nil && $0.asset!.identifier == referenceId }) else {
             delegate?.didFailUpload(PhotobookAPIError.missingPhotobookInfo)
             return
         }
@@ -228,16 +253,18 @@ class PhotobookAPIManager {
         // Store the URL string
         productLayout.asset!.uploadUrl = url
         
-        // Notify delegate
-        delegate?.didFinishUploading(asset: productLayout.asset!)
-
+        handleFinishedUploadingAsset(asset: productLayout.asset!)
+    }
+    
+    private func handleFinishedUploadingAsset(asset:Asset) {
         // Reduce the count
         pendingUploads -= 1
+        // Notify delegate
+        delegate?.didFinishUploading(asset: asset)
         if pendingUploads == 0 {
             // All uploads done. Submit details and inform delegate
-            submitPhotobookDetails() { [weak welf = self] (error) in
-                welf?.delegate?.didFinishCreatingPdf(error: error)
-            }
+            isUploading = false
+            delegate?.didFinishUploadingPhotobook()
         }
     }
     
@@ -247,14 +274,29 @@ class PhotobookAPIManager {
             return
         }
 
+        totalUploads = 0
         for layout in productLayouts {
             if layout.asset != nil { totalUploads += 1 }
         }
         APIClient.shared.recreateBackgroundSession(completionHandler)
     }
     
+    func cancelUpload(_ completion: @escaping () -> Void) {
+        if isUploading {
+            print("will cancel uploads")
+            apiClient.cancelBackgroundTasks {
+                self.isUploading = false
+                self.pendingUploads = 0
+                self.totalUploads = 0
+                completion()
+                print("did cancel uploads")
+            }
+        } else {
+            completion()
+        }
+    }
 
-    // MARK: Private methods
+    /*
     private func submitPhotobookDetails(_ completionHandler: @escaping (Error?) -> Void) {
         guard let parameters = photobookParameters() else {
             completionHandler(PhotobookAPIError.couldNotBuildCreationParameters)
@@ -264,7 +306,7 @@ class PhotobookAPIManager {
         apiClient.post(context: .pig, endpoint: EndPoints.initialisePdf, parameters: parameters) { ( jsonData, error) in
             completionHandler(error)
         }
-    }
+    }*/
     
     private func photobookParameters() -> [String: Any]? {
         guard let photobookId = OrderManager.shared.photobookId else { return nil }
@@ -313,6 +355,7 @@ class PhotobookAPIManager {
             try data.write(to: fileUrl)
             return fileUrl
         } catch {
+            print(error)
             return nil
         }
     }

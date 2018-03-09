@@ -143,6 +143,9 @@
 		B90F288B20066D3100FF3D15 /* OrderSummaryTotalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90F288A20066D3100FF3D15 /* OrderSummaryTotalTableViewCell.swift */; };
 		B939FE8C200CD18200B1084B /* OrderSummaryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B939FE8B200CD18200B1084B /* OrderSummaryManager.swift */; };
 		B939FE8E200E381C00B1084B /* CheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B939FE8D200E381C00B1084B /* CheckoutViewController.swift */; };
+		B97ABBCA204D445900238C8A /* ReceiptProgressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97ABBC9204D445900238C8A /* ReceiptProgressTableViewCell.swift */; };
+		B97ABBCE204D44A900238C8A /* ReceiptDetailsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97ABBCD204D44A900238C8A /* ReceiptDetailsTableViewCell.swift */; };
+		B97ABBD0204D52E400238C8A /* ReceiptInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97ABBCF204D52E400238C8A /* ReceiptInfoTableViewCell.swift */; };
 		B986DF2D20164BDA005461A0 /* order_summary_0.json in Resources */ = {isa = PBXBuildFile; fileRef = B986DF2C20164BDA005461A0 /* order_summary_0.json */; };
 		B986DF2F201B445E005461A0 /* UpsellOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = B986DF2E201B445E005461A0 /* UpsellOption.swift */; };
 		B99536DA202DB1B80019B1AF /* order_summary_1.json in Resources */ = {isa = PBXBuildFile; fileRef = B99536D9202DB1B80019B1AF /* order_summary_1.json */; };
@@ -317,6 +320,9 @@
 		B90F288A20066D3100FF3D15 /* OrderSummaryTotalTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryTotalTableViewCell.swift; sourceTree = "<group>"; };
 		B939FE8B200CD18200B1084B /* OrderSummaryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryManager.swift; sourceTree = "<group>"; };
 		B939FE8D200E381C00B1084B /* CheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutViewController.swift; sourceTree = "<group>"; };
+		B97ABBC9204D445900238C8A /* ReceiptProgressTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptProgressTableViewCell.swift; sourceTree = "<group>"; };
+		B97ABBCD204D44A900238C8A /* ReceiptDetailsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptDetailsTableViewCell.swift; sourceTree = "<group>"; };
+		B97ABBCF204D52E400238C8A /* ReceiptInfoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReceiptInfoTableViewCell.swift; sourceTree = "<group>"; };
 		B986DF2C20164BDA005461A0 /* order_summary_0.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = order_summary_0.json; sourceTree = "<group>"; };
 		B986DF2E201B445E005461A0 /* UpsellOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpsellOption.swift; sourceTree = "<group>"; };
 		B99536D9202DB1B80019B1AF /* order_summary_1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = order_summary_1.json; sourceTree = "<group>"; };
@@ -464,9 +470,12 @@
 		2E7C369820209600008033E7 /* Receipt */ = {
 			isa = PBXGroup;
 			children = (
-				2E7C3692202095DC008033E7 /* ReceiptFooterTableViewCell.swift */,
 				2E7C3694202095ED008033E7 /* ReceiptHeaderTableViewCell.swift */,
+				B97ABBC9204D445900238C8A /* ReceiptProgressTableViewCell.swift */,
+				B97ABBCF204D52E400238C8A /* ReceiptInfoTableViewCell.swift */,
+				B97ABBCD204D44A900238C8A /* ReceiptDetailsTableViewCell.swift */,
 				2E7C3696202095FB008033E7 /* ReceiptLineItemTableViewCell.swift */,
+				2E7C3692202095DC008033E7 /* ReceiptFooterTableViewCell.swift */,
 			);
 			path = Receipt;
 			sourceTree = "<group>";
@@ -1082,9 +1091,11 @@
 				2ECB5A971FDFE01100FF39A5 /* OutOfBoundsTouchView.swift in Sources */,
 				6F4DE6551FB4522A0099A97E /* StoryTableViewCell.swift in Sources */,
 				2E5F825320162855002F3607 /* DeliveryAddressTableViewCell.swift in Sources */,
+				B97ABBCE204D44A900238C8A /* ReceiptDetailsTableViewCell.swift in Sources */,
 				6FCE959D1FF555EE0023FC14 /* AssetPlacementViewController.swift in Sources */,
 				6FC7E87B1FBEF7FC00D2BCDA /* PhotobookAPIManager.swift in Sources */,
 				2ECF57C520120DF60047094C /* UserInputTableViewCell.swift in Sources */,
+				B97ABBD0204D52E400238C8A /* ReceiptInfoTableViewCell.swift in Sources */,
 				2EA00E472044464E00371B88 /* Analytics.swift in Sources */,
 				6F0A68361FE16D1200B7E56C /* LayoutSelectionViewController.swift in Sources */,
 				2E1733932010CD0B00F0D718 /* Country.swift in Sources */,
@@ -1131,6 +1142,7 @@
 				6FE05DA820345C3E003C9655 /* SwiftLuhn.swift in Sources */,
 				2EA00E4520443ACB00371B88 /* KiteAPIClient.swift in Sources */,
 				2E7C3695202095ED008033E7 /* ReceiptHeaderTableViewCell.swift in Sources */,
+				B97ABBCA204D445900238C8A /* ReceiptProgressTableViewCell.swift in Sources */,
 				2E0B58A21FB32AC100F31A9E /* PhotosAlbum.swift in Sources */,
 				6FA1893B2004B9C700E6D0AB /* ModalAlbumsCollectionViewController.swift in Sources */,
 				2E0B58A91FB3508B00F31A9E /* SelectedAssetsManager.swift in Sources */,

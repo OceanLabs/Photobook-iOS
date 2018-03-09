@@ -389,6 +389,7 @@ class CheckoutViewController: UIViewController {
     }
     
     private func showReceipt() {
+        OrderManager.shared.saveBackup()
         if self.presentedViewController == nil{
             self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
         }
@@ -461,7 +462,7 @@ class CheckoutViewController: UIViewController {
         if let selectedMethod = OrderManager.shared.shippingMethod, let shippingMethod = cost.shippingMethod(id: selectedMethod), shippingMethod.totalCost == 0.0 {
             // The user must have a promo code which reduces this order cost to nothing, lucky user :)
             OrderManager.shared.paymentToken = nil
-            submitOrder(completionHandler: nil)
+            showReceipt()
         }
         else{
             if OrderManager.shared.paymentMethod == .applePay{
@@ -509,32 +510,6 @@ class CheckoutViewController: UIViewController {
         UIView.animate(withDuration: time) {
             self.view.layoutIfNeeded()
         }
-    }
-    
-    private func submitOrder(completionHandler: ((_ status: PKPaymentAuthorizationStatus) -> Void)?) {
-        progressOverlayViewController.show(message: Constants.submittingOrderText)
-        OrderManager.shared.submitOrder(completionHandler: { [weak welf = self] errorMessage in
-            welf?.progressOverlayViewController.hide()
-            
-            if let errorMessage = errorMessage {
-                completionHandler?(.failure)
-                if welf?.presentedViewController != nil {
-                    welf?.presentedViewController?.dismiss(animated: true, completion: {
-                        welf?.present(UIAlertController(errorMessage: errorMessage), animated: true, completion: nil)
-                    })
-                } else {
-                    welf?.present(UIAlertController(errorMessage: errorMessage), animated: true, completion: nil)
-                }
-                return
-            }
-            
-            completionHandler?(.success)
-            
-            // It's possible that we are done submitting the order before the Apple Pay (or other) modal has dismissed, so wait for that to finish.
-            welf?.modalPresentationDismissedGroup.notify(queue: DispatchQueue.main, execute: {
-                welf?.showReceipt()
-            })
-        })
     }
 }
 
@@ -596,7 +571,8 @@ extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
         }
         
         OrderManager.shared.paymentToken = token
-        submitOrder(completionHandler: completionHandler)
+        
+        showReceipt()
     }
     
     func modalPresentationDidFinish() {

@@ -11,6 +11,13 @@ import Stripe
 
 class OrderManager {
     
+    private struct Constants {
+        static let savedCostKey = "OrderManager.cost"
+        static let savedOrderDetailsKey = "OrderManager.orderDetails"
+        static let savedShippingMethodKey = "OrderManager.shippingMethod"
+        static let savedPaymentTokenKey = "OrderManager.paymentToken"
+    }
+    
     let currencyCode = Locale.current.currencyCode ?? "USD" //USD if locale unavailable
     var deliveryDetails: DeliveryDetails?
     var shippingMethod: Int?
@@ -95,16 +102,32 @@ class OrderManager {
         orderId = nil
     }
     
-    func submitOrder(completionHandler: @escaping (_ error: ErrorMessage?) -> Void) {
-        // First create a Photobook PDF Id
-        ProductManager.shared.initializePhotobookPdf(completionHandler: { [weak welf = self] pdfId, error in
-            guard error == nil else { completionHandler(ErrorMessage(error)); return }
-            
-            welf?.photobookId = pdfId
-            KiteAPIClient.shared.submitOrder(parameters: welf!.orderParameters(), completionHandler: { orderId, error in
-                welf?.orderId = orderId
-                completionHandler(error)
-            })
+    func saveBackup() {
+        guard let detailsData = try? PropertyListEncoder().encode(deliveryDetails),
+            let cost = validCost else { return }
+        
+        UserDefaults.standard.set(detailsData, forKey: Constants.savedOrderDetailsKey)
+        UserDefaults.standard.set(NSKeyedArchiver.archivedData(withRootObject: cost), forKey: Constants.savedCostKey)
+        UserDefaults.standard.set(paymentToken, forKey: Constants.savedPaymentTokenKey)
+        UserDefaults.standard.set(shippingMethod, forKey: Constants.savedShippingMethodKey)
+        UserDefaults.standard.synchronize()
+    }
+    
+    func loadBackup() {
+        guard let detailsData = UserDefaults.standard.object(forKey: Constants.savedOrderDetailsKey) as? Data,
+            let costData = UserDefaults.standard.object(forKey: Constants.savedCostKey) as? Data else { return }
+        
+        deliveryDetails = try? PropertyListDecoder().decode(DeliveryDetails.self, from: detailsData)
+        cachedCost = NSKeyedUnarchiver.unarchiveObject(with: costData) as? Cost
+        paymentToken = UserDefaults.standard.string(forKey: Constants.savedPaymentTokenKey)
+        shippingMethod = UserDefaults.standard.integer(forKey: Constants.savedShippingMethodKey)
+    }
+    
+    func submitOrder(_ urls:[String], completionHandler: @escaping (_ error: ErrorMessage?) -> Void) {
+        //TODO: change
+        KiteAPIClient.shared.submitOrder(parameters: orderParameters(), completionHandler: { [weak welf = self] orderId, error in
+            welf?.orderId = orderId
+            completionHandler(error)
         })
     }
     

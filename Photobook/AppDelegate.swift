@@ -20,6 +20,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         Fabric.with([Crashlytics.self])
         
+        //check if upload is in progress
+        if ProductManager.shared.isUploading {
+            //show receipt screen to prevent user from ordering another photobook
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let receiptViewController = storyboard.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
+            receiptViewController.dismissClosure = { [weak welf = self] in
+                let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController")
+                welf?.window?.rootViewController = tabBarController
+            }
+            let navigationController = UINavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
+            navigationController.pushViewController(receiptViewController, animated: false)
+            window?.rootViewController = navigationController
+        }
+        
         return true
     }
     
