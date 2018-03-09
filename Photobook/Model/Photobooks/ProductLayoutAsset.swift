@@ -21,7 +21,7 @@ class ProductLayoutAsset: Codable {
     var containerSize: CGSize! {
         didSet {
             if !shouldFitAsset && oldValue != nil {
-                let relativeScale = containerSize.width / oldValue.width
+                let relativeScale = containerSize.height / oldValue.height
                 transform = LayoutUtils.adjustTransform(transform, byFactor: relativeScale)
                 return
             }            
