@@ -14,12 +14,6 @@ import KeychainSwift
 class InstagramLoginViewController: UIViewController {
     
     private var webView: WKWebView = WKWebView()
-    
-    private lazy var instagramClient: OAuth2Swift = {
-        let client = OAuth2Swift.instagramClient()
-        client.authorizeURLHandler = self
-        return client
-    }()
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
     }()
@@ -59,9 +53,10 @@ class InstagramLoginViewController: UIViewController {
             }
         })
         
-        instagramClient.authorize(withCallbackURL: URL(string: OAuth2Swift.Constants.redirectUri)!, scope: OAuth2Swift.Constants.scope, state:"INSTAGRAM",
+        InstagramClient.shared.authorizeURLHandler = self
+        InstagramClient.shared.authorize(withCallbackURL: URL(string: InstagramClient.Constants.redirectUri)!, scope: InstagramClient.Constants.scope, state:"INSTAGRAM",
             success: { [weak welf = self] credential, response, parameters in
-                KeychainSwift().set(credential.oauthToken, forKey: OAuth2Swift.Constants.keychainInstagramTokenKey)
+                KeychainSwift().set(credential.oauthToken, forKey: InstagramClient.Constants.keychainInstagramTokenKey)
                 let instagramAssetPicker = AssetPickerCollectionViewController.instagramAssetPicker()
                 instagramAssetPicker.delegate = instagramAssetPicker
                 welf?.navigationController?.setViewControllers([instagramAssetPicker], animated: false)
@@ -80,7 +75,7 @@ extension InstagramLoginViewController: WKNavigationDelegate {
         guard let url = navigationAction.request.url else { decisionHandler(.allow); return }
         
         // Intercept the redirectUri. User has logged in successfully
-        guard !url.absoluteString.hasPrefix(OAuth2Swift.Constants.redirectUri) else {
+        guard !url.absoluteString.hasPrefix(InstagramClient.Constants.redirectUri) else {
             
             // Handle the case where the user has denied authorization after logging in
             if url.absoluteString.contains("user_denied") {

@@ -14,7 +14,6 @@ class FacebookAlbumManager {
     private struct Constants {
         static let pageSize = 100
         static let graphPath = "me/albums?limit=\(pageSize)&fields=id,name,count,cover_photo"
-        static let serviceName = "Facebook"
     }
     
     var albums =  [Album]()
@@ -24,7 +23,7 @@ class FacebookAlbumManager {
     
     func fetchAlbums(graphPath: String, completionHandler: ((Error?) -> Void)?) {
         guard let token = FBSDKAccessToken.current() else {
-            completionHandler?(ErrorMessage(message: CommonLocalizedStrings.serviceAccessError(serviceName: Constants.serviceName)))
+            completionHandler?(ErrorMessage(message: CommonLocalizedStrings.serviceAccessError(serviceName: FacebookClient.Constants.serviceName)))
             return
         }
         
@@ -43,7 +42,7 @@ class FacebookAlbumManager {
                 else {
                     // Not worth showing an error if one of the later pagination requests fail
                     guard self.albums.isEmpty else { return }
-                    completionHandler?(ErrorMessage(message: CommonLocalizedStrings.serviceAccessError(serviceName: Constants.serviceName)))
+                    completionHandler?(ErrorMessage(message: CommonLocalizedStrings.serviceAccessError(serviceName: FacebookClient.Constants.serviceName)))
                     return
             }
             
