@@ -337,10 +337,27 @@ extension AlbumsCollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard cell.reuseIdentifier == Constants.loadingCellReuseIdentifier else { return }
+        let previousAlbumCount = albumManager.albums.count
         albumManager.loadNextBatchOfAlbums() { [weak welf = self] (error) in
+            guard let stelf = welf else { return }
             if let error = error {
-                welf?.showErrorMessage(error: error, dismissAfter: 3.0) {}
+                stelf.showErrorMessage(error: error, dismissAfter: 3.0) {}
+                return
             }
+            
+            stelf.collectionView?.performBatchUpdates({
+                // Insert new albums
+                var indexPaths = [IndexPath]()
+                for i in previousAlbumCount ..< stelf.albumManager.albums.count {
+                    indexPaths.append(IndexPath(row: i, section: 0))
+                }                
+                stelf.collectionView?.insertItems(at: indexPaths)
+                
+                // Remove spinner cell if all albums have been loaded
+                if !stelf.albumManager.hasMoreAlbumsToLoad {
+                    stelf.collectionView?.deleteItems(at: [IndexPath(row: 0, section: 1)])
+                }
+            }, completion: nil)
         }
     }
 }
