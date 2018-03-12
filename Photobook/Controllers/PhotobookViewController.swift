@@ -11,7 +11,7 @@ import UIKit
 class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate {
     
     private struct Constants {
-        static let rearrageScale: CGFloat = 0.8
+        static let rearrangeScale: CGFloat = 0.8
         static let cellSideMargin: CGFloat = 10.0
         static let rearrangeAnimationDuration: TimeInterval = 0.25
         static let dragLiftScale: CGFloat = 1.1
@@ -25,7 +25,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         static let rearrangeGreyColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1.0)
     }
     private var reverseRearrangeScale: CGFloat {
-        return 1 + (1 - Constants.rearrageScale) / Constants.rearrageScale
+        return 1 + (1 - Constants.rearrangeScale) / Constants.rearrangeScale
     }
 
     @IBOutlet weak var collectionViewTrailingConstraint: NSLayoutConstraint!
@@ -118,10 +118,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let multiplier: CGFloat
         if #available(iOS 11, *) {
             normalTopInset = 0
-            multiplier = 1 - Constants.rearrageScale
+            multiplier = 1 - Constants.rearrangeScale
         } else {
             normalTopInset = navigationController?.navigationBar.frame.maxY ?? 0
-            multiplier = 1 + Constants.rearrageScale
+            multiplier = 1 + Constants.rearrangeScale
         }
         
         let rearrangingTopInset = (navigationController?.navigationBar.frame.maxY ?? 0) * multiplier
@@ -216,7 +216,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         if isRearranging {
             UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
                 interactiveCellClosure(true)
-                self.collectionView.transform = CGAffineTransform(translationX: 0, y: -self.collectionView.frame.size.height * (1.0-Constants.rearrageScale)/2.0).scaledBy(x: Constants.rearrageScale, y: Constants.rearrageScale)
+                self.collectionView.transform = CGAffineTransform(translationX: 0, y: -self.collectionView.frame.size.height * (1.0-Constants.rearrangeScale)/2.0).scaledBy(x: Constants.rearrangeScale, y: Constants.rearrangeScale)
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
             }, completion: nil)
@@ -483,7 +483,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         UIView.animate(withDuration: Constants.dropAnimationDuration, delay: 0, options: .curveEaseInOut, animations: {
             draggingView.transform = CGAffineTransform(translationX: draggingView.transform.tx, y: draggingView.transform.ty)
-            draggingView.frame.origin = CGPoint(x: self.collectionView.frame.origin.x + Constants.cellSideMargin * Constants.rearrageScale, y: destinationY)
+            draggingView.frame.origin = CGPoint(x: self.collectionView.frame.origin.x + Constants.cellSideMargin * Constants.rearrangeScale, y: destinationY)
             draggingView.layer.shadowRadius = 0
             draggingView.layer.shadowOpacity = 0
         }, completion: { _ in
