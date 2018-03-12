@@ -18,6 +18,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         static let loadingCellReuseIdentifier = "LoadingCell"
         static let marginBetweenImages: CGFloat = 1
         static let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
+        static let numberOfAssetPlaceholders = 50
     }
 
     @IBOutlet private weak var selectAllButton: UIBarButtonItem?
@@ -78,16 +79,24 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         activityIndicator.startAnimating()
 
         album.loadAssets(completionHandler: { [weak welf = self] error in
+            welf?.postAlbumLoadSetup()
+            
             guard error == nil else {
-                welf?.postAlbumLoadSetup()
                 welf?.showErrorMessage(error: error!) { welf?.loadAssets() }
                 return
             }
 
             welf?.collectionView?.reloadData()
+            welf?.resetCachedAssets()
         })
     }
     
+    private func postAlbumLoadSetup() {
+        activityIndicator.stopAnimating()
+        
+        updateSelectAllButton()
+    }
+
     private func showErrorMessage(error: Error, dismissAfter: TimeInterval? = nil, completion: (() -> Void)?) {
         let message: ErrorMessage
         var offsetTop: CGFloat = 0.0
@@ -215,12 +224,6 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         for indexPath in collectionView?.indexPathsForVisibleItems ?? [] {
             updateSelectedStatus(indexPath: indexPath)
         }
-    }
-    
-    func postAlbumLoadSetup() {
-        activityIndicator.stopAnimating()
-        
-        updateSelectAllButton()
     }
     
     func updateSelectAllButton() {
@@ -417,7 +420,7 @@ extension AssetPickerCollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return album.assets.count
+            return !album.assets.isEmpty ? album.assets.count : Constants.numberOfAssetPlaceholders
         case 1:
             return album.hasMoreAssetsToLoad ? 1 : 0
         default:
@@ -430,6 +433,8 @@ extension AssetPickerCollectionViewController {
         case 0:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AssetPickerCollectionViewCell", for: indexPath) as? AssetPickerCollectionViewCell else { return UICollectionViewCell() }
             
+            guard !album.assets.isEmpty else { return cell }
+                
             let asset = album.assets[indexPath.item]
             cell.assetId = asset.identifier
             
@@ -512,7 +517,7 @@ extension AssetPickerCollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.section == 0, let cell = cell as? AssetPickerCollectionViewCell {
+        if indexPath.section == 0, !album.assets.isEmpty, let cell = cell as? AssetPickerCollectionViewCell {
             updateSelectedStatus(cell: cell, indexPath: indexPath, asset: album.assets[indexPath.item])
             return
         }
