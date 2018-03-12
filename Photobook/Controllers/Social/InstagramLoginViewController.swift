@@ -14,12 +14,6 @@ import KeychainSwift
 class InstagramLoginViewController: UIViewController {
     
     private var webView: WKWebView = WKWebView()
-    
-    private lazy var instagramClient: OAuth2Swift = {
-        let client = OAuth2Swift.instagramClient()
-        client.authorizeURLHandler = self
-        return client
-    }()
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
     }()
@@ -30,8 +24,21 @@ class InstagramLoginViewController: UIViewController {
         super.viewDidLoad()
         
         webView.navigationDelegate = self
-        webView.frame = view.bounds
         view.insertSubview(webView, at: 0)
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        if #available(iOS 11.0, *) {
+            let guide = self.view.safeAreaLayoutGuide
+            webView.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
+            webView.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
+            webView.bottomAnchor.constraint(equalTo: guide.bottomAnchor).isActive = true
+            webView.topAnchor.constraint(equalTo: guide.topAnchor).isActive = true
+        } else {
+            NSLayoutConstraint(item: webView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
+            NSLayoutConstraint(item: webView, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
+            NSLayoutConstraint(item: webView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
+            NSLayoutConstraint(item: webView, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0).isActive = true
+        }
+        
         
         startAuthenticatingUser()
     }
@@ -46,9 +53,10 @@ class InstagramLoginViewController: UIViewController {
             }
         })
         
-        instagramClient.authorize(withCallbackURL: URL(string: OAuth2Swift.Constants.redirectUri)!, scope: OAuth2Swift.Constants.scope, state:"INSTAGRAM",
+        InstagramClient.shared.authorizeURLHandler = self
+        InstagramClient.shared.authorize(withCallbackURL: URL(string: InstagramClient.Constants.redirectUri)!, scope: InstagramClient.Constants.scope, state:"INSTAGRAM",
             success: { [weak welf = self] credential, response, parameters in
-                KeychainSwift().set(credential.oauthToken, forKey: OAuth2Swift.Constants.keychainInstagramTokenKey)
+                KeychainSwift().set(credential.oauthToken, forKey: InstagramClient.Constants.keychainInstagramTokenKey)
                 let instagramAssetPicker = AssetPickerCollectionViewController.instagramAssetPicker()
                 instagramAssetPicker.delegate = instagramAssetPicker
                 welf?.navigationController?.setViewControllers([instagramAssetPicker], animated: false)
@@ -67,7 +75,15 @@ extension InstagramLoginViewController: WKNavigationDelegate {
         guard let url = navigationAction.request.url else { decisionHandler(.allow); return }
         
         // Intercept the redirectUri. User has logged in successfully
-        guard !url.absoluteString.hasPrefix(OAuth2Swift.Constants.redirectUri) else {
+        guard !url.absoluteString.hasPrefix(InstagramClient.Constants.redirectUri) else {
+            
+            // Handle the case where the user has denied authorization after logging in
+            if url.absoluteString.contains("user_denied") {
+                decisionHandler(.cancel)
+                navigationController?.popViewController(animated: true)
+                return
+            }
+            
             webView.stopLoading()
             activityIndicatorView.stopAnimating()
             
