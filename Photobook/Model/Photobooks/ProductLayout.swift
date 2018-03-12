@@ -62,6 +62,10 @@ class ProductLayout: Codable {
         }
     }
     
+    var hasEmptyContent: Bool {
+        return (layout.imageLayoutBox != nil && asset == nil) || (layout.imageLayoutBox == nil && layout.textLayoutBox != nil && (text ?? "").isEmpty)
+    }
+    
     init(layout: Layout, productLayoutAsset: ProductLayoutAsset? = nil, productLayoutText: ProductLayoutText? = nil) {
         self.layout = layout
         self.productLayoutAsset = productLayoutAsset
