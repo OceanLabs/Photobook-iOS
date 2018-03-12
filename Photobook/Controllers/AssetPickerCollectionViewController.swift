@@ -354,7 +354,16 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
     
     func actionsForAssetCollectorViewControllerHiddenStateChange(_ assetCollectorViewController: AssetCollectorViewController, willChangeTo hidden: Bool) -> () -> () {
         return { [weak welf = self] in
-            welf?.collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: hidden ? 0 : assetCollectorViewController.viewHeight, right: 0)
+            let topInset: CGFloat
+            let bottomInset: CGFloat
+            if #available(iOS 11, *){
+                topInset = 0
+                bottomInset = hidden ? 0 : assetCollectorViewController.viewHeight
+            } else {
+                topInset =  welf?.navigationController?.navigationBar.frame.maxY ?? 0
+                bottomInset = assetCollectorViewController.view.frame.height - assetCollectorViewController.view.transform.ty
+            }
+            welf?.collectionView?.contentInset = UIEdgeInsets(top: topInset, left: 0, bottom: bottomInset, right: 0)
         }
     }
     
