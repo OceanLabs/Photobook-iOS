@@ -128,10 +128,9 @@ extension InstagramAlbum: Album {
         fetchAssets(url: Constants.instagramMediaBaseUrl, completionHandler: completionHandler)
     }
     
-    func loadNextBatchOfAssets() {
+    func loadNextBatchOfAssets(completionHandler: ((Error?) -> Void)?) {
         guard let url = nextUrl else { return }
-        nextUrl = nil
-        fetchAssets(url: url, completionHandler: nil)
+        fetchAssets(url: url, completionHandler: completionHandler)
     }
     
     func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {

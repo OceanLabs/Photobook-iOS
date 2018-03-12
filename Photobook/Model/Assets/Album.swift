@@ -18,7 +18,7 @@ protocol Album {
     var hasMoreAssetsToLoad: Bool { get }
     
     func loadAssets(completionHandler: ((_ error: Error?) -> Void)?)
-    func loadNextBatchOfAssets()
+    func loadNextBatchOfAssets(completionHandler: ((_ error: Error?) -> Void)?)
     func coverAsset(completionHandler: @escaping (_ asset: Asset?, _ error: Error?) -> Void)
     
 }

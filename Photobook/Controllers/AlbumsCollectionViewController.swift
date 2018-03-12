@@ -102,7 +102,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
         }
         
         // Adding assets: the album picker will be presented modally inside a navigation controller
-        if self.collectorMode == .adding, let navigationBar = self.navigationController?.navigationBar as? PhotobookNavigationBar {
+        if collectorMode == .adding, let navigationBar = navigationController?.navigationBar as? PhotobookNavigationBar {
             offsetTop = navigationBar.barHeight
         } else { // Browse tab
             offsetTop = navigationController!.navigationBar.frame.maxY

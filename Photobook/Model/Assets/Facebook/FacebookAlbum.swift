@@ -87,6 +87,8 @@ class FacebookAlbum {
                 let cursors = paging["cursors"] as? [String: Any],
                 let after = cursors["after"] as? String {
                 self.after = after
+            } else {
+                self.after = nil
             }
             
             // Call the completion handler only on the first request, subsequent requests will update the album
@@ -95,23 +97,20 @@ class FacebookAlbum {
             } else {
                 NotificationCenter.default.post(name: AssetsNotificationName.albumsWereUpdated, object: [AlbumChange(album: self, assetsRemoved: [], indexesRemoved: [], assetsAdded: newAssets)])
             }
-        
         })
     }
-
 }
 
 extension FacebookAlbum: Album {
-    
+
     func loadAssets(completionHandler: ((Error?) -> Void)?) {
         fetchAssets(graphPath: graphPath, completionHandler: completionHandler)
     }
     
-    func loadNextBatchOfAssets() {
+    func loadNextBatchOfAssets(completionHandler: ((Error?) -> Void)?) {
         guard let after = after else { return }
-        self.after = nil
         let graphPath = self.graphPath + "&after=\(after)"
-        fetchAssets(graphPath: graphPath, completionHandler: nil)
+        fetchAssets(graphPath: graphPath, completionHandler: completionHandler)
     }
     
     var hasMoreAssetsToLoad: Bool {
