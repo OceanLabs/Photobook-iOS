@@ -79,20 +79,6 @@ class AlbumsCollectionViewController: UICollectionViewController {
         }
     }
     
-    private func loadNextBatchOfAlbumsIfNeeded() {
-        guard albumManager.hasMoreAlbumsToLoad, let collectionView = collectionView else { return }
-        for cell in collectionView.visibleCells {
-            if cell.reuseIdentifier == Constants.loadingCellReuseIdentifier {
-                albumManager.loadNextBatchOfAlbums() { [weak welf = self] (error) in
-                    if let error = error {
-                        welf?.showErrorMessage(error: error, dismissAfter: Constants.timeToDismissMessages) {}
-                    }
-                }
-                break
-            }
-        }
-    }
-    
     private func showErrorMessage(error: Error, dismissAfter: TimeInterval? = nil, completion: (() -> Void)?) {
         let message: ErrorMessage
         let offsetTop: CGFloat
