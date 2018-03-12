@@ -26,6 +26,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     
     var albumManager: AlbumManager!
     private let selectedAssetsManager = SelectedAssetsManager()
+    private var accountManager: AccountClient?
     var collectorMode: AssetCollectorMode = .selecting
     weak var addingDelegate: AssetCollectorAddingDelegate?
     weak var assetPickerDelegate: AssetPickerCollectionViewControllerDelegate?
@@ -226,12 +227,48 @@ class AlbumsCollectionViewController: UICollectionViewController {
     
 }
 
+extension AlbumsCollectionViewController: LogoutHandler {
+    
+    func prepareToHandleLogout(accountManager: AccountClient) {
+        self.accountManager = accountManager
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Social/Logout", value: "Log Out", comment: "Button title for loggin out of social accounts, eg Facebook, Instagram"), style: .plain, target: self, action: #selector(confirmLogout))
+    }
+    
+    @objc private func confirmLogout() {
+        guard let accountManager = accountManager else { return }
+        let alertController = UIAlertController(title: NSLocalizedString("Social/LogoutConfirmationAlertTitle", value: "Log Out", comment: "Alert title asking the user to log out of social service eg Instagram/Facebook"), message: NSLocalizedString("Social/LogoutConfirmationAlertMessage", value: "Are you sure you want to log out of \(accountManager.serviceName)?", comment: "Alert message asking the user to log out of social service eg Instagram/Facebook"), preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Yes", value: "Yes", comment: "Affirmative button title for alert asking the user confirmation for an action"), style: .default, handler: { _ in
+            accountManager.logout()
+            self.popToLandingScreen()
+        }))
+        
+        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    func popToLandingScreen() {
+        guard let accountManager = accountManager else { return }
+        guard let viewController = self.storyboard?.instantiateViewController(withIdentifier: accountManager.serviceName + "LandingViewController") else { return }
+        self.navigationController?.setViewControllers([viewController, self], animated: false)
+        self.navigationController?.popViewController(animated: true)
+    }
+}
+
 extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
     // MARK: AssetCollectorViewControllerDelegate
     
     func actionsForAssetCollectorViewControllerHiddenStateChange(_ assetCollectorViewController: AssetCollectorViewController, willChangeTo hidden: Bool) -> () -> () {
         return { [weak welf = self] in
-            welf?.collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: hidden ? 0 : assetCollectorViewController.viewHeight, right: 0)
+            let topInset: CGFloat
+            let bottomInset: CGFloat
+            if #available(iOS 11, *){
+                topInset = 0
+                bottomInset = hidden ? 0 : assetCollectorViewController.viewHeight
+            } else {
+                topInset =  hidden ? (welf?.navigationController?.navigationBar.frame.maxY ?? 0) : 0
+                bottomInset = hidden ? assetCollectorViewController.view.frame.height - assetCollectorViewController.view.transform.ty : assetCollectorViewController.viewHeight
+            }
+            welf?.collectionView?.contentInset = UIEdgeInsets(top: topInset, left: 0, bottom: bottomInset, right: 0)
         }
     }
     

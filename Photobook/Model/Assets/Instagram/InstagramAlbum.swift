@@ -14,7 +14,6 @@ class InstagramAlbum {
     
     private struct Constants {
         static let instagramMediaBaseUrl = "https://api.instagram.com/v1/users/self/media/recent"
-        static let serviceName = "Instagram"
         static let pageSize = 100
     }
     
@@ -25,17 +24,8 @@ class InstagramAlbum {
         return nextUrl != nil
     }
     
-    private lazy var instagramClient: OAuth2Swift = {
-        let client = OAuth2Swift.instagramClient()
-        return client
-    }()
-    
-    init(authenticationHandler: OAuthSwiftURLHandlerType) {
-        instagramClient.authorizeURLHandler = authenticationHandler
-    }
-    
     func fetchAssets(url: String, completionHandler:((_ error: Error?)->())?) {
-        guard let token = KeychainSwift().get(OAuth2Swift.Constants.keychainInstagramTokenKey) else { return }
+        guard let token = KeychainSwift().get(InstagramClient.Constants.keychainInstagramTokenKey) else { return }
         
         var urlToLoad = url
         
@@ -44,8 +34,8 @@ class InstagramAlbum {
         }
         urlToLoad = "\(urlToLoad)&count=\(Constants.pageSize)"
         
-        instagramClient.startAuthorizedRequest(urlToLoad, method: .GET, parameters: [:], onTokenRenewal: { credential in
-            KeychainSwift().set(credential.oauthToken, forKey: OAuth2Swift.Constants.keychainInstagramTokenKey)
+        InstagramClient.shared.startAuthorizedRequest(urlToLoad, method: .GET, parameters: [:], onTokenRenewal: { credential in
+            KeychainSwift().set(credential.oauthToken, forKey: InstagramClient.Constants.keychainInstagramTokenKey)
         }, success: { response in
             guard let json = (try? JSONSerialization.jsonObject(with: response.data, options: [])) as? [String : Any],
             let pagination = json["pagination"] as? [String : Any],
@@ -54,7 +44,7 @@ class InstagramAlbum {
                 // Not worth showing an error if one of the later pagination requests fail
                 guard self.assets.isEmpty else { return }
                 
-                completionHandler?(ErrorUtils.genericRetryErrorMessage(message: CommonLocalizedStrings.serviceAccessError(serviceName: Constants.serviceName), action: { [weak welf = self] in
+                completionHandler?(ErrorUtils.genericRetryErrorMessage(message: CommonLocalizedStrings.serviceAccessError(serviceName: InstagramClient.Constants.serviceName), action: { [weak welf = self] in
                     welf?.fetchAssets(url: url, completionHandler: completionHandler)
                 }))
                 
@@ -109,7 +99,12 @@ class InstagramAlbum {
             // Not worth showing an error if one of the later pagination requests fail
             guard self.assets.isEmpty else { return }
             
-            let message = failure.underlyingError?.localizedDescription ?? CommonLocalizedStrings.serviceAccessError(serviceName: Constants.serviceName)
+            if ((failure.underlyingError as NSError?)?.userInfo["Response-Body"] as? String)?.contains("OAuthAccessTokenException") == true {
+                completionHandler?(AccountError.notLoggedIn)
+                return
+            }
+            
+            let message = failure.underlyingError?.localizedDescription ?? CommonLocalizedStrings.serviceAccessError(serviceName: InstagramClient.Constants.serviceName)
             completionHandler?(ErrorUtils.genericRetryErrorMessage(message: message, action: { [weak welf = self] in
                 welf?.fetchAssets(url: url, completionHandler: completionHandler)
             }))

@@ -469,6 +469,11 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBAction func tappedDoneButton(_ sender: UIBarButtonItem) {
         // If in the asset placement tool, go back to the previous tool
         if toolbarButtons[Tool.placeAsset.rawValue].isSelected {
+            // Check if the previous tool is the text editor. If so, select the first tool instead
+            let previousTool = Tool(rawValue: toolbarButtons.index(of: previouslySelectedButton)!)
+            if previousTool == .editText {
+                previouslySelectedButton = toolbarButtons.first!
+            }
             tappedToolButton(previouslySelectedButton)
             return
         }

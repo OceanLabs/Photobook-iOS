@@ -49,6 +49,7 @@ class PhotobookNavigationBar: UINavigationBar {
             effectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
             effectView.frame = CGRect(x: 0.0, y: effectViewY, width: bounds.width, height: barHeight)
             effectView.backgroundColor = UIColor(white: 1.0, alpha: 0.75)
+            effectView.isUserInteractionEnabled = false
             insertSubview(effectView, at: 0)
         }
         sendSubview(toBack: effectView)

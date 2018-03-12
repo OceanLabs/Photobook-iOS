@@ -88,7 +88,6 @@ class AssetCollectorViewController: UIViewController {
     public var isHidden: Bool = false {
         didSet {
             if oldValue != isHidden {
-                let actions = delegate?.actionsForAssetCollectorViewControllerHiddenStateChange(self, willChangeTo: isHidden)
                 viewHeight = isHidden ? 0 : viewHeightDefault
                 let duration: TimeInterval = isHideShowAnimated ? 0.2 : 0
                 let options = isHidden ? UIViewAnimationOptions.curveEaseIn : UIViewAnimationOptions.curveEaseOut
@@ -96,7 +95,7 @@ class AssetCollectorViewController: UIViewController {
                     self.topContainerView.alpha = self.isHidden ? 0 : 1
                     self.imageCollectionView.alpha = self.isHidden ? 0 : 1
                     self.adaptHeight()
-                    actions?()
+                    self.delegate?.actionsForAssetCollectorViewControllerHiddenStateChange(self, willChangeTo: self.isHidden)()
                 }, completion: nil)
             }
         }

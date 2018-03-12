@@ -18,7 +18,7 @@ class InstagramLandingViewController: UIViewController {
         super.viewDidLoad()
         
         // If we are logged in show the Instagram asset picker
-        if KeychainSwift().getData(OAuth2Swift.Constants.keychainInstagramTokenKey) != nil {
+        if KeychainSwift().getData(InstagramClient.Constants.keychainInstagramTokenKey) != nil {
             // Hide all views because this screen will be shown for a split second
             for view in view.subviews {
                 view.isHidden = true
