@@ -41,7 +41,6 @@ class InstagramAlbum {
             let pagination = json["pagination"] as? [String : Any],
             let data = json["data"] as? [[String : Any]]
             else {
-                // Not worth showing an error if one of the later pagination requests fail
                 completionHandler?(ErrorMessage(text: CommonLocalizedStrings.serviceAccessError(serviceName: InstagramClient.Constants.serviceName)))
                 return
             }

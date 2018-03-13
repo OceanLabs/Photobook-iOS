@@ -17,7 +17,6 @@ class AlbumsCollectionViewController: UICollectionViewController {
         static let timeToDismissMessages: TimeInterval = 3.0
     }
     
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     var assetCollectorController: AssetCollectorViewController!
     
     /// The height between the bottom of the image and bottom of the cell where the labels sit
@@ -63,13 +62,9 @@ class AlbumsCollectionViewController: UICollectionViewController {
     }
     
     func loadAlbums() {
-        guard albumManager.albums.count == 0 else { return }
-        
-        activityIndicator.startAnimating()
+        guard albumManager.albums.isEmpty else { return }
         
         albumManager.loadAlbums() { [weak welf = self] (error) in
-            welf?.activityIndicator.stopAnimating()
-            
             guard error == nil else {
                 welf?.showErrorMessage(error: error!) { welf?.loadAlbums() }
                 return
