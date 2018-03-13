@@ -13,9 +13,10 @@ class AlbumsCollectionViewController: UICollectionViewController {
     
     private struct Constants {
         static let loadingCellReuseIdentifier = "LoadingCell"
+        static let numberOfAlbumPlaceholders = 6
+        static let timeToDismissMessages: TimeInterval = 3.0
     }
     
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     var assetCollectorController: AssetCollectorViewController!
     
     /// The height between the bottom of the image and bottom of the cell where the labels sit
@@ -43,8 +44,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadAlbums()
-        
+
         navigationItem.title = albumManager.title
         
         // Setup the Image Collector Controller
@@ -61,38 +61,50 @@ class AlbumsCollectionViewController: UICollectionViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(albumsWereAdded(_:)), name: AssetsNotificationName.albumsWereAdded, object: nil)
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        loadNextBatchOfAlbumsIfNeeded()
-    }
-    
     func loadAlbums() {
-        albumManager.loadAlbums(completionHandler: { [weak welf = self] (error) in
-            if let errorMessage = error as? ActionableErrorMessage {
-                welf?.emptyScreenViewController.show(ErrorUtils.genericRetryErrorMessage(message: errorMessage.message, action: {
-                    errorMessage.buttonAction()
-                    if errorMessage.dismissErrorPromptAfterAction {
-                        welf?.emptyScreenViewController.hide()
-                    }
-                }))
+        guard albumManager.albums.isEmpty else { return }
+        
+        albumManager.loadAlbums() { [weak welf = self] (error) in
+            guard error == nil else {
+                welf?.showErrorMessage(error: error!) { welf?.loadAlbums() }
                 return
-            } else if let errorMessage = error as? ErrorMessage {
-                welf?.present(UIAlertController(errorMessage: errorMessage), animated: true, completion: nil)
             }
             
-            welf?.activityIndicator.stopAnimating()
             welf?.collectionView?.reloadData()
-        })
+        }
     }
     
-    private func loadNextBatchOfAlbumsIfNeeded() {
-        guard albumManager.hasMoreAlbumsToLoad, let collectionView = collectionView else { return }
-        for cell in collectionView.visibleCells {
-            if cell.reuseIdentifier == Constants.loadingCellReuseIdentifier {
-                albumManager.loadNextBatchOfAlbums()
-                break
+    private func showErrorMessage(error: Error, dismissAfter: TimeInterval? = nil, completion: (() -> Void)?) {
+        let message: ErrorMessage
+        let offsetTop: CGFloat
+        
+        // If the message requires an action, use the empty screen
+        if var errorMessage = error as? ActionableErrorMessage {
+            errorMessage.buttonAction = {
+                errorMessage.buttonAction()
+                if errorMessage.dismissErrorPromptAfterAction {
+                    self.emptyScreenViewController.hide()
+                }
             }
+            emptyScreenViewController.show(errorMessage)
+            return
+        }
+        
+        if let error = error as? ErrorMessage {
+            message = error
+        } else {
+            message = ErrorMessage(error)!
+        }
+        
+        // Adding assets: the album picker will be presented modally inside a navigation controller
+        if collectorMode == .adding, let navigationBar = navigationController?.navigationBar as? PhotobookNavigationBar {
+            offsetTop = navigationBar.barHeight
+        } else { // Browse tab
+            offsetTop = navigationController!.navigationBar.frame.maxY
+        }
+        
+        MessageBarViewController.show(message: message, parentViewController: self, offsetTop: offsetTop, centred: true, dismissAfter: dismissAfter) {
+            completion?()
         }
     }
     
@@ -103,7 +115,10 @@ class AlbumsCollectionViewController: UICollectionViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        loadAlbums()
+        
         // Refresh number of assets selected badges
+        guard albumManager.albums.count > 0 else { return }
         for cell in collectionView?.visibleCells ?? [] {
             guard let cell = cell as? AlbumCollectionViewCell,
             let indexPath = collectionView?.indexPath(for: cell)
@@ -260,7 +275,7 @@ extension AlbumsCollectionViewController{
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return albumManager.albums.count
+            return albumManager.albums.isEmpty ? Constants.numberOfAlbumPlaceholders : albumManager.albums.count
         case 1:
             return albumManager.hasMoreAlbumsToLoad ? 1 : 0
         default:
@@ -272,6 +287,13 @@ extension AlbumsCollectionViewController{
         switch indexPath.section {
         case 0:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumCollectionViewCell", for: indexPath) as? AlbumCollectionViewCell else { return UICollectionViewCell() }
+            
+            guard !albumManager.albums.isEmpty else {
+                cell.albumNameLabel.text = ""
+                cell.albumAssetsCountLabel.text = ""
+                cell.selectedCountLabel.isHidden = true
+                return cell
+            }
             
             let album = albumManager.albums[indexPath.item]
             cell.albumId = album.identifier
@@ -296,7 +318,11 @@ extension AlbumsCollectionViewController{
             
             return cell
         case 1:
-            return collectionView.dequeueReusableCell(withReuseIdentifier: Constants.loadingCellReuseIdentifier, for: indexPath)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.loadingCellReuseIdentifier, for: indexPath)
+            if let activityIndicator = cell.contentView.subviews.first as? UIActivityIndicatorView {
+                activityIndicator.startAnimating()
+            }
+            return cell
         default:
             return UICollectionViewCell()
         }
@@ -323,7 +349,34 @@ extension AlbumsCollectionViewController {
     // MARK: UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard albumManager.albums.count > 0 else { return }
         showAlbum(album: albumManager.albums[indexPath.item])
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard cell.reuseIdentifier == Constants.loadingCellReuseIdentifier else { return }
+        let previousAlbumCount = albumManager.albums.count
+        albumManager.loadNextBatchOfAlbums() { [weak welf = self] (error) in
+            guard let stelf = welf else { return }
+            if let error = error {
+                stelf.showErrorMessage(error: error, dismissAfter: 3.0) {}
+                return
+            }
+            
+            stelf.collectionView?.performBatchUpdates({
+                // Insert new albums
+                var indexPaths = [IndexPath]()
+                for i in previousAlbumCount ..< stelf.albumManager.albums.count {
+                    indexPaths.append(IndexPath(row: i, section: 0))
+                }                
+                stelf.collectionView?.insertItems(at: indexPaths)
+                
+                // Remove spinner cell if all albums have been loaded
+                if !stelf.albumManager.hasMoreAlbumsToLoad {
+                    stelf.collectionView?.deleteItems(at: [IndexPath(row: 0, section: 1)])
+                }
+            }, completion: nil)
+        }
     }
 }
 

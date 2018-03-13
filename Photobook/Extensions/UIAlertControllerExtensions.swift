@@ -11,7 +11,7 @@ import UIKit
 extension UIAlertController {
     
     convenience init(errorMessage: ErrorMessage) {
-        self.init(title: errorMessage.title, message: errorMessage.message, preferredStyle: .alert)
+        self.init(title: errorMessage.title, message: errorMessage.text, preferredStyle: .alert)
         addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
     }
     

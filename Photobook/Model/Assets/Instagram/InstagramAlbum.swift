@@ -41,13 +41,7 @@ class InstagramAlbum {
             let pagination = json["pagination"] as? [String : Any],
             let data = json["data"] as? [[String : Any]]
             else {
-                // Not worth showing an error if one of the later pagination requests fail
-                guard self.assets.isEmpty else { return }
-                
-                completionHandler?(ErrorUtils.genericRetryErrorMessage(message: CommonLocalizedStrings.serviceAccessError(serviceName: InstagramClient.Constants.serviceName), action: { [weak welf = self] in
-                    welf?.fetchAssets(url: url, completionHandler: completionHandler)
-                }))
-                
+                completionHandler?(ErrorMessage(text: CommonLocalizedStrings.serviceAccessError(serviceName: InstagramClient.Constants.serviceName)))
                 return
             }
             
@@ -87,14 +81,7 @@ class InstagramAlbum {
             
             self.assets.append(contentsOf: newAssets)
             
-            DispatchQueue.main.async {
-                // Call the completion handler only on the first request, subsequent requests will update the album
-                if let completionHandler = completionHandler {
-                    completionHandler(nil)
-                } else {
-                    NotificationCenter.default.post(name: AssetsNotificationName.albumsWereUpdated, object: [AlbumChange(album: self, assetsRemoved: [], indexesRemoved: [], assetsAdded: newAssets)])
-                }
-            }
+            completionHandler?(nil)
         }, failure: { failure in
             // Not worth showing an error if one of the later pagination requests fail
             guard self.assets.isEmpty else { return }
@@ -105,9 +92,7 @@ class InstagramAlbum {
             }
             
             let message = failure.underlyingError?.localizedDescription ?? CommonLocalizedStrings.serviceAccessError(serviceName: InstagramClient.Constants.serviceName)
-            completionHandler?(ErrorUtils.genericRetryErrorMessage(message: message, action: { [weak welf = self] in
-                welf?.fetchAssets(url: url, completionHandler: completionHandler)
-            }))
+            completionHandler?(ErrorMessage(text: message))
         })
         
     }
@@ -128,10 +113,9 @@ extension InstagramAlbum: Album {
         fetchAssets(url: Constants.instagramMediaBaseUrl, completionHandler: completionHandler)
     }
     
-    func loadNextBatchOfAssets() {
+    func loadNextBatchOfAssets(completionHandler: ((Error?) -> Void)?) {
         guard let url = nextUrl else { return }
-        nextUrl = nil
-        fetchAssets(url: url, completionHandler: nil)
+        fetchAssets(url: url, completionHandler: completionHandler)
     }
     
     func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {

@@ -52,7 +52,7 @@ class URLAsset: Asset {
         let sortingFunction: (URLAssetMetadata) -> Bool = size.width >= size.height ? { $0.size.width >= imageSize.width } : { $0.size.height >= imageSize.height }
         let metadata = self.metadata.first (where: sortingFunction) ?? self.metadata.last
         guard let url = metadata?.url else {
-            completionHandler(nil, ErrorMessage(message: CommonLocalizedStrings.somethingWentWrong))
+            completionHandler(nil, ErrorMessage(text: CommonLocalizedStrings.somethingWentWrong))
             return
         }
         
@@ -66,7 +66,7 @@ class URLAsset: Asset {
     
     func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension?, Error?) -> Void) {
         guard let url = metadata.last?.url else {
-            completionHandler(nil, nil, ErrorMessage(message: CommonLocalizedStrings.somethingWentWrong))
+            completionHandler(nil, nil, ErrorMessage(text: CommonLocalizedStrings.somethingWentWrong))
             return
         }
         

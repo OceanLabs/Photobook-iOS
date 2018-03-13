@@ -114,8 +114,6 @@ extension Story: Album {
         collectionForCoverPhoto.coverAsset(useFirstImageInCollection: true, completionHandler: completionHandler)
     }
     
-    func loadNextBatchOfAssets() {}
-    
-    
+    func loadNextBatchOfAssets(completionHandler: ((Error?) -> Void)?) {}
 }
 
