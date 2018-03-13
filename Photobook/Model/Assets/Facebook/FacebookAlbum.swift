@@ -53,8 +53,6 @@ class FacebookAlbum {
             
             guard let result = (result as? [String: Any]), let data = result["data"] as? [[String: Any]]
                 else {
-                    // Not worth showing an error if one of the later pagination requests fail
-                    guard self.assets.isEmpty else { return }
                     completionHandler?(ErrorMessage(text: CommonLocalizedStrings.serviceAccessError(serviceName: Constants.serviceName)))
                     return
             }
@@ -90,13 +88,8 @@ class FacebookAlbum {
             } else {
                 self.after = nil
             }
-            
-            // Call the completion handler only on the first request, subsequent requests will update the album
-            if let completionHandler = completionHandler {
-                completionHandler(nil)
-            } else {
-                NotificationCenter.default.post(name: AssetsNotificationName.albumsWereUpdated, object: [AlbumChange(album: self, assetsRemoved: [], indexesRemoved: [], assetsAdded: newAssets)])
-            }
+        
+            completionHandler?(nil)
         })
     }
 }

@@ -111,14 +111,15 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         }
 
         // If the message requires an action, use the empty screen
-        if var errorMessage = error as? ActionableErrorMessage {
-            errorMessage.buttonAction = {
+        if let errorMessage = error as? ActionableErrorMessage {
+            var errorCopy = errorMessage
+            errorCopy.buttonAction = {
                 errorMessage.buttonAction()
                 if errorMessage.dismissErrorPromptAfterAction {
                     self.emptyScreenViewController.hide()
                 }
             }
-            emptyScreenViewController.show(errorMessage)
+            emptyScreenViewController.show(errorCopy)
             return
         }
         
