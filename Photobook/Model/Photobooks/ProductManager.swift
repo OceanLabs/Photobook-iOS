@@ -503,7 +503,7 @@ extension ProductManager: PhotobookAPIManagerDelegate {
                 NotificationCenter.default.post(name: ProductManager.failedPhotobookUpload, object: nil) //not resolvable
             }
         } else if let _ = error as? APIClientError {
-            // Connection / server errors are handled by the system. This can only be a parsing error.
+            // Connection / server errors or parsing error
             print("ProductManager: could not parse upload response")
             NotificationCenter.default.post(name: ProductManager.shouldRetryUploadingImages, object: nil) //resolvable
         }

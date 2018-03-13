@@ -104,7 +104,7 @@ class OrderManager {
     
     func saveBackup() {
         guard let detailsData = try? PropertyListEncoder().encode(deliveryDetails),
-            let cost = validCost else { return }
+            let cost = cachedCost else { return }
         
         UserDefaults.standard.set(detailsData, forKey: Constants.savedOrderDetailsKey)
         UserDefaults.standard.set(NSKeyedArchiver.archivedData(withRootObject: cost), forKey: Constants.savedCostKey)

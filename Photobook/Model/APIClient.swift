@@ -378,12 +378,18 @@ class APIClient: NSObject {
     }
     
     func cancelBackgroundTasks(_ completion: @escaping () -> Void) {
-        backgroundUrlSession.getAllTasks { (tasks) in
+        backgroundUrlSession.getTasksWithCompletionHandler { (tasks, uploadTasks, downloadTasks) in
             for task in tasks {
                 task.cancel()
             }
             completion()
         }
+        /*backgroundUrlSession.getAllTasks { (tasks) in
+            for task in tasks {
+                task.cancel()
+            }
+            completion()
+        }*/
     }
 }
 

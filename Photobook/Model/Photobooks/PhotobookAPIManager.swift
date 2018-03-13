@@ -217,7 +217,7 @@ class PhotobookAPIManager {
 
             asset.imageData(progressHandler: nil, completionHandler: { [weak welf = self] data, fileExtension, error in
                 guard error == nil, let data = data, let fileExtension = fileExtension else {
-                    welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImageData)
+                    welf?.delegate?.didFailUpload(PhotobookAPIError.missingPhotobookInfo)
                     return
                 }
                 

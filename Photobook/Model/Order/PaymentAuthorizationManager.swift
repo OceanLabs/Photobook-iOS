@@ -195,6 +195,7 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
             }
             
             self.delegate?.paymentAuthorizationDidFinish(token: token?.tokenId, error: nil, completionHandler: completion)
+            completion(.success)
         })
     }
     

@@ -15,14 +15,24 @@ class ReceiptInfoTableViewCell: UITableViewCell {
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
-    @IBOutlet weak var actionButton: UIButton!
+    @IBOutlet weak var actionButtonContainerView: UIView!
+    @IBOutlet weak var primaryActionButton: UIButton!
+    @IBOutlet weak var secondaryActionButton: UIButton!
     
-    @IBOutlet weak var showingButtonConstraint: NSLayoutConstraint!
-    @IBOutlet weak var hiddenButtonConstraint: NSLayoutConstraint!
+    @IBOutlet weak var showActionButtonsConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideActionButtonsConstraint: NSLayoutConstraint!
+    @IBOutlet weak var showSecondaryActionButtonConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideSecondaryActionButtonConstraint: NSLayoutConstraint!
     
-    func setActionButtonHidden(_ hidden:Bool) {
-        actionButton.isHidden = hidden
-        showingButtonConstraint.priority = hidden ? .defaultLow : .defaultHigh
-        hiddenButtonConstraint.priority = hidden ? .defaultHigh : .defaultLow
+    func setSecondaryActionButtonHidden(_ hidden:Bool) {
+        secondaryActionButton.isHidden = hidden
+        showSecondaryActionButtonConstraint.priority = hidden ? .defaultLow : .defaultHigh
+        hideSecondaryActionButtonConstraint.priority = hidden ? .defaultHigh : .defaultLow
+    }
+    
+    func setActionButtonsHidden(_ hidden:Bool) {
+        actionButtonContainerView.isHidden = hidden
+        showActionButtonsConstraint.priority = hidden ? .defaultLow : .defaultHigh
+        hideActionButtonsConstraint.priority = hidden ? .defaultHigh : .defaultLow
     }
 }

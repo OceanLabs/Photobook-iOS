@@ -77,6 +77,12 @@ class PhotosAsset: Asset {
     }
     
     func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension?, Error?) -> Void) {
+        
+        if photosAsset.mediaType != .image {
+            completionHandler(nil, nil, NSError())
+            return
+        }
+        
         let options = PHImageRequestOptions()
         options.isNetworkAccessAllowed = true
         
