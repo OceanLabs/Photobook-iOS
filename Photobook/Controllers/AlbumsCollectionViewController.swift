@@ -280,7 +280,7 @@ extension AlbumsCollectionViewController{
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return albumManager.albums.isEmpty ? albumManager.albums.count : Constants.numberOfAlbumPlaceholders
+            return albumManager.albums.isEmpty ? Constants.numberOfAlbumPlaceholders : albumManager.albums.count
         case 1:
             return albumManager.hasMoreAlbumsToLoad ? 1 : 0
         default:
