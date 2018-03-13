@@ -196,7 +196,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             }))
         }
         
-        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .default, handler: nil))
+        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
         
         present(alertController, animated: true, completion: nil)
     }
