@@ -170,6 +170,12 @@ class AssetCollectorViewController: UIViewController {
         }
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.imageCollectionView.collectionViewLayout.invalidateLayout()
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
