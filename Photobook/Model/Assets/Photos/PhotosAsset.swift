@@ -65,7 +65,6 @@ class PhotosAsset: Asset {
     func image(size: CGSize, loadThumbnailsFirst: Bool = true, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
         
         // Request the image at the correct aspect ratio
-        
         var imageSize = self.size.resizeAspectFill(size)
         
         let options = PHImageRequestOptions()
