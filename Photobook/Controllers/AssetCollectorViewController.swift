@@ -125,9 +125,9 @@ class AssetCollectorViewController: UIViewController {
     public static func instance(fromStoryboardWithParent parent: UIViewController, selectedAssetsManager: SelectedAssetsManager, delayAppearance: Bool = false) -> AssetCollectorViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "AssetCollectorViewController") as! AssetCollectorViewController
+        vc.selectedAssetsManager = selectedAssetsManager
         vc.delayAppearance = delayAppearance
         vc.parentController = parent
-        vc.selectedAssetsManager = selectedAssetsManager
         
         return vc
     }
