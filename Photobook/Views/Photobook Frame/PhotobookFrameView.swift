@@ -97,8 +97,6 @@ class PhotobookFrameView: UIView {
         layer.shadowOffset = PhotobookConstants.shadowOffset
         layer.shadowRadius = PhotobookConstants.shadowRadius
         layer.masksToBounds = false
-        layer.shouldRasterize = true
-        layer.rasterizationScale = UIScreen.main.scale
     }
     
     override func layoutSubviews() {
@@ -136,19 +134,29 @@ class PhotobookFrameView: UIView {
     
     func resetPageColor() {
         setPageColor()
-        coverView.setNeedsDisplay()
-        spreadBackgroundView.setNeedsDisplay()
         if leftPagesBehindView != nil { leftPagesBehindView!.setNeedsDisplay() }
         if rightPagesBehindView != nil { rightPagesBehindView!.setNeedsDisplay() }
-        leftPageBackgroundView.setNeedsDisplay()
-        rightPageBackgroundView.setNeedsDisplay()
     }
 }
 
 // Internal class representing the inside of a cover in an open photobook. Please use PhotobookFrameView instead.
 class PhotobookFrameCoverView: UIView {
 
-    var color: ProductColor = .white
+    var color: ProductColor = .white {
+        didSet {
+            switch color {
+            case .white:
+                layer.borderWidth = PhotobookConstants.borderWidth
+                layer.borderColor = ColorConstants.White.color1
+                
+                backgroundColor = ColorConstants.White.color2
+            case .black:
+                layer.borderWidth = 0.0
+                
+                backgroundColor = ColorConstants.Black.color1
+            }
+        }
+    }
     
     override init(frame: CGRect) {
         fatalError("Not to be used programmatically. Please use PhotobookFrameView instead.")
@@ -159,36 +167,6 @@ class PhotobookFrameCoverView: UIView {
         
         layer.cornerRadius = PhotobookConstants.cornerRadius
         layer.masksToBounds = true
-        layer.shouldRasterize = true
-        layer.rasterizationScale = UIScreen.main.scale
-    }
-    
-    override func draw(_ rect: CGRect) {
-        guard let context = UIGraphicsGetCurrentContext() else { return }
-        
-        let shineColor: CGColor
-        
-        switch color {
-        case .white:
-            layer.borderWidth = PhotobookConstants.borderWidth
-            layer.borderColor = ColorConstants.White.color1
-
-            ColorConstants.White.color2.setFill()
-            shineColor = UIColor.white.cgColor
-        case .black:
-            layer.borderWidth = 0.0
-            
-            ColorConstants.Black.color1.setFill()
-            shineColor = ColorConstants.Black.color2
-        }
-        context.fill(rect)
-        
-        // Left shine effect
-        context.setStrokeColor(shineColor)
-        context.setLineWidth(1.0)
-        context.move(to: CGPoint(x: 1.5, y: 0.0))
-        context.addLine(to: CGPoint(x: 1.5, y: rect.maxY))
-        context.strokePath()
     }
 }
 
@@ -206,35 +184,11 @@ class PhotobookFrameSpreadBackgroundView: UIView {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        layer.shadowRadius = 1.0
+        layer.shadowOpacity = 0.2
+        layer.shadowOffset = CGSize(width: 0.0, height: 1.0)
         layer.shouldRasterize = true
         layer.rasterizationScale = UIScreen.main.scale
-    }
-    
-    override func draw(_ rect: CGRect) {
-        guard let context = UIGraphicsGetCurrentContext() else { return }
-        
-        let topLineColor: CGColor
-        
-        switch color {
-        case .white:
-            topLineColor = ColorConstants.White.color3
-        case .black:
-            topLineColor = ColorConstants.Black.color3
-        }
-        context.fill(rect)
-        
-        // Top line
-        context.setStrokeColor(topLineColor)
-        context.setLineWidth(0.5)
-        context.move(to: .zero)
-        context.addLine(to: CGPoint(x: rect.maxX, y: 0.0))
-        context.strokePath()
-    }
-    
-    override func layoutSubviews() {
-        layer.shadowOpacity = 0.2
-        layer.shadowRadius = 1.0
-        layer.shadowOffset = CGSize(width: 0.0, height: 1.0)
     }
 }
 
@@ -242,7 +196,22 @@ class PhotobookFrameSpreadBackgroundView: UIView {
 class PhotobookFramePageBackgroundView: UIView {
 
     var pageSide = PageSide.left
-    var color: ProductColor = .white
+    var color: ProductColor = .white {
+        didSet {
+            switch color {
+            case .white:
+                gradientLayer.colors = [ UIColor.white.cgColor, ColorConstants.White.color4 ]
+            case .black:
+                gradientLayer.colors = [ ColorConstants.Black.color4.cgColor, ColorConstants.Black.color5 ]
+            }
+        }
+    }
+    private var gradientLayer: CAGradientLayer = {
+        let aLayer = CAGradientLayer()
+        aLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+        aLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+        return aLayer
+    }()
     
     override init(frame: CGRect) {
         fatalError("Not to be used programmatically. Please use PhotobookFrameView instead.")
@@ -250,38 +219,11 @@ class PhotobookFramePageBackgroundView: UIView {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        layer.shouldRasterize = true
-        layer.rasterizationScale = UIScreen.main.scale
+        layer.addSublayer(gradientLayer)
     }
 
-    override func draw(_ rect: CGRect) {
-        guard let context = UIGraphicsGetCurrentContext() else { return }
-        
-        let gradientColors: [CGColor]
-        let topLineColor: CGColor
-        
-        switch color {
-        case .white:
-            UIColor.white.setFill()
-            gradientColors = [ UIColor.white.cgColor, UIColor.white.cgColor, ColorConstants.White.color4 ]
-            topLineColor = ColorConstants.White.color3
-        case .black:
-            ColorConstants.Black.color4.setFill()
-            gradientColors = [ ColorConstants.Black.color4.cgColor, ColorConstants.Black.color4.cgColor, ColorConstants.Black.color5 ]
-            topLineColor = ColorConstants.Black.color3
-        }
-        context.fill(rect)
-        
-        let locations: [CGFloat] = [ 0.0, 0.5, 1.0 ]
-        let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: gradientColors as CFArray, locations: locations)
-        context.drawLinearGradient(gradient!, start: .zero, end: CGPoint(x: rect.maxX, y: 0.0), options: CGGradientDrawingOptions(rawValue: 0))
-        
-        // Top line
-        context.setStrokeColor(topLineColor)
-        context.setLineWidth(0.5)
-        context.move(to: .zero)
-        context.addLine(to: CGPoint(x: rect.maxX, y: 0.0))
-        context.strokePath()
+    override func layoutSubviews() {
+        gradientLayer.frame = bounds
     }
 }
 
@@ -297,8 +239,6 @@ class PhotobookFramePagesBehindView: UIView {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        layer.shouldRasterize = true
-        layer.rasterizationScale = UIScreen.main.scale
     }
     
     override func draw(_ rect: CGRect) {
