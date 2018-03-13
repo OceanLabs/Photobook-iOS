@@ -25,6 +25,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     weak var delegate: AssetPickerCollectionViewControllerDelegate?
     private var previousPreheatRect = CGRect.zero
     var selectedAssetsManager: SelectedAssetsManager?
+    private var accountManager: AccountClient?
     private var assetCollectorController: AssetCollectorViewController!
     var delayCollectorAppearance = false
     static let coverAspectRatio: CGFloat = 2.723684211
@@ -70,6 +71,12 @@ class AssetPickerCollectionViewController: UICollectionViewController {
                     return
                 } else if let errorMessage = error as? ErrorMessage {
                     welf?.present(UIAlertController(errorMessage: errorMessage), animated: true, completion: nil)
+                } else if let error = error as? AccountError {
+                    switch error {
+                    case .notLoggedIn:
+                        self.accountManager?.logout()
+                        self.popToLandingScreen()
+                    }
                 }
                 
                 welf?.collectionView?.reloadData()
@@ -314,12 +321,49 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     
 }
 
+extension AssetPickerCollectionViewController: LogoutHandler {
+    
+    func prepareToHandleLogout(accountManager: AccountClient) {
+        self.accountManager = accountManager
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Social/Logout", value: "Log Out", comment: "Button title for loggin out of social accounts, eg Facebook, Instagram"), style: .plain, target: self, action: #selector(confirmLogout))
+    }
+    
+    @objc private func confirmLogout() {
+        guard let accountManager = accountManager else { return }
+        let alertController = UIAlertController(title: NSLocalizedString("Social/LogoutConfirmationAlertTitle", value: "Log Out", comment: "Alert title asking the user to log out of social service eg Instagram/Facebook"), message: NSLocalizedString("Social/LogoutConfirmationAlertMessage", value: "Are you sure you want to log out of \(accountManager.serviceName)?", comment: "Alert message asking the user to log out of social service eg Instagram/Facebook"), preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Yes", value: "Yes", comment: "Affirmative button title for alert asking the user confirmation for an action"), style: .default, handler: { _ in
+            accountManager.logout()
+            self.popToLandingScreen()
+        }))
+        
+        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    func popToLandingScreen() {
+        guard let accountManager = accountManager else { return }
+        guard let viewController = self.storyboard?.instantiateViewController(withIdentifier: accountManager.serviceName + "LandingViewController") else { return }
+        self.navigationController?.setViewControllers([viewController, self], animated: false)
+        self.navigationController?.popViewController(animated: true)
+    }
+}
+
+
 extension AssetPickerCollectionViewController: AssetCollectorViewControllerDelegate {
     // MARK: AssetCollectorViewControllerDelegate
     
     func actionsForAssetCollectorViewControllerHiddenStateChange(_ assetCollectorViewController: AssetCollectorViewController, willChangeTo hidden: Bool) -> () -> () {
         return { [weak welf = self] in
-            welf?.collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: hidden ? 0 : assetCollectorViewController.viewHeight, right: 0)
+            let topInset: CGFloat
+            let bottomInset: CGFloat
+            if #available(iOS 11, *){
+                topInset = 0
+                bottomInset = hidden ? 0 : assetCollectorViewController.viewHeight
+            } else {
+                topInset =  welf?.navigationController?.navigationBar.frame.maxY ?? 0
+                bottomInset = assetCollectorViewController.view.frame.height - assetCollectorViewController.view.transform.ty
+            }
+            welf?.collectionView?.contentInset = UIEdgeInsets(top: topInset, left: 0, bottom: bottomInset, right: 0)
         }
     }
     

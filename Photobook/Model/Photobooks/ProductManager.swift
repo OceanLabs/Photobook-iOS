@@ -106,7 +106,22 @@ class ProductManager {
         return minimumRequiredAssets < productLayouts.count
     }
     var hasLayoutWithoutAsset: Bool {
-        return productLayouts.first { $0.layout.imageLayoutBox != nil && $0.productLayoutAsset?.asset == nil } != nil
+        return productLayouts.first { $0.hasEmptyContent } != nil
+    }
+    var emptyLayoutIndices: [Int] {
+        var temp = [Int]()
+        var index = 0
+        for productLayout in productLayouts {
+            if productLayout.hasEmptyContent {
+                temp.append(index)
+                if productLayout.layout.isDoubleLayout {
+                    index += 1
+                    temp.append(index)
+                }
+            }
+            index += 1
+        }
+        return temp
     }
     
     //upload

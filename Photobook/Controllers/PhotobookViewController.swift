@@ -11,7 +11,7 @@ import UIKit
 class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate {
     
     private struct Constants {
-        static let rearrageScale: CGFloat = 0.8
+        static let rearrangeScale: CGFloat = 0.8
         static let cellSideMargin: CGFloat = 10.0
         static let rearrangeAnimationDuration: TimeInterval = 0.25
         static let dragLiftScale: CGFloat = 1.1
@@ -25,13 +25,16 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         static let rearrangeGreyColor = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1.0)
     }
     private var reverseRearrangeScale: CGFloat {
-        return 1 + (1 - Constants.rearrageScale) / Constants.rearrageScale
+        return 1 + (1 - Constants.rearrangeScale) / Constants.rearrangeScale
     }
 
     @IBOutlet weak var collectionViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var collectionViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var collectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var collectionViewBottomConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var ctaContainerBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var ctaButton: UIButton!
     
     @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var ctaButtonContainer: UIView!
@@ -83,6 +86,14 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         setup(with: photobook)
         
         backButton.setTitleColor(navigationController?.navigationBar.tintColor, for: .normal)
+        
+        if #available(iOS 11, *) {
+        } else {
+            let constant = ctaContainerBottomConstraint.constant
+            ctaContainerBottomConstraint.isActive = false
+            ctaContainerBottomConstraint = NSLayoutConstraint(item: view, attribute: .bottom, relatedBy: .equal, toItem: ctaButton, attribute: .bottom, multiplier: 1, constant: constant)
+            ctaContainerBottomConstraint.isActive = true
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -103,9 +114,19 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         let bottomInset = isRearranging ? ctaButtonContainer.frame.size.height * reverseRearrangeScale - insets.bottom : ctaButtonContainer.frame.size.height - insets.bottom - collectionViewBottomConstraint.constant
         
-        let topInset = isRearranging ? (navigationController?.navigationBar.frame.maxY ?? 0) * (1 - Constants.rearrageScale) : 0
+        let normalTopInset: CGFloat
+        let multiplier: CGFloat
+        if #available(iOS 11, *) {
+            normalTopInset = 0
+            multiplier = 1 - Constants.rearrangeScale
+        } else {
+            normalTopInset = navigationController?.navigationBar.frame.maxY ?? 0
+            multiplier = 1 + Constants.rearrangeScale
+        }
+        
+        let rearrangingTopInset = (navigationController?.navigationBar.frame.maxY ?? 0) * multiplier
                 
-        collectionView.contentInset = UIEdgeInsets(top: topInset, left: collectionView.contentInset.left, bottom: bottomInset, right: collectionView.contentInset.right)
+        collectionView.contentInset = UIEdgeInsets(top: isRearranging ? rearrangingTopInset : normalTopInset, left: collectionView.contentInset.left, bottom: bottomInset, right: collectionView.contentInset.right)
         collectionView.scrollIndicatorInsets = collectionView.contentInset
     }
     
@@ -196,7 +217,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         if isRearranging {
             UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
                 interactiveCellClosure(true)
-                self.collectionView.transform = CGAffineTransform(translationX: 0, y: -self.collectionView.frame.size.height * (1.0-Constants.rearrageScale)/2.0).scaledBy(x: Constants.rearrageScale, y: Constants.rearrageScale)
+                self.collectionView.transform = CGAffineTransform(translationX: 0, y: -self.collectionView.frame.size.height * (1.0-Constants.rearrangeScale)/2.0).scaledBy(x: Constants.rearrangeScale, y: Constants.rearrangeScale)
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
             }, completion: nil)
@@ -228,15 +249,42 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBAction func didTapCheckout(_ sender: Any) {
         guard draggingView == nil else { return }
         
+        let goToCheckout = {
+            let orderSummaryViewController = self.storyboard?.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
+            self.navigationController?.pushViewController(orderSummaryViewController, animated: true)
+        }
+        
         guard !ProductManager.shared.hasLayoutWithoutAsset else {
-            let alertController = UIAlertController(title: NSLocalizedString("Photobook/MissingAssetsTitle", value: "Missing Photos", comment: "Alert title informing the user that at least one page is missing a photo"), message: NSLocalizedString("Photobook/MissingAssetsMessage", value: "At least one of your pages has an empty photo frame. Please edit the page by tapping on it and pick a photo from your selection.", comment: "Alert message informing the user that at least one page is missing a photo"), preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
+            var indices = ProductManager.shared.emptyLayoutIndices
+            var pageList = ""
+            var message = ""
+            
+            if indices.first == 0 {
+                message = NSLocalizedString("Photobook/MissingAssetsCover", value: "The cover is blank.", comment: "")
+                indices.removeFirst()
+                if indices.count > 0 { message += " " }
+            }
+            for index in indices {
+                if !pageList.isEmpty { pageList += ", " }
+                pageList += String(index)
+            }
+            
+            if !pageList.isEmpty {
+                if indices.count == 1 {
+                    message += String(format: NSLocalizedString("Photobook/MissingAssetsMessageOnePage", value: "Page %@ is blank.", comment: "Alert message informing the user that they have one blank page"), pageList)
+                } else {
+                    message += String(format: NSLocalizedString("Photobook/MissingAssetsMessageMultiplePages", value: "Pages %@ are blank.", comment: "Alert message informing the user that they have multiple blank pages"), pageList)
+                }
+            }
+            let alertController = UIAlertController(title: NSLocalizedString("Photobook/MissingAssetsTitle", value: "Continue to checkout?", comment: "Alert title informing the user that they have blank pages"), message: message, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .default, handler: nil))
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default) { _ in
+                goToCheckout()
+            })
             present(alertController, animated: true, completion: nil)
             return
         }
-        
-        let orderSummaryViewController = self.storyboard?.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
-        self.navigationController?.pushViewController(orderSummaryViewController, animated: true)
+        goToCheckout()
     }
         
     @IBAction func didTapBack() {
@@ -463,7 +511,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         UIView.animate(withDuration: Constants.dropAnimationDuration, delay: 0, options: .curveEaseInOut, animations: {
             draggingView.transform = CGAffineTransform(translationX: draggingView.transform.tx, y: draggingView.transform.ty)
-            draggingView.frame.origin = CGPoint(x: self.collectionView.frame.origin.x + Constants.cellSideMargin * Constants.rearrageScale, y: destinationY)
+            draggingView.frame.origin = CGPoint(x: self.collectionView.frame.origin.x + Constants.cellSideMargin * Constants.rearrangeScale, y: destinationY)
             draggingView.layer.shadowRadius = 0
             draggingView.layer.shadowOpacity = 0
         }, completion: { _ in
