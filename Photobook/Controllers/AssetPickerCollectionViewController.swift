@@ -149,12 +149,6 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         loadAssets()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        updateCachedAssets()
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
