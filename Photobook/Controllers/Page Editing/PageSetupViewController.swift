@@ -406,6 +406,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         layoutSelectionViewController.selectedLayout = productLayout!.layout
         layoutSelectionViewController.coverColor = ProductManager.shared.coverColor
         layoutSelectionViewController.pageColor = ProductManager.shared.pageColor
+        layoutSelectionViewController.isEditingDoubleLayout = productLayout!.layout.isDoubleLayout
     }
     
     private func setupColorSelection() {

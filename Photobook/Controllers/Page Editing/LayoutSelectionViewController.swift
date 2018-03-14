@@ -9,9 +9,7 @@
 import UIKit
 
 protocol LayoutSelectionDelegate: class {
-    
     func didSelectLayout(_ layout: Layout)
-    
 }
 
 class LayoutSelectionViewController: UIViewController {
@@ -82,7 +80,7 @@ class LayoutSelectionViewController: UIViewController {
             collectionView.scrollToItem(at: IndexPath(row: selectedLayoutIndex, section: 0), at: .centeredHorizontally, animated: true)
         }
     }
-    
+    var isEditingDoubleLayout = false
     weak var delegate: LayoutSelectionDelegate?
 }
 
@@ -120,6 +118,7 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
         cell.isBorderVisible = (indexPath.row == selectedLayoutIndex)
         cell.coverColor = coverColor
         cell.pageColor = pageColor
+        cell.isEditingDoubleLayout = isEditingDoubleLayout
         cell.setupLayout()
 
         return cell
