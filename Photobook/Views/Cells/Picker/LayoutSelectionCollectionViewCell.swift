@@ -33,6 +33,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     var pageIndex: Int?
     var coverColor: ProductColor!
     var pageColor: ProductColor!
+    var isEditingDoubleLayout = false // True if the original layout was a double page
     
     private var pageView: PhotobookPageView! {
         guard let pageType = pageType else { return nil }
@@ -122,7 +123,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         pageView.setupTextBox(mode: .linesPlaceholder)
         
         // Setup the opposite layout if necessary
-        if !layout.isDoubleLayout && (pageType == .left || pageType == .right) {
+        if !layout.isDoubleLayout && !isEditingDoubleLayout && (pageType == .left || pageType == .right) {
             let oppositeIndex = pageIndex + (pageType == .left ? 1 : -1)
             oppositePageView!.pageIndex = oppositeIndex
             oppositePageView!.productLayout = ProductManager.shared.productLayouts[oppositeIndex].shallowCopy()
