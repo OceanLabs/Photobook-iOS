@@ -428,7 +428,7 @@ extension AssetPickerCollectionViewController {
         case 0:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AssetPickerCollectionViewCell", for: indexPath) as? AssetPickerCollectionViewCell else { return UICollectionViewCell() }
             
-            guard !album.assets.isEmpty else { return cell }
+            guard indexPath.item < album.assets.count else { return cell }
                 
             let asset = album.assets[indexPath.item]
             cell.assetId = asset.identifier
@@ -512,7 +512,7 @@ extension AssetPickerCollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.section == 0, !album.assets.isEmpty, let cell = cell as? AssetPickerCollectionViewCell {
+        if indexPath.section == 0, indexPath.item < album.assets.count, let cell = cell as? AssetPickerCollectionViewCell {
             updateSelectedStatus(cell: cell, indexPath: indexPath, asset: album.assets[indexPath.item])
             return
         }
