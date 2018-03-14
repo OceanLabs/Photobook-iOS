@@ -478,8 +478,6 @@
                                             <outlet property="rightPageBackgroundView" destination="IJ7-bZ-Y37" id="QkE-qz-FSM"/>
                                             <outlet property="rightPageView" destination="Ext-3a-SVs" id="FYy-NG-47e"/>
                                             <outlet property="rightPagesBehindView" destination="Zfa-gp-SpN" id="CVx-Fs-8Ki"/>
-                                            <outlet property="spreadBackgroundLeadingConstraint" destination="kHM-sS-QKk" id="g0H-qK-mal"/>
-                                            <outlet property="spreadBackgroundTrailingConstraint" destination="4aO-Rs-t7g" id="4xz-FS-RUM"/>
                                             <outlet property="spreadBackgroundView" destination="7yw-nf-eJr" id="IS0-dm-zj4"/>
                                             <outlet property="widthConstraint" destination="tUn-3u-UJK" id="3s4-3l-KBd"/>
                                         </connections>
@@ -769,8 +767,6 @@
                                                                 <outlet property="pageDividerView" destination="kCn-Ht-0Ja" id="KJr-Lz-pQa"/>
                                                                 <outlet property="rightPageBackgroundView" destination="dNZ-05-dgZ" id="XgK-wH-Eoi"/>
                                                                 <outlet property="rightPageView" destination="qiS-EF-1C4" id="jLf-Hd-2mk"/>
-                                                                <outlet property="spreadBackgroundLeadingConstraint" destination="Ssr-nG-HCq" id="Ipg-sS-SKl"/>
-                                                                <outlet property="spreadBackgroundTrailingConstraint" destination="OJK-p7-0gf" id="OYa-Pj-wwc"/>
                                                                 <outlet property="spreadBackgroundView" destination="UQ5-Ef-1Lx" id="ExK-No-Eod"/>
                                                                 <outlet property="widthConstraint" destination="Edy-zb-B1U" id="sE1-k7-UVq"/>
                                                             </connections>
@@ -2384,8 +2380,6 @@
                                                         <outlet property="rightPageBackgroundView" destination="j1z-u2-5I8" id="6f3-F8-vS6"/>
                                                         <outlet property="rightPageView" destination="7Bf-Wz-wqA" id="DSR-xJ-CrG"/>
                                                         <outlet property="rightPagesBehindView" destination="4Z1-jm-uVB" id="cQg-S9-oOE"/>
-                                                        <outlet property="spreadBackgroundLeadingConstraint" destination="lAR-x5-d4S" id="ePa-fM-RLR"/>
-                                                        <outlet property="spreadBackgroundTrailingConstraint" destination="tDa-aG-Tsj" id="kki-sz-U6w"/>
                                                         <outlet property="spreadBackgroundView" destination="TZQ-n4-cxl" id="q5i-1H-0jp"/>
                                                         <outlet property="widthConstraint" destination="PF9-ZE-BgX" id="dPo-uG-pbt"/>
                                                     </connections>
