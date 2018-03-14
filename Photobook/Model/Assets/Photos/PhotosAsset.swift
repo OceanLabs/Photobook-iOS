@@ -52,7 +52,7 @@ class PhotosAsset: Asset {
 
     var size: CGSize { return CGSize(width: photosAsset.pixelWidth, height: photosAsset.pixelHeight) }
     var isLandscape: Bool {
-        return self.size.width > self.size.height
+        return size.width > size.height
     }
     var uploadUrl: String?
     
@@ -63,12 +63,17 @@ class PhotosAsset: Asset {
     }
     
     func image(size: CGSize, loadThumbnailsFirst: Bool = true, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
+        
+        // Request the image at the correct aspect ratio
+        var imageSize = self.size.resizeAspectFill(size)
+        
         let options = PHImageRequestOptions()
         options.deliveryMode = loadThumbnailsFirst ? .opportunistic : .highQualityFormat
         options.isNetworkAccessAllowed = true
+        options.resizeMode = .exact
         
         // Convert points to pixels
-        let imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())
+        imageSize = CGSize(width: imageSize.width * UIScreen.main.usableScreenScale(), height: imageSize.height * UIScreen.main.usableScreenScale())
         PHImageManager.default().requestImage(for: photosAsset, targetSize: imageSize, contentMode: .aspectFill, options: options) { (image, _) in
             DispatchQueue.main.async {
                 completionHandler(image, nil)

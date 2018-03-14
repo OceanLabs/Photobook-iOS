@@ -46,19 +46,27 @@ class URLAsset: Asset {
     func image(size: CGSize, loadThumbnailsFirst: Bool, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
         
         // Convert points to pixels
-        let imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())
+        var imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())
+        
+        // Modify the requested size to match the image aspect ratio
+        if let maxSize = self.metadata.last?.size, maxSize != .zero {
+            imageSize = maxSize.resizeAspectFill(imageSize)
+        }
         
         // Find the smallest image that is larger than what we want
-        let sortingFunction: (URLAssetMetadata) -> Bool = size.width >= size.height ? { $0.size.width >= imageSize.width } : { $0.size.height >= imageSize.height }
-        let metadata = self.metadata.first (where: sortingFunction) ?? self.metadata.last
+        let comparisonClosure: (URLAssetMetadata) -> Bool = imageSize.width >= imageSize.height ? { $0.size.width >= imageSize.width } : { $0.size.height >= imageSize.height }
+        let metadata = self.metadata.first (where: comparisonClosure) ?? self.metadata.last
         guard let url = metadata?.url else {
             completionHandler(nil, ErrorMessage(text: CommonLocalizedStrings.somethingWentWrong))
             return
         }
         
         SDWebImageManager.shared().loadImage(with: url, options: [], progress: nil, completed: { image, _, error, _, _, _ in
-            DispatchQueue.main.async {
-                completionHandler(image, error)
+            DispatchQueue.global(qos: .background).async {
+                let image = image?.shrinkToSize(imageSize)
+                DispatchQueue.main.async {
+                    completionHandler(image, error)
+                }
             }
         })
         
