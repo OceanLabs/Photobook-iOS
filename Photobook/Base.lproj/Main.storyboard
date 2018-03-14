@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="2XF-yO-9gv">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WZR-4z-wzI">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -3338,6 +3338,21 @@ Copyright © 2018 Kite. All right reserverd.</string>
             </objects>
             <point key="canvasLocation" x="4715" y="-134"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="jTb-KZ-dAJ">
+            <objects>
+                <navigationController navigationBarHidden="YES" id="WZR-4z-wzI" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="VZg-cd-0O7">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="2XF-yO-9gv" kind="relationship" relationship="rootViewController" id="xjP-7A-ecS"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DBI-k2-lWT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2002" y="32"/>
+        </scene>
         <!--Item-->
         <scene sceneID="c5L-BD-S21">
             <objects>
@@ -3436,13 +3451,14 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <viewLayoutGuide key="safeArea" id="R1q-NW-Xkc"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" id="Aqp-Rw-Api"/>
+                    <navigationItem key="navigationItem" id="LJ9-70-0Nz"/>
                     <connections>
                         <outlet property="bgImageView" destination="ZkH-HQ-Cv6" id="nzg-Yg-uP9"/>
                         <outlet property="ctaButton" destination="zQs-sL-P80" id="h64-V1-QQh"/>
                         <outlet property="ctaContainerView" destination="wFH-aZ-OE8" id="fpR-MM-nHl"/>
                         <outlet property="ctaInvisibleConstraint" destination="kk3-s4-C9V" id="Uol-GR-5wD"/>
                         <outlet property="ctaVisibleConstraint" destination="O4c-I3-BvW" id="VDT-gZ-nGo"/>
-                        <segue destination="d5b-Ic-QyB" kind="presentation" identifier="IntroDismiss" modalTransitionStyle="crossDissolve" id="e9K-If-bQs"/>
+                        <segue destination="d5b-Ic-QyB" kind="custom" identifier="IntroDismiss" customClass="IntroDismissSegue" customModule="Photobook" customModuleProvider="target" id="e9K-If-bQs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IK7-eg-46l" userLabel="First Responder" sceneMemberID="firstResponder"/>
