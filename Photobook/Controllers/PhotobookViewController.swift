@@ -379,7 +379,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         pasteBoard?.setItems([["ly.kite.photobook.productLayout" : leftData]])
         
-        if let rightIndex = cell.rightIndex {
+        if !leftProductLayout.layout.isDoubleLayout, let rightIndex = cell.rightIndex {
             let rightProductLayout = ProductManager.shared.productLayouts[rightIndex]
             guard let rightData = try? PropertyListEncoder().encode(rightProductLayout) else {
                 fatalError("Photobook: encoding of product layout failed")
