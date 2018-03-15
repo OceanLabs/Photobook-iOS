@@ -154,7 +154,7 @@ class PhotobookPageView: UIView {
             return
         }
         
-        asset.image(size: CGSize(width: assetContainerView.frame.size.width * 2, height: assetContainerView.frame.size.height * 2), completionHandler: { [weak welf = self] (image, _) in
+        asset.image(size: CGSize(width: assetContainerView.frame.size.width, height: assetContainerView.frame.size.height), completionHandler: { [weak welf = self] (image, _) in
             guard welf?.pageIndex == index, let image = image else { return }
             welf?.setImage(image: image)
             
