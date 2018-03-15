@@ -74,9 +74,11 @@ class PhotosAsset: Asset {
         
         // Convert points to pixels
         imageSize = CGSize(width: imageSize.width * UIScreen.main.usableScreenScale(), height: imageSize.height * UIScreen.main.usableScreenScale())
-        PHImageManager.default().requestImage(for: photosAsset, targetSize: imageSize, contentMode: .aspectFill, options: options) { (image, _) in
-            DispatchQueue.main.async {
-                completionHandler(image, nil)
+        DispatchQueue.global(qos: .background).async {
+            PHImageManager.default().requestImage(for: self.photosAsset, targetSize: imageSize, contentMode: .aspectFill, options: options) { (image, _) in
+                DispatchQueue.main.async {
+                    completionHandler(image, nil)
+                }
             }
         }
     }
