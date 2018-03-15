@@ -91,7 +91,7 @@ class FacebookAlbum {
 }
 
 extension FacebookAlbum: Album {
-
+    
     func loadAssets(completionHandler: ((Error?) -> Void)?) {
         fetchAssets(graphPath: graphPath, completionHandler: completionHandler)
     }
@@ -109,4 +109,9 @@ extension FacebookAlbum: Album {
     func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
         completionHandler(URLAsset(metadata: [URLAssetMetadata(size: .zero, url: coverPhotoUrl)], albumIdentifier: identifier, identifier: coverPhotoUrl.absoluteString), nil)
     }
+}
+
+extension FacebookAlbum: PickerAnalytics {
+    var selectingPhotosScreenName: Analytics.ScreenName { return .facebookPicker }
+    var addingMorePhotosScreenName: Analytics.ScreenName { return .facebookPickerAddingMorePhotos }
 }

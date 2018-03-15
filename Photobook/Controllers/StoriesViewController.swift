@@ -31,6 +31,9 @@ class StoriesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        Analytics.shared.trackScreenViewed(.stories)
+        
         loadStories()
         
         NotificationCenter.default.addObserver(self, selector: #selector(loadStories), name: .UIApplicationDidBecomeActive, object: nil)

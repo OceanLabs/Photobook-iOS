@@ -8,6 +8,11 @@
 
 import UIKit
 
+protocol PickerAnalytics {
+    var selectingPhotosScreenName: Analytics.ScreenName { get }
+    var addingMorePhotosScreenName: Analytics.ScreenName { get }
+}
+
 /// View Controller to show albums. It doesn't care about the source of those albums as long as they conform to the Album protocol.
 class AlbumsCollectionViewController: UICollectionViewController {
     
@@ -44,7 +49,12 @@ class AlbumsCollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        if let pickerAnalytics = albumManager as? PickerAnalytics {
+            let screenName = collectorMode == .selecting ? pickerAnalytics.selectingPhotosScreenName : pickerAnalytics.addingMorePhotosScreenName
+            Analytics.shared.trackScreenViewed(screenName)
+        }
+        
         navigationItem.title = albumManager.title
         
         // Setup the Image Collector Controller

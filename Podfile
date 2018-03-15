@@ -10,6 +10,7 @@ pod 'KeychainSwift'
 pod 'SDWebImage', '~> 4.3'
 pod 'FBSDKCoreKit'
 pod 'FBSDKLoginKit'
+pod 'Analytics', '~> 3.0'
 
 target 'Photobook' do
 end

@@ -99,3 +99,8 @@ extension FacebookAlbumManager: AlbumManager {
     func startCachingImages(for assets: [Asset], targetSize: CGSize) { }
     func stopCachingImages(for assets: [Asset], targetSize: CGSize) { }
 }
+
+extension FacebookAlbumManager: PickerAnalytics {
+    var addingMorePhotosScreenName: Analytics.ScreenName { return .facebookAlbumsAddingMorePhotos }
+    var selectingPhotosScreenName: Analytics.ScreenName { return .facebookAlbums }
+}

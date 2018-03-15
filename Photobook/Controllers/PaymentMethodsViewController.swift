@@ -33,6 +33,9 @@ class PaymentMethodsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        Analytics.shared.trackScreenViewed(Analytics.ScreenName.paymentMethods)
+        
         title = NSLocalizedString("PaymentMethods/Title", value: "Payment Methods", comment: "Title for the payment methods screen")
     }
 
