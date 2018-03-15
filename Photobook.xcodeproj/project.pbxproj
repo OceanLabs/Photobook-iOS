@@ -599,21 +599,30 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		6F4DE64C1FB323280099A97E /* Controllers */ = {
+		6F190EFF20597ABE00F249E1 /* Asset Selection */ = {
 			isa = PBXGroup;
 			children = (
-				B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */,
 				6F4DE64D1FB323540099A97E /* StoriesViewController.swift */,
 				2E0B58911FB325FF00F31A9E /* AlbumsCollectionViewController.swift */,
 				6FA1893A2004B9C700E6D0AB /* ModalAlbumsCollectionViewController.swift */,
 				2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */,
 				2E6B9EDE1FBF1B0D00F28C00 /* FullScreenImageViewController.swift */,
-				6F0A682D1FE0243400B7E56C /* EmptyScreenViewController.swift */,
-				B9D3340D2029FB14003D4338 /* ProgressOverlayViewController.swift */,
 				2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */,
 				B9BC2E261FBF195200F4AA56 /* AssetCollectorViewController.swift */,
-				2E8B3E431FD191AC00FB8878 /* PhotobookViewController.swift */,
+			);
+			path = "Asset Selection";
+			sourceTree = "<group>";
+		};
+		6F4DE64C1FB323280099A97E /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */,
+				6F190EFF20597ABE00F249E1 /* Asset Selection */,
 				6FFE21C9202CA7AB004EC0EA /* Page Editing */,
+				6F0A682D1FE0243400B7E56C /* EmptyScreenViewController.swift */,
+				6F53E093204FFAF200B73AB8 /* MessageBarViewController.swift */,
+				B9D3340D2029FB14003D4338 /* ProgressOverlayViewController.swift */,
+				2E8B3E431FD191AC00FB8878 /* PhotobookViewController.swift */,
 				B90F287E1FFF8D1A00FF3D15 /* OrderSummaryViewController.swift */,
 				B939FE8D200E381C00B1084B /* CheckoutViewController.swift */,
 				2E17337E200F4E0B00F0D718 /* PaymentMethodsViewController.swift */,
@@ -625,7 +634,6 @@
 				2E7C6F05201F4E670071E6B8 /* ReceiptTableViewController.swift */,
 				B90EB85D203701CD0005D91C /* AmountPickerViewController.swift */,
 				2EA24E482035AC940069B12A /* Social */,
-				6F53E093204FFAF200B73AB8 /* MessageBarViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
