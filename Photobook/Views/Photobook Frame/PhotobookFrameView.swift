@@ -54,7 +54,10 @@ class PhotobookFrameView: UIView {
     @IBOutlet private weak var rightPageBackgroundView: PhotobookFramePageBackgroundView! { didSet { rightPageBackgroundView.pageSide = .right } }
     @IBOutlet private weak var pageDividerView: PhotobookFramePageDividerView!
     @IBOutlet private weak var widthConstraint: NSLayoutConstraint!
-        
+    
+    @IBOutlet private var spreadBackgroundLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private var spreadBackgroundTrailingConstraint: NSLayoutConstraint!
+    
     @IBOutlet weak var leftPageView: PhotobookPageView!
     @IBOutlet weak var rightPageView: PhotobookPageView!
     
@@ -67,6 +70,9 @@ class PhotobookFrameView: UIView {
             leftPageBackgroundView.isHidden = !isLeftPageVisible
             leftPagesBehindView?.isHidden = !isLeftPageVisible
             leftPageView.isVisible = isLeftPageVisible
+            if spreadBackgroundLeadingConstraint != nil {
+                spreadBackgroundLeadingConstraint.isActive = isLeftPageVisible
+            }
         }
     }
     var isRightPageVisible = true {
@@ -75,6 +81,9 @@ class PhotobookFrameView: UIView {
             rightPageBackgroundView.isHidden = !isRightPageVisible
             rightPagesBehindView?.isHidden = !isRightPageVisible
             rightPageView.isVisible = isRightPageVisible
+            if spreadBackgroundTrailingConstraint != nil {
+                spreadBackgroundTrailingConstraint.isActive = isRightPageVisible
+            }
         }
     }
     
