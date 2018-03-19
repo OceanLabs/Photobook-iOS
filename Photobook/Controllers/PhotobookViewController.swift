@@ -364,6 +364,11 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     // MARK: - UIMenuController actions
     
+    @objc func cutPages() {
+        copyPages()
+        deletePages()
+    }
+    
     @objc func copyPages() {
         guard let indexPath = interactingItemIndexPath,
             let cell = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell),
@@ -457,6 +462,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let pasteBoard = UIPasteboard(name: UIPasteboardName("ly.kite.photobook.rearrange"), create: true)
         
         var menuItems = [UIMenuItem]()
+        menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemCutTitle", value: "Cut", comment: "Cut/Paste interaction"), action: #selector(cutPages)))
         menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemCopyTitle", value: "Copy", comment: "Copy/Paste interaction"), action: #selector(copyPages)))
         if (pasteBoard?.items.count ?? 0) > 0 {
             menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemPasteTitle", value: "Paste", comment: "Copy/Paste interaction"), action: #selector(pastePages)))
