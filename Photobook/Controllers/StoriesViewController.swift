@@ -79,9 +79,10 @@ class StoriesViewController: UIViewController {
 
     @objc private func loadStories() {
         storiesAreLoading = true
-        StoriesManager.shared.loadTopStories()
-        storiesAreLoading = false
-        tableView.reloadData()
+        StoriesManager.shared.loadTopStories(completionHandler: {
+            storiesAreLoading = false
+            tableView.reloadData()
+        })
     }
 }
 
