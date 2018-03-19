@@ -582,8 +582,9 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 collectionView.deleteItems(at: [IndexPath(item: sourceIndexPath.item + (movingDown ? 0 : 1), section: sourceIndexPath.section)])
             }, completion: { _ in
                 self.updateVisibleCells()
-                Analytics.shared.trackAction(.rearrangedPages)
             })
+            
+            Analytics.shared.trackAction(.rearrangedPages)
         }
     }
     

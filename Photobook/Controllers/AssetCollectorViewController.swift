@@ -203,8 +203,9 @@ class AssetCollectorViewController: UIViewController {
     }
     
     @IBAction public func useThese() {
-        delegate?.assetCollectorViewControllerDidFinish(self)
         Analytics.shared.trackAction(.collectorUseTheseTapped, [Analytics.PropertyNames.numberOfPhotosSelected: assets.count])
+        
+        delegate?.assetCollectorViewControllerDidFinish(self)
     }
     
     private func adaptToParent() {

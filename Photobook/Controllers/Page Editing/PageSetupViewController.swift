@@ -486,7 +486,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
                                                          Analytics.PropertyNames.secondsInBackground: Int(secondsSpentInBackground)
             ])
         
-        Analytics.shared.trackAction(.editingCancelled, [Analytics.PropertyNames.secondsInEditing: secondsSinceEditingEntered()])
+        delegate?.didFinishEditingPage()
     }
     
     @IBAction func tappedDoneButton(_ sender: UIBarButtonItem) {
@@ -514,10 +514,11 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         {
             productLayout.productLayoutText!.text = visibleText
         }
-        delegate?.didFinishEditingPage(pageIndex, pageType: pageType, productLayout: productLayout, color: selectedColor)
         
         Analytics.shared.trackAction(.editingConfirmed, [Analytics.PropertyNames.secondsInEditing: secondsSinceEditingEntered(),
                                                          Analytics.PropertyNames.secondsInBackground: Int(secondsSpentInBackground)])
+        
+        delegate?.didFinishEditingPage(pageIndex, pageType: pageType, productLayout: productLayout, color: selectedColor)
     }
     
     private var isAnimatingTool = false
