@@ -72,6 +72,7 @@ class Analytics {
         static let upsellOptionName = "Upsell option name"
         static let secondsSinceAppOpen = "Seconds since app open"
         static let secondsInEditing = "Seconds in editing"
+        static let secondsInBackground = "Seconds in background"
     }
     
     private struct Constants {
@@ -82,7 +83,7 @@ class Analytics {
     
     private var appLaunchDate = Date()
     private var appBackgroundedDate: Date?
-    private var secondsSpentInBackground: TimeInterval = 0
+    private(set) var secondsSpentInBackground: TimeInterval = 0
     
     var userDistinctId: String {
         let keychain = KeychainSwift()
@@ -146,6 +147,6 @@ class Analytics {
     }
     
     func secondsSinceAppOpen() -> Int {
-        return Int(Date().timeIntervalSince(appLaunchDate) - secondsSpentInBackground)
+        return Int(Date().timeIntervalSince(appLaunchDate))
     }
 }

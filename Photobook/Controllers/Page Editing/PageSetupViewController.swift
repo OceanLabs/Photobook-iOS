@@ -450,7 +450,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func secondsSinceEditingEntered() -> Int {
-        return Int(Date().timeIntervalSince(enteredEditingDate) - secondsSpentInBackground)
+        return Int(Date().timeIntervalSince(enteredEditingDate))
     }
     
     // MARK: - Navigation
@@ -482,7 +482,9 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     @IBAction func tappedCancelButton(_ sender: UIBarButtonItem) {
-        delegate?.didFinishEditingPage()
+        Analytics.shared.trackAction(.editingCancelled, [Analytics.PropertyNames.secondsInEditing: secondsSinceEditingEntered(),
+                                                         Analytics.PropertyNames.secondsInBackground: Int(secondsSpentInBackground)
+            ])
         
         Analytics.shared.trackAction(.editingCancelled, [Analytics.PropertyNames.secondsInEditing: secondsSinceEditingEntered()])
     }
@@ -514,7 +516,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         delegate?.didFinishEditingPage(pageIndex, pageType: pageType, productLayout: productLayout, color: selectedColor)
         
-        Analytics.shared.trackAction(.editingConfirmed, [Analytics.PropertyNames.secondsInEditing: secondsSinceEditingEntered()])
+        Analytics.shared.trackAction(.editingConfirmed, [Analytics.PropertyNames.secondsInEditing: secondsSinceEditingEntered(),
+                                                         Analytics.PropertyNames.secondsInBackground: Int(secondsSpentInBackground)])
     }
     
     private var isAnimatingTool = false

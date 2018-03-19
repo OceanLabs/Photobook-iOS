@@ -514,7 +514,9 @@ class CheckoutViewController: UIViewController {
     }
     
     private func submitOrder(completionHandler: ((_ status: PKPaymentAuthorizationStatus) -> Void)?) {
-          Analytics.shared.trackAction(.orderSubmitted, [Analytics.PropertyNames.secondsSinceAppOpen: Analytics.shared.secondsSinceAppOpen()])
+          Analytics.shared.trackAction(.orderSubmitted, [Analytics.PropertyNames.secondsSinceAppOpen: Analytics.shared.secondsSinceAppOpen(),
+                                                         Analytics.PropertyNames.secondsInBackground: Int(Analytics.shared.secondsSpentInBackground)
+                                                         ])
         progressOverlayViewController.show(message: Constants.submittingOrderText)
         OrderManager.shared.submitOrder(completionHandler: { [weak welf = self] errorMessage in
             welf?.progressOverlayViewController.hide()
