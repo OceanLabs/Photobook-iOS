@@ -214,11 +214,11 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         
         if selectedAssetsManager?.count(for: album) == album.assets.count {
             selectedAssetsManager?.deselectAllAssets(for: album)
-            Analytics.shared.trackAction(Analytics.ActionName.pickerDeselectAllTapped)
+            Analytics.shared.trackAction(.pickerDeselectAllTapped)
         }
         else {
             selectedAssetsManager?.selectAllAssets(for: album)
-            Analytics.shared.trackAction(Analytics.ActionName.pickerSelectAllTapped)
+            Analytics.shared.trackAction(.pickerSelectAllTapped)
         }
         
         updateSelectAllButton()

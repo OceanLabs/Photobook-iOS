@@ -49,7 +49,7 @@ class PhotobookTabBar: UITabBar {
                 let newValueTitle = tabBar.selectedItem?.title,
                 newValueTitle != oldValue?.title
                 else { return }
-            Analytics.shared.trackAction(Analytics.ActionName.photoSourceSelected, [Analytics.PropertyNames.photoSourceName: newValueTitle])
+            Analytics.shared.trackAction(.photoSourceSelected, [Analytics.PropertyNames.photoSourceName: newValueTitle])
         })
     }
     
