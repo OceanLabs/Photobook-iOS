@@ -42,7 +42,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
     
-    var selectedAssetsManager: SelectedAssetsManager?
+    var assets: [Asset]?
     var selectedAssetsSource: SelectedAssetsSource?
     private var titleButton = UIButton()
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
@@ -130,7 +130,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func setup(with photobook: Photobook) {
-        guard let assets = selectedAssetsManager?.selectedAssets else {
+        guard let assets = assets else {
             // Should never really reach here
             emptyScreenViewController.show(message: NSLocalizedString("Photobook/NoPhotosSelected", value: "No photos selected", comment: "No photos selected error message"))
             return
@@ -627,7 +627,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let barType = (navigationController?.navigationBar as? PhotobookNavigationBar)?.barType
         
         pageSetupViewController = modalNavigationController.viewControllers.first as! PageSetupViewController
-        pageSetupViewController.selectedAssetsManager = selectedAssetsManager
+        pageSetupViewController.assets = assets
         pageSetupViewController.pageIndex = index
         pageSetupViewController.selectedAssetsSource = selectedAssetsSource
         if barType != nil {

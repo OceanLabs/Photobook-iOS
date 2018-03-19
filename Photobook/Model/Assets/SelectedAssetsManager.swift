@@ -25,6 +25,8 @@ class SelectedAssetsManager: NSObject {
         
         // Listen for the receipt dismissed notification so that we deselect all selected assets
         NotificationCenter.default.addObserver(self, selector: #selector(deselectAllAssetsForAllAlbums), name: ReceiptNotificationName.receiptWillDismiss, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssets(_:)), name: AssetSelectorViewController.assetSelectorAddedAssets, object: nil)
     }
     
     deinit {
@@ -43,6 +45,11 @@ class SelectedAssetsManager: NSObject {
     
     func orderAssetsByDate() {
         selectedAssets.sort { ($0.date ?? .distantFuture) < ($1.date ?? .distantFuture) }
+    }
+    
+    @objc private func selectedAssets(_ notification: Notification) {
+        guard let assets = notification.userInfo?["assets"] as? [Asset] else { return }
+        select(assets)
     }
     
     func select(_ assets:[Asset]) {

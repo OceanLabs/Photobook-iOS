@@ -23,13 +23,19 @@ class AssetPickerCollectionViewController: UICollectionViewController {
 
     @IBOutlet private weak var selectAllButton: UIBarButtonItem?
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
+    
     weak var delegate: AssetPickerCollectionViewControllerDelegate?
+    
     private var previousPreheatRect = CGRect.zero
+    
     var selectedAssetsManager: SelectedAssetsManager?
     private var accountManager: AccountClient?
     private var assetCollectorController: AssetCollectorViewController!
+    
     var delayCollectorAppearance = false
+    
     static let coverAspectRatio: CGFloat = 2.723684211
+    
     private lazy var imageCellSize: CGSize = {
         guard let collectionView = collectionView else { return .zero }
         var usableSpace = collectionView.frame.width
@@ -37,6 +43,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         let cellWidth = usableSpace / Constants.numberOfCellsPerRow
         return CGSize(width: cellWidth, height: cellWidth)
     }()
+    
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
     }()
@@ -394,10 +401,10 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
     func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
         switch collectorMode {
         case .adding:
-            addingDelegate?.didFinishAdding(assets: selectedAssetsManager?.selectedAssets)
+            addingDelegate?.didFinishAdding(selectedAssetsManager?.selectedAssets)
         default:
             let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
-            photobookViewController.selectedAssetsManager = selectedAssetsManager
+            photobookViewController.assets = selectedAssetsManager?.selectedAssets
             photobookViewController.selectedAssetsSource = SelectedAssetsSource(album: album, albumManager: albumManager)
             navigationController?.pushViewController(photobookViewController, animated: true)
         }

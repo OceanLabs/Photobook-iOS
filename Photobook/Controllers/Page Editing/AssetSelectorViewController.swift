@@ -16,17 +16,13 @@ protocol AssetSelectorDelegate: class {
 
 class AssetSelectorViewController: UIViewController {
     
+    static let assetSelectorAddedAssets = Notification.Name("assetSelectorAddedAssets")
+    
     @IBOutlet weak var collectionView: UICollectionView!
     
     private var addMoreSelectedAssetsManager = SelectedAssetsManager()
-    private var assets: [Asset] {
-        get {
-            if let manager = selectedAssetsManager {
-                return manager.selectedAssets
-            }
-            return [Asset]()
-        }
-    }
+    var assets = [Asset]()
+
     private lazy var timesUsed: [String: Int] = {
         var temp = [String: Int]()
         
@@ -38,7 +34,6 @@ class AssetSelectorViewController: UIViewController {
     }()
     private var selectedAssetIndex = -1
     
-    var selectedAssetsManager: SelectedAssetsManager!
     var selectedAssetsSource: SelectedAssetsSource?
     weak var delegate: AssetSelectorDelegate?
     
@@ -46,7 +41,7 @@ class AssetSelectorViewController: UIViewController {
         didSet {
             guard selectedAsset != nil else {
                 if let previousAsset = oldValue, timesUsed[previousAsset.identifier] != nil {
-                    if selectedAssetsManager.selectedAssets.index(where: { $0.identifier == previousAsset.identifier }) == nil {
+                    if assets.index(where: { $0.identifier == previousAsset.identifier }) == nil {
                         timesUsed.removeValue(forKey: previousAsset.identifier)
                     } else {
                         timesUsed[previousAsset.identifier] = timesUsed[previousAsset.identifier]! - 1
@@ -125,7 +120,7 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
             }
         }
         
-        selectedAsset = selectedAssetsManager.selectedAssets[indexPath.row]
+        selectedAsset = assets[indexPath.row]
         timesUsed[selectedAsset!.identifier] = (timesUsed[selectedAsset!.identifier] ?? 0) + 1
         if let newSelectedCell = collectionView.cellForItem(at: indexPath) as? AssetSelectorAssetCollectionViewCell {
             newSelectedCell.timesUsed = timesUsed[selectedAsset!.identifier]!
@@ -138,13 +133,16 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
 
 extension AssetSelectorViewController: AssetCollectorAddingDelegate {
     
-    func didFinishAdding(assets: [Asset]?) {
+    func didFinishAdding(_ assets: [Asset]?) {
         guard let assets = assets, !assets.isEmpty else {
             self.dismiss(animated: false, completion: nil)
             return
         }
-        
-        selectedAssetsManager.select(assets)
+
+        // Add assets that are not already in the list
+        let newAssets = assets.filter { asset in !self.assets.contains { $0 == asset } }
+        self.assets.append(contentsOf: newAssets)
+
         collectionView.reloadData()
         collectionView.scrollToItem(at: IndexPath(row: self.assets.count, section: 0), at: .centeredHorizontally, animated: true)
         self.dismiss(animated: false, completion: nil)

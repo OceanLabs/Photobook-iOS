@@ -9,7 +9,13 @@
 import UIKit
 
 protocol AssetCollectorAddingDelegate: class {
-    func didFinishAdding(assets: [Asset]?)
+    func didFinishAdding(_ assets: [Asset]?)
+}
+
+extension AssetCollectorAddingDelegate {
+    func didFinishAddingAssets() {
+        didFinishAdding(nil)
+    }
 }
 
 class ModalAlbumsCollectionViewController: UIViewController {
@@ -142,13 +148,11 @@ class ModalAlbumsCollectionViewController: UIViewController {
         }
     }
     
-    private func animateContainerViewOffScreen(duration: TimeInterval = 0.4, adding assets: [Asset]? = nil) {
+    private func animateContainerViewOffScreen(duration: TimeInterval = 0.4) {
         containerViewBottomConstraint.constant = view.bounds.height
         UIView.animate(withDuration: duration, delay: 0.0, options: [.beginFromCurrentState, .curveEaseOut], animations: {
             self.view.backgroundColor = .clear
             self.view.layoutIfNeeded()
-        }, completion: { _ in
-            self.addingDelegate?.didFinishAdding(assets: assets)
         })
     }
     
@@ -166,8 +170,15 @@ extension ModalAlbumsCollectionViewController: UINavigationControllerDelegate {
 
 extension ModalAlbumsCollectionViewController: AssetCollectorAddingDelegate {
     
-    func didFinishAdding(assets: [Asset]?) {
-        animateContainerViewOffScreen(adding: assets)
+    func didFinishAdding(_ assets: [Asset]?) {
+        if let assets = assets {
+            // Post notification for any selectedAssetManagers listening
+            NotificationCenter.default.post(name: AssetSelectorViewController.assetSelectorAddedAssets, object: self, userInfo: ["assets": assets])
+
+            // Notify the delegate
+            addingDelegate?.didFinishAdding(assets)
+        }
+        animateContainerViewOffScreen()
     }
 }
 
