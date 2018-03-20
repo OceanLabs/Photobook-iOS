@@ -467,7 +467,7 @@ class ProductManager {
     
     func bleed(forPageSize size: CGSize) -> CGFloat {
         guard let product = product else { return 0.0 }
-        let scaleFactor = size.width / product.pageWidth
+        let scaleFactor = size.height / product.pageHeight
         return bleed * scaleFactor
     }
     
