@@ -66,6 +66,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        Analytics.shared.trackScreenViewed(Analytics.ScreenName.photobook)
+        
         if #available(iOS 11.0, *) {
             navigationItem.largeTitleDisplayMode = .never
         }
@@ -295,6 +297,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             ProductManager.shared.reset()
             
             self.navigationController?.popViewController(animated: true)
+            
+            Analytics.shared.trackAction(.wentBackFromPhotobookPreview)
         }))
         alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
         
@@ -421,6 +425,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             self.updateVisibleCells()
         })
         
+        Analytics.shared.trackAction(.pastedPages)
+        
     }
     
     @objc func deletePages() {
@@ -436,6 +442,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }, completion: { _ in
             self.updateVisibleCells()
         })
+        
+        Analytics.shared.trackAction(.deletedPages)
         
     }
     
@@ -554,9 +562,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                     ProductManager.shared.moveLayout(at: sourceProductLayoutIndex + 1, to: destinationProductLayoutIndex + 1)
                     ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
                 }
-                
-            }
-            else {
+            } else {
                 if sourceProductLayout.layout.isDoubleLayout {
                     ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
                 } else {
@@ -577,6 +583,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             }, completion: { _ in
                 self.updateVisibleCells()
             })
+            
+            Analytics.shared.trackAction(.rearrangedPages)
         }
     }
     
@@ -788,6 +796,8 @@ extension PhotobookViewController: PageSetupDelegate {
                 let previousLayout = ProductManager.shared.productLayouts[index]
                 ProductManager.shared.productLayouts[index] = productLayout
                 
+                trackAnalyticsActionsForEditingFinished(index: index, productLayout: productLayout, previousLayout: previousLayout)
+                
                 if previousLayout.layout.isDoubleLayout != productLayout.layout.isDoubleLayout {
                     // From single to double
                     if productLayout.layout.isDoubleLayout {
@@ -819,6 +829,18 @@ extension PhotobookViewController: PageSetupDelegate {
 
         pageSetupViewController.animateBackToPhotobook {
             self.dismiss(animated: false)
+        }
+    }
+    
+    func trackAnalyticsActionsForEditingFinished(index: Int, productLayout: ProductLayout, previousLayout: ProductLayout) {
+        if previousLayout.productLayoutText?.text != productLayout.productLayoutText?.text {
+            Analytics.shared.trackAction(.addedTextToPage)
+        }
+        if !previousLayout.layout.isDoubleLayout && productLayout.layout.isDoubleLayout {
+            Analytics.shared.trackAction(.usingDoublePageLayout)
+        }
+        if index == 0 && previousLayout.layout.id != productLayout.layout.id {
+            Analytics.shared.trackAction(.coverLayoutChanged)
         }
     }
 }
@@ -952,6 +974,8 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
         }, completion: { _ in
             self.updateVisibleCells()
         })
+        
+        Analytics.shared.trackAction(.addedPages)
         
     }
     

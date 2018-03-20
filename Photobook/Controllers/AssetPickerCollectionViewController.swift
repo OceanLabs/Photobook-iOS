@@ -54,6 +54,11 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if let pickerAnalytics = album as? PickerAnalytics {
+            let screenName = collectorMode == .selecting ? pickerAnalytics.selectingPhotosScreenName : pickerAnalytics.addingMorePhotosScreenName
+            Analytics.shared.trackScreenViewed(screenName)
+        }
+        
         resetCachedAssets()
         
         if #available(iOS 11.0, *) {
@@ -209,9 +214,11 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         
         if selectedAssetsManager?.count(for: album) == album.assets.count {
             selectedAssetsManager?.deselectAllAssets(for: album)
+            Analytics.shared.trackAction(.pickerDeselectAllTapped)
         }
         else {
             selectedAssetsManager?.selectAllAssets(for: album)
+            Analytics.shared.trackAction(.pickerSelectAllTapped)
         }
         
         updateSelectAllButton()

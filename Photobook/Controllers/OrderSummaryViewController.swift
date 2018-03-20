@@ -37,6 +37,8 @@ class OrderSummaryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        Analytics.shared.trackScreenViewed(Analytics.ScreenName.summary)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryManagerWillUpdate), name: OrderSummaryManager.notificationWillUpdate, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryManagerDidUpdateSummary), name: OrderSummaryManager.notificationDidUpdateSummary, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryManagerPreviewImageReady), name: OrderSummaryManager.notificationPreviewImageReady, object: nil)
@@ -154,20 +156,22 @@ extension OrderSummaryViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == Constants.sectionOptions {
+        if indexPath.section == Constants.sectionOptions,
+            let upsellOption = OrderSummaryManager.shared.upsellOptions?[indexPath.row] {
             //handle changed upsell selection
-            OrderSummaryManager.shared.selectUpsellOption(OrderSummaryManager.shared.upsellOptions![indexPath.row])
+            OrderSummaryManager.shared.selectUpsellOption(upsellOption)
             progressOverlayViewController.show(message: NSLocalizedString("OrderSummary/Loading", value: "Loading order details", comment: "Loading product summary"))
-        } else {
-            tableView.deselectRow(at: indexPath, animated: false)
+            Analytics.shared.trackAction(.selectedUpsellOption, [Analytics.PropertyNames.upsellOptionName: upsellOption.displayName])
         }
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        if indexPath.section == Constants.sectionOptions {
+        if indexPath.section == Constants.sectionOptions,
+            let upsellOption = OrderSummaryManager.shared.upsellOptions?[indexPath.row] {
             //handle changed upsell selection
-            OrderSummaryManager.shared.deselectUpsellOption(OrderSummaryManager.shared.upsellOptions![indexPath.row])
+            OrderSummaryManager.shared.deselectUpsellOption(upsellOption)
             progressOverlayViewController.show(message: NSLocalizedString("OrderSummary/Loading", value: "Loading order details", comment: "Loading product summary"))
+            Analytics.shared.trackAction(.deselectedUpsellOption, [Analytics.PropertyNames.upsellOptionName: upsellOption.displayName])
         }
     }
 }

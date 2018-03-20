@@ -25,6 +25,8 @@ class ReceiptTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        Analytics.shared.trackScreenViewed(Analytics.ScreenName.receipt)
+        
         title = NSLocalizedString("Receipt/Title", value: "Purchased", comment: "Receipt screen title")
         navigationItem.leftBarButtonItem = UIBarButtonItem()
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false

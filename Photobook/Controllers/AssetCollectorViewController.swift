@@ -193,6 +193,7 @@ class AssetCollectorViewController: UIViewController {
     
     @IBAction public func clearAssets() {
         selectedAssetsManager?.deselectAllAssetsForAllAlbums()
+        Analytics.shared.trackAction(.collectorSelectionCleared)
     }
     
     @IBAction private func turnOnDeletingMode() {
@@ -208,6 +209,8 @@ class AssetCollectorViewController: UIViewController {
     }
     
     @IBAction public func useThese() {
+        Analytics.shared.trackAction(.collectorUseTheseTapped, [Analytics.PropertyNames.numberOfPhotosSelected: assets.count])
+        
         delegate?.assetCollectorViewControllerDidFinish(self)
     }
     

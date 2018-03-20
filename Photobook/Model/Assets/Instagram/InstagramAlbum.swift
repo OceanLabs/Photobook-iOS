@@ -100,7 +100,7 @@ class InstagramAlbum {
 }
 
 extension InstagramAlbum: Album {
-    
+        
     var numberOfAssets: Int {
         return assets.count
     }
@@ -121,4 +121,9 @@ extension InstagramAlbum: Album {
     func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
         return completionHandler(assets.first, nil)
     }
+}
+
+extension InstagramAlbum: PickerAnalytics {
+    var selectingPhotosScreenName: Analytics.ScreenName { return .instagramPicker }
+    var addingMorePhotosScreenName: Analytics.ScreenName { return .instagramPickerAddingMorePhotos }
 }

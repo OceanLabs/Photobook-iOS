@@ -191,3 +191,8 @@ extension PhotosAlbumManager: PHPhotoLibraryChangeObserver {
     }
     
 }
+
+extension PhotosAlbumManager: PickerAnalytics {
+    var selectingPhotosScreenName: Analytics.ScreenName { return .albums }
+    var addingMorePhotosScreenName: Analytics.ScreenName { return .albumsAddingMorePhotos }
+}

@@ -51,6 +51,8 @@ class SpineTextEditingViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        Analytics.shared.trackScreenViewed(Analytics.ScreenName.spineTextEditing)
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
         
