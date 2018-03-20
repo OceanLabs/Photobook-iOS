@@ -389,7 +389,7 @@ class CheckoutViewController: UIViewController {
     }
     
     private func showReceipt() {
-        OrderManager.shared.saveBackup()
+        OrderManager.shared.saveCheckoutDetails()
         if self.presentedViewController == nil {
             self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
         }

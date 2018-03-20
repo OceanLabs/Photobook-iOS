@@ -102,7 +102,7 @@ class OrderManager {
         orderId = nil
     }
     
-    func saveBackup() {
+    func saveCheckoutDetails() {
         guard let detailsData = try? PropertyListEncoder().encode(deliveryDetails),
             let cost = cachedCost else { return }
         
@@ -113,7 +113,7 @@ class OrderManager {
         UserDefaults.standard.synchronize()
     }
     
-    func loadBackup() {
+    func loadCheckoutDetails() {
         guard let detailsData = UserDefaults.standard.object(forKey: Constants.savedOrderDetailsKey) as? Data,
             let costData = UserDefaults.standard.object(forKey: Constants.savedCostKey) as? Data else { return }
         

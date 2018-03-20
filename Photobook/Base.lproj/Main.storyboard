@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="2XF-yO-9gv">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="d5b-Ic-QyB">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -3176,13 +3176,16 @@
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mMA-Ts-Ujx">
                                             <rect key="frame" x="70" y="38" width="274" height="154.5"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="emoji-anxious" translatesAutoresizingMaskIntoConstraints="NO" id="7YA-5V-jAN">
-                                                    <rect key="frame" x="115" y="-0.5" width="43" height="43"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="😰" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sx2-no-iZ8">
+                                                    <rect key="frame" x="115" y="0.0" width="43" height="43"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="43" id="25U-sb-4mp"/>
-                                                        <constraint firstAttribute="height" constant="43" id="83b-Dx-mPf"/>
+                                                        <constraint firstAttribute="height" constant="43" id="9NK-dA-3bA"/>
+                                                        <constraint firstAttribute="width" constant="43" id="dgM-aO-GVu"/>
                                                     </constraints>
-                                                </imageView>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="37"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SOMETHING WENT WRONG" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ibU-Ao-9NZ">
                                                     <rect key="frame" x="0.0" y="49.5" width="274" height="17"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
@@ -3256,14 +3259,14 @@
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstItem="Pdb-e3-eoY" firstAttribute="top" secondItem="ibU-Ao-9NZ" secondAttribute="bottom" constant="5" id="3kI-Un-fEp"/>
-                                                <constraint firstItem="7YA-5V-jAN" firstAttribute="centerX" secondItem="mMA-Ts-Ujx" secondAttribute="centerX" id="5Ne-Nb-NON"/>
                                                 <constraint firstItem="ibU-Ao-9NZ" firstAttribute="leading" secondItem="mMA-Ts-Ujx" secondAttribute="leading" id="7Y1-zW-o1q"/>
                                                 <constraint firstAttribute="trailing" secondItem="Pdb-e3-eoY" secondAttribute="trailing" id="AP2-gf-vRn"/>
+                                                <constraint firstItem="sx2-no-iZ8" firstAttribute="centerX" secondItem="mMA-Ts-Ujx" secondAttribute="centerX" id="BOT-fG-uaX"/>
                                                 <constraint firstAttribute="trailing" secondItem="ibU-Ao-9NZ" secondAttribute="trailing" id="CER-zr-nW5"/>
-                                                <constraint firstItem="7YA-5V-jAN" firstAttribute="top" secondItem="mMA-Ts-Ujx" secondAttribute="top" id="GOV-X3-VjG"/>
+                                                <constraint firstItem="sx2-no-iZ8" firstAttribute="top" secondItem="mMA-Ts-Ujx" secondAttribute="top" id="MXj-Li-WYU"/>
                                                 <constraint firstItem="Pdb-e3-eoY" firstAttribute="leading" secondItem="mMA-Ts-Ujx" secondAttribute="leading" id="NjA-83-et0"/>
-                                                <constraint firstItem="ibU-Ao-9NZ" firstAttribute="top" secondItem="7YA-5V-jAN" secondAttribute="bottom" constant="7" id="QYc-GW-xlZ"/>
                                                 <constraint firstAttribute="bottom" secondItem="Pdb-e3-eoY" secondAttribute="bottom" priority="250" id="VUw-Wi-pSq"/>
+                                                <constraint firstItem="ibU-Ao-9NZ" firstAttribute="top" secondItem="sx2-no-iZ8" secondAttribute="bottom" constant="7" id="Xyk-02-Chu"/>
                                                 <constraint firstItem="Ci7-r0-DhY" firstAttribute="top" secondItem="Pdb-e3-eoY" secondAttribute="bottom" priority="750" constant="8" id="akC-DP-P1o"/>
                                                 <constraint firstItem="Ci7-r0-DhY" firstAttribute="centerX" secondItem="mMA-Ts-Ujx" secondAttribute="centerX" id="dlW-7W-K0x"/>
                                                 <constraint firstAttribute="bottom" secondItem="Ci7-r0-DhY" secondAttribute="bottom" id="xdp-WK-OL1"/>
@@ -3285,7 +3288,7 @@
                                     <outlet property="descriptionLabel" destination="Pdb-e3-eoY" id="9lg-HC-PTG"/>
                                     <outlet property="hideActionButtonsConstraint" destination="VUw-Wi-pSq" id="e0U-IF-WUb"/>
                                     <outlet property="hideSecondaryActionButtonConstraint" destination="QRn-78-Zak" id="ZZj-io-hHI"/>
-                                    <outlet property="iconImageView" destination="7YA-5V-jAN" id="5Wc-Ij-Fy1"/>
+                                    <outlet property="iconLabel" destination="sx2-no-iZ8" id="06h-37-IM1"/>
                                     <outlet property="primaryActionButton" destination="CbJ-Cn-SfE" id="qlV-r5-NvI"/>
                                     <outlet property="secondaryActionButton" destination="nyh-8v-DTD" id="15d-J3-Sot"/>
                                     <outlet property="showActionButtonsConstraint" destination="akC-DP-P1o" id="PLT-9A-fNG"/>
@@ -3574,7 +3577,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Item-->
         <scene sceneID="c5L-BD-S21">
             <objects>
-                <viewController id="2XF-yO-9gv" customClass="IntroViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="IntroViewController" id="2XF-yO-9gv" customClass="IntroViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ZFI-Ae-tE6">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3675,12 +3678,11 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <outlet property="ctaContainerView" destination="wFH-aZ-OE8" id="fpR-MM-nHl"/>
                         <outlet property="ctaInvisibleConstraint" destination="kk3-s4-C9V" id="Uol-GR-5wD"/>
                         <outlet property="ctaVisibleConstraint" destination="O4c-I3-BvW" id="VDT-gZ-nGo"/>
-                        <segue destination="d5b-Ic-QyB" kind="presentation" identifier="IntroDismiss" modalTransitionStyle="crossDissolve" id="e9K-If-bQs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IK7-eg-46l" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1239" y="32"/>
+            <point key="canvasLocation" x="-1321" y="51"/>
         </scene>
         <!--Full Screen Image View Controller-->
         <scene sceneID="XBA-8v-eiC">
@@ -6020,7 +6022,6 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <image name="editPhoto_on" width="29" height="29"/>
         <image name="editText_off" width="29" height="29"/>
         <image name="editText_on" width="29" height="29"/>
-        <image name="emoji-anxious" width="43" height="44"/>
         <image name="plusButton" width="26" height="26"/>
         <image name="selectPhoto_off" width="29" height="29"/>
         <image name="selectPhoto_on" width="29" height="29"/>

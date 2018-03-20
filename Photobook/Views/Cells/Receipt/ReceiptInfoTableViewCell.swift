@@ -12,7 +12,7 @@ class ReceiptInfoTableViewCell: UITableViewCell {
 
     static let reuseIdentifier = NSStringFromClass(ReceiptInfoTableViewCell.self).components(separatedBy: ".").last!
     
-    @IBOutlet weak var iconImageView: UIImageView!
+    @IBOutlet weak var iconLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var actionButtonContainerView: UIView!

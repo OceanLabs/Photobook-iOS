@@ -27,7 +27,7 @@ enum ProductColor: String, Codable {
 }
 
 // Structure containing the user's photobok details to save them to disk
-struct PhotobookBackUp: Codable {
+struct PhotobookBackup: Codable {
     var product: Photobook
     var coverColor: ProductColor
     var pageColor: ProductColor
@@ -51,7 +51,7 @@ class ProductManager {
     
     private struct Storage {
         static let photobookDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!.appending("/Photobook/")
-        static let photobookBackUpFile = photobookDirectory.appending("Photobook.dat")
+        static let photobookBackupFile = photobookDirectory.appending("Photobook.dat")
     }
     
     static let shared: ProductManager = ProductManager()
@@ -68,7 +68,7 @@ class ProductManager {
         self.apiManager = apiManager
     }
     
-    var storageFile: String { return Storage.photobookBackUpFile }
+    var storageFile: String { return Storage.photobookBackupFile }
     #endif
 
     // Public info about photobook products
@@ -358,12 +358,12 @@ class ProductManager {
     /// Loads the user's photobook details from disk
     ///
     /// - Parameter completionHandler: Closure called on completion
-    func loadUserPhotobook(_ completionHandler: @escaping () -> Void) {
-        guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: Storage.photobookBackUpFile) as? Data else {
+    func loadUserPhotobook(_ completionHandler: @escaping () -> Void = {} ) {
+        guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: Storage.photobookBackupFile) as? Data else {
             print("ProductManager: failed to unarchive product")
             return
         }
-        guard let unarchivedProduct = try? PropertyListDecoder().decode(PhotobookBackUp.self, from: unarchivedData) else {
+        guard let unarchivedProduct = try? PropertyListDecoder().decode(PhotobookBackup.self, from: unarchivedData) else {
             print("ProductManager: decoding of product failed")
             return
         }
@@ -380,7 +380,7 @@ class ProductManager {
     func saveUserPhotobook() {
         guard let product = product else { return }
         
-        let rootObject = PhotobookBackUp(product: product, coverColor: coverColor, pageColor: pageColor, productLayouts: productLayouts)
+        let rootObject = PhotobookBackup(product: product, coverColor: coverColor, pageColor: pageColor, productLayouts: productLayouts)
         
         guard let data = try? PropertyListEncoder().encode(rootObject) else {
             fatalError("ProductManager: encoding of product failed")
@@ -394,7 +394,7 @@ class ProductManager {
             }
         }
         
-        let saved = NSKeyedArchiver.archiveRootObject(data, toFile: Storage.photobookBackUpFile)
+        let saved = NSKeyedArchiver.archiveRootObject(data, toFile: Storage.photobookBackupFile)
         if !saved {
             print("ProductManager: failed to archive product")
         }
@@ -507,19 +507,16 @@ extension ProductManager: PhotobookAPIManagerDelegate {
         if let error = error as? PhotobookAPIError {
             switch error {
             case .missingPhotobookInfo:
-                print("ProductManager: incorrect or missing photobook info")
                 NotificationCenter.default.post(name: ProductManager.failedPhotobookUpload, object: nil) //not resolvable
             case .couldNotSaveTempImageData:
                 let info = [ "pending": apiManager.pendingUploads ]
                 NotificationCenter.default.post(name: ProductManager.pendingUploadStatusUpdated, object: info)
                 NotificationCenter.default.post(name: ProductManager.shouldRetryUploadingImages, object: nil) //resolvable
             case .couldNotBuildCreationParameters:
-                print("PhotobookManager: could not build PDF creation request parameters")
                 NotificationCenter.default.post(name: ProductManager.failedPhotobookUpload, object: nil) //not resolvable
             }
         } else if let _ = error as? APIClientError {
             // Connection / server errors or parsing error
-            print("ProductManager: could not parse upload response")
             NotificationCenter.default.post(name: ProductManager.shouldRetryUploadingImages, object: nil) //resolvable
         }
     }

@@ -31,7 +31,7 @@ class PhotosAsset: Asset {
     
     var photosAsset: PHAsset {
         didSet {
-            identifier = photosAsset.localIdentifier
+            identifier = photosAsset.localIdentifier.replacingOccurrences(of: "/", with: "") //remove slashes because it'd result in an invalid path
         }
     }
     
@@ -79,7 +79,7 @@ class PhotosAsset: Asset {
     func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension?, Error?) -> Void) {
         
         if photosAsset.mediaType != .image {
-            completionHandler(nil, nil, NSError())
+            completionHandler(nil, nil, AssetLoadingException.notFound)
             return
         }
         
@@ -87,7 +87,7 @@ class PhotosAsset: Asset {
         options.isNetworkAccessAllowed = true
         
         PHImageManager.default().requestImageData(for: photosAsset, options: options, resultHandler: { imageData, dataUti, _, info in
-            guard let data = imageData, let dataUti = dataUti else { completionHandler(nil, nil, NSError()); return }
+            guard let data = imageData, let dataUti = dataUti else { completionHandler(nil, nil, AssetLoadingException.notFound); return }
             
             let fileExtension: AssetDataFileExtension
             if dataUti.contains(".png") {
@@ -104,7 +104,7 @@ class PhotosAsset: Asset {
             if fileExtension == .unsupported {
                 guard let ciImage = CIImage(data: data),
                     let jpegData = CIContext().jpegRepresentation(of: ciImage, colorSpace: CGColorSpaceCreateDeviceRGB(), options: [kCGImageDestinationLossyCompressionQuality : 0.8])
-                    else { completionHandler(nil, nil, NSError()); return }
+                    else { completionHandler(nil, nil, AssetLoadingException.unsupported); return }
                 completionHandler(jpegData, .jpg, nil)
             } else {
                 completionHandler(imageData, fileExtension, nil)

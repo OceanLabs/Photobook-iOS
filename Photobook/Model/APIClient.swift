@@ -83,7 +83,6 @@ class APIClient: NSObject {
     private lazy var backgroundUrlSession: URLSession = {
         let configuration = URLSessionConfiguration.background(withIdentifier: Constants.backgroundSessionBaseIdentifier)
         configuration.sessionSendsLaunchEvents = true
-        configuration.allowsCellularAccess = false
         configuration.timeoutIntervalForResource = 7 * 24 * 60 * 60 //7 days timeout
         return URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
     }()
@@ -310,7 +309,7 @@ class APIClient: NSObject {
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("multipart/form-data; boundary=\(boundaryString)", forHTTPHeaderField:"content-type")
         
-        let dataTask = URLSession.shared.uploadTask(with: request, fromFile: fileUrl) { (data, response, error) in
+        URLSession.shared.uploadTask(with: request, fromFile: fileUrl) { (data, response, error) in
             guard let data = data, let json = try? JSONSerialization.jsonObject(with: data, options: []) else {
                 DispatchQueue.main.async { completion(nil, error) }
                 return
@@ -318,9 +317,7 @@ class APIClient: NSObject {
             
             DispatchQueue.main.async { completion(json as AnyObject, nil) }
             
-        }
-        
-        dataTask.resume()
+        }.resume()
     }
     
     func uploadImage(_ image: UIImage, imageName: String, context: APIContext, endpoint: String, completion:@escaping (AnyObject?, Error?) -> ()) {
@@ -378,18 +375,12 @@ class APIClient: NSObject {
     }
     
     func cancelBackgroundTasks(_ completion: @escaping () -> Void) {
-        backgroundUrlSession.getTasksWithCompletionHandler { (tasks, uploadTasks, downloadTasks) in
+        backgroundUrlSession.getAllTasks { (tasks) in
             for task in tasks {
                 task.cancel()
             }
             completion()
         }
-        /*backgroundUrlSession.getAllTasks { (tasks) in
-            for task in tasks {
-                task.cancel()
-            }
-            completion()
-        }*/
     }
 }
 

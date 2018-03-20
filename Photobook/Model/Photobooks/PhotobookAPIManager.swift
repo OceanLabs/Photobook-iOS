@@ -185,35 +185,14 @@ class PhotobookAPIManager {
         
         // Set upload counts
         totalUploads = 0
-        var processedAssets = [Asset]()
-        for layout in productLayouts {
-            if let asset = layout.asset {
-                var isAssetAlreadyProcessed = false
-                //check if the asset is already processed for upload in another layout
-                for processedAsset in processedAssets {
-                    if processedAsset == asset {
-                        isAssetAlreadyProcessed = true
-                    }
-                }
-                
-                if !isAssetAlreadyProcessed {
-                    processedAssets.append(asset)
-                    totalUploads += 1
-                }
-            }
-        }
+        let processedAssets = uploadableAssets(withProductLayouts: productLayouts)
+        totalUploads = processedAssets.count
         pendingUploads = totalUploads
         isUploading = true
         completionHandler(totalUploads, nil)
         
         // Upload images
         for asset in processedAssets {
-            
-            // This might be a retry.
-            guard asset.uploadUrl == nil else {
-                handleFinishedUploadingAsset(asset: asset)
-                continue
-            }
 
             asset.imageData(progressHandler: nil, completionHandler: { [weak welf = self] data, fileExtension, error in
                 guard error == nil, let data = data, let fileExtension = fileExtension else {
@@ -221,8 +200,7 @@ class PhotobookAPIManager {
                     return
                 }
                 
-                let assetIdentifier = asset.identifier.replacingOccurrences(of: "/", with: "") //remove slashes because it'd result in an invalid path
-                if let fileUrl = welf?.saveDataToCachesDirectory(data: data, name: "\(assetIdentifier).\(fileExtension)") {
+                if let fileUrl = welf?.saveDataToCachesDirectory(data: data, name: "\(asset.identifier).\(fileExtension)") {
                     welf?.apiClient.uploadImage(fileUrl, reference: self.imageUploadIdentifierPrefix + asset.identifier, context: .pig, endpoint: EndPoints.imageUpload)
                 } else {
                     welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImageData)
@@ -307,18 +285,26 @@ class PhotobookAPIManager {
             completion()
         }
     }
-
-    /*
-    private func submitPhotobookDetails(_ completionHandler: @escaping (Error?) -> Void) {
-        guard let parameters = photobookParameters() else {
-            completionHandler(PhotobookAPIError.couldNotBuildCreationParameters)
-            return
+    
+    private func uploadableAssets(withProductLayouts layouts:[ProductLayout]) -> [Asset] {
+        var processedAssets = [Asset]()
+        layoutLoop: for layout in layouts {
+            if let asset = layout.asset {
+                //check if the asset is already processed for upload in another layout
+                for processedAsset in processedAssets {
+                    if processedAsset == asset {
+                        continue layoutLoop
+                    }
+                }
+                
+                //check if it isn't a retry
+                if asset.uploadUrl == nil {
+                    processedAssets.append(asset)
+                }
+            }
         }
-        
-        apiClient.post(context: .pig, endpoint: EndPoints.initialisePdf, parameters: parameters) { ( jsonData, error) in
-            completionHandler(error)
-        }
-    }*/
+        return processedAssets
+    }
     
     private func photobookParameters() -> [String: Any]? {
         guard let photobookId = OrderManager.shared.photobookId else { return nil }

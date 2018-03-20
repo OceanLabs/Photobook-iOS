@@ -15,9 +15,7 @@ struct ReceiptNotificationName {
 
 class ReceiptTableViewController: UITableViewController {
     
-    struct Constants {
-        static let saveIsProcessingKey = "ReceiptTableViewController.isProcessingOrder"
-        
+    private struct Constants {
         static let infoTitleCompleted = NSLocalizedString("ReceiptTableViewController/InfoTitleCompleted", value: "Ready to Print", comment: "Status title if order has been completed and product is ready to print")
         static let infoDescriptionCompleted = NSLocalizedString("ReceiptTableViewController/InfoDescriptionCompleted", value: "We have received your photos and we will begin processing your photobook shortly", comment: "Info text when order has been completed")
         static let infoTitleError = NSLocalizedString("ReceiptTableViewController/InfoTitleError", value: "Something Went Wrong!", comment: "Status title if order couldn't be completed")
@@ -30,52 +28,124 @@ class ReceiptTableViewController: UITableViewController {
         static let loadingPaymentText = NSLocalizedString("Controllers/ReceiptTableViewController/PaymentLoadingText",
                                                           value: "Preparing Payment",
                                                           comment: "Info text displayed while preparing for payment service")
+        static let loadingFinishingOrderText = NSLocalizedString("Controllers/ReceiptTableViewController/loadingFinishingOrderText",
+                                                                 value: "Finishing order",
+                                                                 comment: "Info text displayed while finishing order")
         
         static let infoButtonTitleRetry = NSLocalizedString("ReceiptTableViewController/InfoButtonRetry", value: "Retry", comment: "Info button text when order couldn't be completed")
         static let infoButtonTitleOK = NSLocalizedString("ReceiptTableViewController/InfoButtonCancelled", value: "OK", comment: "Info button when order was cancelled")
         static let infoButtonTitleUpdate = NSLocalizedString("ReceiptTableViewController/InfoButtonPaymentFailed", value: "Update", comment: "Info button when payment has failed and payment method can be updated")
     }
     
-    enum Section: Int {
+    private enum Section: Int {
         case header, progress, info, details, lineItems, footer
     }
     
-    enum State: Int {
+    private enum State: Int {
         case uploading
         case error
         case completed
         case cancelled
         case paymentFailed
         case paymentRetry
+        
+        func configure(headerCell cell:ReceiptHeaderTableViewCell) {
+            switch self {
+            case .uploading:
+                cell.titleLabel.text = NSLocalizedString("ReceiptTableViewController/TitleUploading", value: "Processing Order", comment: "Receipt sceen title when uploading images")
+            case .completed:
+                cell.titleLabel.text = NSLocalizedString("ReceiptTableViewController/TitleCompleted", value: "Order Complete", comment: "Receipt sceen title when successfully completed uploading images and order is confirmed")
+            case .error:
+                cell.titleLabel.text = NSLocalizedString("ReceiptTableViewController/TitleError", value: "Upload Failed", comment: "Receipt sceen title when uploading images fails")
+            case .cancelled:
+                cell.titleLabel.text = NSLocalizedString("ReceiptTableViewController/TitleCancelled", value: "Order Cancelled", comment: "Receipt sceen title if order had to be cancelled because of unresolvable technical problems")
+            case .paymentFailed, .paymentRetry:
+                cell.titleLabel.text = NSLocalizedString("ReceiptTableViewController/TitlePaymentFailed", value: "Payment Failed", comment: "Receipt sceen title if payment fails and payment method has to be updated")
+            }
+        }
+        
+        func configure(infoCell cell:ReceiptInfoTableViewCell) {
+            switch self {
+            case .completed:
+                cell.iconLabel.text = "👍"
+                cell.titleLabel.text = Constants.infoTitleCompleted.uppercased()
+                cell.descriptionLabel.text = Constants.infoDescriptionCompleted
+                cell.setActionButtonsHidden(true)
+            case .error:
+                cell.iconLabel.text = "😰"
+                cell.titleLabel.text = Constants.infoTitleError.uppercased()
+                cell.descriptionLabel.text = Constants.infoDescriptionError
+                cell.primaryActionButton.setTitle(Constants.infoButtonTitleRetry.uppercased(), for: .normal)
+                cell.setActionButtonsHidden(false)
+            case .cancelled:
+                cell.iconLabel.text = "😵"
+                cell.titleLabel.text = Constants.infoTitleCancelled.uppercased()
+                cell.descriptionLabel.text = Constants.infoDescriptionCancelled
+                cell.primaryActionButton.setTitle(Constants.infoButtonTitleOK.uppercased(), for: .normal)
+                cell.setActionButtonsHidden(true)
+            case .paymentFailed, .paymentRetry:
+                cell.iconLabel.text = "😔"
+                cell.titleLabel.text = Constants.infoTitlePaymentFailed.uppercased()
+                cell.descriptionLabel.text = Constants.infoDescriptionPaymentFailed
+                cell.primaryActionButton.setTitle(Constants.infoButtonTitleUpdate.uppercased(), for: .normal)
+                cell.setActionButtonsHidden(false)
+            default: break
+            }
+            
+            if self == .paymentRetry {
+                cell.setSecondaryActionButtonHidden(false)
+                cell.primaryActionButton.setTitle(Constants.infoButtonTitleRetry.uppercased(), for: .normal)
+                cell.secondaryActionButton.setTitle(Constants.infoButtonTitleUpdate.uppercased(), for: .normal)
+            } else {
+                cell.setSecondaryActionButtonHidden(true)
+            }
+        }
+        
+        func configure(dismissButton barButtonItem:UIBarButtonItem) {
+            let successString = NSLocalizedString("ReceiptTableViewController/DismissButtonSuccess", value: "Continue", comment: "Button displayed after order was placed successfully")
+            let failString = NSLocalizedString("ReceiptTableViewController/DismissButtonFail", value: "Cancel", comment: "Button displayed when something has gone wrong and order couldn't be placed. This gives the user the option to cancel the upload and purchase")
+            switch self {
+            case .uploading:
+                barButtonItem.isEnabled = false
+                barButtonItem.tintColor = .clear
+            case .completed:
+                barButtonItem.isEnabled = true
+                barButtonItem.tintColor = nil
+                barButtonItem.title = successString
+            case .error:
+                barButtonItem.isEnabled = true
+                barButtonItem.tintColor = nil
+                barButtonItem.title = failString
+            case .cancelled:
+                barButtonItem.isEnabled = true
+                barButtonItem.tintColor = nil
+                barButtonItem.title = failString
+            case .paymentFailed, .paymentRetry:
+                barButtonItem.isEnabled = true
+                barButtonItem.tintColor = nil
+                barButtonItem.title = failString
+            }
+        }
     }
     
-    var cost: Cost? {
+    private var cost: Cost? {
         return OrderManager.shared.cachedCost
     }
     
-    var state:State = .error {
+    private var state:State = .uploading {
         didSet {
             if state != oldValue {
                 updateViews()
             }
         }
     }
-    
-    static var isProcessingOrder:Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: Constants.saveIsProcessingKey)
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.saveIsProcessingKey)
-            UserDefaults.standard.synchronize()
-        }
-    }
+    private var lastProcessingError:OrderProcessingError?
     
     @IBOutlet weak var dismissBarButtonItem: UIBarButtonItem!
     var dismissClosure:(() -> Void)?
     
     private var modalPresentationDismissedGroup = DispatchGroup()
-    lazy private var paymentManager: PaymentAuthorizationManager = {
+    private lazy var paymentManager: PaymentAuthorizationManager = {
         let manager = PaymentAuthorizationManager()
         manager.delegate = self
         return manager
@@ -95,13 +165,17 @@ class ReceiptTableViewController: UITableViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem()
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     
-        OrderManager.shared.loadBackup()
+        OrderManager.shared.loadCheckoutDetails()
         updateViews()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(pendingUploadsChanged), name: ProductManager.pendingUploadStatusUpdated, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(photobookUploadFinished), name: ProductManager.finishedPhotobookUpload, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(photobookUploadFailed), name: ProductManager.failedPhotobookUpload, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(shouldRetryUpload), name: ProductManager.shouldRetryUploadingImages, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingCompleted), name: OrderProcessingManager.Notifications.completed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingFailed(_:)), name: OrderProcessingManager.Notifications.failed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(pendingUploadsChanged), name: OrderProcessingManager.Notifications.pendingUploadStatusUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingWillFinish), name: OrderProcessingManager.Notifications.willFinishOrder, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -110,121 +184,30 @@ class ReceiptTableViewController: UITableViewController {
         let loadingString = NSLocalizedString("ReceiptTableViewController/LoadingData", value: "Loading info...", comment: "description for a loading indicator")
         emptyScreenViewController.show(message: loadingString, activity: true)
         
-        if ReceiptTableViewController.isProcessingOrder {
+        if OrderProcessingManager.shared.isProcessingOrder {
             if state == .paymentFailed {
                 //re entered screen from payment methods screen
                 state = .paymentRetry
-                self.emptyScreenViewController.hide(animated: true)
+                emptyScreenViewController.hide(animated: true)
                 return
             }
             
             //re entered app, load and resume upload
-            ProductManager.shared.loadUserPhotobook {
-                
-            }
-            self.emptyScreenViewController.hide(animated: true)
+            ProductManager.shared.loadUserPhotobook()
+            emptyScreenViewController.hide(animated: true)
         } else {
             //start processing
-            ReceiptTableViewController.isProcessingOrder = true
-            //start upload
-            ProductManager.shared.startPhotobookUpload { (totalUploads, error) in
-                self.state = .uploading
-                if totalUploads == 0, error == nil {
-                    self.state = .error
-                }
-                self.emptyScreenViewController.hide(animated: true)
-            }
+            OrderProcessingManager.shared.startProcessing()
+            emptyScreenViewController.hide(animated: true)
         }
 
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
     }
     
     //MARK: Population
     
     private func updateViews() {
         tableView.reloadData()
-        configure(dismissButtonForState: state)
-    }
-    
-    private func configure(headerCell cell:ReceiptHeaderTableViewCell, forState state:State) {
-        switch state {
-        case .uploading:
-            cell.titleLabel.text = NSLocalizedString("ReceiptTableViewController/TitleUploading", value: "Processing Order", comment: "Receipt sceen title when uploading images")
-        case .completed:
-            cell.titleLabel.text = NSLocalizedString("ReceiptTableViewController/TitleCompleted", value: "Order Complete", comment: "Receipt sceen title when successfully completed uploading images and order is confirmed")
-        case .error:
-            cell.titleLabel.text = NSLocalizedString("ReceiptTableViewController/TitleError", value: "Upload Failed", comment: "Receipt sceen title when uploading images fails")
-        case .cancelled:
-            cell.titleLabel.text = NSLocalizedString("ReceiptTableViewController/TitleCancelled", value: "Order Cancelled", comment: "Receipt sceen title if order had to be cancelled because of unresolvable technical problems")
-        case .paymentFailed, .paymentRetry:
-            cell.titleLabel.text = NSLocalizedString("ReceiptTableViewController/TitlePaymentFailed", value: "Payment Failed", comment: "Receipt sceen title if payment fails and payment method has to be updated")
-        }
-    }
-    
-    private func configure(infoCell cell:ReceiptInfoTableViewCell, forState state:State) {
-        switch state {
-        case .completed:
-            cell.iconImageView.image = UIImage(named: "emoji-thumbsup")
-            cell.titleLabel.text = Constants.infoTitleCompleted.uppercased()
-            cell.descriptionLabel.text = Constants.infoDescriptionCompleted
-            cell.setActionButtonsHidden(true)
-        case .error:
-            cell.iconImageView.image = UIImage(named: "emoji-anxious")
-            cell.titleLabel.text = Constants.infoTitleError.uppercased()
-            cell.descriptionLabel.text = Constants.infoDescriptionError
-            cell.primaryActionButton.setTitle(Constants.infoButtonTitleRetry.uppercased(), for: .normal)
-            cell.setActionButtonsHidden(false)
-        case .cancelled:
-            cell.iconImageView.image = UIImage(named: "cancelled")
-            cell.titleLabel.text = Constants.infoTitleCancelled.uppercased()
-            cell.descriptionLabel.text = Constants.infoDescriptionCancelled
-            cell.primaryActionButton.setTitle(Constants.infoButtonTitleOK.uppercased(), for: .normal)
-            cell.setActionButtonsHidden(true)
-        case .paymentFailed, .paymentRetry:
-            cell.iconImageView.image = UIImage(named: "generic-method")
-            cell.titleLabel.text = Constants.infoTitlePaymentFailed.uppercased()
-            cell.descriptionLabel.text = Constants.infoDescriptionPaymentFailed
-            cell.primaryActionButton.setTitle(Constants.infoButtonTitleUpdate.uppercased(), for: .normal)
-            cell.setActionButtonsHidden(false)
-        default: break
-        }
-        
-        if state == .paymentRetry {
-            cell.setSecondaryActionButtonHidden(false)
-            cell.primaryActionButton.setTitle(Constants.infoButtonTitleRetry.uppercased(), for: .normal)
-            cell.secondaryActionButton.setTitle(Constants.infoButtonTitleUpdate.uppercased(), for: .normal)
-        } else {
-            cell.setSecondaryActionButtonHidden(true)
-        }
-    }
-    
-    private func configure(dismissButtonForState state:State) {
-        let successString = NSLocalizedString("ReceiptTableViewController/DismissButtonSuccess", value: "Continue", comment: "Button displayed after order was placed successfully")
-        let failString = NSLocalizedString("ReceiptTableViewController/DismissButtonFail", value: "Cancel", comment: "Button displayed when something has gone wrong and order couldn't be placed. This gives the user the option to cancel the upload and purchase")
-        switch state {
-        case .uploading:
-            dismissBarButtonItem.isEnabled = false
-            dismissBarButtonItem.tintColor = .clear
-        case .completed:
-            dismissBarButtonItem.isEnabled = true
-            dismissBarButtonItem.tintColor = nil
-            dismissBarButtonItem.title = successString
-        case .error:
-            dismissBarButtonItem.isEnabled = true
-            dismissBarButtonItem.tintColor = nil
-            dismissBarButtonItem.title = failString
-        case .cancelled:
-            dismissBarButtonItem.isEnabled = true
-            dismissBarButtonItem.tintColor = nil
-            dismissBarButtonItem.title = failString
-        case .paymentFailed, .paymentRetry:
-            dismissBarButtonItem.isEnabled = true
-            dismissBarButtonItem.tintColor = nil
-            dismissBarButtonItem.title = failString
-        }
+        state.configure(dismissButton: dismissBarButtonItem)
     }
     
     //MARK: Actions
@@ -232,10 +215,15 @@ class ReceiptTableViewController: UITableViewController {
     @IBAction private func primaryActionButtonTapped(_ sender: UIBarButtonItem) {
         switch state {
         case .error:
-            ProductManager.shared.cancelPhotobookUpload {
-                ProductManager.shared.startPhotobookUpload({ (count, error) in
+            if let lastProcessingError = lastProcessingError {
+                switch lastProcessingError {
+                case .upload:
+                    OrderProcessingManager.shared.startPhotobookUpload()
                     self.state = .uploading
-                })
+                case .pdf, .submission:
+                    OrderProcessingManager.shared.finishOrder()
+                default: break
+                }
             }
         case .paymentFailed:
             showPaymentMethods()
@@ -272,14 +260,13 @@ class ReceiptTableViewController: UITableViewController {
     }
     
     private func dismiss() {
-        ProductManager.shared.cancelPhotobookUpload {
-            ReceiptTableViewController.isProcessingOrder = false
+        OrderProcessingManager.shared.cancelProcessing { [weak welf = self] in
             ProductManager.shared.reset()
             OrderManager.shared.reset()
             NotificationCenter.default.post(name: ReceiptNotificationName.receiptWillDismiss, object: nil)
-            self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-            self.navigationController?.popToRootViewController(animated: true)
-            self.dismissClosure?()
+            welf?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+            welf?.navigationController?.popToRootViewController(animated: true)
+            welf?.dismissClosure?()
         }
     }
     
@@ -303,63 +290,6 @@ class ReceiptTableViewController: UITableViewController {
         navigationController?.pushViewController(paymentViewController, animated: true)
     }
     
-    private func createPDFs(_ completion: @escaping (_ urls:[String]?, _ error:Error?) -> Void) {
-        ProductManager.shared.createPhotobookPdf { [weak welf = self] (urls, error) in
-            guard let urls = urls else {
-                if let error = error {
-                    print("ReceiptTableViewController: \(error.localizedDescription)")
-                }
-
-                welf?.state = .error //notify user about submission problem and provide option to retry
- 
-                completion(nil, error)
-                return
-            }
-            
-            completion(urls, error)
-        }
-    }
-    
-    private func submitOrder(_ urls:[String], completion: @escaping (_ errorMessage:ErrorMessage?) -> Void) {
-        OrderManager.shared.submitOrder(urls) { [weak welf = self] (errorMessage) in
-            if let errorMessage = errorMessage {
-                welf?.state = .error
-                completion(errorMessage)
-                return
-            }
-            
-            //TODO: check for order success
-            welf?.pollOrderSuccess(completion: { (errorMessage) in
-            })
-            
-            welf?.state = .completed
-            completion(errorMessage)
-        }
-    }
-    
-    private func pollOrderSuccess(completion: @escaping (_ errorMessage:ErrorMessage?) -> Void) {
-        //TODO: poll order success and provide option to change payment method if fails
-        completion(nil)
-    }
-    
-    private func finishOrder() {
-        //Create PDF
-        progressOverlayViewController.show(message: "")
-        createPDFs { [weak welf = self] (urls, error) in
-            if let urls = urls {
-                welf?.submitOrder(urls, completion: { (errorMessage) in
-                    if let errorMessage = errorMessage {
-                        print("ReceiptTableViewController: \(errorMessage.message)")
-                    }
-                    welf?.progressOverlayViewController.hide()
-                })
-            } else {
-                //failure
-                welf?.progressOverlayViewController.hide()
-            }
-        }
-    }
-    
     //MARK: Table View
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -367,21 +297,25 @@ class ReceiptTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if state == .cancelled {
-            if section == Section.details.rawValue || section == Section.footer.rawValue || section == Section.lineItems.rawValue {
-                return 0
-            }
-        }
-        if section == Section.progress.rawValue {
+        switch section {
+        case Section.header.rawValue:
+            return 1
+        case Section.progress.rawValue:
             return state == .uploading ? 1 : 0
-        }
-        if section == Section.info.rawValue {
+        case Section.info.rawValue:
             return state == .uploading ? 0 : 1
-        }
-        if section == Section.lineItems.rawValue {
+        case Section.details.rawValue:
+            if state == .cancelled { return 0 }
+            return 1
+        case Section.lineItems.rawValue:
+            if state == .cancelled { return 0 }
             return cost?.lineItems?.count ?? 0
+        case Section.footer.rawValue:
+            if state == .cancelled { return 0 }
+            return 1
+        default:
+            return 0
         }
-        return 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -389,7 +323,7 @@ class ReceiptTableViewController: UITableViewController {
         case Section.header.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptHeaderTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptHeaderTableViewCell
             
-            configure(headerCell: cell, forState: state)
+            state.configure(headerCell: cell)
             
             return cell
         case Section.progress.rawValue:
@@ -402,7 +336,7 @@ class ReceiptTableViewController: UITableViewController {
         case Section.info.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptInfoTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptInfoTableViewCell
             
-            configure(infoCell: cell, forState: state)
+            state.configure(infoCell: cell)
             cell.primaryActionButton.addTarget(self, action: #selector(primaryActionButtonTapped(_:)), for: .touchUpInside)
             cell.secondaryActionButton.addTarget(self, action: #selector(secondaryActionButtonTapped(_:)), for: .touchUpInside)
             
@@ -451,30 +385,32 @@ class ReceiptTableViewController: UITableViewController {
         }
     }
     
-    //MARK: - Upload
+    //MARK: - Order Processing
     
     @objc func pendingUploadsChanged() {
-        if state == .cancelled { // don't allow uploads if cancelled, cancel existing uploads instead
-            ProductManager.shared.cancelPhotobookUpload {}
-            return
-        }
-        state = .uploading
         tableView.reloadData()
     }
     
-    @objc func photobookUploadFinished() {
-        finishOrder()
+    @objc func orderProcessingCompleted() {
+        progressOverlayViewController.hide()
+        state = .completed
     }
 
-    @objc func photobookUploadFailed() {
-        ProductManager.shared.cancelPhotobookUpload {
-            self.state = .cancelled
-            ReceiptTableViewController.isProcessingOrder = false
+    @objc func orderProcessingFailed(_ notification: NSNotification) {
+        if let error = notification.userInfo?["error"] as? OrderProcessingError {
+            switch error {
+            case .payment:
+                state = .paymentFailed
+            default: break
+            }
+            lastProcessingError = error
         }
+        state = .error
+        progressOverlayViewController.hide()
     }
     
-    @objc func shouldRetryUpload() {
-        self.state = .error
+    @objc func orderProcessingWillFinish() {
+        progressOverlayViewController.show(message: Constants.loadingFinishingOrderText)
     }
     
 }
@@ -498,7 +434,7 @@ extension ReceiptTableViewController : PaymentAuthorizationManagerDelegate {
         
         OrderManager.shared.paymentToken = token
         
-        finishOrder()
+        OrderProcessingManager.shared.finishOrder()
     }
     
     func modalPresentationDidFinish() {

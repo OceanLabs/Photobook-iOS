@@ -10,6 +10,7 @@ import UIKit
 
 enum AssetLoadingException: Error {
     case notFound
+    case unsupported
 }
 
 enum AssetDataFileExtension: String {
