@@ -19,7 +19,7 @@ protocol AlbumManager {
     
     func loadAlbums(completionHandler: ((_ errorMessage: Error?) -> Void)?)
     var hasMoreAlbumsToLoad: Bool { get }
-    func loadNextBatchOfAlbums()
+    func loadNextBatchOfAlbums(completionHandler: ((_ errorMessage: Error?) -> Void)?)
     
     func stopCachingImagesForAllAssets()
     func startCachingImages(for assets: [Asset], targetSize: CGSize)

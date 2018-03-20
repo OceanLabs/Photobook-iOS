@@ -124,6 +124,11 @@ class OrderManager {
     }
     
     func submitOrder(_ urls:[String], completionHandler: @escaping (_ error: ErrorMessage?) -> Void) {
+    
+        Analytics.shared.trackAction(.orderSubmitted, [Analytics.PropertyNames.secondsSinceAppOpen: Analytics.shared.secondsSinceAppOpen(),
+                                                       Analytics.PropertyNames.secondsInBackground: Int(Analytics.shared.secondsSpentInBackground)
+            ])
+        
         //TODO: change to accept two pdf urls
         KiteAPIClient.shared.submitOrder(parameters: orderParameters(), completionHandler: { [weak welf = self] orderId, error in
             welf?.orderId = orderId

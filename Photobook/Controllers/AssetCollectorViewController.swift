@@ -98,6 +98,12 @@ class AssetCollectorViewController: UIViewController {
                     self.delegate?.actionsForAssetCollectorViewControllerHiddenStateChange(self, willChangeTo: self.isHidden)()
                 }, completion: nil)
             }
+            
+            if oldValue == false {
+                let numberOfItems = imageCollectionView.numberOfItems(inSection: 0)
+                guard numberOfItems > 0 else { return }
+                imageCollectionView.scrollToItem(at: IndexPath(item: numberOfItems - 1, section: 0), at: .right, animated: false)
+            }
         }
     }
     
@@ -125,9 +131,9 @@ class AssetCollectorViewController: UIViewController {
     public static func instance(fromStoryboardWithParent parent: UIViewController, selectedAssetsManager: SelectedAssetsManager, delayAppearance: Bool = false) -> AssetCollectorViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "AssetCollectorViewController") as! AssetCollectorViewController
+        vc.selectedAssetsManager = selectedAssetsManager
         vc.delayAppearance = delayAppearance
         vc.parentController = parent
-        vc.selectedAssetsManager = selectedAssetsManager
         
         return vc
     }
@@ -170,6 +176,12 @@ class AssetCollectorViewController: UIViewController {
         }
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.imageCollectionView.collectionViewLayout.invalidateLayout()
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -181,6 +193,7 @@ class AssetCollectorViewController: UIViewController {
     
     @IBAction public func clearAssets() {
         selectedAssetsManager?.deselectAllAssetsForAllAlbums()
+        Analytics.shared.trackAction(.collectorSelectionCleared)
     }
     
     @IBAction private func turnOnDeletingMode() {
@@ -196,6 +209,8 @@ class AssetCollectorViewController: UIViewController {
     }
     
     @IBAction public func useThese() {
+        Analytics.shared.trackAction(.collectorUseTheseTapped, [Analytics.PropertyNames.numberOfPhotosSelected: assets.count])
+        
         delegate?.assetCollectorViewControllerDidFinish(self)
     }
     

@@ -11,6 +11,7 @@ import UIKit
 class PhotobookTabBar: UITabBar {
     
     var effectView: UIVisualEffectView?
+    var tabChangeObserver: NSKeyValueObservation?
     
     var isBackgroundHidden:Bool = false {
         didSet {
@@ -42,6 +43,14 @@ class PhotobookTabBar: UITabBar {
         insertSubview(effectView, at: 0)
         backgroundImage = UIImage(color: .clear)
         shadowImage = UIImage()
+        
+        tabChangeObserver = observe(\.selectedItem, options: [.new,.old], changeHandler: { tabBar, change in
+            guard let oldValue = change.oldValue,
+                let newValueTitle = tabBar.selectedItem?.title,
+                newValueTitle != oldValue?.title
+                else { return }
+            Analytics.shared.trackAction(.photoSourceSelected, [Analytics.PropertyNames.photoSourceName: newValueTitle])
+        })
     }
     
 }

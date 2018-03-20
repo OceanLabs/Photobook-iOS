@@ -66,7 +66,9 @@ class AppLaunchHandler {
         
         // Stories
         // If there are no stories, remove the stories tab
-        StoriesManager.shared.loadTopStories()
+        StoriesManager.shared.loadTopStories {
+            
+        }
         if StoriesManager.shared.stories.isEmpty {
             tabBarController.viewControllers?.remove(at: Tab.stories.rawValue)
         }

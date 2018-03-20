@@ -18,6 +18,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         static let loadingCellReuseIdentifier = "LoadingCell"
         static let marginBetweenImages: CGFloat = 1
         static let numberOfCellsPerRow: CGFloat = 4 //CGFloat because it's used in size calculations
+        static let numberOfAssetPlaceholders = 50
     }
 
     @IBOutlet private weak var selectAllButton: UIBarButtonItem?
@@ -53,40 +54,17 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if let pickerAnalytics = album as? PickerAnalytics {
+            let screenName = collectorMode == .selecting ? pickerAnalytics.selectingPhotosScreenName : pickerAnalytics.addingMorePhotosScreenName
+            Analytics.shared.trackScreenViewed(screenName)
+        }
+        
         resetCachedAssets()
         
         if #available(iOS 11.0, *) {
             navigationItem.largeTitleDisplayMode = .never
         }
-        
-        if album.assets.isEmpty {
-            self.album.loadAssets(completionHandler: { [weak welf = self] error in
-                if let errorMessage = error as? ActionableErrorMessage {
-                    welf?.emptyScreenViewController.show(ErrorUtils.genericRetryErrorMessage(message: errorMessage.message, action: {
-                        errorMessage.buttonAction()
-                        if errorMessage.dismissErrorPromptAfterAction {
-                            welf?.emptyScreenViewController.hide()
-                        }
-                    }))
-                    return
-                } else if let errorMessage = error as? ErrorMessage {
-                    welf?.present(UIAlertController(errorMessage: errorMessage), animated: true, completion: nil)
-                } else if let error = error as? AccountError {
-                    switch error {
-                    case .notLoggedIn:
-                        self.accountManager?.logout()
-                        self.popToLandingScreen()
-                    }
-                }
-                
-                welf?.collectionView?.reloadData()
-                welf?.postAlbumLoadSetup()
-            })
-        }
-        else{
-            postAlbumLoadSetup()
-        }
-        
+
         registerFor3DTouch()
         
         // Listen to asset manager
@@ -97,20 +75,87 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
     }
     
+    private func loadAssets() {
+        guard album.assets.isEmpty else {
+            postAlbumLoadSetup()
+            return
+        }
+
+        activityIndicator.startAnimating()
+
+        album.loadAssets(completionHandler: { [weak welf = self] error in
+            welf?.postAlbumLoadSetup()
+            
+            guard error == nil else {
+                welf?.showErrorMessage(error: error!) { welf?.loadAssets() }
+                return
+            }
+
+            welf?.collectionView?.reloadData()
+            welf?.resetCachedAssets()
+        })
+    }
+    
+    private func postAlbumLoadSetup() {
+        activityIndicator.stopAnimating()
+        
+        updateSelectAllButton()
+    }
+
+    private func showErrorMessage(error: Error, dismissAfter: TimeInterval? = nil, completion: (() -> Void)?) {
+        let message: ErrorMessage
+        var offsetTop: CGFloat = 0.0
+        
+        if let error = error as? AccountError {
+            switch error {
+            case .notLoggedIn:
+                self.accountManager?.logout()
+                self.popToLandingScreen()
+            }
+            return
+        }
+
+        // If the message requires an action, use the empty screen
+        if let errorMessage = error as? ActionableErrorMessage {
+            var errorCopy = errorMessage
+            errorCopy.buttonAction = {
+                errorMessage.buttonAction()
+                if errorMessage.dismissErrorPromptAfterAction {
+                    self.emptyScreenViewController.hide()
+                }
+            }
+            emptyScreenViewController.show(errorCopy)
+            return
+        }
+        
+        if let error = error as? ErrorMessage {
+            message = error
+        } else {
+            message = ErrorMessage(error)!
+        }
+        
+        // Adding assets: the album picker will be presented modally inside a navigation controller
+        if let navigationBar = navigationController?.navigationBar as? PhotobookNavigationBar {
+            offsetTop = navigationBar.barHeight
+        }
+        
+        MessageBarViewController.show(message: message, parentViewController: self, offsetTop: offsetTop, centred: true, dismissAfter: dismissAfter) {
+            completion?()
+        }
+    }
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
-        updateCachedAssets()
+        loadAssets()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        loadNextBatchOfAssetsIfNeeded()
         
         if !delayCollectorAppearance {
             setupCollector()
@@ -169,9 +214,11 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         
         if selectedAssetsManager?.count(for: album) == album.assets.count {
             selectedAssetsManager?.deselectAllAssets(for: album)
+            Analytics.shared.trackAction(.pickerDeselectAllTapped)
         }
         else {
             selectedAssetsManager?.selectAllAssets(for: album)
+            Analytics.shared.trackAction(.pickerSelectAllTapped)
         }
         
         updateSelectAllButton()
@@ -179,12 +226,6 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         for indexPath in collectionView?.indexPathsForVisibleItems ?? [] {
             updateSelectedStatus(indexPath: indexPath)
         }
-    }
-    
-    func postAlbumLoadSetup() {
-        activityIndicator.stopAnimating()
-        
-        updateSelectAllButton()
     }
     
     func updateSelectAllButton() {
@@ -212,16 +253,6 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         
         let selected = selectedAssetsManager?.isSelected(asset) ?? false
         cell.selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
-    }
-    
-    private func loadNextBatchOfAssetsIfNeeded() {
-        guard album.hasMoreAssetsToLoad, let collectionView = collectionView else { return }
-        for cell in collectionView.visibleCells {
-            if cell.reuseIdentifier == Constants.loadingCellReuseIdentifier {
-                album.loadNextBatchOfAssets()
-                break
-            }
-        }
     }
     
     func coverImageLabelsContainerView() -> UIView? {
@@ -391,7 +422,7 @@ extension AssetPickerCollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return album.assets.count
+            return !album.assets.isEmpty ? album.assets.count : Constants.numberOfAssetPlaceholders
         case 1:
             return album.hasMoreAssetsToLoad ? 1 : 0
         default:
@@ -404,6 +435,8 @@ extension AssetPickerCollectionViewController {
         case 0:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AssetPickerCollectionViewCell", for: indexPath) as? AssetPickerCollectionViewCell else { return UICollectionViewCell() }
             
+            guard indexPath.item < album.assets.count else { return cell }
+                
             let asset = album.assets[indexPath.item]
             cell.assetId = asset.identifier
             
@@ -486,13 +519,35 @@ extension AssetPickerCollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard indexPath.section == 0,
-            let cell = cell as? AssetPickerCollectionViewCell
-            else { return }
+        if indexPath.section == 0, indexPath.item < album.assets.count, let cell = cell as? AssetPickerCollectionViewCell {
+            updateSelectedStatus(cell: cell, indexPath: indexPath, asset: album.assets[indexPath.item])
+            return
+        }
         
-        updateSelectedStatus(cell: cell, indexPath: indexPath, asset: album.assets[indexPath.item])
+        guard cell.reuseIdentifier == Constants.loadingCellReuseIdentifier else { return }
+        let previousAssetCount = album.assets.count
+        album.loadNextBatchOfAssets() { [weak welf = self] (error) in
+            guard let stelf = welf else { return }
+            if let error = error {
+                stelf.showErrorMessage(error: error, dismissAfter: 3.0) {}
+                return
+            }
+            
+            stelf.collectionView?.performBatchUpdates({
+                // Insert new albums
+                var indexPaths = [IndexPath]()
+                for i in previousAssetCount ..< stelf.album.assets.count {
+                    indexPaths.append(IndexPath(row: i, section: 0))
+                }
+                stelf.collectionView?.insertItems(at: indexPaths)
+                
+                // Remove spinner cell if all assets have been loaded
+                if !stelf.album.hasMoreAssetsToLoad {
+                    stelf.collectionView?.deleteItems(at: [IndexPath(row: 0, section: 1)])
+                }
+            }, completion: nil)
+        }
     }
-    
 }
 
 extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegate{

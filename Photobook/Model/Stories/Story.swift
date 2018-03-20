@@ -115,8 +115,11 @@ extension Story: Album {
         collectionForCoverPhoto.coverAsset(useFirstImageInCollection: true, completionHandler: completionHandler)
     }
     
-    func loadNextBatchOfAssets() {}
-    
-    
+    func loadNextBatchOfAssets(completionHandler: ((Error?) -> Void)?) {}
+}
+
+extension Story: PickerAnalytics {
+    var selectingPhotosScreenName: Analytics.ScreenName { return .storiesPicker }
+    var addingMorePhotosScreenName: Analytics.ScreenName { return .storiesPickerAddingMorePhotos }
 }
 

@@ -24,6 +24,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             AppLaunchHandler.enterApp(window: window)
         }
         
+        // Force the static var to initialize so it doesn't miss any notifications
+        _ = Analytics.shared
+        
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     

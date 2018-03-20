@@ -101,6 +101,8 @@ class CheckoutViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        Analytics.shared.trackScreenViewed(Analytics.ScreenName.basket)
+        
         #if TEST_ENVIRONMENT
             title = Constants.title + " (TEST)"
         #else

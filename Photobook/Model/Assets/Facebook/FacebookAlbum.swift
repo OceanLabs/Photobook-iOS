@@ -43,19 +43,13 @@ class FacebookAlbum {
         let graphRequest = FBSDKGraphRequest(graphPath: graphPath, parameters: [:])
         _ = graphRequest?.start(completionHandler: { [weak welf = self] _, result, error in
             if let error = error {
-                // Not worth showing an error if one of the later pagination requests fail
-                guard self.assets.isEmpty else { return }
-                completionHandler?(ErrorUtils.genericRetryErrorMessage(message: error.localizedDescription, action: {
-                    welf?.fetchAssets(graphPath: graphPath, completionHandler: completionHandler)
-                }))
+                completionHandler?(ErrorMessage(text: error.localizedDescription))
                 return
             }
             
             guard let result = (result as? [String: Any]), let data = result["data"] as? [[String: Any]]
                 else {
-                    // Not worth showing an error if one of the later pagination requests fail
-                    guard self.assets.isEmpty else { return }
-                    completionHandler?(ErrorMessage(message: CommonLocalizedStrings.serviceAccessError(serviceName: Constants.serviceName)))
+                    completionHandler?(ErrorMessage(text: CommonLocalizedStrings.serviceAccessError(serviceName: Constants.serviceName)))
                     return
             }
             
@@ -87,18 +81,13 @@ class FacebookAlbum {
                 let cursors = paging["cursors"] as? [String: Any],
                 let after = cursors["after"] as? String {
                 self.after = after
-            }
-            
-            // Call the completion handler only on the first request, subsequent requests will update the album
-            if let completionHandler = completionHandler {
-                completionHandler(nil)
             } else {
-                NotificationCenter.default.post(name: AssetsNotificationName.albumsWereUpdated, object: [AlbumChange(album: self, assetsRemoved: [], indexesRemoved: [], assetsAdded: newAssets)])
+                self.after = nil
             }
         
+            completionHandler?(nil)
         })
     }
-
 }
 
 extension FacebookAlbum: Album {
@@ -107,11 +96,10 @@ extension FacebookAlbum: Album {
         fetchAssets(graphPath: graphPath, completionHandler: completionHandler)
     }
     
-    func loadNextBatchOfAssets() {
+    func loadNextBatchOfAssets(completionHandler: ((Error?) -> Void)?) {
         guard let after = after else { return }
-        self.after = nil
         let graphPath = self.graphPath + "&after=\(after)"
-        fetchAssets(graphPath: graphPath, completionHandler: nil)
+        fetchAssets(graphPath: graphPath, completionHandler: completionHandler)
     }
     
     var hasMoreAssetsToLoad: Bool {
@@ -121,4 +109,9 @@ extension FacebookAlbum: Album {
     func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
         completionHandler(URLAsset(metadata: [URLAssetMetadata(size: .zero, url: coverPhotoUrl)], albumIdentifier: identifier, identifier: coverPhotoUrl.absoluteString), nil)
     }
+}
+
+extension FacebookAlbum: PickerAnalytics {
+    var selectingPhotosScreenName: Analytics.ScreenName { return .facebookPicker }
+    var addingMorePhotosScreenName: Analytics.ScreenName { return .facebookPickerAddingMorePhotos }
 }

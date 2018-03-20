@@ -61,6 +61,11 @@ class PhotosAlbum: Album {
         assetCollection.coverAsset(useFirstImageInCollection: false, completionHandler: completionHandler)
     }
     
-    func loadNextBatchOfAssets() {}
+    func loadNextBatchOfAssets(completionHandler: ((Error?) -> Void)?) {}
     
+}
+
+extension PhotosAlbum: PickerAnalytics {
+    var selectingPhotosScreenName: Analytics.ScreenName { return .picker }
+    var addingMorePhotosScreenName: Analytics.ScreenName { return .pickerAddingMorePhotos }
 }

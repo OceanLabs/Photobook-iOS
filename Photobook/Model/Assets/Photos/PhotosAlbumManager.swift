@@ -16,7 +16,7 @@ class PhotosAlbumManager: NSObject, AlbumManager {
                                                         value: "Permissions Required",
                                                         comment: "Title shown when the photo library access has been disabled")
         static let permissionsMessage = NSLocalizedString("Controllers/EmptyScreenViewController/PermissionDeniedMessage",
-                                                          value: "Photo access has been restricted, but it's needed to create beautiful photo books.\nYou can turn it back on in the system settings",
+                                                          value: "Photo access has been restricted, but it's needed to create beautiful photo books.\nYou can turn it back on in the system settings.",
                                                           comment: "Message shown when the photo library access has been disabled")
         static let permissionsButtonTitle = NSLocalizedString("Controllers/StoriesviewController/PermissionDeniedSettingsButton",
                                                               value: "Open Settings",
@@ -129,7 +129,7 @@ class PhotosAlbumManager: NSObject, AlbumManager {
         }
     }
     
-    func loadNextBatchOfAlbums() {
+    func loadNextBatchOfAlbums(completionHandler: ((Error?) -> Void)?) {
         // Maybe we can use this to load user albums after showing the system ones
     }
     
@@ -144,9 +144,6 @@ class PhotosAlbumManager: NSObject, AlbumManager {
     func stopCachingImages(for assets: [Asset], targetSize: CGSize) {
         PhotosAlbumManager.imageManager.stopCachingImages(for: PhotosAsset.photosAssets(from: assets), targetSize: targetSize, contentMode: .aspectFill, options: nil)
     }
-    
-    
-
 }
 
 extension PhotosAlbumManager: PHPhotoLibraryChangeObserver {
@@ -193,4 +190,9 @@ extension PhotosAlbumManager: PHPhotoLibraryChangeObserver {
         }
     }
     
+}
+
+extension PhotosAlbumManager: PickerAnalytics {
+    var selectingPhotosScreenName: Analytics.ScreenName { return .albums }
+    var addingMorePhotosScreenName: Analytics.ScreenName { return .albumsAddingMorePhotos }
 }

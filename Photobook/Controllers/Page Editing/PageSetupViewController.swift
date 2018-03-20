@@ -52,6 +52,10 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     private var colorSelectionViewController: ColorSelectionViewController!
     private var textEditingViewController: TextEditingViewController!
     
+    private var enteredEditingDate = Date()
+    private var appBackgroundedDate: Date?
+    private var secondsSpentInBackground: TimeInterval = 0
+    
     @IBOutlet private weak var coverFrameView: CoverFrameView! {
         didSet {
             coverFrameView.isHidden = pageType != .cover
@@ -163,10 +167,20 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         toolbar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
         toolbarButtons[Tool.selectAsset.rawValue].isSelected = true
+        sendScreenViewedAnalyticsEvent(for: Tool.selectAsset)
         
         (navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(photobookNavigationBarType)
         
         NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
+        
+        NotificationCenter.default.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in            
+            guard let appBackgroundedDate = welf?.appBackgroundedDate else { return }
+            welf?.secondsSpentInBackground += Date().timeIntervalSince(appBackgroundedDate)
+        })
+        
+        NotificationCenter.default.addObserver(forName: .UIApplicationDidEnterBackground, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
+            welf?.appBackgroundedDate = Date()
+        })
     }
     
     override func viewDidLayoutSubviews() {
@@ -406,6 +420,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         layoutSelectionViewController.selectedLayout = productLayout!.layout
         layoutSelectionViewController.coverColor = ProductManager.shared.coverColor
         layoutSelectionViewController.pageColor = ProductManager.shared.pageColor
+        layoutSelectionViewController.isEditingDoubleLayout = productLayout!.layout.isDoubleLayout
     }
     
     private func setupColorSelection() {
@@ -432,6 +447,10 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         pageView.setupImageBox()
         setupAssetPlacement()
+    }
+    
+    private func secondsSinceEditingEntered() -> Int {
+        return Int(Date().timeIntervalSince(enteredEditingDate))
     }
     
     // MARK: - Navigation
@@ -463,6 +482,10 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     @IBAction func tappedCancelButton(_ sender: UIBarButtonItem) {
+        Analytics.shared.trackAction(.editingCancelled, [Analytics.PropertyNames.secondsInEditing: secondsSinceEditingEntered(),
+                                                         Analytics.PropertyNames.secondsInBackground: Int(secondsSpentInBackground)
+            ])
+        
         delegate?.didFinishEditingPage()
     }
     
@@ -491,15 +514,21 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         {
             productLayout.productLayoutText!.text = visibleText
         }
+        
+        Analytics.shared.trackAction(.editingConfirmed, [Analytics.PropertyNames.secondsInEditing: secondsSinceEditingEntered(),
+                                                         Analytics.PropertyNames.secondsInBackground: Int(secondsSpentInBackground)])
+        
         delegate?.didFinishEditingPage(pageIndex, pageType: pageType, productLayout: productLayout, color: selectedColor)
     }
     
     private var isAnimatingTool = false
     @IBAction func tappedToolButton(_ sender: UIButton) {
-        
+
         guard !isAnimatingTool, let index = toolbarButtons.index(of: sender),
             !toolbarButtons[index].isSelected,
             let tool = Tool(rawValue: index) else { return }
+        
+        sendScreenViewedAnalyticsEvent(for: tool)
 
         // Store currently selected tool so we may come back to it
         previouslySelectedButton = toolbarButtons.first { $0.isSelected }
@@ -586,6 +615,24 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     override var prefersStatusBarHidden: Bool {
         return toolbarButtons != nil ? toolbarButtons[Tool.editText.rawValue].isSelected : false
+    }
+    
+    private func sendScreenViewedAnalyticsEvent(for tool: Tool) {
+        let screenName: Analytics.ScreenName
+        switch tool {
+        case .selectAsset:
+            screenName = .pageEditingPhotoSelection
+        case .selectLayout:
+            screenName = .layoutSelection
+        case .selectColor:
+            screenName = .colorSelection
+        case .placeAsset:
+            screenName = .photoPlacement
+        case .editText:
+            screenName = .textEditing
+        }
+        
+        Analytics.shared.trackScreenViewed(screenName)
     }
 }
 

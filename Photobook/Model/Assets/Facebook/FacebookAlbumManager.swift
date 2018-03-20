@@ -23,26 +23,21 @@ class FacebookAlbumManager {
     
     func fetchAlbums(graphPath: String, completionHandler: ((Error?) -> Void)?) {
         guard let token = FBSDKAccessToken.current() else {
-            completionHandler?(ErrorMessage(message: CommonLocalizedStrings.serviceAccessError(serviceName: FacebookClient.Constants.serviceName)))
+            completionHandler?(ErrorMessage(text: CommonLocalizedStrings.serviceAccessError(serviceName: FacebookClient.Constants.serviceName)))
             return
         }
         
         let graphRequest = FBSDKGraphRequest(graphPath: graphPath, parameters: [:])
         _ = graphRequest?.start(completionHandler: { [weak welf = self] _, result, error in
             if let error = error {
-                // Not worth showing an error if one of the later pagination requests fail
-                guard self.albums.isEmpty else { return }
-                completionHandler?(ErrorUtils.genericRetryErrorMessage(message: error.localizedDescription, action: {
-                    welf?.fetchAlbums(graphPath: graphPath, completionHandler: completionHandler)
-                }))
+                let error = ErrorMessage(text: error.localizedDescription)
+                completionHandler?(error)
                 return
             }
             
             guard let result = (result as? [String: Any]), let data = result["data"] as? [[String: Any]]
                 else {
-                    // Not worth showing an error if one of the later pagination requests fail
-                    guard self.albums.isEmpty else { return }
-                    completionHandler?(ErrorMessage(message: CommonLocalizedStrings.serviceAccessError(serviceName: FacebookClient.Constants.serviceName)))
+                    completionHandler?(ErrorMessage(text: CommonLocalizedStrings.serviceAccessError(serviceName: FacebookClient.Constants.serviceName)))
                     return
             }
             
@@ -68,6 +63,8 @@ class FacebookAlbumManager {
             let cursors = paging["cursors"] as? [String: Any],
                 let after = cursors["after"] as? String {
                 self.after = after
+            } else {
+                self.after = nil
             }
             
             // Call the completion handler only on the first request, subsequent requests will update the album
@@ -76,10 +73,8 @@ class FacebookAlbumManager {
             } else {
                 NotificationCenter.default.post(name: AssetsNotificationName.albumsWereAdded, object: albumAdditions)
             }
-            
         })
     }
-
 }
 
 extension FacebookAlbumManager: AlbumManager {
@@ -90,11 +85,10 @@ extension FacebookAlbumManager: AlbumManager {
         fetchAlbums(graphPath: Constants.graphPath, completionHandler: completionHandler)
     }
     
-    func loadNextBatchOfAlbums() {
+    func loadNextBatchOfAlbums(completionHandler: ((Error?) -> Void)?) {
         guard let after = after else { return }
-        self.after = nil
         let graphPath = Constants.graphPath + "&after=\(after)"
-        fetchAlbums(graphPath: graphPath, completionHandler: nil)
+        fetchAlbums(graphPath: graphPath, completionHandler: completionHandler)
     }
     
     var hasMoreAlbumsToLoad: Bool {
@@ -104,4 +98,9 @@ extension FacebookAlbumManager: AlbumManager {
     func stopCachingImagesForAllAssets() { }
     func startCachingImages(for assets: [Asset], targetSize: CGSize) { }
     func stopCachingImages(for assets: [Asset], targetSize: CGSize) { }
+}
+
+extension FacebookAlbumManager: PickerAnalytics {
+    var addingMorePhotosScreenName: Analytics.ScreenName { return .facebookAlbumsAddingMorePhotos }
+    var selectingPhotosScreenName: Analytics.ScreenName { return .facebookAlbums }
 }

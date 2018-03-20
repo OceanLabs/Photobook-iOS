@@ -28,9 +28,13 @@ class StoriesViewController: UIViewController {
     private var minimumNumberOfStories: Int {
         return stories.count == 1 ? 4 : 3
     }
+    private var storiesAreLoading = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        Analytics.shared.trackScreenViewed(.stories)
+        
         loadStories()
         
         NotificationCenter.default.addObserver(self, selector: #selector(loadStories), name: .UIApplicationDidBecomeActive, object: nil)
@@ -77,8 +81,11 @@ class StoriesViewController: UIViewController {
     }
 
     @objc private func loadStories() {
-        StoriesManager.shared.loadTopStories()
-        tableView.reloadData()
+        storiesAreLoading = true
+        StoriesManager.shared.loadTopStories(completionHandler: {
+            storiesAreLoading = false
+            tableView.reloadData()
+        })
     }
 }
 
@@ -182,7 +189,7 @@ extension StoriesViewController: StoryTableViewCellDelegate {
     // MARK: StoryTableViewCellDelegate
     
     func didTapOnStory(index: Int, coverImage: UIImage?, sourceView: UIView?, labelsContainerView: UIView?) {
-        guard index < stories.count, !stories[index].assets.isEmpty else {
+        guard !storiesAreLoading, index < stories.count, !stories[index].assets.isEmpty else {
             // For a moment after the app has resumed, while the stories are reloading, if the user taps on a story just ignore it. It's unlikely to happen anyway, and even if it does, it's not worth trying to handle it gracefully.
             return
         }
