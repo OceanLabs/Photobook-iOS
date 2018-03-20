@@ -29,7 +29,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private enum Tool: Int {
-        case selectAsset, selectLayout, selectColor, placeAsset, editText
+        case selectLayout, selectAsset, selectColor, placeAsset, editText
     }
     
     @IBOutlet private weak var photobookContainerView: UIView!
@@ -166,7 +166,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         super.viewDidLoad()
         
         toolbar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
-        toolbarButtons[Tool.selectAsset.rawValue].isSelected = true
+        toolbarButtons[Tool.selectLayout.rawValue].isSelected = true
         sendScreenViewedAnalyticsEvent(for: Tool.selectAsset)
         
         (navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(photobookNavigationBarType)
@@ -265,7 +265,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         
         UIView.animate(withDuration: 0.3, delay: 0.1, options: [], animations: {
-            self.assetSelectionContainerView.alpha = 1.0
+            self.layoutSelectionContainerView.alpha = 1.0
             self.toolbar.alpha = 1.0
             
             (self.navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(.clear)
