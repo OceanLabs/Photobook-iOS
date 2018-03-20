@@ -23,7 +23,7 @@ class CheckoutViewController: UIViewController {
         static let detailsLabelColorRequired = UIColor.red.withAlphaComponent(0.6)
         
         static let loadingDetailsText = NSLocalizedString("Controllers/CheckoutViewController/EmptyScreenLoadingText",
-                                                    value: "Loading price details...",
+                                                    value: "Loading price details",
                                                     comment: "Info text displayed next to a loading indicator while loading price details")
         static let loadingPaymentText = NSLocalizedString("Controllers/CheckoutViewController/PaymentLoadingText",
                                                    value: "Preparing Payment",
@@ -129,7 +129,7 @@ class CheckoutViewController: UIViewController {
         
         //POPULATE
         refresh()
-        emptyScreenViewController.show(message: Constants.loadingDetailsText)
+        emptyScreenViewController.show(message: Constants.loadingDetailsText, activity: true)
     }
     
     private func setupApplePayButton() {
