@@ -116,10 +116,11 @@ class IntroViewController: UIViewController {
         
         // Stories
         // If there are no stories, remove the stories tab
-        StoriesManager.shared.loadTopStories()
-        if StoriesManager.shared.stories.isEmpty {
-            tabBarController.viewControllers?.remove(at: Tab.stories.rawValue)
-        }
+        StoriesManager.shared.loadTopStories(completionHandler: {
+            if StoriesManager.shared.stories.isEmpty {
+                tabBarController.viewControllers?.remove(at: Tab.stories.rawValue)
+            }
+        })
         
         // Load the products here, so that the user avoids a loading screen on PhotobookViewController
         ProductManager.shared.initialise(completion: nil)
