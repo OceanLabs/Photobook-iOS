@@ -174,9 +174,13 @@ class ProductManager {
         if product == nil {
             var tempLayouts = [ProductLayout]()
 
-            // Use first photo for the cover
+            // Use a random photo for the cover, but not the first
             let productLayoutAsset = ProductLayoutAsset()
-            productLayoutAsset.asset = addedAssets.first
+            var coverAsset = addedAssets.first
+            if addedAssets.count > 1 {
+                coverAsset = addedAssets[(Int(arc4random()) % (addedAssets.count - 1)) + 1] // Exclude 0
+            }
+            productLayoutAsset.asset = coverAsset
             let coverLayout = coverLayouts.first(where: { $0.imageLayoutBox != nil } )
             let productLayout = ProductLayout(layout: coverLayout!, productLayoutAsset: productLayoutAsset)
             tempLayouts.append(productLayout)
