@@ -810,13 +810,13 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="110" height="74"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SFY-NV-7VF" customClass="CoverFrameView" customModule="Photobook" customModuleProvider="target">
-                                                            <rect key="frame" x="18.5" y="10.5" width="73" height="53"/>
+                                                            <rect key="frame" x="18.5" y="6" width="73" height="62"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pxt-5T-2O8" customClass="CoverBackgroundView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="73" height="53"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="73" height="62"/>
                                                                     <subviews>
                                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oC0-Mt-wgy" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
-                                                                            <rect key="frame" x="3.5" y="0.0" width="69.5" height="53"/>
+                                                                            <rect key="frame" x="3.5" y="0.0" width="69.5" height="62"/>
                                                                             <subviews>
                                                                                 <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Cd-Db-cE8">
                                                                                     <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
@@ -863,7 +863,7 @@
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstItem="Pxt-5T-2O8" firstAttribute="leading" secondItem="SFY-NV-7VF" secondAttribute="leading" id="3mP-jj-mKj"/>
-                                                                <constraint firstAttribute="width" priority="250" constant="73" id="3x8-1m-ttU"/>
+                                                                <constraint firstAttribute="width" constant="73" id="3x8-1m-ttU"/>
                                                                 <constraint firstAttribute="trailing" secondItem="Pxt-5T-2O8" secondAttribute="trailing" id="Weo-dO-bji"/>
                                                                 <constraint firstItem="Pxt-5T-2O8" firstAttribute="top" secondItem="SFY-NV-7VF" secondAttribute="top" id="aKm-3j-wKU"/>
                                                                 <constraint firstAttribute="bottom" secondItem="Pxt-5T-2O8" secondAttribute="bottom" id="cr2-c7-W5B"/>
@@ -878,10 +878,10 @@
                                                     <color key="backgroundColor" red="0.74901960779999999" green="0.75686274509999996" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstItem="SFY-NV-7VF" firstAttribute="centerX" secondItem="15n-jN-NjV" secondAttribute="centerX" id="3Ss-Tp-yvh"/>
-                                                        <constraint firstItem="SFY-NV-7VF" firstAttribute="top" relation="greaterThanOrEqual" secondItem="15n-jN-NjV" secondAttribute="top" constant="6" id="EsH-oS-9dl"/>
+                                                        <constraint firstItem="SFY-NV-7VF" firstAttribute="top" secondItem="15n-jN-NjV" secondAttribute="top" constant="6" id="EsH-oS-9dl"/>
                                                         <constraint firstItem="SFY-NV-7VF" firstAttribute="centerY" secondItem="15n-jN-NjV" secondAttribute="centerY" id="ExV-5J-hCn"/>
                                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="SFY-NV-7VF" secondAttribute="trailing" constant="6" id="HFf-yk-c5j"/>
-                                                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="SFY-NV-7VF" secondAttribute="bottom" constant="6" id="IPU-CY-7Kh"/>
+                                                        <constraint firstAttribute="bottom" secondItem="SFY-NV-7VF" secondAttribute="bottom" constant="6" id="IPU-CY-7Kh"/>
                                                         <constraint firstItem="SFY-NV-7VF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="15n-jN-NjV" secondAttribute="leading" constant="6" id="hZx-8w-qZh"/>
                                                     </constraints>
                                                 </view>
