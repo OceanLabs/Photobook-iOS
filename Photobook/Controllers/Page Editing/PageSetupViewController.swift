@@ -167,7 +167,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         toolbar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
         toolbarButtons[Tool.selectLayout.rawValue].isSelected = true
-        sendScreenViewedAnalyticsEvent(for: Tool.selectAsset)
+        sendScreenViewedAnalyticsEvent(for: Tool.selectLayout)
         
         (navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(photobookNavigationBarType)
         
