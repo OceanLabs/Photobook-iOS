@@ -370,6 +370,11 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     // MARK: - UIMenuController actions
     
+    @objc func cutPages() {
+        copyPages()
+        deletePages()
+    }
+    
     @objc func copyPages() {
         guard let indexPath = interactingItemIndexPath,
             let cell = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell),
@@ -436,6 +441,13 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             let index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex
             else { return }
         
+        guard ProductManager.shared.isRemovingPagesAllowed else {
+            let alertController = UIAlertController(title: NSLocalizedString("Photobook/CannotDeleteAlertTitle", value: "Cannot Delete Page", comment: "Alert title letting the user know they can't delete a page from the book"), message: NSLocalizedString("Photobook/CannotDeleteAlertMessage", value: "Your photo book currently contains the minimum number of pages allowed", comment: "Alert message letting the user know they can't delete a page from the book"), preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
+            present(alertController, animated: true, completion: nil)
+            return
+        }
+        
         let productLayout = ProductManager.shared.productLayouts[index]
         
         ProductManager.shared.deletePages(for: productLayout)
@@ -467,13 +479,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let pasteBoard = UIPasteboard(name: UIPasteboardName("ly.kite.photobook.rearrange"), create: true)
         
         var menuItems = [UIMenuItem]()
+        menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemCutTitle", value: "Cut", comment: "Cut/Paste interaction"), action: #selector(cutPages)))
         menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemCopyTitle", value: "Copy", comment: "Copy/Paste interaction"), action: #selector(copyPages)))
         if (pasteBoard?.items.count ?? 0) > 0 {
             menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemPasteTitle", value: "Paste", comment: "Copy/Paste interaction"), action: #selector(pastePages)))
         }
-        if ProductManager.shared.isRemovingPagesAllowed {
-            menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemDeleteTitle", value: "Delete", comment: "Delete a page from the photobook"), action: #selector(deletePages)))
-        }
+        menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemDeleteTitle", value: "Delete", comment: "Delete a page from the photobook"), action: #selector(deletePages)))
         
         UIMenuController.shared.menuItems = menuItems
         UIMenuController.shared.setMenuVisible(true, animated: true)
