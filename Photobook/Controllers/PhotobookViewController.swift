@@ -433,6 +433,13 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             let index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex
             else { return }
         
+        guard ProductManager.shared.isRemovingPagesAllowed else {
+            let alertController = UIAlertController(title: NSLocalizedString("Photobook/CannotDeleteAlertTitle", value: "Cannot Delete Page", comment: "Alert title letting the user know they can't delete a page from the book"), message: NSLocalizedString("Photobook/CannotDeleteAlertMessage", value: "Your photo book currently contains the minimum number of pages allowed", comment: "Alert message letting the user know they can't delete a page from the book"), preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
+            present(alertController, animated: true, completion: nil)
+            return
+        }
+        
         let productLayout = ProductManager.shared.productLayouts[index]
         
         ProductManager.shared.deletePages(for: productLayout)
@@ -467,9 +474,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         if (pasteBoard?.items.count ?? 0) > 0 {
             menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemPasteTitle", value: "Paste", comment: "Copy/Paste interaction"), action: #selector(pastePages)))
         }
-        if ProductManager.shared.isRemovingPagesAllowed {
-            menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemDeleteTitle", value: "Delete", comment: "Delete a page from the photobook"), action: #selector(deletePages)))
-        }
+        menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemDeleteTitle", value: "Delete", comment: "Delete a page from the photobook"), action: #selector(deletePages)))
         
         UIMenuController.shared.menuItems = menuItems
         UIMenuController.shared.setMenuVisible(true, animated: true)
