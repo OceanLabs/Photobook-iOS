@@ -23,8 +23,12 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     @IBOutlet private weak var leftAssetImageView: UIImageView!
     @IBOutlet private weak var rightAssetContainerView: UIView!
     @IBOutlet private weak var rightAssetImageView: UIImageView!
-    @IBOutlet private weak var photobookLeftAligmentConstraint: NSLayoutConstraint!
-
+    @IBOutlet private var photobookLeftAligmentConstraint: NSLayoutConstraint!
+    @IBOutlet private var photobookTopMarginConstraint: NSLayoutConstraint!
+    @IBOutlet private var photobookBottomMarginConstraint: NSLayoutConstraint!
+    @IBOutlet private var photobookLeadMarginConstraint: NSLayoutConstraint!
+    @IBOutlet private var photobookTrailMarginConstraint: NSLayoutConstraint!
+    
     var pageType: PageType!
     var layout: Layout?
     var asset: Asset!
@@ -98,7 +102,13 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
             photobookFrameView.leftPageView.aspectRatio = aspectRatio
             photobookFrameView.rightPageView.aspectRatio = aspectRatio
         }
-        photobookFrameView.layoutIfNeeded()
+        
+        photobookLeftAligmentConstraint.isActive = !layout.isDoubleLayout
+        photobookLeadMarginConstraint.isActive = layout.isDoubleLayout
+        photobookTrailMarginConstraint.isActive = layout.isDoubleLayout
+        photobookTopMarginConstraint.isActive = !layout.isDoubleLayout
+        photobookBottomMarginConstraint.isActive = !layout.isDoubleLayout
+
         
         let productLayoutAsset = ProductLayoutAsset()
         productLayoutAsset.asset = asset
@@ -109,13 +119,14 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         case .last:
             photobookFrameView.isRightPageVisible = false
             fallthrough
-        case .left:
+        case .left where !layout.isDoubleLayout:
             photobookLeftAligmentConstraint.constant = bounds.width - Constants.photobookAlignmentMargin
         case .first:
             photobookFrameView.isLeftPageVisible = false
         default:
             break
         }
+        photobookFrameView.layoutIfNeeded()
         
         pageView.pageIndex = pageIndex
         pageView.productLayout = productLayout
@@ -138,5 +149,14 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
                 photobookFrameView.resetPageColor()
         }
     }
+    
+    override func prepareForReuse() {
+        photobookLeftAligmentConstraint.isActive = false
+        photobookLeadMarginConstraint.isActive = false
+        photobookTrailMarginConstraint.isActive = false
+        photobookTopMarginConstraint.isActive = false
+        photobookBottomMarginConstraint.isActive = false
+    }
 }
 
+extension LayoutSelectionCollectionViewCell: LayoutSelectionCollectionViewCellSetup {}

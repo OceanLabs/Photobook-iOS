@@ -46,3 +46,5 @@ class CoverLayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         }
     }
 }
+
+extension CoverLayoutSelectionCollectionViewCell: LayoutSelectionCollectionViewCellSetup {}
