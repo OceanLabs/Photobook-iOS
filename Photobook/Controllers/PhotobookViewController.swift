@@ -11,6 +11,7 @@ import UIKit
 class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate {
     
     private struct Constants {
+        static let titleArrowOffset: CGFloat = -8.0
         static let rearrangeScale: CGFloat = 0.8
         static let cellSideMargin: CGFloat = 10.0
         static let rearrangeAnimationDuration: TimeInterval = 0.25
@@ -172,8 +173,9 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             titleButton.setTitle(ProductManager.shared.product?.name, for: .normal)
             titleButton.setImage(UIImage(named:"chevron-down"), for: .normal)
             titleButton.semanticContentAttribute = .forceRightToLeft
-            titleButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -5)
+            titleButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: Constants.titleArrowOffset)
             titleButton.sizeToFit()
+            titleButton.frame = titleButton.frame.insetBy(dx: Constants.titleArrowOffset, dy: 0)
             titleButton.addTarget(self, action: #selector(didTapOnTitle), for: .touchUpInside)
             navigationItem.titleView = titleButton
             return
