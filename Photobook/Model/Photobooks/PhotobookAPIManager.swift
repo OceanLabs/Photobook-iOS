@@ -192,6 +192,7 @@ class PhotobookAPIManager {
         completionHandler(totalUploads, nil)
         
         // Upload images
+        
         for asset in processedAssets {
 
             asset.imageData(progressHandler: nil, completionHandler: { [weak welf = self] data, fileExtension, error in
@@ -200,7 +201,7 @@ class PhotobookAPIManager {
                     return
                 }
                 
-                if let fileUrl = welf?.saveDataToCachesDirectory(data: data, name: "\(asset.identifier).\(fileExtension)") {
+                if let fileUrl = welf?.saveDataToCachesDirectory(data: data, name: "\(asset.fileIdentifier).\(fileExtension)") {
                     welf?.apiClient.uploadImage(fileUrl, reference: self.imageUploadIdentifierPrefix + asset.identifier, context: .pig, endpoint: EndPoints.imageUpload)
                 } else {
                     welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImageData)
@@ -258,7 +259,7 @@ class PhotobookAPIManager {
         }
     }
     
-    func restoreUploads(_ completionHandler: @escaping () -> Void) {
+    func restoreUploads(_ completionHandler: (() -> Void)? = nil) {
         guard let productLayouts = delegate?.productLayouts else {
             delegate?.didFailUpload(PhotobookAPIError.missingPhotobookInfo)
             return
@@ -268,7 +269,7 @@ class PhotobookAPIManager {
         for layout in productLayouts {
             if layout.asset != nil { totalUploads += 1 }
         }
-        APIClient.shared.recreateBackgroundSession(completionHandler)
+        APIClient.shared.recreateBackgroundSession()
     }
     
     func cancelUpload(_ completion: @escaping () -> Void) {

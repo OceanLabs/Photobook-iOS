@@ -84,4 +84,9 @@ class IntroViewController: UIViewController {
             dismissClosure?()
         }
     }
+    
+    func proceedToTabBarController() {
+        performSegue(withIdentifier: "IntroDismiss", sender: nil)
+    }
+    
 }

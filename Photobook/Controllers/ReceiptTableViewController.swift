@@ -15,117 +15,11 @@ struct ReceiptNotificationName {
 
 class ReceiptTableViewController: UITableViewController {
     
-    private struct Constants {
-        static let infoTitleCompleted = NSLocalizedString("ReceiptTableViewController/InfoTitleCompleted", value: "Ready to Print", comment: "Status title if order has been completed and product is ready to print")
-        static let infoDescriptionCompleted = NSLocalizedString("ReceiptTableViewController/InfoDescriptionCompleted", value: "We have received your photos and we will begin processing your photobook shortly", comment: "Info text when order has been completed")
-        static let infoTitleError = NSLocalizedString("ReceiptTableViewController/InfoTitleError", value: "Something Went Wrong!", comment: "Status title if order couldn't be completed")
-        static let infoDescriptionError = NSLocalizedString("ReceiptTableViewController/InfoDescriptionError", value: "Something happened and we can't receive your photos at this point. You can retry or cancel and be refunded", comment: "Info text when order couldn't be completed")
-        static let infoTitleCancelled = NSLocalizedString("ReceiptTableViewController/InfoTitleCancelled", value: "Order Cancelled", comment: "Status title if was cancelled")
-        static let infoDescriptionCancelled = NSLocalizedString("ReceiptTableViewController/InfoDescriptionCancelled", value: "Something happened and we can't receive your photos at this point but we haven't charged you anything", comment: "Info text when order couldn't be completed")
-        static let infoTitlePaymentFailed = NSLocalizedString("ReceiptTableViewController/InfoTitlePaymentFailed", value: "Your Payment Method Failed", comment: "Payment has failed")
-        static let infoDescriptionPaymentFailed = NSLocalizedString("ReceiptTableViewController/InfoDescriptionPaymentFailed", value: "The charge for your book was declined.\nYou can retry with another method", comment: "Info text when payment method has failed")
-        
-        static let loadingPaymentText = NSLocalizedString("Controllers/ReceiptTableViewController/PaymentLoadingText",
-                                                          value: "Preparing Payment",
-                                                          comment: "Info text displayed while preparing for payment service")
-        static let loadingFinishingOrderText = NSLocalizedString("Controllers/ReceiptTableViewController/loadingFinishingOrderText",
-                                                                 value: "Finishing order",
-                                                                 comment: "Info text displayed while finishing order")
-        
-        static let infoButtonTitleRetry = NSLocalizedString("ReceiptTableViewController/InfoButtonRetry", value: "Retry", comment: "Info button text when order couldn't be completed")
-        static let infoButtonTitleOK = NSLocalizedString("ReceiptTableViewController/InfoButtonCancelled", value: "OK", comment: "Info button when order was cancelled")
-        static let infoButtonTitleUpdate = NSLocalizedString("ReceiptTableViewController/InfoButtonPaymentFailed", value: "Update", comment: "Info button when payment has failed and payment method can be updated")
-    }
+    private typealias Constants = ReceiptViewControllerModel.Constants
+    private typealias State = ReceiptViewControllerModel.State
     
     private enum Section: Int {
         case header, progress, info, details, lineItems, footer
-    }
-    
-    private enum State: Int {
-        case uploading
-        case error
-        case completed
-        case cancelled
-        case paymentFailed
-        case paymentRetry
-        
-        func configure(headerCell cell:ReceiptHeaderTableViewCell) {
-            switch self {
-            case .uploading:
-                cell.titleLabel.text = NSLocalizedString("ReceiptTableViewController/TitleUploading", value: "Processing Order", comment: "Receipt sceen title when uploading images")
-            case .completed:
-                cell.titleLabel.text = NSLocalizedString("ReceiptTableViewController/TitleCompleted", value: "Order Complete", comment: "Receipt sceen title when successfully completed uploading images and order is confirmed")
-            case .error:
-                cell.titleLabel.text = NSLocalizedString("ReceiptTableViewController/TitleError", value: "Upload Failed", comment: "Receipt sceen title when uploading images fails")
-            case .cancelled:
-                cell.titleLabel.text = NSLocalizedString("ReceiptTableViewController/TitleCancelled", value: "Order Cancelled", comment: "Receipt sceen title if order had to be cancelled because of unresolvable technical problems")
-            case .paymentFailed, .paymentRetry:
-                cell.titleLabel.text = NSLocalizedString("ReceiptTableViewController/TitlePaymentFailed", value: "Payment Failed", comment: "Receipt sceen title if payment fails and payment method has to be updated")
-            }
-        }
-        
-        func configure(infoCell cell:ReceiptInfoTableViewCell) {
-            switch self {
-            case .completed:
-                cell.iconLabel.text = "👍"
-                cell.titleLabel.text = Constants.infoTitleCompleted.uppercased()
-                cell.descriptionLabel.text = Constants.infoDescriptionCompleted
-                cell.setActionButtonsHidden(true)
-            case .error:
-                cell.iconLabel.text = "😰"
-                cell.titleLabel.text = Constants.infoTitleError.uppercased()
-                cell.descriptionLabel.text = Constants.infoDescriptionError
-                cell.primaryActionButton.setTitle(Constants.infoButtonTitleRetry.uppercased(), for: .normal)
-                cell.setActionButtonsHidden(false)
-            case .cancelled:
-                cell.iconLabel.text = "😵"
-                cell.titleLabel.text = Constants.infoTitleCancelled.uppercased()
-                cell.descriptionLabel.text = Constants.infoDescriptionCancelled
-                cell.primaryActionButton.setTitle(Constants.infoButtonTitleOK.uppercased(), for: .normal)
-                cell.setActionButtonsHidden(true)
-            case .paymentFailed, .paymentRetry:
-                cell.iconLabel.text = "😔"
-                cell.titleLabel.text = Constants.infoTitlePaymentFailed.uppercased()
-                cell.descriptionLabel.text = Constants.infoDescriptionPaymentFailed
-                cell.primaryActionButton.setTitle(Constants.infoButtonTitleUpdate.uppercased(), for: .normal)
-                cell.setActionButtonsHidden(false)
-            default: break
-            }
-            
-            if self == .paymentRetry {
-                cell.setSecondaryActionButtonHidden(false)
-                cell.primaryActionButton.setTitle(Constants.infoButtonTitleRetry.uppercased(), for: .normal)
-                cell.secondaryActionButton.setTitle(Constants.infoButtonTitleUpdate.uppercased(), for: .normal)
-            } else {
-                cell.setSecondaryActionButtonHidden(true)
-            }
-        }
-        
-        func configure(dismissButton barButtonItem:UIBarButtonItem) {
-            let successString = NSLocalizedString("ReceiptTableViewController/DismissButtonSuccess", value: "Continue", comment: "Button displayed after order was placed successfully")
-            let failString = NSLocalizedString("ReceiptTableViewController/DismissButtonFail", value: "Cancel", comment: "Button displayed when something has gone wrong and order couldn't be placed. This gives the user the option to cancel the upload and purchase")
-            switch self {
-            case .uploading:
-                barButtonItem.isEnabled = false
-                barButtonItem.tintColor = .clear
-            case .completed:
-                barButtonItem.isEnabled = true
-                barButtonItem.tintColor = nil
-                barButtonItem.title = successString
-            case .error:
-                barButtonItem.isEnabled = true
-                barButtonItem.tintColor = nil
-                barButtonItem.title = failString
-            case .cancelled:
-                barButtonItem.isEnabled = true
-                barButtonItem.tintColor = nil
-                barButtonItem.title = failString
-            case .paymentFailed, .paymentRetry:
-                barButtonItem.isEnabled = true
-                barButtonItem.tintColor = nil
-                barButtonItem.title = failString
-            }
-        }
     }
     
     private var cost: Cost? {
@@ -209,7 +103,11 @@ class ReceiptTableViewController: UITableViewController {
     
     private func updateViews() {
         tableView.reloadData()
-        state.configure(dismissButton: dismissBarButtonItem)
+        
+        //dismiss button
+        dismissBarButtonItem.title = state.dismissTitle
+        dismissBarButtonItem.isEnabled = state.allowDismissing
+        dismissBarButtonItem.tintColor = state.allowDismissing ? nil : .clear
     }
     
     //MARK: Actions
@@ -292,6 +190,10 @@ class ReceiptTableViewController: UITableViewController {
         navigationController?.pushViewController(paymentViewController, animated: true)
     }
     
+    func proceedToTabBarController() {
+        performSegue(withIdentifier: "ReceiptDismiss", sender: nil)
+    }
+    
     //MARK: Table View
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -325,7 +227,7 @@ class ReceiptTableViewController: UITableViewController {
         case Section.header.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptHeaderTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptHeaderTableViewCell
             
-            state.configure(headerCell: cell)
+            cell.titleLabel.text = state.title
             
             return cell
         case Section.progress.rawValue:
@@ -338,7 +240,14 @@ class ReceiptTableViewController: UITableViewController {
         case Section.info.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptInfoTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptInfoTableViewCell
             
-            state.configure(infoCell: cell)
+            cell.iconLabel.text = state.emoji
+            cell.titleLabel.text = state.infoTitle
+            cell.descriptionLabel.text = state.infoText
+            cell.primaryActionButton.setTitle(state.primaryActionText, for: .normal)
+            cell.secondaryActionButton.setTitle(state.secondaryActionText, for: .normal)
+            cell.setActionButtonsHidden(state.actionsHidden)
+            cell.setSecondaryActionButtonHidden(state.secondaryActionHidden)
+            
             cell.primaryActionButton.addTarget(self, action: #selector(primaryActionButtonTapped(_:)), for: .touchUpInside)
             cell.secondaryActionButton.addTarget(self, action: #selector(secondaryActionButtonTapped(_:)), for: .touchUpInside)
             

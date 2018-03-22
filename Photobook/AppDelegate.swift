@@ -20,9 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         Fabric.with([Crashlytics.self])
         
-        if let window = window {
-            AppLaunchHandler.enterApp(window: window)
-        }
+        window?.rootViewController = PhotobookLaunchHandler.enter()
         
         // Force the static var to initialize so it doesn't miss any notifications
         _ = Analytics.shared

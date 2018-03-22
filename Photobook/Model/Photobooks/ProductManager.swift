@@ -358,7 +358,7 @@ class ProductManager {
     /// Loads the user's photobook details from disk
     ///
     /// - Parameter completionHandler: Closure called on completion
-    func loadUserPhotobook(_ completionHandler: @escaping () -> Void = {} ) {
+    func loadUserPhotobook(_ completionHandler: (() -> Void)? = nil ) {
         guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: Storage.photobookBackupFile) as? Data else {
             print("ProductManager: failed to unarchive product")
             return
@@ -372,7 +372,7 @@ class ProductManager {
         self.coverColor = unarchivedProduct.coverColor
         self.pageColor = unarchivedProduct.pageColor
         self.productLayouts = unarchivedProduct.productLayouts
-        apiManager.restoreUploads(completionHandler)
+        apiManager.restoreUploads()
     }
     
     

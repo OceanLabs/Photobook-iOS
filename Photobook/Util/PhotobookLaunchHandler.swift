@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AppLaunchHandler {
+class PhotobookLaunchHandler {
     
     enum Tab: Int {
         case stories
@@ -17,44 +17,43 @@ class AppLaunchHandler {
         case facebook
     }
     
-    static func enterApp(window: UIWindow) {
+    static func enter() -> UIViewController {
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
-        let goToTabBarControllerClosure = {
-            configureTabBarController(tabBarController)
-            window.rootViewController = tabBarController
-        }
         
         if IntroViewController.userHasDismissed && !OrderProcessingManager.shared.isProcessingOrder {
-            goToTabBarControllerClosure()
-            return
+            configureTabBarController(tabBarController)
+            return tabBarController
+        }
+        
+        let rootNavigationController = UINavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
+        rootNavigationController.isNavigationBarHidden = true
+        if #available(iOS 11.0, *) {
+            rootNavigationController.navigationBar.prefersLargeTitles = false // large titles on nav vc containing other nav vcs causes issues
         }
         
         if !IntroViewController.userHasDismissed {
             let introViewController = storyboard.instantiateViewController(withIdentifier: "IntroViewController") as! IntroViewController
-            introViewController.dismissClosure = goToTabBarControllerClosure
-            window.rootViewController = introViewController
+            introViewController.dismissClosure = {
+                configureTabBarController(tabBarController)
+                introViewController.proceedToTabBarController()
+            }
+            rootNavigationController.viewControllers = [introViewController]
             
-            return
-        }
-        
-        if OrderProcessingManager.shared.isProcessingOrder {
+        } else if OrderProcessingManager.shared.isProcessingOrder {
             //show receipt screen to prevent user from ordering another photobook
             let receiptViewController = storyboard.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
-            receiptViewController.dismissClosure = goToTabBarControllerClosure
-            
-            let navigationController = UINavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
-            navigationController.pushViewController(receiptViewController, animated: false)
-            window.rootViewController = navigationController
-            
-            return
+            receiptViewController.dismissClosure = {
+                configureTabBarController(tabBarController)
+                rootNavigationController.isNavigationBarHidden = true
+                receiptViewController.proceedToTabBarController()
+            }
+            rootNavigationController.isNavigationBarHidden = false
+            rootNavigationController.viewControllers = [receiptViewController]
         }
         
-    }
-    
-    static func proceedToTabBarController() {
-        
+        return rootNavigationController
     }
     
     private static func configureTabBarController(_ tabBarController: UITabBarController) {

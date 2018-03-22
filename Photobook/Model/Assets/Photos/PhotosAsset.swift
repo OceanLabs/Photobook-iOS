@@ -31,7 +31,7 @@ class PhotosAsset: Asset {
     
     var photosAsset: PHAsset {
         didSet {
-            identifier = photosAsset.localIdentifier.replacingOccurrences(of: "/", with: "") //remove slashes because it'd result in an invalid path
+            identifier = photosAsset.localIdentifier
         }
     }
     

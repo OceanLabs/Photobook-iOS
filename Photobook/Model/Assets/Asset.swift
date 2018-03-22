@@ -61,6 +61,13 @@ extension Asset {
         
         image(size: size, loadThumbnailsFirst: loadThumbnailsFirst, progressHandler: progressHandler, completionHandler: completionHandler)
     }
+    
+    /// Removes slashes because it'd result in an invalid path
+    var fileIdentifier: String {
+        get {
+            return identifier.replacingOccurrences(of: "/", with: "")
+        }
+    }
 }
 
 func ==(lhs: Asset, rhs: Asset) -> Bool{

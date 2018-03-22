@@ -162,7 +162,7 @@ class APIClient: NSObject {
     /// Called when the app is launched by the system by pending tasks
     ///
     /// - Parameter completionHandler: The completion handler provided by the system and that should be called when the event handling is done.
-    func recreateBackgroundSession(_ completionHandler: @escaping ()->Void) {
+    func recreateBackgroundSession(_ completionHandler: (()->Void)? = nil) {
         self.backgroundSessionCompletionHandler = completionHandler
         
         // Trigger lazy initialisation
