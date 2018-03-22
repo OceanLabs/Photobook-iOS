@@ -45,7 +45,16 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     var selectedAssetsManager: SelectedAssetsManager?
     var selectedAssetsSource: SelectedAssetsSource?
-    private var titleButton = UIButton()
+    private var titleButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        button.setTitleColor(.black, for: .normal)
+        button.setImage(UIImage(named:"chevron-down"), for: .normal)
+        button.semanticContentAttribute = .forceRightToLeft
+        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: Constants.titleArrowOffset)
+        button.addTarget(self, action: #selector(didTapOnTitle), for: .touchUpInside)
+        return button
+    }()
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
     }()
@@ -167,16 +176,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     private func setupTitleView() {
         if !isRearranging {
-            titleButton = UIButton(type: .custom)
-            titleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-            titleButton.setTitleColor(.black, for: .normal)
             titleButton.setTitle(ProductManager.shared.product?.name, for: .normal)
-            titleButton.setImage(UIImage(named:"chevron-down"), for: .normal)
-            titleButton.semanticContentAttribute = .forceRightToLeft
-            titleButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: Constants.titleArrowOffset)
             titleButton.sizeToFit()
-            titleButton.frame = titleButton.frame.insetBy(dx: Constants.titleArrowOffset, dy: 0)
-            titleButton.addTarget(self, action: #selector(didTapOnTitle), for: .touchUpInside)
             navigationItem.titleView = titleButton
             return
         }
@@ -193,10 +194,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             alertController.addAction(UIAlertAction(title: photobook.name, style: .default, handler: { [weak welf = self] (_) in
                 guard ProductManager.shared.product!.id != photobook.id else { return }
                 
-                welf?.titleButton.setTitle(photobook.name, for: .normal)
-                
                 ProductManager.shared.setPhotobook(photobook)
-                self.collectionView.reloadData()
+                
+                welf?.setupTitleView()
+                welf?.collectionView.reloadData()
             }))
         }
         
