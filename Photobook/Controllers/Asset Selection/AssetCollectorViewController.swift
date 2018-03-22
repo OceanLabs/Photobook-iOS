@@ -98,6 +98,12 @@ class AssetCollectorViewController: UIViewController {
                     self.delegate?.actionsForAssetCollectorViewControllerHiddenStateChange(self, willChangeTo: self.isHidden)()
                 }, completion: nil)
             }
+            
+            if oldValue == false {
+                let numberOfItems = imageCollectionView.numberOfItems(inSection: 0)
+                guard numberOfItems > 0 else { return }
+                imageCollectionView.scrollToItem(at: IndexPath(item: numberOfItems - 1, section: 0), at: .right, animated: false)
+            }
         }
     }
     
@@ -187,6 +193,7 @@ class AssetCollectorViewController: UIViewController {
     
     @IBAction public func clearAssets() {
         selectedAssetsManager?.deselectAllAssetsForAllAlbums()
+        Analytics.shared.trackAction(.collectorSelectionCleared)
     }
     
     @IBAction private func turnOnDeletingMode() {
@@ -202,6 +209,8 @@ class AssetCollectorViewController: UIViewController {
     }
     
     @IBAction public func useThese() {
+        Analytics.shared.trackAction(.collectorUseTheseTapped, [Analytics.PropertyNames.numberOfPhotosSelected: assets.count])
+        
         delegate?.assetCollectorViewControllerDidFinish(self)
     }
     

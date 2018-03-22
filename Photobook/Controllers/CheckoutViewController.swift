@@ -101,6 +101,8 @@ class CheckoutViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        Analytics.shared.trackScreenViewed(Analytics.ScreenName.basket)
+        
         #if TEST_ENVIRONMENT
             title = Constants.title + " (TEST)"
         #else
@@ -512,6 +514,9 @@ class CheckoutViewController: UIViewController {
     }
     
     private func submitOrder(completionHandler: ((_ status: PKPaymentAuthorizationStatus) -> Void)?) {
+          Analytics.shared.trackAction(.orderSubmitted, [Analytics.PropertyNames.secondsSinceAppOpen: Analytics.shared.secondsSinceAppOpen(),
+                                                         Analytics.PropertyNames.secondsInBackground: Int(Analytics.shared.secondsSpentInBackground)
+                                                         ])
         progressOverlayViewController.show(message: Constants.submittingOrderText)
         OrderManager.shared.submitOrder(completionHandler: { [weak welf = self] errorMessage in
             welf?.progressOverlayViewController.hide()

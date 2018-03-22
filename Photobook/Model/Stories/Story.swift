@@ -117,3 +117,8 @@ extension Story: Album {
     func loadNextBatchOfAssets(completionHandler: ((Error?) -> Void)?) {}
 }
 
+extension Story: PickerAnalytics {
+    var selectingPhotosScreenName: Analytics.ScreenName { return .storiesPicker }
+    var addingMorePhotosScreenName: Analytics.ScreenName { return .storiesPickerAddingMorePhotos }
+}
+

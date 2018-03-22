@@ -11,6 +11,7 @@ import UIKit
 class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate {
     
     private struct Constants {
+        static let titleArrowOffset: CGFloat = -8.0
         static let rearrangeScale: CGFloat = 0.8
         static let cellSideMargin: CGFloat = 10.0
         static let rearrangeAnimationDuration: TimeInterval = 0.25
@@ -64,6 +65,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        Analytics.shared.trackScreenViewed(Analytics.ScreenName.photobook)
         
         if #available(iOS 11.0, *) {
             navigationItem.largeTitleDisplayMode = .never
@@ -169,8 +172,9 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             titleButton.setTitle(ProductManager.shared.product?.name, for: .normal)
             titleButton.setImage(UIImage(named:"chevron-down"), for: .normal)
             titleButton.semanticContentAttribute = .forceRightToLeft
-            titleButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -5)
+            titleButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: Constants.titleArrowOffset)
             titleButton.sizeToFit()
+            titleButton.frame = titleButton.frame.insetBy(dx: Constants.titleArrowOffset, dy: 0)
             titleButton.addTarget(self, action: #selector(didTapOnTitle), for: .touchUpInside)
             navigationItem.titleView = titleButton
             return
@@ -294,6 +298,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             ProductManager.shared.reset()
             
             self.navigationController?.popViewController(animated: true)
+            
+            Analytics.shared.trackAction(.wentBackFromPhotobookPreview)
         }))
         alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
         
@@ -363,7 +369,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     // MARK: - UIMenuController actions
     
-    @objc private func copyPages() {
+    @objc func cutPages() {
+        copyPages()
+        deletePages()
+    }
+    
+    @objc func copyPages() {
         guard let indexPath = interactingItemIndexPath,
             let cell = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell),
             let leftIndex = cell.leftIndex
@@ -378,7 +389,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         pasteBoard?.setItems([["ly.kite.photobook.productLayout" : leftData]])
         
-        if let rightIndex = cell.rightIndex {
+        if !leftProductLayout.layout.isDoubleLayout, let rightIndex = cell.rightIndex {
             let rightProductLayout = ProductManager.shared.productLayouts[rightIndex]
             guard let rightData = try? PropertyListEncoder().encode(rightProductLayout) else {
                 fatalError("Photobook: encoding of product layout failed")
@@ -420,12 +431,21 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             self.updateVisibleCells()
         })
         
+        Analytics.shared.trackAction(.pastedPages)
+        
     }
     
     @objc private func deletePages() {
         guard let indexPath = interactingItemIndexPath,
             let index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex
             else { return }
+        
+        guard ProductManager.shared.isRemovingPagesAllowed else {
+            let alertController = UIAlertController(title: NSLocalizedString("Photobook/CannotDeleteAlertTitle", value: "Cannot Delete Page", comment: "Alert title letting the user know they can't delete a page from the book"), message: NSLocalizedString("Photobook/CannotDeleteAlertMessage", value: "Your photo book currently contains the minimum number of pages allowed", comment: "Alert message letting the user know they can't delete a page from the book"), preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
+            present(alertController, animated: true, completion: nil)
+            return
+        }
         
         let productLayout = ProductManager.shared.productLayouts[index]
         
@@ -435,6 +455,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }, completion: { _ in
             self.updateVisibleCells()
         })
+        
+        Analytics.shared.trackAction(.deletedPages)
         
     }
     
@@ -456,13 +478,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let pasteBoard = UIPasteboard(name: UIPasteboardName("ly.kite.photobook.rearrange"), create: true)
         
         var menuItems = [UIMenuItem]()
+        menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemCutTitle", value: "Cut", comment: "Cut/Paste interaction"), action: #selector(cutPages)))
         menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemCopyTitle", value: "Copy", comment: "Copy/Paste interaction"), action: #selector(copyPages)))
         if (pasteBoard?.items.count ?? 0) > 0 {
             menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemPasteTitle", value: "Paste", comment: "Copy/Paste interaction"), action: #selector(pastePages)))
         }
-        if ProductManager.shared.isRemovingPagesAllowed {
-            menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemDeleteTitle", value: "Delete", comment: "Delete a page from the photobook"), action: #selector(deletePages)))
-        }
+        menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemDeleteTitle", value: "Delete", comment: "Delete a page from the photobook"), action: #selector(deletePages)))
         
         UIMenuController.shared.menuItems = menuItems
         UIMenuController.shared.setMenuVisible(true, animated: true)
@@ -553,9 +574,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                     ProductManager.shared.moveLayout(at: sourceProductLayoutIndex + 1, to: destinationProductLayoutIndex + 1)
                     ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
                 }
-                
-            }
-            else {
+            } else {
                 if sourceProductLayout.layout.isDoubleLayout {
                     ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
                 } else {
@@ -576,6 +595,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             }, completion: { _ in
                 self.updateVisibleCells()
             })
+            
+            Analytics.shared.trackAction(.rearrangedPages)
         }
     }
     
@@ -787,6 +808,8 @@ extension PhotobookViewController: PageSetupDelegate {
                 let previousLayout = ProductManager.shared.productLayouts[index]
                 ProductManager.shared.productLayouts[index] = productLayout
                 
+                trackAnalyticsActionsForEditingFinished(index: index, productLayout: productLayout, previousLayout: previousLayout)
+                
                 if previousLayout.layout.isDoubleLayout != productLayout.layout.isDoubleLayout {
                     // From single to double
                     if productLayout.layout.isDoubleLayout {
@@ -818,6 +841,18 @@ extension PhotobookViewController: PageSetupDelegate {
 
         pageSetupViewController.animateBackToPhotobook {
             self.dismiss(animated: false)
+        }
+    }
+    
+    func trackAnalyticsActionsForEditingFinished(index: Int, productLayout: ProductLayout, previousLayout: ProductLayout) {
+        if previousLayout.productLayoutText?.text != productLayout.productLayoutText?.text {
+            Analytics.shared.trackAction(.addedTextToPage)
+        }
+        if !previousLayout.layout.isDoubleLayout && productLayout.layout.isDoubleLayout {
+            Analytics.shared.trackAction(.usingDoublePageLayout)
+        }
+        if index == 0 && previousLayout.layout.id != productLayout.layout.id {
+            Analytics.shared.trackAction(.coverLayoutChanged)
         }
     }
 }
@@ -951,6 +986,8 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
         }, completion: { _ in
             self.updateVisibleCells()
         })
+        
+        Analytics.shared.trackAction(.addedPages)
         
     }
     

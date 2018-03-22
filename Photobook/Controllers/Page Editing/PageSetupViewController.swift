@@ -29,7 +29,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private enum Tool: Int {
-        case selectAsset, selectLayout, selectColor, placeAsset, editText
+        case selectLayout, selectAsset, selectColor, placeAsset, editText
     }
     
     @IBOutlet private weak var photobookContainerView: UIView!
@@ -51,6 +51,10 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     private var assetPlacementViewController: AssetPlacementViewController!
     private var colorSelectionViewController: ColorSelectionViewController!
     private var textEditingViewController: TextEditingViewController!
+    
+    private var enteredEditingDate = Date()
+    private var appBackgroundedDate: Date?
+    private var secondsSpentInBackground: TimeInterval = 0
     
     @IBOutlet private weak var coverFrameView: CoverFrameView! {
         didSet {
@@ -163,11 +167,21 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         super.viewDidLoad()
         
         toolbar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
-        toolbarButtons[Tool.selectAsset.rawValue].isSelected = true
+        toolbarButtons[Tool.selectLayout.rawValue].isSelected = true
+        sendScreenViewedAnalyticsEvent(for: Tool.selectLayout)
         
         (navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(photobookNavigationBarType)
         
         NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
+        
+        NotificationCenter.default.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in            
+            guard let appBackgroundedDate = welf?.appBackgroundedDate else { return }
+            welf?.secondsSpentInBackground += Date().timeIntervalSince(appBackgroundedDate)
+        })
+        
+        NotificationCenter.default.addObserver(forName: .UIApplicationDidEnterBackground, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
+            welf?.appBackgroundedDate = Date()
+        })
     }
     
     override func viewDidLayoutSubviews() {
@@ -252,7 +266,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         
         UIView.animate(withDuration: 0.3, delay: 0.1, options: [], animations: {
-            self.assetSelectionContainerView.alpha = 1.0
+            self.layoutSelectionContainerView.alpha = 1.0
             self.toolbar.alpha = 1.0
             
             (self.navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(.clear)
@@ -436,6 +450,10 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         setupAssetPlacement()
     }
     
+    private func secondsSinceEditingEntered() -> Int {
+        return Int(Date().timeIntervalSince(enteredEditingDate))
+    }
+    
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier else { return }
@@ -465,6 +483,10 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     @IBAction func tappedCancelButton(_ sender: UIBarButtonItem) {
+        Analytics.shared.trackAction(.editingCancelled, [Analytics.PropertyNames.secondsInEditing: secondsSinceEditingEntered(),
+                                                         Analytics.PropertyNames.secondsInBackground: Int(secondsSpentInBackground)
+            ])
+        
         delegate?.didFinishEditingPage()
     }
     
@@ -493,15 +515,21 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         {
             productLayout.productLayoutText!.text = visibleText
         }
+        
+        Analytics.shared.trackAction(.editingConfirmed, [Analytics.PropertyNames.secondsInEditing: secondsSinceEditingEntered(),
+                                                         Analytics.PropertyNames.secondsInBackground: Int(secondsSpentInBackground)])
+        
         delegate?.didFinishEditingPage(pageIndex, pageType: pageType, productLayout: productLayout, color: selectedColor)
     }
     
     private var isAnimatingTool = false
     @IBAction func tappedToolButton(_ sender: UIButton) {
-        
+
         guard !isAnimatingTool, let index = toolbarButtons.index(of: sender),
             !toolbarButtons[index].isSelected,
             let tool = Tool(rawValue: index) else { return }
+        
+        sendScreenViewedAnalyticsEvent(for: tool)
 
         // Store currently selected tool so we may come back to it
         previouslySelectedButton = toolbarButtons.first { $0.isSelected }
@@ -588,6 +616,24 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     override var prefersStatusBarHidden: Bool {
         return toolbarButtons != nil ? toolbarButtons[Tool.editText.rawValue].isSelected : false
+    }
+    
+    private func sendScreenViewedAnalyticsEvent(for tool: Tool) {
+        let screenName: Analytics.ScreenName
+        switch tool {
+        case .selectAsset:
+            screenName = .pageEditingPhotoSelection
+        case .selectLayout:
+            screenName = .layoutSelection
+        case .selectColor:
+            screenName = .colorSelection
+        case .placeAsset:
+            screenName = .photoPlacement
+        case .editText:
+            screenName = .textEditing
+        }
+        
+        Analytics.shared.trackScreenViewed(screenName)
     }
 }
 

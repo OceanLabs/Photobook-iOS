@@ -101,7 +101,7 @@ class ProductManager {
     }
     var isRemovingPagesAllowed: Bool {
         // TODO: Use pages count instead of assets/layout count
-        return minimumRequiredAssets < productLayouts.count
+        return minimumRequiredAssets < productLayouts.count - 1 // Don't include cover for min calculation
     }
     var hasLayoutWithoutAsset: Bool {
         return productLayouts.first { $0.hasEmptyContent } != nil
@@ -174,9 +174,13 @@ class ProductManager {
         if product == nil {
             var tempLayouts = [ProductLayout]()
 
-            // Use first photo for the cover
+            // Use a random photo for the cover, but not the first
             let productLayoutAsset = ProductLayoutAsset()
-            productLayoutAsset.asset = addedAssets.first
+            var coverAsset = addedAssets.first
+            if addedAssets.count > 1 {
+                coverAsset = addedAssets[(Int(arc4random()) % (addedAssets.count - 1)) + 1] // Exclude 0
+            }
+            productLayoutAsset.asset = coverAsset
             let coverLayout = coverLayouts.first(where: { $0.imageLayoutBox != nil } )
             let productLayout = ProductLayout(layout: coverLayout!, productLayoutAsset: productLayoutAsset)
             tempLayouts.append(productLayout)
@@ -467,7 +471,7 @@ class ProductManager {
     
     func bleed(forPageSize size: CGSize) -> CGFloat {
         guard let product = product else { return 0.0 }
-        let scaleFactor = size.width / product.pageWidth
+        let scaleFactor = size.height / product.pageHeight
         return bleed * scaleFactor
     }
     

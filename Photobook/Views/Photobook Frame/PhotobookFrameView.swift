@@ -70,7 +70,9 @@ class PhotobookFrameView: UIView {
             leftPageBackgroundView.isHidden = !isLeftPageVisible
             leftPagesBehindView?.isHidden = !isLeftPageVisible
             leftPageView.isVisible = isLeftPageVisible
-            spreadBackgroundLeadingConstraint.isActive = isLeftPageVisible
+            if spreadBackgroundLeadingConstraint != nil {
+                spreadBackgroundLeadingConstraint.isActive = isLeftPageVisible
+            }
         }
     }
     var isRightPageVisible = true {
@@ -79,7 +81,9 @@ class PhotobookFrameView: UIView {
             rightPageBackgroundView.isHidden = !isRightPageVisible
             rightPagesBehindView?.isHidden = !isRightPageVisible
             rightPageView.isVisible = isRightPageVisible
-            spreadBackgroundTrailingConstraint.isActive = isRightPageVisible
+            if spreadBackgroundTrailingConstraint != nil {
+                spreadBackgroundTrailingConstraint.isActive = isRightPageVisible
+            }
         }
     }
     
