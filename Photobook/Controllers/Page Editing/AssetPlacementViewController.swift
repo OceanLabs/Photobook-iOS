@@ -27,7 +27,7 @@ class AssetPlacementViewController: UIViewController {
     var productLayout: ProductLayout?
     var initialContainerRect: CGRect?
     var targetRect: CGRect?
-    var assetImage: UIImage?
+    var previewAssetImage: UIImage?
 
     private var initialContainerSize: CGSize!
     
@@ -158,7 +158,15 @@ class AssetPlacementViewController: UIViewController {
         
         productLayout.productLayoutAsset?.containerSize = bleedContainerView.bounds.size
         assetImageView.transform = productLayout.productLayoutAsset!.transform
-        assetImageView.image = assetImage
+        
+        assetImageView.image = previewAssetImage
+    
+        // Request an image 3 times the size of the container
+        let highResImageSize = CGSize(width: assetContainerView.bounds.width * 3.0, height: assetContainerView.bounds.height * 3.0)
+        productLayout.asset!.image(size: highResImageSize, loadThumbnailsFirst: false, progressHandler: nil) { (image, _) in
+            guard let image = image else { return }
+            self.assetImageView.image = image
+        }
     }
     
     @IBAction private func tappedRotateButton(_ sender: UIButton) {
