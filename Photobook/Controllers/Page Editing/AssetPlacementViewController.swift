@@ -29,6 +29,8 @@ class AssetPlacementViewController: UIViewController {
     var targetRect: CGRect?
     var assetImage: UIImage?
 
+    private var initialContainerSize: CGSize!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.alpha = 0.0
@@ -38,7 +40,9 @@ class AssetPlacementViewController: UIViewController {
         guard let productLayout = productLayout,
             let containerSize = productLayout.productLayoutAsset?.containerSize else { return }
         
-        setUpLayoutImageBox(withRatio: containerSize.height / containerSize.width)
+        initialContainerSize = containerSize
+        
+        setUpLayoutImageBox(withRatio: initialContainerRect!.height / initialContainerRect!.width)
         setUpImageView(withProductLayout: productLayout)
 
         guard let initialContainerRect = initialContainerRect else {
@@ -86,13 +90,8 @@ class AssetPlacementViewController: UIViewController {
 
         // Re-calculate transform for the photobook's container size
         productLayoutAsset.shouldFitAsset = false
-        if productLayout!.layout.isDoubleLayout {
-            // Account for double page layouts being scaled down by 0.5
-            productLayoutAsset.containerSize = CGSize(width: initialContainerRect.width * 2.0, height: initialContainerRect.height * 2.0)
-        } else {
-            productLayoutAsset.containerSize = CGSize(width: initialContainerRect.width, height: initialContainerRect.height)
-        }
-            
+        productLayoutAsset.containerSize = initialContainerSize
+        
         animatableAssetImageView.image = assetContainerView.snapshot()
         animatableAssetImageView.alpha = 1.0
         
@@ -102,8 +101,11 @@ class AssetPlacementViewController: UIViewController {
             self.assetEditingAreaView.alpha = 0.0
         })
 
-        UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseInOut], animations: {
+        UIView.animate(withDuration: 0.1, delay: 0.2, options: [], animations: {
             self.view.backgroundColor = .clear
+        }, completion: nil)
+        
+        UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseInOut], animations: {
             self.animatableAssetImageView.frame = initialContainerRect
         }, completion: { _ in
             self.view.alpha = 0.0
@@ -130,8 +132,9 @@ class AssetPlacementViewController: UIViewController {
             }
         }
         
-        assetContainerViewWidthConstraint.constant = floor(width)
-        assetContainerViewHeightConstraint.constant = floor(height)
+        assetContainerViewWidthConstraint.constant = width
+        assetContainerViewHeightConstraint.constant = height
+        assetEditingAreaView.layoutIfNeeded()
     }
     
     private func setUpImageView(withProductLayout productLayout: ProductLayout) {
@@ -147,16 +150,14 @@ class AssetPlacementViewController: UIViewController {
         assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: asset.size.width, height: asset.size.height)
 
         // Should trigger a transform recalculation
-        let imageBoxSize = CGSize(width: assetContainerViewWidthConstraint.constant, height: assetContainerViewHeightConstraint.constant)
-        let pageSize = imageBox.containerSize(for: imageBoxSize)
+        let pageSize = imageBox.containerSize(for: assetContainerView.bounds.size)
         let bleed = ProductManager.shared.bleed(forPageSize: pageSize)
         
-        bleedContainerView.frame = imageBox.bleedRect(in: imageBoxSize, withBleed: bleed)
+        bleedContainerView.frame = imageBox.bleedRect(in: assetContainerView.bounds.size, withBleed: bleed)
+        assetImageView.center = CGPoint(x: bleedContainerView.bounds.width * 0.5, y: bleedContainerView.bounds.height * 0.5)
         
         productLayout.productLayoutAsset?.containerSize = bleedContainerView.bounds.size
         assetImageView.transform = productLayout.productLayoutAsset!.transform
-        assetImageView.center = CGPoint(x: bleedContainerView.bounds.width * 0.5, y: bleedContainerView.bounds.height * 0.5)
-        
         assetImageView.image = assetImage
     }
     

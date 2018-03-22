@@ -143,27 +143,27 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Wgp-h3-X0h"/>
-                                    <barButtonItem style="plain" id="zND-5J-8MF">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="IiS-nN-9sR">
-                                            <rect key="frame" x="67.5" y="7.5" width="48" height="29"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" image="selectPhoto_off"/>
-                                            <state key="selected" image="selectPhoto_on"/>
-                                            <state key="highlighted" image="selectPhoto_on"/>
-                                            <connections>
-                                                <action selector="tappedToolButton:" destination="sIe-n5-8hl" eventType="touchUpInside" id="qmE-l7-fbr"/>
-                                            </connections>
-                                        </button>
-                                    </barButtonItem>
                                     <barButtonItem style="plain" id="Kvc-Ao-9jQ">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="B62-6k-8NO">
-                                            <rect key="frame" x="115.5" y="7.5" width="48" height="29"/>
+                                            <rect key="frame" x="67.5" y="7.5" width="48" height="29"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" image="editLayout_off"/>
                                             <state key="selected" image="editLayout_on"/>
                                             <state key="highlighted" image="editLayout_on"/>
                                             <connections>
                                                 <action selector="tappedToolButton:" destination="sIe-n5-8hl" eventType="touchUpInside" id="3a3-RA-dMh"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" id="zND-5J-8MF">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="IiS-nN-9sR">
+                                            <rect key="frame" x="115.5" y="7.5" width="48" height="29"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" image="selectPhoto_off"/>
+                                            <state key="selected" image="selectPhoto_on"/>
+                                            <state key="highlighted" image="selectPhoto_on"/>
+                                            <connections>
+                                                <action selector="tappedToolButton:" destination="sIe-n5-8hl" eventType="touchUpInside" id="qmE-l7-fbr"/>
                                             </connections>
                                         </button>
                                     </barButtonItem>
@@ -587,11 +587,11 @@
                         <outlet property="rightAssetImageView" destination="Nye-J2-uSX" id="rkf-Vs-Rh9"/>
                         <outlet property="textEditingContainerView" destination="2pz-wa-Psx" id="aMd-lC-v6U"/>
                         <outlet property="toolbar" destination="3pJ-D7-Ell" id="uQT-TA-1GG"/>
-                        <outletCollection property="toolbarButtons" destination="IiS-nN-9sR" collectionClass="NSMutableArray" id="Ghn-6i-tC2"/>
-                        <outletCollection property="toolbarButtons" destination="B62-6k-8NO" collectionClass="NSMutableArray" id="7ZM-9r-eqd"/>
-                        <outletCollection property="toolbarButtons" destination="z11-V0-D9v" collectionClass="NSMutableArray" id="jAb-3R-aSG"/>
-                        <outletCollection property="toolbarButtons" destination="0YB-mk-uec" collectionClass="NSMutableArray" id="D7l-Hc-mGk"/>
-                        <outletCollection property="toolbarButtons" destination="kmD-zJ-1We" collectionClass="NSMutableArray" id="7em-3U-8cD"/>
+                        <outletCollection property="toolbarButtons" destination="B62-6k-8NO" collectionClass="NSMutableArray" id="JE1-cP-fOv"/>
+                        <outletCollection property="toolbarButtons" destination="IiS-nN-9sR" collectionClass="NSMutableArray" id="6Ka-V0-Hdn"/>
+                        <outletCollection property="toolbarButtons" destination="z11-V0-D9v" collectionClass="NSMutableArray" id="c6C-07-D3A"/>
+                        <outletCollection property="toolbarButtons" destination="0YB-mk-uec" collectionClass="NSMutableArray" id="vfM-40-XzX"/>
+                        <outletCollection property="toolbarButtons" destination="kmD-zJ-1We" collectionClass="NSMutableArray" id="eGM-Sl-0Zb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lpf-Fw-lQz" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -810,13 +810,13 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="110" height="74"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SFY-NV-7VF" customClass="CoverFrameView" customModule="Photobook" customModuleProvider="target">
-                                                            <rect key="frame" x="18.5" y="10.5" width="73" height="53"/>
+                                                            <rect key="frame" x="18.5" y="6" width="73" height="62"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pxt-5T-2O8" customClass="CoverBackgroundView" customModule="Photobook" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="73" height="53"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="73" height="62"/>
                                                                     <subviews>
                                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oC0-Mt-wgy" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
-                                                                            <rect key="frame" x="3.5" y="0.0" width="69.5" height="53"/>
+                                                                            <rect key="frame" x="3.5" y="0.0" width="69.5" height="62"/>
                                                                             <subviews>
                                                                                 <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Cd-Db-cE8">
                                                                                     <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
@@ -863,7 +863,7 @@
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstItem="Pxt-5T-2O8" firstAttribute="leading" secondItem="SFY-NV-7VF" secondAttribute="leading" id="3mP-jj-mKj"/>
-                                                                <constraint firstAttribute="width" priority="250" constant="73" id="3x8-1m-ttU"/>
+                                                                <constraint firstAttribute="width" constant="73" id="3x8-1m-ttU"/>
                                                                 <constraint firstAttribute="trailing" secondItem="Pxt-5T-2O8" secondAttribute="trailing" id="Weo-dO-bji"/>
                                                                 <constraint firstItem="Pxt-5T-2O8" firstAttribute="top" secondItem="SFY-NV-7VF" secondAttribute="top" id="aKm-3j-wKU"/>
                                                                 <constraint firstAttribute="bottom" secondItem="Pxt-5T-2O8" secondAttribute="bottom" id="cr2-c7-W5B"/>
@@ -878,10 +878,10 @@
                                                     <color key="backgroundColor" red="0.74901960779999999" green="0.75686274509999996" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstItem="SFY-NV-7VF" firstAttribute="centerX" secondItem="15n-jN-NjV" secondAttribute="centerX" id="3Ss-Tp-yvh"/>
-                                                        <constraint firstItem="SFY-NV-7VF" firstAttribute="top" relation="greaterThanOrEqual" secondItem="15n-jN-NjV" secondAttribute="top" constant="6" id="EsH-oS-9dl"/>
+                                                        <constraint firstItem="SFY-NV-7VF" firstAttribute="top" secondItem="15n-jN-NjV" secondAttribute="top" constant="6" id="EsH-oS-9dl"/>
                                                         <constraint firstItem="SFY-NV-7VF" firstAttribute="centerY" secondItem="15n-jN-NjV" secondAttribute="centerY" id="ExV-5J-hCn"/>
                                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="SFY-NV-7VF" secondAttribute="trailing" constant="6" id="HFf-yk-c5j"/>
-                                                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="SFY-NV-7VF" secondAttribute="bottom" constant="6" id="IPU-CY-7Kh"/>
+                                                        <constraint firstAttribute="bottom" secondItem="SFY-NV-7VF" secondAttribute="bottom" constant="6" id="IPU-CY-7Kh"/>
                                                         <constraint firstItem="SFY-NV-7VF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="15n-jN-NjV" secondAttribute="leading" constant="6" id="hZx-8w-qZh"/>
                                                     </constraints>
                                                 </view>
