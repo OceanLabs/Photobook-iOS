@@ -44,7 +44,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private var cancelBarButtonItem: UIBarButtonItem!
     
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
-    var selectedAssetsSource: SelectedAssetsSource?
+    var album: Album?
+    var albumManager: AlbumManager?
     
     private var assetSelectorViewController: AssetSelectorViewController!
     private var layoutSelectionViewController: LayoutSelectionViewController!
@@ -405,7 +406,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     private func setupAssetSelection() {
         assetSelectorViewController.assets = assets
-        assetSelectorViewController.selectedAssetsSource = selectedAssetsSource
+        assetSelectorViewController.album = album
+        assetSelectorViewController.albumManager = albumManager
         assetSelectorViewController.selectedAsset = productLayout.asset
     }
     

@@ -34,7 +34,9 @@ class AssetSelectorViewController: UIViewController {
     }()
     private var selectedAssetIndex = -1
     
-    var selectedAssetsSource: SelectedAssetsSource?
+    var album: Album?
+    var albumManager: AlbumManager?
+    
     weak var delegate: AssetSelectorDelegate?
     
     var selectedAsset: Asset? {
@@ -69,8 +71,10 @@ class AssetSelectorViewController: UIViewController {
 extension AssetSelectorViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // Add one for the "add more" thumbnail
-        return assets.count + 1
+        // Add one for the "add more" thumbnail if an Asset picker was configured
+        var count = assets.count
+        if album != nil || albumManager != nil { count += 1 }
+        return count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -102,7 +106,8 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == assets.count {
             let modalAlbumsCollectionViewController = storyboard?.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
-            modalAlbumsCollectionViewController.selectedAssetsSource = selectedAssetsSource
+            modalAlbumsCollectionViewController.album = album
+            modalAlbumsCollectionViewController.albumManager = albumManager
             modalAlbumsCollectionViewController.addingDelegate = self
             
             present(modalAlbumsCollectionViewController, animated: false, completion: nil)

@@ -37,7 +37,9 @@ class ModalAlbumsCollectionViewController: UIViewController {
     
     var collectorMode: AssetCollectorMode = .adding
     weak var addingDelegate: AssetCollectorAddingDelegate?
-    var selectedAssetsSource: SelectedAssetsSource?
+
+    var album: Album?
+    var albumManager: AlbumManager?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -96,14 +98,14 @@ class ModalAlbumsCollectionViewController: UIViewController {
             let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didPanOnNavigationBar(_:)))
             navigationBar.addGestureRecognizer(panGestureRecognizer)
 
-            if let albumManager = selectedAssetsSource?.albumManager {
+            if let albumManager = albumManager {
                 let albumsCollectionViewController = storyboard?.instantiateViewController(withIdentifier: "AlbumsCollectionViewController") as! AlbumsCollectionViewController
                 albumsCollectionViewController.albumManager = albumManager
                 albumsCollectionViewController.collectorMode = collectorMode
                 albumsCollectionViewController.addingDelegate = self
                 albumsCollectionViewController.assetPickerDelegate = self
                 rootNavigationController.setViewControllers([albumsCollectionViewController], animated: false)
-            } else if let album = selectedAssetsSource?.album {
+            } else if let album = album {
                 let assetPickerCollectionViewController = storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
                 assetPickerCollectionViewController.collectorMode = collectorMode
                 assetPickerCollectionViewController.addingDelegate = self

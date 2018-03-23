@@ -10,6 +10,17 @@ import UIKit
 
 class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate {
     
+    var photobookNavigationBarType: PhotobookNavigationBarType = .clear
+    
+    /// Array of Assets to populate the pages of the photobook.
+    var assets: [Asset]!
+    
+    /// Album to use in order to have access to additional Assets when editing a page. 'album', 'albumManager' & 'pickerViewController' are exclusive.
+    var album: Album?
+    
+    /// Manager for multiple albums to use in order to have access to additional Assets when editing a page. 'album', 'albumManager' & 'pickerViewController' are exclusive.
+    var albumManager: AlbumManager?
+    
     private struct Constants {
         static let titleArrowOffset: CGFloat = -8.0
         static let rearrangeScale: CGFloat = 0.8
@@ -41,10 +52,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private weak var ctaButtonContainer: UIView!
     @IBOutlet private weak var backButton: UIButton!
     
-    var photobookNavigationBarType: PhotobookNavigationBarType = .clear
-    
-    var assets: [Asset]?
-    var selectedAssetsSource: SelectedAssetsSource?
     private var titleButton = UIButton()
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
@@ -650,7 +657,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         pageSetupViewController = modalNavigationController.viewControllers.first as! PageSetupViewController
         pageSetupViewController.assets = assets
         pageSetupViewController.pageIndex = index
-        pageSetupViewController.selectedAssetsSource = selectedAssetsSource
+        pageSetupViewController.album = album
+        pageSetupViewController.albumManager = albumManager
         if barType != nil {
             pageSetupViewController.photobookNavigationBarType = barType!
         }
