@@ -240,12 +240,12 @@ class CheckoutViewController: UIViewController {
                     paymentMethodIconImageView.image = nil
                 }
             case .applePay:
-                paymentMethodIconImageView.image = UIImage(named: "apple-pay-method")
+                paymentMethodIconImageView.image = UIImage(namedInPhotobookBundle: "apple-pay-method")
                 showDeliveryDetailsConstraint.priority = .defaultLow
                 hideDeliveryDetailsConstraint.priority = .defaultHigh
                 deliveryDetailsView.isHidden = true
             case .payPal:
-                paymentMethodIconImageView.image = UIImage(named: "paypal-method")
+                paymentMethodIconImageView.image = UIImage(namedInPhotobookBundle: "paypal-method")
             }
             paymentMethodIconImageView.isHidden = false
             paymentMethodLabel.isHidden = true

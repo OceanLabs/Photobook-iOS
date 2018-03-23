@@ -252,7 +252,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         let asset = asset ?? album.assets[indexPath.item]
         
         let selected = selectedAssetsManager?.isSelected(asset) ?? false
-        cell.selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
+        cell.selectedStatusImageView.image = selected ? UIImage(namedInPhotobookBundle: "Tick") : UIImage(namedInPhotobookBundle: "Tick-empty")
     }
     
     func coverImageLabelsContainerView() -> UIView? {
