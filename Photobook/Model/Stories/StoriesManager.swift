@@ -37,14 +37,16 @@ class StoriesManager: NSObject {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func loadTopStories(completionHandler:() -> Void){
-        let memories = self.orderStories()
-        stories = Array<Story>(memories.prefix(Constants.maxStoriesToDisplay))
-        
-        // No need to wait for the stories to load their assets
-        completionHandler()
-        
+    func loadTopStories(completionHandler:@escaping () -> Void){
         DispatchQueue.global(qos: .background).async {
+            let memories = self.orderStories()
+            self.stories = Array<Story>(memories.prefix(Constants.maxStoriesToDisplay))
+            
+            // No need to wait for the stories to load their assets
+            DispatchQueue.main.async {
+                completionHandler()
+            }
+            
             for story in self.stories {
                 story.loadAssets(completionHandler: nil)
             }

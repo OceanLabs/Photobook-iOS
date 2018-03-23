@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -1231,7 +1230,7 @@
                                             <outlet property="titleLabel" destination="eOz-ny-Awi" id="GMa-bY-W7p"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="EmptyStoryTableViewCell" rowHeight="210" id="mRg-4N-YQA">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="EmptyStoryTableViewCell" rowHeight="210" id="mRg-4N-YQA" customClass="EmptyStoryTableViewCell" customModule="Photobook" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="448" width="375" height="210"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mRg-4N-YQA" id="6nU-p5-hS2">
@@ -1276,6 +1275,9 @@
                                                 <constraint firstItem="Jec-dv-MUn" firstAttribute="leading" secondItem="6nU-p5-hS2" secondAttribute="leading" constant="20" id="tB4-X5-eJ3"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="label" destination="UYO-rE-bk6" id="EZe-1d-Hml"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
