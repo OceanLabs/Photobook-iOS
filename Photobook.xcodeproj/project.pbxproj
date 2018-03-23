@@ -1088,7 +1088,6 @@
 				2ED14B952063A9CD00ED2E2C /* Frameworks */,
 				2ED14B962063A9CD00ED2E2C /* Headers */,
 				2ED14B972063A9CD00ED2E2C /* Resources */,
-				2ED14C492063AC8A00ED2E2C /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1230,40 +1229,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Fabric/run\" ebb34c1747d3ac14c598164178b666e2b9363b7f c3688b33fe4fc3d7339ad1c284d6834ee293e9f2e06bcd37a56b75e2333ca818";
-		};
-		2ED14C492063AC8A00ED2E2C /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/Analytics.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Bolts.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/FacebookCore.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/FacebookLogin.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/FBSDKCoreKit.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/FBSDKLoginKit.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/KeychainSwift.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/OAuthSwift.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/PayPalMobileSDK.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/SDWebImage.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Stripe.framework",
-			);
-			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Analytics.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Bolts.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/FacebookCore.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/FacebookLogin.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/FBSDKCoreKit.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/FBSDKLoginKit.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/OAuthSwift.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/PayPalMobileSDK.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SDWebImage.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Stripe.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
 		3ECB6CA75DDC06D5F75791BD /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
