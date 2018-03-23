@@ -143,7 +143,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     }
     
     @IBAction func searchIconTapped(_ sender: Any) {
-        let searchResultsViewController = self.storyboard?.instantiateViewController(withIdentifier: "AlbumSearchResultsTableViewController") as! AlbumSearchResultsTableViewController
+        let searchResultsViewController = UIStoryboard.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: "AlbumSearchResultsTableViewController") as! AlbumSearchResultsTableViewController
         searchResultsViewController.delegate = self
         searchResultsViewController.albums = self.albumManager.albums
         
@@ -158,7 +158,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     }
     
     func showAlbum(album: Album){
-        let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
+        let assetPickerController = UIStoryboard.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
         assetPickerController.album = album
         assetPickerController.albumManager = albumManager
         assetPickerController.selectedAssetsManager = selectedAssetsManager
@@ -240,7 +240,7 @@ extension AlbumsCollectionViewController: LogoutHandler {
     
     func popToLandingScreen() {
         guard let accountManager = accountManager else { return }
-        guard let viewController = self.storyboard?.instantiateViewController(withIdentifier: accountManager.serviceName + "LandingViewController") else { return }
+        let viewController = UIStoryboard.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: accountManager.serviceName + "LandingViewController")
         self.navigationController?.setViewControllers([viewController, self], animated: false)
         self.navigationController?.popViewController(animated: true)
     }
@@ -269,7 +269,7 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
         case .adding:
             addingDelegate?.didFinishAdding(assets: selectedAssetsManager.selectedAssets)
         default:
-            let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
+            let photobookViewController = UIStoryboard.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
             photobookViewController.selectedAssetsManager = selectedAssetsManager
             navigationController?.pushViewController(photobookViewController, animated: true)
         }

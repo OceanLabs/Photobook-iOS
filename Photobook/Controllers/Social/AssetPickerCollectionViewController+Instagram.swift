@@ -11,7 +11,7 @@ import OAuthSwift
 extension AssetPickerCollectionViewController {
     
     static func instagramAssetPicker() -> AssetPickerCollectionViewController{
-        let assetPicker = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
+        let assetPicker = UIStoryboard.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
         assetPicker.album = InstagramAlbum()
         assetPicker.selectedAssetsManager = SelectedAssetsManager()
         assetPicker.prepareToHandleLogout(accountManager: InstagramClient.shared)

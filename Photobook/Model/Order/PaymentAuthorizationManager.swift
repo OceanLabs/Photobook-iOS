@@ -9,6 +9,10 @@
 import UIKit
 import Stripe
 
+#if !COCOAPODS
+import PayPalMobileSDK
+#endif
+
 enum PaymentMethod: Int {
     case creditCard, applePay, payPal
     

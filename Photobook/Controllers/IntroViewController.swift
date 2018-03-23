@@ -9,7 +9,7 @@
 import UIKit
 import Photos
 
-class IntroViewController: UIViewController {
+public class IntroViewController: UIViewController {
     
     enum Tab: Int {
         case stories
@@ -35,7 +35,7 @@ class IntroViewController: UIViewController {
     @IBOutlet weak var ctaVisibleConstraint: NSLayoutConstraint!
     @IBOutlet weak var ctaInvisibleConstraint: NSLayoutConstraint!
     
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
 
         ctaVisibleConstraint.priority = .defaultLow
@@ -48,7 +48,7 @@ class IntroViewController: UIViewController {
         }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         if userHasDismissed {
@@ -99,15 +99,15 @@ class IntroViewController: UIViewController {
         performSegue(withIdentifier: "IntroDismiss", sender: nil)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    override public func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let segueIdentifier = segue.identifier else { return }
         
         if segueIdentifier == "IntroDismiss" {
-            configureTabBarController(segue.destination as! UITabBarController)
+            IntroViewController.configureTabBarController(segue.destination as! UITabBarController)
         }
     }
     
-    private func configureTabBarController(_ tabBarController: UITabBarController) {
+    @objc public class func configureTabBarController(_ tabBarController: UITabBarController) {
         
         // Browse
         // Set the albumManager to the AlbumsCollectionViewController

@@ -255,7 +255,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         guard draggingView == nil else { return }
         
         let goToCheckout = {
-            let orderSummaryViewController = self.storyboard?.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
+            let orderSummaryViewController = UIStoryboard.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
             self.navigationController?.pushViewController(orderSummaryViewController, animated: true)
         }
         
@@ -642,7 +642,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func editPage(at index: Int, frame: CGRect, containerView: UIView) {
-        let modalNavigationController = storyboard?.instantiateViewController(withIdentifier: "PageSetupNavigationController") as! UINavigationController
+        let modalNavigationController = UIStoryboard.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: "PageSetupNavigationController") as! UINavigationController
         if #available(iOS 11.0, *) {
             modalNavigationController.navigationBar.prefersLargeTitles = false
         }
@@ -788,7 +788,7 @@ extension PhotobookViewController: PhotobookCoverCollectionViewCellDelegate {
     func didTapOnSpine(with rect: CGRect, in containerView: UIView) {
         let initialRect = containerView.convert(rect, to: view)
         
-        let spineTextEditingNavigationController = storyboard?.instantiateViewController(withIdentifier: "SpineTextEditingNavigationController") as! UINavigationController
+        let spineTextEditingNavigationController = UIStoryboard.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: "SpineTextEditingNavigationController") as! UINavigationController
         let spineTextEditingViewController = spineTextEditingNavigationController.viewControllers.first! as! SpineTextEditingViewController
         spineTextEditingViewController.initialRect = initialRect
         spineTextEditingViewController.delegate = self
