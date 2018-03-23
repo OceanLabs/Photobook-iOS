@@ -30,6 +30,7 @@ class AssetPlacementViewController: UIViewController {
     var previewAssetImage: UIImage?
 
     private var initialContainerSize: CGSize!
+    private var maxScale: CGFloat!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -158,8 +159,11 @@ class AssetPlacementViewController: UIViewController {
         
         productLayout.productLayoutAsset?.containerSize = bleedContainerView.bounds.size
         assetImageView.transform = productLayout.productLayoutAsset!.transform
-        
         assetImageView.image = previewAssetImage
+        
+        // Allow scaling up to 3 times the original scale
+        let startingScale = LayoutUtils.scaleToFill(containerSize: bleedContainerView.bounds.size, withSize: asset.size, atAngle: 0)
+        maxScale = startingScale * 3.0
     
         // Request an image 3 times the size of the container
         let highResImageSize = CGSize(width: assetContainerView.bounds.width * 3.0, height: assetContainerView.bounds.height * 3.0)
@@ -216,7 +220,7 @@ class AssetPlacementViewController: UIViewController {
             }
         case .changed:
             if var initial = initialTransform {
-                gestures.forEach({ (gesture) in initial = LayoutUtils.adjustTransform(initial, withRecognizer: gesture, inParentView: bleedContainerView) })
+                gestures.forEach({ (gesture) in initial = LayoutUtils.adjustTransform(initial, withRecognizer: gesture, inParentView: bleedContainerView, maxScale: maxScale) })
                 assetImageView.transform = initial
             }
         case .ended:
