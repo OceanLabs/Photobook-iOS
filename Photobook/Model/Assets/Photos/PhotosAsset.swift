@@ -25,10 +25,6 @@ class TestPhotosAsset: PhotosAsset {
 
 class PhotosAsset: Asset {
     
-    var assetType: String {
-        return NSStringFromClass(PhotosAsset.self)
-    }
-    
     var photosAsset: PHAsset {
         didSet {
             identifier = photosAsset.localIdentifier

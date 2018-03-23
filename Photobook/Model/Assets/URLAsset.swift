@@ -34,11 +34,7 @@ class URLAsset: Asset {
     var isLandscape: Bool {
         return self.size.width > self.size.height
     }
-    
-    var assetType: String {
-        return NSStringFromClass(URLAsset.self)
-    }
-    
+        
     var date: Date?
     
     var albumIdentifier: String

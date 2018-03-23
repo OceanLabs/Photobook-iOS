@@ -19,15 +19,26 @@ enum AssetDataFileExtension: String {
     case unsupported
 }
 
+/// Represents a photo used in a photo book
 protocol Asset: Codable {
+    
+    /// Identifier
     var identifier: String! { get set }
+    
+    /// Album Identifier
+    var albumIdentifier: String { get }
+    
+    /// Size
     var size: CGSize { get }
+    
+    /// True if the orientation of the image representation of the Asset landscape
     var isLandscape: Bool { get }
-    var uploadUrl: String? { get set }
-    var assetType: String { get }
+    
+    /// Date
     var date: Date? { get }
     
-    var albumIdentifier: String { get }
+    /// URL of full size image to use in the Photobook generation
+    var uploadUrl: String? { get set }
     
     /// Request the image that this asset represents.
     ///
