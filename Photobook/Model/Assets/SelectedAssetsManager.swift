@@ -9,6 +9,11 @@
 import UIKit
 import Photos
 
+struct AssetsNotificationName {
+    static let albumsWereUpdated = Notification.Name("albumsWereUpdatedNotificationName")
+    static let albumsWereAdded = Notification.Name("albumsWereAddedNotificationName")
+}
+
 class SelectedAssetsManager: NSObject {
     
     static let notificationUserObjectKeyAssets = "assets"

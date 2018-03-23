@@ -8,11 +8,6 @@
 
 import UIKit
 
-struct AssetsNotificationName {
-    static let albumsWereUpdated = Notification.Name("albumsWereUpdatedNotificationName")
-    static let albumsWereAdded = Notification.Name("albumsWereAddedNotificationName")
-}
-
 /// Manager for a source with multiple albums
 protocol AlbumManager {
     
@@ -25,16 +20,15 @@ protocol AlbumManager {
     /// Flag indicating whether there are more Albums available
     var hasMoreAlbumsToLoad: Bool { get }
     
-    /// Performs the loading of a first batch of albums
+    /// Performs the loading of a first batch of Albums
     ///
     /// - Parameter completionHandler: Closure that gets called on completion
     func loadAlbums(completionHandler: ((_ errorMessage: Error?) -> Void)?)
     
-    /// Performs the loading of the next batch of albums
+    /// Performs the loading of the next batch of Albums
     ///
     /// - Parameter completionHandler: Closure that gets called on completion
     func loadNextBatchOfAlbums(completionHandler: ((_ errorMessage: Error?) -> Void)?)
-    
     
     /// Caches images for the provided assets and size
     ///
