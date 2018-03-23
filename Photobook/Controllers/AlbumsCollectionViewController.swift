@@ -89,15 +89,15 @@ class AlbumsCollectionViewController: UICollectionViewController {
         let offsetTop: CGFloat
         
         // If the message requires an action, use the empty screen
-        if var errorMessage = error as? ActionableErrorMessage {
-            let action = errorMessage.buttonAction
-            errorMessage.buttonAction = {
-                action()
+        if let errorMessage = error as? ActionableErrorMessage {
+            var errorCopy = errorMessage
+            errorCopy.buttonAction = {
+                errorMessage.buttonAction()
                 if errorMessage.dismissErrorPromptAfterAction {
                     self.emptyScreenViewController.hide()
                 }
             }
-            emptyScreenViewController.show(errorMessage)
+            emptyScreenViewController.show(errorCopy)
             return
         }
         
