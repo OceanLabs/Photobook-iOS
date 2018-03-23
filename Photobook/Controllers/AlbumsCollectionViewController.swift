@@ -90,8 +90,9 @@ class AlbumsCollectionViewController: UICollectionViewController {
         
         // If the message requires an action, use the empty screen
         if var errorMessage = error as? ActionableErrorMessage {
+            let action = errorMessage.buttonAction
             errorMessage.buttonAction = {
-                errorMessage.buttonAction()
+                action()
                 if errorMessage.dismissErrorPromptAfterAction {
                     self.emptyScreenViewController.hide()
                 }
