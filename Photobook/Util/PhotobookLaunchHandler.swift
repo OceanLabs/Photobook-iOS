@@ -17,7 +17,7 @@ class PhotobookLaunchHandler {
         case facebook
     }
     
-    static func enter() -> UIViewController {
+    static func getInitialViewController() -> UIViewController {
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController

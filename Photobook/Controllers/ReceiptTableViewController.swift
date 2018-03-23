@@ -15,8 +15,16 @@ struct ReceiptNotificationName {
 
 class ReceiptTableViewController: UITableViewController {
     
-    private typealias Constants = ReceiptViewControllerModel.Constants
-    private typealias State = ReceiptViewControllerModel.State
+    private typealias State = ReceiptViewControllerState
+    
+    private struct Constants {
+        static let loadingPaymentText = NSLocalizedString("Controllers/ReceiptTableViewController/PaymentLoadingText",
+                                                          value: "Preparing Payment",
+                                                          comment: "Info text displayed while preparing for payment service")
+        static let loadingFinishingOrderText = NSLocalizedString("Controllers/ReceiptTableViewController/loadingFinishingOrderText",
+                                                                 value: "Finishing order",
+                                                                 comment: "Info text displayed while finishing order")
+    }
     
     private enum Section: Int {
         case header, progress, info, details, lineItems, footer
