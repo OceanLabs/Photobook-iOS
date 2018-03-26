@@ -11,14 +11,7 @@ import Photos
 
 class IntroViewController: UIViewController {
     
-    enum Tab: Int {
-        case stories
-        case browse
-        case instagram
-        case facebook
-    }
-    
-    var userHasDismissed:Bool {
+    static var userHasDismissed:Bool {
         get {
             return UserDefaults.standard.bool(forKey: "IntroViewController.userHasDismissed")
         }
@@ -35,6 +28,8 @@ class IntroViewController: UIViewController {
     @IBOutlet weak var ctaVisibleConstraint: NSLayoutConstraint!
     @IBOutlet weak var ctaInvisibleConstraint: NSLayoutConstraint!
     
+    var dismissClosure:(() -> Void)?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -44,19 +39,14 @@ class IntroViewController: UIViewController {
         view.layoutIfNeeded()
         
         if PHPhotoLibrary.authorizationStatus() == .authorized {
-            userHasDismissed = true
+            IntroViewController.userHasDismissed = true
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if userHasDismissed {
-            proceedToTabBarController()
-        } else {
-            showIntro()
-        }
-
+        showIntro()
     }
     
     private func showIntro() {
@@ -80,51 +70,23 @@ class IntroViewController: UIViewController {
         switch status {
         case .notDetermined:
             ctaButton.isEnabled = false
-            PHPhotoLibrary.requestAuthorization({ status in
+            PHPhotoLibrary.requestAuthorization({ [weak welf = self] status in
                 DispatchQueue.main.async {
                     self.ctaButton.isEnabled = true
                     
                     // We don't care about the outcome, the next screens will take care of showing the user an error screen if needed
-                    self.userHasDismissed = true
-                    self.proceedToTabBarController()
+                    IntroViewController.userHasDismissed = true
+                    welf?.dismissClosure?()
                 }
             })
         default:
-            userHasDismissed = true
-            proceedToTabBarController()
+            IntroViewController.userHasDismissed = true
+            dismissClosure?()
         }
     }
     
-    private func proceedToTabBarController() {
+    func proceedToTabBarController() {
         performSegue(withIdentifier: "IntroDismiss", sender: nil)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let segueIdentifier = segue.identifier else { return }
-        
-        if segueIdentifier == "IntroDismiss" {
-            configureTabBarController(segue.destination as! UITabBarController)
-        }
-    }
-    
-    private func configureTabBarController(_ tabBarController: UITabBarController) {
-        
-        // Browse
-        // Set the albumManager to the AlbumsCollectionViewController
-        let albumViewController = (tabBarController.viewControllers?[Tab.browse.rawValue] as? UINavigationController)?.topViewController as? AlbumsCollectionViewController
-        albumViewController?.albumManager = PhotosAlbumManager()
-        
-        // Stories
-        // If there are no stories, remove the stories tab
-        StoriesManager.shared.loadTopStories(completionHandler: {
-            if StoriesManager.shared.stories.isEmpty {
-                tabBarController.viewControllers?.remove(at: Tab.stories.rawValue)
-            }
-        })
-        
-        // Load the products here, so that the user avoids a loading screen on PhotobookViewController
-        ProductManager.shared.initialise(completion: nil)
-        
-    }
-
 }

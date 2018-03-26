@@ -27,7 +27,7 @@ enum ProductColor: String, Codable {
 }
 
 // Structure containing the user's photobok details to save them to disk
-struct PhotobookBackUp: Codable {
+struct PhotobookBackup: Codable {
     var product: Photobook
     var coverColor: ProductColor
     var pageColor: ProductColor
@@ -41,6 +41,8 @@ class ProductManager {
     static let pendingUploadStatusUpdated = Notification.Name("ProductManagerPendingUploadStatusUpdated")
     static let shouldRetryUploadingImages = Notification.Name("ProductManagerShouldRetryUploadingImages")
     static let finishedPhotobookCreation = Notification.Name("ProductManagerFinishedPhotobookCreation")
+    static let finishedPhotobookUpload = Notification.Name("ProductManagerFinishedPhotobookUpload")
+    static let failedPhotobookUpload = Notification.Name("ProductManagerFailedPhotobookUpload")
     
     private let bleed: CGFloat = 8.5
 
@@ -49,7 +51,7 @@ class ProductManager {
     
     private struct Storage {
         static let photobookDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!.appending("/Photobook/")
-        static let photobookBackUpFile = photobookDirectory.appending("Photobook.dat")
+        static let photobookBackupFile = photobookDirectory.appending("Photobook.dat")
     }
     
     static let shared: ProductManager = ProductManager()
@@ -66,7 +68,7 @@ class ProductManager {
         self.apiManager = apiManager
     }
     
-    var storageFile: String { return Storage.photobookBackUpFile }
+    var storageFile: String { return Storage.photobookBackupFile }
     #endif
 
     // Public info about photobook products
@@ -120,6 +122,22 @@ class ProductManager {
             index += 1
         }
         return temp
+    }
+    
+    //upload
+    var isUploading:Bool {
+        get {
+            return apiManager.isUploading
+        }
+        set {
+            apiManager.isUploading = newValue
+        }
+    }
+    var pendingUploads:Int {
+        return apiManager.pendingUploads
+    }
+    var totalUploads:Int {
+        return apiManager.totalUploads
     }
     
     func reset() {
@@ -330,34 +348,35 @@ class ProductManager {
     /// Initiates the uploading of the user's photobook
     ///
     /// - Parameter completionHandler: Executed when the uploads are on the way or failed to initiate them. The Int parameter provides the total upload count.
-    func startPhotobookUpload(_ completionHandler: (Int, Error?) -> Void) {
+    func startPhotobookUpload(_ completionHandler: @escaping (Int, Error?) -> Void) {
         self.saveUserPhotobook()
         apiManager.uploadPhotobook(completionHandler)
+    }
+    
+    func cancelPhotobookUpload(_ completionHandler: @escaping () -> Void) {
+        apiManager.cancelUpload {
+            completionHandler()
+        }
     }
     
     /// Loads the user's photobook details from disk
     ///
     /// - Parameter completionHandler: Closure called on completion
-    func loadUserPhotobook(_ completionHandler: @escaping () -> Void) {
-        guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: Storage.photobookBackUpFile) as? Data else {
+    func loadUserPhotobook(_ completionHandler: (() -> Void)? = nil ) {
+        guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: Storage.photobookBackupFile) as? Data else {
             print("ProductManager: failed to unarchive product")
             return
         }
-        guard let unarchivedProduct = try? PropertyListDecoder().decode([String: Any].self, from: unarchivedData) else {
+        guard let unarchivedProduct = try? PropertyListDecoder().decode(PhotobookBackup.self, from: unarchivedData) else {
             print("ProductManager: decoding of product failed")
             return
         }
         
-        if let product = unarchivedProduct["product"] as? Photobook,
-           let coverColor = unarchivedProduct["coverColor"] as? ProductColor,
-           let pageColor = unarchivedProduct["pageColor"] as? ProductColor,
-           let productLayouts = unarchivedProduct["productLayouts"] as? [ProductLayout] {
-                self.product = product
-                self.coverColor = coverColor
-                self.pageColor = pageColor
-                self.productLayouts = productLayouts
-        }
-        apiManager.restoreUploads(completionHandler)
+        self.product = unarchivedProduct.product
+        self.coverColor = unarchivedProduct.coverColor
+        self.pageColor = unarchivedProduct.pageColor
+        self.productLayouts = unarchivedProduct.productLayouts
+        apiManager.restoreUploads()
     }
     
     
@@ -365,7 +384,7 @@ class ProductManager {
     func saveUserPhotobook() {
         guard let product = product else { return }
         
-        let rootObject = PhotobookBackUp(product: product, coverColor: coverColor, pageColor: pageColor, productLayouts: productLayouts)
+        let rootObject = PhotobookBackup(product: product, coverColor: coverColor, pageColor: pageColor, productLayouts: productLayouts)
         
         guard let data = try? PropertyListEncoder().encode(rootObject) else {
             fatalError("ProductManager: encoding of product failed")
@@ -379,7 +398,7 @@ class ProductManager {
             }
         }
         
-        let saved = NSKeyedArchiver.archiveRootObject(data, toFile: Storage.photobookBackUpFile)
+        let saved = NSKeyedArchiver.archiveRootObject(data, toFile: Storage.photobookBackupFile)
         if !saved {
             print("ProductManager: failed to archive product")
         }
@@ -475,8 +494,8 @@ class ProductManager {
         return bleed * scaleFactor
     }
     
-    func initializePhotobookPdf(completionHandler: @escaping (_ photobookId: String?, _ error: Error?) -> Void) {
-        apiManager.initializePhotobookPdf(completionHandler: completionHandler)
+    func createPhotobookPdf(completionHandler: @escaping (_ urls: [String]?, _ error: Error?) -> Void) {
+        apiManager.createPhotobookPdf(completionHandler: completionHandler)
     }
 }
 
@@ -485,25 +504,29 @@ extension ProductManager: PhotobookAPIManagerDelegate {
     func didFinishUploading(asset: Asset) {
         let info: [String: Any] = [ "asset": asset, "pending": apiManager.pendingUploads ]
         NotificationCenter.default.post(name: ProductManager.pendingUploadStatusUpdated, object: info)
+        saveUserPhotobook()
     }
     
     func didFailUpload(_ error: Error) {
         if let error = error as? PhotobookAPIError {
             switch error {
             case .missingPhotobookInfo:
-                fatalError("ProductManager: incorrect or missing photobook info")
+                NotificationCenter.default.post(name: ProductManager.failedPhotobookUpload, object: nil) //not resolvable
             case .couldNotSaveTempImageData:
                 let info = [ "pending": apiManager.pendingUploads ]
                 NotificationCenter.default.post(name: ProductManager.pendingUploadStatusUpdated, object: info)
-                
-                NotificationCenter.default.post(name: ProductManager.shouldRetryUploadingImages, object: nil)
+                NotificationCenter.default.post(name: ProductManager.shouldRetryUploadingImages, object: nil) //resolvable
             case .couldNotBuildCreationParameters:
-                fatalError("PhotobookManager: could not build PDF creation request parameters")
+                NotificationCenter.default.post(name: ProductManager.failedPhotobookUpload, object: nil) //not resolvable
             }
         } else if let _ = error as? APIClientError {
-            // Connection / server errors are handled by the system. This can only be a parsing error.
-            fatalError("ProductManager: could not parse upload response")
+            // Connection / server errors or parsing error
+            NotificationCenter.default.post(name: ProductManager.shouldRetryUploadingImages, object: nil) //resolvable
         }
+    }
+    
+    func didFinishUploadingPhotobook() {
+        NotificationCenter.default.post(name: ProductManager.finishedPhotobookUpload, object: nil)
     }
     
     func didFinishCreatingPdf(error: Error?) {

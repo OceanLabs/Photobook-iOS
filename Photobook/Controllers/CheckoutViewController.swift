@@ -23,7 +23,7 @@ class CheckoutViewController: UIViewController {
         static let detailsLabelColorRequired = UIColor.red.withAlphaComponent(0.6)
         
         static let loadingDetailsText = NSLocalizedString("Controllers/CheckoutViewController/EmptyScreenLoadingText",
-                                                    value: "Loading price details...",
+                                                    value: "Loading price details",
                                                     comment: "Info text displayed next to a loading indicator while loading price details")
         static let loadingPaymentText = NSLocalizedString("Controllers/CheckoutViewController/PaymentLoadingText",
                                                    value: "Preparing Payment",
@@ -129,7 +129,7 @@ class CheckoutViewController: UIViewController {
         
         //POPULATE
         refresh()
-        emptyScreenViewController.show(message: Constants.loadingDetailsText)
+        emptyScreenViewController.show(message: Constants.loadingDetailsText, activity: true)
     }
     
     private func setupApplePayButton() {
@@ -391,7 +391,8 @@ class CheckoutViewController: UIViewController {
     }
     
     private func showReceipt() {
-        if self.presentedViewController == nil{
+        OrderManager.shared.saveCheckoutDetails()
+        if self.presentedViewController == nil {
             self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
         }
         else {
@@ -463,7 +464,7 @@ class CheckoutViewController: UIViewController {
         if let selectedMethod = OrderManager.shared.shippingMethod, let shippingMethod = cost.shippingMethod(id: selectedMethod), shippingMethod.totalCost == 0.0 {
             // The user must have a promo code which reduces this order cost to nothing, lucky user :)
             OrderManager.shared.paymentToken = nil
-            submitOrder(completionHandler: nil)
+            showReceipt()
         }
         else{
             if OrderManager.shared.paymentMethod == .applePay{
@@ -511,35 +512,6 @@ class CheckoutViewController: UIViewController {
         UIView.animate(withDuration: time) {
             self.view.layoutIfNeeded()
         }
-    }
-    
-    private func submitOrder(completionHandler: ((_ status: PKPaymentAuthorizationStatus) -> Void)?) {
-          Analytics.shared.trackAction(.orderSubmitted, [Analytics.PropertyNames.secondsSinceAppOpen: Analytics.shared.secondsSinceAppOpen(),
-                                                         Analytics.PropertyNames.secondsInBackground: Int(Analytics.shared.secondsSpentInBackground)
-                                                         ])
-        progressOverlayViewController.show(message: Constants.submittingOrderText)
-        OrderManager.shared.submitOrder(completionHandler: { [weak welf = self] errorMessage in
-            welf?.progressOverlayViewController.hide()
-            
-            if let errorMessage = errorMessage {
-                completionHandler?(.failure)
-                if welf?.presentedViewController != nil {
-                    welf?.presentedViewController?.dismiss(animated: true, completion: {
-                        welf?.present(UIAlertController(errorMessage: errorMessage), animated: true, completion: nil)
-                    })
-                } else {
-                    welf?.present(UIAlertController(errorMessage: errorMessage), animated: true, completion: nil)
-                }
-                return
-            }
-            
-            completionHandler?(.success)
-            
-            // It's possible that we are done submitting the order before the Apple Pay (or other) modal has dismissed, so wait for that to finish.
-            welf?.modalPresentationDismissedGroup.notify(queue: DispatchQueue.main, execute: {
-                welf?.showReceipt()
-            })
-        })
     }
 }
 
@@ -601,7 +573,8 @@ extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
         }
         
         OrderManager.shared.paymentToken = token
-        submitOrder(completionHandler: completionHandler)
+        
+        showReceipt()
     }
     
     func modalPresentationDidFinish() {

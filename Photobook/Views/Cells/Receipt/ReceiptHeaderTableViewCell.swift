@@ -12,11 +12,6 @@ class ReceiptHeaderTableViewCell: UITableViewCell {
     
     static let reuseIdentifier = NSStringFromClass(ReceiptHeaderTableViewCell.self).components(separatedBy: ".").last!
 
-    @IBOutlet weak var previewImageView: UIImageView!
-    @IBOutlet weak var uploadingSpinnerImageView: UIImageView!
-    @IBOutlet weak var uploadingProgressLabel: UILabel!
-    @IBOutlet weak var shippingAddressLabel: UILabel!
-    @IBOutlet weak var shippingMethodLabel: UILabel!
-    @IBOutlet weak var orderNumberLabel: UILabel!
-    
+    @IBOutlet weak var titleLabel: UILabel!
+
 }

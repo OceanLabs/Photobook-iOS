@@ -10,6 +10,7 @@ import UIKit
 
 enum AssetLoadingException: Error {
     case notFound
+    case unsupported
 }
 
 enum AssetDataFileExtension: String {
@@ -59,6 +60,13 @@ extension Asset {
     func image(size: CGSize, loadThumbnailsFirst: Bool = true, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)? = nil, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void){
         
         image(size: size, loadThumbnailsFirst: loadThumbnailsFirst, progressHandler: progressHandler, completionHandler: completionHandler)
+    }
+    
+    /// Removes slashes because it'd result in an invalid path
+    var fileIdentifier: String {
+        get {
+            return identifier.replacingOccurrences(of: "/", with: "")
+        }
     }
 }
 
