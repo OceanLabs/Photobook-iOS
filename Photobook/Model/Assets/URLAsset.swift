@@ -9,9 +9,27 @@
 import UIKit
 import SDWebImage
 
-struct URLAssetMetadata: Codable {
+class URLAssetMetadata: NSObject, NSCoding {
     var size: CGSize
     let url: URL
+    
+    init(size: CGSize, url: URL) {
+        self.size = size
+        self.url = url
+    }
+    
+    required convenience init?(coder aDecoder: NSCoder) {
+        guard let size = aDecoder.decodeObject(forKey: "size") as? CGSize,
+              let url = aDecoder.decodeObject(forKey: "url") as? URL
+            else { return nil }
+        
+        self.init(size: size, url: url)
+    }
+    
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(size, forKey: "size")
+        aCoder.encode(url, forKey: "url")
+    }
 }
 
 class URLAsset: Asset {
@@ -68,9 +86,9 @@ class URLAsset: Asset {
         
     }
     
-    func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension?, Error?) -> Void) {
+    func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension, Error?) -> Void) {
         guard let url = metadata.last?.url else {
-            completionHandler(nil, nil, ErrorMessage(text: CommonLocalizedStrings.somethingWentWrong))
+            completionHandler(nil, .unsupported, ErrorMessage(text: CommonLocalizedStrings.somethingWentWrong))
             return
         }
         
@@ -79,27 +97,22 @@ class URLAsset: Asset {
         })
     }
     
-    enum CodingKeys: String, CodingKey {
-        case metadata, identifier, uploadUrl, date, albumIdentifier
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(metadata, forKey: "metadata")
+        aCoder.encode(identifier, forKey: "identifier")
+        aCoder.encode(uploadUrl, forKey: "uploadUrl")
+        aCoder.encode(date, forKey: "date")
+        aCoder.encode(albumIdentifier, forKey: "albumIdentifier")
     }
     
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(metadata, forKey: .metadata)
-        try container.encode(identifier, forKey: .identifier)
-        try container.encode(uploadUrl, forKey: .uploadUrl)
-        try container.encode(date, forKey: .date)
-        try container.encode(albumIdentifier, forKey: .albumIdentifier)
-    }
-    
-    required init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
+    required convenience init?(coder aDecoder: NSCoder) {
+        guard let identifier = aDecoder.decodeObject(of: NSString.self, forKey: "identifier") as String?,
+              let albumIdentifier = aDecoder.decodeObject(of: NSString.self, forKey: "albumIdentifier") as String?,
+              let metadata = aDecoder.decodeObject(forKey: "metadata") as? [URLAssetMetadata]
+            else { return nil }
         
-        metadata = try values.decode([URLAssetMetadata].self, forKey: .metadata)
-        identifier = try values.decodeIfPresent(String.self, forKey: .identifier)
-        uploadUrl = try values.decodeIfPresent(String.self, forKey: .uploadUrl)
-        date = try values.decodeIfPresent(Date.self, forKey: .date)
-        albumIdentifier = try values.decode(String.self, forKey: .albumIdentifier)
+        self.init(metadata: metadata, albumIdentifier: albumIdentifier, identifier: identifier)
+        uploadUrl = aDecoder.decodeObject(of: NSString.self, forKey: "uploadUrl") as String?
+        date = aDecoder.decodeObject(of: NSDate.self, forKey: "date") as Date?
     }
-    
 }

@@ -12,15 +12,15 @@ enum AssetLoadingException: Error {
     case notFound
 }
 
-enum AssetDataFileExtension: String {
+@objc enum AssetDataFileExtension: Int {
+    case unsupported
     case jpg
     case png
     case gif
-    case unsupported
 }
 
 /// Represents a photo used in a photo book
-protocol Asset: Codable {
+@objc protocol Asset: NSCoding {
     
     /// Identifier
     var identifier: String! { get set }
@@ -55,7 +55,7 @@ protocol Asset: Codable {
     /// - Parameters:
     ///   - progressHandler: Handler that returns the progress, for a example of a download
     ///   - completionHandler: The completion handler that returns the data
-    func imageData(progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)?, completionHandler: @escaping (_ data: Data?, _ fileExtension: AssetDataFileExtension?, _ error: Error?) -> Void)
+    func imageData(progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)?, completionHandler: @escaping (_ data: Data?, _ fileExtension: AssetDataFileExtension, _ error: Error?) -> Void)
 }
 
 extension Asset {

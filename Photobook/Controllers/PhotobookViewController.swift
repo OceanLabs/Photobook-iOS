@@ -8,6 +8,11 @@
 
 import UIKit
 
+/// Protocol custom photo pickers must conform to be used with photo books
+@objc protocol AssetPicker where Self: UIViewController {
+    weak var addingDelegate: AssetCollectorAddingDelegate? { get set }
+}
+
 class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate {
     
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
@@ -15,11 +20,14 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     /// Array of Assets to populate the pages of the photobook.
     var assets: [Asset]!
     
-    /// Album to use in order to have access to additional Assets when editing a page. 'album', 'albumManager' & 'pickerViewController' are exclusive.
+    /// Album to use in order to have access to additional Assets when editing a page. 'album', 'albumManager' & 'assetPickerViewController' are exclusive.
     var album: Album?
     
-    /// Manager for multiple albums to use in order to have access to additional Assets when editing a page. 'album', 'albumManager' & 'pickerViewController' are exclusive.
+    /// Manager for multiple albums to use in order to have access to additional Assets when editing a page. 'album', 'albumManager' & 'assetPickerViewController' are exclusive.
     var albumManager: AlbumManager?
+    
+    /// View controller allowing the user to pick additional assets. 'album', 'albumManager' & 'assetPickerViewController' are exclusive.
+    var assetPickerViewController: AssetPicker?
     
     private struct Constants {
         static let titleArrowOffset: CGFloat = -8.0
@@ -659,6 +667,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         pageSetupViewController.pageIndex = index
         pageSetupViewController.album = album
         pageSetupViewController.albumManager = albumManager
+        pageSetupViewController.assetPickerViewController = assetPickerViewController
         if barType != nil {
             pageSetupViewController.photobookNavigationBarType = barType!
         }

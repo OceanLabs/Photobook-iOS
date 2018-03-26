@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol AssetCollectorAddingDelegate: class {
+@objc protocol AssetCollectorAddingDelegate: class {
     func didFinishAdding(_ assets: [Asset]?)
 }
 

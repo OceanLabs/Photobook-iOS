@@ -16,14 +16,14 @@ class TestPhotosAsset: PhotosAsset {
         super.init(asset, albumIdentifier: albumIdentifier)
         self.identifier = "id"
     }
-    
-    required init(from decoder: Decoder) throws {
+        
+    required init?(coder aDecoder: NSCoder) {
         super.init(PHAsset(), albumIdentifier: "")
         self.identifier = "id"
     }
 }
 
-class PhotosAsset: Asset {
+class PhotosAsset: NSObject, Asset {
     
     var photosAsset: PHAsset {
         didSet {
@@ -79,12 +79,12 @@ class PhotosAsset: Asset {
         }
     }
     
-    func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension?, Error?) -> Void) {
+    func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension, Error?) -> Void) {
         let options = PHImageRequestOptions()
         options.isNetworkAccessAllowed = true
         
         PHImageManager.default().requestImageData(for: photosAsset, options: options, resultHandler: { imageData, dataUti, _, info in
-            guard let data = imageData, let dataUti = dataUti else { completionHandler(nil, nil, NSError()); return }
+            guard let data = imageData, let dataUti = dataUti else { completionHandler(nil, .unsupported, NSError()); return }
             
             let fileExtension: AssetDataFileExtension
             if dataUti.contains(".png") {
@@ -101,40 +101,28 @@ class PhotosAsset: Asset {
             if fileExtension == .unsupported {
                 guard let ciImage = CIImage(data: data),
                     let jpegData = CIContext().jpegRepresentation(of: ciImage, colorSpace: CGColorSpaceCreateDeviceRGB(), options: [kCGImageDestinationLossyCompressionQuality : 0.8])
-                    else { completionHandler(nil, nil, NSError()); return }
+                    else { completionHandler(nil, .unsupported, NSError()); return }
                 completionHandler(jpegData, .jpg, nil)
             } else {
                 completionHandler(imageData, fileExtension, nil)
             }
         })
     }
-    
-    enum CodingKeys: String, CodingKey {
-        case albumIdentifier, identifier, uploadUrl
+        
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(albumIdentifier, forKey: "albumIdentifier")
+        aCoder.encode(identifier, forKey: "identifier")
+        aCoder.encode(uploadUrl, forKey: "uploadUrl")
     }
     
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(albumIdentifier, forKey: .albumIdentifier)
-        try container.encode(identifier, forKey: .identifier)
-        try container.encode(uploadUrl, forKey: .uploadUrl)
-    }
-    
-    required init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        
-        uploadUrl = try values.decodeIfPresent(String.self, forKey: .uploadUrl)
-        albumIdentifier = try values.decode(String.self, forKey: .albumIdentifier)
-        
-        let assetId = try values.decode(String.self, forKey: .identifier)
-        if let asset = PHAsset.fetchAssets(withLocalIdentifiers: [assetId], options: nil).firstObject {
-            photosAsset = asset
-            identifier = assetId
-        }
-        else {
-            throw AssetLoadingException.notFound
-        }
-        
+    required convenience init?(coder aDecoder: NSCoder) {
+        guard let assetId = aDecoder.decodeObject(of: NSString.self, forKey: "identifier") as String?,
+              let albumIdentifier = aDecoder.decodeObject(of: NSString.self, forKey: "albumIdentifier") as String?,
+              let asset = PHAsset.fetchAssets(withLocalIdentifiers: [assetId], options: nil).firstObject else
+            { return nil }
+            
+        self.init(asset, albumIdentifier: albumIdentifier)
+        uploadUrl = aDecoder.decodeObject(of: NSString.self, forKey: "uploadUrl") as String?
     }
     
     static func photosAssets(from assets:[Asset]) -> [PHAsset] {

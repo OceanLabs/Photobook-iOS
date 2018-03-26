@@ -34,8 +34,21 @@ class AssetSelectorViewController: UIViewController {
     }()
     private var selectedAssetIndex = -1
     
-    var album: Album?
-    var albumManager: AlbumManager?
+    var album: Album? {
+        didSet {
+            if album != nil { collectionView.reloadData() }
+        }
+    }
+    var albumManager: AlbumManager? {
+        didSet {
+            if albumManager != nil { collectionView.reloadData() }
+        }
+    }
+    var assetPickerViewController: AssetPicker? {
+        didSet {
+            if assetPickerViewController != nil { collectionView.reloadData() }
+        }
+    }
     
     weak var delegate: AssetSelectorDelegate?
     
@@ -73,7 +86,7 @@ extension AssetSelectorViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // Add one for the "add more" thumbnail if an Asset picker was configured
         var count = assets.count
-        if album != nil || albumManager != nil { count += 1 }
+        if album != nil || albumManager != nil || assetPickerViewController != nil { count += 1 }
         return count
     }
     
@@ -105,6 +118,12 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == assets.count {
+            if let assetPickerViewController = assetPickerViewController {
+                assetPickerViewController.addingDelegate = self
+                present(assetPickerViewController as! UIViewController, animated: true, completion: nil)
+                return
+            }
+            
             let modalAlbumsCollectionViewController = storyboard?.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
             modalAlbumsCollectionViewController.album = album
             modalAlbumsCollectionViewController.albumManager = albumManager

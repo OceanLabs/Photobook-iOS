@@ -46,6 +46,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
     var album: Album?
     var albumManager: AlbumManager?
+    var assetPickerViewController: AssetPicker?
     
     private var assetSelectorViewController: AssetSelectorViewController!
     private var layoutSelectionViewController: LayoutSelectionViewController!
@@ -408,6 +409,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         assetSelectorViewController.assets = assets
         assetSelectorViewController.album = album
         assetSelectorViewController.albumManager = albumManager
+        assetSelectorViewController.assetPickerViewController = assetPickerViewController
         assetSelectorViewController.selectedAsset = productLayout.asset
     }
     
