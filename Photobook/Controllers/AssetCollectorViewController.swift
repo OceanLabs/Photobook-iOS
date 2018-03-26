@@ -129,7 +129,7 @@ class AssetCollectorViewController: UIViewController {
     }
     
     public static func instance(fromStoryboardWithParent parent: UIViewController, selectedAssetsManager: SelectedAssetsManager, delayAppearance: Bool = false) -> AssetCollectorViewController {
-        let vc = PhotobookUtils.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: "AssetCollectorViewController") as! AssetCollectorViewController
+        let vc = photobookMainStoryboard.instantiateViewController(withIdentifier: "AssetCollectorViewController") as! AssetCollectorViewController
         vc.selectedAssetsManager = selectedAssetsManager
         vc.delayAppearance = delayAppearance
         vc.parentController = parent

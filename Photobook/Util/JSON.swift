@@ -10,7 +10,7 @@ import UIKit
 
 class JSON {
     static func parse(file: String) -> AnyObject? {
-        guard let path = PhotobookUtils.photobookBundle().path(forResource: file, ofType: "json") else { return nil }
+        guard let path = photobookBundle.path(forResource: file, ofType: "json") else { return nil }
         
         do {
             let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)

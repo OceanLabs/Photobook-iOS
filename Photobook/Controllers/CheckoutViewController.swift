@@ -427,7 +427,7 @@ class CheckoutViewController: UIViewController {
     }
     
     @IBAction private func presentAmountPicker() {
-        let amountPickerViewController = PhotobookUtils.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: "AmountPickerViewController") as! AmountPickerViewController
+        let amountPickerViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "AmountPickerViewController") as! AmountPickerViewController
         amountPickerViewController.optionName = NSLocalizedString("Controllers/CheckoutViewController/ItemAmountPickerTitle",
                                                                               value: "Select amount",
                                                                               comment: "The title displayed on the picker view for the amount of basket items")

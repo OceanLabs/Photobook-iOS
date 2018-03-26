@@ -106,7 +106,7 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == assets.count {
-            let modalAlbumsCollectionViewController = PhotobookUtils.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
+            let modalAlbumsCollectionViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
             modalAlbumsCollectionViewController.selectedAssetsSource = selectedAssetsSource
             modalAlbumsCollectionViewController.addingDelegate = self
             

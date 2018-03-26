@@ -28,7 +28,7 @@ class ProgressOverlayViewController: UIViewController {
     /// - Parameter parent: The parent view controller to add it to
     /// - Returns: An initialised Empty Screen
     static func progressOverlay(parent: UIViewController) -> ProgressOverlayViewController {
-        let progressOverlayViewController = PhotobookUtils.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: "ProgressOverlayViewController") as! ProgressOverlayViewController
+        let progressOverlayViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ProgressOverlayViewController") as! ProgressOverlayViewController
         progressOverlayViewController.parentController = parent
         return progressOverlayViewController
     }
