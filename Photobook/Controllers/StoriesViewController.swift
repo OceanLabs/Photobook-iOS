@@ -178,7 +178,7 @@ extension StoriesViewController: UITableViewDataSource {
         
         guard storyIndex < stories.count else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "EmptyStoryTableViewCell", for: indexPath) as! EmptyStoryTableViewCell
-            cell.label.isHidden = storiesAreLoading
+            cell.label.isHidden = StoriesManager.shared.loading
             return cell
         }
         
