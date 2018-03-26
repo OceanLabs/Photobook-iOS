@@ -8,6 +8,10 @@
 
 import Photos
 
+struct StoriesNotificationName {
+    static let storiesWereUpdated = Notification.Name("storiesWereUpdatedNotificationName")
+}
+
 class StoriesManager: NSObject {
     
     enum StoriesManagerError: Error {
@@ -22,6 +26,7 @@ class StoriesManager: NSObject {
     private var selectedAssetsManagerPerStory = [String : SelectedAssetsManager]()
     var stories = [Story]()
     var currentlySelectedStory: Story?
+    var loading = false
     
     private struct Constants {
         static let maxStoriesToDisplay = 16
@@ -37,20 +42,31 @@ class StoriesManager: NSObject {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func loadTopStories(completionHandler:() -> Void){
-        let memories = self.orderStories()
-        stories = Array<Story>(memories.prefix(Constants.maxStoriesToDisplay))
-        
-        // No need to wait for the stories to load their assets
-        completionHandler()
-        
-        DispatchQueue.global(qos: .background).async {
-            for story in self.stories {
-                story.loadAssets(completionHandler: nil)
+    func loadTopStories(completionHandler:(() -> Void)?) {
+        loading = true
+        DispatchQueue.global(qos: .background).async { [weak welf = self] in
+            let memories = self.orderStories()
+            welf?.stories = Array<Story>(memories.prefix(Constants.maxStoriesToDisplay))
+            DispatchQueue.main.async {
+                welf?.loading = false
+                completionHandler?()
+                
+                NotificationCenter.default.post(name: StoriesNotificationName.storiesWereUpdated, object: nil)
             }
         }
     }
     
+    func prepare(story: Story, completionHandler:@escaping () -> Void) {
+        DispatchQueue.global(qos: .background).async {
+            story.loadAssets(completionHandler: { [weak welf = self] _ in
+                welf?.performAutoSelectionIfNeeded(on: story)
+                DispatchQueue.main.async {
+                    completionHandler()
+                }
+            })
+        }
+    }
+
     private func orderStories() -> [Story] {
         var locations = [String: Int]()
         var stories = [Story]()
