@@ -9,6 +9,10 @@
 import UIKit
 import Stripe
 
+#if !COCOAPODS
+import PayPalMobileSDK
+#endif
+
 enum PaymentMethod: Int {
     case creditCard, applePay, payPal
     
@@ -195,6 +199,7 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
             }
             
             self.delegate?.paymentAuthorizationDidFinish(token: token?.tokenId, error: nil, completionHandler: completion)
+            completion(.success)
         })
     }
     

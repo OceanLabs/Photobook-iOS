@@ -91,14 +91,15 @@ class AlbumsCollectionViewController: UICollectionViewController {
         let offsetTop: CGFloat
         
         // If the message requires an action, use the empty screen
-        if var errorMessage = error as? ActionableErrorMessage {
-            errorMessage.buttonAction = {
+        if let errorMessage = error as? ActionableErrorMessage {
+            var errorCopy = errorMessage
+            errorCopy.buttonAction = {
                 errorMessage.buttonAction()
                 if errorMessage.dismissErrorPromptAfterAction {
                     self.emptyScreenViewController.hide()
                 }
             }
-            emptyScreenViewController.show(errorMessage)
+            emptyScreenViewController.show(errorCopy)
             return
         }
         
@@ -144,7 +145,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     }
     
     @IBAction func searchIconTapped(_ sender: Any) {
-        let searchResultsViewController = self.storyboard?.instantiateViewController(withIdentifier: "AlbumSearchResultsTableViewController") as! AlbumSearchResultsTableViewController
+        let searchResultsViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "AlbumSearchResultsTableViewController") as! AlbumSearchResultsTableViewController
         searchResultsViewController.delegate = self
         searchResultsViewController.albums = self.albumManager.albums
         
@@ -159,7 +160,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     }
     
     func showAlbum(album: Album){
-        let assetPickerController = self.storyboard?.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
+        let assetPickerController = photobookMainStoryboard.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
         assetPickerController.album = album
         assetPickerController.albumManager = albumManager
         assetPickerController.selectedAssetsManager = selectedAssetsManager
@@ -241,7 +242,7 @@ extension AlbumsCollectionViewController: LogoutHandler {
     
     func popToLandingScreen() {
         guard let accountManager = accountManager else { return }
-        guard let viewController = self.storyboard?.instantiateViewController(withIdentifier: accountManager.serviceName + "LandingViewController") else { return }
+        let viewController = photobookMainStoryboard.instantiateViewController(withIdentifier: accountManager.serviceName + "LandingViewController")
         self.navigationController?.setViewControllers([viewController, self], animated: false)
         self.navigationController?.popViewController(animated: true)
     }
@@ -270,7 +271,7 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
         case .adding:
             addingDelegate?.didFinishAdding(selectedAssetsManager.selectedAssets)
         default:
-            let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
+            let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
             photobookViewController.assets = selectedAssetsManager.selectedAssets
             navigationController?.pushViewController(photobookViewController, animated: true)
         }

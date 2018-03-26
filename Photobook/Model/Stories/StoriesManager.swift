@@ -37,14 +37,16 @@ class StoriesManager: NSObject {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func loadTopStories(completionHandler:() -> Void){
-        let memories = self.orderStories()
-        stories = Array<Story>(memories.prefix(Constants.maxStoriesToDisplay))
-        
-        // No need to wait for the stories to load their assets
-        completionHandler()
-        
+    func loadTopStories(completionHandler:@escaping () -> Void){
         DispatchQueue.global(qos: .background).async {
+            let memories = self.orderStories()
+            self.stories = Array<Story>(memories.prefix(Constants.maxStoriesToDisplay))
+            
+            // No need to wait for the stories to load their assets
+            DispatchQueue.main.async {
+                completionHandler()
+            }
+            
             for story in self.stories {
                 story.loadAssets(completionHandler: nil)
             }
@@ -68,8 +70,15 @@ class StoriesManager: NSObject {
             var totalAssetCount = 0
             
             let moments = PHAssetCollection.fetchMoments(inMomentList: list, options: PHFetchOptions())
+            
+            
             moments.enumerateObjects { (collection: PHAssetCollection, index: Int,  stop: UnsafeMutablePointer<ObjCBool>) in
-                totalAssetCount += collection.estimatedAssetCount
+                //only use images
+                let fetchOptions = PHFetchOptions()
+                fetchOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
+                let filteredCollection = PHAsset.fetchAssets(in: collection, options: fetchOptions)
+                
+                totalAssetCount += filteredCollection.count
             }
             
             // Must also have a title

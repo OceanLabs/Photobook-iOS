@@ -12,6 +12,10 @@ protocol LayoutSelectionDelegate: class {
     func didSelectLayout(_ layout: Layout)
 }
 
+protocol LayoutSelectionCollectionViewCellSetup {
+    func setupLayout()
+}
+
 class LayoutSelectionViewController: UIViewController {
 
     private struct Constants {
@@ -103,7 +107,6 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
             cell.asset = asset
             cell.isBorderVisible = (indexPath.row == selectedLayoutIndex)
             cell.coverColor = coverColor
-            cell.setupLayout()
             return cell
         }
         
@@ -119,19 +122,37 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
         cell.coverColor = coverColor
         cell.pageColor = pageColor
         cell.isEditingDoubleLayout = isEditingDoubleLayout
-        cell.setupLayout()
 
         return cell
-    }    
+    }
 }
 
 extension LayoutSelectionViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard indexPath.row != selectedLayoutIndex else { return }
+        
+        // Set border directly if visible, reload otherwise.
+        let currentlySelectedIndexPath = IndexPath(row: selectedLayoutIndex, section: 0)
+        if let currentlySelectedCell = collectionView.cellForItem(at: currentlySelectedIndexPath) as? LayoutSelectionCollectionViewCell {
+            currentlySelectedCell.isBorderVisible = false
+        } else {
+            collectionView.reloadItems(at: [currentlySelectedIndexPath])
+        }
+        
+        let newSelectedCell = collectionView.cellForItem(at: indexPath) as! LayoutSelectionCollectionViewCell
+        newSelectedCell.isBorderVisible = true
+        
         let layout = layouts[indexPath.row]
         selectedLayoutIndex = indexPath.row
-        collectionView.reloadData()
+        
         collectionView.scrollToItem(at: IndexPath(row: selectedLayoutIndex, section: 0), at: .centeredHorizontally, animated: true)
         delegate?.didSelectLayout(layout)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if let cell = cell as? LayoutSelectionCollectionViewCellSetup {
+            cell.setupLayout()
+        }
     }
 }

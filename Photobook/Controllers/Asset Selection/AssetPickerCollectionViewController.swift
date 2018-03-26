@@ -259,7 +259,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         let asset = asset ?? album.assets[indexPath.item]
         
         let selected = selectedAssetsManager?.isSelected(asset) ?? false
-        cell.selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
+        cell.selectedStatusImageView.image = selected ? UIImage(namedInPhotobookBundle: "Tick") : UIImage(namedInPhotobookBundle: "Tick-empty")
     }
     
     func coverImageLabelsContainerView() -> UIView? {
@@ -380,7 +380,7 @@ extension AssetPickerCollectionViewController: LogoutHandler {
     
     func popToLandingScreen() {
         guard let accountManager = accountManager else { return }
-        guard let viewController = self.storyboard?.instantiateViewController(withIdentifier: accountManager.serviceName + "LandingViewController") else { return }
+        let viewController = photobookMainStoryboard.instantiateViewController(withIdentifier: accountManager.serviceName + "LandingViewController")
         self.navigationController?.setViewControllers([viewController, self], animated: false)
         self.navigationController?.popViewController(animated: true)
     }
@@ -410,7 +410,7 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
         case .adding:
             addingDelegate?.didFinishAdding(selectedAssetsManager?.selectedAssets)
         default:
-            let photobookViewController = storyboard?.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
+            let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
             photobookViewController.assets = selectedAssetsManager?.selectedAssets
             photobookViewController.album = album
             photobookViewController.albumManager = albumManager
@@ -568,7 +568,7 @@ extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegat
             let thumbnailImage = cell.imageView.image
             else { return nil }
         
-        let fullScreenImageViewController = storyboard?.instantiateViewController(withIdentifier: "FullScreenImageViewController") as! FullScreenImageViewController
+        let fullScreenImageViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "FullScreenImageViewController") as! FullScreenImageViewController
         previewingContext.sourceRect = cell.convert(cell.contentView.frame, to: collectionView)
         
         fullScreenImageViewController.asset = album.assets[indexPath.item]

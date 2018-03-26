@@ -574,7 +574,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             let containerRect = placementContainerView.convert(assetContainerView.frame, from: pageView)
             assetPlacementViewController.productLayout = productLayout
             assetPlacementViewController.initialContainerRect = containerRect
-            assetPlacementViewController.assetImage = assetImageView.image
+            assetPlacementViewController.previewAssetImage = assetImageView.image
             
             if textEditingWasSelected {
                 textEditingViewController.animateOff {

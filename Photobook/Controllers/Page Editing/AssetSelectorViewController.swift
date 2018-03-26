@@ -124,7 +124,7 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
                 return
             }
             
-            let modalAlbumsCollectionViewController = storyboard?.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
+            let modalAlbumsCollectionViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
             modalAlbumsCollectionViewController.album = album
             modalAlbumsCollectionViewController.albumManager = albumManager
             modalAlbumsCollectionViewController.addingDelegate = self

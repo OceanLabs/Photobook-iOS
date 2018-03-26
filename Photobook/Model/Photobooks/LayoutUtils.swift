@@ -25,8 +25,8 @@ class LayoutUtils {
     ///   - containerSize: The size of the Container
     /// - Returns: A new adjusted transform where the Container will be completely filled by the View
     static func adjustTransform(_ transform: CGAffineTransform, forViewSize viewSize: CGSize, inContainerSize containerSize: CGSize) -> CGAffineTransform {
-        var angle = atan2(transform.b, transform.a)
-        var scale = sqrt(transform.a * transform.a + transform.c * transform.c)
+        var angle = transform.angle
+        var scale = transform.scale
         
         // Check if we need to snap to 0 degrees
         if abs(angle.inDegrees()) < Constants.snapToZeroThreshold {
@@ -74,7 +74,7 @@ class LayoutUtils {
     ///   - recognizer: The recognizer that responded to the user's gesture
     ///   - parentView: The view to use as a coordinate space for the gesture
     /// - Returns: A new adjusted transform that reflects the user's intent
-    static func adjustTransform(_ transform: CGAffineTransform, withRecognizer recognizer: UIGestureRecognizer, inParentView parentView: UIView) -> CGAffineTransform {
+    static func adjustTransform(_ transform: CGAffineTransform, withRecognizer recognizer: UIGestureRecognizer, inParentView parentView: UIView, maxScale: CGFloat = CGFloat.greatestFiniteMagnitude) -> CGAffineTransform {
         if let rotateRecognizer = recognizer as? UIRotationGestureRecognizer {
 
             return transform.rotated(by: rotateRecognizer.rotation)
@@ -86,14 +86,17 @@ class LayoutUtils {
             if scale < 1.0 {
                 scale = 1.4 - pow(0.4, scale)
             }
+            else if transform.scale * scale > maxScale {
+                scale = maxScale / transform.scale
+            }
             return transform.scaledBy(x: scale, y: scale)
         }
         if let panRecognizer = recognizer as? UIPanGestureRecognizer {
             let deltaX = panRecognizer.translation(in: parentView).x
             let deltaY = panRecognizer.translation(in: parentView).y
             
-            let angle = atan2(transform.b, transform.a)
-            let scale = sqrt(transform.a * transform.a + transform.c * transform.c)
+            let angle = transform.angle
+            let scale = transform.scale
             
             let tx = (deltaX * cos(angle) + deltaY * sin(angle)) / scale
             let ty = (-deltaX * sin(angle) + deltaY * cos(angle)) / scale
@@ -110,8 +113,8 @@ class LayoutUtils {
     ///   - factor: The factor to apply
     /// - Returns: A new scaled transform
     static func adjustTransform(_ transform: CGAffineTransform, byFactor factor: CGFloat) -> CGAffineTransform {
-        let angle = atan2(transform.b, transform.a)
-        let scale = sqrt(transform.a * transform.a + transform.c * transform.c)
+        let angle = transform.angle
+        let scale = transform.scale
         
         var newTransform = CGAffineTransform(scaleX: scale * factor, y: scale * factor)
         newTransform = newTransform.rotated(by: angle)
@@ -171,6 +174,19 @@ class LayoutUtils {
             rotateTo = 0.0
         }
         return rotateTo
+    }
+}
+
+extension CGAffineTransform {
+
+    // Rotation angle
+    var angle: CGFloat {
+        return atan2(self.b, self.a)
+    }
+    
+    // Scale
+    var scale: CGFloat {
+        return sqrt(self.a * self.a + self.c * self.c)
     }
 }
 

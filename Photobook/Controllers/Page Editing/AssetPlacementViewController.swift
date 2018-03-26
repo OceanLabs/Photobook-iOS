@@ -27,9 +27,10 @@ class AssetPlacementViewController: UIViewController {
     var productLayout: ProductLayout?
     var initialContainerRect: CGRect?
     var targetRect: CGRect?
-    var assetImage: UIImage?
+    var previewAssetImage: UIImage?
 
     private var initialContainerSize: CGSize!
+    private var maxScale: CGFloat!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -158,7 +159,18 @@ class AssetPlacementViewController: UIViewController {
         
         productLayout.productLayoutAsset?.containerSize = bleedContainerView.bounds.size
         assetImageView.transform = productLayout.productLayoutAsset!.transform
-        assetImageView.image = assetImage
+        assetImageView.image = previewAssetImage
+        
+        // Allow scaling up to 3 times the original scale
+        let startingScale = LayoutUtils.scaleToFill(containerSize: bleedContainerView.bounds.size, withSize: asset.size, atAngle: 0)
+        maxScale = startingScale * 3.0
+    
+        // Request an image 3 times the size of the container
+        let highResImageSize = CGSize(width: assetContainerView.bounds.width * 3.0, height: assetContainerView.bounds.height * 3.0)
+        productLayout.asset!.image(size: highResImageSize, loadThumbnailsFirst: false, progressHandler: nil) { (image, _) in
+            guard let image = image else { return }
+            self.assetImageView.image = image
+        }
     }
     
     @IBAction private func tappedRotateButton(_ sender: UIButton) {
@@ -208,7 +220,7 @@ class AssetPlacementViewController: UIViewController {
             }
         case .changed:
             if var initial = initialTransform {
-                gestures.forEach({ (gesture) in initial = LayoutUtils.adjustTransform(initial, withRecognizer: gesture, inParentView: bleedContainerView) })
+                gestures.forEach({ (gesture) in initial = LayoutUtils.adjustTransform(initial, withRecognizer: gesture, inParentView: bleedContainerView, maxScale: maxScale) })
                 assetImageView.transform = initial
             }
         case .ended:

@@ -80,11 +80,20 @@ class PhotosAsset: NSObject, Asset {
     }
     
     func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension, Error?) -> Void) {
+        
+        if photosAsset.mediaType != .image {
+            completionHandler(nil, .unsupported, AssetLoadingException.notFound)
+            return
+        }
+        
         let options = PHImageRequestOptions()
         options.isNetworkAccessAllowed = true
         
         PHImageManager.default().requestImageData(for: photosAsset, options: options, resultHandler: { imageData, dataUti, _, info in
-            guard let data = imageData, let dataUti = dataUti else { completionHandler(nil, .unsupported, NSError()); return }
+            guard let data = imageData, let dataUti = dataUti else {
+                completionHandler(nil, .unsupported, AssetLoadingException.notFound)
+                return
+            }
             
             let fileExtension: AssetDataFileExtension
             if dataUti.contains(".png") {
@@ -101,7 +110,10 @@ class PhotosAsset: NSObject, Asset {
             if fileExtension == .unsupported {
                 guard let ciImage = CIImage(data: data),
                     let jpegData = CIContext().jpegRepresentation(of: ciImage, colorSpace: CGColorSpaceCreateDeviceRGB(), options: [kCGImageDestinationLossyCompressionQuality : 0.8])
-                    else { completionHandler(nil, .unsupported, NSError()); return }
+                else {
+                    completionHandler(nil, .unsupported, AssetLoadingException.unsupported)
+                    return
+                }
                 completionHandler(jpegData, .jpg, nil)
             } else {
                 completionHandler(imageData, fileExtension, nil)

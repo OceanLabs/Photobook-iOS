@@ -57,7 +57,7 @@ class ProductManagerTests: XCTestCase {
             return
         }
         
-        guard let unarchivedProduct = try? PropertyListDecoder().decode(PhotobookBackUp.self, from: unarchivedData) else {
+        guard let unarchivedProduct = try? PropertyListDecoder().decode(PhotobookBackup.self, from: unarchivedData) else {
             XCTFail("Decoding of product failed")
             return
         }

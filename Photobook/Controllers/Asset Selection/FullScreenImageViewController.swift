@@ -43,7 +43,7 @@ class FullScreenImageViewController: UIViewController {
     
     private func updateSelectedStatusIndicator(){
         let selected = selectedAssetsManager?.isSelected(asset) ?? false
-        selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
+        selectedStatusImageView.image = selected ? UIImage(namedInPhotobookBundle: "Tick") : UIImage(namedInPhotobookBundle: "Tick-empty")
     }
     
     // Run when the user presses even more firmly to pop the preview to full screen
