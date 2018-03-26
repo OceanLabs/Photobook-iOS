@@ -44,7 +44,7 @@ class PhotosAsset: NSObject, Asset {
         return photosAsset.creationDate
     }
     
-    var albumIdentifier: String
+    var albumIdentifier: String?
 
     var size: CGSize { return CGSize(width: photosAsset.pixelWidth, height: photosAsset.pixelHeight) }
     var isLandscape: Bool {

@@ -26,7 +26,7 @@ enum AssetLoadingException: Error {
     var identifier: String! { get set }
     
     /// Album Identifier
-    var albumIdentifier: String { get }
+    var albumIdentifier: String? { get }
     
     /// Size
     var size: CGSize { get }

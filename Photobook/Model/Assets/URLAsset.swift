@@ -55,7 +55,7 @@ class URLAsset: Asset {
         
     var date: Date?
     
-    var albumIdentifier: String
+    var albumIdentifier: String?
     
     func image(size: CGSize, loadThumbnailsFirst: Bool, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
         
