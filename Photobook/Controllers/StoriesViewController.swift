@@ -36,9 +36,7 @@ class StoriesViewController: UIViewController {
         
         Analytics.shared.trackScreenViewed(.stories)
         
-        if !StoriesManager.shared.loading && stories.isEmpty {
-            StoriesManager.shared.loadTopStories(completionHandler: nil)
-        }
+        StoriesManager.shared.loadTopStories()
         
         NotificationCenter.default.addObserver(self, selector: #selector(receiptWillDismiss), name: ReceiptNotificationName.receiptWillDismiss, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(storiesWereUpdated), name: StoriesNotificationName.storiesWereUpdated, object: nil)

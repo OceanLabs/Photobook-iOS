@@ -47,7 +47,9 @@ class StoriesManager: NSObject {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func loadTopStories(completionHandler:(() -> Void)?) {
+    func loadTopStories(completionHandler:(() -> Void)? = nil) {
+        guard !loading, stories.isEmpty else { completionHandler?(); return }
+        
         loading = true
         stories = []
         NotificationCenter.default.post(name: StoriesNotificationName.storiesWereUpdated, object: nil)
@@ -77,7 +79,8 @@ class StoriesManager: NSObject {
     @objc private func appRestoredFromBackground() {
         // If stories are loaded from application(_:didFinishLaunchingWithOptions:), make sure we don't load the stories twice, slowing down launch time
         if (fromBackground) {
-            loadTopStories(completionHandler: nil)
+            stories = []
+            loadTopStories()
         }
     }
 
