@@ -23,7 +23,7 @@ extension UIImage {
     }
     
     convenience init?(namedInPhotobookBundle: String) {
-        self.init(named: namedInPhotobookBundle, in: Bundle.photobookBundle(), compatibleWith: nil)
+        self.init(named: namedInPhotobookBundle, in: PhotobookUtils.photobookBundle(), compatibleWith: nil)
     }
     
     

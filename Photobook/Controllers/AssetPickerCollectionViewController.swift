@@ -373,7 +373,7 @@ extension AssetPickerCollectionViewController: LogoutHandler {
     
     func popToLandingScreen() {
         guard let accountManager = accountManager else { return }
-        let viewController = UIStoryboard.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: accountManager.serviceName + "LandingViewController")
+        let viewController = PhotobookUtils.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: accountManager.serviceName + "LandingViewController")
         self.navigationController?.setViewControllers([viewController, self], animated: false)
         self.navigationController?.popViewController(animated: true)
     }
@@ -403,7 +403,7 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
         case .adding:
             addingDelegate?.didFinishAdding(assets: selectedAssetsManager?.selectedAssets)
         default:
-            let photobookViewController = UIStoryboard.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
+            let photobookViewController = PhotobookUtils.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
             photobookViewController.selectedAssetsManager = selectedAssetsManager
             photobookViewController.selectedAssetsSource = SelectedAssetsSource(album: album, albumManager: albumManager)
             navigationController?.pushViewController(photobookViewController, animated: true)
@@ -560,7 +560,7 @@ extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegat
             let thumbnailImage = cell.imageView.image
             else { return nil }
         
-        let fullScreenImageViewController = UIStoryboard.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: "FullScreenImageViewController") as! FullScreenImageViewController
+        let fullScreenImageViewController = PhotobookUtils.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: "FullScreenImageViewController") as! FullScreenImageViewController
         previewingContext.sourceRect = cell.convert(cell.contentView.frame, to: collectionView)
         
         fullScreenImageViewController.asset = album.assets[indexPath.item]

@@ -150,7 +150,7 @@ class MessageBarViewController: UIViewController {
             sharedController.removeFromParentViewController()
         }
         
-        sharedController = UIStoryboard.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: MessageBarViewController.identifier) as! MessageBarViewController
+        sharedController = PhotobookUtils.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: MessageBarViewController.identifier) as! MessageBarViewController
         sharedController.action = action
         sharedController.message = message
         sharedController.dismissAfter = dismissAfter

@@ -9,7 +9,7 @@
 extension AlbumsCollectionViewController {
     
     static func facebookAlbumsCollectionViewController() -> AlbumsCollectionViewController {
-        let albumViewController = UIStoryboard.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: "AlbumsCollectionViewController") as! AlbumsCollectionViewController
+        let albumViewController = PhotobookUtils.photobookStoryBoard(name: "Main").instantiateViewController(withIdentifier: "AlbumsCollectionViewController") as! AlbumsCollectionViewController
         albumViewController.albumManager = FacebookAlbumManager()
         albumViewController.prepareToHandleLogout(accountManager: FacebookClient.shared)
         return albumViewController
