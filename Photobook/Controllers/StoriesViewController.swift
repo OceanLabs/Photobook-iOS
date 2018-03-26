@@ -83,8 +83,8 @@ class StoriesViewController: UIViewController {
     @objc private func loadStories() {
         storiesAreLoading = true
         StoriesManager.shared.loadTopStories(completionHandler: {
-            storiesAreLoading = false
-            tableView.reloadData()
+            self.storiesAreLoading = false
+            self.tableView.reloadData()
         })
     }
 }
@@ -163,7 +163,9 @@ extension StoriesViewController: UITableViewDataSource {
         }
         
         guard storyIndex < stories.count else {
-            return tableView.dequeueReusableCell(withIdentifier: "EmptyStoryTableViewCell", for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "EmptyStoryTableViewCell", for: indexPath) as! EmptyStoryTableViewCell
+            cell.label.isHidden = storiesAreLoading
+            return cell
         }
         
         let story = stories[storyIndex]

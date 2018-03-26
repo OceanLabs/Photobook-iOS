@@ -240,12 +240,12 @@ class CheckoutViewController: UIViewController {
                     paymentMethodIconImageView.image = nil
                 }
             case .applePay:
-                paymentMethodIconImageView.image = UIImage(named: "apple-pay-method")
+                paymentMethodIconImageView.image = UIImage(namedInPhotobookBundle: "apple-pay-method")
                 showDeliveryDetailsConstraint.priority = .defaultLow
                 hideDeliveryDetailsConstraint.priority = .defaultHigh
                 deliveryDetailsView.isHidden = true
             case .payPal:
-                paymentMethodIconImageView.image = UIImage(named: "paypal-method")
+                paymentMethodIconImageView.image = UIImage(namedInPhotobookBundle: "paypal-method")
             }
             paymentMethodIconImageView.isHidden = false
             paymentMethodLabel.isHidden = true
@@ -427,7 +427,7 @@ class CheckoutViewController: UIViewController {
     }
     
     @IBAction private func presentAmountPicker() {
-        let amountPickerViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AmountPickerViewController") as! AmountPickerViewController
+        let amountPickerViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "AmountPickerViewController") as! AmountPickerViewController
         amountPickerViewController.optionName = NSLocalizedString("Controllers/CheckoutViewController/ItemAmountPickerTitle",
                                                                               value: "Select amount",
                                                                               comment: "The title displayed on the picker view for the amount of basket items")
