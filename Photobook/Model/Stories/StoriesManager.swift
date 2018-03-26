@@ -27,6 +27,7 @@ class StoriesManager: NSObject {
     var stories = [Story]()
     var currentlySelectedStory: Story?
     var loading = false
+    private var fromBackground = false
     
     private struct Constants {
         static let maxStoriesToDisplay = 16
@@ -36,6 +37,10 @@ class StoriesManager: NSObject {
         super.init()
         PHPhotoLibrary.shared().register(self)
         NotificationCenter.default.addObserver(self, selector: #selector(resetStoriesSelections), name: ReceiptNotificationName.receiptWillDismiss, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appRestoredFromBackground), name: .UIApplicationDidBecomeActive, object: nil)
+        NotificationCenter.default.addObserver(forName: .UIApplicationDidEnterBackground, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
+            welf?.fromBackground = true
+        })
     }
     
     deinit {
@@ -44,6 +49,8 @@ class StoriesManager: NSObject {
     
     func loadTopStories(completionHandler:(() -> Void)?) {
         loading = true
+        stories = []
+        NotificationCenter.default.post(name: StoriesNotificationName.storiesWereUpdated, object: nil)
         DispatchQueue.global(qos: .background).async { [weak welf = self] in
             let memories = self.orderStories()
             welf?.stories = Array<Story>(memories.prefix(Constants.maxStoriesToDisplay))
@@ -64,6 +71,13 @@ class StoriesManager: NSObject {
                     completionHandler()
                 }
             })
+        }
+    }
+    
+    @objc private func appRestoredFromBackground() {
+        // If stories are loaded from application(_:didFinishLaunchingWithOptions:), make sure we don't load the stories twice, slowing down launch time
+        if (fromBackground) {
+            loadTopStories(completionHandler: nil)
         }
     }
 

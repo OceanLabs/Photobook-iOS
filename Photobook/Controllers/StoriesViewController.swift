@@ -28,7 +28,8 @@ class StoriesViewController: UIViewController {
     private var minimumNumberOfStories: Int {
         return stories.count == 1 ? 4 : 3
     }
-    private var fromBackground = false
+    
+    private var openingStory = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,15 +37,11 @@ class StoriesViewController: UIViewController {
         Analytics.shared.trackScreenViewed(.stories)
         
         if !StoriesManager.shared.loading && stories.isEmpty {
-            loadStories()
+            StoriesManager.shared.loadTopStories(completionHandler: nil)
         }
         
-        NotificationCenter.default.addObserver(self, selector: #selector(appRestoredFromBackground), name: .UIApplicationDidBecomeActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(receiptWillDismiss), name: ReceiptNotificationName.receiptWillDismiss, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(storiesWereUpdated), name: StoriesNotificationName.storiesWereUpdated, object: nil)
-        NotificationCenter.default.addObserver(forName: .UIApplicationDidEnterBackground, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
-            welf?.fromBackground = true
-        })
         
     }
     
@@ -87,19 +84,9 @@ class StoriesViewController: UIViewController {
         }
     }
     
-    @objc private func appRestoredFromBackground() {
-        // There's a possiblibity that we get the notification when this is the first vc shown from application(_:didFinishLaunchingWithOptions:) which we don't care about
-        if (fromBackground) {
-            loadStories()
-        }
-    }
-
-    private func loadStories() {
-        StoriesManager.shared.loadTopStories(completionHandler: nil)
-    }
-    
     @objc private func storiesWereUpdated() {
         tableView.reloadData()
+        tableView.scrollToRow(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
     }
 }
 
@@ -205,12 +192,14 @@ extension StoriesViewController: StoryTableViewCellDelegate {
     // MARK: StoryTableViewCellDelegate
     
     func didTapOnStory(index: Int, coverImage: UIImage?, sourceView: UIView?, labelsContainerView: UIView?) {
-        guard !StoriesManager.shared.loading, index < stories.count else { return }
+        guard !StoriesManager.shared.loading, index < stories.count, !openingStory else { return }
+        openingStory = true
         
         let story = stories[index]
         StoriesManager.shared.currentlySelectedStory = story
         StoriesManager.shared.prepare(story: story, completionHandler: { [weak welf = self] in
             welf?.performSegue(withIdentifier: Constants.viewStorySegueName, sender: (index: index, coverImage: coverImage, sourceView: sourceView, labelsContainerView: labelsContainerView))
+            welf?.openingStory = false
         })
     }
 }

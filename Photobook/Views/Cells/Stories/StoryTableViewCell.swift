@@ -44,4 +44,8 @@ class StoryTableViewCell: UITableViewCell {
         delegate?.didTapOnStory(index: storyIndex, coverImage: coverImageView.image, sourceView: coverImageView.superview, labelsContainerView: titleLabel.superview)
     }
     
+    override func prepareForReuse() {
+        coverImageView.image = nil
+    }
+    
 }
