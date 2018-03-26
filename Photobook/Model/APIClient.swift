@@ -83,7 +83,7 @@ class APIClient: NSObject {
     private lazy var backgroundUrlSession: URLSession = {
         let configuration = URLSessionConfiguration.background(withIdentifier: Constants.backgroundSessionBaseIdentifier)
         configuration.sessionSendsLaunchEvents = true
-        configuration.isDiscretionary = true
+        configuration.timeoutIntervalForResource = 7 * 24 * 60 * 60 //7 days timeout
         return URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
     }()
     
@@ -162,7 +162,7 @@ class APIClient: NSObject {
     /// Called when the app is launched by the system by pending tasks
     ///
     /// - Parameter completionHandler: The completion handler provided by the system and that should be called when the event handling is done.
-    func recreateBackgroundSession(_ completionHandler: @escaping ()->Void) {
+    func recreateBackgroundSession(_ completionHandler: (()->Void)? = nil) {
         self.backgroundSessionCompletionHandler = completionHandler
         
         // Trigger lazy initialisation
@@ -186,6 +186,13 @@ class APIClient: NSObject {
         resourceValues.isExcludedFromBackup = true
         var fileUrl = URL(fileURLWithPath: Storage.uploadTasksFile)
         try? fileUrl.setResourceValues(resourceValues)
+    }
+    
+    func hasPendingBackgroundTasks(_ completion: @escaping (Bool) -> Void) {
+        backgroundUrlSession.getAllTasks { (tasks) in
+            let hasTasks = tasks.count > 0
+            completion(hasTasks)
+        }
     }
     
     // MARK: Generic dataTask handling
@@ -366,6 +373,15 @@ class APIClient: NSObject {
     func pendingBackgroundTaskCount(_ completion: @escaping ((Int)->Void)) {
         backgroundUrlSession.getAllTasks { completion($0.count) }
     }
+    
+    func cancelBackgroundTasks(_ completion: @escaping () -> Void) {
+        backgroundUrlSession.getAllTasks { (tasks) in
+            for task in tasks {
+                task.cancel()
+            }
+            completion()
+        }
+    }
 }
 
 extension APIClient: URLSessionDelegate, URLSessionDataDelegate {
@@ -391,6 +407,7 @@ extension APIClient: URLSessionDelegate, URLSessionDataDelegate {
             
             json!["task_reference"] = reference as AnyObject
         }
+        
         NotificationCenter.default.post(name: APIClient.backgroundSessionTaskFinished, object: nil, userInfo: json)
     }
     
@@ -399,6 +416,7 @@ extension APIClient: URLSessionDelegate, URLSessionDataDelegate {
         
         if error != nil {
             let error = error as NSError?
+            
             var userInfo = [ "error": APIClientError.server(code: error!.code, message: error!.localizedDescription) ] as [String: AnyObject]
             
             // Add reference to response dictionary if there is one

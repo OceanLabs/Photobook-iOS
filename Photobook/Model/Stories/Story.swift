@@ -101,6 +101,7 @@ extension Story: Album {
         moments.enumerateObjects { (collection: PHAssetCollection, index: Int,  stop: UnsafeMutablePointer<ObjCBool>) in
             
             fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: true) ]
+            fetchOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue) //only images
             let fetchedAssets = PHAsset.fetchAssets(in: collection, options: fetchOptions)
             fetchedAssets.enumerateObjects({ (asset, _, _) in
                 self.assets.append(PhotosAsset(asset, albumIdentifier: self.identifier))

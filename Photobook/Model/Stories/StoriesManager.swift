@@ -70,8 +70,15 @@ class StoriesManager: NSObject {
             var totalAssetCount = 0
             
             let moments = PHAssetCollection.fetchMoments(inMomentList: list, options: PHFetchOptions())
+            
+            
             moments.enumerateObjects { (collection: PHAssetCollection, index: Int,  stop: UnsafeMutablePointer<ObjCBool>) in
-                totalAssetCount += collection.estimatedAssetCount
+                //only use images
+                let fetchOptions = PHFetchOptions()
+                fetchOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
+                let filteredCollection = PHAsset.fetchAssets(in: collection, options: fetchOptions)
+                
+                totalAssetCount += filteredCollection.count
             }
             
             // Must also have a title
