@@ -10,7 +10,7 @@ import UIKit
 
 extension UIImage {
     
-    public convenience init?(color: UIColor, size: CGSize = CGSize(width: 1.0, height: 1.0)) {
+    convenience init?(color: UIColor, size: CGSize = CGSize(width: 1.0, height: 1.0)) {
         let rect = CGRect(origin: .zero, size: size)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
         color.setFill()
@@ -20,6 +20,10 @@ extension UIImage {
         
         guard let cgImage = image?.cgImage else { return nil }
         self.init(cgImage: cgImage)
+    }
+    
+    convenience init?(namedInPhotobookBundle: String) {
+        self.init(named: namedInPhotobookBundle, in: photobookBundle, compatibleWith: nil)
     }
     
     

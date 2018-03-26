@@ -75,14 +75,14 @@ extension PaymentMethodsViewController: UITableViewDataSource {
         case -1 + supportsApplePay: // Apple Pay
             let cell = tableView.dequeueReusableCell(withIdentifier: PaymentMethodTableViewCell.reuseIdentifier, for: indexPath) as! PaymentMethodTableViewCell
             cell.method = "ApplePay"
-            cell.icon = UIImage(named:"apple-pay-method")
+            cell.icon = UIImage(namedInPhotobookBundle:"apple-pay-method")
             cell.ticked = selectedPaymentMethod == .applePay
             cell.separator.isHidden = true
             return cell
         case 0 + supportsApplePay: // PayPal
             let cell = tableView.dequeueReusableCell(withIdentifier: PaymentMethodTableViewCell.reuseIdentifier, for: indexPath) as! PaymentMethodTableViewCell
             cell.method = "PayPal"
-            cell.icon = UIImage(named:"paypal-method")
+            cell.icon = UIImage(namedInPhotobookBundle:"paypal-method")
             cell.ticked = selectedPaymentMethod == .payPal
             cell.separator.isHidden = false
             return cell

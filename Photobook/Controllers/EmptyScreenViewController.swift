@@ -44,7 +44,7 @@ class EmptyScreenViewController: UIViewController {
     /// - Parameter parent: The parent view controller to add it to
     /// - Returns: An initialised Empty Screen
     static func emptyScreen(parent: UIViewController) -> EmptyScreenViewController {
-        let emptyScreenViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "EmptyScreenViewController") as! EmptyScreenViewController
+        let emptyScreenViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "EmptyScreenViewController") as! EmptyScreenViewController
         emptyScreenViewController.parentController = parent
         return emptyScreenViewController
     }

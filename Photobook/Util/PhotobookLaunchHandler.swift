@@ -8,7 +8,10 @@
 
 import UIKit
 
-class PhotobookLaunchHandler {
+let photobookBundle = Bundle(for: Photobook.self)
+let photobookMainStoryboard =  UIStoryboard(name: "Main", bundle: photobookBundle)
+
+@objc public class PhotobookLaunchHandler: NSObject {
     
     enum Tab: Int {
         case stories
@@ -56,7 +59,7 @@ class PhotobookLaunchHandler {
         return rootNavigationController
     }
     
-    private static func configureTabBarController(_ tabBarController: UITabBarController) {
+    @objc public static func configureTabBarController(_ tabBarController: UITabBarController) {
         
         // Browse
         // Set the albumManager to the AlbumsCollectionViewController

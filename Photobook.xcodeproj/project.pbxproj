@@ -42,6 +42,12 @@
 		2E2563912018BBCF0096DFC5 /* AddressTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2563902018BBCF0096DFC5 /* AddressTableViewController.swift */; };
 		2E2563932018C3950096DFC5 /* AddressFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2563922018C3950096DFC5 /* AddressFieldTableViewCell.swift */; };
 		2E3E6A5420036FB60044EDFC /* PhotobookCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3E6A5220036FB60044EDFC /* PhotobookCollectionViewCell.swift */; };
+		2E4B83892068E50C00059AA7 /* ReceiptViewControllerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FA530B2063F3B200669758 /* ReceiptViewControllerState.swift */; };
+		2E4B838A2068E51B00059AA7 /* OrderProcessingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FA52FD2059724400669758 /* OrderProcessingManager.swift */; };
+		2E4B838B2068E59E00059AA7 /* ReceiptProgressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97ABBC9204D445900238C8A /* ReceiptProgressTableViewCell.swift */; };
+		2E4B838C2068E5B100059AA7 /* ReceiptInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97ABBCF204D52E400238C8A /* ReceiptInfoTableViewCell.swift */; };
+		2E4B838D2068E5C000059AA7 /* ReceiptDetailsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97ABBCD204D44A900238C8A /* ReceiptDetailsTableViewCell.swift */; };
+		2E4B838E2068EE1000059AA7 /* PhotobookLaunchHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FA5301205FC3DC00669758 /* PhotobookLaunchHandler.swift */; };
 		2E4C9E882049492400F5AD48 /* FacebookAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E872049492400F5AD48 /* FacebookAlbum.swift */; };
 		2E4C9E8A20494D6B00F5AD48 /* AlbumsCollectionViewController+Facebook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8920494D6B00F5AD48 /* AlbumsCollectionViewController+Facebook.swift */; };
 		2E4C9E8C2049527900F5AD48 /* FacebookAlbumManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8B2049527900F5AD48 /* FacebookAlbumManager.swift */; };
@@ -80,6 +86,162 @@
 		2ECF57BC2010D0830047094C /* PaymentMethodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECF57BB2010D0830047094C /* PaymentMethodTableViewCell.swift */; };
 		2ECF57C320120D2A0047094C /* CreditCardTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECF57C220120D2A0047094C /* CreditCardTableViewController.swift */; };
 		2ECF57C520120DF60047094C /* UserInputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECF57C420120DF60047094C /* UserInputTableViewCell.swift */; };
+		2ED14B9D2063A9CD00ED2E2C /* PhotobookSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 2ED14B9B2063A9CD00ED2E2C /* PhotobookSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2ED14BA32063AA4000ED2E2C /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */; };
+		2ED14BA42063AA4000ED2E2C /* StoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DE64D1FB323540099A97E /* StoriesViewController.swift */; };
+		2ED14BA52063AA4000ED2E2C /* AlbumsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58911FB325FF00F31A9E /* AlbumsCollectionViewController.swift */; };
+		2ED14BA62063AA4000ED2E2C /* ModalAlbumsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA1893A2004B9C700E6D0AB /* ModalAlbumsCollectionViewController.swift */; };
+		2ED14BA72063AA4000ED2E2C /* AlbumSearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */; };
+		2ED14BA82063AA4000ED2E2C /* FullScreenImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9EDE1FBF1B0D00F28C00 /* FullScreenImageViewController.swift */; };
+		2ED14BA92063AA4000ED2E2C /* EmptyScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0A682D1FE0243400B7E56C /* EmptyScreenViewController.swift */; };
+		2ED14BAA2063AA4000ED2E2C /* ProgressOverlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D3340D2029FB14003D4338 /* ProgressOverlayViewController.swift */; };
+		2ED14BAB2063AA4000ED2E2C /* AssetPickerCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */; };
+		2ED14BAC2063AA4000ED2E2C /* AssetCollectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BC2E261FBF195200F4AA56 /* AssetCollectorViewController.swift */; };
+		2ED14BAD2063AA4000ED2E2C /* PhotobookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8B3E431FD191AC00FB8878 /* PhotobookViewController.swift */; };
+		2ED14BAE2063AA4000ED2E2C /* TextEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99536DF2035D8E00019B1AF /* TextEditingViewController.swift */; };
+		2ED14BAF2063AA4000ED2E2C /* PageSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0A68311FE1291200B7E56C /* PageSetupViewController.swift */; };
+		2ED14BB02063AA4000ED2E2C /* AssetPlacementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE959C1FF555EE0023FC14 /* AssetPlacementViewController.swift */; };
+		2ED14BB12063AA4000ED2E2C /* LayoutSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0A68351FE16D1200B7E56C /* LayoutSelectionViewController.swift */; };
+		2ED14BB22063AA4000ED2E2C /* ColorSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3920F620177FC900D6C30B /* ColorSelectionViewController.swift */; };
+		2ED14BB32063AA4000ED2E2C /* AssetSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F92BD011FFE3B8100460466 /* AssetSelectorViewController.swift */; };
+		2ED14BB42063AA4000ED2E2C /* SpineTextEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFE21CA202CA7F9004EC0EA /* SpineTextEditingViewController.swift */; };
+		2ED14BB52063AA4000ED2E2C /* OrderSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90F287E1FFF8D1A00FF3D15 /* OrderSummaryViewController.swift */; };
+		2ED14BB62063AA4000ED2E2C /* CheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B939FE8D200E381C00B1084B /* CheckoutViewController.swift */; };
+		2ED14BB72063AA4000ED2E2C /* PaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E17337E200F4E0B00F0D718 /* PaymentMethodsViewController.swift */; };
+		2ED14BB82063AA4000ED2E2C /* CreditCardTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECF57C220120D2A0047094C /* CreditCardTableViewController.swift */; };
+		2ED14BB92063AA4000ED2E2C /* DeliveryDetailsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F8250201617CE002F3607 /* DeliveryDetailsTableViewController.swift */; };
+		2ED14BBA2063AA4000ED2E2C /* AddressTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2563902018BBCF0096DFC5 /* AddressTableViewController.swift */; };
+		2ED14BBB2063AA4000ED2E2C /* CountryPickerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DB552017943500D32989 /* CountryPickerTableViewController.swift */; };
+		2ED14BBC2063AA4000ED2E2C /* ShippingMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC81603201B33230046643B /* ShippingMethodsViewController.swift */; };
+		2ED14BBD2063AA4000ED2E2C /* ReceiptTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C6F05201F4E670071E6B8 /* ReceiptTableViewController.swift */; };
+		2ED14BBE2063AA4000ED2E2C /* AmountPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90EB85D203701CD0005D91C /* AmountPickerViewController.swift */; };
+		2ED14BBF2063AA4000ED2E2C /* InstagramLandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA88C61203C269C00CADCAD /* InstagramLandingViewController.swift */; };
+		2ED14BC02063AA4000ED2E2C /* InstagramLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA24E492035ACB20069B12A /* InstagramLoginViewController.swift */; };
+		2ED14BC12063AA4000ED2E2C /* AssetPickerCollectionViewController+Instagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB9BFAE2036E01F00EED9FA /* AssetPickerCollectionViewController+Instagram.swift */; };
+		2ED14BC22063AA4000ED2E2C /* FacebookLandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E971E1620481FF300A49F21 /* FacebookLandingViewController.swift */; };
+		2ED14BC32063AA4000ED2E2C /* AlbumsCollectionViewController+Facebook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8920494D6B00F5AD48 /* AlbumsCollectionViewController+Facebook.swift */; };
+		2ED14BC42063AA4000ED2E2C /* MessageBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F53E093204FFAF200B73AB8 /* MessageBarViewController.swift */; };
+		2ED14BC52063AA4000ED2E2C /* OrderSummaryUpsellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90F28812003B7A300FF3D15 /* OrderSummaryUpsellTableViewCell.swift */; };
+		2ED14BC62063AA4000ED2E2C /* OrderSummaryDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90F288820066D1500FF3D15 /* OrderSummaryDetailTableViewCell.swift */; };
+		2ED14BC72063AA4000ED2E2C /* OrderSummaryTotalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90F288A20066D3100FF3D15 /* OrderSummaryTotalTableViewCell.swift */; };
+		2ED14BC82063AA4000ED2E2C /* AssetCollectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BE9F931FBF33320002C459 /* AssetCollectorCollectionViewCell.swift */; };
+		2ED14BC92063AA4000ED2E2C /* AlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B589F1FB3297300F31A9E /* AlbumCollectionViewCell.swift */; };
+		2ED14BCA2063AA4000ED2E2C /* AlbumSearchResultsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3821FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift */; };
+		2ED14BCB2063AA4000ED2E2C /* StoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DE6541FB4522A0099A97E /* StoryTableViewCell.swift */; };
+		2ED14BCC2063AA4000ED2E2C /* DoubleStoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DE6561FB452390099A97E /* DoubleStoryTableViewCell.swift */; };
+		2ED14BCD2063AA4000ED2E2C /* AssetPickerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED79FED1FBAEE630046B96C /* AssetPickerCollectionViewCell.swift */; };
+		2ED14BCE2063AA4000ED2E2C /* AssetPickerCoverCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E876E081FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift */; };
+		2ED14BCF2063AA4000ED2E2C /* LayoutSelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC0DE781FE930B0009BB799 /* LayoutSelectionCollectionViewCell.swift */; };
+		2ED14BD02063AA4000ED2E2C /* CoverLayoutSelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1DB8DA201617B7001BECC8 /* CoverLayoutSelectionCollectionViewCell.swift */; };
+		2ED14BD12063AA4000ED2E2C /* AssetSelectorAssetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA189301FFF96E500E6D0AB /* AssetSelectorAssetCollectionViewCell.swift */; };
+		2ED14BD22063AA4000ED2E2C /* AssetSelectorAddMoreCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA189321FFF976200E6D0AB /* AssetSelectorAddMoreCollectionViewCell.swift */; };
+		2ED14BD32063AA4000ED2E2C /* BorderedCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA189361FFFA07500E6D0AB /* BorderedCollectionViewCell.swift */; };
+		2ED14BD42063AA4000ED2E2C /* BorderedRoundedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4606DB201886BD00C7583E /* BorderedRoundedView.swift */; };
+		2ED14BD52063AA4000ED2E2C /* BorderedViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3920F8201881AE00D6C30B /* BorderedViewProtocol.swift */; };
+		2ED14BD62063AA4000ED2E2C /* PhotobookCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3E6A5220036FB60044EDFC /* PhotobookCollectionViewCell.swift */; };
+		2ED14BD72063AA4000ED2E2C /* PhotobookCoverCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6B7A76200E137B002E2FC2 /* PhotobookCoverCollectionViewCell.swift */; };
+		2ED14BD82063AA4000ED2E2C /* PhotobookTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F963FC22031E7B600DE3B3C /* PhotobookTextView.swift */; };
+		2ED14BD92063AA4000ED2E2C /* ShippingMethodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC81601201B33180046643B /* ShippingMethodTableViewCell.swift */; };
+		2ED14BDA2063AA4000ED2E2C /* PaymentMethodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECF57BB2010D0830047094C /* PaymentMethodTableViewCell.swift */; };
+		2ED14BDB2063AA4000ED2E2C /* UserInputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECF57C420120DF60047094C /* UserInputTableViewCell.swift */; };
+		2ED14BDC2063AA4000ED2E2C /* DeliveryAddressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F825220162855002F3607 /* DeliveryAddressTableViewCell.swift */; };
+		2ED14BDD2063AA4000ED2E2C /* AddressFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2563922018C3950096DFC5 /* AddressFieldTableViewCell.swift */; };
+		2ED14BDE2063AA4000ED2E2C /* ReceiptFooterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C3692202095DC008033E7 /* ReceiptFooterTableViewCell.swift */; };
+		2ED14BDF2063AA4000ED2E2C /* ReceiptHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C3694202095ED008033E7 /* ReceiptHeaderTableViewCell.swift */; };
+		2ED14BE02063AA4000ED2E2C /* ReceiptLineItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C3696202095FB008033E7 /* ReceiptLineItemTableViewCell.swift */; };
+		2ED14BE12063AA4000ED2E2C /* OutOfBoundsTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECB5A961FDFE01100FF39A5 /* OutOfBoundsTouchView.swift */; };
+		2ED14BE22063AA4000ED2E2C /* OutOfBoundsTouchCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECB5A981FDFE71200FF39A5 /* OutOfBoundsTouchCollectionView.swift */; };
+		2ED14BE32063AA4000ED2E2C /* PhotobookNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DE6581FB453090099A97E /* PhotobookNavigationBar.swift */; };
+		2ED14BE42063AA4000ED2E2C /* PhotobookTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF25E41FB604E100F46BB0 /* PhotobookTabBar.swift */; };
+		2ED14BE52063AA4000ED2E2C /* PhotobookFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F181545200781BB00D7082D /* PhotobookFrameView.swift */; };
+		2ED14BE62063AA4000ED2E2C /* PhotobookPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB39DD41FC5AE0F009EC5B2 /* PhotobookPageView.swift */; };
+		2ED14BE72063AA4000ED2E2C /* CoverFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1815492009042E00D7082D /* CoverFrameView.swift */; };
+		2ED14BE82063AA4000ED2E2C /* SpineFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5A59F1200CBDD80006BFCA /* SpineFrameView.swift */; };
+		2ED14BE92063AA4000ED2E2C /* TextLabelPlaceholderBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3920F220175D7300D6C30B /* TextLabelPlaceholderBoxView.swift */; };
+		2ED14BEA2063AA4000ED2E2C /* order_summary_0.json in Resources */ = {isa = PBXBuildFile; fileRef = B986DF2C20164BDA005461A0 /* order_summary_0.json */; };
+		2ED14BEB2063AA4000ED2E2C /* order_summary_1.json in Resources */ = {isa = PBXBuildFile; fileRef = B99536D9202DB1B80019B1AF /* order_summary_1.json */; };
+		2ED14BEC2063AA4000ED2E2C /* order_summary_2.json in Resources */ = {isa = PBXBuildFile; fileRef = B99536DD202DB2360019B1AF /* order_summary_2.json */; };
+		2ED14BED2063AA4000ED2E2C /* OrderSummaryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B939FE8B200CD18200B1084B /* OrderSummaryManager.swift */; };
+		2ED14BEE2063AA4000ED2E2C /* OrderSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D3340120220FE7003D4338 /* OrderSummary.swift */; };
+		2ED14BEF2063AA4000ED2E2C /* UpsellOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = B986DF2E201B445E005461A0 /* UpsellOption.swift */; };
+		2ED14BF02063AA4000ED2E2C /* photobooks.json in Resources */ = {isa = PBXBuildFile; fileRef = 6FC7E88A1FC574DA00D2BCDA /* photobooks.json */; };
+		2ED14BF12063AA4000ED2E2C /* LayoutUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2FF37E1FD05686007DB545 /* LayoutUtils.swift */; };
+		2ED14BF22063AA4000ED2E2C /* LayoutBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E8801FC332A500D2BCDA /* LayoutBox.swift */; };
+		2ED14BF32063AA4000ED2E2C /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E87E1FC3329400D2BCDA /* Layout.swift */; };
+		2ED14BF42063AA4000ED2E2C /* Photobook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E8781FBEF4BB00D2BCDA /* Photobook.swift */; };
+		2ED14BF52063AA4000ED2E2C /* PhotobookAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E87A1FBEF7FC00D2BCDA /* PhotobookAPIManager.swift */; };
+		2ED14BF62063AA4000ED2E2C /* ProductLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3C4AC81FC8804300DA0196 /* ProductLayout.swift */; };
+		2ED14BF72063AA4000ED2E2C /* ProductLayoutAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3C4ACC1FC880F100DA0196 /* ProductLayoutAsset.swift */; };
+		2ED14BF82063AA4000ED2E2C /* ProductLayoutText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3C4ACE1FC8811C00DA0196 /* ProductLayoutText.swift */; };
+		2ED14BF92063AA4000ED2E2C /* ProductManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F34855D1FC5A9F900961B32 /* ProductManager.swift */; };
+		2ED14BFA2063AA4000ED2E2C /* FontType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE08D72023139D00C55D2F /* FontType.swift */; };
+		2ED14BFB2063AA4000ED2E2C /* StoriesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F139E0B1FB45DD8005B937E /* StoriesManager.swift */; };
+		2ED14BFC2063AA4000ED2E2C /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F139E0E1FB45EFC005B937E /* Story.swift */; };
+		2ED14BFD2063AA4000ED2E2C /* SelectedAssetsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58A81FB3508B00F31A9E /* SelectedAssetsManager.swift */; };
+		2ED14BFE2063AA4000ED2E2C /* AlbumManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58941FB3280000F31A9E /* AlbumManager.swift */; };
+		2ED14BFF2063AA4000ED2E2C /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58961FB3287900F31A9E /* Album.swift */; };
+		2ED14C002063AA4000ED2E2C /* Asset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58981FB328B800F31A9E /* Asset.swift */; };
+		2ED14C012063AA4000ED2E2C /* PhotosAlbumManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58A31FB32ADD00F31A9E /* PhotosAlbumManager.swift */; };
+		2ED14C022063AA4000ED2E2C /* PhotosAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58A11FB32AC100F31A9E /* PhotosAlbum.swift */; };
+		2ED14C032063AA4000ED2E2C /* PhotosAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B589C1FB3293100F31A9E /* PhotosAsset.swift */; };
+		2ED14C042063AA4000ED2E2C /* InstagramAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA24E4E2035E05C0069B12A /* InstagramAlbum.swift */; };
+		2ED14C052063AA4000ED2E2C /* FacebookAlbumManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8B2049527900F5AD48 /* FacebookAlbumManager.swift */; };
+		2ED14C062063AA4000ED2E2C /* FacebookAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E872049492400F5AD48 /* FacebookAlbum.swift */; };
+		2ED14C072063AA4000ED2E2C /* URLAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8D204979EA00F5AD48 /* URLAsset.swift */; };
+		2ED14C082063AA4000ED2E2C /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E17338B2010B9EE00F0D718 /* Card.swift */; };
+		2ED14C092063AA4000ED2E2C /* Cost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733852010B6BA00F0D718 /* Cost.swift */; };
+		2ED14C0A2063AA4000ED2E2C /* ShippingMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733872010B83100F0D718 /* ShippingMethod.swift */; };
+		2ED14C0B2063AA4000ED2E2C /* PaymentAuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733802010B50400F0D718 /* PaymentAuthorizationManager.swift */; };
+		2ED14C0C2063AA4000ED2E2C /* DeliveryDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DB5120177E5400D32989 /* DeliveryDetails.swift */; };
+		2ED14C0D2063AA4000ED2E2C /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733922010CD0B00F0D718 /* Address.swift */; };
+		2ED14C0E2063AA4000ED2E2C /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733912010CD0A00F0D718 /* Country.swift */; };
+		2ED14C0F2063AA4000ED2E2C /* OrderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D334092029A925003D4338 /* OrderManager.swift */; };
+		2ED14C102063AA4000ED2E2C /* AccountClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E086D102052924E00CF8096 /* AccountClient.swift */; };
+		2ED14C112063AA4000ED2E2C /* InstagramClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E086D1420529C8A00CF8096 /* InstagramClient.swift */; };
+		2ED14C122063AA4000ED2E2C /* FacebookClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E086D172052A13A00CF8096 /* FacebookClient.swift */; };
+		2ED14C132063AA4000ED2E2C /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E8751FBD985900D2BCDA /* APIClient.swift */; };
+		2ED14C142063AA4000ED2E2C /* KiteAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA00E4420443ACB00371B88 /* KiteAPIClient.swift */; };
+		2ED14C152063AA4000ED2E2C /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA00E462044464E00371B88 /* Analytics.swift */; };
+		2ED14C162063AA4000ED2E2C /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBBC0CC1FEBB72D00A4EF45 /* ArrayExtensions.swift */; };
+		2ED14C172063AA4000ED2E2C /* CGFloatExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F34855B1FC5A52900961B32 /* CGFloatExtensions.swift */; };
+		2ED14C182063AA4000ED2E2C /* CGSizeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E74458C2057D5D000766A78 /* CGSizeExtensions.swift */; };
+		2ED14C192063AA4000ED2E2C /* DecimalExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733892010B85F00F0D718 /* DecimalExtensions.swift */; };
+		2ED14C1A2063AA4000ED2E2C /* LuhnStringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733952010CDC400F0D718 /* LuhnStringExtensions.swift */; };
+		2ED14C1B2063AA4000ED2E2C /* NSAttributedStringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE08D520221C7C00C55D2F /* NSAttributedStringExtensions.swift */; };
+		2ED14C1C2063AA4000ED2E2C /* PHAssetCollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9EDB1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift */; };
+		2ED14C1D2063AA4000ED2E2C /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E17338D2010BA3600F0D718 /* StringExtensions.swift */; };
+		2ED14C1E2063AA4000ED2E2C /* SwiftLuhn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE05DA720345C3E003C9655 /* SwiftLuhn.swift */; };
+		2ED14C1F2063AA4000ED2E2C /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF25E61FB6052A00F46BB0 /* UIImageExtensions.swift */; };
+		2ED14C202063AA4000ED2E2C /* UIImageViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA2FDFD2032DF9500BD0586 /* UIImageViewExtensions.swift */; };
+		2ED14C212063AA4000ED2E2C /* UILabelExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB670611FB49FF90062D630 /* UILabelExtensions.swift */; };
+		2ED14C222063AA4000ED2E2C /* UIScreenExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED79FEA1FBAEDFA0046B96C /* UIScreenExtensions.swift */; };
+		2ED14C232063AA4000ED2E2C /* UITextViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3A731D202AFB6800EEF04C /* UITextViewExtensions.swift */; };
+		2ED14C242063AA4000ED2E2C /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9ED91FBDEEF400F28C00 /* UIViewExtensions.swift */; };
+		2ED14C252063AA4000ED2E2C /* UIAlertControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8B27F82045A6C000A0B403 /* UIAlertControllerExtensions.swift */; };
+		2ED14C262063AA4000ED2E2C /* FullScreenImageUnwindSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9EE41FBF1CFB00F28C00 /* FullScreenImageUnwindSegue.swift */; };
+		2ED14C272063AA4000ED2E2C /* ViewStorySegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E876E0A1FC2FA15007CCFA2 /* ViewStorySegue.swift */; };
+		2ED14C282063AA4000ED2E2C /* IntroDismissSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF312B620591EEE001BE3CF /* IntroDismissSegue.swift */; };
+		2ED14C292063AA4000ED2E2C /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A1433A1FDAD278000EFE0D /* Random.swift */; };
+		2ED14C2A2063AA4000ED2E2C /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D3340B2029BF80003D4338 /* JSON.swift */; };
+		2ED14C2B2063AA4000ED2E2C /* ErrorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA88C63203C321E00CADCAD /* ErrorUtils.swift */; };
+		2ED14C2C2063AA4000ED2E2C /* ErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8B27F62045A44800A0B403 /* ErrorMessage.swift */; };
+		2ED14C2D2063AA4B00ED2E2C /* Lora-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08D12021E4B300C55D2F /* Lora-Regular.ttf */; };
+		2ED14C2E2063AA4B00ED2E2C /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08CF2021E4A800C55D2F /* Montserrat-Bold.ttf */; };
+		2ED14C2F2063AA4B00ED2E2C /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08D02021E4AD00C55D2F /* OpenSans-Regular.ttf */; };
+		2ED14C302063AA4B00ED2E2C /* LeagueGothic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6F4DE6501FB35B000099A97E /* LeagueGothic-Regular.otf */; };
+		2ED14C312063AA4B00ED2E2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E0B58861FB30F2100F31A9E /* Assets.xcassets */; };
+		2ED14C322063AB7200ED2E2C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E0B58831FB30F2100F31A9E /* Main.storyboard */; };
+		2ED14C3E2063ABB700ED2E2C /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C332063ABB700ED2E2C /* SDWebImage.framework */; };
+		2ED14C3F2063ABB700ED2E2C /* Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C342063ABB700ED2E2C /* Analytics.framework */; };
+		2ED14C402063ABB700ED2E2C /* FacebookCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C352063ABB700ED2E2C /* FacebookCore.framework */; };
+		2ED14C412063ABB700ED2E2C /* OAuthSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C362063ABB700ED2E2C /* OAuthSwift.framework */; };
+		2ED14C422063ABB700ED2E2C /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C372063ABB700ED2E2C /* FBSDKLoginKit.framework */; };
+		2ED14C432063ABB700ED2E2C /* KeychainSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C382063ABB700ED2E2C /* KeychainSwift.framework */; };
+		2ED14C442063ABB700ED2E2C /* PayPalMobileSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C392063ABB700ED2E2C /* PayPalMobileSDK.framework */; };
+		2ED14C452063ABB700ED2E2C /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3A2063ABB700ED2E2C /* Bolts.framework */; };
+		2ED14C462063ABB700ED2E2C /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3B2063ABB700ED2E2C /* Stripe.framework */; };
+		2ED14C472063ABB700ED2E2C /* FacebookLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3C2063ABB700ED2E2C /* FacebookLogin.framework */; };
+		2ED14C482063ABB700ED2E2C /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3D2063ABB700ED2E2C /* FBSDKCoreKit.framework */; };
 		2ED5B3811FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */; };
 		2ED5B3831FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3821FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift */; };
 		2ED79FE91FBAEDE90046B96C /* AssetPickerCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */; };
@@ -265,6 +427,20 @@
 		2ECF57BE201206FA0047094C /* Photobook-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Photobook-Bridging-Header.h"; sourceTree = "<group>"; };
 		2ECF57C220120D2A0047094C /* CreditCardTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreditCardTableViewController.swift; sourceTree = "<group>"; };
 		2ECF57C420120DF60047094C /* UserInputTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInputTableViewCell.swift; sourceTree = "<group>"; };
+		2ED14B992063A9CD00ED2E2C /* PhotobookSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PhotobookSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2ED14B9B2063A9CD00ED2E2C /* PhotobookSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotobookSDK.h; sourceTree = "<group>"; };
+		2ED14B9C2063A9CD00ED2E2C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2ED14C332063ABB700ED2E2C /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = Carthage/Build/iOS/SDWebImage.framework; sourceTree = "<group>"; };
+		2ED14C342063ABB700ED2E2C /* Analytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Analytics.framework; path = Carthage/Build/iOS/Analytics.framework; sourceTree = "<group>"; };
+		2ED14C352063ABB700ED2E2C /* FacebookCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookCore.framework; path = Carthage/Build/iOS/FacebookCore.framework; sourceTree = "<group>"; };
+		2ED14C362063ABB700ED2E2C /* OAuthSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OAuthSwift.framework; path = Carthage/Build/iOS/OAuthSwift.framework; sourceTree = "<group>"; };
+		2ED14C372063ABB700ED2E2C /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = Carthage/Build/iOS/FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		2ED14C382063ABB700ED2E2C /* KeychainSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KeychainSwift.framework; path = Carthage/Build/iOS/KeychainSwift.framework; sourceTree = "<group>"; };
+		2ED14C392063ABB700ED2E2C /* PayPalMobileSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PayPalMobileSDK.framework; path = Carthage/Build/iOS/PayPalMobileSDK.framework; sourceTree = "<group>"; };
+		2ED14C3A2063ABB700ED2E2C /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = Carthage/Build/iOS/Bolts.framework; sourceTree = "<group>"; };
+		2ED14C3B2063ABB700ED2E2C /* Stripe.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stripe.framework; path = Carthage/Build/iOS/Stripe.framework; sourceTree = "<group>"; };
+		2ED14C3C2063ABB700ED2E2C /* FacebookLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookLogin.framework; path = Carthage/Build/iOS/FacebookLogin.framework; sourceTree = "<group>"; };
+		2ED14C3D2063ABB700ED2E2C /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = Carthage/Build/iOS/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSearchResultsTableViewController.swift; sourceTree = "<group>"; };
 		2ED5B3821FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSearchResultsTableViewCell.swift; sourceTree = "<group>"; };
 		2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPickerCollectionViewController.swift; sourceTree = "<group>"; };
@@ -377,6 +553,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2ED14B952063A9CD00ED2E2C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2ED14C3E2063ABB700ED2E2C /* SDWebImage.framework in Frameworks */,
+				2ED14C3F2063ABB700ED2E2C /* Analytics.framework in Frameworks */,
+				2ED14C402063ABB700ED2E2C /* FacebookCore.framework in Frameworks */,
+				2ED14C412063ABB700ED2E2C /* OAuthSwift.framework in Frameworks */,
+				2ED14C422063ABB700ED2E2C /* FBSDKLoginKit.framework in Frameworks */,
+				2ED14C432063ABB700ED2E2C /* KeychainSwift.framework in Frameworks */,
+				2ED14C442063ABB700ED2E2C /* PayPalMobileSDK.framework in Frameworks */,
+				2ED14C452063ABB700ED2E2C /* Bolts.framework in Frameworks */,
+				2ED14C462063ABB700ED2E2C /* Stripe.framework in Frameworks */,
+				2ED14C472063ABB700ED2E2C /* FacebookLogin.framework in Frameworks */,
+				2ED14C482063ABB700ED2E2C /* FBSDKCoreKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6FB670641FB5BAD40062D630 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -403,6 +597,7 @@
 			children = (
 				2E0B587E1FB30F2100F31A9E /* Photobook */,
 				6FB670681FB5BAD40062D630 /* PhotobookTests */,
+				2ED14B9A2063A9CD00ED2E2C /* PhotobookSDK */,
 				2E0B587D1FB30F2100F31A9E /* Products */,
 				41442346D0981CD5E8F4B2CA /* Pods */,
 				3BAD030253756D88DE562AFF /* Frameworks */,
@@ -414,6 +609,7 @@
 			children = (
 				2E0B587C1FB30F2100F31A9E /* Photobook.app */,
 				6FB670671FB5BAD40062D630 /* PhotobookTests.xctest */,
+				2ED14B992063A9CD00ED2E2C /* PhotobookSDK.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -562,6 +758,15 @@
 			path = Payment;
 			sourceTree = "<group>";
 		};
+		2ED14B9A2063A9CD00ED2E2C /* PhotobookSDK */ = {
+			isa = PBXGroup;
+			children = (
+				2ED14B9B2063A9CD00ED2E2C /* PhotobookSDK.h */,
+				2ED14B9C2063A9CD00ED2E2C /* Info.plist */,
+			);
+			path = PhotobookSDK;
+			sourceTree = "<group>";
+		};
 		2ED79FEC1FBAEE290046B96C /* Picker */ = {
 			isa = PBXGroup;
 			children = (
@@ -581,6 +786,17 @@
 		3BAD030253756D88DE562AFF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2ED14C342063ABB700ED2E2C /* Analytics.framework */,
+				2ED14C3A2063ABB700ED2E2C /* Bolts.framework */,
+				2ED14C352063ABB700ED2E2C /* FacebookCore.framework */,
+				2ED14C3C2063ABB700ED2E2C /* FacebookLogin.framework */,
+				2ED14C3D2063ABB700ED2E2C /* FBSDKCoreKit.framework */,
+				2ED14C372063ABB700ED2E2C /* FBSDKLoginKit.framework */,
+				2ED14C382063ABB700ED2E2C /* KeychainSwift.framework */,
+				2ED14C362063ABB700ED2E2C /* OAuthSwift.framework */,
+				2ED14C392063ABB700ED2E2C /* PayPalMobileSDK.framework */,
+				2ED14C332063ABB700ED2E2C /* SDWebImage.framework */,
+				2ED14C3B2063ABB700ED2E2C /* Stripe.framework */,
 				35185092CEAA07251E4FD67C /* Pods_Photobook.framework */,
 				1561A4A2B130A5F1A92351A0 /* Pods_PhotobookTests.framework */,
 			);
@@ -855,6 +1071,17 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		2ED14B962063A9CD00ED2E2C /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2ED14B9D2063A9CD00ED2E2C /* PhotobookSDK.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		2E0B587B1FB30F2100F31A9E /* Photobook */ = {
 			isa = PBXNativeTarget;
@@ -876,6 +1103,24 @@
 			productName = Photobook;
 			productReference = 2E0B587C1FB30F2100F31A9E /* Photobook.app */;
 			productType = "com.apple.product-type.application";
+		};
+		2ED14B982063A9CD00ED2E2C /* PhotobookSDK */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2ED14BA22063A9CD00ED2E2C /* Build configuration list for PBXNativeTarget "PhotobookSDK" */;
+			buildPhases = (
+				2ED14B942063A9CD00ED2E2C /* Sources */,
+				2ED14B952063A9CD00ED2E2C /* Frameworks */,
+				2ED14B962063A9CD00ED2E2C /* Headers */,
+				2ED14B972063A9CD00ED2E2C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PhotobookSDK;
+			productName = PhotobookSDK;
+			productReference = 2ED14B992063A9CD00ED2E2C /* PhotobookSDK.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 		6FB670661FB5BAD40062D630 /* PhotobookTests */ = {
 			isa = PBXNativeTarget;
@@ -918,6 +1163,10 @@
 							};
 						};
 					};
+					2ED14B982063A9CD00ED2E2C = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 					6FB670661FB5BAD40062D630 = {
 						CreatedOnToolsVersion = 9.1;
 						ProvisioningStyle = Automatic;
@@ -940,6 +1189,7 @@
 			targets = (
 				2E0B587B1FB30F2100F31A9E /* Photobook */,
 				6FB670661FB5BAD40062D630 /* PhotobookTests */,
+				2ED14B982063A9CD00ED2E2C /* PhotobookSDK */,
 			);
 		};
 /* End PBXProject section */
@@ -960,6 +1210,23 @@
 				B99536DA202DB1B80019B1AF /* order_summary_1.json in Resources */,
 				6F4DE6511FB35B010099A97E /* LeagueGothic-Regular.otf in Resources */,
 				6FC7E88B1FC574DA00D2BCDA /* photobooks.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2ED14B972063A9CD00ED2E2C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2ED14BEA2063AA4000ED2E2C /* order_summary_0.json in Resources */,
+				2ED14C322063AB7200ED2E2C /* Main.storyboard in Resources */,
+				2ED14C2D2063AA4B00ED2E2C /* Lora-Regular.ttf in Resources */,
+				2ED14C2E2063AA4B00ED2E2C /* Montserrat-Bold.ttf in Resources */,
+				2ED14C2F2063AA4B00ED2E2C /* OpenSans-Regular.ttf in Resources */,
+				2ED14BEC2063AA4000ED2E2C /* order_summary_2.json in Resources */,
+				2ED14BEB2063AA4000ED2E2C /* order_summary_1.json in Resources */,
+				2ED14BF02063AA4000ED2E2C /* photobooks.json in Resources */,
+				2ED14C312063AA4B00ED2E2C /* Assets.xcassets in Resources */,
+				2ED14C302063AA4B00ED2E2C /* LeagueGothic-Regular.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1276,7 +1543,6 @@
 				2ED14C092063AA4000ED2E2C /* Cost.swift in Sources */,
 				2ED14BCF2063AA4000ED2E2C /* LayoutSelectionCollectionViewCell.swift in Sources */,
 				2ED14BED2063AA4000ED2E2C /* OrderSummaryManager.swift in Sources */,
-				2EC80C3B2063E391009DEF84 /* UIStoryboardExtensions.swift in Sources */,
 				2ED14BE32063AA4000ED2E2C /* PhotobookNavigationBar.swift in Sources */,
 				2ED14C0E2063AA4000ED2E2C /* Country.swift in Sources */,
 				2ED14BA62063AA4000ED2E2C /* ModalAlbumsCollectionViewController.swift in Sources */,
@@ -1309,6 +1575,7 @@
 				2ED14C0A2063AA4000ED2E2C /* ShippingMethod.swift in Sources */,
 				2ED14C062063AA4000ED2E2C /* FacebookAlbum.swift in Sources */,
 				2ED14BB12063AA4000ED2E2C /* LayoutSelectionViewController.swift in Sources */,
+				2E4B838A2068E51B00059AA7 /* OrderProcessingManager.swift in Sources */,
 				2ED14BBD2063AA4000ED2E2C /* ReceiptTableViewController.swift in Sources */,
 				2ED14BB72063AA4000ED2E2C /* PaymentMethodsViewController.swift in Sources */,
 				2ED14C192063AA4000ED2E2C /* DecimalExtensions.swift in Sources */,
@@ -1332,7 +1599,7 @@
 				2ED14BE72063AA4000ED2E2C /* CoverFrameView.swift in Sources */,
 				2ED14BE82063AA4000ED2E2C /* SpineFrameView.swift in Sources */,
 				2ED14BB32063AA4000ED2E2C /* AssetSelectorViewController.swift in Sources */,
-				2EC80C3F2063E701009DEF84 /* BundleExtensions.swift in Sources */,
+				2E4B838B2068E59E00059AA7 /* ReceiptProgressTableViewCell.swift in Sources */,
 				2ED14BDB2063AA4000ED2E2C /* UserInputTableViewCell.swift in Sources */,
 				2ED14C252063AA4000ED2E2C /* UIAlertControllerExtensions.swift in Sources */,
 				2ED14C0D2063AA4000ED2E2C /* Address.swift in Sources */,
@@ -1358,7 +1625,9 @@
 				2ED14BC22063AA4000ED2E2C /* FacebookLandingViewController.swift in Sources */,
 				2ED14BD82063AA4000ED2E2C /* PhotobookTextView.swift in Sources */,
 				2ED14BC72063AA4000ED2E2C /* OrderSummaryTotalTableViewCell.swift in Sources */,
+				2E4B838E2068EE1000059AA7 /* PhotobookLaunchHandler.swift in Sources */,
 				2ED14BA72063AA4000ED2E2C /* AlbumSearchResultsTableViewController.swift in Sources */,
+				2E4B838C2068E5B100059AA7 /* ReceiptInfoTableViewCell.swift in Sources */,
 				2ED14BCC2063AA4000ED2E2C /* DoubleStoryTableViewCell.swift in Sources */,
 				2ED14C072063AA4000ED2E2C /* URLAsset.swift in Sources */,
 				2ED14C142063AA4000ED2E2C /* KiteAPIClient.swift in Sources */,
@@ -1369,6 +1638,7 @@
 				2ED14C162063AA4000ED2E2C /* ArrayExtensions.swift in Sources */,
 				2ED14BF12063AA4000ED2E2C /* LayoutUtils.swift in Sources */,
 				2ED14BC92063AA4000ED2E2C /* AlbumCollectionViewCell.swift in Sources */,
+				2E4B838D2068E5C000059AA7 /* ReceiptDetailsTableViewCell.swift in Sources */,
 				2ED14BBA2063AA4000ED2E2C /* AddressTableViewController.swift in Sources */,
 				2ED14C1B2063AA4000ED2E2C /* NSAttributedStringExtensions.swift in Sources */,
 				2ED14BE02063AA4000ED2E2C /* ReceiptLineItemTableViewCell.swift in Sources */,
@@ -1401,6 +1671,7 @@
 				2ED14C282063AA4000ED2E2C /* IntroDismissSegue.swift in Sources */,
 				2ED14BAF2063AA4000ED2E2C /* PageSetupViewController.swift in Sources */,
 				2ED14BDD2063AA4000ED2E2C /* AddressFieldTableViewCell.swift in Sources */,
+				2E4B83892068E50C00059AA7 /* ReceiptViewControllerState.swift in Sources */,
 				2ED14BFD2063AA4000ED2E2C /* SelectedAssetsManager.swift in Sources */,
 				2ED14BFC2063AA4000ED2E2C /* Story.swift in Sources */,
 				2ED14BBC2063AA4000ED2E2C /* ShippingMethodsViewController.swift in Sources */,
@@ -1797,6 +2068,122 @@
 			};
 			name = "Release Test";
 		};
+		2ED14B9E2063A9CD00ED2E2C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = PhotobookSDK/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		2ED14B9F2063A9CD00ED2E2C /* Debug Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = PhotobookSDK/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = "Debug Test";
+		};
+		2ED14BA02063A9CD00ED2E2C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = PhotobookSDK/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		2ED14BA12063A9CD00ED2E2C /* Release Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = PhotobookSDK/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = "Release Test";
+		};
 		6FB6706E1FB5BAD40062D630 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FF99346143FA805B3676D912 /* Pods-PhotobookTests.debug.xcconfig */;
@@ -1854,6 +2241,17 @@
 				2E73DA9120236D47002471F8 /* Debug Test */,
 				2E0B58901FB30F2100F31A9E /* Release */,
 				2E73DA9420236D51002471F8 /* Release Test */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2ED14BA22063A9CD00ED2E2C /* Build configuration list for PBXNativeTarget "PhotobookSDK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2ED14B9E2063A9CD00ED2E2C /* Debug */,
+				2ED14B9F2063A9CD00ED2E2C /* Debug Test */,
+				2ED14BA02063A9CD00ED2E2C /* Release */,
+				2ED14BA12063A9CD00ED2E2C /* Release Test */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

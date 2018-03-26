@@ -64,16 +64,16 @@ extension Card {
     
     var cardIcon: UIImage {
         guard let cardType = number.cardType() else {
-            return UIImage(named: "generic-card")!
+            return UIImage(namedInPhotobookBundle: "generic-card")!
         }
         
         switch cardType {
         case .amex:
-            return UIImage(named: "amex-logo")!
+            return UIImage(namedInPhotobookBundle: "amex-logo")!
         case .visa:
-            return UIImage(named: "visa-logo")!
+            return UIImage(namedInPhotobookBundle: "visa-logo")!
         case .mastercard:
-            return UIImage(named: "mastercard-logo")!
+            return UIImage(namedInPhotobookBundle: "mastercard-logo")!
         default:
             return UIImage()
         }

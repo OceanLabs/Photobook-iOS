@@ -49,7 +49,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let button = UIButton(type: .custom)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         button.setTitleColor(.black, for: .normal)
-        button.setImage(UIImage(named:"chevron-down"), for: .normal)
+        button.setImage(UIImage(namedInPhotobookBundle:"chevron-down"), for: .normal)
         button.semanticContentAttribute = .forceRightToLeft
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: Constants.titleArrowOffset)
         button.addTarget(self, action: #selector(didTapOnTitle), for: .touchUpInside)
@@ -255,7 +255,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         guard draggingView == nil else { return }
         
         let goToCheckout = {
-            let orderSummaryViewController = self.storyboard?.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
+            let orderSummaryViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
             self.navigationController?.pushViewController(orderSummaryViewController, animated: true)
         }
         
@@ -642,7 +642,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func editPage(at index: Int, frame: CGRect, containerView: UIView) {
-        let modalNavigationController = storyboard?.instantiateViewController(withIdentifier: "PageSetupNavigationController") as! UINavigationController
+        let modalNavigationController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PageSetupNavigationController") as! UINavigationController
         if #available(iOS 11.0, *) {
             modalNavigationController.navigationBar.prefersLargeTitles = false
         }
@@ -788,7 +788,7 @@ extension PhotobookViewController: PhotobookCoverCollectionViewCellDelegate {
     func didTapOnSpine(with rect: CGRect, in containerView: UIView) {
         let initialRect = containerView.convert(rect, to: view)
         
-        let spineTextEditingNavigationController = storyboard?.instantiateViewController(withIdentifier: "SpineTextEditingNavigationController") as! UINavigationController
+        let spineTextEditingNavigationController = photobookMainStoryboard.instantiateViewController(withIdentifier: "SpineTextEditingNavigationController") as! UINavigationController
         let spineTextEditingViewController = spineTextEditingNavigationController.viewControllers.first! as! SpineTextEditingViewController
         spineTextEditingViewController.initialRect = initialRect
         spineTextEditingViewController.delegate = self
