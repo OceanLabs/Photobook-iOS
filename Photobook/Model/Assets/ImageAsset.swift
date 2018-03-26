@@ -6,19 +6,27 @@
 //  Copyright © 2018 Kite.ly. All rights reserved.
 //
 
-class ImageAsset: Asset {
+/// Image resource based on a UIImage that can be used in a photo book
+class ImageAsset: NSObject, Asset {
     var image: UIImage!
     
     var identifier = UUID().uuidString
     var date: Date? = nil
     var albumIdentifier: String? = nil
     var size: CGSize {
+        guard image != nil else { return .zero }
         return image.size
     }
     var isLandscape: Bool {
+        guard image != nil else { return false }
         return size.width > size.height
     }
     var uploadUrl: String?
+    
+    convenience init(_ image: UIImage) {
+        self.init()
+        self.image = image
+    }
     
     func image(size: CGSize, loadThumbnailsFirst: Bool, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
         guard let image = image else {

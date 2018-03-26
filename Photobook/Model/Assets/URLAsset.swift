@@ -9,6 +9,7 @@
 import UIKit
 import SDWebImage
 
+/// Metadata associated with a remote asset
 class URLAssetMetadata: NSObject, NSCoding {
     var size: CGSize
     let url: URL
@@ -32,14 +33,14 @@ class URLAssetMetadata: NSObject, NSCoding {
     }
 }
 
-class URLAsset: Asset {
+/// Remote image resource that can be used in a photo book
+class URLAsset: NSObject, Asset {
     
     init(metadata: [URLAssetMetadata], albumIdentifier: String, thumbnailSize: CGSize = .zero, size: CGSize = .zero, identifier: String) {
         self.metadata = metadata.sorted(by: { $0.size.width < $1.size.width })
         self.albumIdentifier = albumIdentifier
         self.identifier = identifier
     }
-    
     
     /// An array of image URL per size, sorted by ascending width
     private let metadata: [URLAssetMetadata]
