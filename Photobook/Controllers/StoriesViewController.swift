@@ -29,6 +29,7 @@ class StoriesViewController: UIViewController {
         return stories.count == 1 ? 4 : 3
     }
     private var storiesAreLoading = false
+    private var fromBackground = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,8 +38,11 @@ class StoriesViewController: UIViewController {
         
         loadStories()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(loadStories), name: .UIApplicationDidBecomeActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appRestoredFromBackground), name: .UIApplicationDidBecomeActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(receiptWillDismiss), name: ReceiptNotificationName.receiptWillDismiss, object: nil)
+        NotificationCenter.default.addObserver(forName: .UIApplicationDidEnterBackground, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
+            welf?.fromBackground = true
+        })
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -79,8 +83,15 @@ class StoriesViewController: UIViewController {
             break
         }
     }
+    
+    @objc private func appRestoredFromBackground() {
+        // There's a possiblibity that we get the notification when this is the first vc shown from application(_:didFinishLaunchingWithOptions:) which we don't care about
+        if (fromBackground) {
+            loadStories()
+        }
+    }
 
-    @objc private func loadStories() {
+    private func loadStories() {
         storiesAreLoading = true
         StoriesManager.shared.loadTopStories(completionHandler: {
             storiesAreLoading = false
