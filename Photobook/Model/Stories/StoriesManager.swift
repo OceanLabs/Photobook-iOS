@@ -51,16 +51,26 @@ class StoriesManager: NSObject {
         guard !loading, stories.isEmpty else { completionHandler?(); return }
         
         loading = true
-        stories = []
-        NotificationCenter.default.post(name: StoriesNotificationName.storiesWereUpdated, object: nil)
         DispatchQueue.global(qos: .background).async { [weak welf = self] in
             let memories = self.orderStories()
-            welf?.stories = Array<Story>(memories.prefix(Constants.maxStoriesToDisplay))
+            let newStories = Array<Story>(memories.prefix(Constants.maxStoriesToDisplay))
+            
+            guard let stelf = welf else { return }
+            
+            var storiesChanged = newStories.count != stelf.stories.count
+            for index in 0..<newStories.count {
+                guard !storiesChanged else { break }
+                storiesChanged = newStories[index].title != stelf.stories[index].title || newStories[index].subtitle != stelf.stories[index].subtitle
+            }
+            
+            welf?.stories = newStories
             DispatchQueue.main.async {
                 welf?.loading = false
                 completionHandler?()
                 
-                NotificationCenter.default.post(name: StoriesNotificationName.storiesWereUpdated, object: nil)
+                if storiesChanged {
+                    NotificationCenter.default.post(name: StoriesNotificationName.storiesWereUpdated, object: nil)
+                }
             }
         }
     }
@@ -79,7 +89,6 @@ class StoriesManager: NSObject {
     @objc private func appRestoredFromBackground() {
         // If stories are loaded from application(_:didFinishLaunchingWithOptions:), make sure we don't load the stories twice, slowing down launch time
         if (fromBackground) {
-            stories = []
             loadTopStories()
         }
     }
