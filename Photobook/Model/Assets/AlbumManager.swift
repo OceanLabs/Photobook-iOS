@@ -37,14 +37,14 @@ protocol AlbumManager {
     ///   - targetSize: The desired size for the images
     func startCachingImages(for assets: [Asset], targetSize: CGSize)
 
-    /// Removes the cached images for the provided assets and size
+    /// Stops the process of caching images for the provided assets and size
     ///
     /// - Parameters:
     ///   - assets: Assets for which to cache images
     ///   - targetSize: The desired size for the images
     func stopCachingImages(for assets: [Asset], targetSize: CGSize)
     
-    /// Removes the cached images for all assets in 'assets'
+    /// Stops the process of caching images for all assets in 'assets'
     func stopCachingImagesForAllAssets()
 }
 
