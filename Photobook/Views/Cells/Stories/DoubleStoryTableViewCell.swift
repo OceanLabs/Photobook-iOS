@@ -34,4 +34,9 @@ class DoubleStoryTableViewCell: StoryTableViewCell {
         }
         delegate?.didTapOnStory(index: storyIndex + 1, coverImage: secondCoverImageView.image, sourceView: secondCoverImageView.superview, labelsContainerView: secondTitleLabel.superview)
     }
+    
+    override func prepareForReuse() {
+        coverImageView.image = nil
+        secondCoverImageView.image = nil
+    }
 }

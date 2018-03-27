@@ -8,6 +8,10 @@
 
 import Photos
 
+struct StoriesNotificationName {
+    static let storiesWereUpdated = Notification.Name("storiesWereUpdatedNotificationName")
+}
+
 class StoriesManager: NSObject {
     
     enum StoriesManagerError: Error {
@@ -22,6 +26,8 @@ class StoriesManager: NSObject {
     private var selectedAssetsManagerPerStory = [String : SelectedAssetsManager]()
     var stories = [Story]()
     var currentlySelectedStory: Story?
+    var loading = false
+    private var fromBackground = false
     
     private struct Constants {
         static let maxStoriesToDisplay = 16
@@ -31,28 +37,62 @@ class StoriesManager: NSObject {
         super.init()
         PHPhotoLibrary.shared().register(self)
         NotificationCenter.default.addObserver(self, selector: #selector(resetStoriesSelections), name: ReceiptNotificationName.receiptWillDismiss, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appRestoredFromBackground), name: .UIApplicationDidBecomeActive, object: nil)
+        NotificationCenter.default.addObserver(forName: .UIApplicationDidEnterBackground, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
+            welf?.fromBackground = true
+        })
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func loadTopStories(completionHandler:@escaping () -> Void){
-        DispatchQueue.global(qos: .background).async {
+    func loadTopStories(completionHandler:(() -> Void)? = nil) {
+        guard !loading, stories.isEmpty else { completionHandler?(); return }
+        
+        loading = true
+        DispatchQueue.global(qos: .background).async { [weak welf = self] in
             let memories = self.orderStories()
-            self.stories = Array<Story>(memories.prefix(Constants.maxStoriesToDisplay))
+            let newStories = Array<Story>(memories.prefix(Constants.maxStoriesToDisplay))
             
-            // No need to wait for the stories to load their assets
-            DispatchQueue.main.async {
-                completionHandler()
+            guard let stelf = welf else { return }
+            
+            var storiesChanged = newStories.count != stelf.stories.count
+            for index in 0..<newStories.count {
+                guard !storiesChanged else { break }
+                storiesChanged = newStories[index].title != stelf.stories[index].title || newStories[index].subtitle != stelf.stories[index].subtitle
             }
             
-            for story in self.stories {
-                story.loadAssets(completionHandler: nil)
+            welf?.stories = newStories
+            DispatchQueue.main.async {
+                welf?.loading = false
+                completionHandler?()
+                
+                if storiesChanged {
+                    NotificationCenter.default.post(name: StoriesNotificationName.storiesWereUpdated, object: nil)
+                }
             }
         }
     }
     
+    func prepare(story: Story, completionHandler:@escaping () -> Void) {
+        DispatchQueue.global(qos: .background).async {
+            story.loadAssets(completionHandler: { [weak welf = self] _ in
+                welf?.performAutoSelectionIfNeeded(on: story)
+                DispatchQueue.main.async {
+                    completionHandler()
+                }
+            })
+        }
+    }
+    
+    @objc private func appRestoredFromBackground() {
+        // If stories are loaded from application(_:didFinishLaunchingWithOptions:), make sure we don't load the stories twice, slowing down launch time
+        if (fromBackground) {
+            loadTopStories()
+        }
+    }
+
     private func orderStories() -> [Story] {
         var locations = [String: Int]()
         var stories = [Story]()
