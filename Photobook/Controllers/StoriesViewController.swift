@@ -38,19 +38,19 @@ class StoriesViewController: UIViewController {
         
         StoriesManager.shared.loadTopStories()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(receiptWillDismiss), name: ReceiptNotificationName.receiptWillDismiss, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(storiesWereUpdated), name: StoriesNotificationName.storiesWereUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(storiesWereUpdated), name: StoriesNotificationName.storiesWereUpdated, object: nil)        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
+        (tabBarController?.tabBar as? PhotobookTabBar)?.isBackgroundHidden = false
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         StoriesManager.shared.currentlySelectedStory = nil
-    }
-    
-    @objc private func receiptWillDismiss() {
-         (tabBarController?.tabBar as? PhotobookTabBar)?.isBackgroundHidden = false
     }
     
     @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {

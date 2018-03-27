@@ -8,6 +8,7 @@
 
 import UIKit
 import PassKit
+import UserNotifications
 
 struct ReceiptNotificationName {
     static let receiptWillDismiss = Notification.Name("receiptWillDismissNotificationName")
@@ -103,6 +104,11 @@ class ReceiptTableViewController: UITableViewController {
             //start processing
             OrderProcessingManager.shared.startProcessing()
             emptyScreenViewController.hide(animated: true)
+            
+            //ask for notification permission
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: { [weak welf = self] in
+                welf?.notificationsSetup()
+            })
         }
 
     }
@@ -200,6 +206,12 @@ class ReceiptTableViewController: UITableViewController {
     
     func proceedToTabBarController() {
         performSegue(withIdentifier: "ReceiptDismiss", sender: nil)
+    }
+    
+    func notificationsSetup() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) { (success, error) in
+            //don't care about the result
+        }
     }
     
     //MARK: Table View
@@ -316,16 +328,32 @@ class ReceiptTableViewController: UITableViewController {
     }
 
     @objc func orderProcessingFailed(_ notification: NSNotification) {
+        //send a local notification
+        let userNotification = UNMutableNotificationContent()
+        
+        //determine error
         if let error = notification.userInfo?["error"] as? OrderProcessingError {
             switch error {
             case .payment:
                 state = .paymentFailed
-            default: break
+                userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitlePaymentFailed", value: "Payment Failed", comment: "title of a notification notfifying about failed photobook payment")
+                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyPaymentFailed", value: "Update your payment method to finish photobook checkout", comment: "body of a notification notfifying about failed photobook payment")
+            case .cancelled:
+                state = .cancelled
+                userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitleCancelled", value: "Photobook Cancelled", comment: "title of a notification notfifying about failed photobook that had to be cancelled")
+                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyCancelled", value: "Something went wrong and we couldn't process your photbook", comment: "body of a notification notfifying about failed photobook that had to be cancelled")
+            default:
+                state = .error
+                userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitleProcessingFailed", value: "Couldn't Finish Photobook", comment: "title of a notification notfifying about failed photobook processing")
+                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyProcessingFailed", value: "Something went wrong and your photobook couldn't be sent to our servers", comment: "body of a notification notfifying about failed photobook processing")
             }
             lastProcessingError = error
         }
-        state = .error
         progressOverlayViewController.hide()
+    
+        //send local notification
+        let request = UNNotificationRequest(identifier: "ReceiptTableViewController.OrderProcessingFailed", content: userNotification, trigger:nil)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
     
     @objc func orderProcessingWillFinish() {

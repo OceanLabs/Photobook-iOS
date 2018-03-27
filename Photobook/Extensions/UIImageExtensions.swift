@@ -33,7 +33,7 @@ extension UIImage {
     ///   - size: The image size in points
     ///   - aspectFit: True for aspectFit, false for aspectFill
     func shrinkToSize(_ size: CGSize, aspectFit: Bool = false) -> UIImage {
-        let scaleFactor = aspectFit ? max(size.width, size.height) / max(self.size.height, self.size.width) : max(size.width, size.height) / max(self.size.height, self.size.width)
+        let scaleFactor = aspectFit ? max(size.width, size.height) / max(self.size.height, self.size.width) : max(size.width, size.height) / min(self.size.height, self.size.width)
         
         // We don't care about scaling up
         guard scaleFactor < 1 else { return self }
