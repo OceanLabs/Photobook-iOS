@@ -50,10 +50,6 @@ class URLAsset: NSObject, Asset {
         return metadata.last?.size ?? .zero
     }
     
-    var isLandscape: Bool {
-        return self.size.width > self.size.height
-    }
-        
     var date: Date?
     
     var albumIdentifier: String?

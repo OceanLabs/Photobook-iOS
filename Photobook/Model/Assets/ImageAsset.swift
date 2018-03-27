@@ -17,10 +17,6 @@ class ImageAsset: NSObject, Asset {
         guard image != nil else { return .zero }
         return image.size
     }
-    var isLandscape: Bool {
-        guard image != nil else { return false }
-        return size.width > size.height
-    }
     var uploadUrl: String?
     
     convenience init(_ image: UIImage) {

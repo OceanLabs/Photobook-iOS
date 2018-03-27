@@ -32,9 +32,6 @@ enum AssetLoadingException: Error {
     /// Size
     var size: CGSize { get }
     
-    /// True if the orientation of the image representation of the Asset landscape
-    var isLandscape: Bool { get }
-    
     /// Date
     var date: Date? { get }
     
@@ -49,7 +46,6 @@ enum AssetLoadingException: Error {
     ///   - progressHandler: Handler that returns the progress, for a example of a download
     ///   - completionHandler: The completion handler that returns the image
     func image(size: CGSize, loadThumbnailsFirst: Bool, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)?, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void)
-    
     
     /// Request the data representation of this asset
     ///
@@ -73,11 +69,16 @@ extension Asset {
         image(size: size, loadThumbnailsFirst: loadThumbnailsFirst, progressHandler: progressHandler, completionHandler: completionHandler)
     }
     
-    /// Removes slashes because it'd result in an invalid path
+    /// Identifier without forward slashes that can be used as a filename when saving the asset to disk
     var fileIdentifier: String {
         get {
             return identifier.replacingOccurrences(of: "/", with: "")
         }
+    }
+    
+    /// True if the orientation of the image representation of the Asset landscape
+    var isLandscape: Bool {
+        return size.width > size.height
     }
 }
 

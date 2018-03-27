@@ -14,12 +14,12 @@ class TestPhotosAsset: PhotosAsset {
     override var size: CGSize { return CGSize(width: 10.0, height: 20.0) }
     override init(_ asset: PHAsset, albumIdentifier: String) {
         super.init(asset, albumIdentifier: albumIdentifier)
-        self.identifier = "id"
+        identifier = "id"
     }
         
     required init?(coder aDecoder: NSCoder) {
         super.init(PHAsset(), albumIdentifier: "")
-        self.identifier = "id"
+        identifier = "id"
     }
 }
 
@@ -47,9 +47,6 @@ class PhotosAsset: NSObject, Asset {
     var albumIdentifier: String?
 
     var size: CGSize { return CGSize(width: photosAsset.pixelWidth, height: photosAsset.pixelHeight) }
-    var isLandscape: Bool {
-        return size.width > size.height
-    }
     var uploadUrl: String?
     
     init(_ asset: PHAsset, albumIdentifier: String) {
