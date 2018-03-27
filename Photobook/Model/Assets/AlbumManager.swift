@@ -8,6 +8,11 @@
 
 import UIKit
 
+struct AssetsNotificationName {
+    static let albumsWereUpdated = Notification.Name("albumsWereUpdatedNotificationName")
+    static let albumsWereAdded = Notification.Name("albumsWereAddedNotificationName")
+}
+
 /// Manager for a source with multiple albums
 protocol AlbumManager {
     
