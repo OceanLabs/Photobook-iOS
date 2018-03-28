@@ -13,7 +13,7 @@ enum AssetLoadingException: Error {
     case unsupported
 }
 
-@objc enum AssetDataFileExtension: Int {
+@objc public enum AssetDataFileExtension: Int {
     case unsupported
     case jpg
     case png
