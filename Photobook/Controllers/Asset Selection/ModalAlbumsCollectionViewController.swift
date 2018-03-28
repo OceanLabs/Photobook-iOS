@@ -138,7 +138,9 @@ class ModalAlbumsCollectionViewController: UIViewController {
             let belowThreshold = deltaY >= view.bounds.height / Constants.screenThresholdToDismiss
             if  belowThreshold || velocityY > Constants.velocityToTriggerSwipe {
                 let duration = belowThreshold || velocityY > Constants.velocityForFastDismissal ? 0.2 : 0.4
-                animateContainerViewOffScreen(duration: duration)
+                animateContainerViewOffScreen(duration: duration) {
+                    self.didFinishAddingAssets()
+                }
                 return
             }
             containerViewBottomConstraint.constant = Constants.topMargin
@@ -150,16 +152,20 @@ class ModalAlbumsCollectionViewController: UIViewController {
         }
     }
     
-    private func animateContainerViewOffScreen(duration: TimeInterval = 0.4) {
+    private func animateContainerViewOffScreen(duration: TimeInterval = 0.4, completionHandler: (() -> Void)? = nil) {
         containerViewBottomConstraint.constant = view.bounds.height
         UIView.animate(withDuration: duration, delay: 0.0, options: [.beginFromCurrentState, .curveEaseOut], animations: {
             self.view.backgroundColor = .clear
             self.view.layoutIfNeeded()
+        }, completion: { _ in
+            completionHandler?()
         })
     }
     
     @IBAction private func didTapOnArrowButton(_ sender: UIButton) {
-        animateContainerViewOffScreen()
+        animateContainerViewOffScreen() {
+            self.didFinishAddingAssets()
+        }
     }
 }
 
@@ -173,14 +179,15 @@ extension ModalAlbumsCollectionViewController: UINavigationControllerDelegate {
 extension ModalAlbumsCollectionViewController: AssetCollectorAddingDelegate {
     
     func didFinishAdding(_ assets: [Asset]?) {
-        if let assets = assets {
-            // Post notification for any selectedAssetManagers listening
-            NotificationCenter.default.post(name: AssetSelectorViewController.assetSelectorAddedAssets, object: self, userInfo: ["assets": assets])
-
+        animateContainerViewOffScreen() {
+            if let assets = assets {
+                // Post notification for any selectedAssetManagers listening
+                NotificationCenter.default.post(name: AssetSelectorViewController.assetSelectorAddedAssets, object: self, userInfo: ["assets": assets])
+            }
+            
             // Notify the delegate
-            addingDelegate?.didFinishAdding(assets)
+            self.addingDelegate?.didFinishAdding(assets)
         }
-        animateContainerViewOffScreen()
     }
 }
 
