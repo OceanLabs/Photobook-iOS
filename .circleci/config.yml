@@ -26,6 +26,17 @@ jobs:
             SCAN_DEVICE: iPhone 6
             SCAN_SCHEME: Photobook
 
+      # Install Carthage
+      - run:
+         name: Install Carthage
+         command: carthage update
+
+      # Build the framework
+      - run:
+          name: Build the framework
+          command: fastlane gym --project Photobook.xcodeproj/ --scheme PhotobookSDK --skip_package_ipa
+          
+
       # Collect XML test results data to show in the UI,
       # and save the same XML files under test-results folder
       # in the Artifacts tab
