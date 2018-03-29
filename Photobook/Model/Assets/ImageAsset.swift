@@ -7,10 +7,10 @@
 //
 
 /// Image resource based on a UIImage that can be used in a photo book
-public class ImageAsset: NSObject, Asset {
+public class ImageAsset: NSObject, NSCoding, Asset {
     
     /// Image representation of the asset
-    public var image: UIImage!
+    public var image: UIImage
     
     /// Date associated with this asset
     public var date: Date? = nil
@@ -18,13 +18,9 @@ public class ImageAsset: NSObject, Asset {
     var identifier = UUID().uuidString
     var albumIdentifier: String? = nil
     var uploadUrl: String?
-    var size: CGSize {
-        guard image != nil else { return .zero }
-        return image.size
-    }
+    var size: CGSize { return image.size }
 
-    public convenience init(_ image: UIImage) {
-        self.init()
+    public init(image: UIImage) {
         self.image = image
     }
     
@@ -39,33 +35,23 @@ public class ImageAsset: NSObject, Asset {
         aCoder.encode(imageData, forKey: "image")
     }
     
-    public required convenience init?(coder aDecoder: NSCoder) {
-        guard let identifier = aDecoder.decodeObject(of: NSString.self, forKey: "identifier") as String?
-            else { return nil }
-        
-        self.init()
-        self.identifier = identifier
-        
-        uploadUrl = aDecoder.decodeObject(of: NSString.self, forKey: "uploadUrl") as String?
-        
-        if let imageData = aDecoder.decodeObject(of: NSData.self, forKey: "image") as Data? {
-            image = NSKeyedUnarchiver.unarchiveObject(with: imageData) as? UIImage
+    public required init?(coder aDecoder: NSCoder) {
+        guard let identifier = aDecoder.decodeObject(of: NSString.self, forKey: "identifier") as String?,
+              let imageData = aDecoder.decodeObject(of: NSData.self, forKey: "image") as Data?,
+              let image = NSKeyedUnarchiver.unarchiveObject(with: imageData) as? UIImage else {
+            return nil
         }
+        
+        self.image = image
+        self.identifier = identifier
+        uploadUrl = aDecoder.decodeObject(of: NSString.self, forKey: "uploadUrl") as String?
     }
 
     func image(size: CGSize, loadThumbnailsFirst: Bool, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
-        guard let image = image else {
-            completionHandler(nil, nil)
-            return
-        }
         completionHandler(image, nil)
     }
     
     func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension, Error?) -> Void) {
-        guard let image = image else {
-            completionHandler(nil, .unsupported, nil)
-            return
-        }
         let data = UIImageJPEGRepresentation(image, 0.8)
         completionHandler(data, .jpg, nil)
     }

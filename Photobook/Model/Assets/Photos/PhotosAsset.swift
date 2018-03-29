@@ -23,7 +23,7 @@ class TestPhotosAsset: PhotosAsset {
     }
 }
 
-class PhotosAsset: NSObject, Asset {
+class PhotosAsset: NSObject, NSCoding, Asset {
     
     var photosAsset: PHAsset {
         didSet {

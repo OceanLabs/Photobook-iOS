@@ -8,8 +8,19 @@
 
 import UIKit
 
-/// Protocol custom photo pickers must conform to be used with photo books
-@objc protocol AssetPicker where Self: UIViewController {
+/// Conforming classes can be notified when PhotobookAssets are added by a custom photo picker
+@objc public protocol AssetCollectorAddingDelegate: class {
+    func didFinishAdding(_ assets: [PhotobookAsset]?)
+}
+
+extension AssetCollectorAddingDelegate {
+    func didFinishAddingAssets() {
+        didFinishAdding(nil)
+    }
+}
+
+/// Protocol custom photo pickers must conform to to be used with photo books
+@objc public protocol PhotobookAssetPicker where Self: UIViewController {
     weak var addingDelegate: AssetCollectorAddingDelegate? { get set }
 }
 
@@ -27,7 +38,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     var albumManager: AlbumManager?
     
     /// View controller allowing the user to pick additional assets. 'album', 'albumManager' & 'assetPickerViewController' are exclusive.
-    var assetPickerViewController: AssetPicker?
+    var assetPickerViewController: PhotobookAssetPicker?
     
     private struct Constants {
         static let titleArrowOffset: CGFloat = -8.0

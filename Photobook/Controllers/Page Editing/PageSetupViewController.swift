@@ -46,7 +46,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
     var album: Album?
     var albumManager: AlbumManager?
-    var assetPickerViewController: AssetPicker?
+    var assetPickerViewController: PhotobookAssetPicker?
     
     private var assetSelectorViewController: AssetSelectorViewController!
     private var layoutSelectionViewController: LayoutSelectionViewController!

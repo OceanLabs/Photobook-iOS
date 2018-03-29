@@ -8,16 +8,6 @@
 
 import UIKit
 
-@objc protocol AssetCollectorAddingDelegate: class {
-    func didFinishAdding(_ assets: [Asset]?)
-}
-
-extension AssetCollectorAddingDelegate {
-    func didFinishAddingAssets() {
-        didFinishAdding(nil)
-    }
-}
-
 class ModalAlbumsCollectionViewController: UIViewController {
 
     private struct Constants {
@@ -178,9 +168,9 @@ extension ModalAlbumsCollectionViewController: UINavigationControllerDelegate {
 
 extension ModalAlbumsCollectionViewController: AssetCollectorAddingDelegate {
     
-    func didFinishAdding(_ assets: [Asset]?) {
+    func didFinishAdding(_ assets: [PhotobookAsset]?) {
         animateContainerViewOffScreen() {
-            if let assets = assets {
+            if let assets = assets as? [Asset] {
                 // Post notification for any selectedAssetManagers listening
                 NotificationCenter.default.post(name: AssetSelectorViewController.assetSelectorAddedAssets, object: self, userInfo: ["assets": assets])
             }

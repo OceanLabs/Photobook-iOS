@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         Fabric.with([Crashlytics.self])
         
-        window?.rootViewController = PhotobookLaunchHandler.getInitialViewController()
+        window?.rootViewController = PhotobookManager.shared.rootViewControllerForCurrentState()
         
         // Force the static var to initialize so it doesn't miss any notifications
         _ = Analytics.shared
@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
         // The application was woken up by a background task
-        ProductManager.shared.loadUserPhotobook(completionHandler)
+        PhotobookManager.shared.restorePhotobook(completionHandler)        
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {

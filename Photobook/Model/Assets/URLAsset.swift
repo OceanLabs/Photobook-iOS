@@ -40,7 +40,7 @@ public class URLAssetImage: NSObject, NSCoding {
 }
 
 /// Remote image resource that can be used in a photo book
-public class URLAsset: NSObject, Asset {
+public class URLAsset: NSObject, NSCoding, Asset {
     
     /// Unique identifier
     public var identifier: String!

@@ -44,7 +44,7 @@ class AssetSelectorViewController: UIViewController {
             if albumManager != nil { collectionView.reloadData() }
         }
     }
-    var assetPickerViewController: AssetPicker? {
+    var assetPickerViewController: PhotobookAssetPicker? {
         didSet {
             if assetPickerViewController != nil { collectionView.reloadData() }
         }
@@ -157,12 +157,12 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
 
 extension AssetSelectorViewController: AssetCollectorAddingDelegate {
     
-    func didFinishAdding(_ assets: [Asset]?) {
-        guard let assets = assets, !assets.isEmpty else {
+    func didFinishAdding(_ assets: [PhotobookAsset]?) {
+        guard let assets = assets as? [Asset], !assets.isEmpty else {
             self.dismiss(animated: false, completion: nil)
             return
         }
-
+        
         // Add assets that are not already in the list
         let newAssets = assets.filter { asset in !self.assets.contains { $0 == asset } }
         self.assets.append(contentsOf: newAssets)
