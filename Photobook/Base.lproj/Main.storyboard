@@ -72,7 +72,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="3tS-Fo-5bm" firstAttribute="leading" secondItem="OFT-ci-Vpz" secondAttribute="leading" constant="70" id="0Mg-vE-2do"/>
+                            <constraint firstItem="3tS-Fo-5bm" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="OFT-ci-Vpz" secondAttribute="leading" constant="70" id="0Mg-vE-2do"/>
                             <constraint firstItem="3tS-Fo-5bm" firstAttribute="trailing" secondItem="Jdf-5N-Pfk" secondAttribute="trailing" priority="750" id="0Zt-4m-YZm"/>
                             <constraint firstItem="3tS-Fo-5bm" firstAttribute="top" secondItem="Qlt-FQ-DVE" secondAttribute="bottom" constant="2" id="IiJ-CP-oDx"/>
                             <constraint firstItem="HTZ-sF-ffW" firstAttribute="trailing" secondItem="Jdf-5N-Pfk" secondAttribute="trailing" priority="750" id="Mbj-eS-BWd"/>
@@ -2322,7 +2322,7 @@
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" secondItem="5Vu-Py-eeg" secondAttribute="height" multiplier="169:199" id="6Xf-BN-wbS"/>
+                                                                <constraint firstAttribute="width" secondItem="5Vu-Py-eeg" secondAttribute="height" multiplier="169:199" priority="750" id="6Xf-BN-wbS"/>
                                                             </constraints>
                                                             <connections>
                                                                 <outlet property="aspectRatioConstraint" destination="6Xf-BN-wbS" id="hJe-ui-FmD"/>
@@ -4928,7 +4928,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="7aS-Kd-9up" firstAttribute="top" secondItem="D3f-X6-Wbe" secondAttribute="bottom" id="Qb1-9L-eTG"/>
+                            <constraint firstItem="kUJ-ce-tjQ" firstAttribute="bottom" secondItem="D3f-X6-Wbe" secondAttribute="bottom" id="Qb1-9L-eTG"/>
                             <constraint firstItem="D3f-X6-Wbe" firstAttribute="leading" secondItem="fmd-R8-H4g" secondAttribute="leading" id="SW7-oF-EKt"/>
                             <constraint firstAttribute="trailing" secondItem="D3f-X6-Wbe" secondAttribute="trailing" id="Y1L-5P-G0M"/>
                             <constraint firstItem="D3f-X6-Wbe" firstAttribute="top" secondItem="fmd-R8-H4g" secondAttribute="top" id="nst-zO-Hub"/>
@@ -5741,7 +5741,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <constraints>
                             <constraint firstItem="i9W-fV-Wlt" firstAttribute="leading" secondItem="QbR-5l-3kZ" secondAttribute="leading" id="TVj-Bf-O10"/>
                             <constraint firstAttribute="trailing" secondItem="i9W-fV-Wlt" secondAttribute="trailing" id="W4u-PS-gLY"/>
-                            <constraint firstItem="cA8-Gg-ZKR" firstAttribute="top" secondItem="i9W-fV-Wlt" secondAttribute="bottom" id="gMw-74-0mb"/>
+                            <constraint firstItem="qgK-iQ-jVK" firstAttribute="bottom" secondItem="i9W-fV-Wlt" secondAttribute="bottom" id="gMw-74-0mb"/>
                             <constraint firstItem="i9W-fV-Wlt" firstAttribute="top" secondItem="QbR-5l-3kZ" secondAttribute="top" id="iog-YK-9Av"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="qgK-iQ-jVK"/>
@@ -5832,7 +5832,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <constraints>
                             <constraint firstItem="cSO-Mv-yrW" firstAttribute="leading" secondItem="E5w-mv-kh8" secondAttribute="leading" id="JPh-xx-g0d"/>
                             <constraint firstAttribute="trailing" secondItem="cSO-Mv-yrW" secondAttribute="trailing" id="Kt6-Do-645"/>
-                            <constraint firstItem="Ztc-aU-Khy" firstAttribute="top" secondItem="cSO-Mv-yrW" secondAttribute="bottom" id="gzc-Zp-wKY"/>
+                            <constraint firstItem="nHF-i3-iff" firstAttribute="bottom" secondItem="cSO-Mv-yrW" secondAttribute="bottom" id="xx4-EJ-bc3"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="nHF-i3-iff"/>
                         <connections>
@@ -5841,7 +5841,6 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     </view>
                     <size key="freeformSize" width="375" height="300"/>
                     <connections>
-                        <outlet property="contentViewBottomConstraint" destination="gzc-Zp-wKY" id="LcJ-6k-TIK"/>
                         <outlet property="contentViewHeightConstraint" destination="AL2-Ti-FC4" id="WYL-US-0fI"/>
                         <outlet property="optionPickerView" destination="eGL-DM-nQa" id="gC0-09-qG2"/>
                         <outlet property="optionTitleLabel" destination="J9a-xe-qHs" id="zco-Sc-yi9"/>
