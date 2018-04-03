@@ -10,7 +10,7 @@ import UIKit
 import SDWebImage
 
 /// Location for an image of a specific size
-public class URLAssetImage: NSObject, NSCoding {
+@objc public class URLAssetImage: NSObject, NSCoding {
     
     let size: CGSize
     let url: URL
@@ -20,17 +20,17 @@ public class URLAssetImage: NSObject, NSCoding {
     /// - Parameters:
     ///   - url: Location of the image
     ///   - size: Dimensions of the image
-    public init(url: URL, size: CGSize) {
+    @objc public init(url: URL, size: CGSize) {
         self.size = size
         self.url = url
     }
     
-    public func encode(with aCoder: NSCoder) {
+    @objc public func encode(with aCoder: NSCoder) {
         aCoder.encode(size, forKey: "size")
         aCoder.encode(url, forKey: "url")
     }
 
-    public required convenience init?(coder aDecoder: NSCoder) {
+    @objc public required convenience init?(coder aDecoder: NSCoder) {
         guard let size = aDecoder.decodeObject(forKey: "size") as? CGSize,
               let url = aDecoder.decodeObject(forKey: "url") as? URL
             else { return nil }
@@ -40,32 +40,32 @@ public class URLAssetImage: NSObject, NSCoding {
 }
 
 /// Remote image resource that can be used in a photo book
-public class URLAsset: NSObject, NSCoding, Asset {
+@objc public class URLAsset: NSObject, NSCoding, Asset {
     
     /// Unique identifier
-    public var identifier: String!
+    @objc public var identifier: String!
     
     /// Album unique identifier
-    public var albumIdentifier: String?
+    @objc public var albumIdentifier: String?
     
     /// Date associated with this asset
-    public var date: Date?
+    @objc public var date: Date?
     
     /// Array of URL per size available for the asset
-    public let images: [URLAssetImage]
+    @objc public let images: [URLAssetImage]
     
     var uploadUrl: String?
     var size: CGSize {
         return images.last?.size ?? .zero
     }
     
-    public init(identifier: String, albumIdentifier: String, images: [URLAssetImage]) {
+    @objc public init(identifier: String, albumIdentifier: String, images: [URLAssetImage]) {
         self.images = images.sorted(by: { $0.size.width < $1.size.width })
         self.albumIdentifier = albumIdentifier
         self.identifier = identifier
     }
     
-    public func encode(with aCoder: NSCoder) {
+    @objc public func encode(with aCoder: NSCoder) {
         aCoder.encode(images, forKey: "images")
         aCoder.encode(identifier, forKey: "identifier")
         aCoder.encode(uploadUrl, forKey: "uploadUrl")
@@ -73,7 +73,7 @@ public class URLAsset: NSObject, NSCoding, Asset {
         aCoder.encode(albumIdentifier, forKey: "albumIdentifier")
     }
     
-    public required convenience init?(coder aDecoder: NSCoder) {
+    @objc public required convenience init?(coder aDecoder: NSCoder) {
         guard let identifier = aDecoder.decodeObject(of: NSString.self, forKey: "identifier") as String?,
             let albumIdentifier = aDecoder.decodeObject(of: NSString.self, forKey: "albumIdentifier") as String?,
             let images = aDecoder.decodeObject(forKey: "images") as? [URLAssetImage]

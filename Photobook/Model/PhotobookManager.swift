@@ -22,11 +22,11 @@ let photobookMainStoryboard =  UIStoryboard.init(name: "Main", bundle: photobook
     }
     
     /// Shared client
-    public static let shared = PhotobookManager()
+    @objc public static let shared = PhotobookManager()
     
     
     /// True if a photo book order is being processed, false otherwise
-    public var isProcessingOrder: Bool {
+    @objc public var isProcessingOrder: Bool {
         return OrderProcessingManager.shared.isProcessingOrder
     }
     
@@ -34,7 +34,7 @@ let photobookMainStoryboard =  UIStoryboard.init(name: "Main", bundle: photobook
     ///
     /// - Parameter assets: Images to use to initialise the photo book. Available asset types are: ImageAsset, URLAsset & PhotosAsset
     /// - Returns: A photo book view controller
-    public func photobookViewController(with assets: [PhotobookAsset]) -> UIViewController {
+    @objc public func photobookViewController(with assets: [PhotobookAsset]) -> UIViewController {
         guard let assets = assets as? [Asset] else {
             fatalError("Could not initialise the Photo Book.")
         }
@@ -49,7 +49,7 @@ let photobookMainStoryboard =  UIStoryboard.init(name: "Main", bundle: photobook
     ///
     /// - Parameter closure: Closure to call when the receipt view controller finishes its tasks or the user dismisses it
     /// - Returns: A receipt view controller
-    public func receiptViewController(onDismiss closure: @escaping (() -> Void)) -> UIViewController? {
+    @objc public func receiptViewController(onDismiss closure: @escaping (() -> Void)) -> UIViewController? {
         guard isProcessingOrder else { return nil }
         
         let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
@@ -61,7 +61,7 @@ let photobookMainStoryboard =  UIStoryboard.init(name: "Main", bundle: photobook
     /// Restores the user's photo book, if it exists, and any ongoing upload tasks
     ///
     /// - Parameter completionHandler: Completion handler to be forwarded from 'handleEventsForBackgroundURLSession' in the application's app delegate
-    public func restorePhotobook(_ completionHandler: @escaping (() -> Void)) {
+    @objc public func restorePhotobook(_ completionHandler: @escaping (() -> Void)) {
         ProductManager.shared.loadUserPhotobook(completionHandler)
     }
     

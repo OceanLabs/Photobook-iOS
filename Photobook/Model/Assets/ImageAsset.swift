@@ -7,24 +7,24 @@
 //
 
 /// Image resource based on a UIImage that can be used in a photo book
-public class ImageAsset: NSObject, NSCoding, Asset {
+@objc public class ImageAsset: NSObject, NSCoding, Asset {
     
     /// Image representation of the asset
-    public var image: UIImage
+    @objc public var image: UIImage
     
     /// Date associated with this asset
-    public var date: Date? = nil
+    @objc public var date: Date? = nil
     
     var identifier = UUID().uuidString
     var albumIdentifier: String? = nil
     var uploadUrl: String?
     var size: CGSize { return image.size }
 
-    public init(image: UIImage) {
+    @objc public init(image: UIImage) {
         self.image = image
     }
     
-    public func encode(with aCoder: NSCoder) {
+    @objc public func encode(with aCoder: NSCoder) {
         aCoder.encode(identifier, forKey: "identifier")
         if uploadUrl != nil {
             aCoder.encode(uploadUrl, forKey: "uploadUrl")
@@ -35,7 +35,7 @@ public class ImageAsset: NSObject, NSCoding, Asset {
         aCoder.encode(imageData, forKey: "image")
     }
     
-    public required init?(coder aDecoder: NSCoder) {
+    @objc public required init?(coder aDecoder: NSCoder) {
         guard let identifier = aDecoder.decodeObject(of: NSString.self, forKey: "identifier") as String?,
               let imageData = aDecoder.decodeObject(of: NSData.self, forKey: "image") as Data?,
               let image = NSKeyedUnarchiver.unarchiveObject(with: imageData) as? UIImage else {
