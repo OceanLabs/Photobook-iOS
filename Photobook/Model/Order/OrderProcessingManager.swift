@@ -24,10 +24,10 @@ class OrderProcessingManager {
     }
     
     struct Notifications {
-        static let completed = Notification.Name("OrderProcessingManager.Completed")
-        static let failed = Notification.Name("OrderProcessingManager.Failed")
-        static let pendingUploadStatusUpdated = Notification.Name("OrderProcessingManager.PendingUploadStatusUpdated")
-        static let willFinishOrder = Notification.Name("OrderProcessingManager.WillFinishOrder")
+        static let completed = Notification.Name("ly.kite.sdk.OrderProcessingManager.Completed")
+        static let failed = Notification.Name("ly.kite.sdk.OrderProcessingManager.Failed")
+        static let pendingUploadStatusUpdated = Notification.Name("ly.kite.sdk.OrderProcessingManager.PendingUploadStatusUpdated")
+        static let willFinishOrder = Notification.Name("ly.kite.sdk.OrderProcessingManager.WillFinishOrder")
     }
     
     private var cancelCompletionBlock:(() -> Void)?

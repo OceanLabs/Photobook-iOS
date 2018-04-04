@@ -28,7 +28,7 @@ class Address: NSCopying, Codable, Hashable {
     static var savedAddresses = Address.loadSavedAddresses()
     
     private struct Constants {
-        static let savedAddressesKey = "savedAddressesKey"
+        static let savedAddressesKey = "ly.kite.sdk.savedAddressesKey"
     }
     
     init() {

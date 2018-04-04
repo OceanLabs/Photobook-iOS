@@ -11,7 +11,7 @@ import UIKit
 class DeliveryDetails: NSCopying, Codable {
     
     private struct Constants {
-        static let savedDetailsKey = "savedDetailsKey"
+        static let savedDetailsKey = "ly.kite.sdk.savedDetailsKey"
     }
     
     var firstName: String?

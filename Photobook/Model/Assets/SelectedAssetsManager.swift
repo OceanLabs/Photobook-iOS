@@ -13,8 +13,8 @@ class SelectedAssetsManager: NSObject {
     
     static let notificationUserObjectKeyAssets = "assets"
     static let notificationUserObjectKeyIndices = "indices"
-    static let notificationNameSelected = Notification.Name("SelectedAssetsManager.Selected")
-    static let notificationNameDeselected = Notification.Name("SelectedAssetsManager.Deselected")
+    static let notificationNameSelected = Notification.Name("ly.kite.sdk.SelectedAssetsManager.Selected")
+    static let notificationNameDeselected = Notification.Name("ly.kite.sdk.SelectedAssetsManager.Deselected")
 
     private(set) var selectedAssets = [Asset]()
     

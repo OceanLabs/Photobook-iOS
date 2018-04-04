@@ -38,11 +38,11 @@ struct PhotobookBackup: Codable {
 class ProductManager {
 
     // Notification keys
-    static let pendingUploadStatusUpdated = Notification.Name("ProductManagerPendingUploadStatusUpdated")
-    static let shouldRetryUploadingImages = Notification.Name("ProductManagerShouldRetryUploadingImages")
-    static let finishedPhotobookCreation = Notification.Name("ProductManagerFinishedPhotobookCreation")
-    static let finishedPhotobookUpload = Notification.Name("ProductManagerFinishedPhotobookUpload")
-    static let failedPhotobookUpload = Notification.Name("ProductManagerFailedPhotobookUpload")
+    static let pendingUploadStatusUpdated = Notification.Name("ly.kite.sdk.ProductManagerPendingUploadStatusUpdated")
+    static let shouldRetryUploadingImages = Notification.Name("ly.kite.sdk.ProductManagerShouldRetryUploadingImages")
+    static let finishedPhotobookCreation = Notification.Name("ly.kite.sdk.ProductManagerFinishedPhotobookCreation")
+    static let finishedPhotobookUpload = Notification.Name("ly.kite.sdk.ProductManagerFinishedPhotobookUpload")
+    static let failedPhotobookUpload = Notification.Name("ly.kite.sdk.ProductManagerFailedPhotobookUpload")
     
     private let bleed: CGFloat = 8.5
 

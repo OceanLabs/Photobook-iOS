@@ -12,12 +12,13 @@ import Stripe
 class OrderManager {
     
     private struct Constants {
-        static let savedCostKey = "OrderManager.cost"
-        static let savedOrderDetailsKey = "OrderManager.orderDetails"
-        static let savedShippingMethodKey = "OrderManager.shippingMethod"
-        static let savedPaymentTokenKey = "OrderManager.paymentToken"
+        static let savedCostKey = "ly.kite.sdk.OrderManager.cost"
+        static let savedOrderDetailsKey = "ly.kite.sdk.OrderManager.orderDetails"
+        static let savedShippingMethodKey = "ly.kite.sdk.OrderManager.shippingMethod"
+        static let savedPaymentTokenKey = "ly.kite.sdk.OrderManager.paymentToken"
     }
     
+    // TODO: Get the supported currencies from the server and make sure the currency of the locale is supported. Otherwise fall back to USD, GBP, EUR, first supported, in that order of preference
     let currencyCode = Locale.current.currencyCode ?? "USD" //USD if locale unavailable
     var deliveryDetails: DeliveryDetails?
     var shippingMethod: Int?

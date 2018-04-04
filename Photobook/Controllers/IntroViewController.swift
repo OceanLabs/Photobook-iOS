@@ -13,10 +13,10 @@ class IntroViewController: UIViewController {
     
     static var userHasDismissed:Bool {
         get {
-            return UserDefaults.standard.bool(forKey: "IntroViewController.userHasDismissed")
+            return UserDefaults.standard.bool(forKey: "ly.kite.sdk.IntroViewController.userHasDismissed")
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: "IntroViewController.userHasDismissed")
+            UserDefaults.standard.set(newValue, forKey: "ly.kite.sdk.IntroViewController.userHasDismissed")
             UserDefaults.standard.synchronize()
         }
     }

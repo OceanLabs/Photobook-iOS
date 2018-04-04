@@ -11,7 +11,7 @@ import PassKit
 import UserNotifications
 
 struct ReceiptNotificationName {
-    static let receiptWillDismiss = Notification.Name("receiptWillDismissNotificationName")
+    static let receiptWillDismiss = Notification.Name("ly.kite.sdk.receiptWillDismissNotificationName")
 }
 
 class ReceiptTableViewController: UITableViewController {

@@ -9,7 +9,7 @@
 import Photos
 
 struct StoriesNotificationName {
-    static let storiesWereUpdated = Notification.Name("storiesWereUpdatedNotificationName")
+    static let storiesWereUpdated = Notification.Name("ly.kite.sdk.storiesWereUpdatedNotificationName")
 }
 
 class StoriesManager: NSObject {

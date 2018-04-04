@@ -9,8 +9,8 @@
 import UIKit
 
 struct AssetsNotificationName {
-    static let albumsWereUpdated = Notification.Name("albumsWereUpdatedNotificationName")
-    static let albumsWereAdded = Notification.Name("albumsWereAddedNotificationName")
+    static let albumsWereUpdated = Notification.Name("ly.kite.sdk.albumsWereUpdatedNotificationName")
+    static let albumsWereAdded = Notification.Name("ly.kite.sdk.albumsWereAddedNotificationName")
 }
 
 protocol AlbumManager {

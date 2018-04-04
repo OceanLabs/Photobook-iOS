@@ -10,10 +10,10 @@ import UIKit
 import SDWebImage
 
 class OrderSummaryManager {
-    static let notificationWillUpdate = Notification.Name("OrderSummaryManager.willUpdate")
-    static let notificationPreviewImageReady = Notification.Name("OrderSummaryManager.previewImageReady")
-    static let notificationPreviewImageFailed = Notification.Name("OrderSummaryManager.previewImageFailed")
-    static let notificationDidUpdateSummary = Notification.Name("OrderSummaryManager.didUpdateSummary")
+    static let notificationWillUpdate = Notification.Name("ly.kite.sdk.OrderSummaryManager.willUpdate")
+    static let notificationPreviewImageReady = Notification.Name("ly.kite.sdk.OrderSummaryManager.previewImageReady")
+    static let notificationPreviewImageFailed = Notification.Name("ly.kite.sdk.OrderSummaryManager.previewImageFailed")
+    static let notificationDidUpdateSummary = Notification.Name("ly.kite.sdk.OrderSummaryManager.didUpdateSummary")
     
     //layouts configured by previous UX
     private var layouts:[ProductLayout] {
