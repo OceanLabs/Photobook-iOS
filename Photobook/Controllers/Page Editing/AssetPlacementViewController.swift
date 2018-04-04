@@ -176,8 +176,7 @@ class AssetPlacementViewController: UIViewController {
     @IBAction private func tappedRotateButton(_ sender: UIButton) {
         if let productLayoutAsset = productLayout?.productLayoutAsset {
             let transform = productLayoutAsset.transform
-            let angle = atan2(transform.b, transform.a)
-            let rotateTo = LayoutUtils.nextCCWCuadrantAngle(to: angle)
+            let rotateTo = LayoutUtils.nextCCWCuadrantAngle(to: transform.angle)
             
             let scale = LayoutUtils.scaleToFill(containerSize: bleedContainerView.bounds.size, withSize: productLayoutAsset.asset!.size, atAngle: rotateTo)
             productLayoutAsset.transform = CGAffineTransform.identity.rotated(by: rotateTo).scaledBy(x: scale, y: scale)
