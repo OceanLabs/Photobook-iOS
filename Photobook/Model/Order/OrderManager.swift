@@ -9,6 +9,11 @@
 import UIKit
 import Stripe
 
+struct OrdersNotificationName {
+    static let orderWasCreated = Notification.Name("ly.kite.sdk.orderWasCreated")
+    static let orderWasSuccessful = Notification.Name("ly.kite.sdk.orderWasSuccessful")
+}
+
 class OrderManager {
     
     private struct Constants {
@@ -112,6 +117,8 @@ class OrderManager {
         UserDefaults.standard.set(paymentToken, forKey: Constants.savedPaymentTokenKey)
         UserDefaults.standard.set(shippingMethod, forKey: Constants.savedShippingMethodKey)
         UserDefaults.standard.synchronize()
+        
+        NotificationCenter.default.post(name: OrdersNotificationName.orderWasCreated, object: nil)
     }
     
     func loadCheckoutDetails() {
