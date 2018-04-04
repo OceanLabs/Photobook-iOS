@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ShippingMethod: NSObject, NSSecureCoding {
+class ShippingMethod: Codable {
     
     static var supportsSecureCoding = true
     
@@ -32,30 +32,6 @@ class ShippingMethod: NSObject, NSSecureCoding {
         self.totalCostFormatted = totalCostFormatted
         self.maxDeliveryTime = maxDeliveryTime
         self.minDeliveryTime = minDeliveryTime
-    }
-    
-    required convenience init?(coder aDecoder: NSCoder) {
-        guard
-            let id = aDecoder.decodeInteger(forKey: "id") as Int?,
-            let name = aDecoder.decodeObject(of: NSString.self, forKey: "name") as String?,
-            let shippingCostFormatted = aDecoder.decodeObject(of: NSString.self, forKey: "shippingCostFormatted") as String?,
-            let totalCost = aDecoder.decodeObject(of: NSDecimalNumber.self, forKey: "totalCost") as Decimal?,
-            let totalCostFormatted = aDecoder.decodeObject(of: NSString.self, forKey: "totalCostFormatted") as String?,
-            let maxDeliveryTime = aDecoder.decodeInteger(forKey: "maxDeliveryTime") as Int?,
-            let minDeliveryTime = aDecoder.decodeInteger(forKey: "minDeliveryTime") as Int?
-            else { return nil }
-        
-        self.init(id: id, name: name, shippingCostFormatted: shippingCostFormatted, totalCost: totalCost, totalCostFormatted: totalCostFormatted, maxDeliveryTime: maxDeliveryTime, minDeliveryTime: minDeliveryTime)
-    }
-    
-    func encode(with aCoder: NSCoder) {
-        aCoder.encode(id, forKey: "id")
-        aCoder.encode(name, forKey: "name")
-        aCoder.encode(shippingCostFormatted, forKey: "shippingCostFormatted")
-        aCoder.encode(totalCost, forKey: "totalCost")
-        aCoder.encode(totalCostFormatted, forKey: "totalCostFormatted")
-        aCoder.encode(maxDeliveryTime, forKey: "maxDeliveryTime")
-        aCoder.encode(minDeliveryTime, forKey: "minDeliveryTime")
     }
 
     static func parse(dictionary: [String: Any]) -> ShippingMethod? {

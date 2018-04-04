@@ -167,7 +167,7 @@ class CreditCardTableViewController: UITableViewController {
         let card = Card(number: cardNumberTextField.text!, expireMonth: selectedExpiryMonth, expireYear: selectedExpiryYear, cvv2: cvvTextField.text!)
         Card.currentCard = card
         
-        OrderManager.shared.paymentMethod = .creditCard
+        OrderManager.basketOrder.paymentMethod = .creditCard
         
         delegate?.didAddCreditCard(on: self)
     }

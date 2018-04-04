@@ -47,6 +47,7 @@ let photobookMainStoryboard =  UIStoryboard(name: "Main", bundle: photobookBundl
         } else if OrderProcessingManager.shared.isProcessingOrder {
             //show receipt screen to prevent user from ordering another photobook
             let receiptViewController = storyboard.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
+            receiptViewController.order = OrderManager.shared.loadBasketOrder()
             receiptViewController.dismissClosure = {
                 configureTabBarController(tabBarController)
                 rootNavigationController.isNavigationBarHidden = true

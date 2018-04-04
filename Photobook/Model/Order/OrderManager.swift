@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Stripe
 
 struct OrdersNotificationName {
     static let orderWasCreated = Notification.Name("ly.kite.sdk.orderWasCreated")
@@ -16,119 +15,21 @@ struct OrdersNotificationName {
 
 class OrderManager {
     
-    private struct Constants {
-        static let savedCostKey = "ly.kite.sdk.OrderManager.cost"
-        static let savedOrderDetailsKey = "ly.kite.sdk.OrderManager.orderDetails"
-        static let savedShippingMethodKey = "ly.kite.sdk.OrderManager.shippingMethod"
-        static let savedPaymentTokenKey = "ly.kite.sdk.OrderManager.paymentToken"
+    struct Storage {
+        static let photobookDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!.appending("/Photobook/")
+        static let photobookBackupFile = photobookDirectory.appending("Photobook.dat")
+        static let basketOrderBackupFile = photobookDirectory.appending("BasketOrder.dat")
     }
     
-    // TODO: Get the supported currencies from the server and make sure the currency of the locale is supported. Otherwise fall back to USD, GBP, EUR, first supported, in that order of preference
-    let currencyCode = Locale.current.currencyCode ?? "USD" //USD if locale unavailable
-    var deliveryDetails: DeliveryDetails?
-    var shippingMethod: Int?
-    var paymentMethod: PaymentMethod?
-    var itemCount: Int = 1
-    var promoCode: String?
-    var photobookId: String?
-    var orderId: String?
-    
-    var cachedCost: Cost?
-    var validCost: Cost? {
-        return hasValidCachedCost ? cachedCost : nil
+    var basketOrder = Order()
+    static var basketOrder: Order { // For convenience
+        return shared.basketOrder
     }
-    
-    func updateCost(forceUpdate: Bool = false, _ completionHandler: @escaping (_ error : Error?) -> Void) {
-        
-        // TODO: REMOVEME. Mock cost & shipping methods
-        let lineItem = LineItem(id: 0, name: "Clown Costume 🤡", cost: Decimal(integerLiteral: 10), formattedCost: "$10")
-        let shippingMethod = ShippingMethod(id: 1, name: "Fiesta Deliveries 🎉🚚", shippingCostFormatted: "$5", totalCost: Decimal(integerLiteral: 15), totalCostFormatted: "$15", maxDeliveryTime: 150, minDeliveryTime: 100)
-        let shippingMethod2 = ShippingMethod(id: 2, name: "Magic Unicorn ✨🦄✨", shippingCostFormatted: "$5000", totalCost: Decimal(integerLiteral: 15), totalCostFormatted: "$5010", maxDeliveryTime: 1, minDeliveryTime: 0)
-        
-        let validPromoCode = "kite"
-        let promoDiscount = validPromoCode == promoCode ? "-£5.00" : nil
-        var promoCodeInvalidReason:String?
-        if promoCode != nil && promoDiscount == nil {
-            promoCodeInvalidReason = "Invalid code 🤷"
-        }
-        
-        self.cachedCost = Cost(hash: orderHash, lineItems: [lineItem], shippingMethods: [shippingMethod, shippingMethod2], promoDiscount: promoDiscount, promoCodeInvalidReason: promoCodeInvalidReason)
-        if self.shippingMethod == nil { self.shippingMethod = 1 }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            completionHandler(nil)
-        }
-    }
-    
-    var orderHash: Int {
-        
-        var stringHash = ""
-        if let deliveryDetails = deliveryDetails { stringHash += "ad:\(deliveryDetails.hashValue)," }
-        if let promoCode = promoCode { stringHash += "pc:\(promoCode)," }
-        if let productName = ProductManager.shared.product?.name { stringHash += "jb:\(productName)," }
-        stringHash += "qt:\(ProductManager.shared.productLayouts.count),"
-        
-        stringHash += "up:("
-        for upsell in OrderSummaryManager.shared.selectedUpsellOptions {
-            stringHash += "\(upsell.hashValue),"
-        }
-        stringHash += ")"
-        
-        return stringHash.hashValue
-    }
-    
-    var hasValidCachedCost: Bool {
-        return cachedCost?.orderHash == orderHash
-    }
-    var paymentToken: String?
     
     static let shared = OrderManager()
     
-    init() {
-        reset()
-    }
-    
-    var orderIsFree: Bool {
-        var orderIsFree = false
-        if let cost = OrderManager.shared.validCost, let selectedMethod = OrderManager.shared.shippingMethod, let shippingMethod = cost.shippingMethod(id: selectedMethod){
-            orderIsFree = shippingMethod.totalCost == 0.0
-        }
-        
-        return orderIsFree
-    }
-    
     func reset() {
-        deliveryDetails = nil
-        shippingMethod = nil
-        paymentMethod = Stripe.deviceSupportsApplePay() ? .applePay : nil
-        itemCount = 1
-        promoCode = nil
-        cachedCost = nil
-        photobookId = nil
-        orderId = nil
-    }
-    
-    func saveCheckoutDetails() {
-        guard let detailsData = try? PropertyListEncoder().encode(deliveryDetails),
-            let cost = cachedCost else { return }
-        
-        UserDefaults.standard.set(detailsData, forKey: Constants.savedOrderDetailsKey)
-        UserDefaults.standard.set(NSKeyedArchiver.archivedData(withRootObject: cost), forKey: Constants.savedCostKey)
-        UserDefaults.standard.set(paymentToken, forKey: Constants.savedPaymentTokenKey)
-        UserDefaults.standard.set(shippingMethod, forKey: Constants.savedShippingMethodKey)
-        UserDefaults.standard.synchronize()
-        
-        NotificationCenter.default.post(name: OrdersNotificationName.orderWasCreated, object: nil)
-    }
-    
-    func loadCheckoutDetails() {
-        guard let detailsData = UserDefaults.standard.object(forKey: Constants.savedOrderDetailsKey) as? Data,
-            let costData = UserDefaults.standard.object(forKey: Constants.savedCostKey) as? Data else { return }
-        
-        deliveryDetails = try? PropertyListDecoder().decode(DeliveryDetails.self, from: detailsData)
-        cachedCost = NSKeyedUnarchiver.unarchiveObject(with: costData) as? Cost
-        paymentToken = UserDefaults.standard.string(forKey: Constants.savedPaymentTokenKey)
-        shippingMethod = UserDefaults.standard.integer(forKey: Constants.savedShippingMethodKey)
+        basketOrder = Order()
     }
     
     func submitOrder(_ urls:[String], completionHandler: @escaping (_ error: ErrorMessage?) -> Void) {
@@ -138,32 +39,45 @@ class OrderManager {
             ])
         
         //TODO: change to accept two pdf urls
-        KiteAPIClient.shared.submitOrder(parameters: orderParameters(), completionHandler: { [weak welf = self] orderId, error in
-            welf?.orderId = orderId
+        KiteAPIClient.shared.submitOrder(parameters: basketOrder.orderParameters(), completionHandler: { [weak welf = self] orderId, error in
+            welf?.basketOrder.orderId = orderId
             completionHandler(error)
         })
     }
     
-    private func orderParameters() -> [String: Any] {
-        var shippingAddress = deliveryDetails?.address?.jsonRepresentation()
-        shippingAddress?["recipient_first_name"] = deliveryDetails?.firstName
-        shippingAddress?["recipient_last_name"] = deliveryDetails?.lastName
-        shippingAddress?["recipient_name"] = deliveryDetails?.fullName
+    /// Saves the basket order to disk
+    func saveBasketOrder() {
+        guard let data = try? PropertyListEncoder().encode(OrderManager.basketOrder) else {
+            fatalError("OrderManager: encoding of order failed")
+        }
         
-        var parameters = [String: Any]()
-        parameters["payment_charge_token"] = paymentToken
-        parameters["shipping_address"] = shippingAddress
-        parameters["customer_email"] = deliveryDetails?.email
-        parameters["customer_phone"] = deliveryDetails?.phone
-        parameters["promo_code"] = promoCode
-        parameters["shipping_method"] = shippingMethod
-        parameters["jobs"] = [[
-            "template_id" : ProductManager.shared.product?.productTemplateId ?? "",
-            "multiples" : itemCount,
-            "assets": [["inside_pdf" : photobookId ?? ""]]
-            ]]
+        if !FileManager.default.fileExists(atPath: OrderManager.Storage.photobookDirectory) {
+            do {
+                try FileManager.default.createDirectory(atPath: OrderManager.Storage.photobookDirectory, withIntermediateDirectories: false, attributes: nil)
+            } catch {
+                print("OrderManager: could not save order")
+            }
+        }
         
-        return parameters
+        let saved = NSKeyedArchiver.archiveRootObject(data, toFile: OrderManager.Storage.basketOrderBackupFile)
+        if !saved {
+            print("OrderManager: failed to archive order")
+        }
+    }
+    
+    /// Loads the basket order from disk and returns it
+    func loadBasketOrder() -> Order? {
+        guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: OrderManager.Storage.basketOrderBackupFile) as? Data else {
+            print("ProductManager: failed to unarchive order")
+            return nil
+        }
+        guard let unarchivedOrder = try? PropertyListDecoder().decode(Order.self, from: unarchivedData) else {
+            print("ProductManager: decoding of order failed")
+            return nil
+        }
+        
+        OrderManager.shared.basketOrder = unarchivedOrder
+        return unarchivedOrder
     }
     
 }

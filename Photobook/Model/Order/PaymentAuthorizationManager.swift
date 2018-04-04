@@ -13,7 +13,7 @@ import Stripe
 import PayPalMobileSDK
 #endif
 
-enum PaymentMethod: Int {
+enum PaymentMethod: Int, Codable {
     case creditCard, applePay, payPal
     
     var description: String {
@@ -91,9 +91,9 @@ class PaymentAuthorizationManager: NSObject {
     ///
     /// - Parameter cost: The total cost of the order
     private func authorizeApplePay(cost: Cost) {
-        let paymentRequest = Stripe.paymentRequest(withMerchantIdentifier: applePayMerchantId, country: "US", currency: OrderManager.shared.currencyCode)
+        let paymentRequest = Stripe.paymentRequest(withMerchantIdentifier: applePayMerchantId, country: "US", currency: OrderManager.basketOrder.currencyCode)
         
-        paymentRequest.paymentSummaryItems = cost.summaryItemsForApplePay(payTo: applePayPayTo, shippingMethodId: OrderManager.shared.shippingMethod!)
+        paymentRequest.paymentSummaryItems = cost.summaryItemsForApplePay(payTo: applePayPayTo, shippingMethodId: OrderManager.basketOrder.shippingMethod!)
         paymentRequest.requiredShippingAddressFields = [.postalAddress, .name, .email, .phone]
         
         guard let paymentController = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) else { return }
@@ -108,10 +108,10 @@ class PaymentAuthorizationManager: NSObject {
     ///
     /// - Parameter cost: The total cost of the order
     private func authorizePayPal(cost: Cost){
-        let details = OrderManager.shared.deliveryDetails
+        let details = OrderManager.basketOrder.deliveryDetails
         let address = details?.address
 
-        guard let totalCost = cost.shippingMethod(id: OrderManager.shared.shippingMethod)?.totalCost,
+        guard let totalCost = cost.shippingMethod(id: OrderManager.basketOrder.shippingMethod)?.totalCost,
             let firstName = details?.firstName,
             let lastName = details?.lastName,
             let line1 = address?.line1,
@@ -122,7 +122,7 @@ class PaymentAuthorizationManager: NSObject {
             else { return }
 
         let paypalAddress = PayPalShippingAddress(recipientName: String(format: "%@ %@", firstName, lastName), withLine1: line1, withLine2: address?.line2 ?? "", withCity: city, withState: address?.stateOrCounty ?? "", withPostalCode: postalCode, withCountryCode: country.codeAlpha2)
-        let payment = PayPalPayment(amount: totalCost as NSDecimalNumber, currencyCode: OrderManager.shared.currencyCode, shortDescription: product.name, intent: .authorize)
+        let payment = PayPalPayment(amount: totalCost as NSDecimalNumber, currencyCode: OrderManager.basketOrder.currencyCode, shortDescription: product.name, intent: .authorize)
         payment.shippingAddress = paypalAddress
 
         let config = PayPalConfiguration()
@@ -189,7 +189,7 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
         
         deliveryDetails.email = payment.shippingContact?.emailAddress
         deliveryDetails.phone = payment.shippingContact?.phoneNumber?.stringValue
-        OrderManager.shared.deliveryDetails = deliveryDetails
+        OrderManager.basketOrder.deliveryDetails = deliveryDetails
         
         let client = STPAPIClient(publishableKey: Constants.stripePublicKey)
         client.createToken(with: payment, completion: {(token: STPToken?, error: Error?) in
@@ -218,24 +218,24 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
         
         let deliveryDetails = DeliveryDetails()
         deliveryDetails.address = shippingAddress
-        OrderManager.shared.deliveryDetails = deliveryDetails
+        OrderManager.basketOrder.deliveryDetails = deliveryDetails
         
-        OrderManager.shared.updateCost { [weak welf = self] (error: Error?) in
+        OrderManager.basketOrder.updateCost { [weak welf = self] (error: Error?) in
             
-            guard let cachedCost = OrderManager.shared.cachedCost else {
+            guard let cachedCost = OrderManager.basketOrder.cachedCost else {
                 completion(.failure, [PKShippingMethod](), [PKPaymentSummaryItem]())
                 return
             }
 
             guard error == nil else {
-                completion(.failure, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: welf!.applePayPayTo, shippingMethodId: OrderManager.shared.shippingMethod!))
+                completion(.failure, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: welf!.applePayPayTo, shippingMethodId: OrderManager.basketOrder.shippingMethod!))
                 return
             }
 
             //Cost is expected to change here so update views
             welf?.delegate?.costUpdated()
             
-            completion(.success, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: welf!.applePayPayTo, shippingMethodId: OrderManager.shared.shippingMethod!))
+            completion(.success, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: welf!.applePayPayTo, shippingMethodId: OrderManager.basketOrder.shippingMethod!))
         }
     }
 }

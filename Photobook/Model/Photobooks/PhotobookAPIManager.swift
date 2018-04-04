@@ -308,7 +308,7 @@ class PhotobookAPIManager {
     }
     
     private func photobookParameters() -> [String: Any]? {
-        guard let photobookId = OrderManager.shared.photobookId else { return nil }
+        guard let photobookId = OrderManager.basketOrder.photobookId else { return nil }
         
         // TODO: confirm schema
         var photobook = [String: Any]()

@@ -24,10 +24,10 @@ class PaymentMethodsViewController: UIViewController {
 
     fileprivate var selectedPaymentMethod: PaymentMethod? {
         get {
-            return OrderManager.shared.paymentMethod
+            return OrderManager.basketOrder.paymentMethod
         }
         set {
-            OrderManager.shared.paymentMethod = newValue
+            OrderManager.basketOrder.paymentMethod = newValue
         }
     }
 
@@ -128,7 +128,7 @@ extension PaymentMethodsViewController: UITableViewDelegate {
         }
         
         tableView.reloadData()
-        OrderManager.shared.paymentMethod = selectedPaymentMethod
+        OrderManager.basketOrder.paymentMethod = selectedPaymentMethod
     }
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -138,7 +138,7 @@ extension PaymentMethodsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         Card.currentCard = nil
-        if Stripe.deviceSupportsApplePay() { OrderManager.shared.paymentMethod = .applePay }
+        if Stripe.deviceSupportsApplePay() { OrderManager.basketOrder.paymentMethod = .applePay }
         tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
     }
 }
