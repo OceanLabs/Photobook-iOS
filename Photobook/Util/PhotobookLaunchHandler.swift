@@ -13,8 +13,14 @@ let photobookMainStoryboard =  UIStoryboard(name: "Main", bundle: photobookBundl
 
 @objc public class PhotobookLaunchHandler: NSObject {
     
+    @objc public enum Environment: Int {
+        case test
+        case live
+    }
+    
     @objc public static let orderWasCreatedNotificationName = Notification.Name("ly.kite.sdk.orderWasCreated")
     @objc public static let orderWasSuccessfulNotificationName = Notification.Name("ly.kite.sdk.orderWasSuccessful")
+    @objc public static var environment: Environment = .live
     
     enum Tab: Int {
         case stories

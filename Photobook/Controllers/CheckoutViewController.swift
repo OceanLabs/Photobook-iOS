@@ -103,11 +103,11 @@ class CheckoutViewController: UIViewController {
         
         Analytics.shared.trackScreenViewed(Analytics.ScreenName.basket)
         
-        #if TEST_ENVIRONMENT
+        if PhotobookLaunchHandler.environment == .test {
             title = Constants.title + " (TEST)"
-        #else
+        } else {
             title = Constants.title
-        #endif
+        }
         
         registerForKeyboardNotifications()
         NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryPreviewImageReady), name: OrderSummaryManager.notificationPreviewImageReady, object: nil)

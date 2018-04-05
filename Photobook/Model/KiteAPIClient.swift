@@ -11,11 +11,8 @@ import UIKit
 class KiteAPIClient {
     
     private struct Constants {
-        #if TEST_ENVIRONMENT
-        static let apiKey = "78b798ff366815c833dfa848654aba43b71a883a" // TODO: Replace with real API key
-        #else
-        static let apiKey = "" // TODO: Set API key
-        #endif
+        // TODO: Replace with real API keys
+        static let apiKey = PhotobookLaunchHandler.environment == .test ? "78b798ff366815c833dfa848654aba43b71a883a" : ""
     }
     
     private struct Endpoints {
