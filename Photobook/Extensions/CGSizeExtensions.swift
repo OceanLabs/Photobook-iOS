@@ -14,7 +14,7 @@ extension CGSize {
         let sourceAspectRatio = self.width / self.height
         let targetAspectRatio = targetSize.width / targetSize.height
         
-        if sourceAspectRatio >= targetAspectRatio{
+        if sourceAspectRatio >= targetAspectRatio {
             return CGSize(width: targetSize.height * sourceAspectRatio, height: targetSize.height)
         }
         else{
