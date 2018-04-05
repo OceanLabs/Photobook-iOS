@@ -391,6 +391,7 @@ class CheckoutViewController: UIViewController {
     }
     
     private func showReceipt() {
+        OrderManager.basketOrder.lastSubmissionDate = Date()
         NotificationCenter.default.post(name: PhotobookLaunchHandler.orderWasCreatedNotificationName, object: OrderManager.basketOrder)
         
         OrderManager.shared.saveBasketOrder()

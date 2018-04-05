@@ -18,6 +18,7 @@ import UIKit
     var itemCount: Int = 1
     var promoCode: String?
     var photobookId: String?
+    var lastSubmissionDate: Date?
     @objc public var orderId: String?
     @objc public var paymentToken: String?
     
