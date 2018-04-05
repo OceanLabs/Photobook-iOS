@@ -324,7 +324,7 @@ class ReceiptTableViewController: UITableViewController {
     }
     
     @objc func orderProcessingCompleted() {
-        NotificationCenter.default.post(name: OrdersNotificationName.orderWasSuccessful, object: order)
+        NotificationCenter.default.post(name: PhotobookLaunchHandler.orderWasSuccessfulNotificationName, object: order)
         
         progressOverlayViewController.hide()
         state = .completed

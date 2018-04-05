@@ -8,11 +8,6 @@
 
 import UIKit
 
-struct OrdersNotificationName {
-    static let orderWasCreated = Notification.Name("ly.kite.sdk.orderWasCreated")
-    static let orderWasSuccessful = Notification.Name("ly.kite.sdk.orderWasSuccessful")
-}
-
 class OrderManager {
     
     struct Storage {

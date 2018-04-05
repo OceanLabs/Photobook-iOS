@@ -391,7 +391,7 @@ class CheckoutViewController: UIViewController {
     }
     
     private func showReceipt() {
-        NotificationCenter.default.post(name: OrdersNotificationName.orderWasCreated, object: OrderManager.basketOrder)
+        NotificationCenter.default.post(name: PhotobookLaunchHandler.orderWasCreatedNotificationName, object: OrderManager.basketOrder)
         
         OrderManager.shared.saveBasketOrder()
         

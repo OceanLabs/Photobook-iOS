@@ -13,6 +13,9 @@ let photobookMainStoryboard =  UIStoryboard(name: "Main", bundle: photobookBundl
 
 @objc public class PhotobookLaunchHandler: NSObject {
     
+    @objc public static let orderWasCreatedNotificationName = Notification.Name("ly.kite.sdk.orderWasCreated")
+    @objc public static let orderWasSuccessfulNotificationName = Notification.Name("ly.kite.sdk.orderWasSuccessful")
+    
     enum Tab: Int {
         case stories
         case browse
