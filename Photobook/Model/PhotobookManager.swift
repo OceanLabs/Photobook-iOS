@@ -39,6 +39,7 @@ let photobookMainStoryboard =  UIStoryboard.init(name: "Main", bundle: photobook
             fatalError("Could not initialise the Photo Book.")
         }
         
+        UIFont.loadAllFonts()
         let navigationController = UINavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
         let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.assets = assets
@@ -55,6 +56,7 @@ let photobookMainStoryboard =  UIStoryboard.init(name: "Main", bundle: photobook
     @objc public func receiptViewController(onDismiss closure: @escaping (() -> Void)) -> UIViewController? {
         guard isProcessingOrder else { return nil }
         
+        UIFont.loadAllFonts()
         let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
         receiptViewController.dismissClosure = closure
         

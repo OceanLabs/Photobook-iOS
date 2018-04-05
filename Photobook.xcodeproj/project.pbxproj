@@ -254,6 +254,8 @@
 		6F0A68361FE16D1200B7E56C /* LayoutSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0A68351FE16D1200B7E56C /* LayoutSelectionViewController.swift */; };
 		6F139E0C1FB45DD8005B937E /* StoriesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F139E0B1FB45DD8005B937E /* StoriesManager.swift */; };
 		6F139E0F1FB45EFC005B937E /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F139E0E1FB45EFC005B937E /* Story.swift */; };
+		6F17F325207657FD00001888 /* UIFontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F17F324207657FD00001888 /* UIFontExtensions.swift */; };
+		6F17F326207657FD00001888 /* UIFontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F17F324207657FD00001888 /* UIFontExtensions.swift */; };
 		6F181546200781BB00D7082D /* PhotobookFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F181545200781BB00D7082D /* PhotobookFrameView.swift */; };
 		6F18154A2009042E00D7082D /* CoverFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1815492009042E00D7082D /* CoverFrameView.swift */; };
 		6F1DB8DB201617B7001BECC8 /* CoverLayoutSelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1DB8DA201617B7001BECC8 /* CoverLayoutSelectionCollectionViewCell.swift */; };
@@ -309,7 +311,6 @@
 		6FDF25E51FB604E100F46BB0 /* PhotobookTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF25E41FB604E100F46BB0 /* PhotobookTabBar.swift */; };
 		6FDF25E71FB6052A00F46BB0 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF25E61FB6052A00F46BB0 /* UIImageExtensions.swift */; };
 		6FE05DA820345C3E003C9655 /* SwiftLuhn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE05DA720345C3E003C9655 /* SwiftLuhn.swift */; };
-		6FE45CC4206CE73B00DDD2D9 /* PhotobookSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2ED14B992063A9CD00ED2E2C /* PhotobookSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FFE21CB202CA7F9004EC0EA /* SpineTextEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFE21CA202CA7F9004EC0EA /* SpineTextEditingViewController.swift */; };
 		7CBF1FFD216E73D9ACD8E2EF /* Pods_Photobook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35185092CEAA07251E4FD67C /* Pods_Photobook.framework */; };
 		B90EB85E203701CD0005D91C /* AmountPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90EB85D203701CD0005D91C /* AmountPickerViewController.swift */; };
@@ -459,6 +460,7 @@
 		6F0A68351FE16D1200B7E56C /* LayoutSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutSelectionViewController.swift; sourceTree = "<group>"; };
 		6F139E0B1FB45DD8005B937E /* StoriesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesManager.swift; sourceTree = "<group>"; };
 		6F139E0E1FB45EFC005B937E /* Story.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Story.swift; sourceTree = "<group>"; };
+		6F17F324207657FD00001888 /* UIFontExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFontExtensions.swift; sourceTree = "<group>"; };
 		6F181545200781BB00D7082D /* PhotobookFrameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookFrameView.swift; sourceTree = "<group>"; };
 		6F1815492009042E00D7082D /* CoverFrameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverFrameView.swift; sourceTree = "<group>"; };
 		6F1DB8DA201617B7001BECC8 /* CoverLayoutSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverLayoutSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -951,6 +953,7 @@
 				6F3A731D202AFB6800EEF04C /* UITextViewExtensions.swift */,
 				2E6B9ED91FBDEEF400F28C00 /* UIViewExtensions.swift */,
 				2E8B27F82045A6C000A0B403 /* UIAlertControllerExtensions.swift */,
+				6F17F324207657FD00001888 /* UIFontExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1538,6 +1541,7 @@
 				B90F288920066D1500FF3D15 /* OrderSummaryDetailTableViewCell.swift in Sources */,
 				2E6B9EDA1FBDEEF500F28C00 /* UIViewExtensions.swift in Sources */,
 				B986DF2F201B445E005461A0 /* UpsellOption.swift in Sources */,
+				6F17F325207657FD00001888 /* UIFontExtensions.swift in Sources */,
 				2E3E6A5420036FB60044EDFC /* PhotobookCollectionViewCell.swift in Sources */,
 				2ED5B3811FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift in Sources */,
 				6FC7E8811FC332A500D2BCDA /* LayoutBox.swift in Sources */,
@@ -1569,6 +1573,7 @@
 				2ED14BA42063AA4000ED2E2C /* StoriesViewController.swift in Sources */,
 				2ED14BCA2063AA4000ED2E2C /* AlbumSearchResultsTableViewCell.swift in Sources */,
 				2ED14BD72063AA4000ED2E2C /* PhotobookCoverCollectionViewCell.swift in Sources */,
+				6F17F326207657FD00001888 /* UIFontExtensions.swift in Sources */,
 				2ED14C0B2063AA4000ED2E2C /* PaymentAuthorizationManager.swift in Sources */,
 				2ED14BF92063AA4000ED2E2C /* ProductManager.swift in Sources */,
 				2ED14BA32063AA4000ED2E2C /* IntroViewController.swift in Sources */,
