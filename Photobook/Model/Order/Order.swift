@@ -18,8 +18,8 @@ import UIKit
     var itemCount: Int = 1
     var promoCode: String?
     var photobookId: String?
-    var orderId: String?
-    var paymentToken: String?
+    @objc public var orderId: String?
+    @objc public var paymentToken: String?
     
     var cachedCost: Cost?
     var validCost: Cost? {
