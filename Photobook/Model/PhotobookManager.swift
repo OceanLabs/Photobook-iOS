@@ -43,6 +43,7 @@ let photobookMainStoryboard =  UIStoryboard.init(name: "Main", bundle: photobook
         let navigationController = UINavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
         let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.assets = assets
+        photobookViewController.navigationItem.leftBarButtonItems = nil
         
         navigationController.viewControllers = [ photobookViewController ]
         
