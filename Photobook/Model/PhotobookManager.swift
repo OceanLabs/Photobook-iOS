@@ -39,10 +39,13 @@ let photobookMainStoryboard =  UIStoryboard.init(name: "Main", bundle: photobook
             fatalError("Could not initialise the Photo Book.")
         }
         
+        let navigationController = UINavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
         let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.assets = assets
         
-        return photobookViewController
+        navigationController.viewControllers = [ photobookViewController ]
+        
+        return navigationController
     }
     
     /// Receipt View Controller
