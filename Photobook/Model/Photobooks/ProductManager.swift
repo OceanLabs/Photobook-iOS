@@ -89,7 +89,6 @@ class ProductManager {
     var pageColor: ProductColor = .white
     var productLayouts = [ProductLayout]()
     var minimumRequiredAssets: Int {
-        return 4
         let defaultMinimum = 20
         
         return product?.minimumRequiredAssets ?? products?.first?.minimumRequiredAssets ?? defaultMinimum
