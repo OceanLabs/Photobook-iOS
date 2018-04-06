@@ -15,6 +15,7 @@ class ProductLayout: Codable {
     }
     var productLayoutAsset: ProductLayoutAsset?
     var productLayoutText: ProductLayoutText?
+    var hasBeenEdited: Bool = false
     
     var asset: Asset? {
         get {

@@ -641,7 +641,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
     }
     
-    private func editPage(at index: Int, frame: CGRect, containerView: UIView) {
+    private func editPage(_ page: PhotobookPageView, at index: Int, frame: CGRect, containerView: UIView) {
         let modalNavigationController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PageSetupNavigationController") as! UINavigationController
         if #available(iOS 11.0, *) {
             modalNavigationController.navigationBar.prefersLargeTitles = false
@@ -653,6 +653,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         pageSetupViewController.selectedAssetsManager = selectedAssetsManager
         pageSetupViewController.pageIndex = index
         pageSetupViewController.selectedAssetsSource = selectedAssetsSource
+        pageSetupViewController.previewAssetImage = page.currentImage
+        
         if barType != nil {
             pageSetupViewController.photobookNavigationBarType = barType!
         }
@@ -796,8 +798,8 @@ extension PhotobookViewController: PhotobookCoverCollectionViewCellDelegate {
         navigationController?.present(spineTextEditingNavigationController, animated: false, completion: nil)
     }
     
-    func didTapOnCover(with frame: CGRect, in containerView: UIView) {
-        editPage(at: 0, frame: frame, containerView: containerView)
+    func didTapOnCover(_ cover: PhotobookPageView, with frame: CGRect, in containerView: UIView) {
+        editPage(cover, at: 0, frame: frame, containerView: containerView)
     }
 }
 
@@ -862,8 +864,8 @@ extension PhotobookViewController: PageSetupDelegate {
 extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
     // MARK: PhotobookCollectionViewCellDelegate
     
-    func didTapOnPage(at index: Int, frame: CGRect, in containerView: UIView) {
-        editPage(at: index, frame: frame, containerView: containerView)
+    func didTapOnPage(_ page: PhotobookPageView, at index: Int, frame: CGRect, in containerView: UIView) {
+        editPage(page, at: index, frame: frame, containerView: containerView)
     }
 
     func didLongPress(_ sender: UILongPressGestureRecognizer) {

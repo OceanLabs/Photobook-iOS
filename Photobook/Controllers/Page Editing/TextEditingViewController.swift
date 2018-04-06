@@ -154,10 +154,13 @@ class TextEditingViewController: UIViewController {
         }
 
         if !hasAnImageLayout {
-            UIView.animate(withDuration: 0.1) {
+            UIView.animate(withDuration: 0.1, delay: 0.0, options: [.curveEaseOut], animations: {
                 self.textViewBorderView.alpha = 1.0
                 self.textView.alpha = 1.0
-            }
+            }, completion: { _ in
+                self.isAnimatingOnScreen = false
+                self.animateOnFinishedCompletion()
+            })
             return
         }
         
@@ -202,6 +205,10 @@ class TextEditingViewController: UIViewController {
                 self.view.backgroundColor = .clear
             }, completion: { _ in
                 self.animatableAssetImageView.alpha = 1.0
+                self.view.alpha = 0.0
+                self.view.backgroundColor = backgroundColor
+                
+                self.hasPlacedPageView = false
                 completion()
             })
             return
