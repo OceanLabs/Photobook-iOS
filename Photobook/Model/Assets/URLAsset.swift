@@ -52,7 +52,7 @@ import SDWebImage
     @objc public var date: Date?
     
     /// Array of URL per size available for the asset
-    @objc public let images: [URLAssetImage]
+    @objc public var images: [URLAssetImage]
     
     var uploadUrl: String?
     var size: CGSize {
