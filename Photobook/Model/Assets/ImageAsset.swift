@@ -47,7 +47,7 @@
         uploadUrl = aDecoder.decodeObject(of: NSString.self, forKey: "uploadUrl") as String?
     }
 
-    func image(size: CGSize, loadThumbnailsFirst: Bool, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
+    func image(size: CGSize, loadThumbnailFirst: Bool, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
         completionHandler(image, nil)
     }
     

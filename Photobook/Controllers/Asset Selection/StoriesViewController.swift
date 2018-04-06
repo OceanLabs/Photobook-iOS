@@ -28,27 +28,29 @@ class StoriesViewController: UIViewController {
     private var minimumNumberOfStories: Int {
         return stories.count == 1 ? 4 : 3
     }
-    private var storiesAreLoading = false
+    
+    private var openingStory = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         Analytics.shared.trackScreenViewed(.stories)
         
-        loadStories()
+        StoriesManager.shared.loadTopStories()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(loadStories), name: .UIApplicationDidBecomeActive, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(receiptWillDismiss), name: ReceiptNotificationName.receiptWillDismiss, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(storiesWereUpdated), name: StoriesNotificationName.storiesWereUpdated, object: nil)        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        (tabBarController?.tabBar as? PhotobookTabBar)?.isBackgroundHidden = false
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         StoriesManager.shared.currentlySelectedStory = nil
-    }
-    
-    @objc private func receiptWillDismiss() {
-         (tabBarController?.tabBar as? PhotobookTabBar)?.isBackgroundHidden = false
     }
     
     @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
@@ -79,13 +81,10 @@ class StoriesViewController: UIViewController {
             break
         }
     }
-
-    @objc private func loadStories() {
-        storiesAreLoading = true
-        StoriesManager.shared.loadTopStories(completionHandler: {
-            self.storiesAreLoading = false
-            self.tableView.reloadData()
-        })
+    
+    @objc private func storiesWereUpdated() {
+        tableView.reloadData()
+        tableView.scrollToRow(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
     }
 }
 
@@ -164,7 +163,7 @@ extension StoriesViewController: UITableViewDataSource {
         
         guard storyIndex < stories.count else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "EmptyStoryTableViewCell", for: indexPath) as! EmptyStoryTableViewCell
-            cell.label.isHidden = storiesAreLoading
+            cell.label.isHidden = StoriesManager.shared.loading
             return cell
         }
         
@@ -191,13 +190,15 @@ extension StoriesViewController: StoryTableViewCellDelegate {
     // MARK: StoryTableViewCellDelegate
     
     func didTapOnStory(index: Int, coverImage: UIImage?, sourceView: UIView?, labelsContainerView: UIView?) {
-        guard !storiesAreLoading, index < stories.count, !stories[index].assets.isEmpty else {
-            // For a moment after the app has resumed, while the stories are reloading, if the user taps on a story just ignore it. It's unlikely to happen anyway, and even if it does, it's not worth trying to handle it gracefully.
-            return
-        }
+        guard !StoriesManager.shared.loading, index < stories.count, !openingStory else { return }
+        openingStory = true
         
-        StoriesManager.shared.currentlySelectedStory = stories[index]
-        performSegue(withIdentifier: Constants.viewStorySegueName, sender: (index: index, coverImage: coverImage, sourceView: sourceView, labelsContainerView: labelsContainerView))
+        let story = stories[index]
+        StoriesManager.shared.currentlySelectedStory = story
+        StoriesManager.shared.prepare(story: story, completionHandler: { [weak welf = self] in
+            welf?.performSegue(withIdentifier: Constants.viewStorySegueName, sender: (index: index, coverImage: coverImage, sourceView: sourceView, labelsContainerView: labelsContainerView))
+            welf?.openingStory = false
+        })
     }
 }
 

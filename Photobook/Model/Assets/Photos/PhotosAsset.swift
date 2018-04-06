@@ -55,13 +55,13 @@ class PhotosAsset: NSObject, NSCoding, Asset {
         self.albumIdentifier = albumIdentifier
     }
     
-    func image(size: CGSize, loadThumbnailsFirst: Bool = true, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
+    func image(size: CGSize, loadThumbnailFirst: Bool = true, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
         
         // Request the image at the correct aspect ratio
         var imageSize = self.size.resizeAspectFill(size)
         
         let options = PHImageRequestOptions()
-        options.deliveryMode = loadThumbnailsFirst ? .opportunistic : .highQualityFormat
+        options.deliveryMode = loadThumbnailFirst ? .opportunistic : .highQualityFormat
         options.isNetworkAccessAllowed = true
         options.resizeMode = .exact
         

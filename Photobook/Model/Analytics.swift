@@ -73,6 +73,7 @@ class Analytics {
         static let secondsSinceAppOpen = "Seconds since app open"
         static let secondsInEditing = "Seconds in editing"
         static let secondsInBackground = "Seconds in background"
+        static let environment = "Environment"
     }
     
     private struct Constants {
@@ -101,7 +102,7 @@ class Analytics {
     }
     
     init() {
-        let analyticsConfiguration = SEGAnalyticsConfiguration(writeKey: "") //TODO get key
+        let analyticsConfiguration = SEGAnalyticsConfiguration(writeKey: "kFnvwFEImWDbOLGZxaQVwP86bpf4nKO8")
         analyticsConfiguration.trackApplicationLifecycleEvents = true
         SEGAnalytics.setup(with: analyticsConfiguration)
         
@@ -128,13 +129,28 @@ class Analytics {
         NotificationCenter.default.removeObserver(self)
     }
     
+    func addEnvironment(to properties:[String: Any]?) -> [String: Any] {
+        #if TEST_ENVIRONMENT
+        let environment = "Test"
+        #else
+        let environment = "Live"
+        #endif
+        
+        var properties = properties ?? [:]
+        properties[PropertyNames.environment] = environment
+        
+        return properties
+    }
+    
     func trackScreenViewed(_ screenName: ScreenName, _ properties: [String: Any]? = nil) {
+        
         #if DEBUG
             print("Analytics: Screen \"\(screenName.rawValue)\" viewed. Properties: \(properties ?? [:])")
         #endif
         
-        // TODO: Uncomment when we have a key
-//        SEGAnalytics.shared().screen(screenName, properties: properties)
+        let properties = addEnvironment(to: properties)
+        
+        SEGAnalytics.shared().screen(screenName.rawValue, properties: properties)
     }
     
     func trackAction(_ actionName: ActionName, _ properties: [String: Any]? = nil){
@@ -142,8 +158,9 @@ class Analytics {
             print("Analytics: Action \"\(actionName.rawValue)\" triggered. Properties: \(properties ?? [:])")
         #endif
         
-        // TODO: Uncomment when we have a key
-//        SEGAnalytics.shared().track(actionName.rawValue, properties: properties)
+        let properties = addEnvironment(to: properties)
+        
+        SEGAnalytics.shared().track(actionName.rawValue, properties: properties)
     }
     
     func secondsSinceAppOpen() -> Int {

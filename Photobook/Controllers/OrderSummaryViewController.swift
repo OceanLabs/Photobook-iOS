@@ -76,7 +76,7 @@ class OrderSummaryViewController: UIViewController {
         coverSnapshotPageView.setupTextBox(mode: .userTextOnly)
         
         if let asset = ProductManager.shared.productLayouts.first?.asset {
-            asset.image(size: CGSize(width: dimensionForPage, height: dimensionForPage), loadThumbnailsFirst: false, completionHandler: { [weak welf = self] (image, error) in
+            asset.image(size: CGSize(width: dimensionForPage, height: dimensionForPage), loadThumbnailFirst: false, progressHandler: nil, completionHandler: { [weak welf = self] (image, error) in
                 guard let image = image else { return }
                 
                 welf?.coverSnapshotPageView.setupImageBox(with: image)

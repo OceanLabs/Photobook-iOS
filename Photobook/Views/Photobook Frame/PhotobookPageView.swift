@@ -9,7 +9,7 @@
 import UIKit
 
 @objc protocol PhotobookPageViewDelegate: class {
-    @objc optional func didTapOnPage(at index: Int)
+    @objc optional func didTapOnPage(_ page: PhotobookPageView, at index: Int)
     @objc optional func didTapOnAsset(at index: Int)
     @objc optional func didTapOnText(at index: Int)
 }
@@ -81,7 +81,7 @@ class PhotobookPageView: UIView {
     @IBOutlet private var aspectRatioConstraint: NSLayoutConstraint!
     
     override func layoutSubviews() {
-        setupImageBox()
+        setupImageBox(with: currentImage)
         adjustTextLabel()
         setupGestures()
     }
@@ -118,14 +118,18 @@ class PhotobookPageView: UIView {
             return
         }
         
-        self.setupImageBox()
-        self.setupTextBox()
+        assetImageView.alpha = 0.0
+        setupImageBox()
+        setupTextBox()
     }
     
-    var previousIdentifier: String?
-    var previousImage: UIImage?
-
-    func setupImageBox(with assetImage: UIImage? = nil, animated: Bool = true) {
+    private var currentIdentifier: String?
+    private var containerView: UIView! {
+        return bleedAssetContainerView != nil ? bleedAssetContainerView! : assetContainerView!
+    }
+    var currentImage: UIImage?
+    
+    func setupImageBox(with assetImage: UIImage? = nil, animated: Bool = true, loadThumbnailFirst: Bool = true) {
         guard let imageBox = productLayout?.layout.imageLayoutBox else {
             assetContainerView.alpha = 0.0
             return
@@ -142,24 +146,26 @@ class PhotobookPageView: UIView {
             assetImageView.image = nil
             return
         }
-        
+
         // Avoid reloading image if not necessary
+        if currentIdentifier != nil && asset.identifier == currentIdentifier {
+            setImage(image: currentImage!)
+            return
+        }
+
         if let assetImage = assetImage {
             setImage(image: assetImage)
             return
         }
         
-        if previousIdentifier != nil && asset.identifier == previousIdentifier {
-            setImage(image: previousImage!)
-            return
-        }
+        var size = assetContainerView.bounds.size
+        if productLayout!.hasBeenEdited { size = 3.0 * size }
         
-        asset.image(size: CGSize(width: assetContainerView.frame.size.width, height: assetContainerView.frame.size.height), completionHandler: { [weak welf = self] (image, _) in
+        asset.image(size: size, loadThumbnailFirst: loadThumbnailFirst, progressHandler: nil, completionHandler: { [weak welf = self] (image, _) in
             guard welf?.pageIndex == index, let image = image else { return }
             welf?.setImage(image: image)
             
-            welf?.previousIdentifier = asset.identifier
-            welf?.previousImage = image
+            welf?.currentIdentifier = asset.identifier
 
             UIView.animate(withDuration: animated ? 0.1 : 0.0) {
                 welf?.assetImageView.alpha = 1.0
@@ -170,11 +176,13 @@ class PhotobookPageView: UIView {
     func setImage(image: UIImage) {
         guard let asset = productLayout?.productLayoutAsset?.asset else { return }
 
-        assetImageView.image = image
+        currentImage = image
+        
         assetImageView.transform = .identity
         assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: asset.size.width, height: asset.size.height)
-        let containerView = bleedAssetContainerView != nil ? bleedAssetContainerView! : assetContainerView!
+        assetImageView.image = image
         assetImageView.center = CGPoint(x: containerView.bounds.midX, y: containerView.bounds.midY)
+        
         productLayout!.productLayoutAsset!.containerSize = containerView.bounds.size
         assetImageView.transform = productLayout!.productLayoutAsset!.transform
     }
@@ -259,7 +267,7 @@ class PhotobookPageView: UIView {
     
     @objc private func didTapOnPage(_ sender: UITapGestureRecognizer) {
         guard let index = pageIndex else { return }
-        delegate?.didTapOnPage?(at: index)
+        delegate?.didTapOnPage?(self, at: index)
     }
     
     @objc private func didTapOnAsset(_ sender: UITapGestureRecognizer) {

@@ -10,7 +10,7 @@ import UIKit
 
 protocol PhotobookCoverCollectionViewCellDelegate: class {
     func didTapOnSpine(with rect: CGRect, in containerView: UIView)
-    func didTapOnCover(with rect: CGRect, in containerView: UIView)
+    func didTapOnCover(_ cover: PhotobookPageView, with rect: CGRect, in containerView: UIView)
 }
 
 class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
@@ -76,8 +76,8 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
 
 extension PhotobookCoverCollectionViewCell: PhotobookPageViewDelegate {
     
-    func didTapOnPage(at index: Int) {
-        delegate?.didTapOnCover(with: coverFrameView.frame, in: self)
+    func didTapOnPage(_ page: PhotobookPageView, at index: Int) {
+        delegate?.didTapOnCover(page, with: coverFrameView.frame, in: self)
     }
 }
 
