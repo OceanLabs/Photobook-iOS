@@ -10,9 +10,9 @@
 
 import UIKit
 
-public extension UIFont {
+extension UIFont {
     
-    @objc class public func loadAllFonts() {
+    static func loadAllFonts() {
         registerFontWithFilenameString(filenameString: "LeagueGothic-Regular.otf")
         registerFontWithFilenameString(filenameString: "OpenSans-Regular.ttf")
         registerFontWithFilenameString(filenameString: "Montserrat-Bold.ttf")
