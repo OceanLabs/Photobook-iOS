@@ -134,13 +134,13 @@ extension LayoutSelectionViewController: UICollectionViewDelegate {
         
         // Set border directly if visible, reload otherwise.
         let currentlySelectedIndexPath = IndexPath(row: selectedLayoutIndex, section: 0)
-        if let currentlySelectedCell = collectionView.cellForItem(at: currentlySelectedIndexPath) as? LayoutSelectionCollectionViewCell {
+        if let currentlySelectedCell = collectionView.cellForItem(at: currentlySelectedIndexPath) as? BorderedCollectionViewCell {
             currentlySelectedCell.isBorderVisible = false
         } else {
             collectionView.reloadItems(at: [currentlySelectedIndexPath])
         }
         
-        let newSelectedCell = collectionView.cellForItem(at: indexPath) as! LayoutSelectionCollectionViewCell
+        let newSelectedCell = collectionView.cellForItem(at: indexPath) as! BorderedCollectionViewCell
         newSelectedCell.isBorderVisible = true
         
         let layout = layouts[indexPath.row]
