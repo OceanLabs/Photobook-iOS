@@ -256,6 +256,7 @@
 		6F139E0F1FB45EFC005B937E /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F139E0E1FB45EFC005B937E /* Story.swift */; };
 		6F17F325207657FD00001888 /* UIFontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F17F324207657FD00001888 /* UIFontExtensions.swift */; };
 		6F17F326207657FD00001888 /* UIFontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F17F324207657FD00001888 /* UIFontExtensions.swift */; };
+		6F17F3372077A70E00001888 /* PhotobookSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F17F3362077A70E00001888 /* PhotobookSDK.swift */; };
 		6F181546200781BB00D7082D /* PhotobookFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F181545200781BB00D7082D /* PhotobookFrameView.swift */; };
 		6F18154A2009042E00D7082D /* CoverFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1815492009042E00D7082D /* CoverFrameView.swift */; };
 		6F1DB8DB201617B7001BECC8 /* CoverLayoutSelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1DB8DA201617B7001BECC8 /* CoverLayoutSelectionCollectionViewCell.swift */; };
@@ -461,6 +462,7 @@
 		6F139E0B1FB45DD8005B937E /* StoriesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesManager.swift; sourceTree = "<group>"; };
 		6F139E0E1FB45EFC005B937E /* Story.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Story.swift; sourceTree = "<group>"; };
 		6F17F324207657FD00001888 /* UIFontExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFontExtensions.swift; sourceTree = "<group>"; };
+		6F17F3362077A70E00001888 /* PhotobookSDK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookSDK.swift; sourceTree = "<group>"; };
 		6F181545200781BB00D7082D /* PhotobookFrameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookFrameView.swift; sourceTree = "<group>"; };
 		6F1815492009042E00D7082D /* CoverFrameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverFrameView.swift; sourceTree = "<group>"; };
 		6F1DB8DA201617B7001BECC8 /* CoverLayoutSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverLayoutSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -839,6 +841,7 @@
 				2E086D162052A10900CF8096 /* Clients */,
 				2EA00E462044464E00371B88 /* Analytics.swift */,
 				B9FA5301205FC3DC00669758 /* PhotobookManager.swift */,
+				6F17F3362077A70E00001888 /* PhotobookSDK.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1674,6 +1677,7 @@
 				2ED14C132063AA4000ED2E2C /* APIClient.swift in Sources */,
 				2ED14C082063AA4000ED2E2C /* Card.swift in Sources */,
 				2ED14BC82063AA4000ED2E2C /* AssetCollectorCollectionViewCell.swift in Sources */,
+				6F17F3372077A70E00001888 /* PhotobookSDK.swift in Sources */,
 				2ED14BC62063AA4000ED2E2C /* OrderSummaryDetailTableViewCell.swift in Sources */,
 				2ED14C1D2063AA4000ED2E2C /* StringExtensions.swift in Sources */,
 				2ED14C242063AA4000ED2E2C /* UIViewExtensions.swift in Sources */,
