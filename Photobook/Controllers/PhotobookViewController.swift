@@ -8,6 +8,11 @@
 
 import UIKit
 
+/// Conforming classes can be asked to dismiss a photobook view controller
+@objc public protocol PhotobookSdkDelegate: class {
+    func dismissPhotobookViewController(_ viewController: UIViewController)
+}
+
 /// Conforming classes can be notified when PhotobookAssets are added by a custom photo picker
 @objc public protocol AssetCollectorAddingDelegate: class {
     func didFinishAdding(_ assets: [PhotobookAsset]?)
@@ -40,6 +45,9 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     /// View controller allowing the user to pick additional assets. 'album', 'albumManager' & 'assetPickerViewController' are exclusive.
     var assetPickerViewController: PhotobookAssetPicker?
     
+    /// Delegate to dismiss the PhotobookViewController
+    weak var delegate: PhotobookSdkDelegate?
+    
     private struct Constants {
         static let titleArrowOffset: CGFloat = -8.0
         static let rearrangeScale: CGFloat = 0.8
@@ -69,7 +77,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var ctaButtonContainer: UIView!
-    @IBOutlet private weak var backButton: UIButton!
+    @IBOutlet private weak var backButton: UIButton?
     
     private var titleButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -123,7 +131,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         setup(with: photobook)
         
-        backButton.setTitleColor(navigationController?.navigationBar.tintColor, for: .normal)
+        backButton?.setTitleColor(navigationController?.navigationBar.tintColor, for: .normal)
         
         if #available(iOS 11, *) {
         } else {
@@ -230,6 +238,15 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
         
         present(alertController, animated: true, completion: nil)
+    }
+    
+    @IBAction func tappedCancel(_ sender: UIBarButtonItem) {
+        guard let delegate = delegate, let navigationController = navigationController else {
+            dismiss(animated: true, completion: nil)
+            return
+        }
+        
+        delegate.dismissPhotobookViewController(navigationController)
     }
 
     @IBAction private func didTapRearrange(_ sender: UIBarButtonItem) {

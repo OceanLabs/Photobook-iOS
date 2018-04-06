@@ -22,18 +22,22 @@ import UIKit
     
     /// Photo book view controller initialised with the provided images
     ///
-    /// - Parameter assets: Images to use to initialise the photo book. Available asset types are: ImageAsset, URLAsset & PhotosAsset
-    /// - Returns: A photo book view controller
-    @objc public func photobookViewController(with assets: [PhotobookAsset]) -> UIViewController {
-        guard let assets = assets as? [Asset] else {
-            fatalError("Could not initialise the Photo Book.")
+    /// - Parameter assets: Images to use to initialise the photobook. Cannot be empty. Available asset types are: ImageAsset, URLAsset & PhotosAsset.
+    /// - Parameter delegate: Delegate to dismiss the photobook creation UI
+    /// - Returns: A photobook UIViewController
+    @objc public func photobookViewController(with assets: [PhotobookAsset], delegate: PhotobookSdkDelegate? = nil) -> UIViewController? {
+        guard let assets = assets as? [Asset], assets.count > 0 else {
+            return nil
         }
         
         UIFont.loadAllFonts()
         let navigationController = UINavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
         let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.assets = assets
-        photobookViewController.navigationItem.leftBarButtonItems = nil
+        photobookViewController.delegate = delegate
+        
+        let closeBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: photobookViewController, action: #selector(photobookViewController.tappedCancel(_:)))
+        photobookViewController.navigationItem.leftBarButtonItems = [ closeBarButtonItem ]
         
         navigationController.viewControllers = [ photobookViewController ]
         
@@ -43,7 +47,7 @@ import UIKit
     /// Receipt View Controller
     ///
     /// - Parameter closure: Closure to call when the receipt view controller finishes its tasks or the user dismisses it
-    /// - Returns: A receipt view controller
+    /// - Returns: A receipt UIViewController
     @objc public func receiptViewController(onDismiss closure: @escaping (() -> Void)) -> UIViewController? {
         guard isProcessingOrder else { return nil }
         
