@@ -9,7 +9,7 @@
 import UIKit
 
 let photobookBundle = Bundle(for: Photobook.self)
-let photobookMainStoryboard =  UIStoryboard.init(name: "Main", bundle: photobookBundle)
+let photobookMainStoryboard =  UIStoryboard(name: "Main", bundle: photobookBundle)
 
 /// Shared manager for the photo book UI
 class PhotobookManager: NSObject {
