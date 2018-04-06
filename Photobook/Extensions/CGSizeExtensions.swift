@@ -8,17 +8,23 @@
 
 import Foundation
 
-extension CGSize{
+extension CGSize {
     
     func resizeAspectFill(_ targetSize: CGSize) -> CGSize {
         let sourceAspectRatio = self.width / self.height
         let targetAspectRatio = targetSize.width / targetSize.height
         
-        if sourceAspectRatio >= targetAspectRatio{
+        if sourceAspectRatio >= targetAspectRatio {
             return CGSize(width: targetSize.height * sourceAspectRatio, height: targetSize.height)
         }
         else{
             return CGSize(width: targetSize.width, height: targetSize.width / sourceAspectRatio)
         }
     }
+
+    static func * (size: CGSize, scalar: CGFloat) -> CGSize {
+        return CGSize(width: size.width * scalar, height: size.height * scalar)
+    }
+    
+    static func * (scalar: CGFloat, size: CGSize) -> CGSize { return size * scalar }
 }

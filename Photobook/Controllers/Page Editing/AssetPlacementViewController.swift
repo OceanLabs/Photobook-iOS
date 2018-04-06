@@ -82,7 +82,7 @@ class AssetPlacementViewController: UIViewController {
         })
     }
     
-    func animateBackToPhotobook(_ completion: @escaping (() -> Void)) {
+    func animateBackToPhotobook(_ completion: @escaping ((UIImage) -> Void)) {
         guard let initialContainerRect = initialContainerRect,
               let productLayoutAsset = productLayout?.productLayoutAsset else {
             view.alpha = 0.0
@@ -111,7 +111,7 @@ class AssetPlacementViewController: UIViewController {
         }, completion: { _ in
             self.view.alpha = 0.0
             self.view.backgroundColor = backgroundColor
-            completion()
+            completion(self.assetImageView.image!)
         })
     }
     
@@ -166,8 +166,8 @@ class AssetPlacementViewController: UIViewController {
         maxScale = startingScale * 3.0
     
         // Request an image 3 times the size of the container
-        let highResImageSize = CGSize(width: assetContainerView.bounds.width * 3.0, height: assetContainerView.bounds.height * 3.0)
-        productLayout.asset!.image(size: highResImageSize, loadThumbnailsFirst: false, progressHandler: nil) { (image, _) in
+        let highResImageSize = assetContainerView.bounds.size * 3.0
+        productLayout.asset!.image(size: highResImageSize, loadThumbnailFirst: false, progressHandler: nil) { (image, _) in
             guard let image = image else { return }
             self.assetImageView.image = image
         }
@@ -176,8 +176,7 @@ class AssetPlacementViewController: UIViewController {
     @IBAction private func tappedRotateButton(_ sender: UIButton) {
         if let productLayoutAsset = productLayout?.productLayoutAsset {
             let transform = productLayoutAsset.transform
-            let angle = atan2(transform.b, transform.a)
-            let rotateTo = LayoutUtils.nextCCWCuadrantAngle(to: angle)
+            let rotateTo = LayoutUtils.nextCCWCuadrantAngle(to: transform.angle)
             
             let scale = LayoutUtils.scaleToFill(containerSize: bleedContainerView.bounds.size, withSize: productLayoutAsset.asset!.size, atAngle: rotateTo)
             productLayoutAsset.transform = CGAffineTransform.identity.rotated(by: rotateTo).scaledBy(x: scale, y: scale)

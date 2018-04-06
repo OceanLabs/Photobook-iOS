@@ -34,10 +34,10 @@ protocol Asset: Codable {
     ///
     /// - Parameters:
     ///   - size: The requested image size in points. Depending on the asset type and source this size may just a guideline
-    ///   - loadThumbnailsFirst: Whether thumbnails get loaded first before the actual image. Setting this to true will result in the completion handler being executed multiple times
+    ///   - loadThumbnailFirst: Whether thumbnails get loaded first before the actual image. Setting this to true will result in the completion handler being executed multiple times
     ///   - progressHandler: Handler that returns the progress, for a example of a download
     ///   - completionHandler: The completion handler that returns the image
-    func image(size: CGSize, loadThumbnailsFirst: Bool, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)?, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void)
+    func image(size: CGSize, loadThumbnailFirst: Bool, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)?, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void)
     
     
     /// Request the data representation of this asset
@@ -54,12 +54,12 @@ extension Asset {
     ///
     /// - Parameters:
     ///   - size: The requested image size in points. Depending on the asset type and source this size may just a guideline
-    ///   - loadThumbnailsFirst: Whether thumbnails get loaded first before the actual image. Setting this to true will result in the completion handler being executed multiple times
+    ///   - loadThumbnailFirst: Whether thumbnails get loaded first before the actual image. Setting this to true will result in the completion handler being executed multiple times
     ///   - progressHandler: Handler that returns the progress, for a example of a download
     ///   - completionHandler: The completion handler that returns the image
-    func image(size: CGSize, loadThumbnailsFirst: Bool = true, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)? = nil, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void){
+    func image(size: CGSize, loadThumbnailFirst: Bool = true, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)? = nil, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void){
         
-        image(size: size, loadThumbnailsFirst: loadThumbnailsFirst, progressHandler: progressHandler, completionHandler: completionHandler)
+        image(size: size, loadThumbnailFirst: loadThumbnailFirst, progressHandler: progressHandler, completionHandler: completionHandler)
     }
     
     /// Removes slashes because it'd result in an invalid path
