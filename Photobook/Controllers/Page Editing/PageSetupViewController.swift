@@ -44,7 +44,9 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private var cancelBarButtonItem: UIBarButtonItem!
     
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
-    var selectedAssetsSource: SelectedAssetsSource?
+    var album: Album?
+    var albumManager: AlbumManager?
+    var assetPickerViewController: PhotobookAssetPicker?
     var previewAssetImage: UIImage?
     
     private var assetSelectorViewController: AssetSelectorViewController!
@@ -106,7 +108,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     // Public settings
     weak var delegate: PageSetupDelegate?
-    var selectedAssetsManager: SelectedAssetsManager!
+    var assets: [Asset]!
+    
     var pageIndex: Int! {
         didSet {
             guard pageIndex != nil else {
@@ -410,8 +413,10 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func setupAssetSelection() {
-        assetSelectorViewController.selectedAssetsManager = selectedAssetsManager
-        assetSelectorViewController.selectedAssetsSource = selectedAssetsSource
+        assetSelectorViewController.assets = assets
+        assetSelectorViewController.album = album
+        assetSelectorViewController.albumManager = albumManager
+        assetSelectorViewController.assetPickerViewController = assetPickerViewController
         assetSelectorViewController.selectedAsset = productLayout.asset
     }
     

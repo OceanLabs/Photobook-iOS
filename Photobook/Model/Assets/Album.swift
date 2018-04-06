@@ -8,19 +8,38 @@
 
 import UIKit
 
+/// Collection of Assets
 protocol Album {
     
-    /// Returns the estimated number of assets of this album, which might be available without calling loadAssets. It might differ from the actual number of assets. Returns NSNotFound if it isn't available.
-    var numberOfAssets: Int { get }
-    var localizedName: String? { get }
+    // Identifier
     var identifier: String { get }
+
+    /// Number of Assets in the album
+    var numberOfAssets: Int { get }
+    
+    /// Localized name
+    var localizedName: String? { get }
+    
+    /// Collection of already loaded Assets
     var assets: [Asset] { get }
+    
+    /// True if the album has more Assets to load, False otherwise
     var hasMoreAssetsToLoad: Bool { get }
     
+    /// Performs the loading of a first batch of Assets
+    ///
+    /// - Parameter completionHandler: Closure that gets called on completion
     func loadAssets(completionHandler: ((_ error: Error?) -> Void)?)
-    func loadNextBatchOfAssets(completionHandler: ((_ error: Error?) -> Void)?)
-    func coverAsset(completionHandler: @escaping (_ asset: Asset?, _ error: Error?) -> Void)
     
+    /// Performs the loading of the next batch of Assets
+    ///
+    /// - Parameter completionHandler: Closure that gets called on completion
+    func loadNextBatchOfAssets(completionHandler: ((_ error: Error?) -> Void)?)
+    
+    /// Retrieves the Asset to be used as cover for the Album
+    ///
+    /// - Parameter completionHandler: Closure that gets called on completion
+    func coverAsset(completionHandler: @escaping (_ asset: Asset?, _ error: Error?) -> Void)
 }
 
 struct AlbumChange {

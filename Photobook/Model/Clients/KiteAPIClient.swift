@@ -12,7 +12,7 @@ class KiteAPIClient {
     
     private struct Constants {
         // TODO: Replace with real API keys
-        static let apiKey = PhotobookLaunchHandler.environment == .test ? "78b798ff366815c833dfa848654aba43b71a883a" : ""
+        static let apiKey = PhotobookManager.environment == .test ? "78b798ff366815c833dfa848654aba43b71a883a" : ""
     }
     
     private struct Endpoints {

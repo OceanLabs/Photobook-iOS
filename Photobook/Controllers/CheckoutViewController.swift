@@ -103,7 +103,7 @@ class CheckoutViewController: UIViewController {
         
         Analytics.shared.trackScreenViewed(Analytics.ScreenName.basket)
         
-        if PhotobookLaunchHandler.environment == .test {
+        if PhotobookManager.environment == .test {
             title = Constants.title + " (TEST)"
         } else {
             title = Constants.title
@@ -392,7 +392,7 @@ class CheckoutViewController: UIViewController {
     
     private func showReceipt() {
         OrderManager.basketOrder.lastSubmissionDate = Date()
-        NotificationCenter.default.post(name: PhotobookLaunchHandler.orderWasCreatedNotificationName, object: OrderManager.basketOrder)
+        NotificationCenter.default.post(name: OrdersNotificationName.orderWasCreated, object: OrderManager.basketOrder)
         
         OrderManager.shared.saveBasketOrder()
         

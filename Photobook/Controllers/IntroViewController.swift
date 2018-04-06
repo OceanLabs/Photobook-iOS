@@ -1,5 +1,5 @@
 //
-//  PhotoPermissionViewController.swift
+//  IntroViewController.swift
 //  Photobook
 //
 //  Created by Julian Gruber on 09/11/2017.

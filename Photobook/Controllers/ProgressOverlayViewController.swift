@@ -71,7 +71,7 @@ class ProgressOverlayViewController: UIViewController {
             showSubviews(false)
             UIView.animate(withDuration: 0.3, animations: {
                 self.view.alpha = 0.0
-            }, completion: { (finished) in
+            }, completion: { _ in
                 self.view.alpha = 1
                 self.view.removeFromSuperview()
                 self.removeFromParentViewController()

@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         PhotobookLaunchHandler.environment = .test
         #endif
         
-        window?.rootViewController = PhotobookLaunchHandler.getInitialViewController()
+        window?.rootViewController = PhotobookManager.rootViewControllerForCurrentState()
         
         // Force the static var to initialize so it doesn't miss any notifications
         _ = Analytics.shared

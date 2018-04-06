@@ -20,6 +20,7 @@ class PhotosAlbum: Album {
         self.assetCollection = assetCollection
     }
     
+    /// Returns the estimated number of assets for this album, which might not be available without calling loadAssets. It might differ from the actual number of assets. NSNotFound if not available.
     var numberOfAssets: Int{
         return !assets.isEmpty ? assets.count : assetCollection.estimatedAssetCount
     }

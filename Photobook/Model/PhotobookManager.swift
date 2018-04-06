@@ -1,5 +1,5 @@
 //
-//  AppLaunchHandler.swift
+//  PhotobookManager.swift
 //  Photobook
 //
 //  Created by Julian Gruber on 19/03/2018.
@@ -11,16 +11,15 @@ import UIKit
 let photobookBundle = Bundle(for: Photobook.self)
 let photobookMainStoryboard =  UIStoryboard(name: "Main", bundle: photobookBundle)
 
-@objc public class PhotobookLaunchHandler: NSObject {
+/// Shared manager for the photo book UI
+class PhotobookManager: NSObject {
     
-    @objc public enum Environment: Int {
+    enum Environment {
         case test
         case live
     }
     
-    @objc public static let orderWasCreatedNotificationName = Notification.Name("ly.kite.sdk.orderWasCreated")
-    @objc public static let orderWasSuccessfulNotificationName = Notification.Name("ly.kite.sdk.orderWasSuccessful")
-    @objc public static var environment: Environment = .live
+    static var environment: Environment = .live
     
     enum Tab: Int {
         case stories
@@ -29,12 +28,11 @@ let photobookMainStoryboard =  UIStoryboard(name: "Main", bundle: photobookBundl
         case facebook
     }
     
-    static func getInitialViewController() -> UIViewController {
+    static func rootViewControllerForCurrentState() -> UIViewController {
+        let tabBarController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
+        let isProcessingOrder = OrderProcessingManager.shared.isProcessingOrder
         
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
-        
-        if IntroViewController.userHasDismissed && !OrderProcessingManager.shared.isProcessingOrder {
+        if IntroViewController.userHasDismissed && !isProcessingOrder {
             configureTabBarController(tabBarController)
             return tabBarController
         }
@@ -42,23 +40,24 @@ let photobookMainStoryboard =  UIStoryboard(name: "Main", bundle: photobookBundl
         let rootNavigationController = UINavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
         rootNavigationController.isNavigationBarHidden = true
         if #available(iOS 11.0, *) {
-            rootNavigationController.navigationBar.prefersLargeTitles = false // large titles on nav vc containing other nav vcs causes issues
+            // Large titles on nav vc containing other nav vcs causes issues
+            rootNavigationController.navigationBar.prefersLargeTitles = false
         }
         
         if !IntroViewController.userHasDismissed {
-            let introViewController = storyboard.instantiateViewController(withIdentifier: "IntroViewController") as! IntroViewController
+            let introViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "IntroViewController") as! IntroViewController
             introViewController.dismissClosure = {
-                configureTabBarController(tabBarController)
+                self.configureTabBarController(tabBarController)
                 introViewController.proceedToTabBarController()
             }
             rootNavigationController.viewControllers = [introViewController]
             
-        } else if OrderProcessingManager.shared.isProcessingOrder {
-            //show receipt screen to prevent user from ordering another photobook
-            let receiptViewController = storyboard.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
+        } else if isProcessingOrder {
+            // Show receipt screen to prevent user from ordering another photobook
+            let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
             receiptViewController.order = OrderManager.shared.loadBasketOrder()
             receiptViewController.dismissClosure = {
-                configureTabBarController(tabBarController)
+                self.configureTabBarController(tabBarController)
                 rootNavigationController.isNavigationBarHidden = true
                 receiptViewController.proceedToTabBarController()
             }
@@ -69,7 +68,7 @@ let photobookMainStoryboard =  UIStoryboard(name: "Main", bundle: photobookBundl
         return rootNavigationController
     }
     
-    @objc public static func configureTabBarController(_ tabBarController: UITabBarController) {
+    private static func configureTabBarController(_ tabBarController: UITabBarController) {
         
         // Browse
         // Set the albumManager to the AlbumsCollectionViewController
@@ -86,6 +85,5 @@ let photobookMainStoryboard =  UIStoryboard(name: "Main", bundle: photobookBundl
         
         // Load the products here, so that the user avoids a loading screen on PhotobookViewController
         ProductManager.shared.initialise(completion: nil)
-        
     }
 }

@@ -8,6 +8,11 @@
 
 import UIKit
 
+struct OrdersNotificationName {
+    static let orderWasCreated = Notification.Name("ly.kite.sdk.orderWasCreated")
+    static let orderWasSuccessful = Notification.Name("ly.kite.sdk.orderWasSuccessful")
+}
+
 @objc public class Order: NSObject, Codable {
 
     // TODO: Get the supported currencies from the server and make sure the currency of the locale is supported. Otherwise fall back to USD, GBP, EUR, first supported, in that order of preference

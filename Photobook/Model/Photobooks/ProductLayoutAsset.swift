@@ -53,11 +53,15 @@ class ProductLayoutAsset: Codable {
         try container.encode(containerSize, forKey: .containerSize)
         
         if let asset = asset as? PhotosAsset {
-            try container.encode(asset, forKey: .asset)
+            let assetData = NSKeyedArchiver.archivedData(withRootObject: asset)
+            try container.encode(assetData, forKey: .asset)
         } else if let asset = asset as? URLAsset {
-            try container.encode(asset, forKey: .asset)
+            let assetData = NSKeyedArchiver.archivedData(withRootObject: asset)
+            try container.encode(assetData, forKey: .asset)
+
         } else if let asset = asset as? TestPhotosAsset {
-            try container.encode(asset, forKey: .asset)
+            let assetData = NSKeyedArchiver.archivedData(withRootObject: asset)
+            try container.encode(assetData, forKey: .asset)
         }
     }
     
@@ -68,13 +72,10 @@ class ProductLayoutAsset: Codable {
         
         transform = try values.decode(CGAffineTransform.self, forKey: .transform)
         containerSize = try values.decodeIfPresent(CGSize.self, forKey: .containerSize)
-        
-        if let loadedAsset = try? values.decodeIfPresent(PhotosAsset.self, forKey: .asset) {
-            asset = loadedAsset
-        } else if let loadedAsset = try? values.decodeIfPresent(URLAsset.self, forKey: .asset){
-            asset = loadedAsset
-        } else if let loadedAsset = try? values.decodeIfPresent(TestPhotosAsset.self, forKey: .asset) {
-            asset = loadedAsset
+
+        if let data = try values.decodeIfPresent(Data.self, forKey: .asset),
+            let loadedAsset = NSKeyedUnarchiver.unarchiveObject(with: data) as? Asset {
+                asset = loadedAsset
         }
     }
     
