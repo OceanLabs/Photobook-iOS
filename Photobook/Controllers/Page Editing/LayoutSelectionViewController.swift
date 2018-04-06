@@ -43,7 +43,7 @@ class LayoutSelectionViewController: UIViewController {
             }
             
             let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-            asset.image(size: flowLayout.itemSize, loadThumbnailFirst: true, progressHandler: nil, completionHandler: { (image, error) in
+            asset.image(size: flowLayout.itemSize, completionHandler: { (image, error) in
                 guard error == nil else {
                     print("Layouts: error retrieving image")
                     return
@@ -59,7 +59,7 @@ class LayoutSelectionViewController: UIViewController {
                 
                 guard let oppositeAsset = oppositeLayout.asset else { return }
                 
-                oppositeAsset.image(size: flowLayout.itemSize, loadThumbnailFirst: true, progressHandler: nil, completionHandler: { (image, error) in
+                oppositeAsset.image(size: flowLayout.itemSize, completionHandler: { (image, error) in
                     guard error == nil else {
                         print("Layouts: error retrieving opposite image")
                         return

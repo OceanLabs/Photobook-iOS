@@ -58,7 +58,19 @@ enum AssetLoadingException: Error {
 }
 
 extension Asset {
+    
+    /// Request the image that this asset represents. This function calls the protocol method with some default parameters
+    ///
+    /// - Parameters:
+    ///   - size: The requested image size in points. Depending on the asset type and source this size may just a guideline
+    ///   - loadThumbnailsFirst: Whether thumbnails get loaded first before the actual image. Setting this to true will result in the completion handler being executed multiple times
+    ///   - progressHandler: Handler that returns the progress, for a example of a download
+    ///   - completionHandler: The completion handler that returns the image
+    func image(size: CGSize, loadThumbnailsFirst: Bool = true, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)? = nil, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void){
         
+        image(size: size, loadThumbnailsFirst: loadThumbnailsFirst, progressHandler: progressHandler, completionHandler: completionHandler)
+    }
+    
     /// Identifier without forward slashes that can be used as a filename when saving the asset to disk
     var fileIdentifier: String {
         get {
