@@ -84,7 +84,7 @@ class ProductLayoutAsset: Codable {
         transform = LayoutUtils.adjustTransform(transform, forViewSize: asset.size, inContainerSize: containerSize)
     }
     
-    private func fitAssetToContainer() {
+    func fitAssetToContainer() {
         guard let asset = asset, let containerSize = containerSize else { return }
         
         // Calculate scale. Ignore any previous translation or rotation
