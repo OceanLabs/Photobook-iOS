@@ -8,10 +8,6 @@
 
 import Stripe
 
-protocol PaymentMethodsDelegate: class {
-    func didTapToDismissPayments()
-}
-
 class PaymentMethodsViewController: UIViewController {
     
     private struct Constants {
@@ -19,8 +15,6 @@ class PaymentMethodsViewController: UIViewController {
     }
 
     @IBOutlet weak var tableView: UITableView!
-
-    weak var delegate: PaymentMethodsDelegate!
 
     fileprivate var selectedPaymentMethod: PaymentMethod? {
         get {
@@ -49,10 +43,7 @@ class PaymentMethodsViewController: UIViewController {
             destination.delegate = self
         }
     }
-
-    @IBAction func tappedCloseButton(_ sender: UIBarButtonItem) {
-        delegate?.didTapToDismissPayments()
-    }
+    
 }
 
 extension PaymentMethodsViewController: UITableViewDataSource {
