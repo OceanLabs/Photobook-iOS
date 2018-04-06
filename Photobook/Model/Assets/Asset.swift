@@ -13,22 +13,32 @@ enum AssetLoadingException: Error {
     case unsupported
 }
 
-enum AssetDataFileExtension: String {
+@objc public enum AssetDataFileExtension: Int {
+    case unsupported
     case jpg
     case png
     case gif
-    case unsupported
 }
 
-protocol Asset: Codable {
+@objc public protocol PhotobookAsset {}
+
+/// Represents a photo used in a photo book
+@objc protocol Asset: PhotobookAsset {
+    
+    /// Identifier
     var identifier: String! { get set }
+    
+    /// Album Identifier
+    var albumIdentifier: String? { get }
+    
+    /// Size
     var size: CGSize { get }
-    var isLandscape: Bool { get }
-    var uploadUrl: String? { get set }
-    var assetType: String { get }
+    
+    /// Date
     var date: Date? { get }
     
-    var albumIdentifier: String { get }
+    /// URL of full size image to use in the Photobook generation
+    var uploadUrl: String? { get set }
     
     /// Request the image that this asset represents.
     ///
@@ -39,34 +49,26 @@ protocol Asset: Codable {
     ///   - completionHandler: The completion handler that returns the image
     func image(size: CGSize, loadThumbnailFirst: Bool, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)?, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void)
     
-    
     /// Request the data representation of this asset
     ///
     /// - Parameters:
     ///   - progressHandler: Handler that returns the progress, for a example of a download
     ///   - completionHandler: The completion handler that returns the data
-    func imageData(progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)?, completionHandler: @escaping (_ data: Data?, _ fileExtension: AssetDataFileExtension?, _ error: Error?) -> Void)
+    func imageData(progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)?, completionHandler: @escaping (_ data: Data?, _ fileExtension: AssetDataFileExtension, _ error: Error?) -> Void)
 }
 
 extension Asset {
-    
-    /// Request the image that this asset represents. This function calls the protocol method with some default parameters
-    ///
-    /// - Parameters:
-    ///   - size: The requested image size in points. Depending on the asset type and source this size may just a guideline
-    ///   - loadThumbnailFirst: Whether thumbnails get loaded first before the actual image. Setting this to true will result in the completion handler being executed multiple times
-    ///   - progressHandler: Handler that returns the progress, for a example of a download
-    ///   - completionHandler: The completion handler that returns the image
-    func image(size: CGSize, loadThumbnailFirst: Bool = true, progressHandler: ((_ downloaded: Int64, _ total: Int64) -> Void)? = nil, completionHandler: @escaping (_ image: UIImage?, _ error: Error?) -> Void){
         
-        image(size: size, loadThumbnailFirst: loadThumbnailFirst, progressHandler: progressHandler, completionHandler: completionHandler)
-    }
-    
-    /// Removes slashes because it'd result in an invalid path
+    /// Identifier without forward slashes that can be used as a filename when saving the asset to disk
     var fileIdentifier: String {
         get {
             return identifier.replacingOccurrences(of: "/", with: "")
         }
+    }
+    
+    /// True if the orientation of the image representation of the Asset landscape
+    var isLandscape: Bool {
+        return size.width > size.height
     }
 }
 

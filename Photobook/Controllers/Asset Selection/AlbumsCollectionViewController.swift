@@ -30,6 +30,8 @@ class AlbumsCollectionViewController: UICollectionViewController {
     
     var albumManager: AlbumManager!
     private let selectedAssetsManager = SelectedAssetsManager()
+    var assets: [Asset]!
+    
     private var accountManager: AccountClient?
     var collectorMode: AssetCollectorMode = .selecting
     weak var addingDelegate: AssetCollectorAddingDelegate?
@@ -267,10 +269,10 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
     func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
         switch collectorMode {
         case .adding:
-            addingDelegate?.didFinishAdding(assets: selectedAssetsManager.selectedAssets)
+            addingDelegate?.didFinishAdding(selectedAssetsManager.selectedAssets)
         default:
             let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
-            photobookViewController.selectedAssetsManager = selectedAssetsManager
+            photobookViewController.assets = selectedAssetsManager.selectedAssets
             navigationController?.pushViewController(photobookViewController, animated: true)
         }
     }

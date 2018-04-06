@@ -8,7 +8,45 @@
 
 import UIKit
 
+/// Conforming classes can be asked to dismiss a photobook view controller
+@objc public protocol PhotobookSdkDelegate: class {
+    func dismissPhotobookViewController(_ viewController: UIViewController)
+}
+
+/// Conforming classes can be notified when PhotobookAssets are added by a custom photo picker
+@objc public protocol AssetCollectorAddingDelegate: class {
+    func didFinishAdding(_ assets: [PhotobookAsset]?)
+}
+
+extension AssetCollectorAddingDelegate {
+    func didFinishAddingAssets() {
+        didFinishAdding(nil)
+    }
+}
+
+/// Protocol custom photo pickers must conform to to be used with photo books
+@objc public protocol PhotobookAssetPicker where Self: UIViewController {
+    weak var addingDelegate: AssetCollectorAddingDelegate? { get set }
+}
+
 class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate {
+    
+    var photobookNavigationBarType: PhotobookNavigationBarType = .clear
+    
+    /// Array of Assets to populate the pages of the photobook.
+    var assets: [Asset]!
+    
+    /// Album to use in order to have access to additional Assets when editing a page. 'album', 'albumManager' & 'assetPickerViewController' are exclusive.
+    var album: Album?
+    
+    /// Manager for multiple albums to use in order to have access to additional Assets when editing a page. 'album', 'albumManager' & 'assetPickerViewController' are exclusive.
+    var albumManager: AlbumManager?
+    
+    /// View controller allowing the user to pick additional assets. 'album', 'albumManager' & 'assetPickerViewController' are exclusive.
+    var assetPickerViewController: PhotobookAssetPicker?
+    
+    /// Delegate to dismiss the PhotobookViewController
+    weak var delegate: PhotobookSdkDelegate?
     
     private struct Constants {
         static let titleArrowOffset: CGFloat = -8.0
@@ -29,22 +67,18 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         return 1 + (1 - Constants.rearrangeScale) / Constants.rearrangeScale
     }
 
-    @IBOutlet weak var collectionViewTrailingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var collectionViewLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var collectionViewTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var collectionViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var collectionViewTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var collectionViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var collectionViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var collectionViewBottomConstraint: NSLayoutConstraint!
     
-    @IBOutlet weak var ctaContainerBottomConstraint: NSLayoutConstraint!
-    @IBOutlet weak var ctaButton: UIButton!
+    @IBOutlet private weak var ctaContainerBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var ctaButton: UIButton!
     
     @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var ctaButtonContainer: UIView!
-    @IBOutlet weak var backButton: UIButton!
+    @IBOutlet private weak var backButton: UIButton?
     
-    var photobookNavigationBarType: PhotobookNavigationBarType = .clear
-    
-    var selectedAssetsManager: SelectedAssetsManager?
-    var selectedAssetsSource: SelectedAssetsSource?
     private var titleButton: UIButton = {
         let button = UIButton(type: .custom)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
@@ -55,10 +89,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         button.addTarget(self, action: #selector(didTapOnTitle), for: .touchUpInside)
         return button
     }()
+
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
     }()
-    var titleLabel: UILabel?
     private var interactingItemIndexPath: IndexPath?
     private var proposedDropIndexPath: IndexPath?
     private var insertingIndexPath: IndexPath?
@@ -97,7 +131,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         setup(with: photobook)
         
-        backButton.setTitleColor(navigationController?.navigationBar.tintColor, for: .normal)
+        backButton?.setTitleColor(navigationController?.navigationBar.tintColor, for: .normal)
         
         if #available(iOS 11, *) {
         } else {
@@ -143,7 +177,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func setup(with photobook: Photobook) {
-        guard let assets = selectedAssetsManager?.selectedAssets else {
+        guard let assets = assets else {
             // Should never really reach here
             emptyScreenViewController.show(message: NSLocalizedString("Photobook/NoPhotosSelected", value: "No photos selected", comment: "No photos selected error message"))
             return
@@ -205,6 +239,15 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         present(alertController, animated: true, completion: nil)
     }
+    
+    @IBAction func tappedCancel(_ sender: UIBarButtonItem) {
+        guard let delegate = delegate, let navigationController = navigationController else {
+            dismiss(animated: true, completion: nil)
+            return
+        }
+        
+        delegate.dismissPhotobookViewController(navigationController)
+    }
 
     @IBAction private func didTapRearrange(_ sender: UIBarButtonItem) {
         isRearranging = !isRearranging
@@ -251,7 +294,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         return indexPath.row == 0 || indexPath.row == collectionView.numberOfItems(inSection: 1) - 1
     }
     
-    @IBAction func didTapCheckout(_ sender: Any) {
+    @IBAction private func didTapCheckout(_ sender: Any) {
         guard draggingView == nil else { return }
         
         let goToCheckout = {
@@ -292,7 +335,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         goToCheckout()
     }
         
-    @IBAction func didTapBack() {
+    @IBAction private func didTapBack() {
         let alertController = UIAlertController(title: NSLocalizedString("Photobook/BackAlertTitle", value: "Are you sure?", comment: "Title for alert asking the user to go back"), message: NSLocalizedString("Photobook/BackAlertMessage", value: "This will discard any changes made to your photobook", comment: "Message for alert asking the user to go back"), preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Yes", value: "Yes", comment: "Affirmative button title for alert asking the user confirmation for an action"), style: .destructive, handler: { _ in
             
@@ -332,7 +375,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         scrollingTimer = nil
     }
     
-    @objc func albumsWereUpdated(_ notification: Notification) {
+    @objc private func albumsWereUpdated(_ notification: Notification) {
         guard let albumsChanges = notification.object as? [AlbumChange] else { return }
         
         var removedAssets = [Asset]()
@@ -400,7 +443,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
     }
     
-    @objc func pastePages() {
+    @objc private func pastePages() {
         guard ProductManager.shared.isAddingPagesAllowed else {
             showNotAllowedToAddMorePagesAlert()
             return
@@ -437,7 +480,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
     }
     
-    @objc func deletePages() {
+    @objc private func deletePages() {
         guard let indexPath = interactingItemIndexPath,
             let index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex
             else { return }
@@ -462,7 +505,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
     }
     
-    @objc func menuDidHide() {
+    @objc private func menuDidHide() {
         interactingItemIndexPath = nil
     }
     
@@ -493,7 +536,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     // MARK: - Drag and Drop
     
-    func deleteProposalCell(enableFeedback: Bool) {
+    private func deleteProposalCell(enableFeedback: Bool) {
         guard let indexPath = proposedDropIndexPath else { return }
         proposedDropIndexPath = nil
         collectionView.deleteItems(at: [indexPath])
@@ -504,7 +547,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
     }
     
-    func insertProposalCell(_ indexPath: IndexPath) {
+    private func insertProposalCell(_ indexPath: IndexPath) {
         proposedDropIndexPath = indexPath
         collectionView.insertItems(at: [indexPath])
         
@@ -512,7 +555,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         generator.impactOccurred()        
     }
     
-    func dropView() {
+    private func dropView() {
         guard var sourceIndexPath = interactingItemIndexPath,
             let draggingView = self.draggingView
             else { return }
@@ -602,7 +645,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
     }
     
-    func liftView(_ photobookFrameView: PhotobookFrameView) {
+    private func liftView(_ photobookFrameView: PhotobookFrameView) {
         guard let productLayoutIndex = photobookFrameView.leftPageView.pageIndex,
             let spreadIndex = ProductManager.shared.spreadIndex(for: productLayoutIndex),
             spreadIndex != collectionView.numberOfItems(inSection: 1) - 1
@@ -625,7 +668,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         })
     }
     
-    func updateVisibleCells() {
+    private func updateVisibleCells() {
         for cell in collectionView.visibleCells {
             guard let indexPath = collectionView.indexPath(for: cell),
                 let productLayoutIndex = ProductManager.shared.productLayoutIndex(for: indexPath.item),
@@ -650,9 +693,11 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let barType = (navigationController?.navigationBar as? PhotobookNavigationBar)?.barType
         
         pageSetupViewController = modalNavigationController.viewControllers.first as! PageSetupViewController
-        pageSetupViewController.selectedAssetsManager = selectedAssetsManager
+        pageSetupViewController.assets = assets
         pageSetupViewController.pageIndex = index
-        pageSetupViewController.selectedAssetsSource = selectedAssetsSource
+        pageSetupViewController.album = album
+        pageSetupViewController.albumManager = albumManager
+        pageSetupViewController.assetPickerViewController = assetPickerViewController
         pageSetupViewController.previewAssetImage = page.currentImage
         
         if barType != nil {

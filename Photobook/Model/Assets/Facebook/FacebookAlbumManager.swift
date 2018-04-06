@@ -93,11 +93,7 @@ extension FacebookAlbumManager: AlbumManager {
     
     var hasMoreAlbumsToLoad: Bool {
         return after != nil
-    }
-    
-    func stopCachingImagesForAllAssets() { }
-    func startCachingImages(for assets: [Asset], targetSize: CGSize) { }
-    func stopCachingImages(for assets: [Asset], targetSize: CGSize) { }
+    }    
 }
 
 extension FacebookAlbumManager: PickerAnalytics {

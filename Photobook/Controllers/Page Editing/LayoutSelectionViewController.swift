@@ -43,7 +43,7 @@ class LayoutSelectionViewController: UIViewController {
             }
             
             let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-            asset.image(size: flowLayout.itemSize, completionHandler: { (image, error) in
+            asset.image(size: flowLayout.itemSize, loadThumbnailFirst: true, progressHandler: nil, completionHandler: { (image, error) in
                 guard error == nil else {
                     print("Layouts: error retrieving image")
                     return
@@ -59,7 +59,7 @@ class LayoutSelectionViewController: UIViewController {
                 
                 guard let oppositeAsset = oppositeLayout.asset else { return }
                 
-                oppositeAsset.image(size: flowLayout.itemSize, completionHandler: { (image, error) in
+                oppositeAsset.image(size: flowLayout.itemSize, loadThumbnailFirst: true, progressHandler: nil, completionHandler: { (image, error) in
                     guard error == nil else {
                         print("Layouts: error retrieving opposite image")
                         return
@@ -134,13 +134,13 @@ extension LayoutSelectionViewController: UICollectionViewDelegate {
         
         // Set border directly if visible, reload otherwise.
         let currentlySelectedIndexPath = IndexPath(row: selectedLayoutIndex, section: 0)
-        if let currentlySelectedCell = collectionView.cellForItem(at: currentlySelectedIndexPath) as? LayoutSelectionCollectionViewCell {
+        if let currentlySelectedCell = collectionView.cellForItem(at: currentlySelectedIndexPath) as? BorderedCollectionViewCell {
             currentlySelectedCell.isBorderVisible = false
         } else {
             collectionView.reloadItems(at: [currentlySelectedIndexPath])
         }
         
-        let newSelectedCell = collectionView.cellForItem(at: indexPath) as! LayoutSelectionCollectionViewCell
+        let newSelectedCell = collectionView.cellForItem(at: indexPath) as! BorderedCollectionViewCell
         newSelectedCell.isBorderVisible = true
         
         let layout = layouts[indexPath.row]

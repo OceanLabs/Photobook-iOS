@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WZR-4z-wzI">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WZR-4z-wzI">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -72,7 +73,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="3tS-Fo-5bm" firstAttribute="leading" secondItem="OFT-ci-Vpz" secondAttribute="leading" constant="70" id="0Mg-vE-2do"/>
+                            <constraint firstItem="3tS-Fo-5bm" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="OFT-ci-Vpz" secondAttribute="leading" constant="70" id="0Mg-vE-2do"/>
                             <constraint firstItem="3tS-Fo-5bm" firstAttribute="trailing" secondItem="Jdf-5N-Pfk" secondAttribute="trailing" priority="750" id="0Zt-4m-YZm"/>
                             <constraint firstItem="3tS-Fo-5bm" firstAttribute="top" secondItem="Qlt-FQ-DVE" secondAttribute="bottom" constant="2" id="IiJ-CP-oDx"/>
                             <constraint firstItem="HTZ-sF-ffW" firstAttribute="trailing" secondItem="Jdf-5N-Pfk" secondAttribute="trailing" priority="750" id="Mbj-eS-BWd"/>
@@ -2322,7 +2323,7 @@
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" secondItem="5Vu-Py-eeg" secondAttribute="height" multiplier="169:199" id="6Xf-BN-wbS"/>
+                                                                <constraint firstAttribute="width" secondItem="5Vu-Py-eeg" secondAttribute="height" multiplier="169:199" priority="750" id="6Xf-BN-wbS"/>
                                                             </constraints>
                                                             <connections>
                                                                 <outlet property="aspectRatioConstraint" destination="6Xf-BN-wbS" id="hJe-ui-FmD"/>
@@ -3484,7 +3485,7 @@ United Kingdom</string>
                                                         <constraint firstAttribute="height" constant="0.5" id="TtV-Wt-yDH"/>
                                                     </constraints>
                                                 </view>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="TOTAL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YkY-h9-Mt3">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" ambiguous="YES" text="TOTAL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YkY-h9-Mt3">
                                                     <rect key="frame" x="43" y="18.5" width="46" height="17"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                     <nil key="textColor"/>
@@ -3496,17 +3497,17 @@ United Kingdom</string>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gru-O7-G42">
+                                                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gru-O7-G42">
                                                     <rect key="frame" x="0.0" y="120.5" width="414" height="2000"/>
                                                     <color key="backgroundColor" red="0.96478241679999999" green="0.96861559149999998" blue="0.96862834689999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="2000" id="oln-BA-PQN"/>
                                                     </constraints>
                                                 </view>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0OR-b4-OLa">
+                                                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0OR-b4-OLa">
                                                     <rect key="frame" x="0.0" y="120.5" width="414" height="132"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yJ9-ir-SG6">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" ambiguous="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yJ9-ir-SG6">
                                                             <rect key="frame" x="20" y="30" width="374" height="72"/>
                                                             <string key="text">This transaction will appear as Kite Tech Ltd in your bank statement. If you have any questions about your order, please contact us at support@kite.ly
 
@@ -4379,27 +4380,27 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         </constraints>
                                     </imageView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="auP-wg-78f">
-                                        <rect key="frame" x="-26" y="280" width="0.0" height="105.5"/>
+                                        <rect key="frame" x="27.5" y="280" width="268.5" height="105.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This is the message to be displayed" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="biS-tO-Mdx">
-                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="19.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="268.5" height="19.5"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="TitleLabel"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="khq-wc-CRm">
-                                                <rect key="frame" x="0.0" y="25.5" width="0.0" height="18"/>
+                                                <rect key="frame" x="115.5" y="25.5" width="37.5" height="18"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="MessageLabel"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="kqZ-tO-O8M">
-                                                <rect key="frame" x="177.5" y="49.5" width="20" height="20"/>
+                                                <rect key="frame" x="124" y="49.5" width="20" height="20"/>
                                             </activityIndicatorView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fDf-QR-3g6" userLabel="Button">
-                                                <rect key="frame" x="169" y="75.5" width="37" height="30"/>
+                                                <rect key="frame" x="115.5" y="75.5" width="37" height="30"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="RetryButton"/>
                                                 <state key="normal" title="Retry"/>
                                                 <connections>
@@ -4628,7 +4629,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                 <constraint firstAttribute="height" constant="1" id="SmN-Lx-rAp"/>
                                             </constraints>
                                         </view>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yL9-8P-d2z">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yL9-8P-d2z">
                                             <rect key="frame" x="16" y="45" width="343" height="16"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <color key="textColor" red="0.4275171160697937" green="0.42716902494430542" blue="0.4470638632774353" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -4706,7 +4707,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                 <constraint firstAttribute="height" constant="1" id="Ita-VG-Jfh"/>
                                             </constraints>
                                         </view>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="45s-9M-gdM">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="45s-9M-gdM">
                                             <rect key="frame" x="16" y="51" width="343" height="16"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <nil key="textColor"/>
@@ -4928,7 +4929,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="7aS-Kd-9up" firstAttribute="top" secondItem="D3f-X6-Wbe" secondAttribute="bottom" id="Qb1-9L-eTG"/>
+                            <constraint firstItem="kUJ-ce-tjQ" firstAttribute="bottom" secondItem="D3f-X6-Wbe" secondAttribute="bottom" id="Qb1-9L-eTG"/>
                             <constraint firstItem="D3f-X6-Wbe" firstAttribute="leading" secondItem="fmd-R8-H4g" secondAttribute="leading" id="SW7-oF-EKt"/>
                             <constraint firstAttribute="trailing" secondItem="D3f-X6-Wbe" secondAttribute="trailing" id="Y1L-5P-G0M"/>
                             <constraint firstItem="D3f-X6-Wbe" firstAttribute="top" secondItem="fmd-R8-H4g" secondAttribute="top" id="nst-zO-Hub"/>
@@ -4997,7 +4998,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                 <constraint firstAttribute="height" constant="1" id="F11-OJ-Vlv"/>
                                             </constraints>
                                         </view>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bbr-BM-nTt">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bbr-BM-nTt">
                                             <rect key="frame" x="16" y="45" width="343" height="16"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <nil key="textColor"/>
@@ -5741,7 +5742,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <constraints>
                             <constraint firstItem="i9W-fV-Wlt" firstAttribute="leading" secondItem="QbR-5l-3kZ" secondAttribute="leading" id="TVj-Bf-O10"/>
                             <constraint firstAttribute="trailing" secondItem="i9W-fV-Wlt" secondAttribute="trailing" id="W4u-PS-gLY"/>
-                            <constraint firstItem="cA8-Gg-ZKR" firstAttribute="top" secondItem="i9W-fV-Wlt" secondAttribute="bottom" id="gMw-74-0mb"/>
+                            <constraint firstItem="qgK-iQ-jVK" firstAttribute="bottom" secondItem="i9W-fV-Wlt" secondAttribute="bottom" id="gMw-74-0mb"/>
                             <constraint firstItem="i9W-fV-Wlt" firstAttribute="top" secondItem="QbR-5l-3kZ" secondAttribute="top" id="iog-YK-9Av"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="qgK-iQ-jVK"/>
@@ -5832,7 +5833,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <constraints>
                             <constraint firstItem="cSO-Mv-yrW" firstAttribute="leading" secondItem="E5w-mv-kh8" secondAttribute="leading" id="JPh-xx-g0d"/>
                             <constraint firstAttribute="trailing" secondItem="cSO-Mv-yrW" secondAttribute="trailing" id="Kt6-Do-645"/>
-                            <constraint firstItem="Ztc-aU-Khy" firstAttribute="top" secondItem="cSO-Mv-yrW" secondAttribute="bottom" id="gzc-Zp-wKY"/>
+                            <constraint firstItem="nHF-i3-iff" firstAttribute="bottom" secondItem="cSO-Mv-yrW" secondAttribute="bottom" id="xx4-EJ-bc3"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="nHF-i3-iff"/>
                         <connections>
@@ -5841,7 +5842,6 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     </view>
                     <size key="freeformSize" width="375" height="300"/>
                     <connections>
-                        <outlet property="contentViewBottomConstraint" destination="gzc-Zp-wKY" id="LcJ-6k-TIK"/>
                         <outlet property="contentViewHeightConstraint" destination="AL2-Ti-FC4" id="WYL-US-0fI"/>
                         <outlet property="optionPickerView" destination="eGL-DM-nQa" id="gC0-09-qG2"/>
                         <outlet property="optionTitleLabel" destination="J9a-xe-qHs" id="zco-Sc-yi9"/>

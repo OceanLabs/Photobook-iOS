@@ -115,7 +115,7 @@ class MessageBarViewController: UIViewController {
     @IBAction private func hide() {
         UIView.animate(withDuration: Constants.animateOffScreenTime, animations: {
             self.containerView.alpha = 0.0
-        }) { (finished) in
+        }) { _ in
             self.view.removeFromSuperview()
             self.removeFromParentViewController()
 

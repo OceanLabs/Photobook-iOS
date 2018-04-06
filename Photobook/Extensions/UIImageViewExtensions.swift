@@ -29,7 +29,7 @@ extension UIImageView {
         
         self.alpha = 0
         let size = size ?? self.frame.size
-        asset.image(size: size, completionHandler: { image, error in
+        asset.image(size: size, loadThumbnailFirst: true, progressHandler: nil, completionHandler: { image, error in
             guard validCellCheck?() ?? true else { return }
             
             self.image = image

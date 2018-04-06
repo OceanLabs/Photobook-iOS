@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         Fabric.with([Crashlytics.self])
         
-        window?.rootViewController = PhotobookLaunchHandler.getInitialViewController()
+        window?.rootViewController = PhotobookManager.rootViewControllerForCurrentState()
         
         // Force the static var to initialize so it doesn't miss any notifications
         _ = Analytics.shared
