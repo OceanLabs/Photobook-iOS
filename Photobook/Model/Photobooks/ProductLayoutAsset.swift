@@ -21,7 +21,7 @@ class ProductLayoutAsset: Codable {
     var containerSize: CGSize! {
         didSet {
             if !shouldFitAsset && oldValue != nil {
-                var relativeScale: CGFloat
+                let relativeScale: CGFloat
                 let relativeWidth = containerSize.width / oldValue.width
                 if !relativeWidth.isNaN && oldValue.width > 0.0 && containerSize.width >= containerSize.height {
                     relativeScale = relativeWidth
