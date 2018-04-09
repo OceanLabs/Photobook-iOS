@@ -44,16 +44,19 @@ extension BorderedViewProtocol where Self: UIView {
         let inset: CGFloat = bWidth * 0.5 - 0.5 // Bring the border in by 0.5 to account for the difference in the curvature of the bezier paths
         let rect = CGRect(x: -inset, y: -inset, width: bounds.width + 2.0 * inset, height: bounds.height + 2.0 * inset)
         let borderPath = UIBezierPath(roundedRect: rect, cornerRadius: radius()).cgPath
-        borderLayer = CAShapeLayer()
+        if borderLayer == nil { borderLayer = CAShapeLayer() }
         borderLayer.fillColor = nil
         borderLayer.path = borderPath
         borderLayer.frame = bounds
         borderLayer.strokeColor = roundedBorderColor != nil ? roundedBorderColor!.cgColor : UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0).cgColor
         borderLayer.lineWidth = bWidth
+
+        if reset { setupRoundedBackgroundView() }
     }
     
     func setupRoundedBackgroundView() {
-        roundedBackgroundView.bezierRoundedCorners(withRadius: radius())
+        guard roundedBackgroundView != nil else { return }
+        roundedBackgroundView.bezierRoundedCorners(withRadius: radius(), rect: bounds)
         roundedBackgroundView.backgroundColor = color
     }
     

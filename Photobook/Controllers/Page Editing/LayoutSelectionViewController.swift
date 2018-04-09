@@ -20,12 +20,18 @@ class LayoutSelectionViewController: UIViewController {
 
     private struct Constants {
         static let pageSideMargin: CGFloat = 20.0
+        static let photobookSideMargin: CGFloat = 15.0
     }
 
     @IBOutlet private weak var collectionView: UICollectionView! {
         didSet {
             collectionView.backgroundView = nil
             collectionView.backgroundColor = .clear
+            
+            // Adapt the size of the cells to the book aspect ratio
+            let aspectRatio = ProductManager.shared.product!.aspectRatio!
+            let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+            flowLayout.itemSize = CGSize(width: aspectRatio * flowLayout.itemSize.height + Constants.photobookSideMargin, height: flowLayout.itemSize.height)
         }
     }
     
