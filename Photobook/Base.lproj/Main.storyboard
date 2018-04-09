@@ -623,7 +623,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="110" height="74"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="blQ-JN-Gqo">
+                                                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="blQ-JN-Gqo">
                                                     <rect key="frame" x="0.0" y="0.0" width="110" height="74"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H9U-f1-gmU" customClass="PhotobookFrameView" customModule="Photobook" customModuleProvider="target">

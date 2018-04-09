@@ -44,6 +44,8 @@ class CoverLayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
             coverFrameView.color = coverColor
             coverFrameView.resetCoverColor()
         }
+        
+        setup(reset: true)
     }
 }
 
