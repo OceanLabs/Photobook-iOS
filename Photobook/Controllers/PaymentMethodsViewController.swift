@@ -8,10 +8,6 @@
 
 import Stripe
 
-protocol PaymentMethodsDelegate: class {
-    func didTapToDismissPayments()
-}
-
 class PaymentMethodsViewController: UIViewController {
     
     private struct Constants {
@@ -20,14 +16,12 @@ class PaymentMethodsViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
 
-    weak var delegate: PaymentMethodsDelegate!
-
     fileprivate var selectedPaymentMethod: PaymentMethod? {
         get {
-            return OrderManager.shared.paymentMethod
+            return OrderManager.basketOrder.paymentMethod
         }
         set {
-            OrderManager.shared.paymentMethod = newValue
+            OrderManager.basketOrder.paymentMethod = newValue
         }
     }
 
@@ -49,10 +43,7 @@ class PaymentMethodsViewController: UIViewController {
             destination.delegate = self
         }
     }
-
-    @IBAction func tappedCloseButton(_ sender: UIBarButtonItem) {
-        delegate?.didTapToDismissPayments()
-    }
+    
 }
 
 extension PaymentMethodsViewController: UITableViewDataSource {
@@ -128,7 +119,7 @@ extension PaymentMethodsViewController: UITableViewDelegate {
         }
         
         tableView.reloadData()
-        OrderManager.shared.paymentMethod = selectedPaymentMethod
+        OrderManager.basketOrder.paymentMethod = selectedPaymentMethod
     }
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -138,7 +129,7 @@ extension PaymentMethodsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         Card.currentCard = nil
-        if Stripe.deviceSupportsApplePay() { OrderManager.shared.paymentMethod = .applePay }
+        if Stripe.deviceSupportsApplePay() { OrderManager.basketOrder.paymentMethod = .applePay }
         tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
     }
 }

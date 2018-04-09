@@ -47,28 +47,28 @@ class PhotobookAPIManager {
     
     var pendingUploads:Int {
         get {
-            return UserDefaults.standard.integer(forKey: "PhotobookAPIManager.pendingUploads")
+            return UserDefaults.standard.integer(forKey: "ly.kite.sdk.photobookAPIManager.pendingUploads")
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: "PhotobookAPIManager.pendingUploads")
+            UserDefaults.standard.set(newValue, forKey: "ly.kite.sdk.photobookAPIManager.pendingUploads")
             UserDefaults.standard.synchronize()
         }
     }
     var totalUploads:Int {
         get {
-            return UserDefaults.standard.integer(forKey: "PhotobookAPIManager.totalUploads")
+            return UserDefaults.standard.integer(forKey: "ly.kite.sdk.photobookAPIManager.totalUploads")
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: "PhotobookAPIManager.totalUploads")
+            UserDefaults.standard.set(newValue, forKey: "ly.kite.sdk.photobookAPIManager.totalUploads")
             UserDefaults.standard.synchronize()
         }
     }
     var isUploading:Bool {
         get {
-            return UserDefaults.standard.bool(forKey: "PhotobookAPIManager.isUploading")
+            return UserDefaults.standard.bool(forKey: "ly.kite.sdk.photobookAPIManager.isUploading")
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: "PhotobookAPIManager.isUploading")
+            UserDefaults.standard.set(newValue, forKey: "ly.kite.sdk.photobookAPIManager.isUploading")
             UserDefaults.standard.synchronize()
         }
     }
@@ -196,7 +196,7 @@ class PhotobookAPIManager {
         for asset in processedAssets {
 
             asset.imageData(progressHandler: nil, completionHandler: { [weak welf = self] data, fileExtension, error in
-                guard error == nil, let data = data, let fileExtension = fileExtension else {
+                guard error == nil, let data = data, fileExtension != .unsupported else {
                     welf?.delegate?.didFailUpload(PhotobookAPIError.missingPhotobookInfo)
                     return
                 }
@@ -308,7 +308,7 @@ class PhotobookAPIManager {
     }
     
     private func photobookParameters() -> [String: Any]? {
-        guard let photobookId = OrderManager.shared.photobookId else { return nil }
+        guard let photobookId = OrderManager.basketOrder.photobookId else { return nil }
         
         // TODO: confirm schema
         var photobook = [String: Any]()

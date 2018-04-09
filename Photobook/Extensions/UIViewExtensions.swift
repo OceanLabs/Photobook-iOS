@@ -54,10 +54,11 @@ extension UIView {
     /// Applies a rounded corner mask to the view using a bezier path
     ///
     /// - Parameter radius: The radius
-    func bezierRoundedCorners(withRadius radius: CGFloat) {
+    /// - Parameter rect: The rect to use
+    func bezierRoundedCorners(withRadius radius: CGFloat, rect: CGRect? = nil) {
         let maskLayer = CAShapeLayer()
         maskLayer.fillColor = UIColor.white.cgColor
-        maskLayer.path = UIBezierPath(roundedRect: self.bounds, cornerRadius: radius).cgPath
+        maskLayer.path = UIBezierPath(roundedRect: rect ?? self.bounds, cornerRadius: radius).cgPath
         maskLayer.frame = self.bounds
         
         layer.mask = maskLayer

@@ -13,8 +13,8 @@ class SelectedAssetsManager: NSObject {
     
     static let notificationUserObjectKeyAssets = "assets"
     static let notificationUserObjectKeyIndices = "indices"
-    static let notificationNameSelected = Notification.Name("SelectedAssetsManager.Selected")
-    static let notificationNameDeselected = Notification.Name("SelectedAssetsManager.Deselected")
+    static let notificationNameSelected = Notification.Name("ly.kite.sdk.selectedAssetsManager.selected")
+    static let notificationNameDeselected = Notification.Name("ly.kite.sdk.selectedAssetsManager.deselected")
 
     private(set) var selectedAssets = [Asset]()
     
@@ -25,6 +25,8 @@ class SelectedAssetsManager: NSObject {
         
         // Listen for the receipt dismissed notification so that we deselect all selected assets
         NotificationCenter.default.addObserver(self, selector: #selector(deselectAllAssetsForAllAlbums), name: ReceiptNotificationName.receiptWillDismiss, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssets(_:)), name: AssetSelectorViewController.assetSelectorAddedAssets, object: nil)
     }
     
     deinit {
@@ -43,6 +45,11 @@ class SelectedAssetsManager: NSObject {
     
     func orderAssetsByDate() {
         selectedAssets.sort { ($0.date ?? .distantFuture) < ($1.date ?? .distantFuture) }
+    }
+    
+    @objc private func selectedAssets(_ notification: Notification) {
+        guard let assets = notification.userInfo?["assets"] as? [Asset] else { return }
+        select(assets)
     }
     
     func select(_ assets:[Asset]) {

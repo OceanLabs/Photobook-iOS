@@ -1,5 +1,5 @@
 //
-//  PhotoPermissionViewController.swift
+//  IntroViewController.swift
 //  Photobook
 //
 //  Created by Julian Gruber on 09/11/2017.
@@ -13,10 +13,10 @@ class IntroViewController: UIViewController {
     
     static var userHasDismissed:Bool {
         get {
-            return UserDefaults.standard.bool(forKey: "IntroViewController.userHasDismissed")
+            return UserDefaults.standard.bool(forKey: "ly.kite.sdk.introViewController.userHasDismissed")
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: "IntroViewController.userHasDismissed")
+            UserDefaults.standard.set(newValue, forKey: "ly.kite.sdk.introViewController.userHasDismissed")
             UserDefaults.standard.synchronize()
         }
     }

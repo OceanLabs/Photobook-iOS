@@ -20,12 +20,18 @@ class LayoutSelectionViewController: UIViewController {
 
     private struct Constants {
         static let pageSideMargin: CGFloat = 20.0
+        static let photobookSideMargin: CGFloat = 15.0
     }
 
     @IBOutlet private weak var collectionView: UICollectionView! {
         didSet {
             collectionView.backgroundView = nil
             collectionView.backgroundColor = .clear
+            
+            // Adapt the size of the cells to the book aspect ratio
+            let aspectRatio = ProductManager.shared.product!.aspectRatio!
+            let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+            flowLayout.itemSize = CGSize(width: aspectRatio * flowLayout.itemSize.height + Constants.photobookSideMargin, height: flowLayout.itemSize.height)
         }
     }
     
@@ -43,7 +49,7 @@ class LayoutSelectionViewController: UIViewController {
             }
             
             let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-            asset.image(size: flowLayout.itemSize, completionHandler: { (image, error) in
+            asset.image(size: flowLayout.itemSize, loadThumbnailFirst: true, progressHandler: nil, completionHandler: { (image, error) in
                 guard error == nil else {
                     print("Layouts: error retrieving image")
                     return
@@ -59,7 +65,7 @@ class LayoutSelectionViewController: UIViewController {
                 
                 guard let oppositeAsset = oppositeLayout.asset else { return }
                 
-                oppositeAsset.image(size: flowLayout.itemSize, completionHandler: { (image, error) in
+                oppositeAsset.image(size: flowLayout.itemSize, loadThumbnailFirst: true, progressHandler: nil, completionHandler: { (image, error) in
                     guard error == nil else {
                         print("Layouts: error retrieving opposite image")
                         return
@@ -134,13 +140,13 @@ extension LayoutSelectionViewController: UICollectionViewDelegate {
         
         // Set border directly if visible, reload otherwise.
         let currentlySelectedIndexPath = IndexPath(row: selectedLayoutIndex, section: 0)
-        if let currentlySelectedCell = collectionView.cellForItem(at: currentlySelectedIndexPath) as? LayoutSelectionCollectionViewCell {
+        if let currentlySelectedCell = collectionView.cellForItem(at: currentlySelectedIndexPath) as? BorderedCollectionViewCell {
             currentlySelectedCell.isBorderVisible = false
         } else {
             collectionView.reloadItems(at: [currentlySelectedIndexPath])
         }
         
-        let newSelectedCell = collectionView.cellForItem(at: indexPath) as! LayoutSelectionCollectionViewCell
+        let newSelectedCell = collectionView.cellForItem(at: indexPath) as! BorderedCollectionViewCell
         newSelectedCell.isBorderVisible = true
         
         let layout = layouts[indexPath.row]

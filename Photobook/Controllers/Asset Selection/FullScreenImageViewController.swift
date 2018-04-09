@@ -28,7 +28,7 @@ class FullScreenImageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        asset.image(size: preferredContentSize, completionHandler: { [weak welf = self] (image, _) in
+        asset.image(size: preferredContentSize, loadThumbnailFirst: true, progressHandler: nil, completionHandler: { [weak welf = self] (image, _) in
             if image != nil {
                 welf?.imageView.image = image
                 welf?.activityIndicator.stopAnimating()

@@ -14,7 +14,6 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     
     private struct Constants {
         static let photobookAlignmentMargin: CGFloat = 10.0
-        static let photobookVerticalMargin: CGFloat = 6.0
     }
     
     // Constraints
@@ -148,6 +147,8 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
                 photobookFrameView.pageColor = pageColor
                 photobookFrameView.resetPageColor()
         }
+        
+        setup(reset: true)
     }
     
     override func prepareForReuse() {

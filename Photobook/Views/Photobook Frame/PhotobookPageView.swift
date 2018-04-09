@@ -161,7 +161,7 @@ class PhotobookPageView: UIView {
         var size = assetContainerView.bounds.size
         if productLayout!.hasBeenEdited { size = 3.0 * size }
         
-        asset.image(size: size, loadThumbnailFirst: loadThumbnailFirst, completionHandler: { [weak welf = self] (image, _) in
+        asset.image(size: size, loadThumbnailFirst: loadThumbnailFirst, progressHandler: nil, completionHandler: { [weak welf = self] (image, _) in
             guard welf?.pageIndex == index, let image = image else { return }
             welf?.setImage(image: image)
             

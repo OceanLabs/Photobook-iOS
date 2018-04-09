@@ -8,7 +8,7 @@ jobs:
 
     # Specify the Xcode version to use
     macos:
-      xcode: "9.0"
+      xcode: "9.3.0"
 
     steps:
       - checkout
@@ -29,7 +29,7 @@ jobs:
       # Install Carthage
       - run:
          name: Install Carthage
-         command: carthage update
+         command: carthage update --platform iOS
 
       # Build the framework
       - run:

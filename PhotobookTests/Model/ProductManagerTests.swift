@@ -72,7 +72,6 @@ class ProductManagerTests: XCTestCase {
         XCTAssertEqual(unarchivedProduct.pageColor, productManager.pageColor)
 
         XCTAssertEqual(unarchivedProduct.productLayouts.first!.asset!.identifier, photosAsset.identifier)
-        XCTAssertEqual(unarchivedProduct.productLayouts.first!.asset!.assetType, photosAsset.assetType)
         XCTAssertEqual(unarchivedProduct.productLayouts.first!.asset!.size, photosAsset.size)
     }
 
