@@ -23,7 +23,7 @@ class ProductLayoutAsset: Codable {
             if !shouldFitAsset && oldValue != nil {
                 let relativeScale: CGFloat
                 let relativeWidth = containerSize.width / oldValue.width
-                if !relativeWidth.isNaN && containerSize.width > containerSize.height {
+                if !relativeWidth.isNaN && oldValue.width > 0.0 && containerSize.width >= containerSize.height {
                     relativeScale = relativeWidth
                 } else {
                     let relativeHeight = containerSize.height / oldValue.height
@@ -85,7 +85,7 @@ class ProductLayoutAsset: Codable {
         transform = LayoutUtils.adjustTransform(transform, forViewSize: asset.size, inContainerSize: containerSize)
     }
     
-    private func fitAssetToContainer() {
+    func fitAssetToContainer() {
         guard let asset = asset, let containerSize = containerSize else { return }
         
         // Calculate scale. Ignore any previous translation or rotation

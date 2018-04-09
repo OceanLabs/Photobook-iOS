@@ -96,8 +96,12 @@ class ProductLayout: Codable {
         guard layout != nil else { return }
         
         if productLayoutAsset != nil && layout.imageLayoutBox != nil {
-            productLayoutAsset!.shouldFitAsset = reset
-            productLayoutAsset!.containerSize = layout.imageLayoutBox!.rect.size
+            if reset {
+                productLayoutAsset!.shouldFitAsset = true
+                productLayoutAsset!.containerSize = layout.imageLayoutBox!.rect.size
+            } else {
+                productLayoutAsset!.adjustTransform()
+            }
         }
         if productLayoutText != nil && layout.textLayoutBox != nil {
             productLayoutText!.containerSize = layout.textLayoutBox!.rect.size
