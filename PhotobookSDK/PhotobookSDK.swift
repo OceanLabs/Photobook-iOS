@@ -23,9 +23,9 @@ import UIKit
     @objc public static func setEnvironment(environment: Environment) {
         switch environment {
         case .test:
-            PhotobookManager.environment = .test
+            APIClient.environment = .test
         case .live:
-            PhotobookManager.environment = .live
+            APIClient.environment = .live
         }
     }
     

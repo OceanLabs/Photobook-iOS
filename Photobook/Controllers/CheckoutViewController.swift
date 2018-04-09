@@ -103,7 +103,7 @@ class CheckoutViewController: UIViewController {
         
         Analytics.shared.trackScreenViewed(Analytics.ScreenName.basket)
         
-        if PhotobookManager.environment == .test {
+        if APIClient.environment == .test {
             title = Constants.title + " (TEST)"
         } else {
             title = Constants.title

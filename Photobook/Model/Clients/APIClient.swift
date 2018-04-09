@@ -22,6 +22,11 @@ enum APIContext {
     case kite
 }
 
+enum Environment {
+    case test
+    case live
+}
+
 /// Network client for all interaction with the API
 class APIClient: NSObject {
     
@@ -52,6 +57,9 @@ class APIClient: NSObject {
         case jpeg
         case png
     }
+    
+    /// The environment of the app, live vs test
+    static var environment: Environment = .live
     
     private func baseURLString(for context: APIContext) -> String {
         switch context {

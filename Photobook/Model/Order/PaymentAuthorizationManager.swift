@@ -38,7 +38,7 @@ class PaymentAuthorizationManager: NSObject {
         static let applePayPayTo = "Canon"
         static let applePayMerchantId = "merchant.ly.kite.sdk"
         
-        static let stripePublicKey = PhotobookManager.environment == .test ? "pk_test_fJtOj7oxBKrLFOneBFLj0OH3" : "pk_live_qQhXxzjS8inja3K31GDajdXo"
+        static let stripePublicKey = APIClient.environment == .test ? "pk_test_fJtOj7oxBKrLFOneBFLj0OH3" : "pk_live_qQhXxzjS8inja3K31GDajdXo"
     }
     
     weak var delegate : (PaymentAuthorizationManagerDelegate & UIViewController)?

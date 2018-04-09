@@ -130,7 +130,7 @@ class Analytics {
     }
     
     func addEnvironment(to properties:[String: Any]?) -> [String: Any] {
-        let environment = PhotobookManager.environment == .test ? "Test" : "Live"
+        let environment = APIClient.environment == .test ? "Test" : "Live"
         
         var properties = properties ?? [:]
         properties[PropertyNames.environment] = environment

@@ -8,18 +8,8 @@
 
 import UIKit
 
-let photobookBundle = Bundle(for: Photobook.self)
-let photobookMainStoryboard =  UIStoryboard(name: "Main", bundle: photobookBundle)
-
 /// Shared manager for the photo book UI
 class PhotobookManager: NSObject {
-    
-    enum Environment {
-        case test
-        case live
-    }
-    
-    static var environment: Environment = .live
     
     enum Tab: Int {
         case stories
