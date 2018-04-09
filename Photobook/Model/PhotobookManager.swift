@@ -18,6 +18,13 @@ class PhotobookManager: NSObject {
         case facebook
     }
     
+    static func setupPayments() {
+        PaymentAuthorizationManager.applePayPayTo = "Canon"
+        PaymentAuthorizationManager.applePayMerchantId = "merchant.ly.kite.sdk"
+        PaymentAuthorizationManager.stripeTestPublicKey = "pk_test_fJtOj7oxBKrLFOneBFLj0OH3"
+        PaymentAuthorizationManager.stripeLivePublicKey = "pk_live_qQhXxzjS8inja3K31GDajdXo"
+    }
+    
     static func rootViewControllerForCurrentState() -> UIViewController {
         let tabBarController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
         let isProcessingOrder = OrderProcessingManager.shared.isProcessingOrder

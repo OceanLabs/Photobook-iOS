@@ -29,6 +29,18 @@ import UIKit
         }
     }
     
+    /// Payee name to use for ApplePay
+    @objc public var applePayPayTo: String? { didSet { PaymentAuthorizationManager.applePayPayTo = applePayPayTo } }
+    
+    /// ApplePay merchand ID
+    @objc public var applePayMerchantId: String? { didSet { PaymentAuthorizationManager.applePayMerchantId = applePayMerchantId } }
+    
+    /// Stripe public test key
+    @objc public var stripeTestPublicKey: String? { didSet { PaymentAuthorizationManager.stripeTestPublicKey = stripeTestPublicKey } }
+    
+    /// Stripe public live key
+    @objc public var stripeLivePublicKey: String? { didSet { PaymentAuthorizationManager.stripeLivePublicKey = stripeLivePublicKey } }
+    
     /// Shared client
     @objc public static let shared = PhotobookSDK()
     

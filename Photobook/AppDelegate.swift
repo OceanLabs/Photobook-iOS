@@ -24,6 +24,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         APIClient.environment = .test
         #endif
         
+        PhotobookManager.setupPayments()
+        
         window?.rootViewController = PhotobookManager.rootViewControllerForCurrentState()
         
         // Force the static var to initialize so it doesn't miss any notifications
