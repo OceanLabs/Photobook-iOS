@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Fabric.with([Crashlytics.self])
         
         #if TEST_ENVIRONMENT
-        PhotobookLaunchHandler.environment = .test
+        PhotobookManager.environment = .test
         #endif
         
         window?.rootViewController = PhotobookManager.rootViewControllerForCurrentState()
