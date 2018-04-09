@@ -47,28 +47,28 @@ class PhotobookAPIManager {
     
     var pendingUploads:Int {
         get {
-            return UserDefaults.standard.integer(forKey: "ly.kite.sdk.PhotobookAPIManager.pendingUploads")
+            return UserDefaults.standard.integer(forKey: "ly.kite.sdk.photobookAPIManager.pendingUploads")
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: "ly.kite.sdk.PhotobookAPIManager.pendingUploads")
+            UserDefaults.standard.set(newValue, forKey: "ly.kite.sdk.photobookAPIManager.pendingUploads")
             UserDefaults.standard.synchronize()
         }
     }
     var totalUploads:Int {
         get {
-            return UserDefaults.standard.integer(forKey: "ly.kite.sdk.PhotobookAPIManager.totalUploads")
+            return UserDefaults.standard.integer(forKey: "ly.kite.sdk.photobookAPIManager.totalUploads")
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: "ly.kite.sdk.PhotobookAPIManager.totalUploads")
+            UserDefaults.standard.set(newValue, forKey: "ly.kite.sdk.photobookAPIManager.totalUploads")
             UserDefaults.standard.synchronize()
         }
     }
     var isUploading:Bool {
         get {
-            return UserDefaults.standard.bool(forKey: "ly.kite.sdk.PhotobookAPIManager.isUploading")
+            return UserDefaults.standard.bool(forKey: "ly.kite.sdk.photobookAPIManager.isUploading")
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: "ly.kite.sdk.PhotobookAPIManager.isUploading")
+            UserDefaults.standard.set(newValue, forKey: "ly.kite.sdk.photobookAPIManager.isUploading")
             UserDefaults.standard.synchronize()
         }
     }
