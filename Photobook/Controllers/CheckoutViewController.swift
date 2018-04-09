@@ -101,7 +101,7 @@ class CheckoutViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        Analytics.shared.trackScreenViewed(Analytics.ScreenName.basket)
+        Analytics.shared.trackScreenViewed(.basket)
         
         if APIClient.environment == .test {
             title = Constants.title + " (TEST)"
