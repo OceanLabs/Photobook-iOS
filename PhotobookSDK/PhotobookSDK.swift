@@ -11,6 +11,24 @@ import UIKit
 /// Shared manager for the photo book UI
 @objc public class PhotobookSDK: NSObject {
     
+    @objc public static let orderWasCreatedNotificationName = OrdersNotificationName.orderWasCreated
+    @objc public static let orderWasSuccessfulNotificationName = OrdersNotificationName.orderWasSuccessful
+    
+    @objc public enum Environment: Int {
+        case test
+        case live
+    }
+    
+    /// Set to use the live or test environment
+    @objc public static func setEnvironment(environment: Environment) {
+        switch environment {
+        case .test:
+            APIClient.environment = .test
+        case .live:
+            APIClient.environment = .live
+        }
+    }
+    
     /// Shared client
     @objc public static let shared = PhotobookSDK()
     

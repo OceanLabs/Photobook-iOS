@@ -22,12 +22,17 @@ enum APIContext {
     case kite
 }
 
+enum Environment {
+    case test
+    case live
+}
+
 /// Network client for all interaction with the API
 class APIClient: NSObject {
     
     // Notification keys
-    static let backgroundSessionTaskFinished = Notification.Name("APIClientBackgroundSessionTaskFinished")
-    static let backgroundSessionAllTasksFinished = Notification.Name("APIClientBackgroundSessionAllTaskFinished")
+    static let backgroundSessionTaskFinished = Notification.Name("ly.kite.sdk.APIClientBackgroundSessionTaskFinished")
+    static let backgroundSessionAllTasksFinished = Notification.Name("ly.kite.sdk.APIClientBackgroundSessionAllTaskFinished")
     
     // Storage constants
     private struct Storage {
@@ -36,8 +41,8 @@ class APIClient: NSObject {
     }
     
     private struct Constants {
-        static let backgroundSessionBaseIdentifier = "ly.kite.photobook.backgroundSession"
-        static let errorDomain = "Photobook.APIClient.APIClientError"
+        static let backgroundSessionBaseIdentifier = "ly.kite.sdk.backgroundSession"
+        static let errorDomain = "ly.kite.sdk.APIClient.APIClientError"
     }
     
     // Available methods
@@ -52,6 +57,9 @@ class APIClient: NSObject {
         case jpeg
         case png
     }
+    
+    /// The environment of the app, live vs test
+    static var environment: Environment = .live
     
     private func baseURLString(for context: APIContext) -> String {
         switch context {

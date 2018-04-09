@@ -38,21 +38,16 @@ struct PhotobookBackup: Codable {
 class ProductManager {
 
     // Notification keys
-    static let pendingUploadStatusUpdated = Notification.Name("ProductManagerPendingUploadStatusUpdated")
-    static let shouldRetryUploadingImages = Notification.Name("ProductManagerShouldRetryUploadingImages")
-    static let finishedPhotobookCreation = Notification.Name("ProductManagerFinishedPhotobookCreation")
-    static let finishedPhotobookUpload = Notification.Name("ProductManagerFinishedPhotobookUpload")
-    static let failedPhotobookUpload = Notification.Name("ProductManagerFailedPhotobookUpload")
+    static let pendingUploadStatusUpdated = Notification.Name("ly.kite.sdk.productManagerPendingUploadStatusUpdated")
+    static let shouldRetryUploadingImages = Notification.Name("ly.kite.sdk.productManagerShouldRetryUploadingImages")
+    static let finishedPhotobookCreation = Notification.Name("ly.kite.sdk.productManagerFinishedPhotobookCreation")
+    static let finishedPhotobookUpload = Notification.Name("ly.kite.sdk.productManagerFinishedPhotobookUpload")
+    static let failedPhotobookUpload = Notification.Name("ly.kite.sdk.productManagerFailedPhotobookUpload")
     
     private let bleed: CGFloat = 8.5
 
     var currentPortraitLayout = 0
     var currentLandscapeLayout = 0
-    
-    private struct Storage {
-        static let photobookDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!.appending("/Photobook/")
-        static let photobookBackupFile = photobookDirectory.appending("Photobook.dat")
-    }
     
     static let shared: ProductManager = ProductManager()
     
@@ -68,7 +63,7 @@ class ProductManager {
         self.apiManager = apiManager
     }
     
-    var storageFile: String { return Storage.photobookBackupFile }
+    var storageFile: String { return OrderManager.Storage.photobookBackupFile }
     #endif
 
     // Public info about photobook products
@@ -363,7 +358,7 @@ class ProductManager {
     ///
     /// - Parameter completionHandler: Closure called on completion
     func loadUserPhotobook(_ completionHandler: (() -> Void)? = nil ) {
-        guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: Storage.photobookBackupFile) as? Data else {
+        guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: OrderManager.Storage.photobookBackupFile) as? Data else {
             print("ProductManager: failed to unarchive product")
             return
         }
@@ -377,6 +372,7 @@ class ProductManager {
         self.pageColor = unarchivedProduct.pageColor
         self.productLayouts = unarchivedProduct.productLayouts
         apiManager.restoreUploads()
+        completionHandler?()
     }
     
     
@@ -390,15 +386,15 @@ class ProductManager {
             fatalError("ProductManager: encoding of product failed")
         }
         
-        if !FileManager.default.fileExists(atPath: Storage.photobookDirectory) {
+        if !FileManager.default.fileExists(atPath: OrderManager.Storage.photobookDirectory) {
             do {
-                try FileManager.default.createDirectory(atPath: Storage.photobookDirectory, withIntermediateDirectories: false, attributes: nil)
+                try FileManager.default.createDirectory(atPath: OrderManager.Storage.photobookDirectory, withIntermediateDirectories: false, attributes: nil)
             } catch {
                 print("ProductManager: could not save photobook")
             }
         }
         
-        let saved = NSKeyedArchiver.archiveRootObject(data, toFile: Storage.photobookBackupFile)
+        let saved = NSKeyedArchiver.archiveRootObject(data, toFile: OrderManager.Storage.photobookBackupFile)
         if !saved {
             print("ProductManager: failed to archive product")
         }

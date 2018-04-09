@@ -20,6 +20,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         Fabric.with([Crashlytics.self])
         
+        #if TEST_ENVIRONMENT
+        APIClient.environment = .test
+        #endif
+        
         window?.rootViewController = PhotobookManager.rootViewControllerForCurrentState()
         
         // Force the static var to initialize so it doesn't miss any notifications

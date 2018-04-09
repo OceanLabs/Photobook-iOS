@@ -8,9 +8,6 @@
 
 import UIKit
 
-let photobookBundle = Bundle(for: Photobook.self)
-let photobookMainStoryboard =  UIStoryboard(name: "Main", bundle: photobookBundle)
-
 /// Shared manager for the photo book UI
 class PhotobookManager: NSObject {
     
@@ -48,6 +45,7 @@ class PhotobookManager: NSObject {
         } else if isProcessingOrder {
             // Show receipt screen to prevent user from ordering another photobook
             let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
+            receiptViewController.order = OrderManager.shared.loadBasketOrder()
             receiptViewController.dismissClosure = {
                 self.configureTabBarController(tabBarController)
                 rootNavigationController.isNavigationBarHidden = true
@@ -76,6 +74,6 @@ class PhotobookManager: NSObject {
         })
         
         // Load the products here, so that the user avoids a loading screen on PhotobookViewController
-        ProductManager.shared.initialise(completion: nil)        
+        ProductManager.shared.initialise(completion: nil)
     }
 }
