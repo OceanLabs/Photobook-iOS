@@ -10,9 +10,7 @@ import UIKit
 import PassKit
 
 class LineItem: Codable {
-    
-    static var supportsSecureCoding = true
-    
+        
     let id: Int
     let name: String
     let cost: Decimal
