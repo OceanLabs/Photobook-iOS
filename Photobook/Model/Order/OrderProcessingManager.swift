@@ -144,6 +144,7 @@ class OrderProcessingManager {
                     
                     if errorMessage != nil {
                         //Failure - Payment
+                        
                         NotificationCenter.default.post(name: Notifications.failed, object: welf, userInfo: ["error":OrderProcessingError.payment])
                         return
                     }

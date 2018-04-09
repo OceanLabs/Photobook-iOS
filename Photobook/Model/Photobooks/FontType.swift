@@ -11,14 +11,18 @@ import Foundation
 @objc enum FontType: Int, Codable {
     case plain, classic, solid
     
-    private func fontWithSize(_ size: CGFloat) -> UIFont {
-        let name: String
-        switch self {
-        case .plain: name = "OpenSans-Regular"
-        case .classic: name = "Lora-Regular"
-        case .solid: name = "Montserrat-Bold"
+    var fontFamily:String {
+        get {
+            switch self {
+            case .plain: return "OpenSans-Regular"
+            case .classic: return "Lora-Regular"
+            case .solid: return "Montserrat-Bold"
+            }
         }
-        return UIFont(name: name, size: size)!
+    }
+    
+    private func fontWithSize(_ size: CGFloat) -> UIFont {
+        return UIFont(name: fontFamily, size: size)!
     }
     
     private func paragraphStyle(isSpineText: Bool) -> NSParagraphStyle {

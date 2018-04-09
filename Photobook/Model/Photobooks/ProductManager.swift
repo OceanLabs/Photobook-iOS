@@ -80,6 +80,15 @@ class ProductManager {
     var productUpsellOptions: [UpsellOption]? //TODO: Get this from the initial-data endpoint
     var spineText: String?
     var spineFontType: FontType = .plain
+    var spineColor:UIColor {
+        get {
+            if pageColor == .black {
+                return .white
+            } else {
+                return .black
+            }
+        }
+    }
     var coverColor: ProductColor = .white
     var pageColor: ProductColor = .white
     var productLayouts = [ProductLayout]()

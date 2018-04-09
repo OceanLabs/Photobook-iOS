@@ -164,8 +164,14 @@ class PhotobookAPIManager {
     ///
     /// - Parameter completionHandler: Closure to be called with PDF URLs if successful, or an error if it fails
     func createPhotobookPdf(completionHandler: @escaping (_ urls: [String]?, _ error: Error?) -> Void) {
-        completionHandler(["https://kite.ly/someurl", "https://kite.ly/someotherurl"], nil)
-        //TODO: send request
+        apiClient.post(context: .photobook, endpoint: "ios/generate_pdf", parameters: photobookPDFParameters()) { (response, error) in
+            guard let response = response as? [String:Any], let coverUrl = response["coverUrl"] as? String, let insideUrl = response["insideUrl"] as? String else {
+                completionHandler(nil, error)
+                return
+            }
+            
+            completionHandler([coverUrl, insideUrl], nil)
+        }
     }
     
     /// Uploads the photobook images and the user's photobook choices
@@ -274,13 +280,11 @@ class PhotobookAPIManager {
     
     func cancelUpload(_ completion: @escaping () -> Void) {
         if isUploading {
-            print("will cancel uploads")
             apiClient.cancelBackgroundTasks {
                 self.isUploading = false
                 self.pendingUploads = 0
                 self.totalUploads = 0
                 completion()
-                print("did cancel uploads")
             }
         } else {
             completion()
@@ -307,23 +311,31 @@ class PhotobookAPIManager {
         return processedAssets
     }
     
-    private func photobookParameters() -> [String: Any]? {
-        guard let photobookId = OrderManager.basketOrder.photobookId else { return nil }
+    private func photobookPDFParameters() -> [String: Any]? {
         
-        // TODO: confirm schema
+        guard let product = ProductManager.shared.product else {
+            return nil
+        }
+        
         var photobook = [String: Any]()
         
+        //Pages
         var pages = [[String: Any]]()
         for productLayout in ProductManager.shared.productLayouts {
             var page = [String: Any]()
+            
+            var layoutBoxes = [[String:Any]]()
             
             if let asset = productLayout.asset,
                 let imageLayoutBox = productLayout.layout.imageLayoutBox,
                 let productLayoutAsset = productLayout.productLayoutAsset {
                 
-                page["contentType"] = "image"
-                page["dimensionsPercentages"] = ["height": imageLayoutBox.rect.height, "width": imageLayoutBox.rect.width]
-                page["relativeStartPoint"] = ["x": imageLayoutBox.rect.origin.x, "y": imageLayoutBox.rect.origin.y]
+                var layoutBox = [String:Any]()
+                
+                layoutBox["contentType"] = "image"
+                layoutBox["isDoubleLayout"] = productLayout.layout.isDoubleLayout
+                layoutBox["dimensionsPercentages"] = ["height": imageLayoutBox.rect.height, "width": imageLayoutBox.rect.width]
+                layoutBox["relativeStartPoint"] = ["x": imageLayoutBox.rect.origin.x, "y": imageLayoutBox.rect.origin.y]
                 
                 // Set the container size to 1,1 so that the transform is relativized
                 productLayoutAsset.containerSize = CGSize(width: 1, height: 1)
@@ -332,18 +344,85 @@ class PhotobookAPIManager {
                 var containedItem = [String: Any]()
                 var picture = [String: Any]()
                 picture["url"] = asset.uploadUrl
-                picture["relativeStartPoint"] = ["x": productLayoutAsset.transform.tx, "y": productLayoutAsset.transform.ty]
-                picture["rotation"] = productLayoutAsset.transform.angle
-                picture["zoom"] = productLayoutAsset.transform.scale
-                
+                picture["dimensions"] = ["height":asset.size.height, "width":asset.size.width]
+                picture["thumbnailUrl"] = asset.uploadUrl //mock data
                 containedItem["picture"] = picture
-                page["containedItem"] = containedItem
+                containedItem["relativeStartPoint"] = ["x": productLayoutAsset.transform.tx, "y": productLayoutAsset.transform.ty]
+                containedItem["rotation"] = atan2(productLayoutAsset.transform.b, productLayoutAsset.transform.a)
+                containedItem["zoom"] = productLayoutAsset.transform.a // X & Y axes scale should be the same, use the scale for X axis
+                containedItem["baseWidthPercent"] = 1 //mock data
+                containedItem["flipped"] = false //mock data
                 
+                
+                layoutBox["containedItem"] = containedItem
+                
+                layoutBoxes.append(layoutBox)
             }
+            
+            page["layoutBoxes"] = layoutBoxes
             pages.append(page)
         }
+    
         photobook["pages"] = pages
-        photobook["pdfId"] = photobookId
+        
+        //product
+        
+        var productVariant = [String:Any]()
+        
+        productVariant["id"] = product.id
+        productVariant["name"] = product.name
+        productVariant["templateId"] = product.productTemplateId
+        productVariant["pageWidth"] = product.pageWidth
+        productVariant["pageHeight"] = product.pageHeight
+        //TODO: replace mock data
+        productVariant["cost"] = ["EUR":"25.00", "USD":"30.00", "GBP":"23.00"]
+        productVariant["costPerPage"] = ["EUR":"1.30", "USD":"1.50", "GBP":"1.00"]
+        productVariant["description"] = "description"
+        productVariant["finishTypes"] = [["name":"gloss", "cost":["EUR":"1.30", "USD":"1.50", "GBP":"1.00"]]]
+        productVariant["minPages"] = 20
+        productVariant["maxPages"] = 70
+        productVariant["coverSize"] = ["mm":["width":300, "height":300]]
+        productVariant["pageSetp"] = 0
+        productVariant["bleed"] = ["px":20, "mm":20]
+        productVariant["spine"] = ["ranges": ["20-38": 0,
+                                              "40-54": 0,
+                                              "56-70": 0,
+                                              "72-88": 0,
+                                              "90-104": 0,
+                                              "106-120": 0,
+                                              "122-134": 0,
+                                              "136-140": 0], "multiplier":1] //mock data end
+        
+        photobook["productVariant"] = productVariant
+        
+        //config
+        
+        var photobookConfig = [String:Any]()
+        
+        photobookConfig["coverColor"] = ProductManager.shared.coverColor.uiColor().hex
+        photobookConfig["pageColor"] = ProductManager.shared.pageColor.uiColor().hex
+        
+        var spineText = [String:Any]()
+        
+        spineText["text"] = ProductManager.shared.spineText
+        spineText["color"] = ProductManager.shared.spineColor.hex
+        
+        var font = [String:Any]()
+        
+        font["fontFamily"] = ProductManager.shared.spineFontType.fontFamily
+        //TODO: replace mock data
+        font["fontSize"] = "20dp"
+        font["fontSizePx"] = 20
+        font["fontWeight"] = 1
+        font["lineHeight"] = 20
+        font["name"] = "name" //mock data end
+        
+        spineText["font"] = font
+        
+        photobookConfig["spineText"] = spineText
+        
+        photobook["photobookConfig"] = photobookConfig
+        
         
         return photobook
     }
