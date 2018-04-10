@@ -119,8 +119,15 @@ import SDWebImage
             return
         }
         
-        SDWebImageManager.shared().loadImage(with: url, options: [], progress: nil, completed: { _, data, error, _, _, _ in
-            completionHandler(data, .jpg, error)
+        SDWebImageManager.shared().loadImage(with: url, options: [], progress: nil, completed: { image, data, error, _, _, _ in
+            if let data = data {
+                completionHandler(data, .jpg, nil)
+            } else if let image = image {
+                let imageData = UIImageJPEGRepresentation(image, 1)
+                completionHandler(imageData, .jpg, nil)
+            } else {
+                completionHandler(nil, .jpg, error)
+            }
         })
     }
 }
