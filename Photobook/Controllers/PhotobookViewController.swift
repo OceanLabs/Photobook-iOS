@@ -60,11 +60,11 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     private var titleButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17.0, weight: .semibold)
         button.setTitleColor(.black, for: .normal)
         button.setImage(UIImage(namedInPhotobookBundle:"chevron-down"), for: .normal)
         button.semanticContentAttribute = .forceRightToLeft
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: Constants.titleArrowOffset)
+        button.imageEdgeInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: Constants.titleArrowOffset)
         button.addTarget(self, action: #selector(didTapOnTitle), for: .touchUpInside)
         return button
     }()
@@ -83,9 +83,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     // Scrolling at 60Hz when we are dragging looks good enough and avoids having to normalize the scroll offset
     private lazy var screenRefreshRate: Double = 1.0 / 60.0
-    
-    private var pageSetupViewController: PageSetupViewController!
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -648,7 +646,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
 
         let barType = (navigationController?.navigationBar as? PhotobookNavigationBar)?.barType
         
-        pageSetupViewController = modalNavigationController.viewControllers.first as! PageSetupViewController
+        let pageSetupViewController = modalNavigationController.viewControllers.first as! PageSetupViewController
         pageSetupViewController.assets = assets
         pageSetupViewController.pageIndex = index
         pageSetupViewController.album = album
@@ -667,8 +665,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             }
         }
         present(modalNavigationController, animated: false) {
-            let containerRect = self.pageSetupViewController.view.convert(frame, from: containerView)
-            self.pageSetupViewController.animateFromPhotobook(frame: containerRect) {
+            let containerRect = pageSetupViewController.view.convert(frame, from: containerView)
+            pageSetupViewController.animateFromPhotobook(frame: containerRect) {
                 self.navigationController!.navigationBar.alpha = 0.0
             }
         }
@@ -807,10 +805,10 @@ extension PhotobookViewController: PhotobookCoverCollectionViewCellDelegate {
 extension PhotobookViewController: PageSetupDelegate {
     // MARK: PageSetupDelegate
     
-    func didFinishEditingPage(_ index: Int?, pageType: PageType?, productLayout: ProductLayout?, color: ProductColor?) {
+    func didFinishEditingPage(_ index: Int?, pageType: PageType?, productLayout: ProductLayout?, color: ProductColor?, editor: PageSetupViewController) {
         if let index = index {
             if let productLayout = productLayout {
-                trackAnalyticsActionsForEditingFinished(index: index, productLayout: productLayout)                
+                trackAnalyticsActionsForEditingFinished(index: index, productLayout: productLayout)
                 ProductManager.shared.replaceLayout(at: index, with: productLayout, pageType: pageType)
             }
             if let color = color {
@@ -829,7 +827,7 @@ extension PhotobookViewController: PageSetupDelegate {
             self.navigationController!.navigationBar.alpha = 1.0
         }, completion: nil)
 
-        pageSetupViewController.animateBackToPhotobook {
+        editor.animateBackToPhotobook {
             self.dismiss(animated: false)
         }
     }
