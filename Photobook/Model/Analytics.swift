@@ -59,11 +59,18 @@ class Analytics {
         case orderSubmitted = "Order submitted"
         case editingCancelled = "Editing cancelled"
         case editingConfirmed = "Editing confirmed"
+        case uploadCancelled = "Upload cancelled"
+        case uploadRetried = "Upload retried"
+        case uploadSuccessful = "Upload successful"
     }
     
-    enum ErrorName {
-        case imageUploadFailed
-        case uploadInfoIsInconsistent
+    enum ErrorName: String {
+        case photobookInfo = "Photobook information error"
+        case diskError = "Image saving error"
+        case imageUpload = "Image upload error"
+        case pdfCreation = "PDF creation error"
+        case orderSubmission = "Order submission error"
+        case payment = "Payment error"
     }
     
     struct PropertyNames {
@@ -157,6 +164,16 @@ class Analytics {
         let properties = addEnvironment(to: properties)
         
         SEGAnalytics.shared().track(actionName.rawValue, properties: properties)
+    }
+    
+    func trackError(_ errorName: ErrorName) {
+        #if DEBUG
+            print("Analytics: Error \"\(errorName.rawValue)\" happened")
+        #endif
+        
+        let properties = addEnvironment(to: [:])
+        
+        SEGAnalytics.shared().track(errorName.rawValue, properties: properties)
     }
     
     func secondsSinceAppOpen() -> Int {

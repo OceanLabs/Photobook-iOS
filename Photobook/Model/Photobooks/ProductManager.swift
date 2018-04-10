@@ -515,13 +515,13 @@ extension ProductManager: PhotobookAPIManagerDelegate {
     func didFailUpload(_ error: Error) {
         if let error = error as? PhotobookAPIError {
             switch error {
-            case .missingPhotobookInfo:
-                NotificationCenter.default.post(name: ProductManager.failedPhotobookUpload, object: nil) //not resolvable
             case .couldNotSaveTempImageData:
+                Analytics.shared.trackError(.diskError)
                 let info = [ "pending": apiManager.pendingUploads ]
                 NotificationCenter.default.post(name: ProductManager.pendingUploadStatusUpdated, object: info)
                 NotificationCenter.default.post(name: ProductManager.shouldRetryUploadingImages, object: nil) //resolvable
-            case .couldNotBuildCreationParameters:
+            case .missingPhotobookInfo, .couldNotBuildCreationParameters:
+                Analytics.shared.trackError(.photobookInfo)
                 NotificationCenter.default.post(name: ProductManager.failedPhotobookUpload, object: nil) //not resolvable
             }
         } else if let _ = error as? APIClientError {
@@ -531,6 +531,7 @@ extension ProductManager: PhotobookAPIManagerDelegate {
     }
     
     func didFinishUploadingPhotobook() {
+        Analytics.shared.trackAction(.uploadSuccessful)
         NotificationCenter.default.post(name: ProductManager.finishedPhotobookUpload, object: nil)
     }
     
