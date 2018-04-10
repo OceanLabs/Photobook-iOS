@@ -30,6 +30,10 @@ class KiteAPIClient {
     }
     
     func submitOrder(parameters: [String: Any], completionHandler: @escaping (_ orderId: String?, _ error: ErrorMessage?) -> Void) {
+        guard apiKey != nil else {
+            fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
+        }
+        
         APIClient.shared.post(context: .kite, endpoint: Endpoints.orderSubmission, parameters: parameters, headers: kiteHeaders, completion: { response, error in
             let orderId = (response as? [String: Any])?["print_order_id"] as? String
             
