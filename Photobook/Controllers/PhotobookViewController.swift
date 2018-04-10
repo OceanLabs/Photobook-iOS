@@ -831,23 +831,8 @@ extension PhotobookViewController: PageSetupDelegate {
     func didFinishEditingPage(_ index: Int?, pageType: PageType?, productLayout: ProductLayout?, color: ProductColor?) {
         if let index = index {
             if let productLayout = productLayout {
-                let previousLayout = ProductManager.shared.productLayouts[index]
-                ProductManager.shared.productLayouts[index] = productLayout
-                
-                trackAnalyticsActionsForEditingFinished(index: index, productLayout: productLayout, previousLayout: previousLayout)
-                
-                if previousLayout.layout.isDoubleLayout != productLayout.layout.isDoubleLayout {
-                    // From single to double
-                    if productLayout.layout.isDoubleLayout {
-                        if pageType == .left {
-                            ProductManager.shared.deletePage(at: index + 1)
-                        } else if pageType == .right {
-                            ProductManager.shared.deletePage(at: index - 1)
-                        }
-                    } else {
-                        ProductManager.shared.addPage(at: index + 1)
-                    }
-                }
+                trackAnalyticsActionsForEditingFinished(index: index, productLayout: productLayout)                
+                ProductManager.shared.replaceLayout(at: index, with: productLayout, pageType: pageType)
             }
             if let color = color {
                 if index == 0 { // Cover
@@ -870,7 +855,9 @@ extension PhotobookViewController: PageSetupDelegate {
         }
     }
     
-    func trackAnalyticsActionsForEditingFinished(index: Int, productLayout: ProductLayout, previousLayout: ProductLayout) {
+    func trackAnalyticsActionsForEditingFinished(index: Int, productLayout: ProductLayout) {
+        let previousLayout = ProductManager.shared.productLayouts[index]
+        
         if previousLayout.productLayoutText?.text != productLayout.productLayoutText?.text {
             Analytics.shared.trackAction(.addedTextToPage)
         }

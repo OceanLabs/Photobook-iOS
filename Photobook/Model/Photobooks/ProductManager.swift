@@ -505,6 +505,24 @@ class ProductManager {
             }
         }
     }
+    
+    func replaceLayout(at index: Int, with productLayout: ProductLayout, pageType: PageType?) {
+        let previousLayout = productLayouts[index]
+        productLayouts[index] = productLayout
+        
+        if previousLayout.layout.isDoubleLayout != productLayout.layout.isDoubleLayout {
+            // From single to double
+            if productLayout.layout.isDoubleLayout {
+                if pageType == .left {
+                    deletePage(at: index + 1)
+                } else if pageType == .right {
+                    deletePage(at: index - 1)
+                }
+            } else {
+                addPage(at: index + 1)
+            }
+        }
+    }
 
     private func moveLayout(at sourceIndex: Int, to destinationIndex: Int) {
         guard sourceIndex < productLayouts.count && destinationIndex < productLayouts.count else { return }
