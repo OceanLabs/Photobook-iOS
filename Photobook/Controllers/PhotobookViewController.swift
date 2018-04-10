@@ -231,33 +231,25 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         isRearranging = !isRearranging
         
         // Update drag interaction enabled status
-        let interactiveCellClosure: ((Bool) -> Void) = { [weak welf = self] (isRearranging) in
-            guard let stelf = welf else { return }
-            for cell in stelf.collectionView.visibleCells {
-                guard var photobookCell = cell as? InteractivePagesCell else { continue }
-                photobookCell.isFaded = isRearranging && stelf.shouldFadeWhenRearranging(cell)
-                photobookCell.isPageInteractionEnabled = !isRearranging
-            }
-        }
-        
-        if isRearranging {
+        let interactiveCellClosure: ((Bool) -> Void) = { (isRearranging) in
             UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
-                interactiveCellClosure(true)
-                self.collectionView.transform = CGAffineTransform(translationX: 0, y: -self.collectionView.frame.size.height * (1.0 - Constants.rearrangeScale) / 2.0).scaledBy(x: Constants.rearrangeScale, y: Constants.rearrangeScale)
+                for cell in self.collectionView.visibleCells {
+                    guard var photobookCell = cell as? InteractivePagesCell else { continue }
+                    photobookCell.isFaded = isRearranging && self.shouldFadeWhenRearranging(cell)
+                    photobookCell.isPageInteractionEnabled = !isRearranging
+                }
+                
+                self.collectionView.transform = isRearranging ? CGAffineTransform(translationX: 0.0, y: -self.collectionView.frame.height * (1.0 - Constants.rearrangeScale) / 2.0).scaledBy(x: Constants.rearrangeScale, y: Constants.rearrangeScale) : .identity
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
             }, completion: nil)
-            
+        }
+
+        interactiveCellClosure(isRearranging)
+        if isRearranging {
             sender.title = NSLocalizedString("Photobook/DoneButtonTitle", value: "Done", comment: "Done button title")
             sender.tintColor = Constants.doneBlueColor
         } else {
-            UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
-                interactiveCellClosure(false)
-                self.collectionView.transform = .identity
-                self.view.setNeedsLayout()
-                self.view.layoutIfNeeded()
-            }, completion: nil)
-            
             sender.title = NSLocalizedString("Photobook/RearrangeButtonTitle", value: "Rearrange", comment: "Rearrange button title")
             sender.tintColor = Constants.rearrangeGreyColor
         }
