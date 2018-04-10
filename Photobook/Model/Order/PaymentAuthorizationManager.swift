@@ -34,15 +34,19 @@ protocol PaymentAuthorizationManagerDelegate: class {
 
 class PaymentAuthorizationManager: NSObject {
     
-    static var applePayPayTo: String?
-    static var applePayMerchantId: String?
-    static var stripeTestPublicKey: String?
-    static var stripeLivePublicKey: String?
+    static var applePayPayTo: String = {
+        if let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ??
+            Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String {
+            return "Kite.ly (via \(appName))"
+        }
+        return "Kite.ly"
+    }()
+    static var applePayMerchantId: String!
     
     weak var delegate : (PaymentAuthorizationManagerDelegate & UIViewController)?
         
     private var stripePublicKey: String? {
-        return APIClient.environment == .test ? PaymentAuthorizationManager.stripeTestPublicKey : PaymentAuthorizationManager.stripeLivePublicKey
+        return APIClient.environment == .test ? "pk_test_fJtOj7oxBKrLFOneBFLj0OH3" : "pk_live_qQhXxzjS8inja3K31GDajdXo"
     }
     
     func authorizePayment(cost: Cost, method: PaymentMethod){
@@ -80,13 +84,10 @@ class PaymentAuthorizationManager: NSObject {
         guard let applePayMerchantId = PaymentAuthorizationManager.applePayMerchantId else {
             fatalError("Missing merchant ID for ApplePay: PhotobookSDK.shared.applePayMerchantID")
         }
-        guard let applePayPayTo = PaymentAuthorizationManager.applePayPayTo else {
-            fatalError("Missing payee name for ApplePay: PhotobookSDK.shared.applePayPayTo")
-        }
 
         let paymentRequest = Stripe.paymentRequest(withMerchantIdentifier: applePayMerchantId, country: "US", currency: OrderManager.basketOrder.currencyCode)
         
-        paymentRequest.paymentSummaryItems = cost.summaryItemsForApplePay(payTo: applePayPayTo, shippingMethodId: OrderManager.basketOrder.shippingMethod!)
+        paymentRequest.paymentSummaryItems = cost.summaryItemsForApplePay(payTo: PaymentAuthorizationManager.applePayPayTo, shippingMethodId: OrderManager.basketOrder.shippingMethod!)
         paymentRequest.requiredShippingAddressFields = [.postalAddress, .name, .email, .phone]
         
         guard let paymentController = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) else { return }
@@ -209,10 +210,6 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didSelectShippingContact contact: PKContact, completion: @escaping (PKPaymentAuthorizationStatus, [PKShippingMethod], [PKPaymentSummaryItem]) -> Void) {
         
-        guard let applePayPayTo = PaymentAuthorizationManager.applePayPayTo else {
-            fatalError("Missing payee name for ApplePay: PhotobookSDK.shared.applePayPayTo")
-        }
-        
         let shippingAddress = Address()
         
         if let code = contact.postalAddress?.isoCountryCode, let country = Country.countryFor(code: code){
@@ -231,14 +228,14 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
             }
 
             guard error == nil else {
-                completion(.failure, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: applePayPayTo, shippingMethodId: OrderManager.basketOrder.shippingMethod!))
+                completion(.failure, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: PaymentAuthorizationManager.applePayPayTo, shippingMethodId: OrderManager.basketOrder.shippingMethod!))
                 return
             }
 
             //Cost is expected to change here so update views
             welf?.delegate?.costUpdated()
             
-            completion(.success, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: applePayPayTo, shippingMethodId: OrderManager.basketOrder.shippingMethod!))
+            completion(.success, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: PaymentAuthorizationManager.applePayPayTo, shippingMethodId: OrderManager.basketOrder.shippingMethod!))
         }
     }
 }

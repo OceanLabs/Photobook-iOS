@@ -30,20 +30,19 @@ import UIKit
     }
     
     /// Payee name to use for ApplePay
-    @objc public var applePayPayTo: String? { didSet { PaymentAuthorizationManager.applePayPayTo = applePayPayTo } }
+    @objc public var applePayPayTo: String? {
+        didSet {
+            if let applePayPayTo = applePayPayTo {
+                PaymentAuthorizationManager.applePayPayTo = applePayPayTo
+            }
+        }
+    }
     
     /// ApplePay merchand ID
-    @objc public var applePayMerchantId: String? { didSet { PaymentAuthorizationManager.applePayMerchantId = applePayMerchantId } }
-    
-    /// Stripe public test key
-    @objc public var stripeTestPublicKey: String? { didSet { PaymentAuthorizationManager.stripeTestPublicKey = stripeTestPublicKey } }
-    
-    /// Stripe public live key
-    @objc public var stripeLivePublicKey: String? { didSet { PaymentAuthorizationManager.stripeLivePublicKey = stripeLivePublicKey } }
+    @objc public var applePayMerchantId: String! { didSet { PaymentAuthorizationManager.applePayMerchantId = applePayMerchantId } }
     
     /// Shared client
     @objc public static let shared = PhotobookSDK()
-    
     
     /// True if a photo book order is being processed, false otherwise
     @objc public var isProcessingOrder: Bool {

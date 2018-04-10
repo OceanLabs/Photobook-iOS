@@ -19,10 +19,8 @@ class PhotobookManager: NSObject {
     }
     
     static func setupPayments() {
-        PaymentAuthorizationManager.applePayPayTo = "Canon"
+        PaymentAuthorizationManager.applePayPayTo = "Kite.ly (via HD Photobooks)"
         PaymentAuthorizationManager.applePayMerchantId = "merchant.ly.kite.sdk"
-        PaymentAuthorizationManager.stripeTestPublicKey = "pk_test_fJtOj7oxBKrLFOneBFLj0OH3"
-        PaymentAuthorizationManager.stripeLivePublicKey = "pk_live_qQhXxzjS8inja3K31GDajdXo"
     }
     
     static func rootViewControllerForCurrentState() -> UIViewController {
