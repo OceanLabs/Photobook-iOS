@@ -383,12 +383,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     // MARK: - UIMenuController actions
     
-    @objc func cutPages() {
+    @objc private func cutPages() {
         copyPages()
         deletePages()
     }
     
-    @objc func copyPages() {
+    @objc private func copyPages() {
         guard let indexPath = interactingItemIndexPath,
             let cell = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell),
             let leftIndex = cell.leftIndex
@@ -525,9 +525,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func dropView() {
-        guard var sourceIndexPath = interactingItemIndexPath,
-            let draggingView = self.draggingView
-            else { return }
+        guard var sourceIndexPath = interactingItemIndexPath, let draggingView = draggingView else { return }
         
         let sourceCell = (collectionView.cellForItem(at: sourceIndexPath) as? PhotobookCollectionViewCell)
         
@@ -536,7 +534,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 
         let destinationY: CGFloat
         if let destinationCell = collectionView.cellForItem(at: IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 0), section: destinationIndexPath.section)) {
-            destinationY = self.collectionView.convert(destinationCell.frame, to: self.view).origin.y
+            destinationY = collectionView.convert(destinationCell.frame, to: view).origin.y
         } else if draggingView.frame.origin.y + draggingView.frame.height > view.frame.height / 2.0 {
             destinationY = -draggingView.frame.height
         } else {
@@ -574,7 +572,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             ProductManager.shared.moveLayout(from: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
             
-            self.interactingItemIndexPath = nil
+            interactingItemIndexPath = nil
             
             let insertingIndexPath = IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 0), section: destinationIndexPath.section)
             self.insertingIndexPath = insertingIndexPath
