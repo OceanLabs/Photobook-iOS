@@ -34,24 +34,19 @@ protocol PaymentAuthorizationManagerDelegate: class {
 
 class PaymentAuthorizationManager: NSObject {
     
-    private struct Constants {
-        static let applePayPayTo = "Canon"
-        static let applePayMerchantId = "merchant.ly.kite.sdk"
-        
-        static let stripePublicKey = APIClient.environment == .test ? "pk_test_fJtOj7oxBKrLFOneBFLj0OH3" : "pk_live_qQhXxzjS8inja3K31GDajdXo"
-    }
+    static var applePayPayTo: String = {
+        if let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ??
+            Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String {
+            return "Kite.ly (via \(appName))"
+        }
+        return "Kite.ly"
+    }()
+    static var applePayMerchantId: String!
     
     weak var delegate : (PaymentAuthorizationManagerDelegate & UIViewController)?
-    
-    var applePayPayTo: String {
-        get{
-            return Constants.applePayPayTo
-        }
-    }
-    var applePayMerchantId: String {
-        get{
-            return Constants.applePayMerchantId
-        }
+        
+    private var stripePublicKey: String? {
+        return APIClient.environment == .test ? "pk_test_fJtOj7oxBKrLFOneBFLj0OH3" : "pk_live_qQhXxzjS8inja3K31GDajdXo"
     }
     
     func authorizePayment(cost: Cost, method: PaymentMethod){
@@ -69,10 +64,9 @@ class PaymentAuthorizationManager: NSObject {
     ///
     /// - Parameter cost: The total cost of the order
     private func authorizeCreditCard(cost: Cost) {
-        let stripeKey = Constants.stripePublicKey
         guard var currentCard = Card.currentCard else { return }
         
-        currentCard.clientId = stripeKey
+        currentCard.clientId = stripePublicKey
         currentCard.authorise() { (error, token) in
             guard let token = token, error == nil else {
                 self.delegate?.paymentAuthorizationDidFinish(token: nil, error: error, completionHandler: nil)
@@ -87,9 +81,13 @@ class PaymentAuthorizationManager: NSObject {
     ///
     /// - Parameter cost: The total cost of the order
     private func authorizeApplePay(cost: Cost) {
+        guard let applePayMerchantId = PaymentAuthorizationManager.applePayMerchantId else {
+            fatalError("Missing merchant ID for ApplePay: PhotobookSDK.shared.applePayMerchantID")
+        }
+
         let paymentRequest = Stripe.paymentRequest(withMerchantIdentifier: applePayMerchantId, country: "US", currency: OrderManager.basketOrder.currencyCode)
         
-        paymentRequest.paymentSummaryItems = cost.summaryItemsForApplePay(payTo: applePayPayTo, shippingMethodId: OrderManager.basketOrder.shippingMethod!)
+        paymentRequest.paymentSummaryItems = cost.summaryItemsForApplePay(payTo: PaymentAuthorizationManager.applePayPayTo, shippingMethodId: OrderManager.basketOrder.shippingMethod!)
         paymentRequest.requiredShippingAddressFields = [.postalAddress, .name, .email, .phone]
         
         guard let paymentController = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) else { return }
@@ -173,6 +171,11 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
         deliveryDetails.email = payment.shippingContact?.emailAddress
         deliveryDetails.phone = payment.shippingContact?.phoneNumber?.stringValue
         
+        guard let stripePublicKey = stripePublicKey else {
+            let environment = APIClient.environment == .test ? "Test" : "Live"
+            fatalError("Missing public key for Stripe: PhotobookSDK.shared.stripe\(environment)PublicKey")
+        }
+        
         guard shippingAddress.isValid else{
             completion(.invalidShippingPostalAddress)
             return
@@ -187,7 +190,7 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
         deliveryDetails.phone = payment.shippingContact?.phoneNumber?.stringValue
         OrderManager.basketOrder.deliveryDetails = deliveryDetails
         
-        let client = STPAPIClient(publishableKey: Constants.stripePublicKey)
+        let client = STPAPIClient(publishableKey: stripePublicKey)
         client.createToken(with: payment, completion: {(token: STPToken?, error: Error?) in
             guard error == nil else{
                 completion(.failure)
@@ -206,6 +209,7 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
     }
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didSelectShippingContact contact: PKContact, completion: @escaping (PKPaymentAuthorizationStatus, [PKShippingMethod], [PKPaymentSummaryItem]) -> Void) {
+        
         let shippingAddress = Address()
         
         if let code = contact.postalAddress?.isoCountryCode, let country = Country.countryFor(code: code){
@@ -224,14 +228,14 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
             }
 
             guard error == nil else {
-                completion(.failure, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: welf!.applePayPayTo, shippingMethodId: OrderManager.basketOrder.shippingMethod!))
+                completion(.failure, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: PaymentAuthorizationManager.applePayPayTo, shippingMethodId: OrderManager.basketOrder.shippingMethod!))
                 return
             }
 
             //Cost is expected to change here so update views
             welf?.delegate?.costUpdated()
             
-            completion(.success, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: welf!.applePayPayTo, shippingMethodId: OrderManager.basketOrder.shippingMethod!))
+            completion(.success, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: PaymentAuthorizationManager.applePayPayTo, shippingMethodId: OrderManager.basketOrder.shippingMethod!))
         }
     }
 }

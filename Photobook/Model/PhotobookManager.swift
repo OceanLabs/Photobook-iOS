@@ -18,6 +18,12 @@ class PhotobookManager: NSObject {
         case facebook
     }
     
+    static func setupPayments() {
+        PaymentAuthorizationManager.applePayPayTo = "Kite.ly (via HD Photobooks)"
+        PaymentAuthorizationManager.applePayMerchantId = "merchant.ly.kite.sdk"
+        KiteAPIClient.shared.apiKey = "78b798ff366815c833dfa848654aba43b71a883a"
+    }
+    
     static func rootViewControllerForCurrentState() -> UIViewController {
         let tabBarController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
         let isProcessingOrder = OrderProcessingManager.shared.isProcessingOrder

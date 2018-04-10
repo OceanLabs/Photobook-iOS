@@ -29,9 +29,23 @@ import UIKit
         }
     }
     
+    /// Payee name to use for ApplePay
+    @objc public var applePayPayTo: String? {
+        didSet {
+            if let applePayPayTo = applePayPayTo {
+                PaymentAuthorizationManager.applePayPayTo = applePayPayTo
+            }
+        }
+    }
+    
+    /// ApplePay merchand ID
+    @objc public var applePayMerchantId: String! { didSet { PaymentAuthorizationManager.applePayMerchantId = applePayMerchantId } }
+    
+    /// Kite public API key
+    @objc public var kiteApiKey: String! { didSet { KiteAPIClient.shared.apiKey = kiteApiKey } }
+    
     /// Shared client
     @objc public static let shared = PhotobookSDK()
-    
     
     /// True if a photo book order is being processed, false otherwise
     @objc public var isProcessingOrder: Bool {
