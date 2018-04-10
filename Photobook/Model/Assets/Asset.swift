@@ -20,8 +20,6 @@ enum AssetLoadingException: Error {
     case gif
 }
 
-@objc public protocol PhotobookAsset {}
-
 /// Represents a photo used in a photo book
 @objc protocol Asset: PhotobookAsset {
     

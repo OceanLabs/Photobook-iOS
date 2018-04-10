@@ -8,27 +8,6 @@
 
 import UIKit
 
-/// Conforming classes can be asked to dismiss a photobook view controller
-@objc public protocol PhotobookSdkDelegate: class {
-    func dismissPhotobookViewController(_ viewController: UIViewController)
-}
-
-/// Conforming classes can be notified when PhotobookAssets are added by a custom photo picker
-@objc public protocol AssetCollectorAddingDelegate: class {
-    func didFinishAdding(_ assets: [PhotobookAsset]?)
-}
-
-extension AssetCollectorAddingDelegate {
-    func didFinishAddingAssets() {
-        didFinishAdding(nil)
-    }
-}
-
-/// Protocol custom photo pickers must conform to to be used with photo books
-@objc public protocol PhotobookAssetPicker where Self: UIViewController {
-    weak var addingDelegate: AssetCollectorAddingDelegate? { get set }
-}
-
 class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate {
     
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
