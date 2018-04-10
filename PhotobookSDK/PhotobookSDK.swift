@@ -41,6 +41,9 @@ import UIKit
     /// ApplePay merchand ID
     @objc public var applePayMerchantId: String! { didSet { PaymentAuthorizationManager.applePayMerchantId = applePayMerchantId } }
     
+    /// Kite public API key
+    @objc public var kiteApiKey: String! { didSet { KiteAPIClient.shared.apiKey = kiteApiKey } }
+    
     /// Shared client
     @objc public static let shared = PhotobookSDK()
     
