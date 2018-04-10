@@ -67,7 +67,7 @@ class ReceiptTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        Analytics.shared.trackScreenViewed(Analytics.ScreenName.receipt)
+        Analytics.shared.trackScreenViewed(.receipt)
         
         navigationItem.leftBarButtonItem = UIBarButtonItem()
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
@@ -144,6 +144,7 @@ class ReceiptTableViewController: UITableViewController {
             showPaymentMethods()
         case .paymentRetry:
             //re authorize payment and submit order again
+            Analytics.shared.trackAction(.uploadRetried)
             pay()
             break
         case .cancelled:
@@ -165,6 +166,7 @@ class ReceiptTableViewController: UITableViewController {
             let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.no, style: .default, handler:nil))
             alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.yes, style: .destructive, handler: { [weak welf = self] (_) in
+                Analytics.shared.trackAction(.uploadCancelled)
                 welf?.dismiss()
             }))
             

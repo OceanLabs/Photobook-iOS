@@ -87,7 +87,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        Analytics.shared.trackScreenViewed(Analytics.ScreenName.photobook)
+        Analytics.shared.trackScreenViewed(.photobook)
         setup()
     }
     
