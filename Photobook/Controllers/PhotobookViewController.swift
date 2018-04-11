@@ -8,27 +8,6 @@
 
 import UIKit
 
-/// Conforming classes can be asked to dismiss a photobook view controller
-@objc public protocol PhotobookSdkDelegate: class {
-    func dismissPhotobookViewController(_ viewController: UIViewController)
-}
-
-/// Conforming classes can be notified when PhotobookAssets are added by a custom photo picker
-@objc public protocol AssetCollectorAddingDelegate: class {
-    func didFinishAdding(_ assets: [PhotobookAsset]?)
-}
-
-extension AssetCollectorAddingDelegate {
-    func didFinishAddingAssets() {
-        didFinishAdding(nil)
-    }
-}
-
-/// Protocol custom photo pickers must conform to to be used with photo books
-@objc public protocol PhotobookAssetPicker where Self: UIViewController {
-    weak var addingDelegate: AssetCollectorAddingDelegate? { get set }
-}
-
 class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate {
     
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
@@ -81,11 +60,11 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     private var titleButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17.0, weight: .semibold)
         button.setTitleColor(.black, for: .normal)
         button.setImage(UIImage(namedInPhotobookBundle:"chevron-down"), for: .normal)
         button.semanticContentAttribute = .forceRightToLeft
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: Constants.titleArrowOffset)
+        button.imageEdgeInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: Constants.titleArrowOffset)
         button.addTarget(self, action: #selector(didTapOnTitle), for: .touchUpInside)
         return button
     }()
@@ -104,42 +83,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     // Scrolling at 60Hz when we are dragging looks good enough and avoids having to normalize the scroll offset
     private lazy var screenRefreshRate: Double = 1.0 / 60.0
-    
-    private var pageSetupViewController: PageSetupViewController!
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
         Analytics.shared.trackScreenViewed(.photobook)
-        
-        if #available(iOS 11.0, *) {
-            navigationItem.largeTitleDisplayMode = .never
-        }
-        
-        // Remove pasteboard so that we avoid edge-cases with stale or inconsistent data
-        UIPasteboard.remove(withName: UIPasteboardName("ly.kite.photobook.rearrange"))
-        
-        collectionViewBottomConstraint.constant = -view.frame.height * (reverseRearrangeScale - 1)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(menuDidHide), name: NSNotification.Name.UIMenuControllerDidHideMenu, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
-        
-        guard let photobook = ProductManager.shared.products?.first else {
-            loadProducts()
-            return
-        }
-        
-        setup(with: photobook)
-        
-        backButton?.setTitleColor(navigationController?.navigationBar.tintColor, for: .normal)
-        
-        if #available(iOS 11, *) {
-        } else {
-            let constant = ctaContainerBottomConstraint.constant
-            ctaContainerBottomConstraint.isActive = false
-            ctaContainerBottomConstraint = NSLayoutConstraint(item: view, attribute: .bottom, relatedBy: .equal, toItem: ctaButton, attribute: .bottom, multiplier: 1, constant: constant)
-            ctaContainerBottomConstraint.isActive = true
-        }
+        setup()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -151,6 +100,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        adjustInsets()
+    }
+    
+    private func adjustInsets() {
         let insets: UIEdgeInsets
         if #available(iOS 11.0, *) {
             insets = view.safeAreaInsets
@@ -171,9 +124,36 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         
         let rearrangingTopInset = (navigationController?.navigationBar.frame.maxY ?? 0) * multiplier
-                
+        
         collectionView.contentInset = UIEdgeInsets(top: isRearranging ? rearrangingTopInset : normalTopInset, left: collectionView.contentInset.left, bottom: bottomInset, right: collectionView.contentInset.right)
         collectionView.scrollIndicatorInsets = collectionView.contentInset
+    }
+    
+    private func setup() {
+        collectionViewBottomConstraint.constant = -view.frame.height * (reverseRearrangeScale - 1)
+        
+        if #available(iOS 11.0, *) {
+            navigationItem.largeTitleDisplayMode = .never
+        } else {
+            ctaContainerBottomConstraint.isActive = false
+            ctaContainerBottomConstraint = NSLayoutConstraint(item: view, attribute: .bottom, relatedBy: .equal, toItem: ctaButton, attribute: .bottom, multiplier: 1, constant: ctaContainerBottomConstraint.constant)
+            ctaContainerBottomConstraint.isActive = true
+        }
+        
+        backButton?.setTitleColor(navigationController?.navigationBar.tintColor, for: .normal)
+        
+        // Remove pasteboard so that we avoid edge-cases with stale or inconsistent data
+        UIPasteboard.remove(withName: UIPasteboardName("ly.kite.photobook.rearrange"))
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(menuDidHide), name: NSNotification.Name.UIMenuControllerDidHideMenu, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
+        
+        if let photobook = ProductManager.shared.products?.first {
+            setup(with: photobook)
+            return
+        }
+        
+        loadProducts()
     }
     
     private func setup(with photobook: Photobook) {
@@ -195,13 +175,11 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     private func loadProducts() {
         emptyScreenViewController.show(message: NSLocalizedString("Photobook/Loading", value: "Loading products", comment: "Loading products screen message"), activity: true)
         ProductManager.shared.initialise(completion: { [weak welf = self] (error: Error?) in
-            guard let photobook = ProductManager.shared.products?.first,
-                error == nil
-                else {
-                    welf?.emptyScreenViewController.show(message: error?.localizedDescription ?? "Error", buttonTitle: CommonLocalizedStrings.retry, buttonAction: {
-                        welf?.loadProducts()
-                    })
-                    return
+            guard let photobook = ProductManager.shared.products?.first, error == nil else {
+                welf?.emptyScreenViewController.show(message: error?.localizedDescription ?? "Error", buttonTitle: CommonLocalizedStrings.retry, buttonAction: {
+                    welf?.loadProducts()
+                })
+                return
             }
             
             welf?.setup(with: photobook)
@@ -253,37 +231,28 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         isRearranging = !isRearranging
         
         // Update drag interaction enabled status
-        let interactiveCellClosure: ((Bool) -> Void) = { [weak welf = self] (isRearranging) in
-            guard let stelf = welf else { return }
-            for cell in stelf.collectionView.visibleCells {
-                guard var photobookCell = cell as? InteractivePagesCell else { continue }
-                photobookCell.isFaded = isRearranging && stelf.shouldFadeWhenRearranging(cell)
-                photobookCell.isPageInteractionEnabled = !isRearranging
-            }
-        }
-        
-        if isRearranging {
+        let interactiveCellClosure: ((Bool) -> Void) = { (isRearranging) in
             UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
-                interactiveCellClosure(true)
-                self.collectionView.transform = CGAffineTransform(translationX: 0, y: -self.collectionView.frame.size.height * (1.0-Constants.rearrangeScale)/2.0).scaledBy(x: Constants.rearrangeScale, y: Constants.rearrangeScale)
+                for cell in self.collectionView.visibleCells {
+                    guard var photobookCell = cell as? InteractivePagesCell else { continue }
+                    photobookCell.isFaded = isRearranging && self.shouldFadeWhenRearranging(cell)
+                    photobookCell.isPageInteractionEnabled = !isRearranging
+                }
+                
+                self.collectionView.transform = isRearranging ? CGAffineTransform(translationX: 0.0, y: -self.collectionView.frame.height * (1.0 - Constants.rearrangeScale) / 2.0).scaledBy(x: Constants.rearrangeScale, y: Constants.rearrangeScale) : .identity
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
             }, completion: nil)
-            
+        }
+
+        interactiveCellClosure(isRearranging)
+        if isRearranging {
             sender.title = NSLocalizedString("Photobook/DoneButtonTitle", value: "Done", comment: "Done button title")
             sender.tintColor = Constants.doneBlueColor
-        } else{
-            UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
-                interactiveCellClosure(false)
-                self.collectionView.transform = .identity
-                self.view.setNeedsLayout()
-                self.view.layoutIfNeeded()
-            }, completion: nil)
-            
+        } else {
             sender.title = NSLocalizedString("Photobook/RearrangeButtonTitle", value: "Rearrange", comment: "Rearrange button title")
             sender.tintColor = Constants.rearrangeGreyColor
         }
-        
         
         setupTitleView()
     }
@@ -414,12 +383,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     // MARK: - UIMenuController actions
     
-    @objc func cutPages() {
+    @objc private func cutPages() {
         copyPages()
         deletePages()
     }
     
-    @objc func copyPages() {
+    @objc private func copyPages() {
         guard let indexPath = interactingItemIndexPath,
             let cell = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell),
             let leftIndex = cell.leftIndex
@@ -556,9 +525,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func dropView() {
-        guard var sourceIndexPath = interactingItemIndexPath,
-            let draggingView = self.draggingView
-            else { return }
+        guard var sourceIndexPath = interactingItemIndexPath, let draggingView = draggingView else { return }
         
         let sourceCell = (collectionView.cellForItem(at: sourceIndexPath) as? PhotobookCollectionViewCell)
         
@@ -567,7 +534,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 
         let destinationY: CGFloat
         if let destinationCell = collectionView.cellForItem(at: IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 0), section: destinationIndexPath.section)) {
-            destinationY = self.collectionView.convert(destinationCell.frame, to: self.view).origin.y
+            destinationY = collectionView.convert(destinationCell.frame, to: view).origin.y
         } else if draggingView.frame.origin.y + draggingView.frame.height > view.frame.height / 2.0 {
             destinationY = -draggingView.frame.height
         } else {
@@ -597,38 +564,15 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         if destinationIndexPath != sourceIndexPath,
             let sourceProductLayoutIndex = ProductManager.shared.productLayoutIndex(for: sourceIndexPath.item) {
             
-            let sourceProductLayout = ProductManager.shared.productLayouts[sourceProductLayoutIndex]
-            
             // Because we show a placeholder graphic where the drop proposal is, we get the destination index from the previous page
             let previousIndexPath = IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 1), section: destinationIndexPath.section)
             let previousCell = (collectionView.cellForItem(at: previousIndexPath) as? PhotobookCollectionViewCell)
             
             guard let destinationProductLayoutIndex = previousCell?.leftIndex ?? previousCell?.rightIndex else { return }
-            let destinationProductLayout = ProductManager.shared.productLayouts[destinationProductLayoutIndex]
             
-            // Depending of if we're moving up or down, we will have to move either the left layout first or the second so that we don't mess up the indexes
-            if  movingDown{
-                if sourceProductLayout.layout.isDoubleLayout && destinationProductLayout.layout.isDoubleLayout {
-                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
-                } else if sourceProductLayout.layout.isDoubleLayout {
-                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex + 1)
-                } else if destinationProductLayout.layout.isDoubleLayout {
-                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex + 1, to: destinationProductLayoutIndex)
-                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex - 1)
-                } else {
-                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex + 1, to: destinationProductLayoutIndex + 1)
-                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
-                }
-            } else {
-                if sourceProductLayout.layout.isDoubleLayout {
-                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
-                } else {
-                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
-                    ProductManager.shared.moveLayout(at: sourceProductLayoutIndex + 1, to: destinationProductLayoutIndex + 1)
-                }
-            }
+            ProductManager.shared.moveLayout(from: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
             
-            self.interactingItemIndexPath = nil
+            interactingItemIndexPath = nil
             
             let insertingIndexPath = IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 0), section: destinationIndexPath.section)
             self.insertingIndexPath = insertingIndexPath
@@ -692,7 +636,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
 
         let barType = (navigationController?.navigationBar as? PhotobookNavigationBar)?.barType
         
-        pageSetupViewController = modalNavigationController.viewControllers.first as! PageSetupViewController
+        let pageSetupViewController = modalNavigationController.viewControllers.first as! PageSetupViewController
         pageSetupViewController.assets = assets
         pageSetupViewController.pageIndex = index
         pageSetupViewController.album = album
@@ -711,8 +655,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             }
         }
         present(modalNavigationController, animated: false) {
-            let containerRect = self.pageSetupViewController.view.convert(frame, from: containerView)
-            self.pageSetupViewController.animateFromPhotobook(frame: containerRect) {
+            let containerRect = pageSetupViewController.view.convert(frame, from: containerView)
+            pageSetupViewController.animateFromPhotobook(frame: containerRect) {
                 self.navigationController!.navigationBar.alpha = 0.0
             }
         }
@@ -851,26 +795,11 @@ extension PhotobookViewController: PhotobookCoverCollectionViewCellDelegate {
 extension PhotobookViewController: PageSetupDelegate {
     // MARK: PageSetupDelegate
     
-    func didFinishEditingPage(_ index: Int?, pageType: PageType?, productLayout: ProductLayout?, color: ProductColor?) {
+    func didFinishEditingPage(_ index: Int?, pageType: PageType?, productLayout: ProductLayout?, color: ProductColor?, editor: PageSetupViewController) {
         if let index = index {
             if let productLayout = productLayout {
-                let previousLayout = ProductManager.shared.productLayouts[index]
-                ProductManager.shared.productLayouts[index] = productLayout
-                
-                trackAnalyticsActionsForEditingFinished(index: index, productLayout: productLayout, previousLayout: previousLayout)
-                
-                if previousLayout.layout.isDoubleLayout != productLayout.layout.isDoubleLayout {
-                    // From single to double
-                    if productLayout.layout.isDoubleLayout {
-                        if pageType == .left {
-                            ProductManager.shared.deletePage(at: index + 1)
-                        } else if pageType == .right {
-                            ProductManager.shared.deletePage(at: index - 1)
-                        }
-                    } else {
-                        ProductManager.shared.addPage(at: index + 1)
-                    }
-                }
+                trackAnalyticsActionsForEditingFinished(index: index, productLayout: productLayout)
+                ProductManager.shared.replaceLayout(at: index, with: productLayout, pageType: pageType)
             }
             if let color = color {
                 if index == 0 { // Cover
@@ -888,12 +817,14 @@ extension PhotobookViewController: PageSetupDelegate {
             self.navigationController!.navigationBar.alpha = 1.0
         }, completion: nil)
 
-        pageSetupViewController.animateBackToPhotobook {
+        editor.animateBackToPhotobook {
             self.dismiss(animated: false)
         }
     }
     
-    func trackAnalyticsActionsForEditingFinished(index: Int, productLayout: ProductLayout, previousLayout: ProductLayout) {
+    func trackAnalyticsActionsForEditingFinished(index: Int, productLayout: ProductLayout) {
+        let previousLayout = ProductManager.shared.productLayouts[index]
+        
         if previousLayout.productLayoutText?.text != productLayout.productLayoutText?.text {
             Analytics.shared.trackAction(.addedTextToPage)
         }

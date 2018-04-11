@@ -479,7 +479,52 @@ class ProductManager {
         return .right
     }
     
-    func moveLayout(at sourceIndex: Int, to destinationIndex: Int) {
+    func moveLayout(from fromIndex: Int, to toIndex: Int) {
+        let fromProductLayout = productLayouts[fromIndex]
+        let toProductLayout = productLayouts[toIndex]
+        
+        let movingDown = fromIndex < toIndex
+        
+        if movingDown {
+            if fromProductLayout.layout.isDoubleLayout && toProductLayout.layout.isDoubleLayout {
+                moveLayout(at: fromIndex, to: toIndex)
+            } else if fromProductLayout.layout.isDoubleLayout {
+                moveLayout(at: fromIndex, to: toIndex + 1)
+            } else if toProductLayout.layout.isDoubleLayout {
+                moveLayout(at: fromIndex + 1, to: toIndex)
+                moveLayout(at: fromIndex, to: toIndex - 1)
+            } else {
+                moveLayout(at: fromIndex + 1, to: toIndex + 1)
+                moveLayout(at: fromIndex, to: toIndex)
+            }
+        } else {
+            moveLayout(at: fromIndex, to: toIndex)
+            
+            if !fromProductLayout.layout.isDoubleLayout {
+                moveLayout(at: fromIndex + 1, to: toIndex + 1)
+            }
+        }
+    }
+    
+    func replaceLayout(at index: Int, with productLayout: ProductLayout, pageType: PageType?) {
+        let previousLayout = productLayouts[index]
+        productLayouts[index] = productLayout
+        
+        if previousLayout.layout.isDoubleLayout != productLayout.layout.isDoubleLayout {
+            // From single to double
+            if productLayout.layout.isDoubleLayout {
+                if pageType == .left {
+                    deletePage(at: index + 1)
+                } else if pageType == .right {
+                    deletePage(at: index - 1)
+                }
+            } else {
+                addPage(at: index + 1)
+            }
+        }
+    }
+
+    private func moveLayout(at sourceIndex: Int, to destinationIndex: Int) {
         guard sourceIndex < productLayouts.count && destinationIndex < productLayouts.count else { return }
         productLayouts.move(sourceIndex, to: destinationIndex)
     }

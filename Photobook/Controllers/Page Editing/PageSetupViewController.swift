@@ -9,12 +9,12 @@
 import UIKit
 
 protocol PageSetupDelegate: class {
-    func didFinishEditingPage(_ index: Int?, pageType: PageType?, productLayout: ProductLayout?, color: ProductColor?)
+    func didFinishEditingPage(_ index: Int?, pageType: PageType?, productLayout: ProductLayout?, color: ProductColor?, editor: PageSetupViewController)
 }
 
 extension PageSetupDelegate {
-    func didFinishEditingPage(_ index: Int? = nil, pageType: PageType? = nil, productLayout: ProductLayout? = nil, color: ProductColor? = nil) {
-        didFinishEditingPage(index, pageType: pageType, productLayout: productLayout, color: color)
+    func didFinishEditingPage(_ index: Int? = nil, pageType: PageType? = nil, productLayout: ProductLayout? = nil, color: ProductColor? = nil, editor: PageSetupViewController) {
+        didFinishEditingPage(index, pageType: pageType, productLayout: productLayout, color: color, editor: editor)
     }
 }
 
@@ -498,7 +498,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
                                                          Analytics.PropertyNames.secondsInBackground: Int(secondsSpentInBackground)
             ])
         
-        delegate?.didFinishEditingPage()
+        delegate?.didFinishEditingPage(editor: self)
     }
     
     @IBAction func tappedDoneButton(_ sender: UIBarButtonItem) {
@@ -530,7 +530,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         Analytics.shared.trackAction(.editingConfirmed, [Analytics.PropertyNames.secondsInEditing: secondsSinceEditingEntered(),
                                                          Analytics.PropertyNames.secondsInBackground: Int(secondsSpentInBackground)])
         
-        delegate?.didFinishEditingPage(pageIndex, pageType: pageType, productLayout: productLayout, color: selectedColor)
+        delegate?.didFinishEditingPage(pageIndex, pageType: pageType, productLayout: productLayout, color: selectedColor, editor: self)
     }
     
     private var isAnimatingTool = false
