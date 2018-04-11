@@ -25,46 +25,36 @@ class PhotobookManager: NSObject {
     }
     
     static func rootViewControllerForCurrentState() -> UIViewController {
-        let tabBarController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
         let isProcessingOrder = OrderProcessingManager.shared.isProcessingOrder
         
         if IntroViewController.userHasDismissed && !isProcessingOrder {
+            let tabBarController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
             configureTabBarController(tabBarController)
             return tabBarController
         }
         
         let rootNavigationController = UINavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
-        rootNavigationController.isNavigationBarHidden = true
         if #available(iOS 11.0, *) {
             // Large titles on nav vc containing other nav vcs causes issues
             rootNavigationController.navigationBar.prefersLargeTitles = false
         }
         
         if !IntroViewController.userHasDismissed {
+            rootNavigationController.isNavigationBarHidden = true
             let introViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "IntroViewController") as! IntroViewController
-            introViewController.dismissClosure = {
-                self.configureTabBarController(tabBarController)
-                introViewController.proceedToTabBarController()
-            }
             rootNavigationController.viewControllers = [introViewController]
             
         } else if isProcessingOrder {
             // Show receipt screen to prevent user from ordering another photobook
             let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
             receiptViewController.order = OrderManager.shared.loadBasketOrder()
-            receiptViewController.dismissClosure = {
-                self.configureTabBarController(tabBarController)
-                rootNavigationController.isNavigationBarHidden = true
-                receiptViewController.proceedToTabBarController()
-            }
-            rootNavigationController.isNavigationBarHidden = false
             rootNavigationController.viewControllers = [receiptViewController]
         }
         
         return rootNavigationController
     }
     
-    private static func configureTabBarController(_ tabBarController: UITabBarController) {
+    static func configureTabBarController(_ tabBarController: UITabBarController) {
         
         // Browse
         // Set the albumManager to the AlbumsCollectionViewController

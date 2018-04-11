@@ -47,7 +47,6 @@ class ReceiptTableViewController: UITableViewController {
     private var lastProcessingError:OrderProcessingError?
     
     @IBOutlet weak var dismissBarButtonItem: UIBarButtonItem!
-    var dismissClosure:(() -> Void)?
     
     private var modalPresentationDismissedGroup = DispatchGroup()
     private lazy var paymentManager: PaymentAuthorizationManager = {
@@ -181,9 +180,23 @@ class ReceiptTableViewController: UITableViewController {
             ProductManager.shared.reset()
             OrderManager.shared.reset()
             NotificationCenter.default.post(name: ReceiptNotificationName.receiptWillDismiss, object: nil)
-            welf?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-            welf?.navigationController?.popToRootViewController(animated: true)
-            welf?.dismissClosure?()
+            
+            // Check if the app was launched into the ReceiptViewController
+            if welf?.navigationController?.viewControllers.count == 1 {
+                welf?.navigationController?.isNavigationBarHidden = true
+                welf?.performSegue(withIdentifier: "ReceiptDismiss", sender: nil)
+            } else {
+                welf?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+                welf?.navigationController?.popToRootViewController(animated: true)
+            }
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard segue.identifier == "ReceiptDismiss" else { return }
+        
+        if let tabBarController = segue.destination as? UITabBarController {
+            PhotobookManager.configureTabBarController(tabBarController)
         }
     }
     
@@ -205,10 +218,6 @@ class ReceiptTableViewController: UITableViewController {
     private func showPaymentMethods() {
         let paymentViewController = storyboard?.instantiateViewController(withIdentifier: "PaymentMethodsViewController") as! PaymentMethodsViewController
         navigationController?.pushViewController(paymentViewController, animated: true)
-    }
-    
-    func proceedToTabBarController() {
-        performSegue(withIdentifier: "ReceiptDismiss", sender: nil)
     }
     
     func notificationsSetup() {

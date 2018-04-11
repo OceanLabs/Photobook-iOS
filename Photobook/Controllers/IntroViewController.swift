@@ -28,8 +28,6 @@ class IntroViewController: UIViewController {
     @IBOutlet weak var ctaVisibleConstraint: NSLayoutConstraint!
     @IBOutlet weak var ctaInvisibleConstraint: NSLayoutConstraint!
     
-    var dismissClosure:(() -> Void)?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -72,21 +70,24 @@ class IntroViewController: UIViewController {
             ctaButton.isEnabled = false
             PHPhotoLibrary.requestAuthorization({ [weak welf = self] status in
                 DispatchQueue.main.async {
-                    self.ctaButton.isEnabled = true
+                    welf?.ctaButton.isEnabled = true
                     
                     // We don't care about the outcome, the next screens will take care of showing the user an error screen if needed
                     IntroViewController.userHasDismissed = true
-                    welf?.dismissClosure?()
+                    welf?.performSegue(withIdentifier: "IntroDismiss", sender: nil)
                 }
             })
         default:
             IntroViewController.userHasDismissed = true
-            dismissClosure?()
+            performSegue(withIdentifier: "IntroDismiss", sender: nil)
         }
     }
     
-    func proceedToTabBarController() {
-        performSegue(withIdentifier: "IntroDismiss", sender: nil)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard segue.identifier == "IntroDismiss" else { return }
+        
+        if let tabBarController = segue.destination as? UITabBarController {
+            PhotobookManager.configureTabBarController(tabBarController)
+        }
     }
-    
 }
