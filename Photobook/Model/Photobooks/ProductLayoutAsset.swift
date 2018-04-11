@@ -80,7 +80,7 @@ class ProductLayoutAsset: Codable {
     }
     
     func adjustTransform() {
-        guard let asset = asset else { return }
+        guard let asset = asset, let containerSize = containerSize else { return }
         
         transform = LayoutUtils.adjustTransform(transform, forViewSize: asset.size, inContainerSize: containerSize)
     }
