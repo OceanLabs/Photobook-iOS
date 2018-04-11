@@ -55,9 +55,9 @@ import UIKit
     /// Photo book view controller initialised with the provided images
     ///
     /// - Parameter assets: Images to use to initialise the photobook. Cannot be empty. Available asset types are: ImageAsset, URLAsset & PhotosAsset.
-    /// - Parameter delegate: Delegate to dismiss the photobook creation UI
+    /// - Parameter onDismiss: Closure to execute when the Photobook UI wants to dismissed
     /// - Returns: A photobook UIViewController
-    @objc public func photobookViewController(with assets: [PhotobookAsset], delegate: PhotobookSdkDelegate? = nil) -> UIViewController? {
+    @objc public func photobookViewController(with assets: [PhotobookAsset], onDismiss: (() -> Void)? = nil) -> UIViewController? {
         guard let assets = assets as? [Asset], assets.count > 0 else {
             return nil
         }
@@ -66,7 +66,7 @@ import UIKit
         let navigationController = UINavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
         let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.assets = assets
-        photobookViewController.delegate = delegate
+        photobookViewController.dismissClosure = onDismiss
         
         let closeBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: photobookViewController, action: #selector(photobookViewController.tappedCancel(_:)))
         photobookViewController.navigationItem.leftBarButtonItems = [ closeBarButtonItem ]
@@ -78,15 +78,14 @@ import UIKit
     
     /// Receipt View Controller
     ///
-    /// - Parameter closure: Closure to call when the receipt view controller finishes its tasks or the user dismisses it
+    /// - Parameter onDismiss: Closure to execute when the receipt UI wants to be dismissed
     /// - Returns: A receipt UIViewController
-    @objc public func receiptViewController(onDismiss closure: @escaping (() -> Void)) -> UIViewController? {
+    @objc public func receiptViewController(onDismiss: (() -> Void)? = nil) -> UIViewController? {
         guard isProcessingOrder else { return nil }
         
         UIFont.loadAllFonts()
         let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
-        receiptViewController.dismissClosure = closure
-        
+        receiptViewController.dismissClosure = { (tabBarController) in onDismiss?() }
         return receiptViewController
     }
     

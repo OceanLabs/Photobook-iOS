@@ -25,7 +25,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     var assetPickerViewController: PhotobookAssetPicker?
     
     /// Delegate to dismiss the PhotobookViewController
-    weak var delegate: PhotobookSdkDelegate?
+    var dismissClosure: (() -> Void)?
     
     private struct Constants {
         static let titleArrowOffset: CGFloat = -8.0
@@ -219,12 +219,15 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     @IBAction func tappedCancel(_ sender: UIBarButtonItem) {
-        guard let delegate = delegate, let navigationController = navigationController else {
-            dismiss(animated: true, completion: nil)
+        guard let dismissClosure = dismissClosure else {
+            if presentingViewController != nil {
+                presentingViewController!.dismiss(animated: true, completion: nil)
+                return
+            }
+            navigationController?.popViewController(animated: true)
             return
         }
-        
-        delegate.dismissPhotobookViewController(navigationController)
+        dismissClosure()
     }
 
     @IBAction private func didTapRearrange(_ sender: UIBarButtonItem) {

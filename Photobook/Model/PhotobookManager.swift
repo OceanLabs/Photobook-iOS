@@ -48,6 +48,10 @@ class PhotobookManager: NSObject {
             // Show receipt screen to prevent user from ordering another photobook
             let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
             receiptViewController.order = OrderManager.shared.loadBasketOrder()
+            receiptViewController.dismissClosure = { (tabBarController) in
+                guard let tabBarController = tabBarController else { return }
+                configureTabBarController(tabBarController)
+            }
             rootNavigationController.viewControllers = [receiptViewController]
         }
         

@@ -47,6 +47,7 @@ class ReceiptTableViewController: UITableViewController {
     private var lastProcessingError:OrderProcessingError?
     
     @IBOutlet weak var dismissBarButtonItem: UIBarButtonItem!
+    var dismissClosure: ((UITabBarController?) -> Void)?
     
     private var modalPresentationDismissedGroup = DispatchGroup()
     private lazy var paymentManager: PaymentAuthorizationManager = {
@@ -181,14 +182,28 @@ class ReceiptTableViewController: UITableViewController {
             OrderManager.shared.reset()
             NotificationCenter.default.post(name: ReceiptNotificationName.receiptWillDismiss, object: nil)
             
-            // Check if the app was launched into the ReceiptViewController
-            if welf?.navigationController?.viewControllers.count == 1 {
-                welf?.navigationController?.isNavigationBarHidden = true
-                welf?.performSegue(withIdentifier: "ReceiptDismiss", sender: nil)
-            } else {
-                welf?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-                welf?.navigationController?.popToRootViewController(animated: true)
+            if welf?.dismissClosure != nil {
+                #if PHOTOBOOK_SDK
+                    welf?.dismissClosure?(nil)
+                #else
+                    // Check if the Photobook app was launched into the ReceiptViewController
+                    if welf?.navigationController?.viewControllers.count == 1 {
+                        welf?.navigationController?.isNavigationBarHidden = true
+                        welf?.performSegue(withIdentifier: "ReceiptDismiss", sender: nil)
+                    } else {
+                        welf?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+                        welf?.navigationController?.popToRootViewController(animated: true)
+                    }
+                #endif
+                return
             }
+            
+            // No delegate or dismiss closure provided
+            if welf?.presentingViewController != nil {
+                welf?.presentingViewController!.dismiss(animated: true, completion: nil)
+                return
+            }
+            welf?.navigationController?.popViewController(animated: true)
         }
     }
     
@@ -196,7 +211,7 @@ class ReceiptTableViewController: UITableViewController {
         guard segue.identifier == "ReceiptDismiss" else { return }
         
         if let tabBarController = segue.destination as? UITabBarController {
-            PhotobookManager.configureTabBarController(tabBarController)
+            dismissClosure?(tabBarController)
         }
     }
     
@@ -218,6 +233,10 @@ class ReceiptTableViewController: UITableViewController {
     private func showPaymentMethods() {
         let paymentViewController = storyboard?.instantiateViewController(withIdentifier: "PaymentMethodsViewController") as! PaymentMethodsViewController
         navigationController?.pushViewController(paymentViewController, animated: true)
+    }
+    
+    func proceedToTabBarController() {
+        performSegue(withIdentifier: "ReceiptDismiss", sender: nil)
     }
     
     func notificationsSetup() {
