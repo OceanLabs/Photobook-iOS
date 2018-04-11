@@ -103,7 +103,7 @@ class ProductManager {
     var hasLayoutWithoutAsset: Bool {
         return productLayouts.first { $0.hasEmptyContent } != nil
     }
-    var emptyLayoutIndices: [Int] {
+    var emptyLayoutIndices: [Int]? {
         var temp = [Int]()
         var index = 0
         for productLayout in productLayouts {
@@ -116,7 +116,28 @@ class ProductManager {
             }
             index += 1
         }
-        return temp
+        return temp.count > 0 ? temp : nil
+    }
+    var truncatedTextLayoutIndices: [Int]? {
+        var temp = [Int]()
+
+        let pageSize = CGSize(width: product!.pageWidth!, height: product!.pageHeight!)
+        
+        for (index, productLayout) in productLayouts.enumerated() {
+            guard let textBox = productLayout.layout.textLayoutBox, let text = productLayout.text, text.count > 0 else { continue }
+            
+            let fontType = productLayout.fontType ?? .plain
+            let fontSize = fontType.sizeForScreenHeight()
+            
+            let textFrame = textBox.rectContained(in: pageSize)
+            let attributedText = fontType.attributedText(with: text, fontSize: fontSize, fontColor: .black)
+            
+            let textHeight = attributedText.height(for: textFrame.width)
+            if textHeight > textFrame.height {
+                temp.append(index)
+            }
+        }
+        return temp.count > 0 ? temp : nil
     }
     
     //upload

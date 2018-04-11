@@ -271,37 +271,65 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             self.navigationController?.pushViewController(orderSummaryViewController, animated: true)
         }
         
-        guard !ProductManager.shared.hasLayoutWithoutAsset else {
-            var indices = ProductManager.shared.emptyLayoutIndices
-            var pageList = ""
-            var message = ""
-            
-            if indices.first == 0 {
-                message = NSLocalizedString("Photobook/MissingAssetsCover", value: "The cover is blank.", comment: "")
-                indices.removeFirst()
-                if indices.count > 0 { message += " " }
+        var emptyPageList = ""
+        var truncatedPageList = ""
+        var message = ""
+        
+        if var emptyIndices = ProductManager.shared.emptyLayoutIndices {
+            if emptyIndices.first == 0 {
+                message += NSLocalizedString("Photobook/MissingAssetsCover", value: "The cover is blank.", comment: "Alert message informing the user that the cover is blank")
+                emptyIndices.removeFirst()
+                if !emptyIndices.isEmpty { message += " " }
             }
-            for index in indices {
-                if !pageList.isEmpty { pageList += ", " }
-                pageList += String(index)
+
+            for index in emptyIndices {
+                if !emptyPageList.isEmpty { emptyPageList += ", " }
+                emptyPageList += String(index)
             }
             
-            if !pageList.isEmpty {
-                if indices.count == 1 {
-                    message += String(format: NSLocalizedString("Photobook/MissingAssetsMessageOnePage", value: "Page %@ is blank.", comment: "Alert message informing the user that they have one blank page"), pageList)
+            if !emptyPageList.isEmpty {
+                if emptyIndices.count == 1 {
+                    message += String(format: NSLocalizedString("Photobook/MissingAssetsMessageOnePage", value: "Page %@ is blank.", comment: "Alert message informing the user that they have one blank page"), emptyPageList)
                 } else {
-                    message += String(format: NSLocalizedString("Photobook/MissingAssetsMessageMultiplePages", value: "Pages %@ are blank.", comment: "Alert message informing the user that they have multiple blank pages"), pageList)
+                    message += String(format: NSLocalizedString("Photobook/MissingAssetsMessageMultiplePages", value: "Pages %@ are blank.", comment: "Alert message informing the user that they have multiple blank pages"), emptyPageList)
                 }
             }
-            let alertController = UIAlertController(title: NSLocalizedString("Photobook/MissingAssetsTitle", value: "Continue to checkout?", comment: "Alert title informing the user that they have blank pages"), message: message, preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .default, handler: nil))
-            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default) { _ in
-                goToCheckout()
-            })
-            present(alertController, animated: true, completion: nil)
+        }
+
+        if var truncatedIndices = ProductManager.shared.truncatedTextLayoutIndices {
+            if message.count > 0 { message += "\n" }
+            
+            if truncatedIndices.first == 0 {
+                message += NSLocalizedString("Photobook/TruncatedTextCover", value: "The cover text will be truncated.", comment: "Alert message informing the user that the text on the cover will be truncated")
+                truncatedIndices.removeFirst()
+                if !truncatedIndices.isEmpty { message += " " }
+            }
+        
+            for index in truncatedIndices {
+                if !truncatedPageList.isEmpty { truncatedPageList += ", " }
+                truncatedPageList += String(index)
+            }
+            
+            if !truncatedPageList.isEmpty {
+                if truncatedIndices.count == 1 {
+                    message += String(format: NSLocalizedString("Photobook/TruncatedTextOnePage", value: "The text on page %@ will be truncated.", comment: "Alert message informing the user that the text one page will be truncated"), truncatedPageList)
+                } else {
+                    message += String(format: NSLocalizedString("Photobook/TruncatedTextMultiplePages", value: "The text on pages %@ will be truncated.", comment: "Alert message informing the user that the text on multiple pages will be truncated"), truncatedPageList)
+                }
+            }
+        }
+        
+        guard message.count > 0 else {
+            goToCheckout()
             return
         }
-        goToCheckout()
+        
+        let alertController = UIAlertController(title: NSLocalizedString("Photobook/MissingAssetsTitle", value: "Continue to checkout?", comment: "Alert title informing the user that they have blank pages"), message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .default, handler: nil))
+        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default) { _ in
+            goToCheckout()
+        })
+        present(alertController, animated: true, completion: nil)
     }
         
     @IBAction private func didTapBack() {
