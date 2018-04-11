@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 protocol PhotobookAPIManagerDelegate: class {
-    var product: Photobook? { get set }
+    var template: PhotobookTemplate { get set }
     var productLayouts: [ProductLayout] { get set }
     var coverColor: ProductColor { get set }
     var pageColor: ProductColor { get set }
@@ -92,7 +92,7 @@ class PhotobookAPIManager {
     /// Requests the information about photobook products and layouts from the API
     ///
     /// - Parameter completionHandler: Closure to be called when the request completes
-    func requestPhotobookInfo(_ completionHandler:@escaping ([Photobook]?, [Layout]?, [UpsellOption]?, Error?) -> ()) {
+    func requestPhotobookInfo(_ completionHandler:@escaping ([PhotobookTemplate]?, [Layout]?, [UpsellOption]?, Error?) -> ()) {
         
         apiClient.get(context: .photobook, endpoint: EndPoints.products) { (jsonData, error) in
             
@@ -132,10 +132,10 @@ class PhotobookAPIManager {
             }
             
             // Parse photobook products
-            var tempPhotobooks = [Photobook]()
+            var tempPhotobooks = [PhotobookTemplate]()
             
             for photobookDictionary in productsData {
-                if let photobook = Photobook.parse(photobookDictionary) {
+                if let photobook = PhotobookTemplate.parse(photobookDictionary) {
                     tempPhotobooks.append(photobook)
                 }
             }
@@ -178,7 +178,7 @@ class PhotobookAPIManager {
             return
         }
         
-        guard delegate?.product != nil, let productLayouts = delegate?.productLayouts else {
+        guard delegate?.template != nil, let productLayouts = delegate?.productLayouts else {
             completionHandler(0, PhotobookAPIError.missingPhotobookInfo)
             return
         }
@@ -314,7 +314,7 @@ class PhotobookAPIManager {
         var photobook = [String: Any]()
         
         var pages = [[String: Any]]()
-        for productLayout in ProductManager.shared.productLayouts {
+        for productLayout in ProductManager.shared.currentProduct!.productLayouts {
             var page = [String: Any]()
             
             if let asset = productLayout.asset,

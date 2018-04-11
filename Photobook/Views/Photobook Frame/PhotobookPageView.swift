@@ -224,8 +224,8 @@ class PhotobookPageView: UIView {
         
         let finalFrame = textBox.rectContained(in: bounds.size)
         
-        let originalWidth = ProductManager.shared.product!.pageWidth!
-        let originalHeight = ProductManager.shared.product!.pageHeight!
+        let originalWidth = ProductManager.shared.currentProduct!.template.pageWidth!
+        let originalHeight = ProductManager.shared.currentProduct!.template.pageHeight!
         
         pageTextLabel.transform = .identity
         pageTextLabel.frame = CGRect(x: finalFrame.minX, y: finalFrame.minY, width: originalWidth * textBox.rect.width, height: originalHeight * textBox.rect.height)

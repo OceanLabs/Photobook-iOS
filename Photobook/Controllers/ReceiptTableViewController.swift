@@ -99,7 +99,7 @@ class ReceiptTableViewController: UITableViewController {
             }
             
             //re entered app, load and resume upload
-            ProductManager.shared.loadUserPhotobook()
+            ProductManager.shared.currentProduct!.loadUserPhotobook()
             emptyScreenViewController.hide(animated: true)
         } else {
             //start processing
@@ -256,7 +256,7 @@ class ReceiptTableViewController: UITableViewController {
         case Section.progress.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptProgressTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptProgressTableViewCell
             
-            cell.updateProgress(pendingUploads: ProductManager.shared.pendingUploads, totalUploads: ProductManager.shared.totalUploads)
+            cell.updateProgress(pendingUploads: ProductManager.shared.currentProduct!.pendingUploads, totalUploads: ProductManager.shared.currentProduct!.totalUploads)
             cell.startProgressAnimation()
             
             return cell

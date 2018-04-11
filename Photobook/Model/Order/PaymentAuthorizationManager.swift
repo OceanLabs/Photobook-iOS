@@ -112,7 +112,7 @@ class PaymentAuthorizationManager: NSObject {
             let city = address?.city,
             let postalCode = address?.zipOrPostcode,
             let country = address?.country,
-            let product = ProductManager.shared.product
+            let product = ProductManager.shared.currentProduct?.template
             else { return }
 
         let paypalAddress = PayPalShippingAddress(recipientName: String(format: "%@ %@", firstName, lastName), withLine1: line1, withLine2: address?.line2 ?? "", withCity: city, withState: address?.stateOrCounty ?? "", withPostalCode: postalCode, withCountryCode: country.codeAlpha2)

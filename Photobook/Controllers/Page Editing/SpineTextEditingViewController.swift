@@ -43,7 +43,7 @@ class SpineTextEditingViewController: UIViewController {
     private var backgroundColor: UIColor!
     private var initialTransform: CGAffineTransform!
     
-    private var fontType: FontType = ProductManager.shared.spineFontType
+    private var fontType: FontType = ProductManager.shared.currentProduct!.spineFontType
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -141,17 +141,17 @@ class SpineTextEditingViewController: UIViewController {
     private func setup() {
         
         textField.inputAccessoryView = textToolBarView
-        textField.text = ProductManager.shared.spineText
+        textField.text = ProductManager.shared.currentProduct!.spineText
 
         let initialContainerRatio = initialRect.width / initialRect.height
         
         // Figure out the size of the spine frame
-        let height = textField.bounds.width / ProductManager.shared.product!.spineTextRatio
+        let height = textField.bounds.width / ProductManager.shared.currentProduct!.template.spineTextRatio
         let width = height * initialContainerRatio
         
         spineFrameViewWidthConstraint.constant = width
         spineFrameViewHeightConstraint.constant = height
-        spineFrameView.color = ProductManager.shared.coverColor
+        spineFrameView.color = ProductManager.shared.currentProduct!.coverColor
         spineFrameView.resetSpineColor()
         
         textFieldHeightConstraint.constant = width // Since the cover will be on its side
@@ -188,7 +188,7 @@ class SpineTextEditingViewController: UIViewController {
     
     private func setTextFieldAttributes() {
         let fontSize = fontType.sizeForScreenHeight(spineFrameViewHeightConstraint.constant, isSpineText: true)
-        let fontColor = ProductManager.shared.coverColor.fontColor()
+        let fontColor = ProductManager.shared.currentProduct!.coverColor.fontColor()
         textField.attributedText = fontType.attributedText(with: textField.text, fontSize: fontSize, fontColor: fontColor, isSpineText: true)
         textField.defaultTextAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor, isSpineText: true)
     }

@@ -27,6 +27,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     /// Delegate to dismiss the PhotobookViewController
     weak var delegate: PhotobookSdkDelegate?
     
+    var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
+    
     private struct Constants {
         static let titleArrowOffset: CGFloat = -8.0
         static let rearrangeScale: CGFloat = 0.8
@@ -156,14 +160,21 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         loadProducts()
     }
     
-    private func setup(with photobook: Photobook) {
+    private func setup(with photobook: PhotobookTemplate) {
         guard let assets = assets else {
             // Should never really reach here
             emptyScreenViewController.show(message: NSLocalizedString("Photobook/NoPhotosSelected", value: "No photos selected", comment: "No photos selected error message"))
             return
         }
         
-        ProductManager.shared.setPhotobook(photobook, withAssets: assets)
+        var product: PhotobookProduct! = self.product
+        if product == nil {
+            product = PhotobookProduct(template: photobook, addedAssets: assets)
+            ProductManager.shared.currentProduct = product
+        } else {
+            product.changePhotobook(photobook, withAssets: assets)
+        }
+        
         setupTitleView()
         
         if emptyScreenViewController.parent != nil {
@@ -188,7 +199,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     private func setupTitleView() {
         if !isRearranging {
-            titleButton.setTitle(ProductManager.shared.product?.name, for: .normal)
+            titleButton.setTitle(product.template.name, for: .normal)
             titleButton.sizeToFit()
             navigationItem.titleView = titleButton
             return
@@ -204,9 +215,9 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let alertController = UIAlertController(title: nil, message: NSLocalizedString("Photobook/ChangeSizeTitle", value: "Changing the size keeps your layout intact", comment: "Information when the user wants to change the photo book's size"), preferredStyle: .actionSheet)
         for photobook in photobooks{
             alertController.addAction(UIAlertAction(title: photobook.name, style: .default, handler: { [weak welf = self] (_) in
-                guard ProductManager.shared.product!.id != photobook.id else { return }
+                guard welf?.product.template.id != photobook.id else { return }
                 
-                ProductManager.shared.setPhotobook(photobook)
+                welf?.product.changePhotobook(photobook)
                 
                 welf?.setupTitleView()
                 welf?.collectionView.reloadData()
@@ -271,8 +282,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             self.navigationController?.pushViewController(orderSummaryViewController, animated: true)
         }
         
-        guard !ProductManager.shared.hasLayoutWithoutAsset else {
-            var indices = ProductManager.shared.emptyLayoutIndices
+        guard !product.hasLayoutWithoutAsset else {
+            var indices = product.emptyLayoutIndices
             var pageList = ""
             var message = ""
             
@@ -353,8 +364,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         
         for removedAsset in removedAssets {
-            if let removedIndex = ProductManager.shared.productLayouts.index(where: { $0.asset?.identifier == removedAsset.identifier }) {
-                ProductManager.shared.productLayouts[removedIndex].asset = nil
+            if let removedIndex = product.productLayouts.index(where: { $0.asset?.identifier == removedAsset.identifier }) {
+                product.productLayouts[removedIndex].asset = nil
                 
                 // Check if the cover needs refreshing
                 if removedIndex == 0 && !collectionView.indexPathsForVisibleItems.contains(IndexPath(item: 0, section: 0)) {
@@ -364,7 +375,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                     continue
                 }
                 
-                let spreadIndex = ProductManager.shared.spreadIndex(for: removedIndex)
+                let spreadIndex = product.spreadIndex(for: removedIndex)
                 if let visibleIndexPathToLoad = collectionView.indexPathsForVisibleItems.filter({ $0.item == spreadIndex && $0.section == 1 }).first,
                     let cell = collectionView.cellForItem(at: visibleIndexPathToLoad) as? PhotobookCollectionViewCell
                 {
@@ -394,7 +405,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             let leftIndex = cell.leftIndex
             else { return }
         
-        let leftProductLayout = ProductManager.shared.productLayouts[leftIndex]
+        let leftProductLayout = product.productLayouts[leftIndex]
         
         let pasteBoard = UIPasteboard(name: UIPasteboardName("ly.kite.photobook.rearrange"), create: true)
         
@@ -404,7 +415,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         pasteBoard?.setItems([["ly.kite.photobook.productLayout" : leftData]])
         
         if !leftProductLayout.layout.isDoubleLayout, let rightIndex = cell.rightIndex {
-            let rightProductLayout = ProductManager.shared.productLayouts[rightIndex]
+            let rightProductLayout = product.productLayouts[rightIndex]
             guard let rightData = try? PropertyListEncoder().encode(rightProductLayout) else {
                 fatalError("Photobook: encoding of product layout failed")
             }
@@ -413,7 +424,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     @objc private func pastePages() {
-        guard ProductManager.shared.isAddingPagesAllowed else {
+        guard product.isAddingPagesAllowed else {
             showNotAllowedToAddMorePagesAlert()
             return
         }
@@ -438,7 +449,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         interactingItemIndexPath = nil
         
         // Insert new page above the tapped one
-        ProductManager.shared.addPages(at: index, pages: productLayouts)
+        product.addPages(at: index, pages: productLayouts)
         collectionView.performBatchUpdates({
             collectionView.insertItems(at: [indexPath])
         }, completion: { _ in
@@ -454,16 +465,16 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             let index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex
             else { return }
         
-        guard ProductManager.shared.isRemovingPagesAllowed else {
+        guard product.isRemovingPagesAllowed else {
             let alertController = UIAlertController(title: NSLocalizedString("Photobook/CannotDeleteAlertTitle", value: "Cannot Delete Page", comment: "Alert title letting the user know they can't delete a page from the book"), message: NSLocalizedString("Photobook/CannotDeleteAlertMessage", value: "Your photo book currently contains the minimum number of pages allowed", comment: "Alert message letting the user know they can't delete a page from the book"), preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
             present(alertController, animated: true, completion: nil)
             return
         }
         
-        let productLayout = ProductManager.shared.productLayouts[index]
+        let productLayout = product.productLayouts[index]
         
-        ProductManager.shared.deletePages(for: productLayout)
+        product.deletePages(for: productLayout)
         collectionView.performBatchUpdates({
             collectionView.deleteItems(at: [indexPath])
         }, completion: { _ in
@@ -562,7 +573,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         })
         
         if destinationIndexPath != sourceIndexPath,
-            let sourceProductLayoutIndex = ProductManager.shared.productLayoutIndex(for: sourceIndexPath.item) {
+            let sourceProductLayoutIndex = product.productLayoutIndex(for: sourceIndexPath.item) {
             
             // Because we show a placeholder graphic where the drop proposal is, we get the destination index from the previous page
             let previousIndexPath = IndexPath(item: destinationIndexPath.item + (movingDown ? -1 : 1), section: destinationIndexPath.section)
@@ -570,7 +581,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             guard let destinationProductLayoutIndex = previousCell?.leftIndex ?? previousCell?.rightIndex else { return }
             
-            ProductManager.shared.moveLayout(from: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
+            product.moveLayout(from: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
             
             interactingItemIndexPath = nil
             
@@ -591,7 +602,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     private func liftView(_ photobookFrameView: PhotobookFrameView) {
         guard let productLayoutIndex = photobookFrameView.leftPageView.pageIndex,
-            let spreadIndex = ProductManager.shared.spreadIndex(for: productLayoutIndex),
+            let spreadIndex = product.spreadIndex(for: productLayoutIndex),
             spreadIndex != collectionView.numberOfItems(inSection: 1) - 1
             else { return }
         
@@ -615,14 +626,14 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     private func updateVisibleCells() {
         for cell in collectionView.visibleCells {
             guard let indexPath = collectionView.indexPath(for: cell),
-                let productLayoutIndex = ProductManager.shared.productLayoutIndex(for: indexPath.item),
+                let productLayoutIndex = product.productLayoutIndex(for: indexPath.item),
                 let cell = cell as? PhotobookCollectionViewCell
                 else { continue }
 
-            if ProductManager.shared.productLayouts[productLayoutIndex].layout.isDoubleLayout {
+            if product.productLayouts[productLayoutIndex].layout.isDoubleLayout {
                 cell.loadPages(leftIndex: productLayoutIndex, rightIndex: productLayoutIndex)
             } else {
-                let rightIndex = productLayoutIndex < ProductManager.shared.productLayouts.count - 1 ? productLayoutIndex + 1 : nil
+                let rightIndex = productLayoutIndex < product.productLayouts.count - 1 ? productLayoutIndex + 1 : nil
                 cell.loadPages(leftIndex: productLayoutIndex, rightIndex: rightIndex)
             }
         }
@@ -667,7 +678,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
     // MARK: UICollectionViewDataSource
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        guard ProductManager.shared.product != nil else { return 0 }
+        guard product != nil else { return 0 }
         
         return 2
     }
@@ -675,7 +686,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 1:
-            guard let lastSpreadIndex = ProductManager.shared.spreadIndex(for: ProductManager.shared.productLayouts.count - 1) else { return 0 }
+            guard let lastSpreadIndex = product.spreadIndex(for: product.productLayouts.count - 1) else { return 0 }
             return lastSpreadIndex + 1 + (proposedDropIndexPath != nil ? 1 : 0)
         default:
             return 1
@@ -713,17 +724,17 @@ extension PhotobookViewController: UICollectionViewDataSource {
                 rightIndex = 1
                 cell.isFaded = isRearranging
             case collectionView.numberOfItems(inSection: 1) - 1: // Last page
-                leftIndex = ProductManager.shared.productLayouts.count - 1
+                leftIndex = product.productLayouts.count - 1
                 cell.isFaded = isRearranging
             default:
                 let indexPathItem = indexPath.item - ((proposedDropIndexPath?.item ?? Int.max) < indexPath.item ? 1 : 0)
-                guard let index = ProductManager.shared.productLayoutIndex(for: indexPathItem) else { return cell }
+                guard let index = product.productLayoutIndex(for: indexPathItem) else { return cell }
                 leftIndex = index
-                let isDoubleLayout = ProductManager.shared.productLayouts[leftIndex!].layout.isDoubleLayout
+                let isDoubleLayout = product.productLayouts[leftIndex!].layout.isDoubleLayout
                 
                 if isDoubleLayout {
                     rightIndex = leftIndex
-                } else if leftIndex! + 1 < ProductManager.shared.productLayouts.count {
+                } else if leftIndex! + 1 < product.productLayouts.count {
                     rightIndex = index + 1
                 }
                 cell.setupGestures()
@@ -751,14 +762,12 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        guard let product = ProductManager.shared.product else { return .zero }
-
         if indexPath == proposedDropIndexPath {
             return CGSize(width: collectionView.bounds.width, height: Constants.proposalCellHeight)
         }
 
         let pageWidth = (view.bounds.width - Constants.cellSideMargin * 2.0 - PhotobookConstants.horizontalPageToCoverMargin * 2.0) / 2.0
-        let pageHeight = pageWidth / product.aspectRatio
+        let pageHeight = pageWidth / product.template.aspectRatio
 
         // PhotoboookCollectionViewCell works when the collectionView uses dynamic heights by setting up the aspect ratio of its pages.
         // This however, causes problems with the drag & drop functionality and that is why the cell height is calculated by using the measurements set on the storyboard.
@@ -799,13 +808,13 @@ extension PhotobookViewController: PageSetupDelegate {
         if let index = index {
             if let productLayout = productLayout {
                 trackAnalyticsActionsForEditingFinished(index: index, productLayout: productLayout)
-                ProductManager.shared.replaceLayout(at: index, with: productLayout, pageType: pageType)
+                product.replaceLayout(at: index, with: productLayout, pageType: pageType)
             }
             if let color = color {
                 if index == 0 { // Cover
-                    ProductManager.shared.coverColor = color
+                    product.coverColor = color
                 } else {
-                    ProductManager.shared.pageColor = color
+                    product.pageColor = color
                 }
             }
             collectionView.reloadData()
@@ -823,7 +832,7 @@ extension PhotobookViewController: PageSetupDelegate {
     }
     
     func trackAnalyticsActionsForEditingFinished(index: Int, productLayout: ProductLayout) {
-        let previousLayout = ProductManager.shared.productLayouts[index]
+        let previousLayout = product.productLayouts[index]
         
         if previousLayout.productLayoutText?.text != productLayout.productLayoutText?.text {
             Analytics.shared.trackAction(.addedTextToPage)
@@ -950,7 +959,7 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
     }
     
     func didTapOnPlusButton(at spreadIndex: Int) {
-        guard ProductManager.shared.isAddingPagesAllowed else {
+        guard product.isAddingPagesAllowed else {
             showNotAllowedToAddMorePagesAlert()
             return
         }
@@ -960,7 +969,7 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
         guard let index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex else { return }
         
         // Insert new page above the tapped one
-        ProductManager.shared.addDoubleSpread(at: index)
+        product.addDoubleSpread(at: index)
         collectionView.performBatchUpdates({
             collectionView.insertItems(at: [indexPath])
         }, completion: { _ in
@@ -992,8 +1001,8 @@ extension PhotobookViewController: SpineTextEditingDelegate {
     }
     
     func didSaveSpineTextEditing(_ spineTextEditingViewController: SpineTextEditingViewController, spineText: String?, fontType: FontType) {
-        ProductManager.shared.spineText = spineText
-        ProductManager.shared.spineFontType = fontType
+        product.spineText = spineText
+        product.spineFontType = fontType
         
         collectionView.reloadItems(at: [IndexPath(row: 0, section: 0)])
         

@@ -116,17 +116,19 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
                 fatalError("Page editing started without a layout index")
             }
             
-            productLayout = ProductManager.shared.productLayouts[pageIndex].shallowCopy()
+            productLayout = ProductManager.shared.currentProduct!.productLayouts[pageIndex].shallowCopy()
             productLayout!.hasBeenEdited = true
 
-            pageType = ProductManager.shared.pageType(forLayoutIndex: pageIndex)
+            pageType = ProductManager.shared.currentProduct!.pageType(forLayoutIndex: pageIndex)
+            
+            let product = ProductManager.shared.currentProduct
             
             if pageType == .cover {
-                selectedColor = ProductManager.shared.coverColor
-                availableLayouts = ProductManager.shared.currentCoverLayouts()
+                selectedColor = ProductManager.shared.currentProduct!.coverColor
+                availableLayouts = ProductManager.shared.coverLayouts(for: product!.template)
             } else {
-                selectedColor = ProductManager.shared.pageColor
-                availableLayouts = ProductManager.shared.currentLayouts()
+                selectedColor = ProductManager.shared.currentProduct!.pageColor
+                availableLayouts = ProductManager.shared.layouts(for: product!.template)
             }
         }
     }
@@ -164,7 +166,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private var selectedColor: ProductColor!
-    private var pageColor = ProductManager.shared.pageColor
+    private var pageColor = ProductManager.shared.currentProduct!.pageColor
     
     private var previouslySelectedButton: UIButton!
     
@@ -193,12 +195,12 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         super.viewDidLayoutSubviews()
         
         if !hasDoneSetup {
-            coverFrameView.color = ProductManager.shared.coverColor
-            coverFrameView.pageView.aspectRatio = ProductManager.shared.product!.aspectRatio
+            coverFrameView.color = ProductManager.shared.currentProduct!.coverColor
+            coverFrameView.pageView.aspectRatio = ProductManager.shared.currentProduct!.template.aspectRatio
             coverFrameView.pageView.delegate = self
             
-            photobookFrameView.pageColor = ProductManager.shared.pageColor
-            photobookFrameView.coverColor = ProductManager.shared.coverColor
+            photobookFrameView.pageColor = ProductManager.shared.currentProduct!.pageColor
+            photobookFrameView.coverColor = ProductManager.shared.currentProduct!.coverColor
 
             setupPhotobookPages()
             
@@ -223,7 +225,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             if !isDoublePage && (pageType == .left || pageType == .right) {
                 let oppositeIndex = pageIndex! + (pageType == .left ? 1 : -1)
                 oppositePageView!.pageIndex = oppositeIndex
-                oppositePageView!.productLayout = ProductManager.shared.productLayouts[oppositeIndex]
+                oppositePageView!.productLayout = ProductManager.shared.currentProduct!.productLayouts[oppositeIndex]
                 oppositePageView!.setupImageBox(with: nil, animated: false)
                 oppositePageView!.setupTextBox(mode: .userTextOnly)
             }
@@ -374,7 +376,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func setupPhotobookPages() {
-        let aspectRatio = ProductManager.shared.product!.aspectRatio!
+        let aspectRatio = ProductManager.shared.currentProduct!.template.aspectRatio!
         if isDoublePage {
             photobookFrameView.leftPageView.aspectRatio = pageType == .left ? aspectRatio * 2.0 : 0.0
             photobookFrameView.rightPageView.aspectRatio = pageType == .left ? 0.0 : aspectRatio * 2.0
@@ -403,7 +405,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             break
         }
         
-        let bleed = ProductManager.shared.bleed(forPageSize: pageView.bounds.size)
+        let bleed = ProductManager.shared.currentProduct!.bleed(forPageSize: pageView.bounds.size)
         photobookFrameView.leftPageView.bleed = bleed
         photobookFrameView.rightPageView.bleed = bleed
         
@@ -430,8 +432,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             layoutSelectionViewController.layouts = availableLayouts
         }
         layoutSelectionViewController.selectedLayout = productLayout!.layout
-        layoutSelectionViewController.coverColor = ProductManager.shared.coverColor
-        layoutSelectionViewController.pageColor = ProductManager.shared.pageColor
+        layoutSelectionViewController.coverColor = ProductManager.shared.currentProduct!.coverColor
+        layoutSelectionViewController.pageColor = ProductManager.shared.currentProduct!.pageColor
         layoutSelectionViewController.isEditingDoubleLayout = productLayout!.layout.isDoubleLayout
     }
     

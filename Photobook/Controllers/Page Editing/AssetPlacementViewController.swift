@@ -152,7 +152,7 @@ class AssetPlacementViewController: UIViewController {
 
         // Should trigger a transform recalculation
         let pageSize = imageBox.containerSize(for: assetContainerView.bounds.size)
-        let bleed = ProductManager.shared.bleed(forPageSize: pageSize)
+        let bleed = ProductManager.shared.currentProduct!.bleed(forPageSize: pageSize)
         
         bleedContainerView.frame = imageBox.bleedRect(in: assetContainerView.bounds.size, withBleed: bleed)
         assetImageView.center = CGPoint(x: bleedContainerView.bounds.width * 0.5, y: bleedContainerView.bounds.height * 0.5)

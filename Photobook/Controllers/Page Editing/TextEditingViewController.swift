@@ -235,7 +235,7 @@ class TextEditingViewController: UIViewController {
     private func setup() {
         // Figure out the height of the textView
         guard
-            let pageRatio = ProductManager.shared.product?.aspectRatio,
+            let pageRatio = ProductManager.shared.currentProduct!.template.aspectRatio,
             let textLayoutBox = productLayout?.layout.textLayoutBox
         else {
             fatalError("Text editing failed due to missing layout info.")

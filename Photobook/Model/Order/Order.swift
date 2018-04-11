@@ -46,8 +46,8 @@ class Order: Codable {
         var stringHash = ""
         if let deliveryDetails = deliveryDetails { stringHash += "ad:\(deliveryDetails.hashValue)," }
         if let promoCode = promoCode { stringHash += "pc:\(promoCode)," }
-        if let productName = ProductManager.shared.product?.name { stringHash += "jb:\(productName)," }
-        stringHash += "qt:\(ProductManager.shared.productLayouts.count),"
+        if let productName = ProductManager.shared.currentProduct?.template.name { stringHash += "jb:\(productName)," }
+        stringHash += "qt:\(ProductManager.shared.currentProduct!.productLayouts.count),"
         
         stringHash += "up:("
         for upsell in OrderSummaryManager.shared.selectedUpsellOptions {
@@ -98,7 +98,7 @@ class Order: Codable {
         parameters["promo_code"] = promoCode
         parameters["shipping_method"] = shippingMethod
         parameters["jobs"] = [[
-            "template_id" : ProductManager.shared.product?.productTemplateId ?? "",
+            "template_id" : ProductManager.shared.currentProduct!.template.productTemplateId ?? "",
             "multiples" : itemCount,
             "assets": [["inside_pdf" : photobookId ?? ""]]
             ]]

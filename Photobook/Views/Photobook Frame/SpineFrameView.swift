@@ -30,7 +30,7 @@ class SpineFrameView: UIView {
     
     override func layoutSubviews() {
         // Figure out the available width of the spine frame
-        textLabelWidthConstraint.constant = bounds.height * ProductManager.shared.product!.spineTextRatio
+        textLabelWidthConstraint.constant = bounds.height * ProductManager.shared.currentProduct!.template.spineTextRatio
 
         if !(text ?? "").isEmpty {
             let fontSize = fontType.sizeForScreenHeight(bounds.height, isSpineText: true)

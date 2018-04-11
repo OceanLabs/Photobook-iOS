@@ -23,21 +23,21 @@ class PhotobookTests: XCTestCase {
     ]) as [String: AnyObject]
     
     func testParse_ShouldSucceedWithAValidDictionary() {
-        let photobook = Photobook.parse(validDictionary)
+        let photobook = PhotobookTemplate.parse(validDictionary)
         XCTAssertNotNil(photobook, "Parse: Should succeed with a valid dictionary")
     }
     
     func testParse_ShouldReturnNilIfIdIsMissing() {
         var photobookDictionary = validDictionary
         photobookDictionary["id"] = nil
-        let photobookBox = Photobook.parse(photobookDictionary)
+        let photobookBox = PhotobookTemplate.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if id is missing")
     }
 
     func testParse_ShouldReturnNilIfNameIsMissing() {
         var photobookDictionary = validDictionary
         photobookDictionary["name"] = nil
-        let photobookBox = Photobook.parse(photobookDictionary)
+        let photobookBox = PhotobookTemplate.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if name is missing")
     }
     
@@ -45,14 +45,14 @@ class PhotobookTests: XCTestCase {
     func testParse_ShouldReturnNilIfPageHeightIsMissing() {
         var photobookDictionary = validDictionary
         photobookDictionary["pageHeight"] = nil
-        let photobookBox = Photobook.parse(photobookDictionary)
+        let photobookBox = PhotobookTemplate.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if pageHeight is missing")
     }
     
     func testParse_ShouldReturnNilIfPageHeightIsZero() {
         var photobookDictionary = validDictionary
         photobookDictionary["pageHeight"] = 0.0 as AnyObject
-        let photobookBox = Photobook.parse(photobookDictionary)
+        let photobookBox = PhotobookTemplate.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if pageHeight is zero")
     }
 
@@ -60,14 +60,14 @@ class PhotobookTests: XCTestCase {
     func testParse_ShouldReturnNilIfSpineRatioIsMissing() {
         var photobookDictionary = validDictionary
         photobookDictionary["spineTextRatio"] = nil
-        let photobookBox = Photobook.parse(photobookDictionary)
+        let photobookBox = PhotobookTemplate.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if spineTextRatio is missing")
     }
     
     func testParse_ShouldReturnNilIfSpineRatioIsZero() {
         var photobookDictionary = validDictionary
         photobookDictionary["spineTextRatio"] = 0.0 as AnyObject
-        let photobookBox = Photobook.parse(photobookDictionary)
+        let photobookBox = PhotobookTemplate.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if spineTextRatio is zero")
     }
 
@@ -75,14 +75,14 @@ class PhotobookTests: XCTestCase {
     func testParse_ShouldReturnNilIfAspectRatioIsMissing() {
         var photobookDictionary = validDictionary
         photobookDictionary["aspectRatio"] = nil
-        let photobookBox = Photobook.parse(photobookDictionary)
+        let photobookBox = PhotobookTemplate.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if aspectRatio is missing")
     }
 
     func testParse_ShouldReturnNilIfAspectRatioIsZero() {
         var photobookDictionary = validDictionary
         photobookDictionary["aspectRatio"] = 0.0 as AnyObject
-        let photobookBox = Photobook.parse(photobookDictionary)
+        let photobookBox = PhotobookTemplate.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if aspectRatio is zero")
     }
 
@@ -90,28 +90,28 @@ class PhotobookTests: XCTestCase {
     func testParse_ShouldReturnNilIfCoverLayoutsIsMissing() {
         var photobookDictionary = validDictionary
         photobookDictionary["coverLayouts"] = nil
-        let photobookBox = Photobook.parse(photobookDictionary)
+        let photobookBox = PhotobookTemplate.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if coverLayouts is missing")
     }
     
     func testParse_ShouldReturnNilIfCoverLayoutCountIsZero() {
         var photobookDictionary = validDictionary
         photobookDictionary["coverLayouts"] = [] as AnyObject
-        let photobookBox = Photobook.parse(photobookDictionary)
+        let photobookBox = PhotobookTemplate.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if the coverLayout count is zero")
     }
 
     func testParse_ShouldReturnNilIfLayoutsIsMissing() {
         var photobookDictionary = validDictionary
         photobookDictionary["layouts"] = nil
-        let photobookBox = Photobook.parse(photobookDictionary)
+        let photobookBox = PhotobookTemplate.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if layouts is missing")
     }
 
     func testParse_ShouldReturnNilIfLayoutCountIsZero() {
         var photobookDictionary = validDictionary
         photobookDictionary["layouts"] = [] as AnyObject
-        let photobookBox = Photobook.parse(photobookDictionary)
+        let photobookBox = PhotobookTemplate.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if the layout count is zero")
     }
 
