@@ -49,7 +49,7 @@ import UIKit
     
     /// True if a photo book order is being processed, false otherwise
     @objc public var isProcessingOrder: Bool {
-        return OrderProcessingManager.shared.isProcessingOrder
+        return OrderManager.shared.isProcessingOrder
     }
     
     /// Photo book view controller initialised with the provided images

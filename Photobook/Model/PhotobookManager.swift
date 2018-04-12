@@ -25,7 +25,7 @@ class PhotobookManager: NSObject {
     }
     
     static func rootViewControllerForCurrentState() -> UIViewController {
-        let isProcessingOrder = OrderProcessingManager.shared.isProcessingOrder
+        let isProcessingOrder = OrderManager.shared.isProcessingOrder
         
         if IntroViewController.userHasDismissed && !isProcessingOrder {
             let tabBarController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController

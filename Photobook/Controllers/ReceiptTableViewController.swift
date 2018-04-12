@@ -78,10 +78,10 @@ class ReceiptTableViewController: UITableViewController {
     
         updateViews()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingCompleted), name: OrderProcessingManager.Notifications.completed, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingFailed(_:)), name: OrderProcessingManager.Notifications.failed, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(pendingUploadsChanged), name: OrderProcessingManager.Notifications.pendingUploadStatusUpdated, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingWillFinish), name: OrderProcessingManager.Notifications.willFinishOrder, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingCompleted), name: OrderManager.Notifications.completed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingFailed(_:)), name: OrderManager.Notifications.failed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(pendingUploadsChanged), name: OrderManager.Notifications.pendingUploadStatusUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingWillFinish), name: OrderManager.Notifications.willFinishOrder, object: nil)
     }
     
     deinit {
@@ -94,7 +94,7 @@ class ReceiptTableViewController: UITableViewController {
         let loadingString = NSLocalizedString("ReceiptTableViewController/LoadingData", value: "Loading info...", comment: "description for a loading indicator")
         emptyScreenViewController.show(message: loadingString, activity: true)
         
-        if OrderProcessingManager.shared.isProcessingOrder {
+        if OrderManager.shared.isProcessingOrder {
             if state == .paymentFailed {
                 //re entered screen from payment methods screen
                 state = .paymentRetry
@@ -107,7 +107,7 @@ class ReceiptTableViewController: UITableViewController {
             emptyScreenViewController.hide(animated: true)
         } else {
             //start processing
-            OrderProcessingManager.shared.startProcessing()
+            OrderManager.shared.startProcessing()
             emptyScreenViewController.hide(animated: true)
             
             //ask for notification permission
@@ -137,10 +137,10 @@ class ReceiptTableViewController: UITableViewController {
             if let lastProcessingError = lastProcessingError {
                 switch lastProcessingError {
                 case .upload:
-                    OrderProcessingManager.shared.startPhotobookUpload()
+                    OrderManager.shared.startPhotobookUpload()
                     self.state = .uploading
                 case .pdf, .submission:
-                    OrderProcessingManager.shared.finishOrder()
+                    OrderManager.shared.finishOrder()
                 default: break
                 }
             }
@@ -181,7 +181,7 @@ class ReceiptTableViewController: UITableViewController {
     }
     
     private func dismiss() {
-        OrderProcessingManager.shared.cancelProcessing { [weak welf = self] in
+        OrderManager.shared.cancelProcessing { [weak welf = self] in
             ProductManager.shared.reset()
             OrderManager.shared.reset()
             NotificationCenter.default.post(name: ReceiptNotificationName.receiptWillDismiss, object: nil)
@@ -419,7 +419,7 @@ extension ReceiptTableViewController : PaymentAuthorizationManagerDelegate {
         
         order?.paymentToken = token
         
-        OrderProcessingManager.shared.finishOrder()
+        OrderManager.shared.finishOrder()
     }
     
     func modalPresentationDidFinish() {
