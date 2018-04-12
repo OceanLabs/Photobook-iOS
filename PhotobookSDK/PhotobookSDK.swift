@@ -55,7 +55,7 @@ import UIKit
     /// Photo book view controller initialised with the provided images
     ///
     /// - Parameter assets: Images to use to initialise the photobook. Cannot be empty. Available asset types are: ImageAsset, URLAsset & PhotosAsset.
-    /// - Parameter onDismiss: Closure to execute when the Photobook UI wants to dismissed
+    /// - Parameter onDismiss: Closure to execute when the Photobook UI is ready to be dismissed
     /// - Returns: A photobook UIViewController
     @objc public func photobookViewController(with assets: [PhotobookAsset], onDismiss: (() -> Void)? = nil) -> UIViewController? {
         guard let assets = assets as? [Asset], assets.count > 0 else {
@@ -78,7 +78,7 @@ import UIKit
     
     /// Receipt View Controller
     ///
-    /// - Parameter onDismiss: Closure to execute when the receipt UI wants to be dismissed
+    /// - Parameter onDismiss: Closure to execute when the receipt UI is ready to be dismissed
     /// - Returns: A receipt UIViewController
     @objc public func receiptViewController(onDismiss: (() -> Void)? = nil) -> UIViewController? {
         guard isProcessingOrder else { return nil }
