@@ -39,7 +39,7 @@ import SDWebImage
     }
 }
 
-/// Remote image resource that can be used in a photo book
+/// Remote image resource that can be used in a Photobook
 @objc public class URLAsset: NSObject, NSCoding, Asset {
     
     /// Unique identifier
@@ -59,7 +59,13 @@ import SDWebImage
         return images.last?.size ?? .zero
     }
     
-    @objc public init(identifier: String, albumIdentifier: String, images: [URLAssetImage]) {
+    /// Init
+    ///
+    /// - Parameters:
+    ///   - identifier: Identifier for the asset
+    ///   - albumIdentifier: Identifier for the album the asset belongs to
+    ///   - images: Array of sizes and associated URLs
+    @objc public init(identifier: String, albumIdentifier: String?, images: [URLAssetImage]) {
         self.images = images.sorted(by: { $0.size.width < $1.size.width })
         self.albumIdentifier = albumIdentifier
         self.identifier = identifier
