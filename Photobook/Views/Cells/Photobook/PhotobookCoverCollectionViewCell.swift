@@ -40,30 +40,34 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
             spineFrameView.alpha = coverFrameView.alpha
         }
     }
+    
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        coverFrameView.aspectRatio = ProductManager.shared.currentProduct!.template.aspectRatio
+        coverFrameView.aspectRatio = product.template.aspectRatio
     }
     
     func loadCoverAndSpine() {
         coverFrameView.pageView.pageIndex = 0
-        coverFrameView.pageView.productLayout = ProductManager.shared.currentProduct!.productLayouts.first
-        coverFrameView.pageView.bleed = ProductManager.shared.currentProduct!.bleed(forPageSize: coverFrameView.pageView.bounds.size)
+        coverFrameView.pageView.productLayout = product.productLayouts.first
+        coverFrameView.pageView.bleed = product.bleed(forPageSize: coverFrameView.pageView.bounds.size)
         coverFrameView.pageView.setupImageBox()
         coverFrameView.pageView.setupTextBox(mode: .userTextOnly)
         
-        if spineFrameView.text != ProductManager.shared.currentProduct!.spineText ||
-            spineFrameView.fontType != ProductManager.shared.currentProduct!.spineFontType {
-                spineFrameView.text = ProductManager.shared.currentProduct!.spineText
-                spineFrameView.fontType = ProductManager.shared.currentProduct!.spineFontType
+        if spineFrameView.text != product.spineText ||
+            spineFrameView.fontType != product.spineFontType {
+                spineFrameView.text = product.spineText
+                spineFrameView.fontType = product.spineFontType
                 spineFrameView.setNeedsLayout()
                 spineFrameView.layoutIfNeeded()
         }
         
-        if coverFrameView.color != ProductManager.shared.currentProduct!.coverColor {
-            coverFrameView.color = ProductManager.shared.currentProduct!.coverColor
-            spineFrameView.color = ProductManager.shared.currentProduct!.coverColor
+        if coverFrameView.color != product.coverColor {
+            coverFrameView.color = product.coverColor
+            spineFrameView.color = product.coverColor
             coverFrameView.resetCoverColor()
             spineFrameView.resetSpineColor()
         }

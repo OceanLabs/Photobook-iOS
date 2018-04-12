@@ -18,18 +18,12 @@ class OrderSummaryManager {
     //layouts configured by previous UX
     private var layouts: [ProductLayout] {
         get {
-            return ProductManager.shared.currentProduct!.productLayouts
+            return product.productLayouts
         }
     }
     private var coverImageUrl:String?
     private var isUploadingCoverImage = false
     
-    //original product provided by previous UX
-    var product: PhotobookTemplate? {
-        get {
-            return ProductManager.shared.currentProduct!.template
-        }
-    }
     var upsellOptions: [UpsellOption]? {
         get {
             return ProductManager.shared.upsellOptions
@@ -41,6 +35,10 @@ class OrderSummaryManager {
     private var previewImageUrl: String?
     
     var coverPageSnapshotImage: UIImage?
+    
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
     
     static let shared = OrderSummaryManager()
     

@@ -42,6 +42,10 @@ class PhotobookAPIManager {
     private struct Storage {
         static let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
     }
+    
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
 
     private var apiClient = APIClient.shared
     
@@ -314,7 +318,7 @@ class PhotobookAPIManager {
         var photobook = [String: Any]()
         
         var pages = [[String: Any]]()
-        for productLayout in ProductManager.shared.currentProduct!.productLayouts {
+        for productLayout in product.productLayouts {
             var page = [String: Any]()
             
             if let asset = productLayout.asset,

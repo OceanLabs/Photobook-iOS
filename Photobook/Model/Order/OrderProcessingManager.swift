@@ -47,6 +47,10 @@ class OrderProcessingManager {
         }
     }
     
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
+    
     static let shared = OrderProcessingManager()
     
     private init() {
@@ -80,7 +84,7 @@ class OrderProcessingManager {
         
         cancelCompletionBlock = completion
         if ProductManager.shared.currentProduct?.isUploading ?? false {
-            ProductManager.shared.currentProduct!.cancelPhotobookUpload { [weak welf = self] in
+            product.cancelPhotobookUpload { [weak welf = self] in
                 welf?.isProcessingOrder = false
                 welf?.cancelCompletionBlock?()
                 welf?.cancelCompletionBlock = nil
@@ -92,7 +96,7 @@ class OrderProcessingManager {
     }
     
     func startPhotobookUpload() {
-        ProductManager.shared.currentProduct!.startPhotobookUpload { (count, error) in
+        product.startPhotobookUpload { (count, error) in
             if error != nil {
                 Analytics.shared.trackError(.imageUpload)
                 NotificationCenter.default.post(name: Notifications.failed, object: self, userInfo: ["error": OrderProcessingError.upload])
@@ -105,7 +109,7 @@ class OrderProcessingManager {
         NotificationCenter.default.post(name: Notifications.willFinishOrder, object: self)
         
         // 1 - Create PDF
-        ProductManager.shared.currentProduct!.createPhotobookPdf { [weak welf = self] (urls, error) in
+        product.createPhotobookPdf { [weak welf = self] (urls, error) in
             
             if let swelf = welf, swelf.isCancelling {
                 swelf.isProcessingOrder = false
@@ -185,7 +189,7 @@ class OrderProcessingManager {
     }
     
     @objc func shouldRetryUpload() {
-        ProductManager.shared.currentProduct!.cancelPhotobookUpload {
+        product.cancelPhotobookUpload {
             NotificationCenter.default.post(name: Notifications.failed, object: self, userInfo: ["error": OrderProcessingError.upload])
         }
     }

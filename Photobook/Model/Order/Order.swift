@@ -47,7 +47,7 @@ class Order: Codable {
         if let deliveryDetails = deliveryDetails { stringHash += "ad:\(deliveryDetails.hashValue)," }
         if let promoCode = promoCode { stringHash += "pc:\(promoCode)," }
         if let productName = ProductManager.shared.currentProduct?.template.name { stringHash += "jb:\(productName)," }
-        stringHash += "qt:\(ProductManager.shared.currentProduct!.productLayouts.count),"
+        stringHash += "qt:\(product.productLayouts.count),"
         
         stringHash += "up:("
         for upsell in OrderSummaryManager.shared.selectedUpsellOptions {
@@ -60,6 +60,10 @@ class Order: Codable {
     
     var hasValidCachedCost: Bool {
         return cachedCost?.orderHash == hashValue
+    }
+    
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
     }
     
     func updateCost(forceUpdate: Bool = false, _ completionHandler: @escaping (_ error : Error?) -> Void) {
@@ -98,7 +102,7 @@ class Order: Codable {
         parameters["promo_code"] = promoCode
         parameters["shipping_method"] = shippingMethod
         parameters["jobs"] = [[
-            "template_id" : ProductManager.shared.currentProduct!.template.productTemplateId ?? "",
+            "template_id" : product.template.productTemplateId ?? "",
             "multiples" : itemCount,
             "assets": [["inside_pdf" : photobookId ?? ""]]
             ]]

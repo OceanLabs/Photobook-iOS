@@ -64,6 +64,10 @@ class ReceiptTableViewController: UITableViewController {
         return ProgressOverlayViewController.progressOverlay(parent: self)
     }()
     
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -99,7 +103,7 @@ class ReceiptTableViewController: UITableViewController {
             }
             
             //re entered app, load and resume upload
-            ProductManager.shared.currentProduct!.loadUserPhotobook()
+            product.loadUserPhotobook()
             emptyScreenViewController.hide(animated: true)
         } else {
             //start processing
@@ -284,7 +288,7 @@ class ReceiptTableViewController: UITableViewController {
         case Section.progress.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptProgressTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptProgressTableViewCell
             
-            cell.updateProgress(pendingUploads: ProductManager.shared.currentProduct!.pendingUploads, totalUploads: ProductManager.shared.currentProduct!.totalUploads)
+            cell.updateProgress(pendingUploads: product.pendingUploads, totalUploads: product.totalUploads)
             cell.startProgressAnimation()
             
             return cell
