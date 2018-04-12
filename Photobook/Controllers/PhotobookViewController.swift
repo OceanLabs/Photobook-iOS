@@ -154,10 +154,9 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         if let photobook = ProductManager.shared.products?.first {
             setup(with: photobook)
-            return
+        } else {
+            loadProducts()
         }
-        
-        loadProducts()
     }
     
     private func setup(with photobook: PhotobookTemplate) {
@@ -167,13 +166,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             return
         }
         
-        var product: PhotobookProduct! = self.product
-        if product == nil {
-            product = PhotobookProduct(template: photobook, assets: assets)
-            ProductManager.shared.currentProduct = product
-        } else {
-            product.setTemplate(photobook, withAssets: assets)
-        }
+        ProductManager.shared.currentProduct = PhotobookProduct(template: photobook, assets: assets)
         
         setupTitleView()
         
