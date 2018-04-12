@@ -20,8 +20,14 @@
     var uploadUrl: String?
     var size: CGSize { return image.size }
 
-    @objc public init(image: UIImage) {
+    /// Init
+    ///
+    /// - Parameters:
+    ///   - image: Image representation of the asset
+    ///   - date: Associated date
+    @objc public init(image: UIImage, date: Date?) {
         self.image = image
+        self.date = date
     }
     
     @objc public func encode(with aCoder: NSCoder) {

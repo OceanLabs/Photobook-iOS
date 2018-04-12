@@ -85,6 +85,9 @@ class OrderProcessingManager {
                 welf?.cancelCompletionBlock?()
                 welf?.cancelCompletionBlock = nil
             }
+        } else {
+            cancelCompletionBlock?()
+            cancelCompletionBlock = nil
         }
     }
     

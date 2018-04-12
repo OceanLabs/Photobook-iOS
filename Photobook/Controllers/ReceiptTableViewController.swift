@@ -47,7 +47,7 @@ class ReceiptTableViewController: UITableViewController {
     private var lastProcessingError:OrderProcessingError?
     
     @IBOutlet weak var dismissBarButtonItem: UIBarButtonItem!
-    var dismissClosure:(() -> Void)?
+    var dismissClosure: ((UITabBarController?) -> Void)?
     
     private var modalPresentationDismissedGroup = DispatchGroup()
     private lazy var paymentManager: PaymentAuthorizationManager = {
@@ -181,9 +181,37 @@ class ReceiptTableViewController: UITableViewController {
             ProductManager.shared.reset()
             OrderManager.shared.reset()
             NotificationCenter.default.post(name: ReceiptNotificationName.receiptWillDismiss, object: nil)
-            welf?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-            welf?.navigationController?.popToRootViewController(animated: true)
-            welf?.dismissClosure?()
+            
+            if welf?.dismissClosure != nil {
+                #if PHOTOBOOK_SDK
+                    welf?.dismissClosure?(nil)
+                #else
+                    // Check if the Photobook app was launched into the ReceiptViewController
+                    if welf?.navigationController?.viewControllers.count == 1 {
+                        welf?.navigationController?.isNavigationBarHidden = true
+                        welf?.performSegue(withIdentifier: "ReceiptDismiss", sender: nil)
+                    } else {
+                        welf?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+                        welf?.navigationController?.popToRootViewController(animated: true)
+                    }
+                #endif
+                return
+            }
+            
+            // No delegate or dismiss closure provided
+            if welf?.presentingViewController != nil {
+                welf?.presentingViewController!.dismiss(animated: true, completion: nil)
+                return
+            }
+            welf?.navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard segue.identifier == "ReceiptDismiss" else { return }
+        
+        if let tabBarController = segue.destination as? UITabBarController {
+            dismissClosure?(tabBarController)
         }
     }
     

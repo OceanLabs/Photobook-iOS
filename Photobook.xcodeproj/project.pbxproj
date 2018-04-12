@@ -55,7 +55,6 @@
 		2E4C9E8E204979EA00F5AD48 /* URLAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8D204979EA00F5AD48 /* URLAsset.swift */; };
 		2E5CCC2A207B76870003000F /* GlobalConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5CCC29207B76870003000F /* GlobalConstants.swift */; };
 		2E5CCC2B207B76870003000F /* GlobalConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5CCC29207B76870003000F /* GlobalConstants.swift */; };
-		2E5CCC2C207B773D0003000F /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */; };
 		2E5CCC2D207B773D0003000F /* StoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DE64D1FB323540099A97E /* StoriesViewController.swift */; };
 		2E5CCC2E207B773D0003000F /* AlbumsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58911FB325FF00F31A9E /* AlbumsCollectionViewController.swift */; };
 		2E5CCC2F207B773D0003000F /* ModalAlbumsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA1893A2004B9C700E6D0AB /* ModalAlbumsCollectionViewController.swift */; };
@@ -1702,7 +1701,6 @@
 				2ED14BC62063AA4000ED2E2C /* OrderSummaryDetailTableViewCell.swift in Sources */,
 				2ED14C1D2063AA4000ED2E2C /* StringExtensions.swift in Sources */,
 				2ED14C242063AA4000ED2E2C /* UIViewExtensions.swift in Sources */,
-				2E5CCC2C207B773D0003000F /* IntroViewController.swift in Sources */,
 				2ED14BD22063AA4000ED2E2C /* AssetSelectorAddMoreCollectionViewCell.swift in Sources */,
 				2ED14BE12063AA4000ED2E2C /* OutOfBoundsTouchView.swift in Sources */,
 				2ED14C2A2063AA4000ED2E2C /* JSON.swift in Sources */,
@@ -2144,6 +2142,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PHOTOBOOK_SDK";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2173,6 +2172,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PHOTOBOOK_SDK";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2202,6 +2202,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PHOTOBOOK_SDK;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2231,6 +2232,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PHOTOBOOK_SDK;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
