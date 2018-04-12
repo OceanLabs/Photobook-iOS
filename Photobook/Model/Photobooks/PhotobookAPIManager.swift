@@ -42,10 +42,6 @@ class PhotobookAPIManager {
     private struct Storage {
         static let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
     }
-    
-    private var product: PhotobookProduct! {
-        return ProductManager.shared.currentProduct
-    }
 
     private var apiClient = APIClient.shared
     
@@ -309,47 +305,6 @@ class PhotobookAPIManager {
             }
         }
         return processedAssets
-    }
-    
-    private func photobookParameters() -> [String: Any]? {
-        guard let photobookId = OrderManager.basketOrder.photobookId else { return nil }
-        
-        // TODO: confirm schema
-        var photobook = [String: Any]()
-        
-        var pages = [[String: Any]]()
-        for productLayout in product.productLayouts {
-            var page = [String: Any]()
-            
-            if let asset = productLayout.asset,
-                let imageLayoutBox = productLayout.layout.imageLayoutBox,
-                let productLayoutAsset = productLayout.productLayoutAsset {
-                
-                page["contentType"] = "image"
-                page["dimensionsPercentages"] = ["height": imageLayoutBox.rect.height, "width": imageLayoutBox.rect.width]
-                page["relativeStartPoint"] = ["x": imageLayoutBox.rect.origin.x, "y": imageLayoutBox.rect.origin.y]
-                
-                // Set the container size to 1,1 so that the transform is relativized
-                productLayoutAsset.containerSize = CGSize(width: 1, height: 1)
-                productLayoutAsset.adjustTransform()
-                
-                var containedItem = [String: Any]()
-                var picture = [String: Any]()
-                picture["url"] = asset.uploadUrl
-                picture["relativeStartPoint"] = ["x": productLayoutAsset.transform.tx, "y": productLayoutAsset.transform.ty]
-                picture["rotation"] = productLayoutAsset.transform.angle
-                picture["zoom"] = productLayoutAsset.transform.scale
-                
-                containedItem["picture"] = picture
-                page["containedItem"] = containedItem
-                
-            }
-            pages.append(page)
-        }
-        photobook["pages"] = pages
-        photobook["pdfId"] = photobookId
-        
-        return photobook
     }
     
     private func saveDataToCachesDirectory(data: Data, name: String) -> URL? {

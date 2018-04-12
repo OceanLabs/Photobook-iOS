@@ -4314,7 +4314,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <segue destination="9J6-1w-1sY" kind="show" id="lt6-JZ-FMN"/>
+                                            <segue destination="9J6-1w-1sY" kind="show" identifier="OrderSummarySegueName" id="lt6-JZ-FMN"/>
                                         </connections>
                                     </button>
                                 </subviews>

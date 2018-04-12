@@ -48,7 +48,7 @@ class OrderProcessingManager {
     }
     
     private var product: PhotobookProduct! {
-        return ProductManager.shared.currentProduct
+        return OrderManager.basketOrder.items.first
     }
     
     static let shared = OrderProcessingManager()

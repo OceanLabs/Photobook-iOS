@@ -210,9 +210,9 @@ class CheckoutViewController: UIViewController {
     private func updateViews() {
         
         //product
-        itemTitleLabel.text = ProductManager.shared.currentProduct?.template.name
+        itemTitleLabel.text = OrderManager.basketOrder.items.first!.template.name
         itemPriceLabel.text = OrderManager.basketOrder.cachedCost?.lineItems?.first?.formattedCost
-        itemAmountButton.setTitle("\(OrderManager.basketOrder.itemCount)", for: .normal)
+        itemAmountButton.setTitle("\(OrderManager.basketOrder.items.first!.itemCount)", for: .normal)
         updateItemImage()
         
         //promo code
@@ -440,7 +440,7 @@ class CheckoutViewController: UIViewController {
         amountPickerViewController.optionName = NSLocalizedString("Controllers/CheckoutViewController/ItemAmountPickerTitle",
                                                                               value: "Select amount",
                                                                               comment: "The title displayed on the picker view for the amount of basket items")
-        amountPickerViewController.selectedValue = OrderManager.basketOrder.itemCount
+        amountPickerViewController.selectedValue = OrderManager.basketOrder.items.first!.itemCount
         amountPickerViewController.minimum = 1
         amountPickerViewController.maximum = 10
         amountPickerViewController.delegate = self
@@ -559,7 +559,7 @@ extension CheckoutViewController: UITextFieldDelegate {
 
 extension CheckoutViewController: AmountPickerDelegate {
     func amountPickerDidSelectValue(_ value: Int) {
-        OrderManager.basketOrder.itemCount = value
+        OrderManager.basketOrder.items.first!.itemCount = value
         itemAmountButton.setTitle("\(value)", for: .normal)
     }
 }

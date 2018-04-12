@@ -21,9 +21,8 @@ class Order: Codable {
     var deliveryDetails: DeliveryDetails?
     var shippingMethod: Int?
     var paymentMethod: PaymentMethod? = Stripe.deviceSupportsApplePay() ? .applePay : nil
-    var itemCount: Int = 1
+    var items = [PhotobookProduct]()
     var promoCode: String?
-    var photobookId: String?
     var lastSubmissionDate: Date?
     var orderId: String?
     var paymentToken: String?
@@ -46,8 +45,10 @@ class Order: Codable {
         var stringHash = ""
         if let deliveryDetails = deliveryDetails { stringHash += "ad:\(deliveryDetails.hashValue)," }
         if let promoCode = promoCode { stringHash += "pc:\(promoCode)," }
-        if let productName = ProductManager.shared.currentProduct?.template.name { stringHash += "jb:\(productName)," }
-        stringHash += "qt:\(product.productLayouts.count),"
+        
+        for item in items {
+            if let productName = item.template.name { stringHash += "jb:\(productName)," }
+        }
         
         stringHash += "up:("
         for upsell in OrderSummaryManager.shared.selectedUpsellOptions {
@@ -60,10 +61,6 @@ class Order: Codable {
     
     var hasValidCachedCost: Bool {
         return cachedCost?.orderHash == hashValue
-    }
-    
-    private var product: PhotobookProduct! {
-        return ProductManager.shared.currentProduct
     }
     
     func updateCost(forceUpdate: Bool = false, _ completionHandler: @escaping (_ error : Error?) -> Void) {
@@ -101,11 +98,18 @@ class Order: Codable {
         parameters["customer_phone"] = deliveryDetails?.phone
         parameters["promo_code"] = promoCode
         parameters["shipping_method"] = shippingMethod
-        parameters["jobs"] = [[
-            "template_id" : product.template.productTemplateId ?? "",
-            "multiples" : itemCount,
-            "assets": [["inside_pdf" : photobookId ?? ""]]
-            ]]
+        
+        var jobs = [[String: Any]]()
+        
+        for item in items {
+            jobs.append([
+                "template_id" : item.template.productTemplateId ?? "",
+                "multiples" : item.itemCount,
+                "assets": [["inside_pdf" : item.photobookId ?? ""]]
+                ])
+        }
+        
+        parameters["jobs"] = jobs
         
         return parameters
     }

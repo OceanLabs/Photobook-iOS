@@ -65,7 +65,7 @@ class ReceiptTableViewController: UITableViewController {
     }()
     
     private var product: PhotobookProduct! {
-        return ProductManager.shared.currentProduct
+        return order?.items.first
     }
     
     override func viewDidLoad() {

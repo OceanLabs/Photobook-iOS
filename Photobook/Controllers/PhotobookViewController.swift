@@ -328,17 +328,19 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             }
         }
         
-        guard message.count > 0 else {
-            goToCheckout()
+        guard message.isEmpty else {
+            let alertController = UIAlertController(title: NSLocalizedString("Photobook/MissingAssetsTitle", value: "Continue to checkout?", comment: "Alert title informing the user that they have blank pages"), message: message, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .default, handler: nil))
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default) { _ in
+                goToCheckout()
+            })
+            present(alertController, animated: true, completion: nil)
+            
             return
         }
         
-        let alertController = UIAlertController(title: NSLocalizedString("Photobook/MissingAssetsTitle", value: "Continue to checkout?", comment: "Alert title informing the user that they have blank pages"), message: message, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .default, handler: nil))
-        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default) { _ in
-            goToCheckout()
-        })
-        present(alertController, animated: true, completion: nil)
+        goToCheckout()
+        
     }
         
     @IBAction private func didTapBack() {
