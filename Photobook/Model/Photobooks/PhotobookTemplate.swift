@@ -1,5 +1,5 @@
 //
-//  Photobook.swift
+//  PhotobookTemplate.swift
 //  Photobook
 //
 //  Created by Jaime Landazuri on 17/11/2017.
