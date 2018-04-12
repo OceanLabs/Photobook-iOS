@@ -12,7 +12,7 @@ import Photos
 // Photos asset subclass with stubs to be used in testing
 class TestPhotosAsset: PhotosAsset {
     override var size: CGSize { return CGSize(width: 10.0, height: 20.0) }
-    override init(_ asset: PHAsset, albumIdentifier: String) {
+    override init(_ asset: PHAsset, albumIdentifier: String?) {
         super.init(asset, albumIdentifier: albumIdentifier)
         identifier = "id"
     }
@@ -23,13 +23,18 @@ class TestPhotosAsset: PhotosAsset {
     }
 }
 
-class PhotosAsset: NSObject, NSCoding, Asset {
+/// Photo library resource that can be used in a Photobook
+@objc public class PhotosAsset: NSObject, NSCoding, Asset {
     
-    var photosAsset: PHAsset {
+    /// Photo library asset
+    @objc public var photosAsset: PHAsset {
         didSet {
             identifier = photosAsset.localIdentifier
         }
     }
+    
+    /// Identifier for the album where the asset is included
+    @objc public var albumIdentifier: String?
     
     var identifier: String! {
         didSet {
@@ -43,16 +48,19 @@ class PhotosAsset: NSObject, NSCoding, Asset {
     var date: Date? {
         return photosAsset.creationDate
     }
-    
-    var albumIdentifier: String?
 
     var size: CGSize { return CGSize(width: photosAsset.pixelWidth, height: photosAsset.pixelHeight) }
     var uploadUrl: String?
     
-    init(_ asset: PHAsset, albumIdentifier: String) {
-        photosAsset = asset
-        identifier = photosAsset.localIdentifier
+    /// Init
+    ///
+    /// - Parameters:
+    ///   - photosAsset: Photo library asset
+    ///   - albumIdentifier: Identifier for the album where the asset is included
+    @objc public init(_ photosAsset: PHAsset, albumIdentifier: String?) {
+        self.photosAsset = photosAsset
         self.albumIdentifier = albumIdentifier
+        identifier = photosAsset.localIdentifier
     }
     
     func image(size: CGSize, loadThumbnailFirst: Bool = true, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
@@ -118,13 +126,13 @@ class PhotosAsset: NSObject, NSCoding, Asset {
         })
     }
         
-    func encode(with aCoder: NSCoder) {
+    @objc public func encode(with aCoder: NSCoder) {
         aCoder.encode(albumIdentifier, forKey: "albumIdentifier")
         aCoder.encode(identifier, forKey: "identifier")
         aCoder.encode(uploadUrl, forKey: "uploadUrl")
     }
     
-    required convenience init?(coder aDecoder: NSCoder) {
+    @objc public required convenience init?(coder aDecoder: NSCoder) {
         guard let assetId = aDecoder.decodeObject(of: NSString.self, forKey: "identifier") as String?,
               let albumIdentifier = aDecoder.decodeObject(of: NSString.self, forKey: "albumIdentifier") as String?,
               let asset = PHAsset.fetchAssets(withLocalIdentifiers: [assetId], options: nil).firstObject else
