@@ -34,7 +34,7 @@ struct PhotobookBackup: Codable {
     var productLayouts: [ProductLayout]
 }
 
-class PhotobookProduct {
+class PhotobookProduct: Codable {
 
     // Notification keys
     static let pendingUploadStatusUpdated = Notification.Name("ly.kite.sdk.productManagerPendingUploadStatusUpdated")

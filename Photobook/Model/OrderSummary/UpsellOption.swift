@@ -8,15 +8,20 @@
 
 import UIKit
 
-class UpsellOption: Equatable {
+class UpsellOption: Codable, Equatable {
     var type: String
     var displayName: String
-    var payload: AnyObject?
+    private var payloadData: Data?
+    var payload: AnyObject? {
+        guard let data = payloadData else { return nil }
+        
+        return try? JSONSerialization.jsonObject(with: data, options: .mutableLeaves) as AnyObject
+    }
     
-    init(type: String, displayName: String, payload: AnyObject?) {
+    init(type: String, displayName: String, payload: Data?) {
         self.type = type
         self.displayName = displayName
-        self.payload = payload
+        self.payloadData = payload
     }
     
     convenience init?(_ dict: [String: Any]) {
@@ -26,7 +31,9 @@ class UpsellOption: Equatable {
             return nil
         }
         
-        self.init(type: type, displayName: displayName, payload: dict["payload"] as AnyObject)
+        let payloadData = try? JSONSerialization.data(withJSONObject: dict["payload"] as Any, options: [])
+        
+        self.init(type: type, displayName: displayName, payload: payloadData)
     }
 }
 
