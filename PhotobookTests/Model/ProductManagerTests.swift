@@ -36,7 +36,7 @@ class ProductManagerTests: XCTestCase {
             return
         }
         
-        productManager.currentProduct = PhotobookProduct(template: photobookTemplate, addedAssets: [])
+        productManager.currentProduct = PhotobookProduct(template: photobookTemplate, assets: [])
         productManager.currentProduct?.productLayouts = [ProductLayout]()
         
         let layoutBox = LayoutBox(id: 1, rect: CGRect(x: 0.01, y: 0.01, width: 0.5, height: 0.1))
