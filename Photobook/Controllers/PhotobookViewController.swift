@@ -169,10 +169,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         var product: PhotobookProduct! = self.product
         if product == nil {
-            product = PhotobookProduct(template: photobook, addedAssets: assets)
+            product = PhotobookProduct(template: photobook, assets: assets)
             ProductManager.shared.currentProduct = product
         } else {
-            product.changePhotobook(photobook, withAssets: assets)
+            product.setTemplate(photobook, withAssets: assets)
         }
         
         setupTitleView()
@@ -217,7 +217,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             alertController.addAction(UIAlertAction(title: photobook.name, style: .default, handler: { [weak welf = self] (_) in
                 guard welf?.product.template.id != photobook.id else { return }
                 
-                welf?.product.changePhotobook(photobook)
+                welf?.product.setTemplate(photobook)
                 
                 welf?.setupTitleView()
                 welf?.collectionView.reloadData()

@@ -132,7 +132,7 @@ class PhotobookProduct {
         return apiManager.totalUploads
     }
     
-    init(template: PhotobookTemplate, addedAssets: [Asset]) {
+    init(template: PhotobookTemplate, assets: [Asset]) {
         self.template = template
         
         guard
@@ -151,9 +151,9 @@ class PhotobookProduct {
         
         // Use a random photo for the cover, but not the first
         let productLayoutAsset = ProductLayoutAsset()
-        var coverAsset = addedAssets.first
-        if addedAssets.count > 1 {
-            coverAsset = addedAssets[(Int(arc4random()) % (addedAssets.count - 1)) + 1] // Exclude 0
+        var coverAsset = assets.first
+        if assets.count > 1 {
+            coverAsset = assets[(Int(arc4random()) % (assets.count - 1)) + 1] // Exclude 0
         }
         productLayoutAsset.asset = coverAsset
         let coverLayout = coverLayouts.first(where: { $0.imageLayoutBox != nil } )
@@ -161,7 +161,7 @@ class PhotobookProduct {
         tempLayouts.append(productLayout)
         
         // Create layouts for the remaining assets
-        tempLayouts.append(contentsOf: createLayoutsForAssets(assets: addedAssets, from: imageOnlyLayouts))
+        tempLayouts.append(contentsOf: createLayoutsForAssets(assets: assets, from: imageOnlyLayouts))
         
         // Fill minimum pages with Placeholder assets if needed
         let numberOfPlaceholderLayoutsNeeded = max(template.minimumRequiredAssets - tempLayouts.count, 0)
@@ -170,11 +170,11 @@ class PhotobookProduct {
         productLayouts = tempLayouts
     }
     
-    func changePhotobook(_ photobook: PhotobookTemplate, withAssets assets: [Asset]? = nil) {
+    func setTemplate(_ template: PhotobookTemplate, withAssets assets: [Asset]? = nil) {
         guard
-            let coverLayouts = ProductManager.shared.coverLayouts(for: photobook),
+            let coverLayouts = ProductManager.shared.coverLayouts(for: template),
             !coverLayouts.isEmpty,
-            let layouts = ProductManager.shared.layouts(for: photobook),
+            let layouts = ProductManager.shared.layouts(for: template),
             !layouts.isEmpty
         else {
             print("ProductManager: Missing layouts for selected photobook")
@@ -186,7 +186,7 @@ class PhotobookProduct {
         currentPortraitLayout = 0
         
         // Switching products
-        template = photobook
+        self.template = template
         for pageLayout in productLayouts {
             let availableLayouts = pageLayout === productLayouts.first ? coverLayouts : layouts
             
