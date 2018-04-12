@@ -182,28 +182,28 @@ class ReceiptTableViewController: UITableViewController {
             OrderManager.shared.reset()
             NotificationCenter.default.post(name: ReceiptNotificationName.receiptWillDismiss, object: nil)
             
+            
+            #if PHOTOBOOK_SDK
             if welf?.dismissClosure != nil {
-                #if PHOTOBOOK_SDK
-                    welf?.dismissClosure?(nil)
-                #else
-                    // Check if the Photobook app was launched into the ReceiptViewController
-                    if welf?.navigationController?.viewControllers.count == 1 {
-                        welf?.navigationController?.isNavigationBarHidden = true
-                        welf?.performSegue(withIdentifier: "ReceiptDismiss", sender: nil)
-                    } else {
-                        welf?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-                        welf?.navigationController?.popToRootViewController(animated: true)
-                    }
-                #endif
+                welf?.dismissClosure?(nil)
                 return
             }
-            
             // No delegate or dismiss closure provided
             if welf?.presentingViewController != nil {
                 welf?.presentingViewController!.dismiss(animated: true, completion: nil)
                 return
             }
-            welf?.navigationController?.popToRootViewController(animated: true)
+            welf?.navigationController?.popViewController(animated: true)
+            #else
+            // Check if the Photobook app was launched into the ReceiptViewController
+            if welf?.navigationController?.viewControllers.count == 1 {
+                welf?.navigationController?.isNavigationBarHidden = true
+                welf?.performSegue(withIdentifier: "ReceiptDismiss", sender: nil)
+            } else {
+                welf?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+                welf?.navigationController?.popToRootViewController(animated: true)
+            }
+            #endif
         }
     }
     
