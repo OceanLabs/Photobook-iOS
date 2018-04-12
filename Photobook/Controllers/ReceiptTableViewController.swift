@@ -203,7 +203,7 @@ class ReceiptTableViewController: UITableViewController {
                 welf?.presentingViewController!.dismiss(animated: true, completion: nil)
                 return
             }
-            welf?.navigationController?.popViewController(animated: true)
+            welf?.navigationController?.popToRootViewController(animated: true)
         }
     }
     
