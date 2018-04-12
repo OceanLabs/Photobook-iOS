@@ -27,7 +27,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     /// Delegate to dismiss the PhotobookViewController
     var dismissClosure: (() -> Void)?
     
-    var product: PhotobookProduct! {
+    private var product: PhotobookProduct! {
         return ProductManager.shared.currentProduct
     }
     
