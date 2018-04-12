@@ -130,7 +130,7 @@ class PhotobookAPIManager {
             }
             
             if tempLayouts.isEmpty {
-                print("PBAPIManager: parsing layouts failed")
+                print("PhotobookAPIManager: parsing layouts failed")
                 completionHandler(nil, nil, nil, APIClientError.parsing)
                 return
             }
@@ -145,7 +145,7 @@ class PhotobookAPIManager {
             }
             
             if tempPhotobooks.isEmpty {
-                print("PBAPIManager: parsing photobook products failed")
+                print("PhotobookAPIManager: parsing photobook products failed")
                 completionHandler(nil, nil, nil, APIClientError.parsing)
                 return
             }
@@ -217,7 +217,7 @@ class PhotobookAPIManager {
     @objc func imageUploadFinished(_ notification: Notification) {
         
         guard let dictionary = notification.userInfo as? [String: AnyObject] else {
-            print("PBAPIManager: Task finished but could not cast user info")
+            print("PhotobookAPIManager: Task finished but could not cast user info")
             return
         }
         
