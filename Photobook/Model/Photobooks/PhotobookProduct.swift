@@ -26,14 +26,6 @@ enum ProductColor: String, Codable {
     }
 }
 
-// Structure containing the user's photobok details to save them to disk
-struct PhotobookBackup: Codable {
-    var template: PhotobookTemplate
-    var coverColor: ProductColor
-    var pageColor: ProductColor
-    var productLayouts: [ProductLayout]
-}
-
 class PhotobookProduct: Codable {
 
     // Notification keys
@@ -295,57 +287,13 @@ class PhotobookProduct: Codable {
     ///
     /// - Parameter completionHandler: Executed when the uploads are on the way or failed to initiate them. The Int parameter provides the total upload count.
     func startPhotobookUpload(_ completionHandler: @escaping (Int, Error?) -> Void) {
-        self.saveUserPhotobook()
+        ProductManager.shared.saveUserPhotobook()
         apiManager.uploadPhotobook(completionHandler)
     }
     
     func cancelPhotobookUpload(_ completionHandler: @escaping () -> Void) {
         apiManager.cancelUpload {
             completionHandler()
-        }
-    }
-    
-    /// Loads the user's photobook details from disk
-    ///
-    /// - Parameter completionHandler: Closure called on completion
-    func loadUserPhotobook(_ completionHandler: (() -> Void)? = nil ) {
-        guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: OrderManager.Storage.photobookBackupFile) as? Data else {
-            print("ProductManager: failed to unarchive product")
-            return
-        }
-        guard let unarchivedProduct = try? PropertyListDecoder().decode(PhotobookBackup.self, from: unarchivedData) else {
-            print("ProductManager: decoding of product failed")
-            return
-        }
-        
-        template = unarchivedProduct.template
-        coverColor = unarchivedProduct.coverColor
-        pageColor = unarchivedProduct.pageColor
-        productLayouts = unarchivedProduct.productLayouts
-        apiManager.restoreUploads()
-        completionHandler?()
-    }
-    
-    
-    /// Saves the user's photobook details to disk
-    func saveUserPhotobook() {
-        let rootObject = PhotobookBackup(template: template, coverColor: coverColor, pageColor: pageColor, productLayouts: productLayouts)
-        
-        guard let data = try? PropertyListEncoder().encode(rootObject) else {
-            fatalError("ProductManager: encoding of product failed")
-        }
-        
-        if !FileManager.default.fileExists(atPath: OrderManager.Storage.photobookDirectory) {
-            do {
-                try FileManager.default.createDirectory(atPath: OrderManager.Storage.photobookDirectory, withIntermediateDirectories: false, attributes: nil)
-            } catch {
-                print("ProductManager: could not save photobook")
-            }
-        }
-        
-        let saved = NSKeyedArchiver.archiveRootObject(data, toFile: OrderManager.Storage.photobookBackupFile)
-        if !saved {
-            print("ProductManager: failed to archive product")
         }
     }
     
@@ -485,6 +433,10 @@ class PhotobookProduct: Codable {
     func createPhotobookPdf(completionHandler: @escaping (_ urls: [String]?, _ error: Error?) -> Void) {
         apiManager.createPhotobookPdf(completionHandler: completionHandler)
     }
+    
+    func restoreUploads() {
+        apiManager.restoreUploads()
+    }
 }
 
 extension PhotobookProduct: PhotobookAPIManagerDelegate {
@@ -492,7 +444,7 @@ extension PhotobookProduct: PhotobookAPIManagerDelegate {
     func didFinishUploading(asset: Asset) {
         let info: [String: Any] = [ "asset": asset, "pending": apiManager.pendingUploads ]
         NotificationCenter.default.post(name: PhotobookProduct.pendingUploadStatusUpdated, object: info)
-        saveUserPhotobook()
+        ProductManager.shared.saveUserPhotobook()
     }
     
     func didFailUpload(_ error: Error) {

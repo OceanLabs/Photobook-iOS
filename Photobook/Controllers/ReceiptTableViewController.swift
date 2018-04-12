@@ -103,7 +103,7 @@ class ReceiptTableViewController: UITableViewController {
             }
             
             //re entered app, load and resume upload
-            product.loadUserPhotobook()
+            ProductManager.shared.loadUserPhotobook()
             emptyScreenViewController.hide(animated: true)
         } else {
             //start processing
