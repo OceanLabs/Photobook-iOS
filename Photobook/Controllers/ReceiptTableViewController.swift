@@ -105,9 +105,9 @@ class ReceiptTableViewController: UITableViewController {
             //re entered app, load and resume upload
             ProductManager.shared.loadUserPhotobook()
             emptyScreenViewController.hide(animated: true)
-        } else {
+        } else if let order = order {
             //start processing
-            OrderManager.shared.startProcessing()
+            OrderManager.shared.startProcessing(order: order)
             emptyScreenViewController.hide(animated: true)
             
             //ask for notification permission

@@ -19,10 +19,6 @@ enum OrderProcessingError: Error {
 
 class OrderManager {
     
-    struct Constants {
-        static let isProcessingKey = "OrderManager.isProcessing"
-    }
-    
     struct Notifications {
         static let completed = Notification.Name("ly.kite.sdk.OrderManager.completed")
         static let failed = Notification.Name("ly.kite.sdk.OrderManager.failed")
@@ -36,23 +32,18 @@ class OrderManager {
         static let basketOrderBackupFile = photobookDirectory.appending("BasketOrder.dat")
     }
     
-    var basketOrder = Order()
+    lazy var basketOrder = Order()
+    var processingOrder: Order?
     
     private var cancelCompletionBlock:(() -> Void)?
-    private var isCancelling:Bool {
+    private var isCancelling: Bool {
         get {
             return cancelCompletionBlock != nil
         }
     }
     
-    private(set) var isProcessingOrder:Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: Constants.isProcessingKey)
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.isProcessingKey)
-            UserDefaults.standard.synchronize()
-        }
+    var isProcessingOrder: Bool {
+        return processingOrder != nil
     }
     
     private var product: PhotobookProduct! {
@@ -128,9 +119,9 @@ class OrderManager {
     
     // MARK: - Order Uploading
     
-    func startProcessing() {
+    func startProcessing(order: Order) {
         if isProcessingOrder { return }
-        isProcessingOrder = true
+        processingOrder = order
         startPhotobookUpload()
     }
     
@@ -147,7 +138,7 @@ class OrderManager {
         cancelCompletionBlock = completion
         if ProductManager.shared.currentProduct?.isUploading ?? false {
             product.cancelPhotobookUpload { [weak welf = self] in
-                welf?.isProcessingOrder = false
+                welf?.processingOrder = nil
                 welf?.cancelCompletionBlock?()
                 welf?.cancelCompletionBlock = nil
             }
@@ -174,7 +165,7 @@ class OrderManager {
         product.createPhotobookPdf { [weak welf = self] (urls, error) in
             
             if let swelf = welf, swelf.isCancelling {
-                swelf.isProcessingOrder = false
+                swelf.processingOrder = nil
                 swelf.cancelCompletionBlock?()
                 swelf.cancelCompletionBlock = nil
                 return
@@ -191,7 +182,7 @@ class OrderManager {
             OrderManager.shared.submitOrder(urls, completionHandler: { [weak welf = self] (errorMessage) in
                 
                 if let swelf = welf, swelf.isCancelling {
-                    swelf.isProcessingOrder = false
+                    swelf.processingOrder = nil
                     swelf.cancelCompletionBlock?()
                     swelf.cancelCompletionBlock = nil
                     return
@@ -208,7 +199,7 @@ class OrderManager {
                 welf?.pollOrderSuccess(completion: { [weak welf = self] (errorMessage) in
                     
                     if let swelf = welf, swelf.isCancelling {
-                        swelf.isProcessingOrder = false
+                        swelf.processingOrder = nil
                         swelf.cancelCompletionBlock?()
                         swelf.cancelCompletionBlock = nil
                         return
@@ -222,7 +213,7 @@ class OrderManager {
                     }
                     
                     // Success
-                    welf?.isProcessingOrder = false
+                    welf?.processingOrder = nil
                     NotificationCenter.default.post(name: Notifications.completed, object: self)
                 })
             })
