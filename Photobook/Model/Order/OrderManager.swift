@@ -26,14 +26,24 @@ class OrderManager {
         static let willFinishOrder = Notification.Name("ly.kite.sdk.OrderManager.willFinishOrder")
     }
     
-    struct Storage {
+    struct Storage { //TODO: make private
         static let photobookDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!.appending("/Photobook/")
-        static let photobookBackupFile = photobookDirectory.appending("Photobook.dat")
+        static let photobookBackupFile = photobookDirectory.appending("Photobook.dat") //TODO: remove
         static let basketOrderBackupFile = photobookDirectory.appending("BasketOrder.dat")
+        static let processingOrderBackupFile = photobookDirectory.appending("BasketOrder.dat")
     }
     
     lazy var basketOrder = Order()
-    var processingOrder: Order?
+    var processingOrder: Order? {
+        didSet {
+            guard let processingOrder = processingOrder else {
+                try? FileManager.default.removeItem(atPath: Storage.processingOrderBackupFile)
+                return
+            }
+            
+            saveOrder(processingOrder, file: Storage.processingOrderBackupFile)
+        }
+    }
     
     private var cancelCompletionBlock:(() -> Void)?
     private var isCancelling: Bool {
@@ -43,11 +53,19 @@ class OrderManager {
     }
     
     var isProcessingOrder: Bool {
-        return processingOrder != nil
+        if processingOrder != nil {
+            return true
+        }
+        
+        if let _ = loadProcessingOrder() {
+            return true
+        }
+        
+        return false
     }
     
     private var product: PhotobookProduct! {
-        return OrderManager.shared.basketOrder.items.first
+        return basketOrder.items.first
     }
     
     static let shared = OrderManager()
@@ -84,19 +102,23 @@ class OrderManager {
     
     /// Saves the basket order to disk
     func saveBasketOrder() {
-        guard let data = try? PropertyListEncoder().encode(OrderManager.shared.basketOrder) else {
+        saveOrder(basketOrder, file: Storage.basketOrderBackupFile)
+    }
+    
+    private func saveOrder(_ order: Order, file: String) {
+        guard let data = try? PropertyListEncoder().encode(order) else {
             fatalError("OrderManager: encoding of order failed")
         }
         
-        if !FileManager.default.fileExists(atPath: OrderManager.Storage.photobookDirectory) {
+        if !FileManager.default.fileExists(atPath: Storage.photobookDirectory) {
             do {
-                try FileManager.default.createDirectory(atPath: OrderManager.Storage.photobookDirectory, withIntermediateDirectories: false, attributes: nil)
+                try FileManager.default.createDirectory(atPath: Storage.photobookDirectory, withIntermediateDirectories: false, attributes: nil)
             } catch {
                 print("OrderManager: could not save order")
             }
         }
         
-        let saved = NSKeyedArchiver.archiveRootObject(data, toFile: OrderManager.Storage.basketOrderBackupFile)
+        let saved = NSKeyedArchiver.archiveRootObject(data, toFile:file )
         if !saved {
             print("OrderManager: failed to archive order")
         }
@@ -104,7 +126,21 @@ class OrderManager {
     
     /// Loads the basket order from disk and returns it
     func loadBasketOrder() -> Order? {
-        guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: OrderManager.Storage.basketOrderBackupFile) as? Data else {
+        guard let order = loadOrder(from: Storage.basketOrderBackupFile) else { return nil }
+        
+        basketOrder = order
+        return order
+    }
+    
+    private func loadProcessingOrder() -> Order? {
+        guard let order = loadOrder(from: Storage.processingOrderBackupFile) else { return nil }
+        
+        processingOrder = order
+        return order
+    }
+    
+    private func loadOrder(from file: String) -> Order? {
+        guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: file) as? Data else {
             print("ProductManager: failed to unarchive order")
             return nil
         }
@@ -113,7 +149,6 @@ class OrderManager {
             return nil
         }
         
-        OrderManager.shared.basketOrder = unarchivedOrder
         return unarchivedOrder
     }
     
