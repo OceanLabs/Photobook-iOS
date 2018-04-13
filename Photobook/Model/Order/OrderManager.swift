@@ -26,9 +26,8 @@ class OrderManager {
         static let willFinishOrder = Notification.Name("ly.kite.sdk.OrderManager.willFinishOrder")
     }
     
-    struct Storage { //TODO: make private
+    private struct Storage {
         static let photobookDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!.appending("/Photobook/")
-        static let photobookBackupFile = photobookDirectory.appending("Photobook.dat") //TODO: remove
         static let basketOrderBackupFile = photobookDirectory.appending("BasketOrder.dat")
         static let processingOrderBackupFile = photobookDirectory.appending("BasketOrder.dat")
     }
@@ -36,12 +35,12 @@ class OrderManager {
     lazy var basketOrder = Order()
     var processingOrder: Order? {
         didSet {
-            guard let processingOrder = processingOrder else {
+            guard let _ = processingOrder else {
                 try? FileManager.default.removeItem(atPath: Storage.processingOrderBackupFile)
                 return
             }
             
-            saveOrder(processingOrder, file: Storage.processingOrderBackupFile)
+            saveProcessingOrder()
         }
     }
     
@@ -64,7 +63,7 @@ class OrderManager {
         return false
     }
     
-    private var product: PhotobookProduct! {
+    private var product: PhotobookProduct! { //TODO: delete
         return basketOrder.items.first
     }
     
@@ -124,6 +123,12 @@ class OrderManager {
         }
     }
     
+    func saveProcessingOrder() {
+        guard let processingOrder = processingOrder else { return }
+        
+        saveOrder(processingOrder, file: Storage.processingOrderBackupFile)
+    }
+    
     /// Loads the basket order from disk and returns it
     func loadBasketOrder() -> Order? {
         guard let order = loadOrder(from: Storage.basketOrderBackupFile) else { return nil }
@@ -132,10 +137,11 @@ class OrderManager {
         return order
     }
     
-    private func loadProcessingOrder() -> Order? {
+    func loadProcessingOrder() -> Order? {
         guard let order = loadOrder(from: Storage.processingOrderBackupFile) else { return nil }
         
         processingOrder = order
+        processingOrder?.items.first?.restoreUploads()
         return order
     }
     
@@ -180,6 +186,7 @@ class OrderManager {
         } else {
             cancelCompletionBlock?()
             cancelCompletionBlock = nil
+            processingOrder = nil
         }
     }
     

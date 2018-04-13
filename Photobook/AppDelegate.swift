@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
         // The application was woken up by a background task
-        ProductManager.shared.loadUserPhotobook()
+        _ = OrderManager.shared.loadProcessingOrder()
         completionHandler()
     }
     

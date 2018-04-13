@@ -276,7 +276,6 @@ class PhotobookProduct: Codable {
     ///
     /// - Parameter completionHandler: Executed when the uploads are on the way or failed to initiate them. The Int parameter provides the total upload count.
     func startPhotobookUpload(_ completionHandler: @escaping (Int, Error?) -> Void) {
-        ProductManager.shared.saveUserPhotobook()
         apiManager.uploadPhotobook(completionHandler)
     }
     
@@ -475,7 +474,7 @@ extension PhotobookProduct: PhotobookAPIManagerDelegate {
     func didFinishUploading(asset: Asset) {
         let info: [String: Any] = [ "asset": asset, "pending": apiManager.pendingUploads ]
         NotificationCenter.default.post(name: PhotobookProduct.pendingUploadStatusUpdated, object: info)
-        ProductManager.shared.saveUserPhotobook()
+        OrderManager.shared.saveProcessingOrder()
     }
     
     func didFailUpload(_ error: Error) {

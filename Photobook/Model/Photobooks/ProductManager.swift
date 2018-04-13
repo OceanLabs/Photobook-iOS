@@ -73,43 +73,5 @@ class ProductManager {
         guard let layouts = layouts else { return nil }
         return layouts.filter { photobook.layouts.contains($0.id) }
     }
-    
-    /// Loads the user's photobook details from disk
-    func loadUserPhotobook() {
-        guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: OrderManager.Storage.photobookBackupFile) as? Data else {
-            print("ProductManager: failed to unarchive product")
-            return
-        }
-        guard let unarchivedProduct = try? PropertyListDecoder().decode(PhotobookProduct.self, from: unarchivedData) else {
-            print("ProductManager: decoding of product failed")
-            return
-        }
-        
-        currentProduct = unarchivedProduct
-        unarchivedProduct.restoreUploads()
-    }
-    
-    
-    /// Saves the user's photobook details to disk
-    func saveUserPhotobook() {
-        guard let rootObject = currentProduct else { return }
-        
-        guard let data = try? PropertyListEncoder().encode(rootObject) else {
-            fatalError("ProductManager: encoding of product failed")
-        }
-        
-        if !FileManager.default.fileExists(atPath: OrderManager.Storage.photobookDirectory) {
-            do {
-                try FileManager.default.createDirectory(atPath: OrderManager.Storage.photobookDirectory, withIntermediateDirectories: false, attributes: nil)
-            } catch {
-                print("ProductManager: could not save photobook")
-            }
-        }
-        
-        let saved = NSKeyedArchiver.archiveRootObject(data, toFile: OrderManager.Storage.photobookBackupFile)
-        if !saved {
-            print("ProductManager: failed to archive product")
-        }
-    }
 
 }

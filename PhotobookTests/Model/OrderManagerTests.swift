@@ -1,5 +1,5 @@
 //
-//  ProductManagerTests.swift
+//  OrderManagerTests.swift
 //  PhotobookTests
 //
 //  Created by Jaime Landazuri on 11/12/2017.
@@ -10,7 +10,7 @@ import XCTest
 import Photos
 @testable import Photobook
 
-class ProductManagerTests: XCTestCase {
+class OrderManagerTests: XCTestCase {
 
     var productManager: ProductManager!
     let photosAsset = TestPhotosAsset(PHAsset(), albumIdentifier: "")
@@ -54,7 +54,8 @@ class ProductManagerTests: XCTestCase {
                 return
         }
         
-        productManager.currentProduct = PhotobookProduct(template: photobookTemplate, assets: [], coverLayouts: coverLayouts, layouts: layouts)
+        let product = PhotobookProduct(template: photobookTemplate, assets: [], coverLayouts: coverLayouts, layouts: layouts)
+        productManager.currentProduct = product
         productManager.currentProduct?.productLayouts = [ProductLayout]()
         
         let layoutBox = LayoutBox(id: 1, rect: CGRect(x: 0.01, y: 0.01, width: 0.5, height: 0.1))
@@ -70,32 +71,30 @@ class ProductManagerTests: XCTestCase {
         let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset, productLayoutText: productLayoutText)
 
         productManager.currentProduct?.productLayouts.append(productLayout)
+        
+        OrderManager.shared.basketOrder.items = [product]
     }
 
-    func testSaveUserPhotobook() {
-        productManager.saveUserPhotobook()
+    func testSaveBasketOrder() {
+        let product = productManager.currentProduct!
         
-        guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: OrderManager.Storage.photobookBackupFile) as? Data else {
-            XCTFail("Failed to unarchive product")
-            return
-        }
-        
-        guard let unarchivedProduct = try? PropertyListDecoder().decode(PhotobookProduct.self, from: unarchivedData) else {
+        OrderManager.shared.saveBasketOrder()
+        guard let unarchivedOrder = OrderManager.shared.loadBasketOrder() else {
             XCTFail("Decoding of product failed")
             return
         }
         
-        XCTAssertEqual(unarchivedProduct.template.id, productManager.currentProduct!.template.id)
-        XCTAssertEqual(unarchivedProduct.template.name, productManager.currentProduct!.template.name)
-        XCTAssertEqual(unarchivedProduct.template.aspectRatio, productManager.currentProduct!.template.aspectRatio)
-        XCTAssertEqual(unarchivedProduct.template.layouts, productManager.currentProduct!.template.layouts)
-        XCTAssertEqual(unarchivedProduct.template.coverLayouts, productManager.currentProduct!.template.coverLayouts)
+        XCTAssertEqual(unarchivedOrder.items.first!.template.id, product.template.id)
+        XCTAssertEqual(unarchivedOrder.items.first!.template.name, product.template.name)
+        XCTAssertEqual(unarchivedOrder.items.first!.template.aspectRatio, product.template.aspectRatio)
+        XCTAssertEqual(unarchivedOrder.items.first!.template.layouts, product.template.layouts)
+        XCTAssertEqual(unarchivedOrder.items.first!.template.coverLayouts, product.template.coverLayouts)
 
-        XCTAssertEqual(unarchivedProduct.coverColor, productManager.currentProduct!.coverColor)
-        XCTAssertEqual(unarchivedProduct.pageColor, productManager.currentProduct!.pageColor)
+        XCTAssertEqual(unarchivedOrder.items.first!.coverColor, product.coverColor)
+        XCTAssertEqual(unarchivedOrder.items.first!.pageColor, product.pageColor)
 
-        XCTAssertEqual(unarchivedProduct.productLayouts.first!.asset!.identifier, photosAsset.identifier)
-        XCTAssertEqual(unarchivedProduct.productLayouts.first!.asset!.size, photosAsset.size)
+        XCTAssertEqual(unarchivedOrder.items.first!.productLayouts.first!.asset!.identifier, photosAsset.identifier)
+        XCTAssertEqual(unarchivedOrder.items.first!.productLayouts.first!.asset!.size, photosAsset.size)
     }
 
 }
