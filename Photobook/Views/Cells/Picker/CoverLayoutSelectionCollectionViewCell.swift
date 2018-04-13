@@ -21,13 +21,16 @@ class CoverLayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     var asset: Asset!
     var image: UIImage!
     var coverColor: ProductColor!
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
     
     func setupLayout() {
         guard let layout = layout else { return }
         
         backgroundColor = .clear
         
-        let aspectRatio = ProductManager.shared.product!.aspectRatio!
+        let aspectRatio = product.template.aspectRatio!
         
         coverFrameView.width = (bounds.height - 2.0 * Constants.photobookVerticalMargin) * aspectRatio
         

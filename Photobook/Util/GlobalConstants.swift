@@ -6,7 +6,7 @@
 //  Copyright © 2018 Kite.ly. All rights reserved.
 //
 
-let photobookBundle = Bundle(for: Photobook.self)
+let photobookBundle = Bundle(for: PhotobookTemplate.self)
 let photobookMainStoryboard =  UIStoryboard(name: "Main", bundle: photobookBundle)
 
 struct CommonLocalizedStrings {

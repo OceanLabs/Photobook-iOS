@@ -93,6 +93,6 @@ import UIKit
     ///
     /// - Parameter completionHandler: Completion handler to be forwarded from 'handleEventsForBackgroundURLSession' in the application's app delegate
     @objc public func restorePhotobook(_ completionHandler: @escaping (() -> Void)) {
-        ProductManager.shared.loadUserPhotobook(completionHandler)
+        ProductManager.shared.currentProduct!.loadUserPhotobook(completionHandler)
     }
 }

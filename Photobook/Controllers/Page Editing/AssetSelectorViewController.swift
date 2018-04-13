@@ -26,7 +26,7 @@ class AssetSelectorViewController: UIViewController {
     private lazy var timesUsed: [String: Int] = {
         var temp = [String: Int]()
         
-        for layout in ProductManager.shared.productLayouts {
+        for layout in product.productLayouts {
             guard let asset = layout.asset else { continue }
             temp[asset.identifier] = temp[asset.identifier] != nil ? temp[asset.identifier]! + 1 : 1
         }
@@ -74,6 +74,10 @@ class AssetSelectorViewController: UIViewController {
         }
     }
     var browseNavigationController: UINavigationController!
+    
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
     
     func reselectAsset(_ asset: Asset) {
         selectedAsset = asset

@@ -31,8 +31,13 @@ class ProductManagerTests: XCTestCase {
             "layouts": [ 10, 11, 12, 13 ]
             ]) as [String: AnyObject]
         
-        productManager.product = Photobook.parse(validDictionary)
-        productManager.productLayouts = [ProductLayout]()
+        guard let photobookTemplate = PhotobookTemplate.parse(validDictionary) else {
+            XCTFail("Failed to parse photobook dictionary")
+            return
+        }
+        
+        productManager.currentProduct = PhotobookProduct(template: photobookTemplate, assets: [])
+        productManager.currentProduct?.productLayouts = [ProductLayout]()
         
         let layoutBox = LayoutBox(id: 1, rect: CGRect(x: 0.01, y: 0.01, width: 0.5, height: 0.1))
         let layout = Layout(id: 1, category: "portrait", imageLayoutBox: layoutBox, textLayoutBox: layoutBox, isDoubleLayout: false)
@@ -46,13 +51,13 @@ class ProductManagerTests: XCTestCase {
         
         let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset, productLayoutText: productLayoutText)
 
-        productManager.productLayouts.append(productLayout)
+        productManager.currentProduct?.productLayouts.append(productLayout)
     }
 
     func testSaveUserPhotobook() {
-        productManager.saveUserPhotobook()
+        productManager.currentProduct?.saveUserPhotobook()
         
-        guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: productManager.storageFile) as? Data else {
+        guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: productManager.currentProduct!.storageFile) as? Data else {
             XCTFail("Failed to unarchive product")
             return
         }
@@ -62,14 +67,14 @@ class ProductManagerTests: XCTestCase {
             return
         }
         
-        XCTAssertEqual(unarchivedProduct.product.id, productManager.product!.id)
-        XCTAssertEqual(unarchivedProduct.product.name, productManager.product!.name)
-        XCTAssertEqual(unarchivedProduct.product.aspectRatio, productManager.product!.aspectRatio)
-        XCTAssertEqual(unarchivedProduct.product.layouts, productManager.product!.layouts)
-        XCTAssertEqual(unarchivedProduct.product.coverLayouts, productManager.product!.coverLayouts)
+        XCTAssertEqual(unarchivedProduct.template.id, productManager.currentProduct!.template.id)
+        XCTAssertEqual(unarchivedProduct.template.name, productManager.currentProduct!.template.name)
+        XCTAssertEqual(unarchivedProduct.template.aspectRatio, productManager.currentProduct!.template.aspectRatio)
+        XCTAssertEqual(unarchivedProduct.template.layouts, productManager.currentProduct!.template.layouts)
+        XCTAssertEqual(unarchivedProduct.template.coverLayouts, productManager.currentProduct!.template.coverLayouts)
 
-        XCTAssertEqual(unarchivedProduct.coverColor, productManager.coverColor)
-        XCTAssertEqual(unarchivedProduct.pageColor, productManager.pageColor)
+        XCTAssertEqual(unarchivedProduct.coverColor, productManager.currentProduct!.coverColor)
+        XCTAssertEqual(unarchivedProduct.pageColor, productManager.currentProduct!.pageColor)
 
         XCTAssertEqual(unarchivedProduct.productLayouts.first!.asset!.identifier, photosAsset.identifier)
         XCTAssertEqual(unarchivedProduct.productLayouts.first!.asset!.size, photosAsset.size)

@@ -88,12 +88,16 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         }
     }
     
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
+    
     func setupLayout() {
         guard let pageIndex = pageIndex, let layout = layout else { return }
 
         backgroundColor = .clear
         
-        let aspectRatio = ProductManager.shared.product!.aspectRatio!
+        let aspectRatio = product.template.aspectRatio!
         if layout.isDoubleLayout {
             photobookFrameView.leftPageView.aspectRatio = pageType == .left ? aspectRatio * 2.0 : 0.0
             photobookFrameView.rightPageView.aspectRatio = pageType == .left ? 0.0 : aspectRatio * 2.0
@@ -136,7 +140,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         if !layout.isDoubleLayout && !isEditingDoubleLayout && (pageType == .left || pageType == .right) {
             let oppositeIndex = pageIndex + (pageType == .left ? 1 : -1)
             oppositePageView!.pageIndex = oppositeIndex
-            oppositePageView!.productLayout = ProductManager.shared.productLayouts[oppositeIndex].shallowCopy()
+            oppositePageView!.productLayout = product.productLayouts[oppositeIndex].shallowCopy()
             oppositePageView!.setupImageBox(with: oppositeImage, animated: false)
             oppositePageView!.setupTextBox(mode: .userTextOnly)
         }

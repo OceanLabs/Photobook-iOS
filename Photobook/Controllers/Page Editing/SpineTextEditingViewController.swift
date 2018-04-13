@@ -43,7 +43,11 @@ class SpineTextEditingViewController: UIViewController {
     private var backgroundColor: UIColor!
     private var initialTransform: CGAffineTransform!
     
-    private var fontType: FontType = ProductManager.shared.spineFontType
+    private lazy var fontType: FontType = product.spineFontType
+    
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -141,17 +145,17 @@ class SpineTextEditingViewController: UIViewController {
     private func setup() {
         
         textField.inputAccessoryView = textToolBarView
-        textField.text = ProductManager.shared.spineText
+        textField.text = product.spineText
 
         let initialContainerRatio = initialRect.width / initialRect.height
         
         // Figure out the size of the spine frame
-        let height = textField.bounds.width / ProductManager.shared.product!.spineTextRatio
+        let height = textField.bounds.width / product.template.spineTextRatio
         let width = height * initialContainerRatio
         
         spineFrameViewWidthConstraint.constant = width
         spineFrameViewHeightConstraint.constant = height
-        spineFrameView.color = ProductManager.shared.coverColor
+        spineFrameView.color = product.coverColor
         spineFrameView.resetSpineColor()
         
         textFieldHeightConstraint.constant = width // Since the cover will be on its side
@@ -188,7 +192,7 @@ class SpineTextEditingViewController: UIViewController {
     
     private func setTextFieldAttributes() {
         let fontSize = fontType.sizeForScreenHeight(spineFrameViewHeightConstraint.constant, isSpineText: true)
-        let fontColor = ProductManager.shared.coverColor.fontColor()
+        let fontColor = product.coverColor.fontColor()
         textField.attributedText = fontType.attributedText(with: textField.text, fontSize: fontSize, fontColor: fontColor, isSpineText: true)
         textField.defaultTextAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor, isSpineText: true)
     }

@@ -11,6 +11,10 @@ import Foundation
 @objc enum FontType: Int, Codable {
     case plain, classic, solid
     
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
+    
     private func fontWithSize(_ size: CGFloat) -> UIFont {
         let name: String
         switch self {
@@ -81,7 +85,7 @@ import Foundation
     ///   - isSpineText: Whether the text will show on the spine of the book
     /// - Returns: The scaled font size. If screenHeight is not provided, it returns the original font size.
     func sizeForScreenHeight(_ screenHeight: CGFloat? = nil, isSpineText: Bool = false) -> CGFloat {
-        let photobookToOnScreenScale = screenHeight != nil ? screenHeight! / ProductManager.shared.product!.pageHeight : 1.0
+        let photobookToOnScreenScale = screenHeight != nil ? screenHeight! / product.template.pageHeight : 1.0
         return photobookFontSize(isSpineText: isSpineText) * photobookToOnScreenScale
     }
 }

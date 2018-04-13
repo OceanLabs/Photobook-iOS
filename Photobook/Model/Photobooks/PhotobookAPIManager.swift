@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 protocol PhotobookAPIManagerDelegate: class {
-    var product: Photobook? { get set }
+    var template: PhotobookTemplate { get set }
     var productLayouts: [ProductLayout] { get set }
     var coverColor: ProductColor { get set }
     var pageColor: ProductColor { get set }
@@ -41,6 +41,10 @@ class PhotobookAPIManager {
     
     private struct Storage {
         static let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+    }
+    
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
     }
 
     private var apiClient = APIClient.shared
@@ -92,7 +96,7 @@ class PhotobookAPIManager {
     /// Requests the information about photobook products and layouts from the API
     ///
     /// - Parameter completionHandler: Closure to be called when the request completes
-    func requestPhotobookInfo(_ completionHandler:@escaping ([Photobook]?, [Layout]?, [UpsellOption]?, Error?) -> ()) {
+    func requestPhotobookInfo(_ completionHandler:@escaping ([PhotobookTemplate]?, [Layout]?, [UpsellOption]?, Error?) -> ()) {
         
         apiClient.get(context: .photobook, endpoint: EndPoints.products) { (jsonData, error) in
             
@@ -126,22 +130,22 @@ class PhotobookAPIManager {
             }
             
             if tempLayouts.isEmpty {
-                print("PBAPIManager: parsing layouts failed")
+                print("PhotobookAPIManager: parsing layouts failed")
                 completionHandler(nil, nil, nil, APIClientError.parsing)
                 return
             }
             
             // Parse photobook products
-            var tempPhotobooks = [Photobook]()
+            var tempPhotobooks = [PhotobookTemplate]()
             
             for photobookDictionary in productsData {
-                if let photobook = Photobook.parse(photobookDictionary) {
+                if let photobook = PhotobookTemplate.parse(photobookDictionary) {
                     tempPhotobooks.append(photobook)
                 }
             }
             
             if tempPhotobooks.isEmpty {
-                print("PBAPIManager: parsing photobook products failed")
+                print("PhotobookAPIManager: parsing photobook products failed")
                 completionHandler(nil, nil, nil, APIClientError.parsing)
                 return
             }
@@ -178,7 +182,7 @@ class PhotobookAPIManager {
             return
         }
         
-        guard delegate?.product != nil, let productLayouts = delegate?.productLayouts else {
+        guard delegate?.template != nil, let productLayouts = delegate?.productLayouts else {
             completionHandler(0, PhotobookAPIError.missingPhotobookInfo)
             return
         }
@@ -213,7 +217,7 @@ class PhotobookAPIManager {
     @objc func imageUploadFinished(_ notification: Notification) {
         
         guard let dictionary = notification.userInfo as? [String: AnyObject] else {
-            print("PBAPIManager: Task finished but could not cast user info")
+            print("PhotobookAPIManager: Task finished but could not cast user info")
             return
         }
         
@@ -314,7 +318,7 @@ class PhotobookAPIManager {
         var photobook = [String: Any]()
         
         var pages = [[String: Any]]()
-        for productLayout in ProductManager.shared.productLayouts {
+        for productLayout in product.productLayouts {
             var page = [String: Any]()
             
             if let asset = productLayout.asset,

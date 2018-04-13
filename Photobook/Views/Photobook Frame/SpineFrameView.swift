@@ -28,9 +28,13 @@ class SpineFrameView: UIView {
     var text: String?
     var fontType: FontType = .plain
     
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
+    
     override func layoutSubviews() {
         // Figure out the available width of the spine frame
-        textLabelWidthConstraint.constant = bounds.height * ProductManager.shared.product!.spineTextRatio
+        textLabelWidthConstraint.constant = bounds.height * product.template.spineTextRatio
 
         if !(text ?? "").isEmpty {
             let fontSize = fontType.sizeForScreenHeight(bounds.height, isSpineText: true)

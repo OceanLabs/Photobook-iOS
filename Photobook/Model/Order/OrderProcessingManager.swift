@@ -47,13 +47,17 @@ class OrderProcessingManager {
         }
     }
     
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
+    
     static let shared = OrderProcessingManager()
     
     private init() {
-        NotificationCenter.default.addObserver(self, selector: #selector(pendingUploadsChanged), name: ProductManager.pendingUploadStatusUpdated, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(photobookUploadFinished), name: ProductManager.finishedPhotobookUpload, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(photobookUploadFailed), name: ProductManager.failedPhotobookUpload, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(shouldRetryUpload), name: ProductManager.shouldRetryUploadingImages, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(pendingUploadsChanged), name: PhotobookProduct.pendingUploadStatusUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(photobookUploadFinished), name: PhotobookProduct.finishedPhotobookUpload, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(photobookUploadFailed), name: PhotobookProduct.failedPhotobookUpload, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(shouldRetryUpload), name: PhotobookProduct.shouldRetryUploadingImages, object: nil)
         
     } //private
     
@@ -79,8 +83,8 @@ class OrderProcessingManager {
         }
         
         cancelCompletionBlock = completion
-        if ProductManager.shared.isUploading {
-            ProductManager.shared.cancelPhotobookUpload { [weak welf = self] in
+        if ProductManager.shared.currentProduct?.isUploading ?? false {
+            product.cancelPhotobookUpload { [weak welf = self] in
                 welf?.isProcessingOrder = false
                 welf?.cancelCompletionBlock?()
                 welf?.cancelCompletionBlock = nil
@@ -92,7 +96,7 @@ class OrderProcessingManager {
     }
     
     func startPhotobookUpload() {
-        ProductManager.shared.startPhotobookUpload { (count, error) in
+        product.startPhotobookUpload { (count, error) in
             if error != nil {
                 Analytics.shared.trackError(.imageUpload)
                 NotificationCenter.default.post(name: Notifications.failed, object: self, userInfo: ["error": OrderProcessingError.upload])
@@ -105,7 +109,7 @@ class OrderProcessingManager {
         NotificationCenter.default.post(name: Notifications.willFinishOrder, object: self)
         
         // 1 - Create PDF
-        ProductManager.shared.createPhotobookPdf { [weak welf = self] (urls, error) in
+        product.createPhotobookPdf { [weak welf = self] (urls, error) in
             
             if let swelf = welf, swelf.isCancelling {
                 swelf.isProcessingOrder = false
@@ -185,7 +189,7 @@ class OrderProcessingManager {
     }
     
     @objc func shouldRetryUpload() {
-        ProductManager.shared.cancelPhotobookUpload {
+        product.cancelPhotobookUpload {
             NotificationCenter.default.post(name: Notifications.failed, object: self, userInfo: ["error": OrderProcessingError.upload])
         }
     }

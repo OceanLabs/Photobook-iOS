@@ -72,6 +72,10 @@ class TextEditingViewController: UIViewController {
     private lazy var animatableAssetImageView = UIImageView()
     private var hasAnImageLayout: Bool!
     
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -235,7 +239,7 @@ class TextEditingViewController: UIViewController {
     private func setup() {
         // Figure out the height of the textView
         guard
-            let pageRatio = ProductManager.shared.product?.aspectRatio,
+            let pageRatio = product.template.aspectRatio,
             let textLayoutBox = productLayout?.layout.textLayoutBox
         else {
             fatalError("Text editing failed due to missing layout info.")

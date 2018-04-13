@@ -32,6 +32,10 @@ class AssetPlacementViewController: UIViewController {
     private var initialContainerSize: CGSize!
     private var maxScale: CGFloat!
     
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.alpha = 0.0
@@ -152,7 +156,7 @@ class AssetPlacementViewController: UIViewController {
 
         // Should trigger a transform recalculation
         let pageSize = imageBox.containerSize(for: assetContainerView.bounds.size)
-        let bleed = ProductManager.shared.bleed(forPageSize: pageSize)
+        let bleed = product.bleed(forPageSize: pageSize)
         
         bleedContainerView.frame = imageBox.bleedRect(in: assetContainerView.bounds.size, withBleed: bleed)
         assetImageView.center = CGPoint(x: bleedContainerView.bounds.width * 0.5, y: bleedContainerView.bounds.height * 0.5)

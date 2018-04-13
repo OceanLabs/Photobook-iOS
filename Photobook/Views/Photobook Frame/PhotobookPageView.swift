@@ -80,6 +80,10 @@ class PhotobookPageView: UIView {
     
     @IBOutlet private var aspectRatioConstraint: NSLayoutConstraint!
     
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
+    
     override func layoutSubviews() {
         setupImageBox(with: currentImage)
         adjustTextLabel()
@@ -224,8 +228,8 @@ class PhotobookPageView: UIView {
         
         let finalFrame = textBox.rectContained(in: bounds.size)
         
-        let originalWidth = ProductManager.shared.product!.pageWidth!
-        let originalHeight = ProductManager.shared.product!.pageHeight!
+        let originalWidth = product.template.pageWidth!
+        let originalHeight = product.template.pageHeight!
         
         pageTextLabel.transform = .identity
         pageTextLabel.frame = CGRect(x: finalFrame.minX, y: finalFrame.minY, width: originalWidth * textBox.rect.width, height: originalHeight * textBox.rect.height)

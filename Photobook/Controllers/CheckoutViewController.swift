@@ -210,7 +210,7 @@ class CheckoutViewController: UIViewController {
     private func updateViews() {
         
         //product
-        itemTitleLabel.text = ProductManager.shared.product?.name
+        itemTitleLabel.text = ProductManager.shared.currentProduct?.template.name
         itemPriceLabel.text = OrderManager.basketOrder.cachedCost?.lineItems?.first?.formattedCost
         itemAmountButton.setTitle("\(OrderManager.basketOrder.itemCount)", for: .normal)
         updateItemImage()
