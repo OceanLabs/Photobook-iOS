@@ -12,6 +12,15 @@ class ProductManager {
     
     static let shared = ProductManager()
     
+    private lazy var apiManager = PhotobookAPIManager()
+    
+    #if DEBUG
+    convenience init(apiManager: PhotobookAPIManager) {
+        self.init()
+        self.apiManager = apiManager
+    }
+    #endif
+    
     // Public info about photobook products
     private(set) var products: [PhotobookTemplate]?
     
@@ -41,7 +50,7 @@ class ProductManager {
     ///
     /// - Parameter completion: Completion block with an optional error
     func initialise(completion:((Error?)->())?) {
-        PhotobookAPIManager().requestPhotobookInfo { [weak welf = self] (photobooks, layouts, upsellOptions, error) in
+        apiManager.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, upsellOptions, error) in
             guard error == nil else {
                 completion?(error!)
                 return

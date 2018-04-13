@@ -18,7 +18,15 @@ class ProductManagerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        productManager = ProductManager()
+        let photobookAPIManager = PhotobookAPIManager(apiClient: APIClient.shared, mockJsonFileName: "photobooks")
+        productManager = ProductManager(apiManager: photobookAPIManager)
+        
+        let expectation = self.expectation(description: "Wait for product initialization")
+        productManager.initialise(completion: { _ in
+            expectation.fulfill()
+        })
+        
+        wait(for: [expectation], timeout: 30)
         
         let validDictionary = ([
             "id": 10,
@@ -36,7 +44,17 @@ class ProductManagerTests: XCTestCase {
             return
         }
         
-        productManager.currentProduct = PhotobookProduct(template: photobookTemplate, assets: [])
+        guard
+            let coverLayouts = productManager.coverLayouts(for: photobookTemplate),
+            !coverLayouts.isEmpty,
+            let layouts = productManager.layouts(for: photobookTemplate),
+            !layouts.isEmpty
+            else {
+                XCTFail("ProductManager: Missing layouts for selected photobook")
+                return
+        }
+        
+        productManager.currentProduct = PhotobookProduct(template: photobookTemplate, assets: [], coverLayouts: coverLayouts, layouts: layouts)
         productManager.currentProduct?.productLayouts = [ProductLayout]()
         
         let layoutBox = LayoutBox(id: 1, rect: CGRect(x: 0.01, y: 0.01, width: 0.5, height: 0.1))
@@ -55,14 +73,14 @@ class ProductManagerTests: XCTestCase {
     }
 
     func testSaveUserPhotobook() {
-        productManager.currentProduct?.saveUserPhotobook()
+        productManager.saveUserPhotobook()
         
-        guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: productManager.currentProduct!.storageFile) as? Data else {
+        guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: OrderManager.Storage.photobookBackupFile) as? Data else {
             XCTFail("Failed to unarchive product")
             return
         }
         
-        guard let unarchivedProduct = try? PropertyListDecoder().decode(PhotobookBackup.self, from: unarchivedData) else {
+        guard let unarchivedProduct = try? PropertyListDecoder().decode(PhotobookProduct.self, from: unarchivedData) else {
             XCTFail("Decoding of product failed")
             return
         }

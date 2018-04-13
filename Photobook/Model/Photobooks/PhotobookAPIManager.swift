@@ -79,9 +79,11 @@ class PhotobookAPIManager {
     }
     
     #if DEBUG
-    convenience init(apiClient: APIClient) {
+    private var mockJsonFileName: String?
+    convenience init(apiClient: APIClient, mockJsonFileName: String?) {
         self.init()
         self.apiClient = apiClient
+        self.mockJsonFileName = mockJsonFileName
     }
     #endif
     
@@ -101,7 +103,12 @@ class PhotobookAPIManager {
             if NSClassFromString("XCTest") == nil {
                 jsonData = JSON.parse(file: "photobooks")
             } else {
-                if error != nil {
+                #if DEBUG
+                if let mockJsonFileName = self.mockJsonFileName {
+                    jsonData = JSON.parse(file: mockJsonFileName)
+                }
+                #endif
+                if jsonData == nil, error != nil {
                     completionHandler(nil, nil, nil, error!)
                     return
                 }

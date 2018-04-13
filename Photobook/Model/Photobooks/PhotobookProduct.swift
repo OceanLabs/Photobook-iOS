@@ -47,7 +47,11 @@ class PhotobookProduct: Codable {
     }()
     
     #if DEBUG
-    var storageFile: String { return OrderManager.Storage.photobookBackupFile }
+    convenience init(template: PhotobookTemplate, assets: [Asset], apiManager: PhotobookAPIManager, coverLayouts: [Layout], layouts: [Layout]) {
+        self.init(template: template, assets: assets, coverLayouts: coverLayouts, layouts: layouts)
+        apiManager.delegate = self
+        self.apiManager = apiManager
+    }
     #endif
     
     // Current photobook
@@ -128,18 +132,8 @@ class PhotobookProduct: Codable {
         return apiManager.totalUploads
     }
     
-    init(template: PhotobookTemplate, assets: [Asset]) {
+    init(template: PhotobookTemplate, assets: [Asset], coverLayouts: [Layout], layouts: [Layout]) {
         self.template = template
-        
-        guard
-            let coverLayouts = ProductManager.shared.coverLayouts(for: template),
-            !coverLayouts.isEmpty,
-            let layouts = ProductManager.shared.layouts(for: template),
-            !layouts.isEmpty
-            else {
-                print("ProductManager: Missing layouts for selected photobook")
-                return
-        }
         
         let imageOnlyLayouts = layouts.filter({ $0.imageLayoutBox != nil })
         
@@ -166,16 +160,7 @@ class PhotobookProduct: Codable {
         productLayouts = tempLayouts
     }
     
-    func setTemplate(_ template: PhotobookTemplate, withAssets assets: [Asset]? = nil) {
-        guard
-            let coverLayouts = ProductManager.shared.coverLayouts(for: template),
-            !coverLayouts.isEmpty,
-            let layouts = ProductManager.shared.layouts(for: template),
-            !layouts.isEmpty
-        else {
-            print("ProductManager: Missing layouts for selected photobook")
-            return
-        }
+    func setTemplate(_ template: PhotobookTemplate, withAssets assets: [Asset]? = nil, coverLayouts: [Layout], layouts: [Layout]) {
         
         // Reset the current layout since we are changing products
         currentLandscapeLayout = 0
