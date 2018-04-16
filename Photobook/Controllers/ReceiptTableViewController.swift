@@ -64,10 +64,6 @@ class ReceiptTableViewController: UITableViewController {
         return ProgressOverlayViewController.progressOverlay(parent: self)
     }()
     
-    private var product: PhotobookProduct! {
-        return order.items.first
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -78,10 +74,10 @@ class ReceiptTableViewController: UITableViewController {
     
         updateViews()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingCompleted), name: OrderManager.Notifications.completed, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingFailed(_:)), name: OrderManager.Notifications.failed, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(pendingUploadsChanged), name: OrderManager.Notifications.pendingUploadStatusUpdated, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingWillFinish), name: OrderManager.Notifications.willFinishOrder, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingCompleted), name: OrderManager.NotificationName.completed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingFailed(_:)), name: OrderManager.NotificationName.failed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(pendingUploadsChanged), name: OrderManager.NotificationName.pendingUploadStatusUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingWillFinish), name: OrderManager.NotificationName.willFinishOrder, object: nil)
     }
     
     deinit {
@@ -286,7 +282,8 @@ class ReceiptTableViewController: UITableViewController {
         case Section.progress.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptProgressTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptProgressTableViewCell
             
-            cell.updateProgress(pendingUploads: product.pendingUploads, totalUploads: product.totalUploads)
+            let total = order.assetsToUpload().count
+            cell.updateProgress(pendingUploads: order.remainingAssetsToUpload().count, totalUploads: total)
             cell.startProgressAnimation()
             
             return cell

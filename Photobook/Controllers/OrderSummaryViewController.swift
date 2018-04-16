@@ -60,7 +60,7 @@ class OrderSummaryViewController: UIViewController {
         if segue.identifier == "OrderSummarySegueName" {
             
             // Add current item to the basket
-            OrderManager.shared.basketOrder.items = [self.product] //We currently only support one item at a time
+            OrderManager.shared.basketOrder.products = [self.product] //We currently only support one item at a time
         }
     }
     

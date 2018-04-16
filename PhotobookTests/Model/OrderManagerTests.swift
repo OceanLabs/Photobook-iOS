@@ -72,7 +72,7 @@ class OrderManagerTests: XCTestCase {
 
         productManager.currentProduct?.productLayouts.append(productLayout)
         
-        OrderManager.shared.basketOrder.items = [product]
+        OrderManager.shared.basketOrder.products = [product]
     }
 
     func testSaveBasketOrder() {
@@ -84,17 +84,17 @@ class OrderManagerTests: XCTestCase {
             return
         }
         
-        XCTAssertEqual(unarchivedOrder.items.first!.template.id, product.template.id)
-        XCTAssertEqual(unarchivedOrder.items.first!.template.name, product.template.name)
-        XCTAssertEqual(unarchivedOrder.items.first!.template.aspectRatio, product.template.aspectRatio)
-        XCTAssertEqual(unarchivedOrder.items.first!.template.layouts, product.template.layouts)
-        XCTAssertEqual(unarchivedOrder.items.first!.template.coverLayouts, product.template.coverLayouts)
+        XCTAssertEqual(unarchivedOrder.products.first!.template.id, product.template.id)
+        XCTAssertEqual(unarchivedOrder.products.first!.template.name, product.template.name)
+        XCTAssertEqual(unarchivedOrder.products.first!.template.aspectRatio, product.template.aspectRatio)
+        XCTAssertEqual(unarchivedOrder.products.first!.template.layouts, product.template.layouts)
+        XCTAssertEqual(unarchivedOrder.products.first!.template.coverLayouts, product.template.coverLayouts)
 
-        XCTAssertEqual(unarchivedOrder.items.first!.coverColor, product.coverColor)
-        XCTAssertEqual(unarchivedOrder.items.first!.pageColor, product.pageColor)
+        XCTAssertEqual(unarchivedOrder.products.first!.coverColor, product.coverColor)
+        XCTAssertEqual(unarchivedOrder.products.first!.pageColor, product.pageColor)
 
-        XCTAssertEqual(unarchivedOrder.items.first!.productLayouts.first!.asset!.identifier, photosAsset.identifier)
-        XCTAssertEqual(unarchivedOrder.items.first!.productLayouts.first!.asset!.size, photosAsset.size)
+        XCTAssertEqual(unarchivedOrder.products.first!.productLayouts.first!.asset!.identifier, photosAsset.identifier)
+        XCTAssertEqual(unarchivedOrder.products.first!.productLayouts.first!.asset!.size, photosAsset.size)
     }
 
 }

@@ -27,32 +27,11 @@ enum ProductColor: String, Codable {
 }
 
 class PhotobookProduct: Codable {
-
-    // Notification keys
-    static let pendingUploadStatusUpdated = Notification.Name("ly.kite.sdk.productManagerPendingUploadStatusUpdated")
-    static let shouldRetryUploadingImages = Notification.Name("ly.kite.sdk.productManagerShouldRetryUploadingImages")
-    static let finishedPhotobookCreation = Notification.Name("ly.kite.sdk.productManagerFinishedPhotobookCreation")
-    static let finishedPhotobookUpload = Notification.Name("ly.kite.sdk.productManagerFinishedPhotobookUpload")
-    static let failedPhotobookUpload = Notification.Name("ly.kite.sdk.productManagerFailedPhotobookUpload")
     
     private let bleed: CGFloat = 8.5
 
     var currentPortraitLayout = 0
     var currentLandscapeLayout = 0
-    
-    private lazy var apiManager: PhotobookAPIManager = {
-        let manager = PhotobookAPIManager()
-        manager.delegate = self
-        return manager
-    }()
-    
-    #if DEBUG
-    convenience init(template: PhotobookTemplate, assets: [Asset], apiManager: PhotobookAPIManager, coverLayouts: [Layout], layouts: [Layout]) {
-        self.init(template: template, assets: assets, coverLayouts: coverLayouts, layouts: layouts)
-        apiManager.delegate = self
-        self.apiManager = apiManager
-    }
-    #endif
     
     // Current photobook
     var template: PhotobookTemplate
@@ -114,22 +93,6 @@ class PhotobookProduct: Codable {
             }
         }
         return temp.count > 0 ? temp : nil
-    }
-    
-    //upload
-    var isUploading:Bool {
-        get {
-            return apiManager.isUploading
-        }
-        set {
-            apiManager.isUploading = newValue
-        }
-    }
-    var pendingUploads:Int {
-        return apiManager.pendingUploads
-    }
-    var totalUploads:Int {
-        return apiManager.totalUploads
     }
     
     init(template: PhotobookTemplate, assets: [Asset], coverLayouts: [Layout], layouts: [Layout]) {
@@ -270,19 +233,6 @@ class PhotobookProduct: Codable {
     ///   - page: The page index in the photbook
     func setText(_ text: String, forPage page: Int) {
         productLayouts[page].text = text
-    }
-    
-    /// Initiates the uploading of the user's photobook
-    ///
-    /// - Parameter completionHandler: Executed when the uploads are on the way or failed to initiate them. The Int parameter provides the total upload count.
-    func startPhotobookUpload(_ completionHandler: @escaping (Int, Error?) -> Void) {
-        apiManager.uploadPhotobook(completionHandler)
-    }
-    
-    func cancelPhotobookUpload(_ completionHandler: @escaping () -> Void) {
-        apiManager.cancelUpload {
-            completionHandler()
-        }
     }
     
     func spreadIndex(for productLayoutIndex: Int) -> Int? {
@@ -460,47 +410,12 @@ class PhotobookProduct: Codable {
         return photobook
     }
     
-    func createPhotobookPdf(completionHandler: @escaping (_ urls: [String]?, _ error: Error?) -> Void) {
-        apiManager.createPhotobookPdf(completionHandler: completionHandler)
-    }
-    
-    func restoreUploads() {
-        apiManager.restoreUploads()
-    }
-}
-
-extension PhotobookProduct: PhotobookAPIManagerDelegate {
-
-    func didFinishUploading(asset: Asset) {
-        let info: [String: Any] = [ "asset": asset, "pending": apiManager.pendingUploads ]
-        NotificationCenter.default.post(name: PhotobookProduct.pendingUploadStatusUpdated, object: info)
-        OrderManager.shared.saveProcessingOrder()
-    }
-    
-    func didFailUpload(_ error: Error) {
-        if let error = error as? PhotobookAPIError {
-            switch error {
-            case .couldNotSaveTempImageData:
-                Analytics.shared.trackError(.diskError)
-                let info = [ "pending": apiManager.pendingUploads ]
-                NotificationCenter.default.post(name: PhotobookProduct.pendingUploadStatusUpdated, object: info)
-                NotificationCenter.default.post(name: PhotobookProduct.shouldRetryUploadingImages, object: nil) //resolvable
-            case .missingPhotobookInfo, .couldNotBuildCreationParameters:
-                Analytics.shared.trackError(.photobookInfo)
-                NotificationCenter.default.post(name: PhotobookProduct.failedPhotobookUpload, object: nil) //not resolvable
-            }
-        } else if let _ = error as? APIClientError {
-            // Connection / server errors or parsing error
-            NotificationCenter.default.post(name: PhotobookProduct.shouldRetryUploadingImages, object: nil) //resolvable
+    func assetsToUpload() -> [Asset] {
+        var assets = [Asset]()
+        for layout in productLayouts {
+            guard let asset = layout.asset else { continue }
+            assets.append(asset)
         }
-    }
-    
-    func didFinishUploadingPhotobook() {
-        Analytics.shared.trackAction(.uploadSuccessful)
-        NotificationCenter.default.post(name: PhotobookProduct.finishedPhotobookUpload, object: nil)
-    }
-    
-    func didFinishCreatingPdf(error: Error?) {
-        NotificationCenter.default.post(name: PhotobookProduct.finishedPhotobookCreation, object: nil)
+        return assets
     }
 }

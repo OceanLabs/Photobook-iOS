@@ -21,7 +21,7 @@ class Order: Codable {
     var deliveryDetails: DeliveryDetails?
     var shippingMethod: Int?
     var paymentMethod: PaymentMethod? = Stripe.deviceSupportsApplePay() ? .applePay : nil
-    var items = [PhotobookProduct]()
+    var products = [PhotobookProduct]()
     var promoCode: String?
     var lastSubmissionDate: Date?
     var orderId: String?
@@ -46,8 +46,8 @@ class Order: Codable {
         if let deliveryDetails = deliveryDetails { stringHash += "ad:\(deliveryDetails.hashValue)," }
         if let promoCode = promoCode { stringHash += "pc:\(promoCode)," }
         
-        for item in items {
-            if let productName = item.template.name { stringHash += "jb:\(productName)," }
+        for product in products {
+            if let productName = product.template.name { stringHash += "jb:\(productName)," }
         }
         
         stringHash += "up:("
@@ -101,17 +101,36 @@ class Order: Codable {
         
         var jobs = [[String: Any]]()
         
-        for item in items {
+        for product in products {
             jobs.append([
-                "template_id" : item.template.productTemplateId ?? "",
-                "multiples" : item.itemCount,
-                "assets": [["inside_pdf" : item.photobookId ?? ""]]
+                "template_id" : product.template.productTemplateId ?? "",
+                "multiples" : product.itemCount,
+                "assets": [["inside_pdf" : product.photobookId ?? ""]]
                 ])
         }
         
         parameters["jobs"] = jobs
         
         return parameters
+    }
+    
+    func assetsToUpload() -> [Asset] {
+        var assets = [Asset]()
+        
+        for product in products {
+            let productAssets = product.assetsToUpload()
+            for asset in productAssets {
+                if !assets.contains(where: { $0.identifier == asset.identifier }) {
+                    assets.append(asset)
+                }
+            }
+        }
+        
+        return assets
+    }
+    
+    func remainingAssetsToUpload() -> [Asset] {
+        return assetsToUpload().filter({ $0.uploadUrl == nil })
     }
     
 }
