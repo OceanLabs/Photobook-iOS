@@ -169,7 +169,7 @@ class PhotobookAPIManager {
                 completionHandler(nil, error)
                 return
             }
-            
+            print(coverUrl)
             completionHandler([coverUrl, insideUrl], nil)
         }
     }
@@ -332,14 +332,17 @@ class PhotobookAPIManager {
                 
                 var layoutBox = [String:Any]()
                 
+                productLayoutAsset.containerSize = imageLayoutBox.rectContained(in: CGSize(width: product.pageWidth, height: product.pageHeight)).size
+                productLayoutAsset.adjustTransform()
+                
                 layoutBox["contentType"] = "image"
                 layoutBox["isDoubleLayout"] = productLayout.layout.isDoubleLayout
                 layoutBox["dimensionsPercentages"] = ["height": imageLayoutBox.rect.height, "width": imageLayoutBox.rect.width]
                 layoutBox["relativeStartPoint"] = ["x": imageLayoutBox.rect.origin.x, "y": imageLayoutBox.rect.origin.y]
                 
                 // Set the container size to 1,1 so that the transform is relativized
-                productLayoutAsset.containerSize = CGSize(width: 1, height: 1)
-                productLayoutAsset.adjustTransform()
+                //productLayoutAsset.containerSize = CGSize(width: 1, height: 1)
+                //productLayoutAsset.adjustTransform()
                 
                 var containedItem = [String: Any]()
                 var picture = [String: Any]()
@@ -349,10 +352,16 @@ class PhotobookAPIManager {
                 containedItem["picture"] = picture
                 containedItem["relativeStartPoint"] = ["x": productLayoutAsset.transform.tx, "y": productLayoutAsset.transform.ty]
                 containedItem["rotation"] = atan2(productLayoutAsset.transform.b, productLayoutAsset.transform.a)
-                containedItem["zoom"] = productLayoutAsset.transform.a // X & Y axes scale should be the same, use the scale for X axis
+                
+                var fillRatio = productLayoutAsset.containerSize.width / asset.size.width
+                if asset.size.height < asset.size.width {
+                    fillRatio = productLayoutAsset.containerSize.height / asset.size.height
+                }
+                let zoom = productLayoutAsset.transform.a - fillRatio
+                print("Transform.a = \(productLayoutAsset.transform.a), Fill Ratio = \(fillRatio), zoom level: \(zoom)")
+                containedItem["zoom"] = 1//1 + fillRatio - productLayoutAsset.transform.a // X & Y axes scale should be the same, use the scale for X axis
                 containedItem["baseWidthPercent"] = 1 //mock data
                 containedItem["flipped"] = false //mock data
-                
                 
                 layoutBox["containedItem"] = containedItem
                 
@@ -372,7 +381,7 @@ class PhotobookAPIManager {
         productVariant["id"] = product.id
         productVariant["name"] = product.name
         productVariant["templateId"] = product.productTemplateId
-        productVariant["pageWidth"] = product.pageWidth
+        productVariant["pageWidth"] = product.pageWidth*2
         productVariant["pageHeight"] = product.pageHeight
         //TODO: replace mock data
         productVariant["cost"] = ["EUR":"25.00", "USD":"30.00", "GBP":"23.00"]
@@ -381,9 +390,11 @@ class PhotobookAPIManager {
         productVariant["finishTypes"] = [["name":"gloss", "cost":["EUR":"1.30", "USD":"1.50", "GBP":"1.00"]]]
         productVariant["minPages"] = 20
         productVariant["maxPages"] = 70
-        productVariant["coverSize"] = ["mm":["width":300, "height":300]]
-        productVariant["pageSetp"] = 0
-        productVariant["bleed"] = ["px":20, "mm":20]
+        productVariant["coverSize"] = ["mm":["width":product.pageWidth, "height":product.pageHeight]]
+        productVariant["size"] = ["mm":["width":product.pageWidth*2, "height":product.pageHeight]] //TODO: handle double size on backend // ["mm":["width":300, "height":300]]
+        productVariant["pageStep"] = 0
+        //productVariant["bleed"] = ["px":ProductManager.shared.bleed(forPageSize: CGSize(width: product.pageWidth, height: product.pageHeight)), "mm":ProductManager.shared.bleed(forPageSize: CGSize(width: product.pageWidth, height: product.pageHeight))]
+        productVariant["bleed"] = ["px":0, "mm":0]
         productVariant["spine"] = ["ranges": ["20-38": 0,
                                               "40-54": 0,
                                               "56-70": 0,

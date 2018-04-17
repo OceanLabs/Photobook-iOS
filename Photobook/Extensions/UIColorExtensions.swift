@@ -19,7 +19,7 @@ extension UIColor {
         self.getRed(&r, green: &g, blue: &b, alpha: &a)
         
         return String(
-            format: "%02X%02X%02X",
+            format: "#%02X%02X%02X",
             Int(r * 0xff),
             Int(g * 0xff),
             Int(b * 0xff)
