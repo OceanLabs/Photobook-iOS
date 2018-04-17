@@ -213,7 +213,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 welf?.product.setTemplate(photobook)
                 
                 welf?.setupTitleView()
-                welf?.collectionView.reloadData()
+                
+                welf?.collectionView.performBatchUpdates({
+                    welf?.collectionView.reloadData()
+                }, completion: nil)
             }))
         }
         
@@ -774,7 +777,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             
             return cell
         }
-    }
+    }    
 }
 
 extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
