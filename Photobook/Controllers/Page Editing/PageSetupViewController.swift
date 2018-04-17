@@ -197,6 +197,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         super.viewDidLayoutSubviews()
         
         if !hasDoneSetup {
+            pageView.shouldSetImage = false
+            
             coverFrameView.color = product.coverColor
             coverFrameView.pageView.aspectRatio = product.template.aspectRatio
             coverFrameView.pageView.delegate = self
@@ -218,7 +220,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             setupLayoutSelection()
             setupColorSelection()
             setupTextEditing()
-
+            
             pageView.pageIndex = pageIndex
             pageView.productLayout = productLayout
             pageView.setupTextBox(mode: .userTextOnly)
@@ -226,9 +228,10 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             // Setup the opposite layout if necessary
             if !isDoublePage && (pageType == .left || pageType == .right) {
                 let oppositeIndex = pageIndex! + (pageType == .left ? 1 : -1)
+                oppositePageView!.shouldSetImage = false
                 oppositePageView!.pageIndex = oppositeIndex
                 oppositePageView!.productLayout = product.productLayouts[oppositeIndex]
-                oppositePageView!.setupImageBox(with: nil, animated: false)
+                oppositeProductLayout = product.productLayouts[oppositeIndex]
                 oppositePageView!.setupTextBox(mode: .userTextOnly)
             }
             hideViewsBeforeAnimation()
@@ -252,13 +255,23 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     private var frameView: UIView {
         return pageType == .cover ? coverFrameView : photobookFrameView
     }
+    private var oppositeProductLayout: ProductLayout?
     
     func animateFromPhotobook(frame: CGRect, completion: @escaping (() -> Void)) {
         containerRect = frame
         
         // Use preview image for the animation and editing until a higher resolution image is available
-        pageView.setupImageBox(with: previewAssetImage, animated: false)
+        let previewAssetImage = productLayout?.productLayoutAsset?.currentImage
+        pageView.shouldSetImage = true
+        pageView.setupImageBox(with: previewAssetImage)
         
+        // Use preview image for the opposite page if needed
+        if let oppositePageView = oppositePageView, let oppositeProductLayout = oppositeProductLayout {
+            let oppositeAssetImage = oppositeProductLayout.productLayoutAsset?.currentImage
+            oppositePageView.shouldSetImage = true
+            oppositePageView.setupImageBox(with: oppositeAssetImage)
+        }
+
         animatableAssetImageView.transform = .identity
         animatableAssetImageView.frame = frameView.bounds
         animatableAssetImageView.center = CGPoint(x: containerRect.midX, y: containerRect.midY)

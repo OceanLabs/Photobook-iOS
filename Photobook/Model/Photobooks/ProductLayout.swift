@@ -10,7 +10,7 @@
 class ProductLayout: Codable {
     var layout: Layout! {
         didSet {
-            self.fitItemsInLayout(reset: oldValue.category != layout.category)
+            self.fitItemsInLayout(reset: oldValue.category != layout.category || !hasBeenEdited)
         }
     }
     var productLayoutAsset: ProductLayoutAsset?
@@ -96,20 +96,17 @@ class ProductLayout: Codable {
         guard layout != nil else { return }
         
         if productLayoutAsset != nil && layout.imageLayoutBox != nil {
+            productLayoutAsset!.shouldFitAsset = reset
             if reset {
-                productLayoutAsset!.shouldFitAsset = true
                 productLayoutAsset!.containerSize = layout.imageLayoutBox!.rect.size
-            } else {
-                productLayoutAsset!.adjustTransform()
             }
-        }
-        if productLayoutText != nil && layout.textLayoutBox != nil {
-            productLayoutText!.containerSize = layout.textLayoutBox!.rect.size
         }
     }
     
     func shallowCopy() -> ProductLayout {
-        return ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset?.shallowCopy(), productLayoutText: productLayoutText?.deepCopy())
+        let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset?.shallowCopy(), productLayoutText: productLayoutText?.deepCopy())
+        productLayout.hasBeenEdited = hasBeenEdited
+        return productLayout
     }
 }
 
