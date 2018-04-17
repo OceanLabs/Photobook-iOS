@@ -56,10 +56,6 @@ class ReceiptTableViewController: UITableViewController {
         return manager
     }()
     
-    private lazy var emptyScreenViewController: EmptyScreenViewController = {
-        return EmptyScreenViewController.emptyScreen(parent: self)
-    }()
-    
     private lazy var progressOverlayViewController: ProgressOverlayViewController = {
         return ProgressOverlayViewController.progressOverlay(parent: self)
     }()
@@ -87,22 +83,20 @@ class ReceiptTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let loadingString = NSLocalizedString("ReceiptTableViewController/LoadingData", value: "Loading info...", comment: "description for a loading indicator")
-        emptyScreenViewController.show(message: loadingString, activity: true)
         
-        if OrderManager.shared.isProcessingOrder {
+        if order.orderId != nil {
+            progressOverlayViewController.hide()
+            state = .completed
+        } else if OrderManager.shared.isProcessingOrder {
             if state == .paymentFailed {
                 //re entered screen from payment methods screen
                 state = .paymentRetry
-                emptyScreenViewController.hide(animated: true)
                 return
             }
             
-            emptyScreenViewController.hide(animated: true)
         } else {
             //start processing
             OrderManager.shared.startProcessing(order: order)
-            emptyScreenViewController.hide(animated: true)
             
             //ask for notification permission
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: { [weak welf = self] in
