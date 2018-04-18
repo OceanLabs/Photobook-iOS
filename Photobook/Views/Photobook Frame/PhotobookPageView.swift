@@ -175,8 +175,10 @@ class PhotobookPageView: UIView {
     
     var shouldSetImage: Bool = false
     private func setImage(image: UIImage) {
-        guard let productLayoutAsset = productLayout?.productLayoutAsset, let asset = productLayoutAsset.asset else { return }
-        guard shouldSetImage else { return }
+        guard let productLayoutAsset = productLayout?.productLayoutAsset,
+              let asset = productLayoutAsset.asset,
+              shouldSetImage
+            else { return }
         
         assetImageView.transform = .identity
         assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: asset.size.width, height: asset.size.height)

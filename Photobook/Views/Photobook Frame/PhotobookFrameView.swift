@@ -20,7 +20,7 @@ struct PhotobookConstants {
     static let verticalPageToCoverMargin: CGFloat = 5.0
 }
 
-fileprivate struct ColorConstants {
+private struct ColorConstants {
     struct White {
         static let color1 = UIColor(red: 0.87, green: 0.87, blue: 0.87, alpha: 1.0).cgColor
         static let color2 = UIColor(red: 0.96, green: 0.96, blue: 0.96, alpha: 1.0)

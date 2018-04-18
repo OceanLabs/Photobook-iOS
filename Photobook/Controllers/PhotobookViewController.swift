@@ -211,12 +211,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 guard welf?.product.template.id != photobook.id else { return }
                 
                 welf?.product.setTemplate(photobook)
-                
                 welf?.setupTitleView()
-                
-                welf?.collectionView.performBatchUpdates({
-                    welf?.collectionView.reloadData()
-                }, completion: nil)
+                welf?.collectionView.reloadData()
             }))
         }
         
