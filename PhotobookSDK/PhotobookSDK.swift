@@ -67,9 +67,7 @@ import UIKit
         let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.assets = assets
         photobookViewController.dismissClosure = onDismiss
-        
-        let closeBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: photobookViewController, action: #selector(photobookViewController.tappedCancel(_:)))
-        photobookViewController.navigationItem.leftBarButtonItems = [ closeBarButtonItem ]
+        photobookViewController.showCancelButton = true
         
         navigationController.viewControllers = [ photobookViewController ]
         
