@@ -168,7 +168,7 @@ class LayoutUtils {
         var rotateTo = floor(angle / (.pi * 0.5)) * .pi * 0.5
         
         if angle ==~ rotateTo {
-            rotateTo = angle - .pi * 0.5
+            rotateTo = rotateTo - .pi * 0.5
         }
         if abs(rotateTo) < CGFloat.minPrecision {
             rotateTo = 0.0
