@@ -45,6 +45,11 @@ class OrderManager {
     }()
     var processingOrder: Order? {
         didSet {
+            guard let _ = processingOrder else {
+                try? FileManager.default.removeItem(atPath: Storage.processingOrderBackupFile)
+                return
+            }
+            
             saveProcessingOrder()
         }
     }
@@ -127,10 +132,7 @@ class OrderManager {
     }
     
     func saveProcessingOrder() {
-        guard let processingOrder = processingOrder else {
-            try? FileManager.default.removeItem(atPath: Storage.processingOrderBackupFile)
-            return
-        }
+        guard let processingOrder = processingOrder else { return }
         
         saveOrder(processingOrder, file: Storage.processingOrderBackupFile)
     }
