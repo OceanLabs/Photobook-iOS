@@ -36,7 +36,12 @@ class OrderManager {
     
     private lazy var apiManager = PhotobookAPIManager()
     
-    lazy var basketOrder = Order()
+    lazy var basketOrder: Order = {
+        guard let order = loadOrder(from: Storage.basketOrderBackupFile) else {
+            return Order()
+        }        
+        return order
+    }()
     var processingOrder: Order? {
         didSet {
             saveProcessingOrder()
@@ -121,15 +126,6 @@ class OrderManager {
         
         saveOrder(processingOrder, file: Storage.processingOrderBackupFile)
     }
-    
-    /// Loads the basket order from disk and returns it
-    func loadBasketOrder() -> Order? {
-        guard let order = loadOrder(from: Storage.basketOrderBackupFile) else { return nil }
-        
-        basketOrder = order
-        return order
-    }
-    
     
     /// Loads the order whose upload is currently in progress and resumes the upload process
     ///
