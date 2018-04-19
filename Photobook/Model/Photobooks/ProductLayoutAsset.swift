@@ -34,7 +34,7 @@ class ProductLayoutAsset: Codable {
                 relativeScale = relativeHeight
             }
 
-            transform = LayoutUtils.adjustTransform(transform, byFactor: relativeScale)
+            transform = transform.scaledBy(x: relativeScale, y: relativeScale)
             adjustTransform()
         }
     }

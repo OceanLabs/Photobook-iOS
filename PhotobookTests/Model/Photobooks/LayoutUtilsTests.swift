@@ -13,6 +13,8 @@ class LayoutUtilsTests: XCTestCase {
     
     let containerSize = CGSize(width: 1.0, height: 1.0)
     
+    private let identity = CGAffineTransform.identity
+    
     func testScaleToFill() {
         let images = [
             // Size, Angle, Expected scale
@@ -54,27 +56,12 @@ class LayoutUtilsTests: XCTestCase {
     }
     
     func testCenterTransform() {
+        let transform = identity.translatedBy(x: 4.0, y: 4.0)
         let parentView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: 100.0, height: 70.0))
-        let transform = CGAffineTransform.identity.translatedBy(x: 4.0, y: 4.0)
-        let expectedTransform = CGAffineTransform.identity.translatedBy(x: -6.0, y: -1.0)
+        let expectedTransform = identity.translatedBy(x: -6.0, y: -1.0)
         let currentPoint = CGPoint(x: 40.0, y: 30.0)
         
         let newTransform = LayoutUtils.centerTransform(transform, inParentView: parentView, fromPoint: currentPoint)
         XCTAssertEqual(newTransform, expectedTransform)
-    }
-    
-    func testAdjustTransformByFactor() {
-        let transforms = [
-            // Tranform, Expected scale, Expected Tx, Expected Ty
-            (CGAffineTransform.identity.scaledBy(x: 0.5, y: 0.5), 0.2, 0.1, 0.0, 0.0),
-            
-        ]
-        
-        for (index, transform) in transforms.enumerated() {
-            let newTransform = LayoutUtils.adjustTransform(transform.0, byFactor: CGFloat(transform.1))
-            XCTAssertEqual(newTransform.scale, CGFloat(transform.2), accuracy: 0.01, "Transform \(index): scale should be \(CGFloat(transform.2)) not \(newTransform.scale)")
-            XCTAssertEqual(newTransform.tx, CGFloat(transform.3), accuracy: 0.01, "Transform \(index): Tx should be \(CGFloat(transform.3)) not \(newTransform.tx)")
-            XCTAssertEqual(newTransform.ty, CGFloat(transform.4), accuracy: 0.01, "Transform \(index): Tx should be \(CGFloat(transform.4)) not \(newTransform.ty)")
-        }
     }
 }
