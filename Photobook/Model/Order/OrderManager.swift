@@ -53,7 +53,7 @@ class OrderManager {
             return true
         }
         
-        if let _ = loadProcessingOrder() {
+        if loadProcessingOrder() {
             return true
         }
         
@@ -130,15 +130,24 @@ class OrderManager {
         return order
     }
     
-    func loadProcessingOrder() -> Order? {
+    
+    /// Loads the order whose upload is currently in progress and resumes the upload process
+    ///
+    /// - Parameter completionHandler: Called when the order is loaded, or immediately if there is no order to load
+    /// - Returns: True if an order was loaded, false otherwise
+    func loadProcessingOrder(_ completionHandler: (() -> Void)? = nil) -> Bool {
         guard FileManager.default.fileExists(atPath: Storage.processingOrderBackupFile),
             let order = loadOrder(from: Storage.processingOrderBackupFile)
-            else { return nil }
+            else {
+                completionHandler?()
+                return false
+        }
         
         processingOrder = order
         APIClient.shared.recreateBackgroundSession()
         uploadAssets()
-        return order
+        completionHandler?()
+        return true
     }
     
     private func loadOrder(from file: String) -> Order? {

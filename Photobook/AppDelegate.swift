@@ -36,8 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
         // The application was woken up by a background task
-        _ = OrderManager.shared.loadProcessingOrder()
-        completionHandler()
+        _ = OrderManager.shared.loadProcessingOrder(completionHandler)
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
