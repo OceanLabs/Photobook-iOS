@@ -114,4 +114,61 @@ class LayoutUtilsTests: XCTestCase {
         // Original translation (5.0, 6.0) + new translation (4.0, 6.0) = result (9.0, 12.0)
         XCTAssertTrue(newTransform.tx == 9.0 && newTransform.ty == 12.0)
     }
+    
+    let adjustContainerSize = CGSize(width: 100.0, height: 100.0)
+    let adjustViewSize = CGSize(width: 150.0, height: 150.0)
+
+    func testAdjustTransformForViewSizeInContainerSize_nudgesViewLeft() {
+        // Move view right and rotate it 45 degrees counterclockwise
+        let initialTransform = identity.translatedBy(x: 25.0, y: 0.0).rotated(by: .pi / 4.0)
+        let newTransform = LayoutUtils.adjustTransform(initialTransform, forViewSize: adjustViewSize, inContainerSize: adjustContainerSize)
+        // Should nudge view to the left
+        XCTAssertEqual(newTransform.tx, 6.06, accuracy: 0.01)
+    }
+    
+    func testAdjustTransformForViewSizeInContainerSize_nudgesViewRight() {
+        // Move view left by 25.0 and rotate it 45 degrees counterclockwise
+        let initialTransform = identity.translatedBy(x: -25.0, y: 0.0).rotated(by: .pi / 4.0)
+        let newTransform = LayoutUtils.adjustTransform(initialTransform, forViewSize: adjustViewSize, inContainerSize: adjustContainerSize)
+        // Should nudge view to the right
+        XCTAssertEqual(newTransform.tx, -6.06, accuracy: 0.01)
+    }
+
+    func testAdjustTransformForViewSizeInContainerSize_nudgesViewUp() {
+        // Move view down by 25.0 and rotate it 45 degrees counterclockwise
+        let initialTransform = identity.translatedBy(x: 0.0, y: 25.0).rotated(by: .pi / 4.0)
+        let newTransform = LayoutUtils.adjustTransform(initialTransform, forViewSize: adjustViewSize, inContainerSize: adjustContainerSize)
+        // Should nudge view up
+        XCTAssertEqual(newTransform.ty, 6.06, accuracy: 0.01)
+    }
+    
+    func testAdjustTransformForViewSizeInContainerSize_nudgesViewDown() {
+        // Move view up by 25.0 and rotate it 45 degrees counterclockwise
+        let initialTransform = identity.translatedBy(x: 0.0, y: -25.0).rotated(by: .pi / 4.0)
+        let newTransform = LayoutUtils.adjustTransform(initialTransform, forViewSize: adjustViewSize, inContainerSize: adjustContainerSize)
+        // Should nudge view down
+        XCTAssertEqual(newTransform.ty, -6.06, accuracy: 0.01)
+    }
+
+    func testAdjustTransformForViewSizeInContainerSize_nudgesViewUpLeftThenDownLeft() {
+        // Move view right and rotate it 30 degrees counterclockwise
+        let initialTransform = identity.translatedBy(x: 25.0, y: 0.0).rotated(by: .pi / 6.0)
+        let newTransform = LayoutUtils.adjustTransform(initialTransform, forViewSize: adjustViewSize, inContainerSize: adjustContainerSize)
+        // Should:
+        // 1. Nudge the view to cover the parent view's top-left corner
+        // 2. Nudge the view to cover the parent view's bottom-left corner
+        XCTAssertEqual(newTransform.tx, 9.15, accuracy: 0.01)
+        XCTAssertEqual(newTransform.ty, -2.45, accuracy: 0.01)
+    }
+
+    func testAdjustTransformForViewSizeInContainerSize_nudgesViewDownAndRight() {
+        // Move view left and rotate it 30 degrees clockwise
+        let initialTransform = identity.translatedBy(x: -25.0, y: 0.0).rotated(by: -.pi / 6.0)
+        let newTransform = LayoutUtils.adjustTransform(initialTransform, forViewSize: adjustViewSize, inContainerSize: adjustContainerSize)
+        // Should:
+        // 1. Nudge the view to cover the parent view's bottom-right corner
+        // 2. Nudge the view to cover the parent view's top-right corner
+        XCTAssertEqual(newTransform.tx, -9.15, accuracy: 0.01)
+        XCTAssertEqual(newTransform.ty, -2.45, accuracy: 0.01)
+    }
 }
