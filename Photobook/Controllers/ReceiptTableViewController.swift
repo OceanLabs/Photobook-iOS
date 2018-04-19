@@ -31,10 +31,10 @@ class ReceiptTableViewController: UITableViewController {
         case header, progress, info, details, lineItems, footer
     }
     
-    var order: Order?
+    var order: Order!
     
     private var cost: Cost? {
-        return order?.cachedCost
+        return order.cachedCost
     }
     
     private var state:State = .uploading {
@@ -56,17 +56,9 @@ class ReceiptTableViewController: UITableViewController {
         return manager
     }()
     
-    private lazy var emptyScreenViewController: EmptyScreenViewController = {
-        return EmptyScreenViewController.emptyScreen(parent: self)
-    }()
-    
     private lazy var progressOverlayViewController: ProgressOverlayViewController = {
         return ProgressOverlayViewController.progressOverlay(parent: self)
     }()
-    
-    private var product: PhotobookProduct! {
-        return ProductManager.shared.currentProduct
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,10 +70,10 @@ class ReceiptTableViewController: UITableViewController {
     
         updateViews()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingCompleted), name: OrderProcessingManager.Notifications.completed, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingFailed(_:)), name: OrderProcessingManager.Notifications.failed, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(pendingUploadsChanged), name: OrderProcessingManager.Notifications.pendingUploadStatusUpdated, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingWillFinish), name: OrderProcessingManager.Notifications.willFinishOrder, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingCompleted), name: OrderManager.NotificationName.completed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingFailed(_:)), name: OrderManager.NotificationName.failed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(pendingUploadsChanged), name: OrderManager.NotificationName.pendingUploadStatusUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingWillFinish), name: OrderManager.NotificationName.willFinishOrder, object: nil)
     }
     
     deinit {
@@ -91,24 +83,20 @@ class ReceiptTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let loadingString = NSLocalizedString("ReceiptTableViewController/LoadingData", value: "Loading info...", comment: "description for a loading indicator")
-        emptyScreenViewController.show(message: loadingString, activity: true)
         
-        if OrderProcessingManager.shared.isProcessingOrder {
+        if order.orderId != nil {
+            progressOverlayViewController.hide()
+            state = .completed
+        } else if OrderManager.shared.isProcessingOrder {
             if state == .paymentFailed {
                 //re entered screen from payment methods screen
                 state = .paymentRetry
-                emptyScreenViewController.hide(animated: true)
                 return
             }
             
-            //re entered app, load and resume upload
-            product.loadUserPhotobook()
-            emptyScreenViewController.hide(animated: true)
         } else {
             //start processing
-            OrderProcessingManager.shared.startProcessing()
-            emptyScreenViewController.hide(animated: true)
+            OrderManager.shared.startProcessing(order: order)
             
             //ask for notification permission
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: { [weak welf = self] in
@@ -137,10 +125,10 @@ class ReceiptTableViewController: UITableViewController {
             if let lastProcessingError = lastProcessingError {
                 switch lastProcessingError {
                 case .upload:
-                    OrderProcessingManager.shared.startPhotobookUpload()
+                    OrderManager.shared.startProcessing(order: order)
                     self.state = .uploading
                 case .pdf, .submission:
-                    OrderProcessingManager.shared.finishOrder()
+                    OrderManager.shared.finishOrder()
                 default: break
                 }
             }
@@ -181,7 +169,7 @@ class ReceiptTableViewController: UITableViewController {
     }
     
     private func dismiss() {
-        OrderProcessingManager.shared.cancelProcessing { [weak welf = self] in
+        OrderManager.shared.cancelProcessing { [weak welf = self] in
             ProductManager.shared.reset()
             OrderManager.shared.reset()
             NotificationCenter.default.post(name: ReceiptNotificationName.receiptWillDismiss, object: nil)
@@ -224,11 +212,11 @@ class ReceiptTableViewController: UITableViewController {
             return
         }
         
-        if order?.paymentMethod == .applePay {
+        if order.paymentMethod == .applePay {
             modalPresentationDismissedGroup.enter()
         }
         
-        guard let paymentMethod = order?.paymentMethod else { return }
+        guard let paymentMethod = order.paymentMethod else { return }
         
         progressOverlayViewController.show(message: Constants.loadingPaymentText)
         paymentManager.authorizePayment(cost: cost, method: paymentMethod)
@@ -288,7 +276,8 @@ class ReceiptTableViewController: UITableViewController {
         case Section.progress.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptProgressTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptProgressTableViewCell
             
-            cell.updateProgress(pendingUploads: product.pendingUploads, totalUploads: product.totalUploads)
+            let total = order.assetsToUpload().count
+            cell.updateProgress(pendingUploads: order.remainingAssetsToUpload().count, totalUploads: total)
             cell.startProgressAnimation()
             
             return cell
@@ -309,14 +298,14 @@ class ReceiptTableViewController: UITableViewController {
             return cell
         case Section.details.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptDetailsTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptDetailsTableViewCell
-            cell.shippingMethodLabel.text = cost?.shippingMethod(id: order?.shippingMethod)?.name
+            cell.shippingMethodLabel.text = cost?.shippingMethod(id: order.shippingMethod)?.name
             
             cell.orderNumberLabel.alpha = 0.35
             switch state {
             case .uploading:
                 cell.orderNumberLabel.text = NSLocalizedString("ReceiptTableViewController/OrderNumberPending", value: "Pending", comment: "Placeholder for order number while images are being uploaded")
             case .completed:
-                if let orderId = order?.orderId {
+                if let orderId = order.orderId {
                     cell.orderNumberLabel.text = "#\(orderId)"
                     cell.orderNumberLabel.alpha = 1
                 } else {
@@ -326,7 +315,7 @@ class ReceiptTableViewController: UITableViewController {
                 cell.orderNumberLabel.text = NSLocalizedString("ReceiptTableViewController/OrderNumberFailed", value: "Failed", comment: "Placeholder for order number when image upload has failed")
             }
             
-            let deliveryDetails = order?.deliveryDetails
+            let deliveryDetails = order.deliveryDetails
             var addressString = ""
             if let name = deliveryDetails?.fullName, !name.isEmpty { addressString += "\(name)\n"}
             if let line1 = deliveryDetails?.address?.line1, !line1.isEmpty { addressString += "\(line1)\n"}
@@ -344,7 +333,7 @@ class ReceiptTableViewController: UITableViewController {
             return cell
         case Section.footer.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptFooterTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptFooterTableViewCell
-            cell.totalCostLabel.text = cost?.shippingMethod(id: order?.shippingMethod)?.totalCostFormatted
+            cell.totalCostLabel.text = cost?.shippingMethod(id: order.shippingMethod)?.totalCostFormatted
             return cell
         default:
             return UITableViewCell()
@@ -358,7 +347,7 @@ class ReceiptTableViewController: UITableViewController {
     }
     
     @objc func orderProcessingCompleted() {
-        order?.lastSubmissionDate = Date()
+        order.lastSubmissionDate = Date()
         NotificationCenter.default.post(name: OrdersNotificationName.orderWasSuccessful, object: order)
         
         progressOverlayViewController.hide()
@@ -417,9 +406,9 @@ extension ReceiptTableViewController : PaymentAuthorizationManagerDelegate {
             return
         }
         
-        order?.paymentToken = token
+        order.paymentToken = token
         
-        OrderProcessingManager.shared.finishOrder()
+        OrderManager.shared.finishOrder()
     }
     
     func modalPresentationDidFinish() {

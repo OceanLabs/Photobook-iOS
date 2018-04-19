@@ -23,8 +23,8 @@ class ShippingMethodsViewController: UIViewController {
         
         self.title = NSLocalizedString("ShippingMethods/Title", value: "Shipping Method", comment: "Shipping method selection screen title")
         
-        if OrderManager.basketOrder.shippingMethod == nil {
-            OrderManager.basketOrder.shippingMethod = OrderManager.basketOrder.cachedCost?.shippingMethods?.first?.id
+        if OrderManager.shared.basketOrder.shippingMethod == nil {
+            OrderManager.shared.basketOrder.shippingMethod = OrderManager.shared.basketOrder.cachedCost?.shippingMethods?.first?.id
         }
     }
     
@@ -38,7 +38,7 @@ class ShippingMethodsViewController: UIViewController {
 extension ShippingMethodsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let shippingMethodsCount = OrderManager.basketOrder.cachedCost?.shippingMethods?.count {
+        if let shippingMethodsCount = OrderManager.shared.basketOrder.cachedCost?.shippingMethods?.count {
             return shippingMethodsCount
         }
         return 0
@@ -47,13 +47,13 @@ extension ShippingMethodsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ShippingMethodTableViewCell.reuseIdentifier, for: indexPath) as! ShippingMethodTableViewCell
         
-        let shippingMethods = OrderManager.basketOrder.cachedCost!.shippingMethods!
+        let shippingMethods = OrderManager.shared.basketOrder.cachedCost!.shippingMethods!
         let shippingMethod = shippingMethods[indexPath.row]
         
         cell.method = shippingMethod.name
         cell.deliveryTime = shippingMethod.deliveryTime
         cell.cost = shippingMethod.shippingCostFormatted
-        cell.ticked = OrderManager.basketOrder.shippingMethod == shippingMethod.id
+        cell.ticked = OrderManager.shared.basketOrder.shippingMethod == shippingMethod.id
         cell.separatorLeadingConstraint.constant = indexPath.row == shippingMethods.count - 1 ? 0.0 : Constants.leadingSeparatorInset
         cell.topSeparator.isHidden = indexPath.row != 0
         
@@ -62,7 +62,7 @@ extension ShippingMethodsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let cell = tableView.dequeueReusableCell(withIdentifier: ShippingMethodHeaderTableViewCell.reuseIdentifier) as? ShippingMethodHeaderTableViewCell
-        cell?.label.text = OrderManager.basketOrder.cachedCost?.lineItems?[section].name
+        cell?.label.text = OrderManager.shared.basketOrder.cachedCost?.lineItems?[section].name
         
         return cell
     }
@@ -72,8 +72,8 @@ extension ShippingMethodsViewController: UITableViewDataSource {
 extension ShippingMethodsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let shippingMethods = OrderManager.basketOrder.cachedCost!.shippingMethods!
-        OrderManager.basketOrder.shippingMethod = shippingMethods[indexPath.row].id
+        let shippingMethods = OrderManager.shared.basketOrder.cachedCost!.shippingMethods!
+        OrderManager.shared.basketOrder.shippingMethod = shippingMethods[indexPath.row].id
         
         tableView.reloadData()
     }

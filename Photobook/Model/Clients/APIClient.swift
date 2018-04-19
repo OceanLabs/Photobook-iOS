@@ -352,6 +352,7 @@ class APIClient: NSObject {
         let dataTask = backgroundUrlSession.uploadTask(with: request, fromFile: fileUrl)
         if reference != nil {
             taskReferences[dataTask.taskIdentifier] = reference
+            savePendingTasks()
         }
         
         dataTask.resume()
@@ -402,9 +403,11 @@ extension APIClient: URLSessionDelegate, URLSessionDataDelegate {
     }
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        guard var json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyObject] else {
+        guard var json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: AnyObject] else {
             if let stringData = String(data: data, encoding: String.Encoding.utf8) {
+                #if DEBUG
                 print("API Error: \(stringData)")
+                #endif
             }
             return
         }
@@ -413,7 +416,7 @@ extension APIClient: URLSessionDelegate, URLSessionDataDelegate {
         if let reference = taskReferences[dataTask.taskIdentifier] {
             taskReferences[dataTask.taskIdentifier] = nil
             
-            json!["task_reference"] = reference as AnyObject
+            json["task_reference"] = reference as AnyObject
         }
         
         NotificationCenter.default.post(name: APIClient.backgroundSessionTaskFinished, object: nil, userInfo: json)

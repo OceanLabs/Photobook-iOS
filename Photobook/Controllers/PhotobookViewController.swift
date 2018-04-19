@@ -177,7 +177,17 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             return
         }
         
-        ProductManager.shared.currentProduct = PhotobookProduct(template: photobook, assets: assets)
+        guard
+            let coverLayouts = ProductManager.shared.coverLayouts(for: photobook),
+            !coverLayouts.isEmpty,
+            let layouts = ProductManager.shared.layouts(for: photobook),
+            !layouts.isEmpty
+            else {
+                print("ProductManager: Missing layouts for selected photobook")
+                return
+        }
+        
+        ProductManager.shared.currentProduct = PhotobookProduct(template: photobook, assets: assets, coverLayouts: coverLayouts, layouts: layouts)
         
         setupTitleView()
         
@@ -221,7 +231,18 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             alertController.addAction(UIAlertAction(title: photobook.name, style: .default, handler: { [weak welf = self] (_) in
                 guard welf?.product.template.id != photobook.id else { return }
                 
-                welf?.product.setTemplate(photobook)
+                guard
+                    let coverLayouts = ProductManager.shared.coverLayouts(for: photobook),
+                    !coverLayouts.isEmpty,
+                    let layouts = ProductManager.shared.layouts(for: photobook),
+                    !layouts.isEmpty
+                    else {
+                        print("ProductManager: Missing layouts for selected photobook")
+                        return
+                }
+                
+                welf?.product.setTemplate(photobook, coverLayouts: coverLayouts, layouts: layouts)
+                
                 welf?.setupTitleView()
                 welf?.collectionView.reloadData()
             }))
@@ -341,17 +362,19 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             }
         }
         
-        guard message.count > 0 else {
-            goToCheckout()
+        guard message.isEmpty else {
+            let alertController = UIAlertController(title: NSLocalizedString("Photobook/MissingAssetsTitle", value: "Continue to checkout?", comment: "Alert title informing the user that they have blank pages"), message: message, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .default, handler: nil))
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default) { _ in
+                goToCheckout()
+            })
+            present(alertController, animated: true, completion: nil)
+            
             return
         }
         
-        let alertController = UIAlertController(title: NSLocalizedString("Photobook/MissingAssetsTitle", value: "Continue to checkout?", comment: "Alert title informing the user that they have blank pages"), message: message, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .default, handler: nil))
-        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default) { _ in
-            goToCheckout()
-        })
-        present(alertController, animated: true, completion: nil)
+        goToCheckout()
+        
     }
         
     @IBAction private func didTapBack() {
