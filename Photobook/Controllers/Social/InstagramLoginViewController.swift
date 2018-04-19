@@ -92,11 +92,44 @@ extension InstagramLoginViewController: WKNavigationDelegate {
             return
         }
         
+        // It's possible that Instagram redirects us to plain instagram.com after using a password sent to the user's email for a suspicious login
+        // In that case they never call the redirect URI and we never get the token. In that case we have to force the user to log in again
+        guard webView.url?.absoluteString != "https://www.instagram.com/" else {
+            decisionHandler(.cancel)
+            
+            let alertController = UIAlertController(title: nil, message: NSLocalizedString("Social/Instagram/LogInAgain", value: "Please log in again", comment: "Alert title asking the user to log in again"), preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: { _ in
+                self.startAuthenticatingUser()
+            }))
+            present(alertController, animated: true, completion: nil)
+            return
+        }
+        
         // Intercept the password reset link and open in it Safari. Currently redirects to https://www.instagram.com/accounts/password/reset/
         guard !(url.absoluteString.contains("password") && url.absoluteString.contains("reset")) else {
             decisionHandler(.cancel)
             
             let alertController = UIAlertController(title: NSLocalizedString("Social/Instagram/ResetPasswordTitle", value: "Reset Instagram Password?", comment: "Alert title asking to reset the user's Instagram password"), message: NSLocalizedString("Social/Instagram/ResetPasswordMessage", value: "This will open Safari so you can reset your password. Please return here when you are done.", comment: "Instructions for resetting the user's Instagram password"), preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: { _ in
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }))
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
+            present(alertController, animated: true, completion: nil)
+            return
+        }
+        
+        // Intercept the logout button on the confirmation page
+        guard !url.absoluteString.contains("logoutin") else {
+            decisionHandler(.cancel)
+            startAuthenticatingUser()
+            return
+            }
+        
+        // Intercept the links on the confirmation page and open them in Safari
+        guard url.absoluteString != "https://www.instagram.com/accounts/manage_access/" else {
+            decisionHandler(.cancel)
+            
+            let alertController = UIAlertController(title: NSLocalizedString("Social/Instagram/OpenInSafariTitle", value: "This link will open in Safari", comment: "Alert title asking to the user to open the link in Safari"), message: NSLocalizedString("Social/Instagram/ProceedConfirmation", value: "Do you want to proceed?", comment: "Alert message asking the user if they want to proceed"), preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: { _ in
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }))
