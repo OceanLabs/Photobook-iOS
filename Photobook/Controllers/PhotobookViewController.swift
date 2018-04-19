@@ -27,6 +27,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     /// Delegate to dismiss the PhotobookViewController
     var dismissClosure: (() -> Void)?
     
+    var showCancelButton: Bool = false
+    
     private var product: PhotobookProduct! {
         return ProductManager.shared.currentProduct
     }
@@ -60,7 +62,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var ctaButtonContainer: UIView!
-    @IBOutlet private weak var backButton: UIButton?
+    @IBOutlet private var backButton: UIButton?
+    private lazy var cancelBarButtonItem: UIBarButtonItem = {
+        return UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(tappedCancel(_:)))
+    }()
     
     private var titleButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -144,7 +149,13 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             ctaContainerBottomConstraint.isActive = true
         }
         
-        backButton?.setTitleColor(navigationController?.navigationBar.tintColor, for: .normal)
+        navigationItem.hidesBackButton = true
+    
+        if showCancelButton {
+            navigationItem.leftBarButtonItems = [ cancelBarButtonItem ]
+        } else {
+            backButton?.setTitleColor(navigationController?.navigationBar.tintColor, for: .normal)
+        }
         
         // Remove pasteboard so that we avoid edge-cases with stale or inconsistent data
         UIPasteboard.remove(withName: UIPasteboardName("ly.kite.photobook.rearrange"))
@@ -274,9 +285,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
 
         interactiveCellClosure(isRearranging)
         if isRearranging {
+            navigationItem.setLeftBarButtonItems(nil, animated: true)
             sender.title = NSLocalizedString("Photobook/DoneButtonTitle", value: "Done", comment: "Done button title")
             sender.tintColor = Constants.doneBlueColor
         } else {
+            let barButtonItem = showCancelButton ? cancelBarButtonItem : UIBarButtonItem(customView: backButton!)
+            navigationItem.setLeftBarButtonItems([barButtonItem], animated: true)
             sender.title = NSLocalizedString("Photobook/RearrangeButtonTitle", value: "Rearrange", comment: "Rearrange button title")
             sender.tintColor = Constants.rearrangeGreyColor
         }
@@ -428,7 +442,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                     let cell = collectionView.cellForItem(at: visibleIndexPathToLoad) as? PhotobookCollectionViewCell
                 {
                     if cell.leftIndex == removedIndex || cell.rightIndex == removedIndex {
-                        cell.loadPages(leftIndex: cell.leftIndex, rightIndex: cell.rightIndex)
+                        cell.loadPages()
                     }
                 }
             }
@@ -678,12 +692,14 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 let cell = cell as? PhotobookCollectionViewCell
                 else { continue }
 
+            cell.leftIndex = productLayoutIndex
             if product.productLayouts[productLayoutIndex].layout.isDoubleLayout {
-                cell.loadPages(leftIndex: productLayoutIndex, rightIndex: productLayoutIndex)
+                cell.rightIndex = productLayoutIndex
             } else {
                 let rightIndex = productLayoutIndex < product.productLayouts.count - 1 ? productLayoutIndex + 1 : nil
-                cell.loadPages(leftIndex: productLayoutIndex, rightIndex: rightIndex)
+                cell.rightIndex = rightIndex
             }
+            cell.loadPages()
         }
     }
     
@@ -701,7 +717,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         pageSetupViewController.album = album
         pageSetupViewController.albumManager = albumManager
         pageSetupViewController.assetPickerViewController = assetPickerViewController
-        pageSetupViewController.previewAssetImage = page.currentImage
         
         if barType != nil {
             pageSetupViewController.photobookNavigationBarType = barType!
@@ -748,7 +763,6 @@ extension PhotobookViewController: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotobookCoverCollectionViewCell.reuseIdentifier, for: indexPath) as! PhotobookCoverCollectionViewCell
             cell.width = (view.bounds.size.width - Constants.cellSideMargin * 2.0) / 2.0
             cell.delegate = self
-            cell.loadCoverAndSpine()
             cell.isPageInteractionEnabled = !isRearranging
             cell.isFaded = isRearranging
             
@@ -790,12 +804,13 @@ extension PhotobookViewController: UICollectionViewDataSource {
                 cell.isFaded = false
             }
             
-            cell.loadPages(leftIndex: leftIndex, rightIndex: rightIndex)
+            cell.leftIndex = leftIndex
+            cell.rightIndex = rightIndex
             cell.isPlusButtonVisible = indexPath.item != 0
             
             return cell
         }
-    }
+    }    
 }
 
 extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
@@ -807,6 +822,14 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         showMenu(at: indexPath)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if let cell = cell as? PhotobookCollectionViewCell {
+            cell.loadPages()
+        } else if let cell = cell as? PhotobookCoverCollectionViewCell {
+            cell.loadCoverAndSpine()
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

@@ -2509,7 +2509,6 @@
                         <viewLayoutGuide key="safeArea" id="5ur-7F-Rc5"/>
                     </view>
                     <navigationItem key="navigationItem" id="gKR-NM-iRy">
-                        <barButtonItem key="backBarButtonItem" title="Back" id="MYT-DQ-dJ6"/>
                         <barButtonItem key="leftBarButtonItem" style="done" id="6qc-zf-Ccw">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="9hV-eh-P4W">
                                 <rect key="frame" x="16" y="6.5" width="59" height="31"/>

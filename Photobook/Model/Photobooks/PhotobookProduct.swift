@@ -166,7 +166,8 @@ class PhotobookProduct: Codable {
         // If assets count is an odd number, use a double layout close to the middle of the photobook
         var doubleAssetIndex: Int?
         if doubleLayout != nil, placeholderLayouts == 0 && assets.count % 2 != 0 {
-            let middleIndex = (assets.count / 2) + 1
+            var middleIndex = assets.count / 2
+            if middleIndex % 2 == 0 { middleIndex -= 1 } // Always start with an odd number (left page)
             for i in stride(from: 0, to: middleIndex-1, by: 2) { // Exclude first and last assets
                 if assets[middleIndex - i].isLandscape {
                     doubleAssetIndex = middleIndex - i

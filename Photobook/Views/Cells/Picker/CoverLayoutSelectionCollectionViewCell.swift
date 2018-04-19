@@ -38,6 +38,7 @@ class CoverLayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         productLayoutAsset.asset = asset
         
         let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset)
+        coverFrameView.pageView.shouldSetImage = true
         coverFrameView.pageView.pageIndex = 0
         coverFrameView.pageView.productLayout = productLayout
         coverFrameView.pageView.setupImageBox(with: image)

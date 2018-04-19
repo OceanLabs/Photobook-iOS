@@ -20,7 +20,7 @@ struct PhotobookConstants {
     static let verticalPageToCoverMargin: CGFloat = 5.0
 }
 
-fileprivate struct ColorConstants {
+private struct ColorConstants {
     struct White {
         static let color1 = UIColor(red: 0.87, green: 0.87, blue: 0.87, alpha: 1.0).cgColor
         static let color2 = UIColor(red: 0.96, green: 0.96, blue: 0.96, alpha: 1.0)
@@ -199,6 +199,10 @@ class PhotobookFrameSpreadBackgroundView: UIView {
 // Internal class representing a stack of pages in an open photobook. Please use PhotobookFrameView instead.
 class PhotobookFramePageBackgroundView: UIView {
 
+    override open class var layerClass: AnyClass {
+        return CAGradientLayer.classForCoder()
+    }
+    
     var pageSide = PageSide.left
     var color: ProductColor = .white {
         didSet {
@@ -210,12 +214,10 @@ class PhotobookFramePageBackgroundView: UIView {
             }
         }
     }
-    private var gradientLayer: CAGradientLayer = {
-        let aLayer = CAGradientLayer()
-        aLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-        aLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-        return aLayer
-    }()
+    
+    private var gradientLayer: CAGradientLayer {
+        return layer as! CAGradientLayer
+    }
     
     override init(frame: CGRect) {
         fatalError("Not to be used programmatically. Please use PhotobookFrameView instead.")
@@ -223,11 +225,8 @@ class PhotobookFramePageBackgroundView: UIView {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        layer.addSublayer(gradientLayer)
-    }
-
-    override func layoutSubviews() {
-        gradientLayer.frame = bounds
+        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+        gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
     }
 }
 

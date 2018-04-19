@@ -45,12 +45,18 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
         return ProductManager.shared.currentProduct
     }
 
+    override func prepareForReuse() {
+        coverFrameView.pageView.shouldSetImage = false
+    }
+
     override func layoutSubviews() {
         super.layoutSubviews()
         coverFrameView.aspectRatio = product.template.aspectRatio
     }
     
     func loadCoverAndSpine() {
+        coverFrameView.pageView.shouldSetImage = true
+        
         coverFrameView.pageView.pageIndex = 0
         coverFrameView.pageView.productLayout = product.productLayouts.first
         coverFrameView.pageView.bleed = product.bleed(forPageSize: coverFrameView.pageView.bounds.size)
