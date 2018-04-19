@@ -79,7 +79,12 @@ class OrderManagerTests: XCTestCase {
         let product = productManager.currentProduct!
         
         OrderManager.shared.saveBasketOrder()
-        guard let unarchivedOrder = OrderManager.shared.loadBasketOrder() else {
+        
+        guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!.appending("/Photobook/BasketOrder.dat")) as? Data else {
+            XCTFail("Decoding of product failed")
+            return
+        }
+        guard let unarchivedOrder = try? PropertyListDecoder().decode(Order.self, from: unarchivedData) else {
             XCTFail("Decoding of product failed")
             return
         }

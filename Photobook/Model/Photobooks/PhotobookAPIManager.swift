@@ -16,13 +16,9 @@ enum PhotobookAPIError: Error {
 
 class PhotobookAPIManager {
     
-    private struct Storage {
-        static let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
-    }
-    
     static let imageUploadIdentifierPrefix = "PhotobookAPIManager-AssetUploader-"
     
-    private struct EndPoints {
+    struct EndPoints {
         static let products = "/ios/initial-data/"
         static let summary = "/ios/summary"
         static let applyUpsell = "/ios/upsell.apply"
@@ -32,8 +28,9 @@ class PhotobookAPIManager {
 
     private var apiClient = APIClient.shared
     
-    #if DEBUG
     private var mockJsonFileName: String?
+    
+    #if DEBUG
     convenience init(apiClient: APIClient, mockJsonFileName: String?) {
         self.init()
         self.apiClient = apiClient
@@ -121,32 +118,6 @@ class PhotobookAPIManager {
     func createPhotobookPdf(completionHandler: @escaping (_ urls: [String]?, _ error: Error?) -> Void) {
         completionHandler(["https://kite.ly/someurl", "https://kite.ly/someotherurl"], nil)
         //TODO: send request
-    }
-    
-    func uploadAsset(asset: Asset, failureHandler: @escaping (Error) -> Void) {
-        asset.imageData(progressHandler: nil, completionHandler: { [weak welf = self] data, fileExtension, error in
-            guard error == nil, let data = data, fileExtension != .unsupported else {
-                failureHandler(PhotobookAPIError.missingPhotobookInfo)
-                return
-            }
-            
-            if let fileUrl = welf?.saveDataToCachesDirectory(data: data, name: "\(asset.fileIdentifier).\(fileExtension)") {
-                welf?.apiClient.uploadImage(fileUrl, reference: PhotobookAPIManager.imageUploadIdentifierPrefix + asset.identifier, context: .pig, endpoint: EndPoints.imageUpload)
-            } else {
-                failureHandler(PhotobookAPIError.couldNotSaveTempImageData)
-            }
-        })
-    }
-    
-    func saveDataToCachesDirectory(data: Data, name: String) -> URL? {
-        let fileUrl = Storage.cachesDirectory.appendingPathComponent(name)
-        do {
-            try data.write(to: fileUrl)
-            return fileUrl
-        } catch {
-            print(error)
-            return nil
-        }
     }
     
 }

@@ -35,6 +35,7 @@ class OrderManager {
     }
     
     private lazy var apiManager = PhotobookAPIManager()
+    private lazy var apiClient = APIClient.shared
     
     lazy var basketOrder: Order = {
         guard let order = loadOrder(from: Storage.basketOrderBackupFile) else {
@@ -71,6 +72,13 @@ class OrderManager {
         NotificationCenter.default.addObserver(self, selector: #selector(shouldRetryUpload), name: NotificationName.shouldRetryUploadingImages, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(imageUploadFinished(_:)), name: APIClient.backgroundSessionTaskFinished, object: nil)
     }
+    
+    #if DEBUG
+    convenience init(apiClient: APIClient) {
+        self.init()
+        self.apiClient = apiClient
+    }
+    #endif
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -196,7 +204,7 @@ class OrderManager {
         
         // Upload images
         for asset in assetsToUpload {
-            apiManager.uploadAsset(asset: asset, failureHandler: { [weak welf = self] error in
+            uploadAsset(asset: asset, failureHandler: { [weak welf = self] error in
                 welf?.didFailUpload(error)
             })
             
@@ -272,6 +280,21 @@ class OrderManager {
     }
     
     //MARK: - Upload
+    
+    func uploadAsset(asset: Asset, failureHandler: @escaping (Error) -> Void) {
+        asset.imageData(progressHandler: nil, completionHandler: { [weak welf = self] data, fileExtension, error in
+            guard error == nil, let data = data, fileExtension != .unsupported else {
+                failureHandler(PhotobookAPIError.missingPhotobookInfo)
+                return
+            }
+            
+            if let fileUrl = DiskUtils.saveDataToCachesDirectory(data: data, name: "\(asset.fileIdentifier).\(fileExtension)") {
+                welf?.apiClient.uploadImage(fileUrl, reference: PhotobookAPIManager.imageUploadIdentifierPrefix + asset.identifier, context: .pig, endpoint: PhotobookAPIManager.EndPoints.imageUpload)
+            } else {
+                failureHandler(PhotobookAPIError.couldNotSaveTempImageData)
+            }
+        })
+    }
     
     @objc func shouldRetryUpload()  {
         NotificationCenter.default.post(name: NotificationName.failed, object: self, userInfo: ["error": OrderProcessingError.upload])
