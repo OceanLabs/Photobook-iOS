@@ -53,11 +53,9 @@ class PhotobookAPIManager {
             if NSClassFromString("XCTest") == nil {
                 jsonData = JSON.parse(file: "photobooks")
             } else {
-                #if DEBUG
                 if let mockJsonFileName = self.mockJsonFileName {
                     jsonData = JSON.parse(file: mockJsonFileName)
                 }
-                #endif
                 if jsonData == nil, error != nil {
                     completionHandler(nil, nil, nil, error!)
                     return
