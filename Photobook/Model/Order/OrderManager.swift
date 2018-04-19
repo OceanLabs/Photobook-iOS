@@ -149,7 +149,6 @@ class OrderManager {
         
         processingOrder = order
         APIClient.shared.recreateBackgroundSession()
-        uploadAssets()
         completionHandler?()
         return true
     }
