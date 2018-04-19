@@ -96,6 +96,9 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         guard let pageIndex = pageIndex, let layout = layout else { return }
 
         backgroundColor = .clear
+
+        photobookFrameView.leftPageView.shouldSetImage = true
+        photobookFrameView.rightPageView.shouldSetImage = true
         
         let aspectRatio = product.template.aspectRatio!
         if layout.isDoubleLayout {

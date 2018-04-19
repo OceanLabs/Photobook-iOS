@@ -40,8 +40,8 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
     
     var leftPageView: PhotobookPageView { return photobookFrameView.leftPageView }
     var rightPageView: PhotobookPageView { return photobookFrameView.rightPageView }
-    var leftIndex: Int? { return leftPageView.pageIndex }
-    var rightIndex: Int? { return rightPageView.pageIndex }
+    var leftIndex: Int?
+    var rightIndex: Int?
     var width: CGFloat! { didSet { photobookFrameView.width = width } }
     var isVisible: Bool {
         get { return !photobookFrameView.isHidden }
@@ -69,14 +69,29 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
     private var product: PhotobookProduct! {
         return ProductManager.shared.currentProduct
     }
+    
+    override func prepareForReuse() {
+        leftPageView.shouldSetImage = false
+        rightPageView.shouldSetImage = false
+    }
 
-    func loadPages(leftIndex: Int?, rightIndex: Int?) {
+    func loadPages() {
+        leftPageView.shouldSetImage = true
+        rightPageView.shouldSetImage = true
+        
+        if let aspectRatio = product.template.aspectRatio, let leftIndex = leftIndex {
+            let isDoubleLayout = product.productLayouts[leftIndex].layout.isDoubleLayout
+            leftPageView.aspectRatio = isDoubleLayout ? aspectRatio * 2.0 : aspectRatio
+            rightPageView.aspectRatio = isDoubleLayout ? 0.0 : aspectRatio
+        }
+        photobookFrameView.layoutIfNeeded()
+        
         if let leftIndex = leftIndex {
             leftPageView.pageIndex = leftIndex
             leftPageView.productLayout = product.productLayouts[leftIndex]
             leftPageView.bleed = product.bleed(forPageSize: leftPageView.bounds.size)
             
-            leftPageView.setupImageBox()
+            leftPageView.setupImageBox(with: leftPageView.productLayout?.productLayoutAsset?.currentImage)
             leftPageView.setupTextBox(mode: .userTextOnly)
             
             photobookFrameView.isLeftPageVisible = true
@@ -92,7 +107,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
             rightPageView.productLayout = product.productLayouts[rightIndex]
             rightPageView.bleed = product.bleed(forPageSize: rightPageView.bounds.size)
             
-            rightPageView.setupImageBox()
+            rightPageView.setupImageBox(with: rightPageView.productLayout?.productLayoutAsset?.currentImage)
             rightPageView.setupTextBox(mode: .userTextOnly)
             
             photobookFrameView.isRightPageVisible = true
@@ -102,16 +117,6 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
                 photobookFrameView.isRightPageVisible = false
             }
             rightPageView.interaction = .disabled
-        }
-        
-        let aspectRatio = product.template.aspectRatio
-        if let aspectRatio = aspectRatio, let leftIndex = leftIndex {
-            let isDoubleLayout = product.productLayouts[leftIndex].layout.isDoubleLayout
-            leftPageView.aspectRatio = isDoubleLayout ? aspectRatio * 2.0 : aspectRatio
-            rightPageView.aspectRatio = isDoubleLayout ? 0.0 : aspectRatio
-        } else {
-            leftPageView.aspectRatio = aspectRatio
-            rightPageView.aspectRatio = aspectRatio
         }
         
         leftPageView.delegate = self

@@ -85,7 +85,7 @@ class PhotobookPageView: UIView {
     }
     
     override func layoutSubviews() {
-        setupImageBox(with: currentImage)
+        setupImageBox(with: productLayout?.productLayoutAsset?.currentImage)
         adjustTextLabel()
         setupGestures()
     }
@@ -127,18 +127,16 @@ class PhotobookPageView: UIView {
         setupTextBox()
     }
     
-    private var currentIdentifier: String?
     private var containerView: UIView! {
         return bleedAssetContainerView != nil ? bleedAssetContainerView! : assetContainerView!
     }
-    var currentImage: UIImage?
     
     func setupImageBox(with assetImage: UIImage? = nil, animated: Bool = true, loadThumbnailFirst: Bool = true) {
         guard let imageBox = productLayout?.layout.imageLayoutBox else {
             assetContainerView.alpha = 0.0
             return
         }
-        
+
         assetContainerView.alpha = 1.0
         assetContainerView.frame = imageBox.rectContained(in: bounds.size)
         if bleedAssetContainerView != nil {
@@ -146,14 +144,8 @@ class PhotobookPageView: UIView {
         }
         setImagePlaceholder()
         
-        guard let index = pageIndex, let asset = productLayout?.productLayoutAsset?.asset else {
+        guard let index = pageIndex, let asset = productLayout?.asset else {
             assetImageView.image = nil
-            return
-        }
-
-        // Avoid reloading image if not necessary
-        if currentIdentifier != nil && asset.identifier == currentIdentifier {
-            setImage(image: currentImage!)
             return
         }
 
@@ -166,21 +158,27 @@ class PhotobookPageView: UIView {
         if productLayout!.hasBeenEdited { size = 3.0 * size }
         
         asset.image(size: size, loadThumbnailFirst: loadThumbnailFirst, progressHandler: nil, completionHandler: { [weak welf = self] (image, _) in
-            guard welf?.pageIndex == index, let image = image else { return }
-            welf?.setImage(image: image)
+            guard welf?.pageIndex == index, let image = image, let productLayoutAsset = welf?.productLayout?.productLayoutAsset else { return }
             
-            welf?.currentIdentifier = asset.identifier
-
+            if productLayoutAsset.currentImage == nil || (asset.identifier == productLayoutAsset.currentIdentifier && productLayoutAsset.currentImage!.size.width <= image.size.width) {
+                productLayoutAsset.currentImage = image
+            }
+            productLayoutAsset.currentIdentifier = asset.identifier
+            
+            welf?.setImage(image: productLayoutAsset.currentImage!)
+            
             UIView.animate(withDuration: animated ? 0.1 : 0.0) {
                 welf?.assetImageView.alpha = 1.0
             }
         })
     }
     
-    func setImage(image: UIImage) {
-        guard let asset = productLayout?.productLayoutAsset?.asset else { return }
-
-        currentImage = image
+    var shouldSetImage: Bool = false
+    private func setImage(image: UIImage) {
+        guard let productLayoutAsset = productLayout?.productLayoutAsset,
+              let asset = productLayoutAsset.asset,
+              shouldSetImage
+            else { return }
         
         assetImageView.transform = .identity
         assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: asset.size.width, height: asset.size.height)

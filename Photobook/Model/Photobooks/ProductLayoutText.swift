@@ -11,11 +11,7 @@ import UIKit
 
 // A photo item in the user's photobook assigned to a layout box
 class ProductLayoutText: Codable {
-    var containerSize: CGSize! {
-        didSet {
-            // TODO: Apply text limitations
-        }
-    }
+    var containerSize: CGSize!
     var text: String?
     var fontType: FontType = .plain
     
