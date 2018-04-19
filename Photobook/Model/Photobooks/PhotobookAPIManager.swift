@@ -7,19 +7,6 @@
 //
 
 import Foundation
-import UIKit
-
-protocol PhotobookAPIManagerDelegate: class {
-    var template: PhotobookTemplate { get set }
-    var productLayouts: [ProductLayout] { get set }
-    var coverColor: ProductColor { get set }
-    var pageColor: ProductColor { get set }
-
-    func didFinishUploading(asset: Asset)
-    func didFailUpload(_ error: Error)
-    func didFinishUploadingPhotobook()
-    func didFinishCreatingPdf(error: Error?)
-}
 
 enum PhotobookAPIError: Error {
     case missingPhotobookInfo
@@ -29,69 +16,27 @@ enum PhotobookAPIError: Error {
 
 class PhotobookAPIManager {
     
-    let imageUploadIdentifierPrefix = "PhotobookAPIManager-AssetUploader-"
+    static let imageUploadIdentifierPrefix = "PhotobookAPIManager-AssetUploader-"
     
-    private struct EndPoints {
+    struct EndPoints {
         static let products = "/ios/initial-data/"
         static let summary = "/ios/summary"
         static let applyUpsell = "/ios/upsell.apply"
         static let createPdf = "/ios/generate_photobook_pdf"
         static let imageUpload = "/upload/"
     }
-    
-    private struct Storage {
-        static let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
-    }
-    
-    private var product: PhotobookProduct! {
-        return ProductManager.shared.currentProduct
-    }
 
     private var apiClient = APIClient.shared
     
-    var pendingUploads:Int {
-        get {
-            return UserDefaults.standard.integer(forKey: "ly.kite.sdk.photobookAPIManager.pendingUploads")
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "ly.kite.sdk.photobookAPIManager.pendingUploads")
-            UserDefaults.standard.synchronize()
-        }
-    }
-    var totalUploads:Int {
-        get {
-            return UserDefaults.standard.integer(forKey: "ly.kite.sdk.photobookAPIManager.totalUploads")
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "ly.kite.sdk.photobookAPIManager.totalUploads")
-            UserDefaults.standard.synchronize()
-        }
-    }
-    var isUploading:Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: "ly.kite.sdk.photobookAPIManager.isUploading")
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "ly.kite.sdk.photobookAPIManager.isUploading")
-            UserDefaults.standard.synchronize()
-        }
-    }
-    weak var delegate: PhotobookAPIManagerDelegate?
-    
-    init() {
-        NotificationCenter.default.addObserver(self, selector: #selector(imageUploadFinished(_:)), name: APIClient.backgroundSessionTaskFinished, object: nil)
-    }
+    private var mockJsonFileName: String?
     
     #if DEBUG
-    convenience init(apiClient: APIClient) {
+    convenience init(apiClient: APIClient, mockJsonFileName: String?) {
         self.init()
         self.apiClient = apiClient
+        self.mockJsonFileName = mockJsonFileName
     }
     #endif
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
     
     /// Requests the information about photobook products and layouts from the API
     ///
@@ -105,7 +50,10 @@ class PhotobookAPIManager {
             if NSClassFromString("XCTest") == nil {
                 jsonData = JSON.parse(file: "photobooks")
             } else {
-                if error != nil {
+                if let mockJsonFileName = self.mockJsonFileName {
+                    jsonData = JSON.parse(file: mockJsonFileName)
+                }
+                if jsonData == nil, error != nil {
                     completionHandler(nil, nil, nil, error!)
                     return
                 }
@@ -172,194 +120,4 @@ class PhotobookAPIManager {
         //TODO: send request
     }
     
-    /// Uploads the photobook images and the user's photobook choices
-    /// The PhotobookAPIManager listens to notifications from the APIClient to track the status of the background uploads.
-    ///
-    /// - Parameter completionHandler: Closure to be called with a total upload count, if the process successfully starts, or an error if it fails
-    func uploadPhotobook(_ completionHandler: (Int, Error?) -> Void) {
-        if isUploading {
-            completionHandler(0, nil) //don't start uploading if upload in progress
-            return
-        }
-        
-        guard delegate?.template != nil, let productLayouts = delegate?.productLayouts else {
-            completionHandler(0, PhotobookAPIError.missingPhotobookInfo)
-            return
-        }
-        
-        // Set upload counts
-        totalUploads = 0
-        let processedAssets = uploadableAssets(withProductLayouts: productLayouts)
-        totalUploads = processedAssets.count
-        pendingUploads = totalUploads
-        isUploading = true
-        completionHandler(totalUploads, nil)
-        
-        // Upload images
-        
-        for asset in processedAssets {
-
-            asset.imageData(progressHandler: nil, completionHandler: { [weak welf = self] data, fileExtension, error in
-                guard error == nil, let data = data, fileExtension != .unsupported else {
-                    welf?.delegate?.didFailUpload(PhotobookAPIError.missingPhotobookInfo)
-                    return
-                }
-                
-                if let fileUrl = welf?.saveDataToCachesDirectory(data: data, name: "\(asset.fileIdentifier).\(fileExtension)") {
-                    welf?.apiClient.uploadImage(fileUrl, reference: self.imageUploadIdentifierPrefix + asset.identifier, context: .pig, endpoint: EndPoints.imageUpload)
-                } else {
-                    welf?.delegate?.didFailUpload(PhotobookAPIError.couldNotSaveTempImageData)
-                }
-            })
-        }
-    }
-    
-    @objc func imageUploadFinished(_ notification: Notification) {
-        
-        guard let dictionary = notification.userInfo as? [String: AnyObject] else {
-            print("PhotobookAPIManager: Task finished but could not cast user info")
-            return
-        }
-        
-        //check if this is a photobook api manager asset upload
-        if let reference = dictionary["task_reference"] as? String, !reference.hasPrefix(imageUploadIdentifierPrefix) {
-            //not intended for this class
-            return
-        }
-        
-        if let error = dictionary["error"] as? APIClientError {
-            delegate?.didFailUpload(error)
-            return
-        }
-        
-        guard let reference = dictionary["task_reference"] as? String,
-            let url = dictionary["full"] as? String else {
-                
-            delegate?.didFailUpload(APIClientError.parsing)
-            return
-        }
-        let referenceId = reference.suffix(reference.count - imageUploadIdentifierPrefix.count)
-        
-        guard let productLayout = delegate?.productLayouts.first(where: { $0.asset != nil && $0.asset!.identifier == referenceId }) else {
-            delegate?.didFailUpload(PhotobookAPIError.missingPhotobookInfo)
-            return
-        }
-
-        // Store the URL string
-        productLayout.asset!.uploadUrl = url
-        
-        handleFinishedUploadingAsset(asset: productLayout.asset!)
-    }
-    
-    private func handleFinishedUploadingAsset(asset:Asset) {
-        // Reduce the count
-        pendingUploads -= 1
-        // Notify delegate
-        delegate?.didFinishUploading(asset: asset)
-        if pendingUploads == 0 {
-            // All uploads done. Submit details and inform delegate
-            isUploading = false
-            delegate?.didFinishUploadingPhotobook()
-        }
-    }
-    
-    func restoreUploads(_ completionHandler: (() -> Void)? = nil) {
-        guard let productLayouts = delegate?.productLayouts else {
-            delegate?.didFailUpload(PhotobookAPIError.missingPhotobookInfo)
-            return
-        }
-
-        totalUploads = 0
-        for layout in productLayouts {
-            if layout.asset != nil { totalUploads += 1 }
-        }
-        APIClient.shared.recreateBackgroundSession()
-    }
-    
-    func cancelUpload(_ completion: @escaping () -> Void) {
-        if isUploading {
-            print("will cancel uploads")
-            apiClient.cancelBackgroundTasks {
-                self.isUploading = false
-                self.pendingUploads = 0
-                self.totalUploads = 0
-                completion()
-                print("did cancel uploads")
-            }
-        } else {
-            completion()
-        }
-    }
-    
-    private func uploadableAssets(withProductLayouts layouts:[ProductLayout]) -> [Asset] {
-        var processedAssets = [Asset]()
-        layoutLoop: for layout in layouts {
-            if let asset = layout.asset {
-                //check if the asset is already processed for upload in another layout
-                for processedAsset in processedAssets {
-                    if processedAsset == asset {
-                        continue layoutLoop
-                    }
-                }
-                
-                //check if it isn't a retry
-                if asset.uploadUrl == nil {
-                    processedAssets.append(asset)
-                }
-            }
-        }
-        return processedAssets
-    }
-    
-    private func photobookParameters() -> [String: Any]? {
-        guard let photobookId = OrderManager.basketOrder.photobookId else { return nil }
-        
-        // TODO: confirm schema
-        var photobook = [String: Any]()
-        
-        var pages = [[String: Any]]()
-        for productLayout in product.productLayouts {
-            var page = [String: Any]()
-            
-            if let asset = productLayout.asset,
-                let imageLayoutBox = productLayout.layout.imageLayoutBox,
-                let productLayoutAsset = productLayout.productLayoutAsset {
-                
-                page["contentType"] = "image"
-                page["dimensionsPercentages"] = ["height": imageLayoutBox.rect.height, "width": imageLayoutBox.rect.width]
-                page["relativeStartPoint"] = ["x": imageLayoutBox.rect.origin.x, "y": imageLayoutBox.rect.origin.y]
-                
-                // Set the container size to 1,1 so that the transform is relativized
-                productLayoutAsset.containerSize = CGSize(width: 1, height: 1)
-                productLayoutAsset.adjustTransform()
-                
-                var containedItem = [String: Any]()
-                var picture = [String: Any]()
-                picture["url"] = asset.uploadUrl
-                picture["relativeStartPoint"] = ["x": productLayoutAsset.transform.tx, "y": productLayoutAsset.transform.ty]
-                picture["rotation"] = productLayoutAsset.transform.angle
-                picture["zoom"] = productLayoutAsset.transform.scale
-                
-                containedItem["picture"] = picture
-                page["containedItem"] = containedItem
-                
-            }
-            pages.append(page)
-        }
-        photobook["pages"] = pages
-        photobook["pdfId"] = photobookId
-        
-        return photobook
-    }
-    
-    private func saveDataToCachesDirectory(data: Data, name: String) -> URL? {
-        let fileUrl = Storage.cachesDirectory.appendingPathComponent(name)
-        do {
-            try data.write(to: fileUrl)
-            return fileUrl
-        } catch {
-            print(error)
-            return nil
-        }
-    }
 }

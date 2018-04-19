@@ -26,37 +26,12 @@ enum ProductColor: String, Codable {
     }
 }
 
-// Structure containing the user's photobok details to save them to disk
-struct PhotobookBackup: Codable {
-    var template: PhotobookTemplate
-    var coverColor: ProductColor
-    var pageColor: ProductColor
-    var productLayouts: [ProductLayout]
-}
-
-class PhotobookProduct {
-
-    // Notification keys
-    static let pendingUploadStatusUpdated = Notification.Name("ly.kite.sdk.productManagerPendingUploadStatusUpdated")
-    static let shouldRetryUploadingImages = Notification.Name("ly.kite.sdk.productManagerShouldRetryUploadingImages")
-    static let finishedPhotobookCreation = Notification.Name("ly.kite.sdk.productManagerFinishedPhotobookCreation")
-    static let finishedPhotobookUpload = Notification.Name("ly.kite.sdk.productManagerFinishedPhotobookUpload")
-    static let failedPhotobookUpload = Notification.Name("ly.kite.sdk.productManagerFailedPhotobookUpload")
+class PhotobookProduct: Codable {
     
     private let bleed: CGFloat = 8.5
 
     var currentPortraitLayout = 0
     var currentLandscapeLayout = 0
-    
-    private lazy var apiManager: PhotobookAPIManager = {
-        let manager = PhotobookAPIManager()
-        manager.delegate = self
-        return manager
-    }()
-    
-    #if DEBUG
-    var storageFile: String { return OrderManager.Storage.photobookBackupFile }
-    #endif
     
     // Current photobook
     var template: PhotobookTemplate
@@ -66,6 +41,10 @@ class PhotobookProduct {
     var coverColor: ProductColor = .white
     var pageColor: ProductColor = .white
     var productLayouts = [ProductLayout]()
+    var itemCount: Int = 1
+    
+    // The id of the uploaded PDF
+    var photobookId: String?
     
     var isAddingPagesAllowed: Bool {
         // TODO: Use pages count instead of assets/layout count
@@ -116,34 +95,8 @@ class PhotobookProduct {
         return temp.count > 0 ? temp : nil
     }
     
-    //upload
-    var isUploading:Bool {
-        get {
-            return apiManager.isUploading
-        }
-        set {
-            apiManager.isUploading = newValue
-        }
-    }
-    var pendingUploads:Int {
-        return apiManager.pendingUploads
-    }
-    var totalUploads:Int {
-        return apiManager.totalUploads
-    }
-    
-    init(template: PhotobookTemplate, assets: [Asset]) {
+    init(template: PhotobookTemplate, assets: [Asset], coverLayouts: [Layout], layouts: [Layout]) {
         self.template = template
-        
-        guard
-            let coverLayouts = ProductManager.shared.coverLayouts(for: template),
-            !coverLayouts.isEmpty,
-            let layouts = ProductManager.shared.layouts(for: template),
-            !layouts.isEmpty
-            else {
-                print("ProductManager: Missing layouts for selected photobook")
-                return
-        }
         
         let imageOnlyLayouts = layouts.filter({ $0.imageLayoutBox != nil })
         
@@ -170,16 +123,7 @@ class PhotobookProduct {
         productLayouts = tempLayouts
     }
     
-    func setTemplate(_ template: PhotobookTemplate, withAssets assets: [Asset]? = nil) {
-        guard
-            let coverLayouts = ProductManager.shared.coverLayouts(for: template),
-            !coverLayouts.isEmpty,
-            let layouts = ProductManager.shared.layouts(for: template),
-            !layouts.isEmpty
-        else {
-            print("ProductManager: Missing layouts for selected photobook")
-            return
-        }
+    func setTemplate(_ template: PhotobookTemplate, withAssets assets: [Asset]? = nil, coverLayouts: [Layout], layouts: [Layout]) {
         
         // Reset the current layout since we are changing products
         currentLandscapeLayout = 0
@@ -290,64 +234,6 @@ class PhotobookProduct {
     ///   - page: The page index in the photbook
     func setText(_ text: String, forPage page: Int) {
         productLayouts[page].text = text
-    }
-    
-    /// Initiates the uploading of the user's photobook
-    ///
-    /// - Parameter completionHandler: Executed when the uploads are on the way or failed to initiate them. The Int parameter provides the total upload count.
-    func startPhotobookUpload(_ completionHandler: @escaping (Int, Error?) -> Void) {
-        self.saveUserPhotobook()
-        apiManager.uploadPhotobook(completionHandler)
-    }
-    
-    func cancelPhotobookUpload(_ completionHandler: @escaping () -> Void) {
-        apiManager.cancelUpload {
-            completionHandler()
-        }
-    }
-    
-    /// Loads the user's photobook details from disk
-    ///
-    /// - Parameter completionHandler: Closure called on completion
-    func loadUserPhotobook(_ completionHandler: (() -> Void)? = nil ) {
-        guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: OrderManager.Storage.photobookBackupFile) as? Data else {
-            print("ProductManager: failed to unarchive product")
-            return
-        }
-        guard let unarchivedProduct = try? PropertyListDecoder().decode(PhotobookBackup.self, from: unarchivedData) else {
-            print("ProductManager: decoding of product failed")
-            return
-        }
-        
-        template = unarchivedProduct.template
-        coverColor = unarchivedProduct.coverColor
-        pageColor = unarchivedProduct.pageColor
-        productLayouts = unarchivedProduct.productLayouts
-        apiManager.restoreUploads()
-        completionHandler?()
-    }
-    
-    
-    /// Saves the user's photobook details to disk
-    func saveUserPhotobook() {
-        let rootObject = PhotobookBackup(template: template, coverColor: coverColor, pageColor: pageColor, productLayouts: productLayouts)
-        
-        guard let data = try? PropertyListEncoder().encode(rootObject) else {
-            fatalError("ProductManager: encoding of product failed")
-        }
-        
-        if !FileManager.default.fileExists(atPath: OrderManager.Storage.photobookDirectory) {
-            do {
-                try FileManager.default.createDirectory(atPath: OrderManager.Storage.photobookDirectory, withIntermediateDirectories: false, attributes: nil)
-            } catch {
-                print("ProductManager: could not save photobook")
-            }
-        }
-        
-        let saved = NSKeyedArchiver.archiveRootObject(data, toFile: OrderManager.Storage.photobookBackupFile)
-        if !saved {
-            print("ProductManager: failed to archive product")
-        }
     }
     
     func spreadIndex(for productLayoutIndex: Int) -> Int? {
@@ -483,43 +369,54 @@ class PhotobookProduct {
         return bleed * scaleFactor
     }
     
-    func createPhotobookPdf(completionHandler: @escaping (_ urls: [String]?, _ error: Error?) -> Void) {
-        apiManager.createPhotobookPdf(completionHandler: completionHandler)
-    }
-}
-
-extension PhotobookProduct: PhotobookAPIManagerDelegate {
-
-    func didFinishUploading(asset: Asset) {
-        let info: [String: Any] = [ "asset": asset, "pending": apiManager.pendingUploads ]
-        NotificationCenter.default.post(name: PhotobookProduct.pendingUploadStatusUpdated, object: info)
-        saveUserPhotobook()
-    }
-    
-    func didFailUpload(_ error: Error) {
-        if let error = error as? PhotobookAPIError {
-            switch error {
-            case .couldNotSaveTempImageData:
-                Analytics.shared.trackError(.diskError)
-                let info = [ "pending": apiManager.pendingUploads ]
-                NotificationCenter.default.post(name: PhotobookProduct.pendingUploadStatusUpdated, object: info)
-                NotificationCenter.default.post(name: PhotobookProduct.shouldRetryUploadingImages, object: nil) //resolvable
-            case .missingPhotobookInfo, .couldNotBuildCreationParameters:
-                Analytics.shared.trackError(.photobookInfo)
-                NotificationCenter.default.post(name: PhotobookProduct.failedPhotobookUpload, object: nil) //not resolvable
+    func photobookParameters() -> [String: Any]? {
+        
+        guard let photobookId = photobookId else { return nil }
+        
+        // TODO: confirm schema
+        var photobook = [String: Any]()
+        
+        var pages = [[String: Any]]()
+        for productLayout in productLayouts {
+            var page = [String: Any]()
+            
+            if let asset = productLayout.asset,
+                let imageLayoutBox = productLayout.layout.imageLayoutBox,
+                let productLayoutAsset = productLayout.productLayoutAsset {
+                
+                page["contentType"] = "image"
+                page["dimensionsPercentages"] = ["height": imageLayoutBox.rect.height, "width": imageLayoutBox.rect.width]
+                page["relativeStartPoint"] = ["x": imageLayoutBox.rect.origin.x, "y": imageLayoutBox.rect.origin.y]
+                
+                // Set the container size to 1,1 so that the transform is relativized
+                productLayoutAsset.containerSize = CGSize(width: 1, height: 1)
+                productLayoutAsset.adjustTransform()
+                
+                var containedItem = [String: Any]()
+                var picture = [String: Any]()
+                picture["url"] = asset.uploadUrl
+                picture["relativeStartPoint"] = ["x": productLayoutAsset.transform.tx, "y": productLayoutAsset.transform.ty]
+                picture["rotation"] = productLayoutAsset.transform.angle
+                picture["zoom"] = productLayoutAsset.transform.scale
+                
+                containedItem["picture"] = picture
+                page["containedItem"] = containedItem
+                
             }
-        } else if let _ = error as? APIClientError {
-            // Connection / server errors or parsing error
-            NotificationCenter.default.post(name: PhotobookProduct.shouldRetryUploadingImages, object: nil) //resolvable
+            pages.append(page)
         }
+        photobook["pages"] = pages
+        photobook["pdfId"] = photobookId
+        
+        return photobook
     }
     
-    func didFinishUploadingPhotobook() {
-        Analytics.shared.trackAction(.uploadSuccessful)
-        NotificationCenter.default.post(name: PhotobookProduct.finishedPhotobookUpload, object: nil)
-    }
-    
-    func didFinishCreatingPdf(error: Error?) {
-        NotificationCenter.default.post(name: PhotobookProduct.finishedPhotobookCreation, object: nil)
+    func assetsToUpload() -> [Asset] {
+        var assets = [Asset]()
+        for layout in productLayouts {
+            guard let asset = layout.asset else { continue }
+            assets.append(asset)
+        }
+        return assets
     }
 }

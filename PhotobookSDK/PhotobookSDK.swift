@@ -49,7 +49,7 @@ import UIKit
     
     /// True if a photo book order is being processed, false otherwise
     @objc public var isProcessingOrder: Bool {
-        return OrderProcessingManager.shared.isProcessingOrder
+        return OrderManager.shared.isProcessingOrder
     }
     
     /// Photo book view controller initialised with the provided images
@@ -91,6 +91,7 @@ import UIKit
     ///
     /// - Parameter completionHandler: Completion handler to be forwarded from 'handleEventsForBackgroundURLSession' in the application's app delegate
     @objc public func restorePhotobook(_ completionHandler: @escaping (() -> Void)) {
-        ProductManager.shared.currentProduct!.loadUserPhotobook(completionHandler)
+        _ = OrderManager.shared.loadProcessingOrder()
+        completionHandler()
     }
 }

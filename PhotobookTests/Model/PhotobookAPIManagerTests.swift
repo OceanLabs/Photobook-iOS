@@ -23,7 +23,7 @@ class APIClientMock: APIClient {
 class PhotobookAPIManagerTests: XCTestCase {
     
     let apiClient = APIClientMock()
-    lazy var photobookAPIManager = PhotobookAPIManager(apiClient: apiClient)
+    lazy var photobookAPIManager = PhotobookAPIManager(apiClient: apiClient, mockJsonFileName: nil)
     
     override func tearDown() {
         apiClient.response = nil
