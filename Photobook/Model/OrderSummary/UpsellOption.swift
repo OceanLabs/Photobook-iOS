@@ -15,7 +15,7 @@ class UpsellOption: Codable, Equatable {
     var payload: AnyObject? {
         guard let data = payloadData else { return nil }
         
-        return try? JSONSerialization.jsonObject(with: data, options: .mutableLeaves) as AnyObject
+        return try? JSONSerialization.jsonObject(with: data, options: []) as AnyObject
     }
     
     init(type: String, displayName: String, payload: Data?) {
