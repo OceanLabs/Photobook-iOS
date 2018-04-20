@@ -24,17 +24,10 @@ class ProductLayoutAsset: Codable {
                 return
             }
 
-            let relativeScale: CGFloat
             let relativeWidth = containerSize.width / oldValue.width
-            
-            if !relativeWidth.isNaN && oldValue.width > 0.0 && containerSize.width > containerSize.height {
-                relativeScale = relativeWidth
-            } else {
-                let relativeHeight = containerSize.height / oldValue.height
-                relativeScale = relativeHeight
-            }
+            let relativeHeight = containerSize.height / oldValue.height
 
-            transform = LayoutUtils.adjustTransform(transform, byFactor: relativeScale)
+            transform = LayoutUtils.adjustTransform(transform, byFactorX: relativeWidth, factorY: relativeHeight)
             adjustTransform()
         }
     }
