@@ -20,7 +20,7 @@ import UIKit
     }
     
     /// Set to use the live or test environment
-    @objc public static func setEnvironment(environment: Environment) {
+    @objc public func setEnvironment(environment: Environment) {
         switch environment {
         case .test:
             APIClient.environment = .test
@@ -59,7 +59,12 @@ import UIKit
     /// - Returns: A photobook UIViewController
     @objc public func photobookViewController(with assets: [PhotobookAsset], onDismiss: (() -> Void)? = nil) -> UIViewController? {
         guard let assets = assets as? [Asset], assets.count > 0 else {
+            print("Photobook SDK: Photobook View Controller not initialised because the assets array passed is empty or nil.")
             return nil
+        }
+        
+        guard KiteAPIClient.shared.apiKey != nil else {
+            fatalError("Photobook SDK: Photobook View Controller not initialised because the Kite API key was not set. You can get this from the Kite Dashboard.")
         }
         
         UIFont.loadAllFonts()
@@ -80,6 +85,10 @@ import UIKit
     /// - Returns: A receipt UIViewController
     @objc public func receiptViewController(onDismiss: (() -> Void)? = nil) -> UIViewController? {
         guard isProcessingOrder else { return nil }
+        
+        guard KiteAPIClient.shared.apiKey != nil else {
+            fatalError("Photobook SDK: Receipt View Controller not initialised because the Kite API key was not set. You can get this from the Kite Dashboard.")
+        }
         
         UIFont.loadAllFonts()
         let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
