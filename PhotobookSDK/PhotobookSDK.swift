@@ -64,8 +64,7 @@ import UIKit
         }
         
         guard KiteAPIClient.shared.apiKey != nil else {
-            print("Photobook SDK: Photobook View Controller not initialised because the Kite API key was not set. You can get this from the Kite Dashboard.")
-            return nil
+            fatalError("Photobook SDK: Photobook View Controller not initialised because the Kite API key was not set. You can get this from the Kite Dashboard.")
         }
         
         UIFont.loadAllFonts()
@@ -88,8 +87,7 @@ import UIKit
         guard isProcessingOrder else { return nil }
         
         guard KiteAPIClient.shared.apiKey != nil else {
-            print("Photobook SDK: Receipt View Controller not initialised because the Kite API key was not set. You can get this from the Kite Dashboard.")
-            return nil
+            fatalError("Photobook SDK: Receipt View Controller not initialised because the Kite API key was not set. You can get this from the Kite Dashboard.")
         }
         
         UIFont.loadAllFonts()
