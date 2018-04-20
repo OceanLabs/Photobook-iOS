@@ -20,7 +20,7 @@ import UIKit
     }
     
     /// Set to use the live or test environment
-    @objc public static func setEnvironment(environment: Environment) {
+    @objc public func setEnvironment(environment: Environment) {
         switch environment {
         case .test:
             APIClient.environment = .test
