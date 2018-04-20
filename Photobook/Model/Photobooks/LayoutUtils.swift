@@ -105,7 +105,30 @@ class LayoutUtils {
         }
         return transform
     }
+    
+    /// Amends a transform by a scale factor. This is useful when we want to scale the user effects to a smaller or larger scope and keep the same visual results.
+    ///
+    /// - Parameters:
+    ///   - transform: The current transform
+    ///   - byFactorX: The factor to apply to the X axis
+    ///   - byFactorY: The factor to apply to the Y axis
+    /// - Returns: A new scaled transform
+    static func adjustTransform(_ transform: CGAffineTransform, byFactorX x: CGFloat, factorY y: CGFloat) -> CGAffineTransform {
+        guard !(x.isNaN && y.isNaN) else { return transform }
+        let scaleX = x.isNaN ? y : x
+        let scaleY = y.isNaN ? x : y
         
+        let angle = transform.angle
+        let scale = transform.scale
+        
+        var newTransform = CGAffineTransform(scaleX: scale * scaleX, y: scale * scaleY)
+        newTransform = newTransform.rotated(by: angle)
+        newTransform.tx = transform.tx * scaleX
+        newTransform.ty = transform.ty * scaleY
+        
+        return newTransform
+    }
+
     /// Amends a view's transform to use the centre of the parentView as reference.
     /// This can be used after rotating the view around an arbitrary anchor point to take the transform back to a valid state.
     ///

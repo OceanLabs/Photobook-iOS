@@ -137,8 +137,10 @@ class PhotobookPageView: UIView {
             return
         }
 
+        // Avoid recalculating transforms with intermediate heights, e.g. when UICollectionViewCells are still determining their height
+        let finalBounds = bounds.width > 0 && (aspectRatio ?? 0.0) > 0.0 ? CGSize(width: bounds.width, height: bounds.width / aspectRatio!) : bounds.size
         assetContainerView.alpha = 1.0
-        assetContainerView.frame = imageBox.rectContained(in: bounds.size)
+        assetContainerView.frame = imageBox.rectContained(in: finalBounds)
         if bleedAssetContainerView != nil {
             bleedAssetContainerView.frame = imageBox.bleedRect(in: assetContainerView.bounds.size, withBleed: bleed)
         }
