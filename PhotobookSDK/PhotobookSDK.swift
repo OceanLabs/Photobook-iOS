@@ -30,7 +30,7 @@ import UIKit
     }
     
     /// Payee name to use for ApplePay
-    @objc public var applePayPayTo: String? {
+    @objc public static var applePayPayTo: String? {
         didSet {
             if let applePayPayTo = applePayPayTo {
                 PaymentAuthorizationManager.applePayPayTo = applePayPayTo
@@ -39,16 +39,13 @@ import UIKit
     }
     
     /// ApplePay merchand ID
-    @objc public var applePayMerchantId: String! { didSet { PaymentAuthorizationManager.applePayMerchantId = applePayMerchantId } }
+    @objc public static var applePayMerchantId: String! { didSet { PaymentAuthorizationManager.applePayMerchantId = applePayMerchantId } }
     
     /// Kite public API key
-    @objc public var kiteApiKey: String! { didSet { KiteAPIClient.shared.apiKey = kiteApiKey } }
-    
-    /// Shared client
-    @objc public static let shared = PhotobookSDK()
+    @objc public static var kiteApiKey: String! { didSet { KiteAPIClient.shared.apiKey = kiteApiKey } }
     
     /// True if a photo book order is being processed, false otherwise
-    @objc public var isProcessingOrder: Bool {
+    @objc public static var isProcessingOrder: Bool {
         return OrderManager.shared.isProcessingOrder
     }
     
@@ -57,7 +54,7 @@ import UIKit
     /// - Parameter assets: Images to use to initialise the photobook. Cannot be empty. Available asset types are: ImageAsset, URLAsset & PhotosAsset.
     /// - Parameter onDismiss: Closure to execute when the Photobook UI is ready to be dismissed
     /// - Returns: A photobook UIViewController
-    @objc public func photobookViewController(with assets: [PhotobookAsset], onDismiss: (() -> Void)? = nil) -> UIViewController? {
+    @objc public static func photobookViewController(with assets: [PhotobookAsset], onDismiss: (() -> Void)? = nil) -> UIViewController? {
         guard let assets = assets as? [Asset], assets.count > 0 else {
             print("Photobook SDK: Photobook View Controller not initialised because the assets array passed is empty or nil.")
             return nil
@@ -84,7 +81,7 @@ import UIKit
     ///
     /// - Parameter onDismiss: Closure to execute when the receipt UI is ready to be dismissed
     /// - Returns: A receipt UIViewController
-    @objc public func receiptViewController(onDismiss: (() -> Void)? = nil) -> UIViewController? {
+    @objc public static func receiptViewController(onDismiss: (() -> Void)? = nil) -> UIViewController? {
         guard isProcessingOrder else { return nil }
         
         guard KiteAPIClient.shared.apiKey != nil else {
@@ -101,7 +98,7 @@ import UIKit
     /// Restores the user's photo book, if it exists, and any ongoing upload tasks
     ///
     /// - Parameter completionHandler: Completion handler to be forwarded from 'handleEventsForBackgroundURLSession' in the application's app delegate
-    @objc public func restorePhotobook(_ completionHandler: @escaping (() -> Void)) {
+    @objc public static func restorePhotobook(_ completionHandler: @escaping (() -> Void)) {
         _ = OrderManager.shared.loadProcessingOrder()
         completionHandler()
     }
