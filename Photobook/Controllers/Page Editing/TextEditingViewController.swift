@@ -87,8 +87,6 @@ class TextEditingViewController: UIViewController {
         
         textView.textContainer.lineFragmentPadding = 0.0
         textView.textContainerInset = .zero
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
     }
     
     private var hasPlacedPageView = false
@@ -112,6 +110,8 @@ class TextEditingViewController: UIViewController {
         
         // Place views according to layout
         setup()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
         
         textView.becomeFirstResponder()
     }
@@ -232,6 +232,9 @@ class TextEditingViewController: UIViewController {
             self.view.backgroundColor = backgroundColor
             
             self.hasPlacedPageView = false
+            
+            NotificationCenter.default.removeObserver(self)
+            
             completion()
         })
     }
