@@ -8,7 +8,6 @@
 
 import UIKit
 import PassKit
-import Stripe
 
 class CheckoutViewController: UIViewController {
     
@@ -123,7 +122,7 @@ class CheckoutViewController: UIViewController {
         payButton.addTarget(self, action: #selector(CheckoutViewController.payButtonTapped(_:)), for: .touchUpInside)
         
         //APPLE PAY
-        if Stripe.deviceSupportsApplePay() {
+        if PaymentAuthorizationManager.isApplePayAvailable {
             setupApplePayButton()
         }
         

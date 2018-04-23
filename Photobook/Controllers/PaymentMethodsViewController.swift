@@ -55,12 +55,12 @@ extension PaymentMethodsViewController: UITableViewDataSource {
         if Card.currentCard != nil { numberOfPayments += 1 }
 
         // Apple Pay
-        if Stripe.deviceSupportsApplePay() { numberOfPayments += 1 }
+        if PaymentAuthorizationManager.isApplePayAvailable { numberOfPayments += 1 }
         return numberOfPayments
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let supportsApplePay = Stripe.deviceSupportsApplePay() ? 1 : 0
+        let supportsApplePay = PaymentAuthorizationManager.isApplePayAvailable ? 1 : 0
         
         switch indexPath.item {
         case -1 + supportsApplePay: // Apple Pay
@@ -103,7 +103,7 @@ extension PaymentMethodsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let supportsApplePay = Stripe.deviceSupportsApplePay() ? 1 : 0
+        let supportsApplePay = PaymentAuthorizationManager.isApplePayAvailable ? 1 : 0
         
         switch indexPath.item {
         case -1 + supportsApplePay: // Apple Pay
@@ -123,13 +123,13 @@ extension PaymentMethodsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        let cardIndex = Stripe.deviceSupportsApplePay() ? 2 : 1
+        let cardIndex = PaymentAuthorizationManager.isApplePayAvailable ? 2 : 1
         return indexPath.row == cardIndex && Card.currentCard != nil
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         Card.currentCard = nil
-        if Stripe.deviceSupportsApplePay() { OrderManager.shared.basketOrder.paymentMethod = .applePay }
+        if PaymentAuthorizationManager.isApplePayAvailable { OrderManager.shared.basketOrder.paymentMethod = .applePay }
         tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
     }
 }
