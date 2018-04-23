@@ -632,6 +632,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 cell.backgroundColor = UIColor(red:0.85, green:0.86, blue:0.86, alpha:1)
                 self.insertingIndexPath = nil
             }
+            
+            if destinationIndexPath == sourceIndexPath {
+                self.showMenu(at: sourceIndexPath)
+            }
         })
         
         if destinationIndexPath != sourceIndexPath,
