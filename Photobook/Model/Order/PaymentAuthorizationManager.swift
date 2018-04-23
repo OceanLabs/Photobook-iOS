@@ -49,6 +49,10 @@ class PaymentAuthorizationManager: NSObject {
         return APIClient.environment == .test ? "pk_test_fJtOj7oxBKrLFOneBFLj0OH3" : "pk_live_qQhXxzjS8inja3K31GDajdXo"
     }
     
+    static var isApplePayAvailable: Bool {
+        return Stripe.deviceSupportsApplePay() && PaymentAuthorizationManager.applePayMerchantId != nil
+    }
+    
     func authorizePayment(cost: Cost, method: PaymentMethod){
         switch method {
         case .applePay:

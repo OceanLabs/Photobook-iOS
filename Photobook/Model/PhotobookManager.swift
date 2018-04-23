@@ -33,7 +33,7 @@ class PhotobookManager: NSObject {
             return tabBarController
         }
         
-        let rootNavigationController = UINavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
+        let rootNavigationController = PhotobookNavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
         if #available(iOS 11.0, *) {
             // Large titles on nav vc containing other nav vcs causes issues
             rootNavigationController.navigationBar.prefersLargeTitles = false
