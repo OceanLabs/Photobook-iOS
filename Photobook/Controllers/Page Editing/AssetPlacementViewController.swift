@@ -82,6 +82,7 @@ class AssetPlacementViewController: UIViewController {
         UIView.animate(withDuration: 0.3, animations: {
             self.view.backgroundColor = backgroundColor
             self.animatableAssetImageView.frame = self.targetRect!
+            self.productLayout!.hasBeenEdited = true
             completion()
         })
     }
