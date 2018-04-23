@@ -38,6 +38,7 @@ protocol TextEditingDelegate: class {
     
     func didChangeFontType(to fontType: FontType)
     func didChangeText(to text: String?)
+    func shouldReactToKeyboardAppearance() -> Bool
     
 }
 
@@ -93,7 +94,7 @@ class TextEditingViewController: UIViewController {
     
     private var hasPlacedPageView = false
     @objc private func keyboardWillShow(notification: NSNotification) {
-        guard !hasPlacedPageView else { return }
+        guard !hasPlacedPageView, delegate?.shouldReactToKeyboardAppearance() ?? false else { return }
         hasPlacedPageView = true
         
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
