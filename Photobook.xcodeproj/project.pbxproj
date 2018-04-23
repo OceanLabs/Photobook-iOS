@@ -78,6 +78,36 @@
 		2E7C6F06201F4E670071E6B8 /* ReceiptTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C6F05201F4E670071E6B8 /* ReceiptTableViewController.swift */; };
 		2E7C822E2088B472002FF9D0 /* DiskUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C822D2088B472002FF9D0 /* DiskUtils.swift */; };
 		2E7C822F2088B472002FF9D0 /* DiskUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C822D2088B472002FF9D0 /* DiskUtils.swift */; };
+		2E870588208E0182004B4B36 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E870587208E0182004B4B36 /* AppDelegate.swift */; };
+		2E87058A208E0182004B4B36 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E870589208E0182004B4B36 /* ViewController.swift */; };
+		2E87058D208E0182004B4B36 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E87058B208E0182004B4B36 /* Main.storyboard */; };
+		2E87058F208E0183004B4B36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E87058E208E0183004B4B36 /* Assets.xcassets */; };
+		2E870592208E0183004B4B36 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E870590208E0183004B4B36 /* LaunchScreen.storyboard */; };
+		2E87059D208E0183004B4B36 /* SDK_DemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E87059C208E0183004B4B36 /* SDK_DemoUITests.swift */; };
+		2E8705A9208E042C004B4B36 /* PhotobookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14B992063A9CD00ED2E2C /* PhotobookSDK.framework */; };
+		2E8705AA208E042C004B4B36 /* PhotobookSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14B992063A9CD00ED2E2C /* PhotobookSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E8705AE208E0520004B4B36 /* Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C342063ABB700ED2E2C /* Analytics.framework */; };
+		2E8705AF208E0520004B4B36 /* Analytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C342063ABB700ED2E2C /* Analytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E8705B0208E0520004B4B36 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3A2063ABB700ED2E2C /* Bolts.framework */; };
+		2E8705B1208E0520004B4B36 /* Bolts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3A2063ABB700ED2E2C /* Bolts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E8705B2208E0520004B4B36 /* FacebookCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C352063ABB700ED2E2C /* FacebookCore.framework */; };
+		2E8705B3208E0520004B4B36 /* FacebookCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C352063ABB700ED2E2C /* FacebookCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E8705B4208E0520004B4B36 /* FacebookLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3C2063ABB700ED2E2C /* FacebookLogin.framework */; };
+		2E8705B5208E0520004B4B36 /* FacebookLogin.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3C2063ABB700ED2E2C /* FacebookLogin.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E8705B6208E0520004B4B36 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3D2063ABB700ED2E2C /* FBSDKCoreKit.framework */; };
+		2E8705B7208E0520004B4B36 /* FBSDKCoreKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3D2063ABB700ED2E2C /* FBSDKCoreKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E8705B8208E0520004B4B36 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C372063ABB700ED2E2C /* FBSDKLoginKit.framework */; };
+		2E8705B9208E0520004B4B36 /* FBSDKLoginKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C372063ABB700ED2E2C /* FBSDKLoginKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E8705BA208E0520004B4B36 /* KeychainSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C382063ABB700ED2E2C /* KeychainSwift.framework */; };
+		2E8705BB208E0520004B4B36 /* KeychainSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C382063ABB700ED2E2C /* KeychainSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E8705BC208E0520004B4B36 /* OAuthSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C362063ABB700ED2E2C /* OAuthSwift.framework */; };
+		2E8705BD208E0520004B4B36 /* OAuthSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C362063ABB700ED2E2C /* OAuthSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E8705BE208E0520004B4B36 /* PayPalMobileSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C392063ABB700ED2E2C /* PayPalMobileSDK.framework */; };
+		2E8705BF208E0520004B4B36 /* PayPalMobileSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C392063ABB700ED2E2C /* PayPalMobileSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E8705C0208E0520004B4B36 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C332063ABB700ED2E2C /* SDWebImage.framework */; };
+		2E8705C1208E0520004B4B36 /* SDWebImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C332063ABB700ED2E2C /* SDWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E8705C2208E0520004B4B36 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3B2063ABB700ED2E2C /* Stripe.framework */; };
+		2E8705C3208E0520004B4B36 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3B2063ABB700ED2E2C /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2E876E091FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E876E081FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift */; };
 		2E876E0B1FC2FA15007CCFA2 /* ViewStorySegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E876E0A1FC2FA15007CCFA2 /* ViewStorySegue.swift */; };
 		2E8B27F72045A44800A0B403 /* ErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8B27F62045A44800A0B403 /* ErrorMessage.swift */; };
@@ -352,6 +382,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		2E870599208E0183004B4B36 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2E0B58741FB30F2100F31A9E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2E870584208E0181004B4B36;
+			remoteInfo = "SDK Demo";
+		};
+		2E8705AB208E042C004B4B36 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2E0B58741FB30F2100F31A9E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2ED14B982063A9CD00ED2E2C;
+			remoteInfo = PhotobookSDK;
+		};
 		6FB6706C1FB5BAD40062D630 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2E0B58741FB30F2100F31A9E /* Project object */;
@@ -360,6 +404,31 @@
 			remoteInfo = Photobook;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2E8705AD208E042C004B4B36 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2E8705B1208E0520004B4B36 /* Bolts.framework in Embed Frameworks */,
+				2E8705B7208E0520004B4B36 /* FBSDKCoreKit.framework in Embed Frameworks */,
+				2E8705BD208E0520004B4B36 /* OAuthSwift.framework in Embed Frameworks */,
+				2E8705B3208E0520004B4B36 /* FacebookCore.framework in Embed Frameworks */,
+				2E8705AA208E042C004B4B36 /* PhotobookSDK.framework in Embed Frameworks */,
+				2E8705BB208E0520004B4B36 /* KeychainSwift.framework in Embed Frameworks */,
+				2E8705BF208E0520004B4B36 /* PayPalMobileSDK.framework in Embed Frameworks */,
+				2E8705B9208E0520004B4B36 /* FBSDKLoginKit.framework in Embed Frameworks */,
+				2E8705C1208E0520004B4B36 /* SDWebImage.framework in Embed Frameworks */,
+				2E8705B5208E0520004B4B36 /* FacebookLogin.framework in Embed Frameworks */,
+				2E8705AF208E0520004B4B36 /* Analytics.framework in Embed Frameworks */,
+				2E8705C3208E0520004B4B36 /* Stripe.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		11DC81CB632AAC7078697EBD /* Pods-Photobook.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.release test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.release test.xcconfig"; sourceTree = "<group>"; };
@@ -420,6 +489,16 @@
 		2E7C3696202095FB008033E7 /* ReceiptLineItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptLineItemTableViewCell.swift; sourceTree = "<group>"; };
 		2E7C6F05201F4E670071E6B8 /* ReceiptTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptTableViewController.swift; sourceTree = "<group>"; };
 		2E7C822D2088B472002FF9D0 /* DiskUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskUtils.swift; sourceTree = "<group>"; };
+		2E870585208E0181004B4B36 /* SDK Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SDK Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E870587208E0182004B4B36 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2E870589208E0182004B4B36 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		2E87058C208E0182004B4B36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2E87058E208E0183004B4B36 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2E870591208E0183004B4B36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		2E870593208E0183004B4B36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2E870598208E0183004B4B36 /* SDK DemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SDK DemoUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E87059C208E0183004B4B36 /* SDK_DemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDK_DemoUITests.swift; sourceTree = "<group>"; };
+		2E87059E208E0183004B4B36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2E876E081FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPickerCoverCollectionViewCell.swift; sourceTree = "<group>"; };
 		2E876E0A1FC2FA15007CCFA2 /* ViewStorySegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewStorySegue.swift; sourceTree = "<group>"; };
 		2E8B27F62045A44800A0B403 /* ErrorMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorMessage.swift; sourceTree = "<group>"; };
@@ -574,6 +653,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2E870582208E0181004B4B36 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E8705B0208E0520004B4B36 /* Bolts.framework in Frameworks */,
+				2E8705B6208E0520004B4B36 /* FBSDKCoreKit.framework in Frameworks */,
+				2E8705BC208E0520004B4B36 /* OAuthSwift.framework in Frameworks */,
+				2E8705B2208E0520004B4B36 /* FacebookCore.framework in Frameworks */,
+				2E8705A9208E042C004B4B36 /* PhotobookSDK.framework in Frameworks */,
+				2E8705BA208E0520004B4B36 /* KeychainSwift.framework in Frameworks */,
+				2E8705BE208E0520004B4B36 /* PayPalMobileSDK.framework in Frameworks */,
+				2E8705B8208E0520004B4B36 /* FBSDKLoginKit.framework in Frameworks */,
+				2E8705C0208E0520004B4B36 /* SDWebImage.framework in Frameworks */,
+				2E8705B4208E0520004B4B36 /* FacebookLogin.framework in Frameworks */,
+				2E8705AE208E0520004B4B36 /* Analytics.framework in Frameworks */,
+				2E8705C2208E0520004B4B36 /* Stripe.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E870595208E0183004B4B36 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2ED14B952063A9CD00ED2E2C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -621,6 +726,8 @@
 				2E0B587E1FB30F2100F31A9E /* Photobook */,
 				6FB670681FB5BAD40062D630 /* PhotobookTests */,
 				2ED14B9A2063A9CD00ED2E2C /* PhotobookSDK */,
+				2E870586208E0182004B4B36 /* SDK Demo */,
+				2E87059B208E0183004B4B36 /* SDK DemoUITests */,
 				2E0B587D1FB30F2100F31A9E /* Products */,
 				41442346D0981CD5E8F4B2CA /* Pods */,
 				3BAD030253756D88DE562AFF /* Frameworks */,
@@ -633,6 +740,8 @@
 				2E0B587C1FB30F2100F31A9E /* Photobook.app */,
 				6FB670671FB5BAD40062D630 /* PhotobookTests.xctest */,
 				2ED14B992063A9CD00ED2E2C /* PhotobookSDK.framework */,
+				2E870585208E0181004B4B36 /* SDK Demo.app */,
+				2E870598208E0183004B4B36 /* SDK DemoUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -748,6 +857,28 @@
 				2E7C3692202095DC008033E7 /* ReceiptFooterTableViewCell.swift */,
 			);
 			path = Receipt;
+			sourceTree = "<group>";
+		};
+		2E870586208E0182004B4B36 /* SDK Demo */ = {
+			isa = PBXGroup;
+			children = (
+				2E870587208E0182004B4B36 /* AppDelegate.swift */,
+				2E870589208E0182004B4B36 /* ViewController.swift */,
+				2E87058B208E0182004B4B36 /* Main.storyboard */,
+				2E87058E208E0183004B4B36 /* Assets.xcassets */,
+				2E870590208E0183004B4B36 /* LaunchScreen.storyboard */,
+				2E870593208E0183004B4B36 /* Info.plist */,
+			);
+			path = "SDK Demo";
+			sourceTree = "<group>";
+		};
+		2E87059B208E0183004B4B36 /* SDK DemoUITests */ = {
+			isa = PBXGroup;
+			children = (
+				2E87059C208E0183004B4B36 /* SDK_DemoUITests.swift */,
+				2E87059E208E0183004B4B36 /* Info.plist */,
+			);
+			path = "SDK DemoUITests";
 			sourceTree = "<group>";
 		};
 		2EA24E482035AC940069B12A /* Social */ = {
@@ -1141,6 +1272,43 @@
 			productReference = 2E0B587C1FB30F2100F31A9E /* Photobook.app */;
 			productType = "com.apple.product-type.application";
 		};
+		2E870584208E0181004B4B36 /* SDK Demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2E8705A7208E0183004B4B36 /* Build configuration list for PBXNativeTarget "SDK Demo" */;
+			buildPhases = (
+				2E870581208E0181004B4B36 /* Sources */,
+				2E870582208E0181004B4B36 /* Frameworks */,
+				2E870583208E0181004B4B36 /* Resources */,
+				2E8705AD208E042C004B4B36 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2E8705AC208E042C004B4B36 /* PBXTargetDependency */,
+			);
+			name = "SDK Demo";
+			productName = "SDK Demo";
+			productReference = 2E870585208E0181004B4B36 /* SDK Demo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2E870597208E0183004B4B36 /* SDK DemoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2E8705A8208E0183004B4B36 /* Build configuration list for PBXNativeTarget "SDK DemoUITests" */;
+			buildPhases = (
+				2E870594208E0183004B4B36 /* Sources */,
+				2E870595208E0183004B4B36 /* Frameworks */,
+				2E870596208E0183004B4B36 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2E87059A208E0183004B4B36 /* PBXTargetDependency */,
+			);
+			name = "SDK DemoUITests";
+			productName = "SDK DemoUITests";
+			productReference = 2E870598208E0183004B4B36 /* SDK DemoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		2ED14B982063A9CD00ED2E2C /* PhotobookSDK */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2ED14BA22063A9CD00ED2E2C /* Build configuration list for PBXNativeTarget "PhotobookSDK" */;
@@ -1186,7 +1354,7 @@
 		2E0B58741FB30F2100F31A9E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0910;
+				LastSwiftUpdateCheck = 0930;
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = Kite.ly;
 				TargetAttributes = {
@@ -1199,6 +1367,15 @@
 								enabled = 1;
 							};
 						};
+					};
+					2E870584208E0181004B4B36 = {
+						CreatedOnToolsVersion = 9.3;
+						ProvisioningStyle = Automatic;
+					};
+					2E870597208E0183004B4B36 = {
+						CreatedOnToolsVersion = 9.3;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 2E870584208E0181004B4B36;
 					};
 					2ED14B982063A9CD00ED2E2C = {
 						CreatedOnToolsVersion = 9.2;
@@ -1227,6 +1404,8 @@
 				2E0B587B1FB30F2100F31A9E /* Photobook */,
 				6FB670661FB5BAD40062D630 /* PhotobookTests */,
 				2ED14B982063A9CD00ED2E2C /* PhotobookSDK */,
+				2E870584208E0181004B4B36 /* SDK Demo */,
+				2E870597208E0183004B4B36 /* SDK DemoUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -1247,6 +1426,23 @@
 				B99536DA202DB1B80019B1AF /* order_summary_1.json in Resources */,
 				6F4DE6511FB35B010099A97E /* LeagueGothic-Regular.otf in Resources */,
 				6FC7E88B1FC574DA00D2BCDA /* photobooks.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E870583208E0181004B4B36 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E870592208E0183004B4B36 /* LaunchScreen.storyboard in Resources */,
+				2E87058F208E0183004B4B36 /* Assets.xcassets in Resources */,
+				2E87058D208E0182004B4B36 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E870596208E0183004B4B36 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1580,6 +1776,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2E870581208E0181004B4B36 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E87058A208E0182004B4B36 /* ViewController.swift in Sources */,
+				2E870588208E0182004B4B36 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E870594208E0183004B4B36 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E87059D208E0183004B4B36 /* SDK_DemoUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2ED14B942063A9CD00ED2E2C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1754,6 +1967,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		2E87059A208E0183004B4B36 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2E870584208E0181004B4B36 /* SDK Demo */;
+			targetProxy = 2E870599208E0183004B4B36 /* PBXContainerItemProxy */;
+		};
+		2E8705AC208E042C004B4B36 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2ED14B982063A9CD00ED2E2C /* PhotobookSDK */;
+			targetProxy = 2E8705AB208E042C004B4B36 /* PBXContainerItemProxy */;
+		};
 		6FB6706D1FB5BAD40062D630 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2E0B587B1FB30F2100F31A9E /* Photobook */;
@@ -1774,6 +1997,22 @@
 			isa = PBXVariantGroup;
 			children = (
 				2E0B58891FB30F2100F31A9E /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		2E87058B208E0182004B4B36 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2E87058C208E0182004B4B36 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		2E870590208E0183004B4B36 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2E870591208E0183004B4B36 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -2126,6 +2365,166 @@
 			};
 			name = "Release Test";
 		};
+		2E87059F208E0183004B4B36 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = "SDK Demo/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ly.kite.SDK-Demo";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2E8705A0208E0183004B4B36 /* Debug Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = "SDK Demo/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ly.kite.SDK-Demo";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug Test";
+		};
+		2E8705A1208E0183004B4B36 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = "SDK Demo/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ly.kite.SDK-Demo";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2E8705A2208E0183004B4B36 /* Release Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = "SDK Demo/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ly.kite.SDK-Demo";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Release Test";
+		};
+		2E8705A3208E0183004B4B36 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				INFOPLIST_FILE = "SDK DemoUITests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ly.kite.SDK-DemoUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "SDK Demo";
+			};
+			name = Debug;
+		};
+		2E8705A4208E0183004B4B36 /* Debug Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				INFOPLIST_FILE = "SDK DemoUITests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ly.kite.SDK-DemoUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "SDK Demo";
+			};
+			name = "Debug Test";
+		};
+		2E8705A5208E0183004B4B36 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				INFOPLIST_FILE = "SDK DemoUITests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ly.kite.SDK-DemoUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "SDK Demo";
+			};
+			name = Release;
+		};
+		2E8705A6208E0183004B4B36 /* Release Test */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				INFOPLIST_FILE = "SDK DemoUITests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ly.kite.SDK-DemoUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "SDK Demo";
+			};
+			name = "Release Test";
+		};
 		2ED14B9E2063A9CD00ED2E2C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2303,6 +2702,28 @@
 				2E73DA9120236D47002471F8 /* Debug Test */,
 				2E0B58901FB30F2100F31A9E /* Release */,
 				2E73DA9420236D51002471F8 /* Release Test */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2E8705A7208E0183004B4B36 /* Build configuration list for PBXNativeTarget "SDK Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E87059F208E0183004B4B36 /* Debug */,
+				2E8705A0208E0183004B4B36 /* Debug Test */,
+				2E8705A1208E0183004B4B36 /* Release */,
+				2E8705A2208E0183004B4B36 /* Release Test */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2E8705A8208E0183004B4B36 /* Build configuration list for PBXNativeTarget "SDK DemoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E8705A3208E0183004B4B36 /* Debug */,
+				2E8705A4208E0183004B4B36 /* Debug Test */,
+				2E8705A5208E0183004B4B36 /* Release */,
+				2E8705A6208E0183004B4B36 /* Release Test */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
