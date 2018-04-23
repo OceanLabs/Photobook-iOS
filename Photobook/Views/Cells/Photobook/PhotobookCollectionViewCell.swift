@@ -71,7 +71,10 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
     }
     
     override func prepareForReuse() {
+        leftPageView.clearImage()
         leftPageView.shouldSetImage = false
+        
+        rightPageView.clearImage()
         rightPageView.shouldSetImage = false
     }
 
