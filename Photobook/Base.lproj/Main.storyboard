@@ -1331,10 +1331,10 @@
             </objects>
             <point key="canvasLocation" x="252.17391304347828" y="31.793478260869566"/>
         </scene>
-        <!--Photobook Tab Bar Controller-->
+        <!--Tab Bar Controller-->
         <scene sceneID="KNZ-RY-mmL">
             <objects>
-                <tabBarController storyboardIdentifier="TabBarController" automaticallyAdjustsScrollViewInsets="NO" id="d5b-Ic-QyB" customClass="PhotobookTabBarController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabBarController" automaticallyAdjustsScrollViewInsets="NO" id="d5b-Ic-QyB" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="EDE-ls-DB7" customClass="PhotobookTabBar" customModule="Photobook" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
