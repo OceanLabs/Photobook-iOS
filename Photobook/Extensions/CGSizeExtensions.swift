@@ -27,4 +27,9 @@ extension CGSize {
     }
     
     static func * (scalar: CGFloat, size: CGSize) -> CGSize { return size * scalar }
+    
+    static func ==~(lhs: CGSize, rhs: CGSize) -> Bool {
+        return (fabs(lhs.width - rhs.width) <= CGFloat.minPrecision) &&
+                (fabs(lhs.height - rhs.height) <= CGFloat.minPrecision)
+    }
 }
