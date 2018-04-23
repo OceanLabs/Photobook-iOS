@@ -730,6 +730,10 @@ extension PageSetupViewController: TextEditingDelegate {
         productLayout.fontType = fontType
         pageView.setupTextBox()
     }
+    
+    func shouldReactToKeyboardAppearance() -> Bool {
+        return toolbarButtons[Tool.editText.rawValue].isSelected
+    }
 }
 
 extension PageSetupViewController: PhotobookPageViewDelegate {
