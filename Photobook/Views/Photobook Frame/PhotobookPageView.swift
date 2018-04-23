@@ -241,7 +241,7 @@ class PhotobookPageView: UIView {
         }
         
         let fontType = isShowingTextPlaceholder ? .plain : (productLayout!.fontType ?? .plain)
-        var fontSize = fontType.sizeForScreenHeight()
+        var fontSize = fontType.sizeForScreenToPageRatio()
         if isShowingTextPlaceholder { fontSize *= 2.0 } // Make text larger so the placeholder can be read
         
         pageTextLabel.attributedText = fontType.attributedText(with: pageTextLabel.text!, fontSize: fontSize, fontColor: color.fontColor())
