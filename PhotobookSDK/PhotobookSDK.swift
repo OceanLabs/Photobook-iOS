@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 /// Shared manager for the photo book UI
 @objc public class PhotobookSDK: NSObject {
@@ -68,6 +69,8 @@ import UIKit
         }
         
         UIFont.loadAllFonts()
+        SDWebImageManager.shared().imageCache?.config.shouldCacheImagesInMemory = false
+        
         let navigationController = PhotobookNavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
         let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.assets = assets
