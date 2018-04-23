@@ -44,6 +44,7 @@ class LayoutUtilsTests: XCTestCase {
         }
     }
     
+    // MARK: - Net CCW cuadrant angle
     func testNextCCWCuadrantAngle() {
         let pi = CGFloat.pi
         let angles: [(CGFloat, CGFloat)] = [
@@ -64,6 +65,7 @@ class LayoutUtilsTests: XCTestCase {
         }
     }
     
+    // MARK: - Centre transform
     func testCenterTransform() {
         let transform = identity.translatedBy(x: 4.0, y: 4.0)
         let parentView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: 100.0, height: 70.0))
@@ -74,6 +76,7 @@ class LayoutUtilsTests: XCTestCase {
         XCTAssertEqual(newTransform, expectedTransform)
     }
     
+    // MARK: - Adjust transform with Recognizer
     func testAdjustTransformWithRecognizer_rotatesTransform() {
         let rotationGestureRecognizer = UIRotationGestureRecognizer()
         rotationGestureRecognizer.rotation = .pi / 6.0 // 30 degrees
@@ -93,7 +96,17 @@ class LayoutUtilsTests: XCTestCase {
         // Original scale 2 x new scale 2 = result 4
         XCTAssertEqual(newTransform.scale, 4.0, accuracy: 0.01)
     }
-    
+
+    func testAdjustTransformWithRecognizer_scaleBelowOne() {
+        let pinchGestureRecognizer = UIPinchGestureRecognizer()
+        pinchGestureRecognizer.scale = 0.7
+        
+        let newTransform = LayoutUtils.adjustTransform(initialTransform, withRecognizer: pinchGestureRecognizer, inParentView: parentView)
+        
+        // Original scale 2 x new scale 0.5 = result max Scale 3.0
+        XCTAssertEqual(newTransform.scale, 1.75, accuracy: 0.01)
+    }
+
     func testAdjustTransformWithRecognizer_maxScale() {
         let pinchGestureRecognizer = UIPinchGestureRecognizer()
         pinchGestureRecognizer.scale = 10.0
@@ -113,6 +126,12 @@ class LayoutUtilsTests: XCTestCase {
         
         // Original translation (5.0, 6.0) + new translation (4.0, 6.0) = result (9.0, 12.0)
         XCTAssertTrue(newTransform.tx == 9.0 && newTransform.ty == 12.0)
+    }
+    
+    func testAdjustTransformWithRecognizer_unrecognizedGesture() {
+        let gestureRecognizer = UIGestureRecognizer()
+        let newTransform = LayoutUtils.adjustTransform(initialTransform, withRecognizer: gestureRecognizer, inParentView: parentView)
+        XCTAssertEqual(newTransform, initialTransform)
     }
 
     func testAdjustTransformByFactorXFactorY_xIsNAN_shouldUseY() {
@@ -158,6 +177,7 @@ class LayoutUtilsTests: XCTestCase {
     let adjustContainerSize = CGSize(width: 100.0, height: 100.0)
     let adjustViewSize = CGSize(width: 150.0, height: 150.0)
 
+    // MARK: - Adjust transform for view size in container size
     func testAdjustTransformForViewSizeInContainerSize_nudgesViewLeft() {
         // Move view right and rotate it 45 degrees counterclockwise
         let initialTransform = identity.translatedBy(x: 25.0, y: 0.0).rotated(by: .pi / 4.0)
@@ -210,5 +230,35 @@ class LayoutUtilsTests: XCTestCase {
         // 2. Nudge the view to cover the parent view's top-right corner
         XCTAssertEqual(newTransform.tx, -9.15, accuracy: 0.01)
         XCTAssertEqual(newTransform.ty, -2.45, accuracy: 0.01)
+    }
+    
+    func testAdjustTransformForViewSizeInContainerSize_snapsToZero() {
+        let angles: [CGFloat] = [ 2.9, 2.0, 1.0, -2.9, -2.0, -1.0, 0.0 ]
+        
+        for (index, angle) in angles.enumerated() {
+            let initialTransform = identity.rotated(by: angle * .pi / 180.0) // Rotate 2 degrees clockwise
+            let newTransform = LayoutUtils.adjustTransform(initialTransform, forViewSize: adjustViewSize, inContainerSize: adjustContainerSize)
+            XCTAssertEqual(newTransform.angle, 0.0, "Input angle \(index + 1) should snap to zero")
+
+        }
+    }
+    
+    func testAdjustTransformForViewSizeInContainerSize_doesNotSnapToZero() {
+        let angles: [CGFloat] = [ 3.1, 363.0, -3.1, -363.0 ]
+        
+        for (index, angle) in angles.enumerated() {
+            let initialTransform = identity.rotated(by: angle * .pi / 180.0) // Rotate 2 degrees clockwise
+            let newTransform = LayoutUtils.adjustTransform(initialTransform, forViewSize: adjustViewSize, inContainerSize: adjustContainerSize)
+            XCTAssertEqual(newTransform.angle, initialTransform.angle, "Input angle \(index + 1) should not change")
+            
+        }
+    }
+    
+    func testAdjustTransformForViewSizeInContainerSize_enforcesMinimumScale() {
+        let minScale = LayoutUtils.scaleToFill(containerSize: adjustContainerSize, withSize: adjustViewSize, atAngle: 0.0)
+        
+        let initialTransform = identity.scaledBy(x: 0.1, y: 0.1)
+        let newTransform = LayoutUtils.adjustTransform(initialTransform, forViewSize: adjustViewSize, inContainerSize: adjustContainerSize)
+        XCTAssertEqual(newTransform.scale, minScale)
     }
 }
