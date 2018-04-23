@@ -91,6 +91,7 @@ class OrderSummaryViewController: UIViewController {
             asset.image(size: CGSize(width: dimensionForPage, height: dimensionForPage), loadThumbnailFirst: false, progressHandler: nil, completionHandler: { [weak welf = self] (image, error) in
                 guard let image = image else { return }
                 
+                welf?.coverSnapshotPageView.shouldSetImage = true
                 welf?.coverSnapshotPageView.setupImageBox(with: image)
                 let snapshot = welf?.coverSnapshotPageView.snapshot()
                 completion(snapshot)

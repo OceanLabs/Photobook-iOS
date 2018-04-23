@@ -117,7 +117,6 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             }
             
             productLayout = product.productLayouts[pageIndex].shallowCopy()
-            productLayout!.hasBeenEdited = true
 
             pageType = product.pageType(forLayoutIndex: pageIndex)
             

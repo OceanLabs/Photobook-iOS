@@ -34,6 +34,8 @@ class ProductLayoutAsset: Codable {
     
     var asset: Asset? {
         didSet {
+            currentImage = nil
+            currentIdentifier = nil
             fitAssetToContainer()
         }
     }
