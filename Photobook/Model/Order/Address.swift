@@ -114,6 +114,7 @@ extension Address {
     // MARK: - Saved Addresses
     
     func addToSavedAddresses() {
+        guard !Address.savedAddresses.contains(self) else { return }
         Address.savedAddresses.append(self)
         Address.saveAddresses()
     }
