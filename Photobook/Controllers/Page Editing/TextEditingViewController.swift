@@ -318,7 +318,7 @@ class TextEditingViewController: UIViewController {
     }
 
     private func setTextViewAttributes(with fontType: FontType, fontColor: UIColor) {
-        let fontSize = fontType.sizeForScreenHeight(pageView.bounds.height)
+        let fontSize = fontType.sizeForScreenToPageRatio(pageView.bounds.height / product.template.pageHeight)
         textView.attributedText = fontType.attributedText(with: textView.text, fontSize: fontSize, fontColor: fontColor)
         textView.typingAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor)
     }

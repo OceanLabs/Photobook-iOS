@@ -82,7 +82,7 @@ class PhotobookProduct: Codable {
             guard let textBox = productLayout.layout.textLayoutBox, let text = productLayout.text, text.count > 0 else { continue }
             
             let fontType = productLayout.fontType ?? .plain
-            let fontSize = fontType.sizeForScreenHeight()
+            let fontSize = fontType.sizeForScreenToPageRatio()
             
             let textFrame = textBox.rectContained(in: pageSize)
             let attributedText = fontType.attributedText(with: text, fontSize: fontSize, fontColor: .black)
