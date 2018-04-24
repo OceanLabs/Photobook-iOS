@@ -176,6 +176,11 @@ class PhotobookPageView: UIView {
     }
     
     var shouldSetImage: Bool = false
+    
+    func clearImage() {
+        assetImageView.image = nil
+    }
+    
     private func setImage(image: UIImage) {
         guard let productLayoutAsset = productLayout?.productLayoutAsset,
               let asset = productLayoutAsset.asset,

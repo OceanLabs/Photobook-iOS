@@ -65,10 +65,19 @@ import SDWebImage
     ///   - identifier: Identifier for the asset
     ///   - albumIdentifier: Identifier for the album the asset belongs to
     ///   - images: Array of sizes and associated URLs
-    @objc public init(identifier: String, albumIdentifier: String?, images: [URLAssetImage]) {
+    @objc public init(identifier: String, albumIdentifier: String? = nil, images: [URLAssetImage]) {
         self.images = images.sorted(by: { $0.size.width < $1.size.width })
         self.albumIdentifier = albumIdentifier
         self.identifier = identifier
+    }
+    
+    /// Init with only one URL
+    ///
+    /// - Parameters:
+    ///   - url: The URL of the remote image
+    ///   - size: The size of the image.
+    @objc public convenience init(_ url: URL, size: CGSize) {
+        self.init(identifier: url.absoluteString, images: [URLAssetImage(url: url, size: size)])
     }
     
     @objc public func encode(with aCoder: NSCoder) {
