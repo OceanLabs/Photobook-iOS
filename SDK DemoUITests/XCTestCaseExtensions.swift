@@ -10,16 +10,24 @@ import XCTest
 
 extension XCTestCase {
     
-    func wait(for element: XCUIElement) {
-        let exists = NSPredicate(format: "isHittable == 1")
+    func wait(_ seconds: TimeInterval) {
+        let expectation = self.expectation(description: "Waiting")
+        DispatchQueue.main.asyncAfter(deadline: .now() + seconds, execute: {
+            expectation.fulfill()
+        })
         
-        expectation(for: exists, evaluatedWith: element, handler: nil)
+        waitForExpectations(timeout: seconds + 1, handler: nil)
+    }
+    
+    func wait(for element: XCUIElement) {
+        let predicate = NSPredicate(format: "isHittable == 1")
+        
+        expectation(for: predicate, evaluatedWith: element, handler: nil)
         waitForExpectations(timeout: 60, handler: nil)
     }
     
-    func XCTAssertExists(_ element: XCUIElement) {
-        let predicate = NSPredicate(format: "isHittable == 1")
-        XCTAssertTrue(predicate.evaluate(with: element))
+    func XCTAssertIsHittable(_ element: XCUIElement) {
+        XCTAssertTrue(element.isHittable)
     }
     
 }
