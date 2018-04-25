@@ -169,7 +169,7 @@ class PhotobookAPIManager {
                 completionHandler(nil, error)
                 return
             }
-            print(coverUrl)
+            print(insideUrl)
             completionHandler([coverUrl, insideUrl], nil)
         }
     }
@@ -332,6 +332,7 @@ class PhotobookAPIManager {
                 
                 var layoutBox = [String:Any]()
                 
+                //adjust container and transform to page dimensions
                 productLayoutAsset.containerSize = imageLayoutBox.rectContained(in: CGSize(width: product.pageWidth, height: product.pageHeight)).size
                 productLayoutAsset.adjustTransform()
                 
@@ -340,9 +341,30 @@ class PhotobookAPIManager {
                 layoutBox["dimensionsPercentages"] = ["height": imageLayoutBox.rect.height, "width": imageLayoutBox.rect.width]
                 layoutBox["relativeStartPoint"] = ["x": imageLayoutBox.rect.origin.x, "y": imageLayoutBox.rect.origin.y]
                 
-                // Set the container size to 1,1 so that the transform is relativized
-                //productLayoutAsset.containerSize = CGSize(width: 1, height: 1)
-                //productLayoutAsset.adjustTransform()
+                //convert transform into css format on the backend
+                let assetAspectRatio = asset.size.width / asset.size.height
+                
+                //1. translation
+                //on web the image with scale factor 1 fills the width of the container and is aligned to the top left corner.
+                //first we calculate the offset in points to align the image center with the container center
+                let yOffset = productLayoutAsset.containerSize.height*0.5 - productLayoutAsset.containerSize.width*0.5*(1/assetAspectRatio) //offset in points to match initial origins within layout
+                
+                //match anchors
+                var transformX = productLayoutAsset.transform.tx
+                var transformY = productLayoutAsset.transform.ty + yOffset
+                
+                //2. zoom
+                //on the pdf back-end scale 1 fills the width of the container. scale 1 on ios is original image width
+                let scaledWidth = asset.size.width * productLayoutAsset.transform.scale
+                let zoom = scaledWidth/productLayoutAsset.containerSize.width
+                
+                //3. rotation
+                //straightfoward as it's just the angle
+                let rotation = atan2(productLayoutAsset.transform.b, productLayoutAsset.transform.a) * (180 / .pi)
+                
+                //convert to css percentages
+                transformX = transformX / productLayoutAsset.containerSize.width
+                transformY = transformY / (productLayoutAsset.containerSize.height*(1/assetAspectRatio))
                 
                 var containedItem = [String: Any]()
                 var picture = [String: Any]()
@@ -350,18 +372,11 @@ class PhotobookAPIManager {
                 picture["dimensions"] = ["height":asset.size.height, "width":asset.size.width]
                 picture["thumbnailUrl"] = asset.uploadUrl //mock data
                 containedItem["picture"] = picture
-                containedItem["relativeStartPoint"] = ["x": productLayoutAsset.transform.tx, "y": productLayoutAsset.transform.ty]
-                containedItem["rotation"] = atan2(productLayoutAsset.transform.b, productLayoutAsset.transform.a)
-                
-                var fillRatio = productLayoutAsset.containerSize.width / asset.size.width
-                if asset.size.height < asset.size.width {
-                    fillRatio = productLayoutAsset.containerSize.height / asset.size.height
-                }
-                let zoom = productLayoutAsset.transform.a - fillRatio
-                print("Transform.a = \(productLayoutAsset.transform.a), Fill Ratio = \(fillRatio), zoom level: \(zoom)")
-                containedItem["zoom"] = 1//1 + fillRatio - productLayoutAsset.transform.a // X & Y axes scale should be the same, use the scale for X axis
+                containedItem["relativeStartPoint"] = ["x": transformX, "y": transformY]
+                containedItem["rotation"] = rotation
+                containedItem["zoom"] = zoom // X & Y axes scale should be the same, use the scale for X axis
                 containedItem["baseWidthPercent"] = 1 //mock data
-                containedItem["flipped"] = false //mock data
+                containedItem["flipped"] = false
                 
                 layoutBox["containedItem"] = containedItem
                 
