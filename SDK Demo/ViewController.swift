@@ -17,7 +17,7 @@ class ViewController: UIViewController {
 
     @IBAction func createPhotobookWithWebPhotos(_ sender: Any) {
         var assets = [URLAsset]()
-        for imageNumber in 1...50 {
+        for imageNumber in 1...20 {
             assets.append(URLAsset(URL(string: baseImageURL+"\(imageNumber).jpg")!, size: sizes[imageNumber]!))
         }
         

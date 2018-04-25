@@ -234,20 +234,23 @@ class CheckoutViewController: UIViewController {
             case .creditCard:
                 if let card = Card.currentCard {
                     paymentMethodIconImageView.image = card.cardIcon
+                    paymentMethodTitleLabel.text = Constants.payingWithText
                 } else {
                     paymentMethodIconImageView.image = nil
+                    paymentMethodTitleLabel.text = Constants.paymentMethodText
                 }
             case .applePay:
                 paymentMethodIconImageView.image = UIImage(namedInPhotobookBundle: "apple-pay-method")
                 showDeliveryDetailsConstraint.priority = .defaultLow
                 hideDeliveryDetailsConstraint.priority = .defaultHigh
                 deliveryDetailsView.isHidden = true
+                paymentMethodTitleLabel.text = Constants.payingWithText
             case .payPal:
                 paymentMethodIconImageView.image = UIImage(namedInPhotobookBundle: "paypal-method")
+                paymentMethodTitleLabel.text = Constants.payingWithText
             }
             paymentMethodIconImageView.isHidden = false
             paymentMethodLabel.isHidden = true
-            paymentMethodTitleLabel.text = Constants.payingWithText
         }
         
         //shipping

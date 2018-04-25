@@ -71,6 +71,10 @@ import SDWebImage
         UIFont.loadAllFonts()
         SDWebImageManager.shared().imageCache?.config.shouldCacheImagesInMemory = false
         
+        if ProcessInfo.processInfo.arguments.contains("UITESTINGENVIRONMENT") {
+            OrderManager.shared.cancelProcessing {}
+        }
+        
         let navigationController = PhotobookNavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
         let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.assets = assets
