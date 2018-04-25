@@ -20,21 +20,25 @@ class Automation {
 
     func goToPhotobookReview() {
         app.buttons["Create Photobook with web photos"].tap()
+        
+        let checkoutButton = app.buttons["Checkout"]
+        testCase.wait(for: checkoutButton)
     }
     
     func goToOrderSummary() {
         goToPhotobookReview()
         
         let checkoutButton = app.buttons["Checkout"]
-        testCase.wait(for: checkoutButton)
         checkoutButton.tap()
+        
+        let continueButton = app.buttons["Continue"]
+        testCase.wait(for: continueButton)
     }
     
     func goToBasket() {
         goToOrderSummary()
         
         let continueButton = app.buttons["Continue"]
-        testCase.wait(for: continueButton)
         continueButton.tap()
     }
     
