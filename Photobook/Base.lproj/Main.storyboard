@@ -2857,6 +2857,7 @@
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qMT-Lg-lj2">
                                         <rect key="frame" x="140" y="84" width="50" height="35"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="quantityButton" label="Quantity"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="50" id="83c-sw-XwA"/>
                                             <constraint firstAttribute="height" constant="35" id="cRL-wp-TO5"/>

@@ -40,6 +40,8 @@ class Automation {
         
         let continueButton = app.buttons["Continue"]
         continueButton.tap()
+        
+        testCase.wait(for: app.buttons["payButton"])
     }
     
     func fillDeliveryDetailsFromBasket() {
