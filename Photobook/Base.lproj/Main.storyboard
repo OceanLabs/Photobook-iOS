@@ -5842,6 +5842,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     </view>
                     <size key="freeformSize" width="375" height="300"/>
                     <connections>
+                        <outlet property="contentViewBottomConstraint" destination="xx4-EJ-bc3" id="6Z5-3U-kEi"/>
                         <outlet property="contentViewHeightConstraint" destination="AL2-Ti-FC4" id="WYL-US-0fI"/>
                         <outlet property="optionPickerView" destination="eGL-DM-nQa" id="gC0-09-qG2"/>
                         <outlet property="optionTitleLabel" destination="J9a-xe-qHs" id="zco-Sc-yi9"/>
