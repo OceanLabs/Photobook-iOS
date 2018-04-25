@@ -37,7 +37,7 @@ class SDK_DemoUITests: XCTestCase {
         automation.goToBasket()
         automation.addNewCreditCardFromBasket()
         automation.fillDeliveryDetailsFromBasket()
-        automation.app/*@START_MENU_TOKEN@*/.buttons["Pay $15"]/*[[".otherElements[\"Basket\"].buttons[\"Pay $15\"]",".buttons[\"Pay $15\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        automation.app.buttons["payButton"].tap()
         
         let processingOrderStaticText = XCUIApplication().tables/*@START_MENU_TOKEN@*/.staticTexts["Processing Order"]/*[[".cells.staticTexts[\"Processing Order\"]",".staticTexts[\"Processing Order\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
         wait(for: processingOrderStaticText)
