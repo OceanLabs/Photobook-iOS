@@ -13,7 +13,7 @@ import Photos
 class OrderManagerTests: XCTestCase {
 
     var productManager: ProductManager!
-    let photosAsset = TestPhotosAsset(PHAsset(), albumIdentifier: "")
+    let photosAsset = TestPhotosAsset()
     
     override func setUp() {
         super.setUp()
@@ -44,17 +44,10 @@ class OrderManagerTests: XCTestCase {
             return
         }
         
-        guard
-            let coverLayouts = productManager.coverLayouts(for: photobookTemplate),
-            !coverLayouts.isEmpty,
-            let layouts = productManager.layouts(for: photobookTemplate),
-            !layouts.isEmpty
-            else {
-                XCTFail("ProductManager: Missing layouts for selected photobook")
-                return
+        guard let product = PhotobookProduct(template: photobookTemplate, assets: [], productManager: productManager) else {
+            XCTFail("Failed to initialise the Photobook product")
+            return
         }
-        
-        let product = PhotobookProduct(template: photobookTemplate, assets: [], coverLayouts: coverLayouts, layouts: layouts)
         productManager.currentProduct = product
         productManager.currentProduct?.productLayouts = [ProductLayout]()
         
