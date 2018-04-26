@@ -177,8 +177,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             return
         }
         
-        guard let product = PhotobookProduct(template: photobook, assets: assets) else { return }
-        ProductManager.shared.currentProduct = product
+        guard let _ = ProductManager.shared.setCurrentProduct(with: photobook, assets: assets) else { return }
         
         setupTitleView()
         

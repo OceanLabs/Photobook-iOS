@@ -34,7 +34,7 @@ class PhotobookProduct: Codable {
         case productLayouts
     }
     
-    private var productManager = ProductManager.shared
+    private unowned var productManager = ProductManager.shared
     
     private let bleed: CGFloat = 8.5
 

@@ -44,11 +44,10 @@ class OrderManagerTests: XCTestCase {
             return
         }
         
-        guard let product = PhotobookProduct(template: photobookTemplate, assets: [], productManager: productManager) else {
+        guard let product = productManager.setCurrentProduct(with: photobookTemplate, assets: []) else {
             XCTFail("Failed to initialise the Photobook product")
             return
         }
-        productManager.currentProduct = product
         productManager.currentProduct?.productLayouts = [ProductLayout]()
         
         let layoutBox = LayoutBox(id: 1, rect: CGRect(x: 0.01, y: 0.01, width: 0.5, height: 0.1))
