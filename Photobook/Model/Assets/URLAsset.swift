@@ -39,7 +39,7 @@ import SDWebImage
     }
 }
 
-/// Remote image resource that can be used in a photo book
+/// Remote image resource that can be used in a Photobook
 @objc public class URLAsset: NSObject, NSCoding, Asset {
     
     /// Unique identifier
@@ -59,10 +59,25 @@ import SDWebImage
         return images.last?.size ?? .zero
     }
     
-    @objc public init(identifier: String, albumIdentifier: String, images: [URLAssetImage]) {
+    /// Init
+    ///
+    /// - Parameters:
+    ///   - identifier: Identifier for the asset
+    ///   - albumIdentifier: Identifier for the album the asset belongs to
+    ///   - images: Array of sizes and associated URLs
+    @objc public init(identifier: String, albumIdentifier: String? = nil, images: [URLAssetImage]) {
         self.images = images.sorted(by: { $0.size.width < $1.size.width })
         self.albumIdentifier = albumIdentifier
         self.identifier = identifier
+    }
+    
+    /// Init with only one URL
+    ///
+    /// - Parameters:
+    ///   - url: The URL of the remote image
+    ///   - size: The size of the image.
+    @objc public convenience init(_ url: URL, size: CGSize) {
+        self.init(identifier: url.absoluteString, images: [URLAssetImage(url: url, size: size)])
     }
     
     @objc public func encode(with aCoder: NSCoder) {
@@ -119,8 +134,12 @@ import SDWebImage
             return
         }
         
-        SDWebImageManager.shared().loadImage(with: url, options: [], progress: nil, completed: { _, data, error, _, _, _ in
-            completionHandler(data, .jpg, error)
+        SDWebImageManager.shared().loadImage(with: url, options: [], progress: nil, completed: { image, data, error, _, _, _ in
+            var imageData = data
+            if let image = image {
+                imageData = UIImageJPEGRepresentation(image, 1)
+            }
+            completionHandler(imageData, .jpg, error)
         })
     }
 }

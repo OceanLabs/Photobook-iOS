@@ -16,31 +16,29 @@ class OrderSummaryManager {
     static let notificationDidUpdateSummary = Notification.Name("ly.kite.sdk.orderSummaryManager.didUpdateSummary")
     
     //layouts configured by previous UX
-    private var layouts:[ProductLayout] {
+    private var layouts: [ProductLayout] {
         get {
-            return ProductManager.shared.productLayouts
+            return product.productLayouts
         }
     }
     private var coverImageUrl:String?
     private var isUploadingCoverImage = false
     
-    //original product provided by previous UX
-    var product:Photobook? {
-        get {
-            return ProductManager.shared.product
-        }
-    }
-    var upsellOptions:[UpsellOption]? {
+    var upsellOptions: [UpsellOption]? {
         get {
             return ProductManager.shared.upsellOptions
         }
     }
-    var selectedUpsellOptions:Set<UpsellOption> = []
-    private(set) var summary:OrderSummary?
-    private(set) var upsoldProduct:Photobook? //product to place the order with. Reflects user's selected upsell options.
-    private var previewImageUrl:String?
+    var selectedUpsellOptions: Set<UpsellOption> = []
+    private(set) var summary: OrderSummary?
+    private(set) var upsoldProduct: PhotobookTemplate? //product to place the order with. Reflects user's selected upsell options.
+    private var previewImageUrl: String?
     
-    var coverPageSnapshotImage:UIImage?
+    var coverPageSnapshotImage: UIImage?
+    
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
     
     static let shared = OrderSummaryManager()
     

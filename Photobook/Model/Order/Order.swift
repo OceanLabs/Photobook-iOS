@@ -20,10 +20,9 @@ class Order: Codable {
     let currencyCode = Locale.current.currencyCode ?? "USD" //USD if locale unavailable
     var deliveryDetails: DeliveryDetails?
     var shippingMethod: Int?
-    var paymentMethod: PaymentMethod? = Stripe.deviceSupportsApplePay() ? .applePay : nil
-    var itemCount: Int = 1
+    var paymentMethod: PaymentMethod? = PaymentAuthorizationManager.isApplePayAvailable ? .applePay : nil
+    var products = [PhotobookProduct]()
     var promoCode: String?
-    var photobookId: String?
     var lastSubmissionDate: Date?
     var orderId: String?
     var paymentToken: String?
@@ -46,8 +45,10 @@ class Order: Codable {
         var stringHash = ""
         if let deliveryDetails = deliveryDetails { stringHash += "ad:\(deliveryDetails.hashValue)," }
         if let promoCode = promoCode { stringHash += "pc:\(promoCode)," }
-        if let productName = ProductManager.shared.product?.name { stringHash += "jb:\(productName)," }
-        stringHash += "qt:\(ProductManager.shared.productLayouts.count),"
+        
+        for product in products {
+            if let productName = product.template.name { stringHash += "jb:\(productName)," }
+        }
         
         stringHash += "up:("
         for upsell in OrderSummaryManager.shared.selectedUpsellOptions {
@@ -97,13 +98,39 @@ class Order: Codable {
         parameters["customer_phone"] = deliveryDetails?.phone
         parameters["promo_code"] = promoCode
         parameters["shipping_method"] = shippingMethod
-        parameters["jobs"] = [[
-            "template_id" : ProductManager.shared.product?.productTemplateId ?? "",
-            "multiples" : itemCount,
-            "assets": [["inside_pdf" : photobookId ?? ""]]
-            ]]
+        
+        var jobs = [[String: Any]]()
+        
+        for product in products {
+            jobs.append([
+                "template_id" : product.template.productTemplateId ?? "",
+                "multiples" : product.itemCount,
+                "assets": [["inside_pdf" : product.photobookId ?? ""]]
+                ])
+        }
+        
+        parameters["jobs"] = jobs
         
         return parameters
+    }
+    
+    func assetsToUpload() -> [Asset] {
+        var assets = [Asset]()
+        
+        for product in products {
+            let productAssets = product.assetsToUpload()
+            for asset in productAssets {
+                if !assets.contains(where: { $0.identifier == asset.identifier }) {
+                    assets.append(asset)
+                }
+            }
+        }
+        
+        return assets
+    }
+    
+    func remainingAssetsToUpload() -> [Asset] {
+        return assetsToUpload().filter({ $0.uploadUrl == nil })
     }
     
 }

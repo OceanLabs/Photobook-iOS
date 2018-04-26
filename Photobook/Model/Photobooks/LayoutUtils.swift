@@ -110,20 +110,25 @@ class LayoutUtils {
     ///
     /// - Parameters:
     ///   - transform: The current transform
-    ///   - factor: The factor to apply
+    ///   - byFactorX: The factor to apply to the X axis
+    ///   - byFactorY: The factor to apply to the Y axis
     /// - Returns: A new scaled transform
-    static func adjustTransform(_ transform: CGAffineTransform, byFactor factor: CGFloat) -> CGAffineTransform {
+    static func adjustTransform(_ transform: CGAffineTransform, byFactorX x: CGFloat, factorY y: CGFloat) -> CGAffineTransform {
+        guard !(x.isNaN && y.isNaN) else { return transform }
+        let scaleX = x.isNaN ? y : x
+        let scaleY = y.isNaN ? x : y
+        
         let angle = transform.angle
         let scale = transform.scale
         
-        var newTransform = CGAffineTransform(scaleX: scale * factor, y: scale * factor)
+        var newTransform = CGAffineTransform(scaleX: scale * scaleX, y: scale * scaleY)
         newTransform = newTransform.rotated(by: angle)
-        newTransform.tx = transform.tx * factor
-        newTransform.ty = transform.ty * factor
+        newTransform.tx = transform.tx * scaleX
+        newTransform.ty = transform.ty * scaleY
         
         return newTransform
     }
-    
+
     /// Amends a view's transform to use the centre of the parentView as reference.
     /// This can be used after rotating the view around an arbitrary anchor point to take the transform back to a valid state.
     ///
@@ -168,7 +173,7 @@ class LayoutUtils {
         var rotateTo = floor(angle / (.pi * 0.5)) * .pi * 0.5
         
         if angle ==~ rotateTo {
-            rotateTo = angle - .pi * 0.5
+            rotateTo = rotateTo - .pi * 0.5
         }
         if abs(rotateTo) < CGFloat.minPrecision {
             rotateTo = 0.0
@@ -176,17 +181,3 @@ class LayoutUtils {
         return rotateTo
     }
 }
-
-extension CGAffineTransform {
-
-    // Rotation angle
-    var angle: CGFloat {
-        return atan2(self.b, self.a)
-    }
-    
-    // Scale
-    var scale: CGFloat {
-        return sqrt(self.a * self.a + self.c * self.c)
-    }
-}
-

@@ -30,8 +30,8 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
     
     @IBOutlet private weak var photobookFrameView: PhotobookFrameView! {
         didSet {
-            photobookFrameView.coverColor = ProductManager.shared.coverColor
-            photobookFrameView.pageColor = ProductManager.shared.pageColor
+            photobookFrameView.coverColor = product.coverColor
+            photobookFrameView.pageColor = product.pageColor
         }
     }
     @IBOutlet private weak var plusButton: UIButton!
@@ -40,8 +40,8 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
     
     var leftPageView: PhotobookPageView { return photobookFrameView.leftPageView }
     var rightPageView: PhotobookPageView { return photobookFrameView.rightPageView }
-    var leftIndex: Int? { return leftPageView.pageIndex }
-    var rightIndex: Int? { return rightPageView.pageIndex }
+    var leftIndex: Int?
+    var rightIndex: Int?
     var width: CGFloat! { didSet { photobookFrameView.width = width } }
     var isVisible: Bool {
         get { return !photobookFrameView.isHidden }
@@ -65,14 +65,36 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
     var isFaded: Bool = false {
         didSet { photobookFrameView.alpha = isFaded ? interactivePageFadedAlpha : 1.0 }
     }
+    
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
+    
+    override func prepareForReuse() {
+        leftPageView.clearImage()
+        leftPageView.shouldSetImage = false
+        
+        rightPageView.clearImage()
+        rightPageView.shouldSetImage = false
+    }
 
-    func loadPages(leftIndex: Int?, rightIndex: Int?) {
+    func loadPages() {
+        leftPageView.shouldSetImage = true
+        rightPageView.shouldSetImage = true
+        
+        if let aspectRatio = product.template.aspectRatio, let leftIndex = leftIndex {
+            let isDoubleLayout = product.productLayouts[leftIndex].layout.isDoubleLayout
+            leftPageView.aspectRatio = isDoubleLayout ? aspectRatio * 2.0 : aspectRatio
+            rightPageView.aspectRatio = isDoubleLayout ? 0.0 : aspectRatio
+        }
+        photobookFrameView.layoutIfNeeded()
+        
         if let leftIndex = leftIndex {
             leftPageView.pageIndex = leftIndex
-            leftPageView.productLayout = ProductManager.shared.productLayouts[leftIndex]
-            leftPageView.bleed = ProductManager.shared.bleed(forPageSize: leftPageView.bounds.size)
+            leftPageView.productLayout = product.productLayouts[leftIndex]
+            leftPageView.bleed = product.bleed(forPageSize: leftPageView.bounds.size)
             
-            leftPageView.setupImageBox()
+            leftPageView.setupImageBox(with: leftPageView.productLayout?.productLayoutAsset?.currentImage)
             leftPageView.setupTextBox(mode: .userTextOnly)
             
             photobookFrameView.isLeftPageVisible = true
@@ -85,10 +107,10 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
         // If leftIndex == rightIndex, then it's a double-page layout
         if let rightIndex = rightIndex, leftIndex != rightIndex {
             rightPageView.pageIndex = rightIndex
-            rightPageView.productLayout = ProductManager.shared.productLayouts[rightIndex]
-            rightPageView.bleed = ProductManager.shared.bleed(forPageSize: rightPageView.bounds.size)
+            rightPageView.productLayout = product.productLayouts[rightIndex]
+            rightPageView.bleed = product.bleed(forPageSize: rightPageView.bounds.size)
             
-            rightPageView.setupImageBox()
+            rightPageView.setupImageBox(with: rightPageView.productLayout?.productLayoutAsset?.currentImage)
             rightPageView.setupTextBox(mode: .userTextOnly)
             
             photobookFrameView.isRightPageVisible = true
@@ -100,31 +122,21 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
             rightPageView.interaction = .disabled
         }
         
-        let aspectRatio = ProductManager.shared.product!.aspectRatio
-        if let aspectRatio = aspectRatio, let leftIndex = leftIndex {
-            let isDoubleLayout = ProductManager.shared.productLayouts[leftIndex].layout.isDoubleLayout
-            leftPageView.aspectRatio = isDoubleLayout ? aspectRatio * 2.0 : aspectRatio
-            rightPageView.aspectRatio = isDoubleLayout ? 0.0 : aspectRatio
-        } else {
-            leftPageView.aspectRatio = aspectRatio
-            rightPageView.aspectRatio = aspectRatio
-        }
-        
         leftPageView.delegate = self
         rightPageView.delegate = self
         
-        if photobookFrameView.coverColor != ProductManager.shared.coverColor ||
-            photobookFrameView.pageColor != ProductManager.shared.pageColor {
+        if photobookFrameView.coverColor != product.coverColor ||
+            photobookFrameView.pageColor != product.pageColor {
             
-            photobookFrameView.coverColor = ProductManager.shared.coverColor
-            photobookFrameView.pageColor = ProductManager.shared.pageColor
+            photobookFrameView.coverColor = product.coverColor
+            photobookFrameView.pageColor = product.pageColor
             photobookFrameView.resetPageColor()
         }
     }
         
     @IBAction func didTapPlus(_ sender: UIButton) {
         guard let layoutIndex = photobookFrameView.leftPageView.pageIndex ?? photobookFrameView.rightPageView.pageIndex,
-            let foldIndex = ProductManager.shared.spreadIndex(for: layoutIndex)
+            let foldIndex = product.spreadIndex(for: layoutIndex)
             else { return }
         delegate?.didTapOnPlusButton(at: foldIndex)
     }

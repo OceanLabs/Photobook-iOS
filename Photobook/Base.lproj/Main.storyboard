@@ -1311,7 +1311,7 @@
         <!--Stories-->
         <scene sceneID="CWX-gk-uYw">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="hhS-Lc-qF3" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="hhS-Lc-qF3" customClass="PhotobookNavigationController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Stories" image="Stories" selectedImage="Stories" id="2rN-mq-FR0">
                         <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="-3"/>
                     </tabBarItem>
@@ -1641,12 +1641,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="z71-M7-c2z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-511" y="1465"/>
+            <point key="canvasLocation" x="-582" y="1483"/>
         </scene>
         <!--Browse-->
         <scene sceneID="F3Q-q1-ZX1">
             <objects>
-                <navigationController storyboardIdentifier="BrowseNavigationController" id="mcv-na-BVN" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="BrowseNavigationController" id="mcv-na-BVN" customClass="PhotobookNavigationController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Browse" image="Albums" id="Nyc-tf-chR">
                         <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="-3"/>
                     </tabBarItem>
@@ -1666,10 +1666,10 @@
             </objects>
             <point key="canvasLocation" x="244" y="806"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Photobook Navigation Controller-->
         <scene sceneID="Vk2-Uq-zhi">
             <objects>
-                <navigationController id="wjj-KU-1G4" sceneMemberID="viewController">
+                <navigationController id="wjj-KU-1G4" customClass="PhotobookNavigationController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="ShZ-uO-ccj" customClass="PhotobookNavigationBar" customModule="Photobook" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1806,7 +1806,7 @@
         <scene sceneID="K2G-GY-hbo">
             <objects>
                 <tableViewController storyboardIdentifier="AlbumSearchResultsTableViewController" id="jjT-Pf-sMB" customClass="AlbumSearchResultsTableViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="6u8-Y8-Fjk">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="28" sectionFooterHeight="28" id="6u8-Y8-Fjk">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -2509,7 +2509,6 @@
                         <viewLayoutGuide key="safeArea" id="5ur-7F-Rc5"/>
                     </view>
                     <navigationItem key="navigationItem" id="gKR-NM-iRy">
-                        <barButtonItem key="backBarButtonItem" title="Back" id="MYT-DQ-dJ6"/>
                         <barButtonItem key="leftBarButtonItem" style="done" id="6qc-zf-Ccw">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="9hV-eh-P4W">
                                 <rect key="frame" x="16" y="6.5" width="59" height="31"/>
@@ -2813,6 +2812,7 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gka-ba-muo">
                                                 <rect key="frame" x="0.0" y="0.0" width="345" height="50"/>
                                                 <color key="backgroundColor" red="0.13185417652130127" green="0.52277827262878418" blue="0.96682602167129517" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="payButton"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                                 <state key="normal" title="Pay">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -3581,10 +3581,10 @@ Copyright © 2018 Kite. All right reserverd.</string>
             </objects>
             <point key="canvasLocation" x="4660.8000000000002" y="1787.4062968515743"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Photobook Navigation Controller-->
         <scene sceneID="jTb-KZ-dAJ">
             <objects>
-                <navigationController navigationBarHidden="YES" id="WZR-4z-wzI" sceneMemberID="viewController">
+                <navigationController navigationBarHidden="YES" id="WZR-4z-wzI" customClass="PhotobookNavigationController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="VZg-cd-0O7" customClass="PhotobookNavigationBar" customModule="Photobook" customModuleProvider="target">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -4314,7 +4314,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <segue destination="9J6-1w-1sY" kind="show" id="lt6-JZ-FMN"/>
+                                            <segue destination="9J6-1w-1sY" kind="show" identifier="OrderSummarySegueName" id="lt6-JZ-FMN"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -5842,6 +5842,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     </view>
                     <size key="freeformSize" width="375" height="300"/>
                     <connections>
+                        <outlet property="contentViewBottomConstraint" destination="xx4-EJ-bc3" id="6Z5-3U-kEi"/>
                         <outlet property="contentViewHeightConstraint" destination="AL2-Ti-FC4" id="WYL-US-0fI"/>
                         <outlet property="optionPickerView" destination="eGL-DM-nQa" id="gC0-09-qG2"/>
                         <outlet property="optionTitleLabel" destination="J9a-xe-qHs" id="zco-Sc-yi9"/>
@@ -5856,10 +5857,10 @@ Copyright © 2018 Kite. All right reserverd.</string>
             </objects>
             <point key="canvasLocation" x="4582" y="-104"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Photobook Navigation Controller-->
         <scene sceneID="wh3-Mz-mVO">
             <objects>
-                <navigationController storyboardIdentifier="SpineTextEditingNavigationController" automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="overFullScreen" id="9tw-R1-Syv" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="SpineTextEditingNavigationController" automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="overFullScreen" id="9tw-R1-Syv" customClass="PhotobookNavigationController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="PXF-PM-hRb" customClass="PhotobookNavigationBar" customModule="Photobook" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
@@ -5877,7 +5878,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Instagram-->
         <scene sceneID="I0K-2M-eov">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Cam-IB-Kkn" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Cam-IB-Kkn" customClass="PhotobookNavigationController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Instagram" image="Instagram" selectedImage="Instagram" id="ips-8Y-p8E">
                         <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="-3"/>
                     </tabBarItem>
@@ -5900,7 +5901,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Item-->
         <scene sceneID="clP-YU-Xki">
             <objects>
-                <navigationController storyboardIdentifier="PageSetupNavigationController" automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="overFullScreen" id="Cq6-59-xbh" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="PageSetupNavigationController" automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="overFullScreen" id="Cq6-59-xbh" customClass="PhotobookNavigationController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="O4n-MI-JUS"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="yJ7-AT-5aJ" customClass="PhotobookNavigationBar" customModule="Photobook" customModuleProvider="target">
@@ -5994,7 +5995,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Facebook-->
         <scene sceneID="nu1-Zs-hcg">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xtK-fB-QMj" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xtK-fB-QMj" customClass="PhotobookNavigationController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Facebook" image="Facebook" selectedImage="Facebook" id="e4B-vw-73n">
                         <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="-3"/>
                     </tabBarItem>

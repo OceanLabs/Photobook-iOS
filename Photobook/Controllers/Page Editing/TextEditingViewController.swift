@@ -38,6 +38,7 @@ protocol TextEditingDelegate: class {
     
     func didChangeFontType(to fontType: FontType)
     func didChangeText(to text: String?)
+    func shouldReactToKeyboardAppearance() -> Bool
     
 }
 
@@ -72,6 +73,10 @@ class TextEditingViewController: UIViewController {
     private lazy var animatableAssetImageView = UIImageView()
     private var hasAnImageLayout: Bool!
     
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -89,7 +94,7 @@ class TextEditingViewController: UIViewController {
     
     private var hasPlacedPageView = false
     @objc private func keyboardWillShow(notification: NSNotification) {
-        guard !hasPlacedPageView else { return }
+        guard !hasPlacedPageView, delegate?.shouldReactToKeyboardAppearance() ?? false else { return }
         hasPlacedPageView = true
         
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
@@ -235,7 +240,7 @@ class TextEditingViewController: UIViewController {
     private func setup() {
         // Figure out the height of the textView
         guard
-            let pageRatio = ProductManager.shared.product?.aspectRatio,
+            let pageRatio = product.template.aspectRatio,
             let textLayoutBox = productLayout?.layout.textLayoutBox
         else {
             fatalError("Text editing failed due to missing layout info.")
@@ -313,7 +318,7 @@ class TextEditingViewController: UIViewController {
     }
 
     private func setTextViewAttributes(with fontType: FontType, fontColor: UIColor) {
-        let fontSize = fontType.sizeForScreenHeight(pageView.bounds.height)
+        let fontSize = fontType.sizeForScreenToPageRatio(pageView.bounds.height / product.template.pageHeight)
         textView.attributedText = fontType.attributedText(with: textView.text, fontSize: fontSize, fontColor: fontColor)
         textView.typingAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor)
     }

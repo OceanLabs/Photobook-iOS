@@ -24,6 +24,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         APIClient.environment = .test
         #endif
         
+        PhotobookManager.setupPayments()
+        
         window?.rootViewController = PhotobookManager.rootViewControllerForCurrentState()
         
         // Force the static var to initialize so it doesn't miss any notifications
@@ -34,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
         // The application was woken up by a background task
-        ProductManager.shared.loadUserPhotobook(completionHandler)
+        _ = OrderManager.shared.loadProcessingOrder(completionHandler)
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {

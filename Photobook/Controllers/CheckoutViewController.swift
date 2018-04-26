@@ -8,7 +8,6 @@
 
 import UIKit
 import PassKit
-import Stripe
 
 class CheckoutViewController: UIViewController {
     
@@ -123,7 +122,7 @@ class CheckoutViewController: UIViewController {
         payButton.addTarget(self, action: #selector(CheckoutViewController.payButtonTapped(_:)), for: .touchUpInside)
         
         //APPLE PAY
-        if Stripe.deviceSupportsApplePay() {
+        if PaymentAuthorizationManager.isApplePayAvailable {
             setupApplePayButton()
         }
         
@@ -169,7 +168,7 @@ class CheckoutViewController: UIViewController {
         super.viewWillAppear(animated)
         
         updateViews()
-        if !OrderManager.basketOrder.hasValidCachedCost {
+        if !OrderManager.shared.basketOrder.hasValidCachedCost {
             refresh(false)
         }
     }
@@ -179,7 +178,7 @@ class CheckoutViewController: UIViewController {
             progressOverlayViewController.show(message: Constants.loadingDetailsText)
         }
         
-        OrderManager.basketOrder.updateCost { (error) in
+        OrderManager.shared.basketOrder.updateCost { (error) in
             
             if let error = error {
                 let alert = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .alert)
@@ -210,13 +209,13 @@ class CheckoutViewController: UIViewController {
     private func updateViews() {
         
         //product
-        itemTitleLabel.text = ProductManager.shared.product?.name
-        itemPriceLabel.text = OrderManager.basketOrder.cachedCost?.lineItems?.first?.formattedCost
-        itemAmountButton.setTitle("\(OrderManager.basketOrder.itemCount)", for: .normal)
+        itemTitleLabel.text = OrderManager.shared.basketOrder.products.first!.template.name
+        itemPriceLabel.text = OrderManager.shared.basketOrder.cachedCost?.lineItems?.first?.formattedCost
+        itemAmountButton.setTitle("\(OrderManager.shared.basketOrder.products.first!.itemCount)", for: .normal)
         updateItemImage()
         
         //promo code
-        if let promoDiscount = OrderManager.basketOrder.validCost?.promoDiscount {
+        if let promoDiscount = OrderManager.shared.basketOrder.validCost?.promoDiscount {
             promoCodeTextField.text = promoDiscount
             previousPromoText = promoDiscount
             promoCodeClearButton.isHidden = false
@@ -230,36 +229,39 @@ class CheckoutViewController: UIViewController {
         hideDeliveryDetailsConstraint.priority = .defaultLow
         deliveryDetailsView.isHidden = false
         paymentMethodIconImageView.image = nil
-        if let paymentMethod = OrderManager.basketOrder.paymentMethod {
+        if let paymentMethod = OrderManager.shared.basketOrder.paymentMethod {
             switch paymentMethod {
             case .creditCard:
                 if let card = Card.currentCard {
                     paymentMethodIconImageView.image = card.cardIcon
+                    paymentMethodTitleLabel.text = Constants.payingWithText
                 } else {
                     paymentMethodIconImageView.image = nil
+                    paymentMethodTitleLabel.text = Constants.paymentMethodText
                 }
             case .applePay:
                 paymentMethodIconImageView.image = UIImage(namedInPhotobookBundle: "apple-pay-method")
                 showDeliveryDetailsConstraint.priority = .defaultLow
                 hideDeliveryDetailsConstraint.priority = .defaultHigh
                 deliveryDetailsView.isHidden = true
+                paymentMethodTitleLabel.text = Constants.payingWithText
             case .payPal:
                 paymentMethodIconImageView.image = UIImage(namedInPhotobookBundle: "paypal-method")
+                paymentMethodTitleLabel.text = Constants.payingWithText
             }
             paymentMethodIconImageView.isHidden = false
             paymentMethodLabel.isHidden = true
-            paymentMethodTitleLabel.text = Constants.payingWithText
         }
         
         //shipping
         shippingMethodLabel.text = ""
-        if let validCost = OrderManager.basketOrder.validCost, let selectedShippingMethod = validCost.shippingMethod(id: OrderManager.basketOrder.shippingMethod) {
+        if let validCost = OrderManager.shared.basketOrder.validCost, let selectedShippingMethod = validCost.shippingMethod(id: OrderManager.shared.basketOrder.shippingMethod) {
             shippingMethodLabel.text = selectedShippingMethod.shippingCostFormatted
         }
         
         //address
         var addressString = ""
-        if let address = OrderManager.basketOrder.deliveryDetails?.address, let line1 = address.line1 {
+        if let address = OrderManager.shared.basketOrder.deliveryDetails?.address, let line1 = address.line1 {
             
             addressString = line1
             if let line2 = address.line2, !line2.isEmpty { addressString = addressString + ", " + line2 }
@@ -286,12 +288,12 @@ class CheckoutViewController: UIViewController {
                                               value: "Pay",
                                               comment: "Text on pay button. This is followed by the amount to pay")
         
-        if let selectedMethod = OrderManager.basketOrder.shippingMethod, let cost = OrderManager.basketOrder.validCost, let shippingMethod = cost.shippingMethod(id: selectedMethod) {
+        if let selectedMethod = OrderManager.shared.basketOrder.shippingMethod, let cost = OrderManager.shared.basketOrder.validCost, let shippingMethod = cost.shippingMethod(id: selectedMethod) {
             payButtonText = payButtonText + " \(shippingMethod.totalCostFormatted)"
         }
         payButton.setTitle(payButtonText, for: .normal)
         
-        let paymentMethod = OrderManager.basketOrder.paymentMethod
+        let paymentMethod = OrderManager.shared.basketOrder.paymentMethod
         
         if paymentMethod == .applePay {
             applePayButton?.isHidden = false
@@ -309,7 +311,7 @@ class CheckoutViewController: UIViewController {
     }
     
     private func paymentMethodIsValid() -> Bool {
-        guard OrderManager.basketOrder.orderIsFree || (OrderManager.basketOrder.paymentMethod != nil && (OrderManager.basketOrder.paymentMethod != .creditCard || Card.currentCard != nil)) else {
+        guard OrderManager.shared.basketOrder.orderIsFree || (OrderManager.shared.basketOrder.paymentMethod != nil && (OrderManager.shared.basketOrder.paymentMethod != .creditCard || Card.currentCard != nil)) else {
             indicatePaymentMethodError()
             return false
         }
@@ -326,7 +328,7 @@ class CheckoutViewController: UIViewController {
     }
     
     private func deliveryDetailsAreValid() -> Bool {
-        guard (!OrderManager.basketOrder.orderIsFree && OrderManager.basketOrder.paymentMethod == .applePay) || (OrderManager.basketOrder.deliveryDetails?.address?.isValid ?? false) else {
+        guard (!OrderManager.shared.basketOrder.orderIsFree && OrderManager.shared.basketOrder.paymentMethod == .applePay) || (OrderManager.shared.basketOrder.deliveryDetails?.address?.isValid ?? false) else {
             indicateDeliveryDetailsError()
             return false
         }
@@ -346,7 +348,7 @@ class CheckoutViewController: UIViewController {
     
     private func checkPromoCode() {
         //promo code
-        if let invalidReason = OrderManager.basketOrder.validCost?.promoCodeInvalidReason {
+        if let invalidReason = OrderManager.shared.basketOrder.validCost?.promoCodeInvalidReason {
             promoCodeTextField.attributedPlaceholder = NSAttributedString(string: invalidReason, attributes: [NSAttributedStringKey.foregroundColor: Constants.detailsLabelColorRequired])
             promoCodeTextField.text = nil
             promoCodeTextField.placeholder = invalidReason
@@ -370,8 +372,8 @@ class CheckoutViewController: UIViewController {
                 promoCodeAccessoryConstraint.priority = .defaultLow
                 promoCodeNormalConstraint.priority = .defaultHigh
             }
-            if OrderManager.basketOrder.promoCode != nil { //it wasn't empty before
-                OrderManager.basketOrder.promoCode = nil
+            if OrderManager.shared.basketOrder.promoCode != nil { //it wasn't empty before
+                OrderManager.shared.basketOrder.promoCode = nil
                 refresh(false)
             }
             return
@@ -379,7 +381,7 @@ class CheckoutViewController: UIViewController {
         
         //textfield is not empty
         if previousPromoText != text { //and it has changed
-            OrderManager.basketOrder.promoCode = text
+            OrderManager.shared.basketOrder.promoCode = text
             promoCodeAccessoryConstraint.priority = .defaultHigh
             promoCodeNormalConstraint.priority = .defaultLow
             promoCodeActivityIndicator.startAnimating()
@@ -390,8 +392,8 @@ class CheckoutViewController: UIViewController {
     }
     
     private func showReceipt() {
-        OrderManager.basketOrder.lastSubmissionDate = Date()
-        NotificationCenter.default.post(name: OrdersNotificationName.orderWasCreated, object: OrderManager.basketOrder)
+        OrderManager.shared.basketOrder.lastSubmissionDate = Date()
+        NotificationCenter.default.post(name: OrdersNotificationName.orderWasCreated, object: OrderManager.shared.basketOrder)
         
         OrderManager.shared.saveBasketOrder()
         
@@ -407,7 +409,7 @@ class CheckoutViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == Constants.receiptSegueName {
-            (segue.destination as? ReceiptTableViewController)?.order = OrderManager.basketOrder
+            (segue.destination as? ReceiptTableViewController)?.order = OrderManager.shared.basketOrder
         }
     }
     
@@ -440,7 +442,7 @@ class CheckoutViewController: UIViewController {
         amountPickerViewController.optionName = NSLocalizedString("Controllers/CheckoutViewController/ItemAmountPickerTitle",
                                                                               value: "Select amount",
                                                                               comment: "The title displayed on the picker view for the amount of basket items")
-        amountPickerViewController.selectedValue = OrderManager.basketOrder.itemCount
+        amountPickerViewController.selectedValue = OrderManager.shared.basketOrder.products.first!.itemCount
         amountPickerViewController.minimum = 1
         amountPickerViewController.maximum = 10
         amountPickerViewController.delegate = self
@@ -451,9 +453,9 @@ class CheckoutViewController: UIViewController {
     @IBAction func payButtonTapped(_ sender: UIButton) {
         guard detailFieldsAreValid() else { return }
         
-        guard let cost = OrderManager.basketOrder.validCost else {
+        guard let cost = OrderManager.shared.basketOrder.validCost else {
             progressOverlayViewController.show(message: Constants.loadingPaymentText)
-            OrderManager.basketOrder.updateCost { [weak welf = self] (error: Error?) in
+            OrderManager.shared.basketOrder.updateCost { [weak welf = self] (error: Error?) in
                 guard error == nil else {
                     let genericError = NSLocalizedString("UpdateCostError", value: "An error occurred while updating our products.\nPlease try again later.", comment: "Generic error when retrieving the cost for the products in the basket")
                     
@@ -470,17 +472,17 @@ class CheckoutViewController: UIViewController {
             return
         }
             
-        if let selectedMethod = OrderManager.basketOrder.shippingMethod, let shippingMethod = cost.shippingMethod(id: selectedMethod), shippingMethod.totalCost == 0.0 {
+        if let selectedMethod = OrderManager.shared.basketOrder.shippingMethod, let shippingMethod = cost.shippingMethod(id: selectedMethod), shippingMethod.totalCost == 0.0 {
             // The user must have a promo code which reduces this order cost to nothing, lucky user :)
-            OrderManager.basketOrder.paymentToken = nil
+            OrderManager.shared.basketOrder.paymentToken = nil
             showReceipt()
         }
         else{
-            if OrderManager.basketOrder.paymentMethod == .applePay{
+            if OrderManager.shared.basketOrder.paymentMethod == .applePay{
                 modalPresentationDismissedGroup.enter()
             }
             
-            guard let paymentMethod = OrderManager.basketOrder.paymentMethod else { return }
+            guard let paymentMethod = OrderManager.shared.basketOrder.paymentMethod else { return }
             
             progressOverlayViewController.show(message: Constants.loadingPaymentText)
             paymentManager.authorizePayment(cost: cost, method: paymentMethod)
@@ -559,7 +561,7 @@ extension CheckoutViewController: UITextFieldDelegate {
 
 extension CheckoutViewController: AmountPickerDelegate {
     func amountPickerDidSelectValue(_ value: Int) {
-        OrderManager.basketOrder.itemCount = value
+        OrderManager.shared.basketOrder.products.first!.itemCount = value
         itemAmountButton.setTitle("\(value)", for: .normal)
     }
 }
@@ -581,13 +583,13 @@ extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
             return
         }
         
-        OrderManager.basketOrder.paymentToken = token
+        OrderManager.shared.basketOrder.paymentToken = token
         
         showReceipt()
     }
     
     func modalPresentationDidFinish() {
-        OrderManager.basketOrder.updateCost { [weak welf = self] (error: Error?) in
+        OrderManager.shared.basketOrder.updateCost { [weak welf = self] (error: Error?) in
             guard welf != nil else { return }
             
             welf?.modalPresentationDismissedGroup.leave()

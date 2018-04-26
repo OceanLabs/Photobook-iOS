@@ -10,10 +10,7 @@ import UIKit
 
 class KiteAPIClient {
     
-    private struct Constants {
-        // TODO: Replace with real API keys
-        static let apiKey = APIClient.environment == .test ? "78b798ff366815c833dfa848654aba43b71a883a" : ""
-    }
+    var apiKey: String?
     
     private struct Endpoints {
         static let endpointVersion = "v4.0"
@@ -24,7 +21,7 @@ class KiteAPIClient {
     
     private var kiteHeaders: [String: String] {
         return [
-            "Authorization": "ApiKey \(Constants.apiKey):",
+            "Authorization": "ApiKey \(apiKey ?? ""):",
             "X-App-Bundle-Id": Bundle.main.bundleIdentifier ?? "",
             "X-App-Name": Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? Bundle.main.object(forInfoDictionaryKey: kCFBundleNameKey as String) as? String ?? "",
             "X-App-Version": Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "",
@@ -33,6 +30,10 @@ class KiteAPIClient {
     }
     
     func submitOrder(parameters: [String: Any], completionHandler: @escaping (_ orderId: String?, _ error: ErrorMessage?) -> Void) {
+        guard apiKey != nil else {
+            fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
+        }
+        
         APIClient.shared.post(context: .kite, endpoint: Endpoints.orderSubmission, parameters: parameters, headers: kiteHeaders, completion: { response, error in
             let orderId = (response as? [String: Any])?["print_order_id"] as? String
             

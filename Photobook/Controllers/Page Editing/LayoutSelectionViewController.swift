@@ -29,7 +29,7 @@ class LayoutSelectionViewController: UIViewController {
             collectionView.backgroundColor = .clear
             
             // Adapt the size of the cells to the book aspect ratio
-            let aspectRatio = ProductManager.shared.product!.aspectRatio!
+            let aspectRatio = product.template.aspectRatio!
             let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
             flowLayout.itemSize = CGSize(width: aspectRatio * flowLayout.itemSize.height + Constants.photobookSideMargin, height: flowLayout.itemSize.height)
         }
@@ -61,7 +61,7 @@ class LayoutSelectionViewController: UIViewController {
             if pageType == .left || pageType == .right {
                 let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
                 let oppositeIndex = pageIndex + (pageType == .left ? 1 : -1)
-                let oppositeLayout = ProductManager.shared.productLayouts[oppositeIndex]
+                let oppositeLayout = product.productLayouts[oppositeIndex]
                 
                 guard let oppositeAsset = oppositeLayout.asset else { return }
                 
@@ -92,6 +92,10 @@ class LayoutSelectionViewController: UIViewController {
     }
     var isEditingDoubleLayout = false
     weak var delegate: LayoutSelectionDelegate?
+    
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
 }
 
 extension LayoutSelectionViewController: UICollectionViewDataSource {

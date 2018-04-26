@@ -41,7 +41,7 @@ import Foundation
         return paragraphStyle.copy() as! NSParagraphStyle
     }
     
-    private func photobookFontSize(isSpineText: Bool) -> CGFloat {
+    private func photobookFontSize() -> CGFloat {
         switch self {
         case .plain: return 8.0
         case .classic: return 11.0
@@ -78,14 +78,13 @@ import Foundation
         return NSAttributedString(string: text, attributes: attributes)
     }
     
-    /// Font size for the specified page height on screen in relation to the original book size in points
+    /// Font size for the specified screen to page height ratio
     ///
     /// - Parameters:
-    ///   - screenHeight: The height of the page on screen
-    ///   - isSpineText: Whether the text will show on the spine of the book
-    /// - Returns: The scaled font size. If screenHeight is not provided, it returns the original font size.
-    func sizeForScreenHeight(_ screenHeight: CGFloat? = nil, isSpineText: Bool = false) -> CGFloat {
-        let photobookToOnScreenScale = screenHeight != nil ? screenHeight! / ProductManager.shared.product!.pageHeight : 1.0
-        return photobookFontSize(isSpineText: isSpineText) * photobookToOnScreenScale
+    ///   - screenToPageRatio: The relation between screen height and page height: i.e. screen / page
+    /// - Returns: The scaled font size. If a ratio is not provided, it returns the original font size.
+    func sizeForScreenToPageRatio(_ screenToPageRatio: CGFloat? = nil) -> CGFloat {
+        let photobookToOnScreenScale = screenToPageRatio != nil ? screenToPageRatio! : 1.0
+        return photobookFontSize() * photobookToOnScreenScale
     }
 }

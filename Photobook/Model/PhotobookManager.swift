@@ -18,47 +18,47 @@ class PhotobookManager: NSObject {
         case facebook
     }
     
+    static func setupPayments() {
+        PaymentAuthorizationManager.applePayPayTo = "Kite.ly (via HD Photobooks)"
+        PaymentAuthorizationManager.applePayMerchantId = "merchant.ly.kite.sdk"
+        KiteAPIClient.shared.apiKey = "78b798ff366815c833dfa848654aba43b71a883a"
+    }
+    
     static func rootViewControllerForCurrentState() -> UIViewController {
-        let tabBarController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
-        let isProcessingOrder = OrderProcessingManager.shared.isProcessingOrder
+        let isProcessingOrder = OrderManager.shared.isProcessingOrder
         
         if IntroViewController.userHasDismissed && !isProcessingOrder {
+            let tabBarController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
             configureTabBarController(tabBarController)
             return tabBarController
         }
         
-        let rootNavigationController = UINavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
-        rootNavigationController.isNavigationBarHidden = true
+        let rootNavigationController = PhotobookNavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
         if #available(iOS 11.0, *) {
             // Large titles on nav vc containing other nav vcs causes issues
             rootNavigationController.navigationBar.prefersLargeTitles = false
         }
         
         if !IntroViewController.userHasDismissed {
+            rootNavigationController.isNavigationBarHidden = true
             let introViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "IntroViewController") as! IntroViewController
-            introViewController.dismissClosure = {
-                self.configureTabBarController(tabBarController)
-                introViewController.proceedToTabBarController()
-            }
             rootNavigationController.viewControllers = [introViewController]
             
         } else if isProcessingOrder {
             // Show receipt screen to prevent user from ordering another photobook
             let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
-            receiptViewController.order = OrderManager.shared.loadBasketOrder()
-            receiptViewController.dismissClosure = {
-                self.configureTabBarController(tabBarController)
-                rootNavigationController.isNavigationBarHidden = true
-                receiptViewController.proceedToTabBarController()
+            receiptViewController.order = OrderManager.shared.processingOrder
+            receiptViewController.dismissClosure = { (tabBarController) in
+                guard let tabBarController = tabBarController else { return }
+                configureTabBarController(tabBarController)
             }
-            rootNavigationController.isNavigationBarHidden = false
             rootNavigationController.viewControllers = [receiptViewController]
         }
         
         return rootNavigationController
     }
     
-    private static func configureTabBarController(_ tabBarController: UITabBarController) {
+    static func configureTabBarController(_ tabBarController: UITabBarController) {
         
         // Browse
         // Set the albumManager to the AlbumsCollectionViewController

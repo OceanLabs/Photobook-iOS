@@ -34,4 +34,22 @@ class LayoutTests: XCTestCase {
         let layoutBox = Layout.parse(layoutDictionary)
         XCTAssertNil(layoutBox, "Parse: Should return nil if category is missing")
     }
+    
+    func testEquality_shouldBeEqual() {
+        let layout1 = Layout(id: 1, category: "Category1", imageLayoutBox: nil, textLayoutBox: nil, isDoubleLayout: false)
+        let layout2 = Layout(id: 1, category: "Category1", imageLayoutBox: nil, textLayoutBox: nil, isDoubleLayout: false)
+        XCTAssertEqual(layout1, layout2)
+    }
+    
+    func testEquality_shouldNotBeEqual_id() {
+        let layout1 = Layout(id: 1, category: "Category1", imageLayoutBox: nil, textLayoutBox: nil, isDoubleLayout: false)
+        let layout2 = Layout(id: 2, category: "Category1", imageLayoutBox: nil, textLayoutBox: nil, isDoubleLayout: false)
+        XCTAssertNotEqual(layout1, layout2)
+    }
+
+    func testEquality_shouldNotBeEqual_category() {
+        let layout1 = Layout(id: 1, category: "Category1", imageLayoutBox: nil, textLayoutBox: nil, isDoubleLayout: false)
+        let layout2 = Layout(id: 1, category: "Category2", imageLayoutBox: nil, textLayoutBox: nil, isDoubleLayout: false)
+        XCTAssertNotEqual(layout1, layout2)
+    }
 }

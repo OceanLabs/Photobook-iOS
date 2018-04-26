@@ -1,5 +1,5 @@
 //
-//  Photobook.swift
+//  PhotobookTemplate.swift
 //  Photobook
 //
 //  Created by Jaime Landazuri on 17/11/2017.
@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 // Defines the characteristics of a photobook / product
-class Photobook: Codable {
+class PhotobookTemplate: Codable {
     var id: Int
     var name: String!
     var productTemplateId: String!
@@ -42,7 +42,7 @@ class Photobook: Codable {
     }
 
     // Parses a photobook dictionary.
-    static func parse(_ dictionary: [String: AnyObject]) -> Photobook? {
+    static func parse(_ dictionary: [String: AnyObject]) -> PhotobookTemplate? {
         
         guard
             let id = dictionary["id"] as? Int,
@@ -55,6 +55,6 @@ class Photobook: Codable {
             let layouts = dictionary["layouts"] as? [Int], !layouts.isEmpty
         else { return nil }
         
-        return Photobook(id: id, name: name, productTemplateId: productTemplateId, pageHeight: pageHeight, spineTextRatio: spineTextRatio, aspectRatio: aspectRatio, coverLayouts: coverLayouts, layouts: layouts)
+        return PhotobookTemplate(id: id, name: name, productTemplateId: productTemplateId, pageHeight: pageHeight, spineTextRatio: spineTextRatio, aspectRatio: aspectRatio, coverLayouts: coverLayouts, layouts: layouts)
     }    
 }

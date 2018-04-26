@@ -80,8 +80,12 @@ class PhotobookPageView: UIView {
     
     @IBOutlet private var aspectRatioConstraint: NSLayoutConstraint!
     
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
+    
     override func layoutSubviews() {
-        setupImageBox(with: currentImage)
+        setupImageBox(with: productLayout?.productLayoutAsset?.currentImage)
         adjustTextLabel()
         setupGestures()
     }
@@ -123,33 +127,27 @@ class PhotobookPageView: UIView {
         setupTextBox()
     }
     
-    private var currentIdentifier: String?
     private var containerView: UIView! {
         return bleedAssetContainerView != nil ? bleedAssetContainerView! : assetContainerView!
     }
-    var currentImage: UIImage?
     
     func setupImageBox(with assetImage: UIImage? = nil, animated: Bool = true, loadThumbnailFirst: Bool = true) {
         guard let imageBox = productLayout?.layout.imageLayoutBox else {
             assetContainerView.alpha = 0.0
             return
         }
-        
+
+        // Avoid recalculating transforms with intermediate heights, e.g. when UICollectionViewCells are still determining their height
+        let finalBounds = bounds.width > 0 && (aspectRatio ?? 0.0) > 0.0 ? CGSize(width: bounds.width, height: bounds.width / aspectRatio!) : bounds.size
         assetContainerView.alpha = 1.0
-        assetContainerView.frame = imageBox.rectContained(in: bounds.size)
+        assetContainerView.frame = imageBox.rectContained(in: finalBounds)
         if bleedAssetContainerView != nil {
             bleedAssetContainerView.frame = imageBox.bleedRect(in: assetContainerView.bounds.size, withBleed: bleed)
         }
         setImagePlaceholder()
         
-        guard let index = pageIndex, let asset = productLayout?.productLayoutAsset?.asset else {
+        guard let index = pageIndex, let asset = productLayout?.asset else {
             assetImageView.image = nil
-            return
-        }
-
-        // Avoid reloading image if not necessary
-        if currentIdentifier != nil && asset.identifier == currentIdentifier {
-            setImage(image: currentImage!)
             return
         }
 
@@ -162,21 +160,32 @@ class PhotobookPageView: UIView {
         if productLayout!.hasBeenEdited { size = 3.0 * size }
         
         asset.image(size: size, loadThumbnailFirst: loadThumbnailFirst, progressHandler: nil, completionHandler: { [weak welf = self] (image, _) in
-            guard welf?.pageIndex == index, let image = image else { return }
-            welf?.setImage(image: image)
+            guard welf?.pageIndex == index, let image = image, let productLayoutAsset = welf?.productLayout?.productLayoutAsset else { return }
             
-            welf?.currentIdentifier = asset.identifier
-
+            if productLayoutAsset.currentImage == nil || (asset.identifier == productLayoutAsset.currentIdentifier && productLayoutAsset.currentImage!.size.width <= image.size.width) {
+                productLayoutAsset.currentImage = image
+            }
+            productLayoutAsset.currentIdentifier = asset.identifier
+            
+            welf?.setImage(image: productLayoutAsset.currentImage!)
+            
             UIView.animate(withDuration: animated ? 0.1 : 0.0) {
                 welf?.assetImageView.alpha = 1.0
             }
         })
     }
     
-    func setImage(image: UIImage) {
-        guard let asset = productLayout?.productLayoutAsset?.asset else { return }
-
-        currentImage = image
+    var shouldSetImage: Bool = false
+    
+    func clearImage() {
+        assetImageView.image = nil
+    }
+    
+    private func setImage(image: UIImage) {
+        guard let productLayoutAsset = productLayout?.productLayoutAsset,
+              let asset = productLayoutAsset.asset,
+              shouldSetImage
+            else { return }
         
         assetImageView.transform = .identity
         assetImageView.frame = CGRect(x: 0.0, y: 0.0, width: asset.size.width, height: asset.size.height)
@@ -224,8 +233,8 @@ class PhotobookPageView: UIView {
         
         let finalFrame = textBox.rectContained(in: bounds.size)
         
-        let originalWidth = ProductManager.shared.product!.pageWidth!
-        let originalHeight = ProductManager.shared.product!.pageHeight!
+        let originalWidth = product.template.pageWidth!
+        let originalHeight = product.template.pageHeight!
         
         pageTextLabel.transform = .identity
         pageTextLabel.frame = CGRect(x: finalFrame.minX, y: finalFrame.minY, width: originalWidth * textBox.rect.width, height: originalHeight * textBox.rect.height)
@@ -237,7 +246,7 @@ class PhotobookPageView: UIView {
         }
         
         let fontType = isShowingTextPlaceholder ? .plain : (productLayout!.fontType ?? .plain)
-        var fontSize = fontType.sizeForScreenHeight()
+        var fontSize = fontType.sizeForScreenToPageRatio()
         if isShowingTextPlaceholder { fontSize *= 2.0 } // Make text larger so the placeholder can be read
         
         pageTextLabel.attributedText = fontType.attributedText(with: pageTextLabel.text!, fontSize: fontSize, fontColor: color.fontColor())

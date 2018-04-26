@@ -34,6 +34,10 @@ class OrderSummaryViewController: UIViewController {
         return ProgressOverlayViewController.progressOverlay(parent: self)
     }()
     
+    private var product: PhotobookProduct! {
+        return ProductManager.shared.currentProduct
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -49,6 +53,14 @@ class OrderSummaryViewController: UIViewController {
         takeCoverSnapshot { (image) in
             OrderSummaryManager.shared.coverPageSnapshotImage = image
             OrderSummaryManager.shared.refresh()
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "OrderSummarySegueName" {
+            
+            // Add current item to the basket
+            OrderManager.shared.basketOrder.products = [self.product] //We currently only support one item at a time
         }
     }
     
@@ -69,16 +81,17 @@ class OrderSummaryViewController: UIViewController {
         
         coverSnapshotPageView.pageIndex = 0
         coverSnapshotPageView.backgroundColor = .clear
-        coverSnapshotPageView.frame.size = CGSize(width: dimensionForPage, height: dimensionForPage / ProductManager.shared.product!.aspectRatio)
-        coverSnapshotPageView.productLayout = ProductManager.shared.productLayouts.first
+        coverSnapshotPageView.frame.size = CGSize(width: dimensionForPage, height: dimensionForPage / product.template.aspectRatio)
+        coverSnapshotPageView.productLayout = product.productLayouts.first
         
-        coverSnapshotPageView.color = ProductManager.shared.coverColor
+        coverSnapshotPageView.color = product.coverColor
         coverSnapshotPageView.setupTextBox(mode: .userTextOnly)
         
-        if let asset = ProductManager.shared.productLayouts.first?.asset {
+        if let asset = product.productLayouts.first?.asset {
             asset.image(size: CGSize(width: dimensionForPage, height: dimensionForPage), loadThumbnailFirst: false, progressHandler: nil, completionHandler: { [weak welf = self] (image, error) in
                 guard let image = image else { return }
                 
+                welf?.coverSnapshotPageView.shouldSetImage = true
                 welf?.coverSnapshotPageView.setupImageBox(with: image)
                 let snapshot = welf?.coverSnapshotPageView.snapshot()
                 completion(snapshot)

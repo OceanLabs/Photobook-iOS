@@ -6,7 +6,6 @@
 //  Copyright © 2017 Kite.ly. All rights reserved.
 //
 
-import Foundation
 import UIKit
 import Photos
 
@@ -20,28 +19,32 @@ class ProductLayoutAsset: Codable {
     
     var containerSize: CGSize! {
         didSet {
-            if !shouldFitAsset && oldValue != nil {
-                let relativeScale: CGFloat
-                let relativeWidth = containerSize.width / oldValue.width
-                if !relativeWidth.isNaN && oldValue.width > 0.0 && containerSize.width >= containerSize.height {
-                    relativeScale = relativeWidth
-                } else {
-                    let relativeHeight = containerSize.height / oldValue.height
-                    relativeScale = relativeHeight
-                }
-                transform = LayoutUtils.adjustTransform(transform, byFactor: relativeScale)
-                adjustTransform()
+            guard !shouldFitAsset && oldValue != nil else {
+                fitAssetToContainer()
                 return
-            }            
-            fitAssetToContainer()
+            }
+
+            let relativeWidth = containerSize.width / oldValue.width
+            let relativeHeight = containerSize.height / oldValue.height
+
+            transform = LayoutUtils.adjustTransform(transform, byFactorX: relativeWidth, factorY: relativeHeight)
+            adjustTransform()
         }
     }
     
     var asset: Asset? {
         didSet {
+            currentImage = nil
+            currentIdentifier = nil
             fitAssetToContainer()
         }
     }
+
+    /// Identifier for the asset linked to currentImage
+    var currentIdentifier: String?
+    
+    /// Already loaded image resource
+    var currentImage: UIImage?
     
     enum CodingKeys: String, CodingKey {
         case transform, containerSize, asset
@@ -80,7 +83,7 @@ class ProductLayoutAsset: Codable {
     }
     
     func adjustTransform() {
-        guard let asset = asset else { return }
+        guard let asset = asset, let containerSize = containerSize else { return }
         
         transform = LayoutUtils.adjustTransform(transform, forViewSize: asset.size, inContainerSize: containerSize)
     }
@@ -98,6 +101,8 @@ class ProductLayoutAsset: Codable {
         aLayoutAsset.asset = asset
         aLayoutAsset.containerSize = containerSize
         aLayoutAsset.transform = transform
+        aLayoutAsset.currentImage = currentImage
+        aLayoutAsset.currentIdentifier = currentIdentifier
         return aLayoutAsset
     }
 }
