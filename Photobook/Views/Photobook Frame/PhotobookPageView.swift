@@ -132,14 +132,14 @@ class PhotobookPageView: UIView {
     }
     
     func setupImageBox(with assetImage: UIImage? = nil, animated: Bool = true, loadThumbnailFirst: Bool = true) {
-        guard let imageBox = productLayout?.layout.imageLayoutBox else {
+        
+        // Avoid recalculating transforms with intermediate heights, e.g. when UICollectionViewCells are still determining their height
+        let finalBounds = bounds.width > 0 && (aspectRatio ?? 0.0) > 0.0 ? CGSize(width: bounds.width, height: bounds.width / aspectRatio!) : bounds.size
+        guard let imageBox = productLayout?.layout.imageLayoutBox,
+                finalBounds.width > 0.0 && finalBounds.height > 0.0 else {
             assetContainerView.alpha = 0.0
             return
         }
-
-        // Avoid recalculating transforms with intermediate heights, e.g. when UICollectionViewCells are still determining their height
-        let finalBounds = bounds.width > 0 && (aspectRatio ?? 0.0) > 0.0 ? CGSize(width: bounds.width, height: bounds.width / aspectRatio!) : bounds.size
-        guard finalBounds.width > 0.0 && finalBounds.height > 0.0 else { return }
 
         assetContainerView.alpha = 1.0
         assetContainerView.frame = imageBox.rectContained(in: finalBounds)
