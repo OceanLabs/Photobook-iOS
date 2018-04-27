@@ -41,7 +41,6 @@ class PhotobookProduct: Codable {
     private var currentPortraitLayout = 0
     private var currentLandscapeLayout = 0
     
-    // Current photobook
     var template: PhotobookTemplate
     var productUpsellOptions: [UpsellOption]? //TODO: Get this from the initial-data endpoint
     var spineText: String?
