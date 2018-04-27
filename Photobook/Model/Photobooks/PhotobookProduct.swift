@@ -29,9 +29,7 @@ enum ProductColor: String, Codable {
 class PhotobookProduct: Codable {
     
     private enum CodingKeys: String, CodingKey {
-        case template
-        case photobookId
-        case productLayouts
+        case template, photobookId, productLayouts, coverColor, pageColor, spineText, spineFontType, productUpsellOptions, itemCount
     }
     
     private unowned var productManager = ProductManager.shared
