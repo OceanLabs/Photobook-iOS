@@ -8,7 +8,7 @@
 
 import UIKit
 
-infix operator ==~
+infix operator ==~: ComparisonPrecedence
 
 // Utils for CGFloat
 extension CGFloat {
