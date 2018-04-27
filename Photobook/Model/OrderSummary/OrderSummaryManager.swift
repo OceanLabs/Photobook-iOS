@@ -56,13 +56,12 @@ class OrderSummaryManager {
         fetchProductDetails()
     }
     
-    func selectUpsellOption(_ option:UpsellOption) {
-        selectedUpsellOptions.insert(option)
-        refresh()
-    }
-    
-    func deselectUpsellOption(_ option:UpsellOption) {
-        selectedUpsellOptions.remove(option)
+    func toggleUpsellOption(_ option:UpsellOption) {
+        if isUpsellOptionSelected(option) {
+            selectedUpsellOptions.remove(option)
+        } else {
+            selectedUpsellOptions.insert(option)
+        }
         refresh()
     }
     
