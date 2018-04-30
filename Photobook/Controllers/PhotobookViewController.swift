@@ -177,17 +177,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             return
         }
         
-        guard
-            let coverLayouts = ProductManager.shared.coverLayouts(for: photobook),
-            !coverLayouts.isEmpty,
-            let layouts = ProductManager.shared.layouts(for: photobook),
-            !layouts.isEmpty
-            else {
-                print("ProductManager: Missing layouts for selected photobook")
-                return
-        }
-        
-        ProductManager.shared.currentProduct = PhotobookProduct(template: photobook, assets: assets, coverLayouts: coverLayouts, layouts: layouts)
+        guard let _ = ProductManager.shared.setCurrentProduct(with: photobook, assets: assets) else { return }
         
         setupTitleView()
         

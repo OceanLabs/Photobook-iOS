@@ -11,10 +11,16 @@ import Photos
 
 // Photos asset subclass with stubs to be used in testing
 class TestPhotosAsset: PhotosAsset {
-    override var size: CGSize { return CGSize(width: 3000.0, height: 2000.0) }
-    override init(_ asset: PHAsset, albumIdentifier: String?) {
-        super.init(asset, albumIdentifier: albumIdentifier)
+    private var stubSize = CGSize(width: 3000.0, height: 2000.0)
+    var height: CGFloat = 2000.0
+    
+    override var size: CGSize { return stubSize }
+    init(_ asset: PHAsset = PHAsset(), size: CGSize? = nil) {
+        super.init(asset, albumIdentifier: "album")
         identifier = "id"
+        if let size = size {
+            stubSize = size
+        }
     }
         
     required init?(coder aDecoder: NSCoder) {
