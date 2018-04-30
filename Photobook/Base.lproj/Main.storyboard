@@ -2565,6 +2565,7 @@
                                         <subviews>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XZ1-hM-Xzz">
                                                 <rect key="frame" x="128" y="0.0" width="232" height="45"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="promoCodeTextField"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="alphabet" returnKeyType="done"/>
                                                 <connections>
