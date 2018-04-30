@@ -63,6 +63,8 @@ class ReceiptTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        (navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(.clear)
+        
         Analytics.shared.trackScreenViewed(.receipt)
         
         navigationItem.leftBarButtonItem = UIBarButtonItem()

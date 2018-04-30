@@ -56,6 +56,11 @@ class OrderSummaryViewController: UIViewController {
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        (navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(.white)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "OrderSummarySegueName" {
             
