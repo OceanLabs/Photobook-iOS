@@ -36,6 +36,25 @@ extension SDK_DemoUITests {
         XCTAssert(newTextFieldValue!.contains("Invalid code"), "Invalid code messsage not shown")
     }
     
+    func testAddressRequired() {
+        automation.goToBasket()
+        automation.addNewCreditCardFromBasket()
+        
+        let addressEntryLabel = automation.app.staticTexts["addressEntryLabel"]
+        XCTAssertFalse(addressEntryLabel.exists, "We should be showing nothing at this point")
+        
+        let payButton = automation.app.buttons["payButton"]
+        payButton.tap()
+        
+        XCTAssertIsHittable(payButton, "Moved to another screen when we should have stayed on the basket screen")
+        
+        XCTAssertEqual(addressEntryLabel.label, "Required", "We didn't show the user that delivery details are required")
+        
+        automation.fillDeliveryDetailsFromBasket()
+        
+        XCTAssertTrue(addressEntryLabel.label.contains("Fiesta Blvd 2, 11111, "), "We didn't show the preview of the delivery details")
+    }
+    
     
     
 }
