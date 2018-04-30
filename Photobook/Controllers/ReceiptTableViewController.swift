@@ -94,6 +94,15 @@ class ReceiptTableViewController: UITableViewController {
                 return
             }
             
+            // Check if there are pending uploads for the current order
+            OrderManager.shared.hasPendingUploads { [weak welf = self] (pendingTasks) in
+                if !pendingTasks {
+                    welf?.state = .error
+                    welf?.lastProcessingError = .upload
+                    welf?.tableView.reloadData()
+                }
+            }
+            
         } else {
             //start processing
             OrderManager.shared.startProcessing(order: order)
@@ -125,7 +134,7 @@ class ReceiptTableViewController: UITableViewController {
             if let lastProcessingError = lastProcessingError {
                 switch lastProcessingError {
                 case .upload:
-                    OrderManager.shared.startProcessing(order: order)
+                    OrderManager.shared.uploadAssets()
                     self.state = .uploading
                 case .pdf, .submission:
                     OrderManager.shared.finishOrder()
@@ -364,15 +373,15 @@ class ReceiptTableViewController: UITableViewController {
             case .payment:
                 state = .paymentFailed
                 userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitlePaymentFailed", value: "Payment Failed", comment: "title of a notification notfifying about failed photobook payment")
-                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyPaymentFailed", value: "Update your payment method to finish photobook checkout", comment: "body of a notification notfifying about failed photobook payment")
+                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyPaymentFailed", value: "Update your payment method to finish photobook checkout", comment: "body of a notification notifying about failed photobook payment")
             case .cancelled:
                 state = .cancelled
                 userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitleCancelled", value: "Photobook Cancelled", comment: "title of a notification notfifying about failed photobook that had to be cancelled")
-                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyCancelled", value: "Something went wrong and we couldn't process your photbook", comment: "body of a notification notfifying about failed photobook that had to be cancelled")
+                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyCancelled", value: "Something went wrong and we couldn't process your photobook", comment: "body of a notification notifying about failed photobook that had to be cancelled")
             default:
                 state = .error
                 userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitleProcessingFailed", value: "Couldn't Finish Photobook", comment: "title of a notification notfifying about failed photobook processing")
-                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyProcessingFailed", value: "Something went wrong and your photobook couldn't be sent to our servers", comment: "body of a notification notfifying about failed photobook processing")
+                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyProcessingFailed", value: "Something went wrong and your photobook couldn't be sent to our servers", comment: "body of a notification notifying about failed photobook processing")
             }
             lastProcessingError = error
         }
