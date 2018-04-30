@@ -4376,7 +4376,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         <accessibility key="accessibilityConfiguration" identifier="Image"/>
                                         <constraints>
                                             <constraint firstAttribute="height" priority="250" constant="260" id="5Jn-7B-03h"/>
-                                            <constraint firstAttribute="width" constant="280" id="ZRt-NH-R55"/>
+                                            <constraint firstAttribute="width" priority="750" constant="280" id="ZRt-NH-R55"/>
                                         </constraints>
                                     </imageView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="auP-wg-78f">
@@ -4415,6 +4415,8 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <accessibility key="accessibilityConfiguration" identifier="EmptyScreen"/>
                         <constraints>
+                            <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="XzE-ZX-e4b" secondAttribute="trailing" id="FFC-jo-MeJ"/>
+                            <constraint firstItem="XzE-ZX-e4b" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="yRL-eG-Tt2" secondAttribute="leadingMargin" id="LzZ-HA-Nb2"/>
                             <constraint firstItem="enA-kY-qmI" firstAttribute="centerY" secondItem="yRL-eG-Tt2" secondAttribute="centerY" id="O67-gZ-wpO"/>
                             <constraint firstItem="enA-kY-qmI" firstAttribute="leading" secondItem="yRL-eG-Tt2" secondAttribute="leadingMargin" constant="10" id="PYe-hO-Al0"/>
                             <constraint firstItem="enA-kY-qmI" firstAttribute="centerX" secondItem="yRL-eG-Tt2" secondAttribute="centerX" id="nDf-qb-3fs"/>
