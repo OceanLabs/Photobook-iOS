@@ -40,6 +40,11 @@ extension SDK_DemoUITests {
         automation.goToBasket()
         automation.addNewCreditCardFromBasket()
         
+        let paymentMethodIconImageView = automation.app.images["paymentMethodIcon"]
+        let paymentMethodIconImageViewValue = paymentMethodIconImageView.value as? String
+        XCTAssertNotNil(paymentMethodIconImageViewValue)
+        XCTAssertEqual(paymentMethodIconImageViewValue, "Visa")
+        
         let addressEntryLabel = automation.app.staticTexts["addressEntryLabel"]
         XCTAssertFalse(addressEntryLabel.exists, "We should be showing nothing at this point")
         
