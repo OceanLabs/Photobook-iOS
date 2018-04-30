@@ -17,15 +17,17 @@ enum OrderProcessingError: Error {
     case server(code: Int, message: String)
 }
 
+protocol OrderProcessingDelegate: class {
+    func orderDidComplete(error: OrderProcessingError?)
+    func uploadStatusDidUpdate()
+    func orderWillFinish()
+}
+
+extension OrderProcessingDelegate {
+    func orderDidComplete() { orderDidComplete(error: nil) }
+}
+
 class OrderManager {
-    
-    struct NotificationName {
-        static let completed = Notification.Name("ly.kite.sdk.orderManager.completed")
-        static let failed = Notification.Name("ly.kite.sdk.orderManager.failed")
-        static let pendingUploadStatusUpdated = Notification.Name("ly.kite.sdk.orderManager.pendingUploadStatusUpdated")
-        static let willFinishOrder = Notification.Name("ly.kite.sdk.orderManager.willFinishOrder")
-        static let finishedPhotobookCreation = Notification.Name("ly.kite.sdk.orderManager.FinishedPhotobookCreation")
-    }
     
     private struct Storage {
         static let photobookDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!.appending("/Photobook/")
@@ -35,6 +37,7 @@ class OrderManager {
     
     private lazy var apiManager = PhotobookAPIManager()
     private lazy var apiClient = APIClient.shared
+    weak var orderProcessingDelegate: OrderProcessingDelegate?
     
     lazy var basketOrder: Order = {
         guard let order = loadOrder(from: Storage.basketOrderBackupFile) else {
@@ -218,7 +221,7 @@ class OrderManager {
     
     func finishOrder() {
         
-        NotificationCenter.default.post(name: NotificationName.willFinishOrder, object: self)
+        orderProcessingDelegate?.orderWillFinish()
         
         // 1 - Create PDF
         apiManager.createPhotobookPdf { [weak welf = self] (urls, error) in
@@ -233,7 +236,7 @@ class OrderManager {
             guard let urls = urls else {
                 // Failure - PDF
                 Analytics.shared.trackError(.pdfCreation)
-                NotificationCenter.default.post(name: NotificationName.failed, object: welf, userInfo: ["error": OrderProcessingError.pdf])
+                welf?.orderProcessingDelegate?.orderDidComplete(error: .pdf)
                 return
             }
             
@@ -250,7 +253,7 @@ class OrderManager {
                 if errorMessage != nil {
                     // Failure - Submission
                     Analytics.shared.trackError(.orderSubmission)
-                    NotificationCenter.default.post(name: NotificationName.failed, object: welf, userInfo: ["error": OrderProcessingError.submission])
+                    welf?.orderProcessingDelegate?.orderDidComplete(error: .submission)
                     return
                 }
                 
@@ -267,19 +270,19 @@ class OrderManager {
                     if errorMessage != nil {
                         // Failure - Payment
                         Analytics.shared.trackError(.payment)
-                        NotificationCenter.default.post(name: NotificationName.failed, object: welf, userInfo: ["error": OrderProcessingError.payment])
+                        welf?.orderProcessingDelegate?.orderDidComplete(error: .payment)
                         return
                     }
                     
                     // Success
                     welf?.processingOrder = nil
-                    NotificationCenter.default.post(name: NotificationName.completed, object: self)
+                    welf?.orderProcessingDelegate?.orderDidComplete()
                 })
             })
         }
     }
     
-    private func pollOrderSuccess(completion: @escaping (_ errorMessage:ErrorMessage?) -> Void) {
+    private func pollOrderSuccess(completion: @escaping (_ errorMessage: ErrorMessage?) -> Void) {
         //TODO: poll order success and provide option to change payment method if fails
         completion(nil)
     }
@@ -329,7 +332,7 @@ class OrderManager {
         let referenceId = reference.suffix(reference.count - PhotobookAPIManager.imageUploadIdentifierPrefix.count)
         
         let assets = order.assetsToUpload().filter({ $0.identifier == referenceId })
-        guard let firstAsset = assets.first else {
+        guard assets.first != nil else {
             didFailUpload(PhotobookAPIError.missingPhotobookInfo)
             return
         }
@@ -339,20 +342,17 @@ class OrderManager {
             asset.uploadUrl = url
         }
         
-        let remainingAssets = order.remainingAssetsToUpload()
-        
-        let info: [String: Any] = ["asset": firstAsset, "pending": remainingAssets.count]
-        NotificationCenter.default.post(name: NotificationName.pendingUploadStatusUpdated, object: info)
+        orderProcessingDelegate?.uploadStatusDidUpdate()
         saveProcessingOrder()
         
-        if remainingAssets.isEmpty {
+        if order.remainingAssetsToUpload().isEmpty {
             Analytics.shared.trackAction(.uploadSuccessful)
             finishOrder()
         }
     }
     
     private func didFailUpload(_ error: Error) {
-        guard let order = processingOrder else { return }
+        guard processingOrder != nil else { return }
         
         Analytics.shared.trackError(.imageUpload)
         
@@ -360,19 +360,19 @@ class OrderManager {
             switch error {
             case .couldNotSaveTempImageData:
                 Analytics.shared.trackError(.diskError)
-                let info = [ "pending": order.remainingAssetsToUpload().count ]
-                NotificationCenter.default.post(name: NotificationName.pendingUploadStatusUpdated, object: info)
-                NotificationCenter.default.post(name: NotificationName.failed, object: self, userInfo: ["error": OrderProcessingError.upload])
+
+                orderProcessingDelegate?.uploadStatusDidUpdate()
+                orderProcessingDelegate?.orderDidComplete(error: .upload)
             case .missingPhotobookInfo, .couldNotBuildCreationParameters:
                 // Not resolvable
                 Analytics.shared.trackError(.photobookInfo)
                 cancelProcessing() {
-                    NotificationCenter.default.post(name: NotificationName.failed, object: self, userInfo: ["error": OrderProcessingError.cancelled])
+                    self.orderProcessingDelegate?.orderDidComplete(error: .cancelled)
                 }
             }
         } else if let _ = error as? APIClientError {
             // Connection / server errors or parsing error
-            NotificationCenter.default.post(name: NotificationName.failed, object: self, userInfo: ["error": OrderProcessingError.upload])
+            orderProcessingDelegate?.orderDidComplete(error: .upload)
         }
     }
 }
