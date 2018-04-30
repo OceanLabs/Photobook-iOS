@@ -3309,7 +3309,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="230"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xc0-UV-1wk">
+                                        <view contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="Xc0-UV-1wk">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="230"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kvL-rV-b3C">
@@ -3319,11 +3319,34 @@
                                                         <constraint firstAttribute="height" constant="1" id="Mj5-G8-86t"/>
                                                     </constraints>
                                                 </view>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DPa-vP-Po0">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tfj-5p-Wbv">
+                                                    <rect key="frame" x="215" y="22" width="152.5" height="160"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ORDER NUMBER" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BY5-g7-Mdn">
+                                                            <rect key="frame" x="8" y="123" width="114" height="17"/>
+                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#82639" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qOB-Nd-uRD">
+                                                            <rect key="frame" x="8" y="143" width="52" height="17"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstItem="BY5-g7-Mdn" firstAttribute="leading" secondItem="Tfj-5p-Wbv" secondAttribute="leading" constant="8" id="PFk-nO-h2R"/>
+                                                        <constraint firstItem="qOB-Nd-uRD" firstAttribute="leading" secondItem="BY5-g7-Mdn" secondAttribute="leading" id="RAn-i9-3SN"/>
+                                                        <constraint firstItem="qOB-Nd-uRD" firstAttribute="top" secondItem="BY5-g7-Mdn" secondAttribute="bottom" constant="3" id="fA5-YO-ELW"/>
+                                                    </constraints>
+                                                </view>
+                                                <view contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="DPa-vP-Po0">
                                                     <rect key="frame" x="43" y="22" width="152.5" height="160"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="SHIPPING ADDRESS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lku-4W-wR0">
-                                                            <rect key="frame" x="0.0" y="0.0" width="140" height="17"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="SHIPPING ADDRESS" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lku-4W-wR0">
+                                                            <rect key="frame" x="0.0" y="0.0" width="139.5" height="17"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -3339,13 +3362,13 @@ United Kingdom</string>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="SHIPPING METHOD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rrq-Tu-d4Y">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="SHIPPING METHOD" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rrq-Tu-d4Y">
                                                             <rect key="frame" x="0.0" y="123" width="134.5" height="17"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Lorem Ipsum" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="99D-Eb-VKk">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Lorem Ipsum" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="99D-Eb-VKk">
                                                             <rect key="frame" x="0.0" y="143" width="83.5" height="17"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <nil key="textColor"/>
@@ -3363,29 +3386,6 @@ United Kingdom</string>
                                                         <constraint firstItem="0qf-Zl-tHB" firstAttribute="top" secondItem="Lku-4W-wR0" secondAttribute="bottom" constant="3" id="q1R-Hk-v8z"/>
                                                         <constraint firstItem="Rrq-Tu-d4Y" firstAttribute="leading" secondItem="0qf-Zl-tHB" secondAttribute="leading" id="wwM-iO-tQZ"/>
                                                         <constraint firstItem="0qf-Zl-tHB" firstAttribute="leading" secondItem="Lku-4W-wR0" secondAttribute="leading" id="xeU-Zc-oMd"/>
-                                                    </constraints>
-                                                </view>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tfj-5p-Wbv">
-                                                    <rect key="frame" x="215.5" y="22" width="152.5" height="160"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ORDER NUMBER" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BY5-g7-Mdn">
-                                                            <rect key="frame" x="8" y="123" width="114" height="17"/>
-                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#82639" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qOB-Nd-uRD">
-                                                            <rect key="frame" x="8" y="143" width="52" height="17"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <constraints>
-                                                        <constraint firstItem="BY5-g7-Mdn" firstAttribute="leading" secondItem="Tfj-5p-Wbv" secondAttribute="leading" constant="8" id="PFk-nO-h2R"/>
-                                                        <constraint firstItem="qOB-Nd-uRD" firstAttribute="leading" secondItem="BY5-g7-Mdn" secondAttribute="leading" id="RAn-i9-3SN"/>
-                                                        <constraint firstItem="qOB-Nd-uRD" firstAttribute="top" secondItem="BY5-g7-Mdn" secondAttribute="bottom" constant="3" id="fA5-YO-ELW"/>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pij-tH-xuJ">
@@ -3410,7 +3410,6 @@ United Kingdom</string>
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Lku-4W-wR0" secondAttribute="trailing" constant="5" id="STc-DJ-ODV"/>
                                                 <constraint firstItem="pij-tH-xuJ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="DPa-vP-Po0" secondAttribute="bottom" constant="23" id="WCg-mB-xg6"/>
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="qOB-Nd-uRD" secondAttribute="trailing" constant="5" id="cXH-NO-R1k"/>
-                                                <constraint firstAttribute="height" constant="230" id="cb3-DZ-Ita"/>
                                                 <constraint firstAttribute="bottom" secondItem="pij-tH-xuJ" secondAttribute="bottom" constant="24" id="eQH-4G-k3m"/>
                                                 <constraint firstAttribute="trailing" secondItem="kvL-rV-b3C" secondAttribute="trailing" constant="20" id="icP-63-hM6"/>
                                                 <constraint firstItem="kvL-rV-b3C" firstAttribute="top" secondItem="Xc0-UV-1wk" secondAttribute="top" id="jlb-0C-7K4"/>
