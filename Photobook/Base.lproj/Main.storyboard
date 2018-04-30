@@ -4102,7 +4102,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                 </connections>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ukX-eg-wn4">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="587"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="g0z-sj-ddc">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="260"/>
@@ -4332,8 +4332,8 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <constraints>
                             <constraint firstItem="ukX-eg-wn4" firstAttribute="trailing" secondItem="ikh-vJ-eCs" secondAttribute="trailing" id="4RF-pB-ErJ"/>
                             <constraint firstItem="ukX-eg-wn4" firstAttribute="top" secondItem="MKm-aN-ue6" secondAttribute="top" id="B0B-0y-nhg"/>
+                            <constraint firstItem="TNh-ZD-JQz" firstAttribute="top" secondItem="ukX-eg-wn4" secondAttribute="bottom" id="EFp-9L-I9o"/>
                             <constraint firstItem="TNh-ZD-JQz" firstAttribute="leading" secondItem="ikh-vJ-eCs" secondAttribute="leading" id="GqX-KT-svw"/>
-                            <constraint firstItem="ukX-eg-wn4" firstAttribute="bottom" secondItem="ikh-vJ-eCs" secondAttribute="bottom" id="dNe-1S-xGD"/>
                             <constraint firstItem="TNh-ZD-JQz" firstAttribute="trailing" secondItem="ikh-vJ-eCs" secondAttribute="trailing" id="jME-bc-08B"/>
                             <constraint firstItem="ukX-eg-wn4" firstAttribute="leading" secondItem="ikh-vJ-eCs" secondAttribute="leading" id="vma-KB-TQf"/>
                             <constraint firstItem="ikh-vJ-eCs" firstAttribute="bottom" secondItem="TNh-ZD-JQz" secondAttribute="bottom" id="xlL-lc-h8y"/>
@@ -4354,7 +4354,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AmM-zD-PVQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2980" y="61"/>
+            <point key="canvasLocation" x="2980" y="60.719640179910051"/>
         </scene>
         <!--Empty Screen View Controller-->
         <scene sceneID="ij0-dd-Rvf">
