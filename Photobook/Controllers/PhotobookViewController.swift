@@ -307,11 +307,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBAction private func didTapCheckout(_ sender: Any) {
         guard draggingView == nil else { return }
         
-        let vc = storyboard?.instantiateViewController(withIdentifier: "ReceiptTableViewController")
-        self.navigationController?.pushViewController(vc!, animated: true)
-        
-        return
-        
         let goToCheckout = {
             let orderSummaryViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
             self.navigationController?.pushViewController(orderSummaryViewController, animated: true)

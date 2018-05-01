@@ -115,8 +115,8 @@ class PhotobookAPIManager {
     /// Note that those get generated asynchronously on the server and when the server returns 200 the process might still fail, affecting the placement of orders using them
     ///
     /// - Parameter completionHandler: Closure to be called with PDF URLs if successful, or an error if it fails
-    func createPhotobookPdf(completionHandler: @escaping (_ urls: [String]?, _ error: Error?) -> Void) {
-        apiClient.post(context: .photobook, endpoint: "ios/generate_pdf", parameters: photobookPDFParameters()) { (response, error) in
+    func createPdf(withPhotobook photobook:PhotobookProduct, completionHandler: @escaping (_ urls: [String]?, _ error: Error?) -> Void) {
+        apiClient.post(context: .photobook, endpoint: "ios/generate_pdf", parameters: photobook.pdfParameters()) { (response, error) in
             guard let response = response as? [String:Any], let coverUrl = response["coverUrl"] as? String, let insideUrl = response["insideUrl"] as? String else {
                 completionHandler(nil, error)
                 return

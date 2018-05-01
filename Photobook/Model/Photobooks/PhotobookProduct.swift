@@ -369,44 +369,170 @@ class PhotobookProduct: Codable {
         return bleed * scaleFactor
     }
     
-    func photobookParameters() -> [String: Any]? {
+    func pdfParameters() -> [String: Any]? {
         
-        guard let photobookId = photobookId else { return nil }
-        
-        // TODO: confirm schema
         var photobook = [String: Any]()
         
+        //Pages
         var pages = [[String: Any]]()
         for productLayout in productLayouts {
             var page = [String: Any]()
             
+            var layoutBoxes = [[String:Any]]()
+            
+            //image layout box
             if let asset = productLayout.asset,
                 let imageLayoutBox = productLayout.layout.imageLayoutBox,
                 let productLayoutAsset = productLayout.productLayoutAsset {
                 
-                page["contentType"] = "image"
-                page["dimensionsPercentages"] = ["height": imageLayoutBox.rect.height, "width": imageLayoutBox.rect.width]
-                page["relativeStartPoint"] = ["x": imageLayoutBox.rect.origin.x, "y": imageLayoutBox.rect.origin.y]
+                var layoutBox = [String:Any]()
                 
-                // Set the container size to 1,1 so that the transform is relativized
-                productLayoutAsset.containerSize = CGSize(width: 1, height: 1)
+                //adjust container and transform to page dimensions
+                productLayoutAsset.containerSize = imageLayoutBox.rectContained(in: CGSize(width: template.pageWidth, height: template.pageHeight)).size
                 productLayoutAsset.adjustTransform()
+                
+                layoutBox["contentType"] = "image"
+                layoutBox["isDoubleLayout"] = productLayout.layout.isDoubleLayout
+                layoutBox["dimensionsPercentages"] = ["height": imageLayoutBox.rect.height, "width": imageLayoutBox.rect.width]
+                layoutBox["relativeStartPoint"] = ["x": imageLayoutBox.rect.origin.x, "y": imageLayoutBox.rect.origin.y]
+                
+                //convert transform into css format on the backend
+                let assetAspectRatio = asset.size.width / asset.size.height
+                
+                //1. translation
+                //on web the image with scale factor 1 fills the width of the container and is aligned to the top left corner.
+                //first we calculate the offset in points to align the image center with the container center
+                let yOffset = productLayoutAsset.containerSize.height*0.5 - productLayoutAsset.containerSize.width*0.5*(1/assetAspectRatio) //offset in points to match initial origins within layout
+                
+                //match anchors
+                var transformX = productLayoutAsset.transform.tx
+                var transformY = productLayoutAsset.transform.ty + yOffset
+                
+                //2. zoom
+                //on the pdf back-end scale 1 fills the width of the container. scale 1 on ios is original image width
+                let scaledWidth = asset.size.width * productLayoutAsset.transform.scale
+                let zoom = scaledWidth/productLayoutAsset.containerSize.width
+                
+                //3. rotation
+                //straightfoward as it's just the angle
+                let rotation = atan2(productLayoutAsset.transform.b, productLayoutAsset.transform.a) * (180 / .pi)
+                
+                //convert to css percentages
+                transformX = transformX / productLayoutAsset.containerSize.width
+                transformY = transformY / (productLayoutAsset.containerSize.height*(1/assetAspectRatio))
                 
                 var containedItem = [String: Any]()
                 var picture = [String: Any]()
                 picture["url"] = asset.uploadUrl
-                picture["relativeStartPoint"] = ["x": productLayoutAsset.transform.tx, "y": productLayoutAsset.transform.ty]
-                picture["rotation"] = productLayoutAsset.transform.angle
-                picture["zoom"] = productLayoutAsset.transform.scale
-                
+                picture["dimensions"] = ["height":asset.size.height, "width":asset.size.width]
+                picture["thumbnailUrl"] = asset.uploadUrl //mock data
                 containedItem["picture"] = picture
-                page["containedItem"] = containedItem
+                containedItem["relativeStartPoint"] = ["x": transformX, "y": transformY]
+                containedItem["rotation"] = rotation
+                containedItem["zoom"] = zoom // X & Y axes scale should be the same, use the scale for X axis
+                containedItem["baseWidthPercent"] = 1 //mock data
+                containedItem["flipped"] = false
                 
+                layoutBox["containedItem"] = containedItem
+                
+                layoutBoxes.append(layoutBox)
             }
+            
+            //text layout box
+            if let text = productLayout.text,
+                let textLayoutBox = productLayout.layout.textLayoutBox,
+                let productLayoutText = productLayout.productLayoutText {
+                
+                var layoutBox = [String:Any]()
+                
+                //adjust container and transform to page dimensions
+                productLayoutText.containerSize = textLayoutBox.rectContained(in: CGSize(width: template.pageWidth, height: template.pageHeight)).size
+                
+                layoutBox["contentType"] = "text"
+                layoutBox["isDoubleLayout"] = productLayout.layout.isDoubleLayout
+                layoutBox["dimensionsPercentages"] = ["height": textLayoutBox.rect.height, "width": textLayoutBox.rect.width]
+                layoutBox["relativeStartPoint"] = ["x": textLayoutBox.rect.origin.x, "y": textLayoutBox.rect.origin.y]
+                
+                var containedItem = [String: Any]()
+                var font = [String: Any]()
+                font["fontFamily"] = productLayoutText.fontType.apiFontFamily
+                font["fontSizePx"] = productLayoutText.fontType.apiPhotobookFontSizePx()
+                font["fontSize"] = "\(productLayoutText.fontType.photobookFontSize())pt"
+                font["fontWeight"] = productLayoutText.fontType.apiPhotobookFontWeight()
+                font["lineHeight"] = productLayoutText.fontType.apiPhotobookLineHeight()
+                containedItem["font"] = font
+                containedItem["text"] = text
+                containedItem["color"] = pageColor.fontColor().hex
+                
+                layoutBox["containedItem"] = containedItem
+                
+                layoutBoxes.append(layoutBox)
+            }
+            
+            page["layoutBoxes"] = layoutBoxes
             pages.append(page)
         }
+        
         photobook["pages"] = pages
-        photobook["pdfId"] = photobookId
+        
+        //product
+        
+        var productVariant = [String:Any]()
+        
+        productVariant["id"] = template.id
+        productVariant["name"] = template.name
+        productVariant["templateId"] = template.productTemplateId
+        productVariant["pageWidth"] =  template.pageWidth*2
+        productVariant["pageHeight"] = template.pageHeight
+        //TODO: replace mock data
+        productVariant["cost"] = ["EUR":"25.00", "USD":"30.00", "GBP":"23.00"]
+        productVariant["costPerPage"] = ["EUR":"1.30", "USD":"1.50", "GBP":"1.00"]
+        productVariant["description"] = "description"
+        productVariant["finishTypes"] = [["name":"gloss", "cost":["EUR":"1.30", "USD":"1.50", "GBP":"1.00"]]]
+        productVariant["minPages"] = 20
+        productVariant["maxPages"] = 70
+        productVariant["coverSize"] = ["mm":["width":template.pageWidth, "height":template.pageHeight]]
+        productVariant["size"] = ["mm":["width":template.pageWidth*2, "height":template.pageHeight]] //TODO: handle double size on backend // ["mm":["width":300, "height":300]]
+        productVariant["pageStep"] = 0
+        //productVariant["bleed"] = ["px":ProductManager.shared.bleed(forPageSize: CGSize(width: product.pageWidth, height: product.pageHeight)), "mm":ProductManager.shared.bleed(forPageSize: CGSize(width: product.pageWidth, height: product.pageHeight))]
+        productVariant["bleed"] = ["px":0, "mm":0]
+        productVariant["spine"] = ["ranges": ["20-38": 0,
+                                              "40-54": 0,
+                                              "56-70": 0,
+                                              "72-88": 0,
+                                              "90-104": 0,
+                                              "106-120": 0,
+                                              "122-134": 0,
+                                              "136-140": 0], "multiplier":1] //mock data end
+        
+        photobook["productVariant"] = productVariant
+        
+        //config
+        
+        var photobookConfig = [String:Any]()
+        
+        photobookConfig["coverColor"] = coverColor.uiColor().hex
+        photobookConfig["pageColor"] = pageColor.uiColor().hex
+        
+        var spineText = [String:Any]()
+        
+        spineText["text"] = spineText
+        spineText["color"] = coverColor.fontColor().hex
+        
+        var font = [String:Any]()
+        
+        font["fontFamily"] = spineFontType.apiFontFamily
+        font["fontSizePx"] = spineFontType.apiPhotobookFontSizePx()
+        font["fontSize"] = "\(spineFontType.photobookFontSize())pt"
+        font["fontWeight"] = spineFontType.apiPhotobookFontWeight()
+        font["lineHeight"] = spineFontType.apiPhotobookLineHeight()
+        
+        spineText["font"] = font
+        
+        photobookConfig["spineText"] = spineText
+        
+        photobook["photobookConfig"] = photobookConfig
+        
         
         return photobook
     }

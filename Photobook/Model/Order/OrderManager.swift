@@ -214,10 +214,14 @@ class OrderManager {
     
     func finishOrder() {
         
+        guard let photobook = ProductManager.shared.currentProduct else {
+            return
+        }
+        
         NotificationCenter.default.post(name: NotificationName.willFinishOrder, object: self)
         
         // 1 - Create PDF
-        apiManager.createPhotobookPdf { [weak welf = self] (urls, error) in
+        apiManager.createPdf(withPhotobook: photobook) { [weak welf = self] (urls, error) in
             
             if let swelf = welf, swelf.isCancelling {
                 swelf.processingOrder = nil
