@@ -165,6 +165,8 @@ class SpineTextEditingViewController: UIViewController {
         
         setTextFieldAttributes()
         
+        textToolBarView.select(fontType: fontType)
+        
         backgroundColor = view.backgroundColor
         view.backgroundColor = .clear
         view.alpha = 1.0
