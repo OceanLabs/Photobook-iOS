@@ -457,7 +457,7 @@ class PhotobookProduct: Codable {
                 var font = [String: Any]()
                 font["fontFamily"] = productLayoutText.fontType.apiFontFamily
                 font["fontSizePx"] = productLayoutText.fontType.apiPhotobookFontSizePx()
-                font["fontSize"] = "\(productLayoutText.fontType.photobookFontSize())pt"
+                font["fontSize"] = productLayoutText.fontType.apiPhotobookFontSize()
                 font["fontWeight"] = productLayoutText.fontType.apiPhotobookFontWeight()
                 font["lineHeight"] = productLayoutText.fontType.apiPhotobookLineHeight()
                 containedItem["font"] = font
@@ -523,7 +523,7 @@ class PhotobookProduct: Codable {
         
         font["fontFamily"] = spineFontType.apiFontFamily
         font["fontSizePx"] = spineFontType.apiPhotobookFontSizePx()
-        font["fontSize"] = "\(spineFontType.photobookFontSize())pt"
+        font["fontSize"] = spineFontType.apiPhotobookFontSize()
         font["fontWeight"] = spineFontType.apiPhotobookFontWeight()
         font["lineHeight"] = spineFontType.apiPhotobookLineHeight()
         
