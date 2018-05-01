@@ -28,12 +28,17 @@ enum ProductColor: String, Codable {
 
 class PhotobookProduct: Codable {
     
+    private enum CodingKeys: String, CodingKey {
+        case template, photobookId, productLayouts, coverColor, pageColor, spineText, spineFontType, productUpsellOptions, itemCount
+    }
+    
+    private unowned var productManager = ProductManager.shared
+    
     private let bleed: CGFloat = 8.5
 
-    var currentPortraitLayout = 0
-    var currentLandscapeLayout = 0
+    private var currentPortraitLayout = 0
+    private var currentLandscapeLayout = 0
     
-    // Current photobook
     var template: PhotobookTemplate
     var productUpsellOptions: [UpsellOption]? //TODO: Get this from the initial-data endpoint
     var spineText: String?
@@ -48,15 +53,13 @@ class PhotobookProduct: Codable {
     
     var isAddingPagesAllowed: Bool {
         // TODO: Use pages count instead of assets/layout count
-        return ProductManager.shared.maximumAllowedAssets > productLayouts.count
+        return productManager.maximumAllowedAssets > productLayouts.count
     }
     var isRemovingPagesAllowed: Bool {
         // TODO: Use pages count instead of assets/layout count
-        return ProductManager.shared.minimumRequiredAssets < productLayouts.count - 1 // Don't include cover for min calculation
+        return productManager.minimumRequiredAssets < productLayouts.count - 1 // Don't include cover for min calculation
     }
-    var hasLayoutWithoutAsset: Bool {
-        return productLayouts.first { $0.hasEmptyContent } != nil
-    }
+
     var emptyLayoutIndices: [Int]? {
         var temp = [Int]()
         var index = 0
@@ -95,8 +98,17 @@ class PhotobookProduct: Codable {
         return temp.count > 0 ? temp : nil
     }
     
-    init(template: PhotobookTemplate, assets: [Asset], coverLayouts: [Layout], layouts: [Layout]) {
+    init?(template: PhotobookTemplate, assets: [Asset], productManager: ProductManager = ProductManager.shared) {
+        guard
+            let coverLayouts = productManager.coverLayouts(for: template), !coverLayouts.isEmpty,
+            let layouts = productManager.layouts(for: template), !layouts.isEmpty
+        else {
+            print("PhotobookProduct: Missing layouts for selected photobook")
+            return nil
+        }
+        
         self.template = template
+        self.productManager = productManager
         
         let imageOnlyLayouts = layouts.filter({ $0.imageLayoutBox != nil })
         
@@ -114,12 +126,9 @@ class PhotobookProduct: Codable {
         tempLayouts.append(productLayout)
         
         // Create layouts for the remaining assets
-        tempLayouts.append(contentsOf: createLayoutsForAssets(assets: assets, from: imageOnlyLayouts))
-        
         // Fill minimum pages with Placeholder assets if needed
-        let numberOfPlaceholderLayoutsNeeded = max(template.minimumRequiredAssets - tempLayouts.count, 0)
-        tempLayouts.append(contentsOf: createLayoutsForAssets(assets: [], from: imageOnlyLayouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
-        
+        let numberOfPlaceholderLayoutsNeeded = max(template.minimumRequiredAssets - assets.count - 1, 0)
+        tempLayouts.append(contentsOf: createLayoutsForAssets(assets: assets, from: imageOnlyLayouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
         productLayouts = tempLayouts
     }
     
@@ -146,7 +155,7 @@ class PhotobookProduct: Codable {
         }
     }
     
-    func createLayoutsForAssets(assets: [Asset], from layouts:[Layout], placeholderLayouts: Int = 0) -> [ProductLayout] {
+    private func createLayoutsForAssets(assets: [Asset], from layouts:[Layout], placeholderLayouts: Int = 0) -> [ProductLayout] {
         var portraitLayouts = layouts.filter { !$0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
         var landscapeLayouts = layouts.filter { $0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
         let doubleLayout = layouts.first { $0.isDoubleLayout }
@@ -237,19 +246,21 @@ class PhotobookProduct: Codable {
     }
     
     func spreadIndex(for productLayoutIndex: Int) -> Int? {
+        guard productLayoutIndex > 0 && productLayoutIndex < productLayouts.count else { return nil }
         var spreadIndex = 0.0
         
         var i = 0
+        var index: Int? = nil
         while i < productLayouts.count {
             if i == productLayoutIndex {
-                return Int(spreadIndex)
+                index = Int(spreadIndex)
             }
             
             spreadIndex += productLayouts[i].layout.isDoubleLayout ? 1 : 0.5
             i += 1
         }
         
-        return nil
+        return index
     }
     
     func productLayoutIndex(for spreadIndex: Int) -> Int? {
@@ -279,16 +290,11 @@ class PhotobookProduct: Codable {
     }
     
     private func addPages(at index: Int, number: Int, pages: [ProductLayout]? = nil) {
-        guard let layouts = ProductManager.shared.layouts(for: template)
+        guard let layouts = productManager.layouts(for: template)
             else { return }
         let newProductLayouts = pages ?? createLayoutsForAssets(assets: [], from: layouts, placeholderLayouts: number)
         
         productLayouts.insert(contentsOf: newProductLayouts, at: index)
-    }
-    
-    func deletePage(at index: Int) {
-        guard index < productLayouts.count else { return }
-        productLayouts.remove(at: index)
     }
     
     func deletePages(for productLayout: ProductLayout) {
@@ -322,21 +328,21 @@ class PhotobookProduct: Codable {
         
         if movingDown {
             if fromProductLayout.layout.isDoubleLayout && toProductLayout.layout.isDoubleLayout {
-                moveLayout(at: fromIndex, to: toIndex)
+                productLayouts.move(fromIndex, to: toIndex)
             } else if fromProductLayout.layout.isDoubleLayout {
-                moveLayout(at: fromIndex, to: toIndex + 1)
+                productLayouts.move(fromIndex, to: toIndex + 1)
             } else if toProductLayout.layout.isDoubleLayout {
-                moveLayout(at: fromIndex + 1, to: toIndex)
-                moveLayout(at: fromIndex, to: toIndex - 1)
+                productLayouts.move(fromIndex + 1, to: toIndex)
+                productLayouts.move(fromIndex, to: toIndex - 1)
             } else {
-                moveLayout(at: fromIndex + 1, to: toIndex + 1)
-                moveLayout(at: fromIndex, to: toIndex)
+                productLayouts.move(fromIndex + 1, to: toIndex + 1)
+                productLayouts.move(fromIndex, to: toIndex)
             }
         } else {
-            moveLayout(at: fromIndex, to: toIndex)
+            productLayouts.move(fromIndex, to: toIndex)
             
             if !fromProductLayout.layout.isDoubleLayout {
-                moveLayout(at: fromIndex + 1, to: toIndex + 1)
+                productLayouts.move(fromIndex + 1, to: toIndex + 1)
             }
         }
     }
@@ -349,19 +355,14 @@ class PhotobookProduct: Codable {
             // From single to double
             if productLayout.layout.isDoubleLayout {
                 if pageType == .left {
-                    deletePage(at: index + 1)
+                    productLayouts.remove(at: index + 1)
                 } else if pageType == .right {
-                    deletePage(at: index - 1)
+                    productLayouts.remove(at: index - 1)
                 }
             } else {
                 addPage(at: index + 1)
             }
         }
-    }
-
-    private func moveLayout(at sourceIndex: Int, to destinationIndex: Int) {
-        guard sourceIndex < productLayouts.count && destinationIndex < productLayouts.count else { return }
-        productLayouts.move(sourceIndex, to: destinationIndex)
     }
     
     func bleed(forPageSize size: CGSize) -> CGFloat {

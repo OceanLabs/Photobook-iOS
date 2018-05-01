@@ -26,11 +26,7 @@ class PhotobookTemplate: Codable {
     
     // TODO: Currencies? MaximumAllowed Pages/Assets?
     
-    init() {
-        fatalError("Use parse(_:) instead")
-    }
-    
-    private init(id: Int, name: String, productTemplateId: String, pageHeight: CGFloat, spineTextRatio: CGFloat, aspectRatio: CGFloat, coverLayouts: [Int], layouts: [Int]) {
+    init(id: Int, name: String, productTemplateId: String, pageHeight: CGFloat, spineTextRatio: CGFloat, aspectRatio: CGFloat, coverLayouts: [Int], layouts: [Int]) {
         self.id = id
         self.name = name
         self.productTemplateId = productTemplateId
@@ -57,4 +53,11 @@ class PhotobookTemplate: Codable {
         
         return PhotobookTemplate(id: id, name: name, productTemplateId: productTemplateId, pageHeight: pageHeight, spineTextRatio: spineTextRatio, aspectRatio: aspectRatio, coverLayouts: coverLayouts, layouts: layouts)
     }    
+}
+
+extension PhotobookTemplate: Equatable {
+    
+    static func ==(lhs: PhotobookTemplate, rhs: PhotobookTemplate) -> Bool {
+        return lhs.id == rhs.id && lhs.productTemplateId == rhs.productTemplateId
+    }
 }

@@ -40,7 +40,7 @@ class ProductManager {
         return 70
     }
     
-    var currentProduct: PhotobookProduct?
+    private(set) var currentProduct: PhotobookProduct?
     
     func reset() {
         currentProduct = nil
@@ -73,5 +73,9 @@ class ProductManager {
         guard let layouts = layouts else { return nil }
         return layouts.filter { photobook.layouts.contains($0.id) }
     }
-
+    
+    func setCurrentProduct(with photobook: PhotobookTemplate, assets: [Asset]) -> PhotobookProduct? {
+        currentProduct = PhotobookProduct(template: photobook, assets: assets, productManager: self)
+        return currentProduct
+    }
 }
