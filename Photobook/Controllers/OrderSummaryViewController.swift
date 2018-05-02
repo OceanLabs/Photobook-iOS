@@ -103,7 +103,7 @@ class OrderSummaryViewController: UIViewController {
         }
     }
     
-    private func updateUpsellOptionsCell(_ cell: OrderSummaryUpsellTableViewCell, index: Int) {
+    private func tappedUpsellOption(for cell: OrderSummaryUpsellTableViewCell, at index: Int) {
         let displayName = OrderSummaryManager.shared.upsellOptions![index].displayName
         cell.titleLabel?.text = displayName
         
@@ -196,7 +196,7 @@ extension OrderSummaryViewController: UITableViewDelegate {
             progressOverlayViewController.show(message: NSLocalizedString("OrderSummary/Loading", value: "Loading order details", comment: "Loading product summary"))
             
             if let cell = tableView.cellForRow(at: indexPath) as? OrderSummaryUpsellTableViewCell {
-                updateUpsellOptionsCell(cell, index: indexPath.row)
+                tappedUpsellOption(for: cell, at: indexPath.row)
             }
             
             if OrderSummaryManager.shared.isUpsellOptionSelected(upsellOption) {
@@ -247,7 +247,7 @@ extension OrderSummaryViewController: UITableViewDataSource {
             return cell
         case Constants.sectionOptions:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrderSummaryUpsellTableViewCell", for: indexPath) as! OrderSummaryUpsellTableViewCell
-            updateUpsellOptionsCell(cell, index: indexPath.row)
+            tappedUpsellOption(for: cell, at: indexPath.row)
             
             return cell
         default:
