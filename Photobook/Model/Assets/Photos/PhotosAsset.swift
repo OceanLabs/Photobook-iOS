@@ -9,23 +9,9 @@
 import UIKit
 import Photos
 
-// Photos asset subclass with stubs to be used in testing
-class TestPhotosAsset: PhotosAsset {
-    private var stubSize = CGSize(width: 3000.0, height: 2000.0)
-    var height: CGFloat = 2000.0
-    
-    override var size: CGSize { return stubSize }
-    init(_ asset: PHAsset = PHAsset(), size: CGSize? = nil) {
-        super.init(asset, albumIdentifier: "album")
-        identifier = "id"
-        if let size = size {
-            stubSize = size
-        }
-    }
-        
-    required init?(coder aDecoder: NSCoder) {
-        super.init(PHAsset(), albumIdentifier: "")
-        identifier = "id"
+class AssetManager {
+    func fetchAssets(withLocalIdentifiers identifiers: [String], options: PHFetchOptions?) -> PHAsset? {
+        return PHAsset.fetchAssets(withLocalIdentifiers: identifiers, options: options).firstObject
     }
 }
 
@@ -42,10 +28,13 @@ class TestPhotosAsset: PhotosAsset {
     /// Identifier for the album where the asset is included
     @objc public var albumIdentifier: String?
     
+    var imageManager = PHImageManager.default()
+    static var assetManager = AssetManager()
+    
     var identifier: String! {
         didSet {
             if photosAsset.localIdentifier != identifier,
-               let asset = PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: PHFetchOptions()).firstObject {
+               let asset = PhotosAsset.assetManager.fetchAssets(withLocalIdentifiers: [identifier], options: PHFetchOptions()) {
                     photosAsset = asset
             }
         }
@@ -82,7 +71,7 @@ class TestPhotosAsset: PhotosAsset {
         // Convert points to pixels
         imageSize = CGSize(width: imageSize.width * UIScreen.main.usableScreenScale(), height: imageSize.height * UIScreen.main.usableScreenScale())
         DispatchQueue.global(qos: .background).async {
-            PHImageManager.default().requestImage(for: self.photosAsset, targetSize: imageSize, contentMode: .aspectFill, options: options) { (image, _) in
+            self.imageManager.requestImage(for: self.photosAsset, targetSize: imageSize, contentMode: .aspectFill, options: options) { (image, _) in
                 DispatchQueue.main.async {
                     completionHandler(image, nil)
                 }
@@ -100,7 +89,7 @@ class TestPhotosAsset: PhotosAsset {
         let options = PHImageRequestOptions()
         options.isNetworkAccessAllowed = true
         
-        PHImageManager.default().requestImageData(for: photosAsset, options: options, resultHandler: { imageData, dataUti, _, info in
+        self.imageManager.requestImageData(for: photosAsset, options: options, resultHandler: { imageData, dataUti, _, _ in
             guard let data = imageData, let dataUti = dataUti else {
                 completionHandler(nil, .unsupported, AssetLoadingException.notFound)
                 return
@@ -141,7 +130,7 @@ class TestPhotosAsset: PhotosAsset {
     @objc public required convenience init?(coder aDecoder: NSCoder) {
         guard let assetId = aDecoder.decodeObject(of: NSString.self, forKey: "identifier") as String?,
               let albumIdentifier = aDecoder.decodeObject(of: NSString.self, forKey: "albumIdentifier") as String?,
-              let asset = PHAsset.fetchAssets(withLocalIdentifiers: [assetId], options: nil).firstObject else
+              let asset = PhotosAsset.assetManager.fetchAssets(withLocalIdentifiers: [assetId], options: nil) else
             { return nil }
             
         self.init(asset, albumIdentifier: albumIdentifier)
@@ -160,7 +149,7 @@ class TestPhotosAsset: PhotosAsset {
     
     static func assets(from photosAssets:[PHAsset], albumId: String) -> [Asset] {
         var assets = [Asset]()
-        for photosAsset in photosAssets{
+        for photosAsset in photosAssets {
             assets.append(PhotosAsset(photosAsset, albumIdentifier: albumId))
         }
         
