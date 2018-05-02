@@ -4254,6 +4254,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Option" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a4Z-Yu-VjU">
                                                             <rect key="frame" x="10" y="0.0" width="284" height="64"/>
+                                                            <accessibility key="accessibilityConfiguration">
+                                                                <bool key="isElement" value="NO"/>
+                                                            </accessibility>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -4290,6 +4293,10 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                 <constraint firstItem="EoL-wH-0aC" firstAttribute="leading" secondItem="qMT-CY-ZqV" secondAttribute="leading" constant="15" id="wBh-aW-v9E"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <accessibilityTraits key="traits" button="YES"/>
+                                            <bool key="isElement" value="YES"/>
+                                        </accessibility>
                                         <connections>
                                             <outlet property="tickImageView" destination="40c-yT-Ocn" id="zDE-1E-0ZH"/>
                                             <outlet property="titleLabel" destination="a4Z-Yu-VjU" id="9HC-oz-pVr"/>

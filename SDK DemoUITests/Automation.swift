@@ -110,10 +110,13 @@ class Automation {
         cityTextField.clearTextField()
         cityTextField.typeText(testCity)
         
-        let zipTextField = tablesQuery.cells.containing(.staticText, identifier:"Zip Code")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
-        zipTextField.tap()
-        zipTextField.clearTextField()
-        zipTextField.typeText(testPostalCode)
+        var zipOrPostalTextField = tablesQuery.cells.containing(.staticText, identifier:"Zip Code")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        if !zipOrPostalTextField.exists {
+            zipOrPostalTextField = tablesQuery.cells.containing(.staticText, identifier:"Postcode")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        }
+        zipOrPostalTextField.tap()
+        zipOrPostalTextField.clearTextField()
+        zipOrPostalTextField.typeText(testPostalCode)
         
         app.navigationBars["Address"].buttons["Save"].tap()
     }
