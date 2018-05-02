@@ -63,6 +63,8 @@ class ReceiptTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        (navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(.clear)
+        
         OrderManager.shared.orderProcessingDelegate = self
         
         Analytics.shared.trackScreenViewed(.receipt)
