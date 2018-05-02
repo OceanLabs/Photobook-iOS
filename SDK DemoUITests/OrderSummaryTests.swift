@@ -8,7 +8,7 @@
 
 import XCTest
 
-extension SDK_DemoUITests {
+class OrderSummaryTests: PhotobookUITest {
     
     func testSelectingAndDeselectingUpsellOption() {
         automation.goToOrderSummary()
