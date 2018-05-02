@@ -212,6 +212,7 @@ class CheckoutViewController: UIViewController {
         itemTitleLabel.text = OrderManager.shared.basketOrder.products.first!.template.name
         itemPriceLabel.text = OrderManager.shared.basketOrder.cachedCost?.lineItems?.first?.formattedCost
         itemAmountButton.setTitle("\(OrderManager.shared.basketOrder.products.first!.itemCount)", for: .normal)
+        itemAmountButton.accessibilityValue = itemAmountButton.title(for: .normal)
         updateItemImage()
         
         //promo code
@@ -567,6 +568,7 @@ extension CheckoutViewController: AmountPickerDelegate {
     func amountPickerDidSelectValue(_ value: Int) {
         OrderManager.shared.basketOrder.products.first!.itemCount = value
         itemAmountButton.setTitle("\(value)", for: .normal)
+        itemAmountButton.accessibilityValue = itemAmountButton.title(for: .normal)
     }
 }
 

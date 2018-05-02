@@ -1,5 +1,5 @@
 //
-//  SDK_DemoUITests.swift
+//  PhotobookUITest.swift
 //  SDK DemoUITests
 //
 //  Created by Konstadinos Karayannis on 23/04/2018.
@@ -8,7 +8,7 @@
 
 import XCTest
 
-class SDK_DemoUITests: XCTestCase {
+class PhotobookUITest: XCTestCase {
     
     var automation: Automation!
         

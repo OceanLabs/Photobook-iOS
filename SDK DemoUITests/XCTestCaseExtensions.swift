@@ -26,13 +26,5 @@ extension XCTestCase {
         waitForExpectations(timeout: 60, handler: nil)
     }
     
-    func XCTAssertIsHittable(_ element: XCUIElement, _ message: String? = nil) {
-        if let message = message {
-            XCTAssertTrue(element.isHittable, message)
-        } else {
-            XCTAssertTrue(element.isHittable)
-        }
-    }
-    
 }
 

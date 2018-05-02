@@ -8,14 +8,27 @@
 
 import XCTest
 
-extension SDK_DemoUITests {
+class BasketTests: PhotobookUITest {
     
-    func testQualityChange() {
+    func testQuantityChange() {
         automation.goToBasket()
         
-        automation.app.buttons["quantityButton"].tap()
-        automation.app.pickerWheels["1"].swipeUp()
+        let quantityButton = automation.app.buttons["quantityButton"]
+        let oldValue = quantityButton.value as? String
+        XCTAssertNotNil(oldValue)
+        XCTAssertEqual(oldValue!, "1")
+        
+        quantityButton.tap()
+        
+        let picker = automation.app.pickerWheels["1"]
+        let pickerLocation = picker.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        pickerLocation.press(forDuration: 0, thenDragTo: picker.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.0)))
+        
         automation.app.buttons["Done"].tap()
+        
+        let newValue = quantityButton.value as? String
+        XCTAssertNotNil(newValue)
+        XCTAssertGreaterThan(newValue!, oldValue!)
     }
     
     func testInvalidPromoCode() {
@@ -51,15 +64,13 @@ extension SDK_DemoUITests {
         let payButton = automation.app.buttons["payButton"]
         payButton.tap()
         
-        XCTAssertIsHittable(payButton, "Moved to another screen when we should have stayed on the basket screen")
+        XCTAssertTrue(payButton.isHittable, "Moved to another screen when we should have stayed on the basket screen")
         
         XCTAssertEqual(addressEntryLabel.label, "Required", "We didn't show the user that delivery details are required")
         
         automation.fillDeliveryDetailsFromBasket()
         
-        XCTAssertTrue(addressEntryLabel.label.contains("Fiesta Blvd 2, 11111, "), "We didn't show the preview of the delivery details")
+        XCTAssertTrue(addressEntryLabel.label.contains("\(automation.testAddressLine1), \(automation.testPostalCode), "), "We didn't show the preview of the delivery details")
     }
-    
-    
     
 }
