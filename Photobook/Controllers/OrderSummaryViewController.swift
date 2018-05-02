@@ -115,7 +115,7 @@ class OrderSummaryViewController: UIViewController {
         if isOptionEnabled {
             cell.accessibilityValue = NSLocalizedString("Accessibility/Enabled", value: "Enabled", comment: "Informs the user that an upsell option is enabled.")
         } else {
-            cell.accessibilityValue = NSLocalizedString("Accessibility/Enabled", value: "Disabled", comment: "Informs the user that an upsell option is disabled.")
+            cell.accessibilityValue = NSLocalizedString("Accessibility/Disabled", value: "Disabled", comment: "Informs the user that an upsell option is disabled.")
         }
     }
     
