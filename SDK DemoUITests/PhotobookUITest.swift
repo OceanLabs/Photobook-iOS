@@ -1,5 +1,5 @@
 //
-//  SDK_DemoUITests.swift
+//  PhotobookUITest.swift
 //  SDK DemoUITests
 //
 //  Created by Konstadinos Karayannis on 23/04/2018.
@@ -8,7 +8,7 @@
 
 import XCTest
 
-class SDK_DemoUITests: XCTestCase {
+class PhotobookUITest: XCTestCase {
     
     var automation: Automation!
         
@@ -42,6 +42,16 @@ class SDK_DemoUITests: XCTestCase {
         
         let processingOrderStaticText = automation.app.tables/*@START_MENU_TOKEN@*/.staticTexts["Processing Order"]/*[[".cells.staticTexts[\"Processing Order\"]",".staticTexts[\"Processing Order\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
         wait(for: processingOrderStaticText)
+        
+        wait(2) // Wait for the notifications popup to appear
+        
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        
+        let allowBtn = springboard.buttons["Allow"]
+        if allowBtn.exists {
+            allowBtn.tap()
+        }
+        
     }
     
 }
