@@ -8,38 +8,10 @@
 
 import UIKit
 
-@objc protocol TextToolBarViewDelegate {
-    func didSelectFontType(_ type: FontType)
-}
-
-class TextToolBarView: UIView {
-    
-    @IBOutlet private var toolButtons: [UIButton]! {
-        didSet { toolButtons.first?.isSelected = true }
-    }
-    private var selectedIndex = 0
-    
-    weak var delegate: TextToolBarViewDelegate?
-    
-    @IBAction func tappedToolButton(_ sender: UIButton) {
-        let index = toolButtons.index(of: sender)!
-        guard selectedIndex != index else { return }
-
-        toolButtons[selectedIndex].isSelected = false
-        toolButtons[index].isSelected = true
-        
-        selectedIndex = index
-        let fontType = FontType(rawValue: index)!
-        delegate?.didSelectFontType(fontType)
-    }
-}
-
 protocol TextEditingDelegate: class {
-    
     func didChangeFontType(to fontType: FontType)
     func didChangeText(to text: String?)
     func shouldReactToKeyboardAppearance() -> Bool
-    
 }
 
 class TextEditingViewController: UIViewController {
@@ -276,6 +248,8 @@ class TextEditingViewController: UIViewController {
             fontType = .plain
         }
         setTextViewAttributes(with: fontType, fontColor: pageColor.fontColor())
+        
+        textToolBarView.select(fontType: fontType)
         
         // Place image if needed
         guard let imageLayoutBox = productLayout!.layout.imageLayoutBox else {
