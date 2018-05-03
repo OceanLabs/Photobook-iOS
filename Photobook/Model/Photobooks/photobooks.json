@@ -3,7 +3,7 @@
 	{
 		"id": 1,
 		"name": "Square 127x127",
-        "productTemplateId": "RPI_WRAP_210X210_SM",
+        "productTemplateId": "hdbook_127x127",
         "pageHeight": 360.0,
         "spineTextRatio": 0.87,
 		"aspectRatio": 1.0,
@@ -13,7 +13,7 @@
 	{
 		"id": 2,
 		"name": "Square 210x210",
-        "productTemplateId": "RPI_WRAP_210X210_SM",
+        "productTemplateId": "hdbook_210x210",
         "pageHeight": 595.28,
         "spineTextRatio": 0.76,
 		"aspectRatio": 1.0,
@@ -23,7 +23,7 @@
 	{
 		"id": 3,
 		"name": "Landscape 210x152",
-        "productTemplateId": "RPI_WRAP_210X210_SM",
+        "productTemplateId": "hdbook_210x152",
         "pageHeight": 430.87,
         "spineTextRatio": 0.72,
 		"aspectRatio": 1.38157681,
@@ -33,7 +33,7 @@
 	{
 		"id": 4,
 		"name": "Landscape 297x210",
-        "productTemplateId": "RPI_WRAP_210X210_SM",
+        "productTemplateId": "hdbook_297x210",
         "pageHeight": 595.28,
         "spineTextRatio": 0.76,
 		"aspectRatio": 1.41427563,
@@ -926,21 +926,5 @@
         		}
         }
     }    
-],
-"upsellOptions": [
-    {
-        "type":"UPGRADE_PHOTOBOOK_SIZE",
-        "displayName":"Upgrade to large size (210x210)",
-        "payload": {
-            "targetTemplateId":"hd_book_210x210"
-        }
-    },
-    {
-        "type":"UPDATE_PHOTOBOOK_FINISH",
-        "displayName":"Upgrade to gloss finish",
-        "payload": {
-            "targetFinish":"gloss"
-        }
-    }
 ]
 }

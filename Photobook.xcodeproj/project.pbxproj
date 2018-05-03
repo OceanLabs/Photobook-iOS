@@ -371,6 +371,8 @@
 		B90F288B20066D3100FF3D15 /* OrderSummaryTotalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90F288A20066D3100FF3D15 /* OrderSummaryTotalTableViewCell.swift */; };
 		B939FE8C200CD18200B1084B /* OrderSummaryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B939FE8B200CD18200B1084B /* OrderSummaryManager.swift */; };
 		B939FE8E200E381C00B1084B /* CheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B939FE8D200E381C00B1084B /* CheckoutViewController.swift */; };
+		B978E5F9209B00CA006394B5 /* upsells.json in Resources */ = {isa = PBXBuildFile; fileRef = B978E5F8209B00CA006394B5 /* upsells.json */; };
+		B978E5FA209B00D7006394B5 /* upsells.json in Resources */ = {isa = PBXBuildFile; fileRef = B978E5F8209B00CA006394B5 /* upsells.json */; };
 		B97ABBCA204D445900238C8A /* ReceiptProgressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97ABBC9204D445900238C8A /* ReceiptProgressTableViewCell.swift */; };
 		B97ABBCE204D44A900238C8A /* ReceiptDetailsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97ABBCD204D44A900238C8A /* ReceiptDetailsTableViewCell.swift */; };
 		B97ABBD0204D52E400238C8A /* ReceiptInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97ABBCF204D52E400238C8A /* ReceiptInfoTableViewCell.swift */; };
@@ -641,6 +643,7 @@
 		B90F288A20066D3100FF3D15 /* OrderSummaryTotalTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryTotalTableViewCell.swift; sourceTree = "<group>"; };
 		B939FE8B200CD18200B1084B /* OrderSummaryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryManager.swift; sourceTree = "<group>"; };
 		B939FE8D200E381C00B1084B /* CheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutViewController.swift; sourceTree = "<group>"; };
+		B978E5F8209B00CA006394B5 /* upsells.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = upsells.json; sourceTree = "<group>"; };
 		B97ABBC9204D445900238C8A /* ReceiptProgressTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptProgressTableViewCell.swift; sourceTree = "<group>"; };
 		B97ABBCD204D44A900238C8A /* ReceiptDetailsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptDetailsTableViewCell.swift; sourceTree = "<group>"; };
 		B97ABBCF204D52E400238C8A /* ReceiptInfoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReceiptInfoTableViewCell.swift; sourceTree = "<group>"; };
@@ -1238,6 +1241,7 @@
 				B986DF2C20164BDA005461A0 /* order_summary_0.json */,
 				B99536D9202DB1B80019B1AF /* order_summary_1.json */,
 				B99536DD202DB2360019B1AF /* order_summary_2.json */,
+				B978E5F8209B00CA006394B5 /* upsells.json */,
 				B939FE8B200CD18200B1084B /* OrderSummaryManager.swift */,
 				B9D3340120220FE7003D4338 /* OrderSummary.swift */,
 				B986DF2E201B445E005461A0 /* UpsellOption.swift */,
@@ -1452,6 +1456,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B978E5FA209B00D7006394B5 /* upsells.json in Resources */,
 				2E0B588A1FB30F2100F31A9E /* LaunchScreen.storyboard in Resources */,
 				6FCE08D42021E4B700C55D2F /* Lora-Regular.ttf in Resources */,
 				2E0B58871FB30F2100F31A9E /* Assets.xcassets in Resources */,
@@ -1492,6 +1497,7 @@
 				2ED14C2D2063AA4B00ED2E2C /* Lora-Regular.ttf in Resources */,
 				2ED14C2E2063AA4B00ED2E2C /* Montserrat-Bold.ttf in Resources */,
 				2ED14C2F2063AA4B00ED2E2C /* OpenSans-Regular.ttf in Resources */,
+				B978E5F9209B00CA006394B5 /* upsells.json in Resources */,
 				2ED14BEC2063AA4000ED2E2C /* order_summary_2.json in Resources */,
 				2ED14BEB2063AA4000ED2E2C /* order_summary_1.json in Resources */,
 				2ED14BF02063AA4000ED2E2C /* photobooks.json in Resources */,

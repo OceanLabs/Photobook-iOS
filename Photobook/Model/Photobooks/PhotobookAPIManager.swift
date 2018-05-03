@@ -20,8 +20,8 @@ class PhotobookAPIManager {
     
     struct EndPoints {
         static let products = "/ios/initial-data/"
-        static let summary = "/ios/summary"
-        static let applyUpsell = "/ios/upsell.apply"
+        static let summary = "/ios/get_summary"
+        static let applyUpsells = "/ios/apply_upsells"
         static let createPdf = "/ios/generate_photobook_pdf"
         static let imageUpload = "/upload/"
     }
@@ -38,10 +38,14 @@ class PhotobookAPIManager {
     }
     #endif
     
+    private func authorizationHeader() -> [String: String] {
+        return ["Authorization": "ApiKey 57c832e42dfdda93d072c6a42c41fbcddf100805"]
+    }
+    
     /// Requests the information about photobook products and layouts from the API
     ///
     /// - Parameter completionHandler: Closure to be called when the request completes
-    func requestPhotobookInfo(_ completionHandler:@escaping ([PhotobookTemplate]?, [Layout]?, [UpsellOption]?, Error?) -> ()) {
+    func requestPhotobookInfo(_ completionHandler:@escaping ([PhotobookTemplate]?, [Layout]?, Error?) -> ()) {
         
         apiClient.get(context: .photobook, endpoint: EndPoints.products) { (jsonData, error) in
             
@@ -54,7 +58,7 @@ class PhotobookAPIManager {
                     jsonData = JSON.parse(file: mockJsonFileName)
                 }
                 if jsonData == nil, error != nil {
-                    completionHandler(nil, nil, nil, error!)
+                    completionHandler(nil, nil, error!)
                     return
                 }
             }
@@ -62,10 +66,9 @@ class PhotobookAPIManager {
             guard
                 let photobooksData = jsonData as? [String: AnyObject],
                 let productsData = photobooksData["products"] as? [[String: AnyObject]],
-                let layoutsData = photobooksData["layouts"] as? [[String: AnyObject]],
-                let upsellData = photobooksData["upsellOptions"] as? [[String: AnyObject]]
+                let layoutsData = photobooksData["layouts"] as? [[String: AnyObject]]
             else {
-                completionHandler(nil, nil, nil, APIClientError.parsing)
+                completionHandler(nil, nil, APIClientError.parsing)
                 return
             }
             
@@ -79,7 +82,7 @@ class PhotobookAPIManager {
             
             if tempLayouts.isEmpty {
                 print("PhotobookAPIManager: parsing layouts failed")
-                completionHandler(nil, nil, nil, APIClientError.parsing)
+                completionHandler(nil, nil, APIClientError.parsing)
                 return
             }
             
@@ -94,20 +97,74 @@ class PhotobookAPIManager {
             
             if tempPhotobooks.isEmpty {
                 print("PhotobookAPIManager: parsing photobook products failed")
+                completionHandler(nil, nil, APIClientError.parsing)
+                return
+            }
+
+            completionHandler(tempPhotobooks, tempLayouts, nil)
+        }
+    }
+    
+    func getOrderSummary(product:PhotobookProduct, completionHandler: @escaping (_ summary: OrderSummary?, _ upsellOptions: [UpsellOption]?, _ productPayload: Any?, _ error: Error?) -> Void) {
+        
+        let parameters = ["productId": product.template.id, "pageCount": product.productLayouts.count]
+        apiClient.post(context: .photobook, endpoint: EndPoints.summary, parameters: parameters, headers: authorizationHeader()) { (jsonData, error) in
+            
+            guard let jsonData = jsonData as? [String: Any],
+                let summaryDict = jsonData["summary"] as? [String: Any],
+                //let upsellOptionsDict = jsonData["upsells"] as? [[String: Any]], //TODO: use endpoint response
+                let payload = jsonData["productPayload"]
+                else {
                 completionHandler(nil, nil, nil, APIClientError.parsing)
                 return
             }
             
-            // Parse photobook upsell options
-            var tempUpsellOptions = [UpsellOption]()
             
-            for upsellOptionDictionary in upsellData {
-                if let upsellOption = UpsellOption(upsellOptionDictionary) {
-                    tempUpsellOptions.append(upsellOption)
+            
+            //var upsellOptions = [UpsellOption]()
+            //for upsellDict in upsellOptionsDict {
+            //    if let upsell = UpsellOption(upsellDict) {
+            //        upsellOptions.append(upsell)
+            //    }
+            //}
+            let upsellOptions = UpsellOption.upsells(forProduct: product)
+            
+            completionHandler(OrderSummary(summaryDict), upsellOptions, payload, nil)
+        }
+    }
+    
+    func applyUpsells(product:PhotobookProduct, upsellOptions:[UpsellOption], completionHandler: @escaping (_ summary: OrderSummary?, _ upsoldProduct: PhotobookProduct?, _ productPayload: Any?, _ error: Error?) -> Void) {
+        
+        var parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.productLayouts.count]
+        var upsellDicts = [[String: Any]]()
+        for upsellOption in upsellOptions {
+            upsellDicts.append(upsellOption.dict)
+        }
+        parameters["upsells"] = upsellDicts
+        apiClient.post(context: .photobook, endpoint: EndPoints.applyUpsells, parameters: parameters, headers: authorizationHeader()) { (jsonData, error) in
+                                                                                        
+            guard let jsonData = jsonData as? [String: Any],
+                let summaryDict = jsonData["summary"] as? [String: Any],
+                let productDict = jsonData["newProduct"] as? [String: Any],
+                let variantDicts = productDict["variants"] as? [[String: Any]],
+                let templateId = variantDicts.first?["templateId"] as? String,
+                let payload = jsonData["productPayload"],
+                let layouts = ProductManager.shared.currentProduct?.productLayouts,
+                let template = ProductManager.shared.products?.first(where: {$0.productTemplateId == templateId})
+                else {
+                    completionHandler(nil, nil, nil, APIClientError.parsing)
+                    return
+            }
+            
+            var assets = [Asset]()
+            for layout in layouts {
+                if let asset = layout.asset {
+                    assets.append(asset)
                 }
             }
-
-            completionHandler(tempPhotobooks, tempLayouts, tempUpsellOptions, nil)
+            let newProduct = PhotobookProduct(template: template, assets: assets)
+            
+            completionHandler(OrderSummary(summaryDict), newProduct, payload, nil)
         }
     }
     

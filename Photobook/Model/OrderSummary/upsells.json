@@ -1,0 +1,35 @@
+{
+    "upsells":[
+               {
+               "displayName":"Upgrade to gloss finish",
+               "sourceTemplateId":"hdbook_210x152",
+               "type":"UPGRADE_GLOSS_FINISH"
+               },
+               {
+               "displayName":"Upgrade to gloss finish",
+               "sourceTemplateId":"hdbook_297x210",
+               "type":"UPGRADE_GLOSS_FINISH"
+               },
+               {
+               "displayName":"Upgrade to gloss finish",
+               "sourceTemplateId":"hdbook_152x210",
+               "type":"UPGRADE_GLOSS_FINISH"
+               },
+               {
+               "displayName":"Upgrade to gloss finish",
+               "sourceTemplateId":"hdbook_127x127",
+               "type":"UPGRADE_GLOSS_FINISH"
+               },
+               {
+               "displayName":"Upgrade to large size (210x210)",
+               "sourceTemplateId":"hdbook_127x127",
+               "targetTemplateId":"hdbook_210x210",
+               "type":"UPGRADE_PRODUCT_SIZE"
+               },
+               {
+               "displayName":"Upgrade to gloss finish",
+               "sourceTemplateId":"hdbook_210x210",
+               "type":"UPGRADE_GLOSS_FINISH"
+               }
+               ]
+}

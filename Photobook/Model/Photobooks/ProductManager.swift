@@ -27,9 +27,6 @@ class ProductManager {
     // List of all available layouts
     private(set) var layouts: [Layout]?
     
-    // List of all available upsell options
-    private(set) var upsellOptions: [UpsellOption]?
-    
     var minimumRequiredAssets: Int {
         let defaultMinimum = 20
         
@@ -40,7 +37,15 @@ class ProductManager {
         return 70
     }
     
-    private(set) var currentProduct: PhotobookProduct?
+    private(set) var currentProduct: PhotobookProduct? {
+        willSet {
+            OrderSummaryManager.shared.reset()
+            upsoldProduct = nil
+            payload = nil
+        }
+    }
+    private(set) var payload: Any?
+    private(set) var upsoldProduct: PhotobookProduct?
     
     func reset() {
         currentProduct = nil
@@ -50,7 +55,7 @@ class ProductManager {
     ///
     /// - Parameter completion: Completion block with an optional error
     func initialise(completion:((Error?)->())?) {
-        apiManager.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, upsellOptions, error) in
+        apiManager.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, error) in
             guard error == nil else {
                 completion?(error!)
                 return
@@ -58,9 +63,22 @@ class ProductManager {
             
             welf?.products = photobooks
             welf?.layouts = layouts
-            welf?.upsellOptions = upsellOptions
             
             completion?(nil)
+        }
+    }
+    
+    func applyUpsells(_ upsells:[UpsellOption], completionHandler: @escaping (_ summary: OrderSummary?, _ error: Error?) -> Void) {
+        guard let currentProduct = currentProduct else {
+            completionHandler(nil, nil)
+            return
+        }
+        
+        apiManager.applyUpsells(product: currentProduct, upsellOptions: upsells) { (summary, upsoldProduct, productPayload, error) in
+            self.upsoldProduct = upsoldProduct
+            self.payload = productPayload
+            
+            completionHandler(summary, error)
         }
     }
     

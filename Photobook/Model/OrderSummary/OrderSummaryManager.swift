@@ -15,6 +15,8 @@ class OrderSummaryManager {
     static let notificationPreviewImageFailed = Notification.Name("ly.kite.sdk.orderSummaryManager.previewImageFailed")
     static let notificationDidUpdateSummary = Notification.Name("ly.kite.sdk.orderSummaryManager.didUpdateSummary")
     
+    private lazy var apiManager = PhotobookAPIManager()
+    
     //layouts configured by previous UX
     private var layouts: [ProductLayout] {
         get {
@@ -24,14 +26,8 @@ class OrderSummaryManager {
     private var coverImageUrl:String?
     private var isUploadingCoverImage = false
     
-    var upsellOptions: [UpsellOption]? {
-        get {
-            return ProductManager.shared.upsellOptions
-        }
-    }
-    var selectedUpsellOptions: Set<UpsellOption> = []
+    private(set) var upsellOptions: [UpsellOption]?
     private(set) var summary: OrderSummary?
-    private(set) var upsoldProduct: PhotobookTemplate? //product to place the order with. Reflects user's selected upsell options.
     private var previewImageUrl: String?
     
     var coverPageSnapshotImage: UIImage?
@@ -39,35 +35,78 @@ class OrderSummaryManager {
     private var product: PhotobookProduct! {
         return ProductManager.shared.currentProduct
     }
+    private(set) var selectedUpsellOptions = Set<UpsellOption>()
     
     static let shared = OrderSummaryManager()
     
+    func reset() {
+        upsellOptions = nil
+        selectedUpsellOptions.removeAll()
+    }
+    
     func refresh() {
-        NotificationCenter.default.post(name: OrderSummaryManager.notificationWillUpdate, object: self)
-        
-        summary = nil
-        previewImageUrl = nil
-        upsoldProduct = nil
-        
-        if coverImageUrl == nil {
-            uploadCoverImage()
+        if upsellOptions?.isEmpty ?? true {
+            fetchOrderSummary()
+        } else {
+            applyUpsells()
         }
-        
-        fetchProductDetails()
     }
     
     func selectUpsellOption(_ option:UpsellOption) {
         selectedUpsellOptions.insert(option)
-        refresh()
+        applyUpsells()
     }
     
     func deselectUpsellOption(_ option:UpsellOption) {
         selectedUpsellOptions.remove(option)
-        refresh()
+        applyUpsells()
     }
     
     func isUpsellOptionSelected(_ option:UpsellOption) -> Bool {
         return selectedUpsellOptions.contains(option)
+    }
+}
+
+// MARK - API Requests
+extension OrderSummaryManager {
+    
+    /// Initial summary fetch
+    private func fetchOrderSummary() {
+        NotificationCenter.default.post(name: OrderSummaryManager.notificationWillUpdate, object: self)
+        
+        prepareForSummaryUpdate()
+        
+        apiManager.getOrderSummary(product: product) { (summary, upsellOptions, productPayload, error) in
+            self.upsellOptions = upsellOptions
+            self.handleReceivingSummary(summary)
+        }
+    }
+    
+    private func applyUpsells() {
+        NotificationCenter.default.post(name: OrderSummaryManager.notificationWillUpdate, object: self)
+        
+        prepareForSummaryUpdate()
+        
+        ProductManager.shared.applyUpsells(Array<UpsellOption>(selectedUpsellOptions)) { (summary, error) in
+            self.handleReceivingSummary(summary)
+        }
+    }
+    
+    private func prepareForSummaryUpdate() {
+        summary = nil
+        previewImageUrl = nil
+        
+        if coverImageUrl == nil {
+            uploadCoverImage()
+        }
+    }
+    
+    private func handleReceivingSummary(_ summary: OrderSummary?) {
+        self.summary = summary
+        NotificationCenter.default.post(name: OrderSummaryManager.notificationDidUpdateSummary, object: self)
+        if self.coverImageUrl != nil {
+            NotificationCenter.default.post(name: OrderSummaryManager.notificationPreviewImageReady, object: self)
+        }
     }
     
     func fetchPreviewImage(withSize size:CGSize, completion:@escaping (UIImage?) -> Void) {
@@ -86,30 +125,6 @@ class OrderSummaryManager {
             })
         } else {
             completion(nil)
-        }
-    }
-    
-    private func fetchProductDetails() {
-        
-        //TODO: mock data REMOVE
-        let randomInt = arc4random_uniform(3)
-        let filename = "order_summary_\(randomInt)"
-        print("mock file: " + filename)
-        
-        guard let summaryDict = JSON.parse(file: filename) as? [String:Any] else {
-            NotificationCenter.default.post(name: OrderSummaryManager.notificationDidUpdateSummary, object: self)
-            return
-        }
-        
-        //summary
-        guard let summary = OrderSummary(summaryDict) else {
-            NotificationCenter.default.post(name: OrderSummaryManager.notificationDidUpdateSummary, object: self)
-            return
-        }
-        self.summary = summary
-        NotificationCenter.default.post(name: OrderSummaryManager.notificationDidUpdateSummary, object: self)
-        if coverImageUrl != nil {
-            NotificationCenter.default.post(name: OrderSummaryManager.notificationPreviewImageReady, object: self)
         }
     }
     
