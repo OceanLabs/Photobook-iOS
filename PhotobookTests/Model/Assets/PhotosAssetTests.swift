@@ -11,60 +11,10 @@ import Photos
 import MobileCoreServices
 @testable import Photobook
 
-class TestPHAsset: PHAsset {
-    
-    var localIdentifierStub: String?
-    var widthStub: Int!
-    var heightStub: Int!
-    var mediaTypeStub: PHAssetMediaType? = .image
-    var dateStub: Date?
-    
-    override var pixelWidth: Int { return widthStub }
-    override var pixelHeight: Int { return heightStub }
-    override var creationDate: Date? { return dateStub }
-    
-    override var mediaType: PHAssetMediaType { return mediaTypeStub! }
-    
-    override var localIdentifier: String {
-        return localIdentifierStub ?? ""
-    }
-}
-
-class TestAssetManager: AssetManager {
-    
-    var phAssetStub: TestPHAsset?
-    
-    func fetchAssets(withLocalIdentifiers identifiers: [String], options: PHFetchOptions?) -> PHAsset? {
-        return phAssetStub
-    }
-}
-
-class ImageManager: PHImageManager {
-    
-    var imageData: Data!
-    var dataUti: String!
-    
-    override func requestImage(for asset: PHAsset, targetSize: CGSize, contentMode: PHImageContentMode, options: PHImageRequestOptions?, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> PHImageRequestID {
-        
-        let image = UIImage(color: .black, size: targetSize)
-        
-        resultHandler(image, nil)
-        
-        return 0
-    }
-    
-    override func requestImageData(for asset: PHAsset, options: PHImageRequestOptions?, resultHandler: @escaping (Data?, String?, UIImageOrientation, [AnyHashable : Any]?) -> Void) -> PHImageRequestID {
-        
-        resultHandler(imageData, dataUti, .up, nil)
-        
-        return 0
-    }
-}
-
 class PhotosAssetTests: XCTestCase {
     
     let image = UIImage(color: .black, size: testSize)!
-    let imageManager = ImageManager()
+    let imageManager = TestImageManager()
     let assetManager = TestAssetManager()
     var phAsset: TestPHAsset!
     var photosAsset: PhotosAsset!
@@ -74,7 +24,7 @@ class PhotosAssetTests: XCTestCase {
         
         phAsset = TestPHAsset()
         phAsset.localIdentifierStub = "localID"
-        assetManager.phAssetStub = phAsset
+        assetManager.phAssetsStub = [phAsset]
         
         PhotosAsset.assetManager = assetManager
         

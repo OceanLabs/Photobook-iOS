@@ -294,8 +294,7 @@ extension StoriesManager: PHPhotoLibraryChangeObserver {
             var indexesRemoved = [Int]()
             for asset in story.assets {
                 guard let asset = asset as? PhotosAsset else { continue }
-                if let changeDetails = changeInstance.changeDetails(for: asset.photosAsset),
-                    changeDetails.objectWasDeleted {
+                if asset.wasRemoved(in: changeInstance) {
                     assetsRemoved.append(asset)
                     
                     if let index = story.assets.index(where: { $0.identifier == asset.identifier}) {
@@ -303,7 +302,7 @@ extension StoriesManager: PHPhotoLibraryChangeObserver {
                     }
                 }
             }
-            albumChanges.append(AlbumChange(album: story, assetsRemoved: assetsRemoved, indexesRemoved: indexesRemoved, assetsAdded: []))
+            albumChanges.append(AlbumChange(album: story, assetsRemoved: assetsRemoved, indexesRemoved: indexesRemoved, assetsInserted: []))
             
             // Remove assets from this story from the end as to not mess up the indexes
             for assetIndex in indexesRemoved.reversed() {

@@ -11,11 +11,16 @@ import Photos
 
 protocol AssetManager {
     func fetchAssets(withLocalIdentifiers identifiers: [String], options: PHFetchOptions?) -> PHAsset?
+    func fetchAssets(in: AssetCollection, options: PHFetchOptions) -> PHFetchResult<PHAsset>
 }
 
 class DefaultAssetManager: AssetManager {
     func fetchAssets(withLocalIdentifiers identifiers: [String], options: PHFetchOptions?) -> PHAsset? {
         return PHAsset.fetchAssets(withLocalIdentifiers: identifiers, options: options).firstObject
+    }
+    
+    func fetchAssets(in assetCollection: AssetCollection, options: PHFetchOptions) -> PHFetchResult<PHAsset> {
+        return PHAsset.fetchAssets(in: assetCollection as! PHAssetCollection, options: options)
     }
 }
 
@@ -23,14 +28,14 @@ class DefaultAssetManager: AssetManager {
 @objc public class PhotosAsset: NSObject, NSCoding, Asset {
     
     /// Photo library asset
-    @objc public var photosAsset: PHAsset {
+    @objc internal(set) public var photosAsset: PHAsset {
         didSet {
             identifier = photosAsset.localIdentifier
         }
     }
     
     /// Identifier for the album where the asset is included
-    @objc public var albumIdentifier: String?
+    @objc internal(set) public var albumIdentifier: String?
     
     var imageManager = PHImageManager.default()
     static var assetManager: AssetManager = DefaultAssetManager()
@@ -151,7 +156,7 @@ class DefaultAssetManager: AssetManager {
         return photosAssets
     }
     
-    static func assets(from photosAssets:[PHAsset], albumId: String) -> [Asset] {
+    static func assets(from photosAssets: [PHAsset], albumId: String) -> [Asset] {
         var assets = [Asset]()
         for photosAsset in photosAssets {
             assets.append(PhotosAsset(photosAsset, albumIdentifier: albumId))
@@ -160,4 +165,11 @@ class DefaultAssetManager: AssetManager {
         return assets
     }
     
+    @objc public func wasRemoved(in changeInstance: PHChange) -> Bool {
+        if let changeDetails = changeInstance.changeDetails(for: photosAsset),
+            changeDetails.objectWasDeleted {
+            return true
+        }
+        return false
+    }
 }

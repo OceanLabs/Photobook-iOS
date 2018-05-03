@@ -9,18 +9,6 @@
 import XCTest
 @testable import Photobook
 
-class TestWebImageManager: WebImageManager {
-    
-    var url: URL?
-    var imageDataStub: Data?
-    var imageStub: UIImage?
-    
-    func loadImage(with url: URL, completion: @escaping (UIImage?, Data?, Error?) -> Void) {
-        self.url = url
-        completion(imageStub, imageDataStub, nil)
-    }
-}
-
 class URLAssetTests: XCTestCase {
         
     func testURLAsset_canBeInitialised() {

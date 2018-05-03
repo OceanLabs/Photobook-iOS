@@ -9,27 +9,48 @@
 import UIKit
 import Photos
 
+protocol AssetCollection {
+    var localizedTitle: String? { get }
+    var localIdentifier: String { get }
+    var estimatedAssetCount: Int { get }
+    func coverAsset(useFirstImageInCollection: Bool, completionHandler: @escaping (Asset?, Error?) -> Void)
+}
+
+protocol ChangeManager {
+    func details(for fetchResult: PHFetchResult<PHAsset>) -> PHFetchResultChangeDetails<PHAsset>?
+}
+
+extension PHChange: ChangeManager {
+    func details(for fetchResult: PHFetchResult<PHAsset>) -> PHFetchResultChangeDetails<PHAsset>? {
+        return changeDetails(for: fetchResult)
+    }
+}
+
+extension PHAssetCollection: AssetCollection {}
+
 class PhotosAlbum: Album {
     
-    let assetCollection: PHAssetCollection
+    let assetCollection: AssetCollection
     var assets = [Asset]()
-    var fetchedAssets: PHFetchResult<PHAsset>?
     var hasMoreAssetsToLoad = false
 
-    init(_ assetCollection: PHAssetCollection) {
+    private var fetchedAssets: PHFetchResult<PHAsset>?
+    var assetManager: AssetManager = DefaultAssetManager()
+    
+    init(_ assetCollection: AssetCollection) {
         self.assetCollection = assetCollection
     }
     
     /// Returns the estimated number of assets for this album, which might not be available without calling loadAssets. It might differ from the actual number of assets. NSNotFound if not available.
-    var numberOfAssets: Int{
+    var numberOfAssets: Int {
         return !assets.isEmpty ? assets.count : assetCollection.estimatedAssetCount
     }
     
-    var localizedName: String?{
+    var localizedName: String? {
         return assetCollection.localizedTitle
     }
     
-    var identifier: String{
+    var identifier: String {
         return assetCollection.localIdentifier
     }
     
@@ -48,7 +69,7 @@ class PhotosAlbum: Album {
         fetchOptions.includeHiddenAssets = false
         fetchOptions.includeAllBurstAssets = false
         fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
-        let fetchedAssets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+        let fetchedAssets = assetManager.fetchAssets(in: assetCollection, options: fetchOptions)
         var assets = [Asset]()
         fetchedAssets.enumerateObjects({ (asset, _, _) in
             assets.append(PhotosAsset(asset, albumIdentifier: self.identifier))
@@ -56,6 +77,7 @@ class PhotosAlbum: Album {
         
         self.assets = assets
         self.fetchedAssets = fetchedAssets
+        //print("crap")
     }
     
     func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
@@ -64,6 +86,15 @@ class PhotosAlbum: Album {
     
     func loadNextBatchOfAssets(completionHandler: ((Error?) -> Void)?) {}
     
+    func changedAssets(for changeInstance: ChangeManager) -> ([Asset]?, [Asset]?) {
+        guard let fetchedAssets = fetchedAssets,
+            let changeDetails = changeInstance.details(for: fetchedAssets)
+        else { return (nil, nil) }
+        
+        let insertedObjects = PhotosAsset.assets(from: changeDetails.insertedObjects, albumId: identifier)
+        let removedObjects = PhotosAsset.assets(from: changeDetails.removedObjects, albumId: identifier)
+        return (insertedObjects, removedObjects)
+    }
 }
 
 extension PhotosAlbum: PickerAnalytics {
