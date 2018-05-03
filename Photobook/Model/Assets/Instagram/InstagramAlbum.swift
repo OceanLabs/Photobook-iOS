@@ -75,7 +75,9 @@ class InstagramAlbum {
                         urlAssetImages.append(URLAssetImage(url: standardResolutionImageUrl, size: CGSize(width: width, height: height)))
                     }
         
-                    newAssets.append(URLAsset(identifier: "\(identifier)-\(i)", albumIdentifier: self.identifier, images: urlAssetImages))
+                    if let urlAsset = URLAsset(identifier: "\(identifier)-\(i)", images: urlAssetImages, albumIdentifier: self.identifier) {
+                        newAssets.append(urlAsset)
+                    }
                 }
             }
             

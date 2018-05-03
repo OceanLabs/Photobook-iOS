@@ -69,10 +69,10 @@ class FacebookAlbum {
                     urlAssetImages.append(URLAssetImage(url: url, size: CGSize(width: width, height: height)))
                 }
                 
-                let newAsset = URLAsset(identifier: identifier, albumIdentifier: self.identifier, images: urlAssetImages)
-                
-                newAssets.append(newAsset)
-                welf?.assets.append(newAsset)
+                if let newAsset = URLAsset(identifier: identifier, images: urlAssetImages, albumIdentifier: self.identifier) {
+                    newAssets.append(newAsset)
+                    welf?.assets.append(newAsset)
+                }
             }
             
             // Get the next page cursor
@@ -107,7 +107,7 @@ extension FacebookAlbum: Album {
     }
     
     func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
-        completionHandler(URLAsset(identifier: coverPhotoUrl.absoluteString, albumIdentifier: identifier, images: [URLAssetImage(url: coverPhotoUrl, size: .zero)]), nil)
+        completionHandler(URLAsset(identifier: coverPhotoUrl.absoluteString, images: [URLAssetImage(url: coverPhotoUrl, size: .zero)], albumIdentifier: identifier), nil)
     }
 }
 

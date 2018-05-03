@@ -40,8 +40,8 @@ class FontTypeTests: XCTestCase {
         let font = attributedText.attribute(NSAttributedStringKey.font, at: 0, effectiveRange: &range) as? UIFont
         let color = attributedText.attribute(NSAttributedStringKey.foregroundColor, at: 0, effectiveRange: &range) as? UIColor
         XCTAssertEqual(attributedText.string, text)
-        XCTAssertTrue(font != nil && font!.pointSize == 10.0)
-        XCTAssertTrue(color != nil && color == .blue)
+        XCTAssertEqualOptional(font?.pointSize, 10.0)
+        XCTAssertEqualOptional(color, .blue)
     }
     
     func testSizeForScreenRatio_shouldReturnPhotobookFontSize() {

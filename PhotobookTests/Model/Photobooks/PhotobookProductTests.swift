@@ -75,13 +75,13 @@ class PhotobookProductTests: XCTestCase {
     // MARK: - EmptyLayoutIndices
     func testEmptyLayoutIndices_shouldReturnLastTen() {
         let emptyLayoutIndices = photobookProduct.emptyLayoutIndices
-        XCTAssertTrue(emptyLayoutIndices == Array(11...19))
+        XCTAssertEqual(emptyLayoutIndices, Array(11...19))
     }
     
     func testEmptyLayoutIndices_shouldCountDoublePageLayoutsAsTwoIndeces() {
         photobookProduct.productLayouts[12].layout.isDoubleLayout = true
         let emptyLayoutIndices = photobookProduct.emptyLayoutIndices
-        XCTAssertTrue(emptyLayoutIndices == Array(11...20))
+        XCTAssertEqual(emptyLayoutIndices, Array(11...20))
     }
 
     func testEmptyLayoutIndices_shouldIgnoreEmptyTextIfLayoutHasAPhoto() {
@@ -149,7 +149,7 @@ class PhotobookProductTests: XCTestCase {
     func testSetText() {
         let text = "This is alternative text"
         photobookProduct.setText(text, forPage: 1)
-        XCTAssertTrue(photobookProduct.productLayouts[1].text == text)
+        XCTAssertEqual(photobookProduct.productLayouts[1].text, text)
     }
     
     // MARK: - Indices & Spreads

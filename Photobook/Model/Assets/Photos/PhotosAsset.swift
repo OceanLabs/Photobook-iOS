@@ -9,7 +9,11 @@
 import UIKit
 import Photos
 
-class AssetManager {
+protocol AssetManager {
+    func fetchAssets(withLocalIdentifiers identifiers: [String], options: PHFetchOptions?) -> PHAsset?
+}
+
+class DefaultAssetManager: AssetManager {
     func fetchAssets(withLocalIdentifiers identifiers: [String], options: PHFetchOptions?) -> PHAsset? {
         return PHAsset.fetchAssets(withLocalIdentifiers: identifiers, options: options).firstObject
     }
@@ -29,7 +33,7 @@ class AssetManager {
     @objc public var albumIdentifier: String?
     
     var imageManager = PHImageManager.default()
-    static var assetManager = AssetManager()
+    static var assetManager: AssetManager = DefaultAssetManager()
     
     var identifier: String! {
         didSet {
