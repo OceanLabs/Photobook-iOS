@@ -52,6 +52,14 @@ class OrderSummaryManager {
         }
     }
     
+    func toggleUpsellOption(_ option:UpsellOption) {
+        if isUpsellOptionSelected(option) {
+            deselectUpsellOption(option)
+        } else {
+            selectUpsellOption(option)
+        }
+    }
+    
     func selectUpsellOption(_ option:UpsellOption) {
         selectedUpsellOptions.insert(option)
         applyUpsells()

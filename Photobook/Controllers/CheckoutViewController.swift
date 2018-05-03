@@ -212,6 +212,7 @@ class CheckoutViewController: UIViewController {
         itemTitleLabel.text = OrderManager.shared.basketOrder.products.first!.template.name
         itemPriceLabel.text = OrderManager.shared.basketOrder.cachedCost?.lineItems?.first?.formattedCost
         itemAmountButton.setTitle("\(OrderManager.shared.basketOrder.products.first!.itemCount)", for: .normal)
+        itemAmountButton.accessibilityValue = itemAmountButton.title(for: .normal)
         updateItemImage()
         
         //promo code
@@ -234,19 +235,23 @@ class CheckoutViewController: UIViewController {
             case .creditCard:
                 if let card = Card.currentCard {
                     paymentMethodIconImageView.image = card.cardIcon
+                    paymentMethodIconImageView.accessibilityValue = card.number.cardType()?.stringValue()
                     paymentMethodTitleLabel.text = Constants.payingWithText
                 } else {
                     paymentMethodIconImageView.image = nil
+                    paymentMethodIconImageView.accessibilityValue = nil
                     paymentMethodTitleLabel.text = Constants.paymentMethodText
                 }
             case .applePay:
                 paymentMethodIconImageView.image = UIImage(namedInPhotobookBundle: "apple-pay-method")
+                paymentMethodIconImageView.accessibilityValue = "Apple Pay"
                 showDeliveryDetailsConstraint.priority = .defaultLow
                 hideDeliveryDetailsConstraint.priority = .defaultHigh
                 deliveryDetailsView.isHidden = true
                 paymentMethodTitleLabel.text = Constants.payingWithText
             case .payPal:
                 paymentMethodIconImageView.image = UIImage(namedInPhotobookBundle: "paypal-method")
+                paymentMethodIconImageView.accessibilityValue = "PayPal"
                 paymentMethodTitleLabel.text = Constants.payingWithText
             }
             paymentMethodIconImageView.isHidden = false
@@ -563,6 +568,7 @@ extension CheckoutViewController: AmountPickerDelegate {
     func amountPickerDidSelectValue(_ value: Int) {
         OrderManager.shared.basketOrder.products.first!.itemCount = value
         itemAmountButton.setTitle("\(value)", for: .normal)
+        itemAmountButton.accessibilityValue = itemAmountButton.title(for: .normal)
     }
 }
 

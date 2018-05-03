@@ -56,6 +56,11 @@ class OrderSummaryViewController: UIViewController {
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        (navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(.white)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "OrderSummarySegueName" {
             
@@ -103,6 +108,22 @@ class OrderSummaryViewController: UIViewController {
         }
     }
     
+    private func tappedUpsellOption(for cell: OrderSummaryUpsellTableViewCell, at index: Int) {
+        let displayName = OrderSummaryManager.shared.upsellOptions![index].displayName
+        cell.titleLabel?.text = displayName
+        
+        cell.accessibilityIdentifier = "upsellOption\(index)"
+        
+        let isOptionEnabled = OrderSummaryManager.shared.isUpsellOptionSelected(OrderSummaryManager.shared.upsellOptions![index])
+        cell.setEnabled(isOptionEnabled)
+        cell.accessibilityLabel = displayName
+        if isOptionEnabled {
+            cell.accessibilityValue = NSLocalizedString("Accessibility/Enabled", value: "Enabled", comment: "Informs the user that an upsell option is enabled.")
+        } else {
+            cell.accessibilityValue = NSLocalizedString("Accessibility/Disabled", value: "Disabled", comment: "Informs the user that an upsell option is disabled.")
+        }
+    }
+    
 }
 
 //MARK: - Notifications
@@ -122,7 +143,10 @@ extension OrderSummaryViewController {
         
         if OrderSummaryManager.shared.summary != nil {
             emptyScreenViewController.hide(animated: true)
-            tableView.reloadData()
+            
+            let numberOfOptions = OrderSummaryManager.shared.upsellOptions?.count ?? 0
+            let sectionsToUpdate = tableView.numberOfRows(inSection: 2) == numberOfOptions ? 0...1 : 0...2
+            tableView.reloadSections(IndexSet(integersIn: sectionsToUpdate), with: .automatic)
         } else {
             
             emptyScreenViewController.show(message: Constants.stringLoadingFail, title: nil, image: nil, activity: false, buttonTitle: CommonLocalizedStrings.retry, buttonAction: {
@@ -169,24 +193,25 @@ extension OrderSummaryViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
         if indexPath.section == Constants.sectionOptions,
             let upsellOption = OrderSummaryManager.shared.upsellOptions?[indexPath.row] {
             //handle changed upsell selection
-            OrderSummaryManager.shared.selectUpsellOption(upsellOption)
+            OrderSummaryManager.shared.toggleUpsellOption(upsellOption)
             progressOverlayViewController.show(message: NSLocalizedString("OrderSummary/Loading", value: "Loading order details", comment: "Loading product summary"))
-            Analytics.shared.trackAction(.selectedUpsellOption, [Analytics.PropertyNames.upsellOptionName: upsellOption.displayName])
+            
+            if let cell = tableView.cellForRow(at: indexPath) as? OrderSummaryUpsellTableViewCell {
+                tappedUpsellOption(for: cell, at: indexPath.row)
+            }
+            
+            if OrderSummaryManager.shared.isUpsellOptionSelected(upsellOption) {
+                Analytics.shared.trackAction(.selectedUpsellOption, [Analytics.PropertyNames.upsellOptionName: upsellOption.displayName])
+            } else {
+                Analytics.shared.trackAction(.deselectedUpsellOption, [Analytics.PropertyNames.upsellOptionName: upsellOption.displayName])
+            }
         }
     }
     
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        if indexPath.section == Constants.sectionOptions,
-            let upsellOption = OrderSummaryManager.shared.upsellOptions?[indexPath.row] {
-            //handle changed upsell selection
-            OrderSummaryManager.shared.deselectUpsellOption(upsellOption)
-            progressOverlayViewController.show(message: NSLocalizedString("OrderSummary/Loading", value: "Loading order details", comment: "Loading product summary"))
-            Analytics.shared.trackAction(.deselectedUpsellOption, [Analytics.PropertyNames.upsellOptionName: upsellOption.displayName])
-        }
-    }
 }
 
 extension OrderSummaryViewController: UITableViewDataSource {
@@ -227,10 +252,8 @@ extension OrderSummaryViewController: UITableViewDataSource {
             return cell
         case Constants.sectionOptions:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrderSummaryUpsellTableViewCell", for: indexPath) as! OrderSummaryUpsellTableViewCell
-            cell.titleLabel?.text = OrderSummaryManager.shared.upsellOptions![indexPath.row].displayName
-            if OrderSummaryManager.shared.isUpsellOptionSelected(OrderSummaryManager.shared.upsellOptions![indexPath.row]) {
-                tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-            }
+            tappedUpsellOption(for: cell, at: indexPath.row)
+            
             return cell
         default:
             return UITableViewCell(style: .default, reuseIdentifier: nil)

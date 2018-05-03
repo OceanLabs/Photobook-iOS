@@ -10,6 +10,16 @@ import XCTest
 
 class Automation {
     
+    let testName = "Clown"
+    let testLastName = "Clownberg"
+    let testEmail = "clown@example.com"
+    let testPhone = "1234567890"
+    let testAddressLine1 = "Fiesta Blvd 2"
+    let testCity = "Clown City"
+    let testPostalCode = "11111"
+    let testCreditCardNumber = "4242424242424242"
+    let testCreditCardCVV = "111"
+    
     let app: XCUIApplication
     let testCase: XCTestCase
     
@@ -20,22 +30,28 @@ class Automation {
 
     func goToPhotobookReview() {
         app.buttons["Create Photobook with web photos"].tap()
+        
+        let checkoutButton = app.buttons["Checkout"]
+        testCase.wait(for: checkoutButton)
     }
     
     func goToOrderSummary() {
         goToPhotobookReview()
         
         let checkoutButton = app.buttons["Checkout"]
-        testCase.wait(for: checkoutButton)
         checkoutButton.tap()
+        
+        let continueButton = app.buttons["Continue"]
+        testCase.wait(for: continueButton)
     }
     
     func goToBasket() {
         goToOrderSummary()
         
         let continueButton = app.buttons["Continue"]
-        testCase.wait(for: continueButton)
         continueButton.tap()
+        
+        testCase.wait(for: app.buttons["payButton"])
     }
     
     func fillDeliveryDetailsFromBasket() {
@@ -53,22 +69,22 @@ class Automation {
         let nameTextField = tablesQuery.cells.containing(.staticText, identifier:"Name")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
         nameTextField.tap()
         nameTextField.clearTextField()
-        nameTextField.typeText("Clown")
+        nameTextField.typeText(testName)
         
         let lastNameTextField = tablesQuery.cells.containing(.staticText, identifier:"Last Name")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
         lastNameTextField.tap()
         lastNameTextField.clearTextField()
-        lastNameTextField.typeText("Clownberg")
+        lastNameTextField.typeText(testLastName)
         
         let emailTextField = tablesQuery.cells.containing(.staticText, identifier:"Email")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
         emailTextField.tap()
         emailTextField.clearTextField()
-        emailTextField.typeText("clown@example.com")
+        emailTextField.typeText(testEmail)
         
         let phoneTextField = tablesQuery.cells.containing(.staticText, identifier:"Phone")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
         phoneTextField.tap()
         phoneTextField.clearTextField()
-        phoneTextField.typeText("1234567890")
+        phoneTextField.typeText(testPhone)
         
         goToAddressFromDeliveryDetails()
         
@@ -86,18 +102,21 @@ class Automation {
         let line1TextField = tablesQuery.cells.containing(.staticText, identifier:"Line1")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
         line1TextField.tap()
         line1TextField.clearTextField()
-        line1TextField.typeText("Fiesta Blvd 2")
+        line1TextField.typeText(testAddressLine1)
         
         
         let cityTextField = tablesQuery.cells.containing(.staticText, identifier:"City")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
         cityTextField.tap()
         cityTextField.clearTextField()
-        cityTextField.typeText("Clown City")
+        cityTextField.typeText(testCity)
         
-        let zipTextField = tablesQuery.cells.containing(.staticText, identifier:"Zip Code")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
-        zipTextField.tap()
-        zipTextField.clearTextField()
-        zipTextField.typeText("11111")
+        var zipOrPostalTextField = tablesQuery.cells.containing(.staticText, identifier:"Zip Code")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        if !zipOrPostalTextField.exists {
+            zipOrPostalTextField = tablesQuery.cells.containing(.staticText, identifier:"Postcode")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        }
+        zipOrPostalTextField.tap()
+        zipOrPostalTextField.clearTextField()
+        zipOrPostalTextField.typeText(testPostalCode)
         
         app.navigationBars["Address"].buttons["Save"].tap()
     }
@@ -120,7 +139,7 @@ class Automation {
     func fillCreditCardAndSave() {
         let cardNumberTextField = app.tables.cells.containing(.staticText, identifier:"Card Number")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
         cardNumberTextField.tap()
-        cardNumberTextField.typeText("4242424242424242")
+        cardNumberTextField.typeText(testCreditCardNumber)
         
         app.toolbars["Toolbar"].buttons["Next"].tap()
         
@@ -130,7 +149,7 @@ class Automation {
         app.toolbars["Toolbar"].buttons["Next"].tap()
         
         let cvvTextField = app.tables/*@START_MENU_TOKEN@*/.secureTextFields["TextField"]/*[[".cells",".secureTextFields[\"Required\"]",".secureTextFields[\"TextField\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/
-        cvvTextField.typeText("111")
+        cvvTextField.typeText(testCreditCardCVV)
         
         app.navigationBars["Card Details"].buttons["Save"].tap()
     }

@@ -37,9 +37,9 @@ class ReceiptProgressTableViewCell: UITableViewCell {
         let uploadedCount = totalUploads - pendingUploads
         
         let progressFormatString = NSLocalizedString("ReceiptProgressTableViewCell/ProgressFormatString", value: "%d of %d photos", comment: "Amount of photos uploaded compared to the total count. Example '7 of 24 photos'")
-        progressLabel.text = String(format: progressFormatString, max(uploadedCount, 1), totalUploads)
-        
-        progressView.setProgress(Float(uploadedCount+1)/Float(totalUploads), animated: false)
+        let startingCount = max(uploadedCount, 1)
+        progressLabel.text = String(format: progressFormatString, startingCount, totalUploads)        
+        progressView.setProgress(Float(startingCount) / Float(totalUploads), animated: false)
     }
     
 }
