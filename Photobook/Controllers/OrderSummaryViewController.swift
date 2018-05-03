@@ -50,6 +50,8 @@ class OrderSummaryViewController: UIViewController {
         
         emptyScreenViewController.show(message: Constants.stringLoading, activity: true)
         
+        OrderSummaryManager.shared.reset()
+        
         takeCoverSnapshot { (image) in
             OrderSummaryManager.shared.coverPageSnapshotImage = image
             OrderSummaryManager.shared.refresh()

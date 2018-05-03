@@ -42,6 +42,10 @@ class OrderSummaryManager {
     func reset() {
         upsellOptions = nil
         selectedUpsellOptions.removeAll()
+        
+        previewImageUrl = nil
+        coverImageUrl = nil
+        isUploadingCoverImage = false
     }
     
     func refresh() {
@@ -82,7 +86,12 @@ extension OrderSummaryManager {
     private func fetchOrderSummary() {
         NotificationCenter.default.post(name: OrderSummaryManager.notificationWillUpdate, object: self)
         
-        prepareForSummaryUpdate()
+        summary = nil
+        previewImageUrl = nil
+        
+        if coverImageUrl == nil {
+            uploadCoverImage()
+        }
         
         apiManager.getOrderSummary(product: product) { (summary, upsellOptions, productPayload, error) in
             self.upsellOptions = upsellOptions
@@ -93,19 +102,8 @@ extension OrderSummaryManager {
     private func applyUpsells() {
         NotificationCenter.default.post(name: OrderSummaryManager.notificationWillUpdate, object: self)
         
-        prepareForSummaryUpdate()
-        
         ProductManager.shared.applyUpsells(Array<UpsellOption>(selectedUpsellOptions)) { (summary, error) in
             self.handleReceivingSummary(summary)
-        }
-    }
-    
-    private func prepareForSummaryUpdate() {
-        summary = nil
-        previewImageUrl = nil
-        
-        if coverImageUrl == nil {
-            uploadCoverImage()
         }
     }
     
