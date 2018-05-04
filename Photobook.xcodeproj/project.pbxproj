@@ -321,6 +321,7 @@
 		6F3E3066209B0F13006381BD /* PhotosAlbumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3E3065209B0F13006381BD /* PhotosAlbumTests.swift */; };
 		6F3E3068209B42CE006381BD /* AssetMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3E3067209B42CE006381BD /* AssetMocks.swift */; };
 		6F3E306A209B5E87006381BD /* FacebookAlbumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3E3069209B5E87006381BD /* FacebookAlbumTests.swift */; };
+		6F3E306C209C610C006381BD /* InstagramAlbumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3E306B209C610C006381BD /* InstagramAlbumTests.swift */; };
 		6F4606DC201886BD00C7583E /* BorderedRoundedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4606DB201886BD00C7583E /* BorderedRoundedView.swift */; };
 		6F4DE64E1FB323540099A97E /* StoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DE64D1FB323540099A97E /* StoriesViewController.swift */; };
 		6F4DE6511FB35B010099A97E /* LeagueGothic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6F4DE6501FB35B000099A97E /* LeagueGothic-Regular.otf */; };
@@ -602,6 +603,7 @@
 		6F3E3065209B0F13006381BD /* PhotosAlbumTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosAlbumTests.swift; sourceTree = "<group>"; };
 		6F3E3067209B42CE006381BD /* AssetMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetMocks.swift; sourceTree = "<group>"; };
 		6F3E3069209B5E87006381BD /* FacebookAlbumTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookAlbumTests.swift; sourceTree = "<group>"; };
+		6F3E306B209C610C006381BD /* InstagramAlbumTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramAlbumTests.swift; sourceTree = "<group>"; };
 		6F4606DB201886BD00C7583E /* BorderedRoundedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedRoundedView.swift; sourceTree = "<group>"; };
 		6F4DE64D1FB323540099A97E /* StoriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesViewController.swift; sourceTree = "<group>"; };
 		6F4DE6501FB35B000099A97E /* LeagueGothic-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LeagueGothic-Regular.otf"; sourceTree = "<group>"; };
@@ -1058,6 +1060,7 @@
 				6F3E3065209B0F13006381BD /* PhotosAlbumTests.swift */,
 				6F3E3067209B42CE006381BD /* AssetMocks.swift */,
 				6F3E3069209B5E87006381BD /* FacebookAlbumTests.swift */,
+				6F3E306B209C610C006381BD /* InstagramAlbumTests.swift */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -2034,6 +2037,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FE3CEC3208DFC2B00BB1BAB /* FontTypeTests.swift in Sources */,
+				6F3E306C209C610C006381BD /* InstagramAlbumTests.swift in Sources */,
 				6F34E66920987D90001A7D59 /* PhotosAssetTests.swift in Sources */,
 				2E25272C2015EDA9004C12AF /* CreditCardTests.swift in Sources */,
 				6FC7E8831FC4458100D2BCDA /* PhotobookAPIManagerTests.swift in Sources */,

@@ -8,6 +8,7 @@
 
 import Foundation
 import Photos
+import OAuthSwift
 @testable import Photobook
 
 class TestPHAsset: PHAsset {
@@ -126,4 +127,32 @@ class TestFacebookApiManager: FacebookApiManager {
     func request(withGraphPath path: String, parameters: [String: Any]?, completion: @escaping (Any?, Error?) -> Void) {
         completion(result, error)
     }
+}
+
+class TestInstagramApiManager: InstagramApiManager {
+    
+    var data: Any?
+    var error: OAuthSwiftError?
+    var credential: OAuthSwiftCredential?
+    var lastUrl: String?
+    
+    func startAuthorizedRequest(_ url: String,
+                                method: OAuthSwiftHTTPRequest.Method,
+                                onTokenRenewal: OAuthSwift.TokenRenewedHandler?,
+                                success: @escaping OAuthSwiftHTTPRequest.SuccessHandler,
+                                failure: @escaping OAuthSwiftHTTPRequest.FailureHandler) {
+        lastUrl = url
+        if let credential = credential { onTokenRenewal?(credential) }
+        if let error = error { failure(error) }
+        else if let data = data {
+            let serialized = try! JSONSerialization.data(withJSONObject: data, options: [])
+            let httpResponse = HTTPURLResponse(url: testUrl, mimeType: "text/html", expectedContentLength: 0, textEncodingName: nil)
+            let response = OAuthSwiftResponse(data: serialized, response: httpResponse, request: nil)
+            success(response)
+        }
+    }
+}
+
+class TestKeychainHandler: NSObject, KeychainHandler {
+    var tokenKey: String?
 }
