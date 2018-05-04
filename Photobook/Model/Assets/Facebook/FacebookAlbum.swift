@@ -9,6 +9,19 @@
 import UIKit
 import FBSDKLoginKit
 
+protocol FacebookApiManager {
+    func request(withGraphPath path: String, parameters: [String: Any]?, completion: @escaping (Any?, Error?) -> Void)
+}
+
+class DefaultFacebookApiManager: FacebookApiManager {
+    func request(withGraphPath path: String, parameters: [String : Any]?, completion: @escaping (Any?, Error?) -> Void) {
+        let graphRequest = FBSDKGraphRequest(graphPath: path, parameters: parameters)
+        _ = graphRequest?.start { _, result, error in
+            completion(result, error)
+        }
+    }
+}
+
 class FacebookAlbum {
     
     private struct Constants {
@@ -24,24 +37,20 @@ class FacebookAlbum {
     }
     
     var numberOfAssets: Int
-    
     var localizedName: String?
-    
     var identifier: String
-    
     var assets = [Asset]()
-        
     var coverPhotoUrl: URL
-    
     var after: String?
     
     var graphPath: String {
         return "\(identifier)/photos?fields=picture,source,id,images&limit=\(Constants.pageSize)"
     }
     
+    var facebookManager: FacebookApiManager = DefaultFacebookApiManager()
+    
     private func fetchAssets(graphPath: String, completionHandler: ((Error?) -> Void)?) {
-        let graphRequest = FBSDKGraphRequest(graphPath: graphPath, parameters: [:])
-        _ = graphRequest?.start(completionHandler: { [weak welf = self] _, result, error in
+        facebookManager.request(withGraphPath: graphPath, parameters: nil) { [weak welf = self] (result, error) in
             if let error = error {
                 completionHandler?(ErrorMessage(text: error.localizedDescription))
                 return
@@ -84,9 +93,9 @@ class FacebookAlbum {
             } else {
                 self.after = nil
             }
-        
+            
             completionHandler?(nil)
-        })
+        }
     }
 }
 

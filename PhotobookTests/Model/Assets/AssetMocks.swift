@@ -117,3 +117,13 @@ class TestAssetCollection: AssetCollection {
         completionHandler(TestPhotosAsset(), nil)
     }
 }
+
+class TestFacebookApiManager: FacebookApiManager {
+
+    var result: Any?
+    var error: LocalizedError?
+    
+    func request(withGraphPath path: String, parameters: [String: Any]?, completion: @escaping (Any?, Error?) -> Void) {
+        completion(result, error)
+    }
+}
