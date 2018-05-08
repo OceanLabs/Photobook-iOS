@@ -4611,7 +4611,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     <subviews>
                                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Required" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="c3a-IO-Ki5">
                                             <rect key="frame" x="68" y="0.0" width="275" height="44"/>
-                                            <accessibility key="accessibilityConfiguration" identifier="TextField"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="userInputTextField"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" priority="750" constant="44" id="dRO-O7-tqP"/>
                                             </constraints>
@@ -4642,8 +4642,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                 <constraint firstAttribute="height" constant="1" id="SmN-Lx-rAp"/>
                                             </constraints>
                                         </view>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yL9-8P-d2z">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yL9-8P-d2z">
                                             <rect key="frame" x="16" y="45" width="343" height="16"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="userInputMessageLabel"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <color key="textColor" red="0.4275171160697937" green="0.42716902494430542" blue="0.4470638632774353" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <nil key="highlightedColor"/>
