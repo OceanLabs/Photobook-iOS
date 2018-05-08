@@ -7,31 +7,13 @@
 //
 
 import XCTest
-@testable import Photobook
 import Photos
-
-class PHCollectionListMock: PHCollectionList {
-    
-    var startDateStub: Date?
-    var endDateStub: Date?
-    
-    override var localizedTitle: String? {
-        return "Collection1"
-    }
-    
-    override var startDate: Date? {
-        return startDateStub
-    }
-    
-    override var endDate: Date? {
-        return endDateStub
-    }
-}
+@testable import Photobook
 
 class StoryTests: XCTestCase {
     
     var story: Story!
-    var list = PHCollectionListMock()
+    var list = TestCollectionList()
     var coverCollection = PHAssetCollection()
     let calendar = Calendar(identifier: Calendar.Identifier.gregorian)
     
@@ -71,24 +53,48 @@ class StoryTests: XCTestCase {
         XCTAssertEqual(story.score, 0, "Should have a score of 0")
     }
     
-    func testTitleShouldBeTheUppercasedCollectionsTitle() {
+    func testTitle_shouldBeTheUppercasedCollectionsTitle() {
         XCTAssertEqual(story.title, story.collectionList.localizedTitle!.uppercased(), "Should have an uppercased title")
     }
     
-    func testSubtitleIsCorrectForASingleDay() {
+    func testSubtitle_shouldBeEmptyIfStartDateIsMissing() {
+        var components = DateComponents()
+        components.day = 1; components.month = 11; components.year = 2017
+        let date = calendar.date(from: components)
+        
+        story.locale = Locale(identifier: "en_US")
+        list.startDateStub = nil
+        list.endDateStub = date
+        
+        XCTAssertTrue(story.subtitle != nil && story.subtitle!.isEmpty)
+    }
+
+    func testSubtitle_shouldBeEmptyIfEndDateIsMissing() {
+        var components = DateComponents()
+        components.day = 1; components.month = 11; components.year = 2017
+        let date = calendar.date(from: components)
+        
+        story.locale = Locale(identifier: "en_US")
+        list.startDateStub = date
+        list.endDateStub = nil
+        
+        XCTAssertTrue(story.subtitle != nil && story.subtitle!.isEmpty)
+    }
+
+    func testSubtitle_isCorrectForASingleDay() {
         // Test with same date
         var startComponents = DateComponents()
         startComponents.day = 1; startComponents.month = 11; startComponents.year = 2017
         let startDate = calendar.date(from: startComponents)
         
         story.locale = Locale(identifier: "en_US")
-        (story.collectionList as! PHCollectionListMock).startDateStub = startDate
-        (story.collectionList as! PHCollectionListMock).endDateStub = startDate
+        list.startDateStub = startDate
+        list.endDateStub = startDate
         
         XCTAssert(story.subtitle ==  "NOV 1, 2017", "The subtitle should be 'NOV 1, 2017' but was: \(story.subtitle!)")
     }
     
-    func testSubtitleIsCorrectForASameMonthDates() {
+    func testSubtitle_isCorrectForASameMonthDates() {
         // Test with same date
         var startComponents = DateComponents()
         startComponents.day = 1; startComponents.month = 11; startComponents.year = 2017
@@ -96,13 +102,13 @@ class StoryTests: XCTestCase {
         
         let endDate = calendar.date(bySetting: .day, value: 5, of: startDate!)
         
-        (story.collectionList as! PHCollectionListMock).startDateStub = startDate
-        (story.collectionList as! PHCollectionListMock).endDateStub = endDate
+        list.startDateStub = startDate
+        list.endDateStub = endDate
         
         XCTAssertEqual(story.subtitle, "NOV 2017", "The subtitle should be 'NOV 2017'")
     }
 
-    func testSubtitleIsCorrectForDifferentMonthDates() {
+    func testSubtitle_isCorrectForDifferentMonthDates() {
         // Test with same date
         var startComponents = DateComponents()
         startComponents.day = 1; startComponents.month = 11; startComponents.year = 2017
@@ -110,13 +116,13 @@ class StoryTests: XCTestCase {
         
         let endDate = calendar.date(bySetting: .month, value: 12, of: startDate!)
         
-        (story.collectionList as! PHCollectionListMock).startDateStub = startDate
-        (story.collectionList as! PHCollectionListMock).endDateStub = endDate
+        list.startDateStub = startDate
+        list.endDateStub = endDate
         
         XCTAssertEqual(story.subtitle, "NOV - DEC 2017", "The subtitle should be 'NOV - DEC 2017'")
     }
     
-    func testSubtitleIsCorrectForDifferentYearDates() {
+    func testSubtitle_isCorrectForDifferentYearDates() {
         // Test with same date
         var startComponents = DateComponents()
         startComponents.day = 1; startComponents.month = 11; startComponents.year = 2017
@@ -125,13 +131,13 @@ class StoryTests: XCTestCase {
         startComponents.year = 2018
         let endDate = calendar.date(from: startComponents)
         
-        (story.collectionList as! PHCollectionListMock).startDateStub = startDate
-        (story.collectionList as! PHCollectionListMock).endDateStub = endDate
+        list.startDateStub = startDate
+        list.endDateStub = endDate
         
         XCTAssertEqual(story.subtitle, "NOV 2017 - NOV 2018", "The subtitle should be 'NOV 2017 - NOV 2018'")
     }
 
-    func testSubtitleIsCorrectForAWeekekEnd() {
+    func testSubtitle_isCorrectForAWeekekEnd() {
         // The dates themselves are not relevant to determine if it is a weekend
         story.isWeekend = true
         
@@ -141,9 +147,47 @@ class StoryTests: XCTestCase {
         
         let endDate = calendar.date(bySetting: .day, value: 3, of: startDate!)
 
-        (story.collectionList as! PHCollectionListMock).startDateStub = startDate
-        (story.collectionList as! PHCollectionListMock).endDateStub = endDate
+        list.startDateStub = startDate
+        list.endDateStub = endDate
         
         XCTAssertEqual(story.subtitle, "WEEKEND IN NOV 2017", "The subtitle should be 'WEEKEND IN NOV 2017")
     }
+    
+    func testLoadAssets_shouldDoNothingIfAlreadyLoaded() {
+        story.assets = [TestPhotosAsset()]
+        
+        var called = false
+        story.loadAssets { _ in
+            called = true
+        }
+        XCTAssertTrue(called)
+        XCTAssertEqual(story.assets.count, 1)
+    }
+    
+    func testLoadAssets_shouldAddAssetsFromEachCollectionInTheMoment() {
+        var assets = [TestPHAsset]()
+        var assetCollections = [TestPHAssetCollection]()
+        for i in 0 ..< 10 {
+            let asset = TestPHAsset()
+            asset.localIdentifierStub = "asset\(i)"
+            assets.append(asset)
+
+            let assetCollection = TestPHAssetCollection()
+            assetCollection.localIdentifierStub = "collection\(i)"
+            assetCollections.append(assetCollection)
+        }
+
+        let testCollectionManager = TestCollectionManager()
+        testCollectionManager.phAssetCollectionStub = assetCollections
+        story.collectionManager = testCollectionManager
+        
+        let testAssetManager = TestAssetManager()
+        testAssetManager.phAssetsStub = assets
+        story.assetsManager = testAssetManager
+        
+        story.loadAssets { _ in
+            XCTAssertEqual(self.story.assets.count, 100)
+        }
+    }
+
 }

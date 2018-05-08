@@ -26,6 +26,22 @@ class TestPHAsset: PHAsset {
     override var localIdentifier: String { return localIdentifierStub ?? "" }
 }
 
+class TestPHAssetCollection: PHAssetCollection {
+    var localIdentifierStub: String?
+    override var localIdentifier: String { return localIdentifierStub ?? "" }
+}
+
+class TestCollectionList: CollectionList {
+    
+    var startDateStub: Date?
+    var endDateStub: Date?
+    
+    var localIdentifier: String { return "id" }
+    var localizedTitle: String? { return "Collection1" }
+    var startDate: Date? { return startDateStub }
+    var endDate: Date? { return endDateStub }
+}
+
 class TestFetchResult: PHFetchResult<PHAsset> {
     
     var phAssetsStub: [PHAsset]!
@@ -34,6 +50,18 @@ class TestFetchResult: PHFetchResult<PHAsset> {
     override func enumerateObjects(_ block: @escaping (PHAsset, Int, UnsafeMutablePointer<ObjCBool>) -> Void) {
         for i in 0 ..< phAssetsStub.count {
             block(phAssetsStub[i], i, &bool)
+        }
+    }
+}
+
+class TestCollectionFetchResult: PHFetchResult<PHAssetCollection> {
+    
+    var phAssetCollectionStub: [PHAssetCollection]!
+    var bool = ObjCBool(false)
+    
+    override func enumerateObjects(_ block: @escaping (PHAssetCollection, Int, UnsafeMutablePointer<ObjCBool>) -> Void) {
+        for i in 0 ..< phAssetCollectionStub.count {
+            block(phAssetCollectionStub[i], i, &bool)
         }
     }
 }
@@ -70,6 +98,16 @@ class TestAssetManager: AssetManager {
     func fetchAssets(in: AssetCollection, options: PHFetchOptions) -> PHFetchResult<PHAsset> {
         let fetchResult = TestFetchResult()
         fetchResult.phAssetsStub = phAssetsStub
+        return fetchResult
+    }
+}
+
+class TestCollectionManager: CollectionManager {
+    var phAssetCollectionStub: [PHAssetCollection]?
+    
+    func fetchMoments(inMomentList collectionList: CollectionList, options: PHFetchOptions) -> PHFetchResult<PHAssetCollection> {
+        let fetchResult = TestCollectionFetchResult()
+        fetchResult.phAssetCollectionStub = phAssetCollectionStub
         return fetchResult
     }
 }

@@ -8,8 +8,27 @@
 
 import Photos
 
+protocol CollectionList {
+    var localizedTitle: String? { get }
+    var localIdentifier: String { get }
+    var startDate: Date? { get }
+    var endDate: Date? { get }
+}
+
+extension PHCollectionList: CollectionList {}
+
+protocol CollectionManager {
+    func fetchMoments(inMomentList collectionList: CollectionList, options: PHFetchOptions) -> PHFetchResult<PHAssetCollection>
+}
+
+class DefaultCollectionManager: CollectionManager {
+    func fetchMoments(inMomentList collectionList: CollectionList, options: PHFetchOptions) -> PHFetchResult<PHAssetCollection> {
+        return PHAssetCollection.fetchMoments(inMomentList: collectionList as! PHCollectionList, options: options)
+    }
+}
+
 class Story {
-    let collectionList: PHCollectionList
+    let collectionList: CollectionList
     let collectionForCoverPhoto: PHAssetCollection
     var components: [String]!
     var photoCount = 0
@@ -26,6 +45,9 @@ class Story {
         return collectionList.localizedTitle!.uppercased()
     }
     
+    var collectionManager: CollectionManager = DefaultCollectionManager()
+    var assetsManager: AssetManager = DefaultAssetManager()
+    
     lazy var subtitle: String? = {
         if isWeekend {
             return String.localizedStringWithFormat(NSLocalizedString("stories/story/date", value: "WEEKEND IN %@",
@@ -34,7 +56,7 @@ class Story {
         return dateString().uppercased()
     }()
     
-    init(list: PHCollectionList, coverCollection: PHAssetCollection) {
+    init(list: CollectionList, coverCollection: PHAssetCollection) {
         collectionList = list
         collectionForCoverPhoto = coverCollection
     }
@@ -92,18 +114,23 @@ extension Story: Album {
     }
     
     func loadAssets(completionHandler: ((Error?) -> Void)?) {
-        guard assets.isEmpty else { completionHandler?(nil); return }
+        guard assets.isEmpty else {
+            completionHandler?(nil)
+            return
+        }
+        
         let fetchOptions = PHFetchOptions()
         fetchOptions.wantsIncrementalChangeDetails = false
         fetchOptions.includeHiddenAssets = false
         fetchOptions.includeAllBurstAssets = false
         
-        let moments = PHAssetCollection.fetchMoments(inMomentList: collectionList, options: PHFetchOptions())
+        let moments = collectionManager.fetchMoments(inMomentList: collectionList, options: PHFetchOptions())
         moments.enumerateObjects { (collection: PHAssetCollection, index: Int,  stop: UnsafeMutablePointer<ObjCBool>) in
             
             fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: true) ]
-            fetchOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue) //only images
-            let fetchedAssets = PHAsset.fetchAssets(in: collection, options: fetchOptions)
+            fetchOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue) // Only images
+            
+            let fetchedAssets = self.assetsManager.fetchAssets(in: collection, options: fetchOptions)
             fetchedAssets.enumerateObjects({ (asset, _, _) in
                 self.assets.append(PhotosAsset(asset, albumIdentifier: self.identifier))
             })
