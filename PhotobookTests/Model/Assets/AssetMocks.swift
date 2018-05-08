@@ -123,8 +123,11 @@ class TestFacebookApiManager: FacebookApiManager {
 
     var result: Any?
     var error: LocalizedError?
+    var lastPath: String?
     
+    var accessToken: String?
     func request(withGraphPath path: String, parameters: [String: Any]?, completion: @escaping (Any?, Error?) -> Void) {
+        self.lastPath = path
         completion(result, error)
     }
 }

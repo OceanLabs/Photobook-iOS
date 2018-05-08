@@ -10,10 +10,14 @@ import UIKit
 import FBSDKLoginKit
 
 protocol FacebookApiManager {
+    var accessToken: String? { get }
     func request(withGraphPath path: String, parameters: [String: Any]?, completion: @escaping (Any?, Error?) -> Void)
 }
 
 class DefaultFacebookApiManager: FacebookApiManager {
+    var accessToken: String? {
+        return FBSDKAccessToken.current().tokenString
+    }
     func request(withGraphPath path: String, parameters: [String : Any]?, completion: @escaping (Any?, Error?) -> Void) {
         let graphRequest = FBSDKGraphRequest(graphPath: path, parameters: parameters)
         _ = graphRequest?.start { _, result, error in
@@ -41,7 +45,7 @@ class FacebookAlbum {
     var identifier: String
     var assets = [Asset]()
     var coverPhotoUrl: URL
-    var after: String?
+    private var after: String?
     
     var graphPath: String {
         return "\(identifier)/photos?fields=picture,source,id,images&limit=\(Constants.pageSize)"

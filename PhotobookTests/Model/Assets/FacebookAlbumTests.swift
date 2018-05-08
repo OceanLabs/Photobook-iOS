@@ -78,21 +78,30 @@ class FacebookAlbumTests: XCTestCase {
         }
     }
     
-    func testLoadNextBatchOfAssets_shouldSetBookmarkToNilIfPagingIsMissing() {
+    func testLoadNextBatchOfAssets_shouldDoNothingIfThereIsNoMoreAssetsToRequest() {
         let testData = ["data": [["id": "1", "images": [["width": 400, "height": 200]]]]]
+
         facebookApiManager.result = testData
-        facebookAlbum.after = "after"
-        facebookAlbum.loadNextBatchOfAssets { (error) in
-            XCTAssertNil(self.facebookAlbum.after)
-        }
+        
+        var called: Bool = false
+        facebookAlbum.loadNextBatchOfAssets { _ in called = true }
+        
+        XCTAssertFalse(called)
     }
     
-    func testLoadNextBatchOfAssets_shouldSetBookmarkToApiValue() {
-        let testData: [String : Any] = ["data": [["id": "1", "images": [["width": 400, "height": 200]]]],
-                "paging": ["cursors": ["after" : "afterText"]]]
+    func testLoadNextBatchOfAlbums_shouldPerformRequestWithProvidedNextUrl() {
+        var testData: [String : Any] = ["data": [["id": "1", "images": [["width": 400, "height": 200]]]],
+                                        "paging": ["next": "yes", "cursors": ["after" : "afterText"]]]
+
         facebookApiManager.result = testData
-        facebookAlbum.loadNextBatchOfAssets { (error) in
-            self.XCTAssertEqualOptional(self.facebookAlbum.after, "afterText")
-        }
+        facebookAlbum.loadAssets { _ in }
+        XCTAssertTrue(facebookAlbum.hasMoreAssetsToLoad)
+        
+        testData["paging"] = nil
+        facebookApiManager.result = testData
+        facebookAlbum.loadNextBatchOfAssets { _ in }
+        XCTAssertTrue(facebookApiManager.lastPath != nil && facebookApiManager.lastPath!.contains("afterText"))
+        XCTAssertFalse(facebookAlbum.hasMoreAssetsToLoad)
     }
+
 }
