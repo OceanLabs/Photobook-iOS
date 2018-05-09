@@ -41,11 +41,9 @@ class ProductManager {
         willSet {
             OrderSummaryManager.shared.reset()
             upsoldProduct = nil
-            payload = nil
         }
     }
-    private(set) var payload: Any?
-    private(set) var upsoldProduct: PhotobookProduct?
+    var upsoldProduct: PhotobookProduct?
     
     func reset() {
         currentProduct = nil
@@ -76,7 +74,7 @@ class ProductManager {
         
         apiManager.applyUpsells(product: currentProduct, upsellOptions: upsells) { (summary, upsoldProduct, productPayload, error) in
             self.upsoldProduct = upsoldProduct
-            self.payload = productPayload
+            self.upsoldProduct?.payload = productPayload
             
             completionHandler(summary, error)
         }

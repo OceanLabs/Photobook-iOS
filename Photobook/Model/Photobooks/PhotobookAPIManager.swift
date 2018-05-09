@@ -105,35 +105,32 @@ class PhotobookAPIManager {
         }
     }
     
-    func getOrderSummary(product:PhotobookProduct, completionHandler: @escaping (_ summary: OrderSummary?, _ upsellOptions: [UpsellOption]?, _ productPayload: Any?, _ error: Error?) -> Void) {
+    func getOrderSummary(product:PhotobookProduct, completionHandler: @escaping (_ summary: OrderSummary?, _ upsellOptions: [UpsellOption]?, _ productPayload: [String: Any]?, _ error: Error?) -> Void) {
         
         let parameters = ["productId": product.template.id, "pageCount": product.productLayouts.count]
         apiClient.post(context: .photobook, endpoint: EndPoints.summary, parameters: parameters, headers: authorizationHeader()) { (jsonData, error) in
             
             guard let jsonData = jsonData as? [String: Any],
                 let summaryDict = jsonData["summary"] as? [String: Any],
-                //let upsellOptionsDict = jsonData["upsells"] as? [[String: Any]], //TODO: use endpoint response
-                let payload = jsonData["productPayload"]
+                let upsellOptionsDict = jsonData["upsells"] as? [[String: Any]],
+                let payload = jsonData["productPayload"] as? [String: Any]
                 else {
                 completionHandler(nil, nil, nil, APIClientError.parsing)
                 return
             }
             
-            
-            
-            //var upsellOptions = [UpsellOption]()
-            //for upsellDict in upsellOptionsDict {
-            //    if let upsell = UpsellOption(upsellDict) {
-            //        upsellOptions.append(upsell)
-            //    }
-            //}
-            let upsellOptions = UpsellOption.upsells(forProduct: product)
+            var upsellOptions = [UpsellOption]()
+            for upsellDict in upsellOptionsDict {
+                if let upsell = UpsellOption(upsellDict) {
+                    upsellOptions.append(upsell)
+                }
+            }
             
             completionHandler(OrderSummary(summaryDict), upsellOptions, payload, nil)
         }
     }
     
-    func applyUpsells(product:PhotobookProduct, upsellOptions:[UpsellOption], completionHandler: @escaping (_ summary: OrderSummary?, _ upsoldProduct: PhotobookProduct?, _ productPayload: Any?, _ error: Error?) -> Void) {
+    func applyUpsells(product:PhotobookProduct, upsellOptions:[UpsellOption], completionHandler: @escaping (_ summary: OrderSummary?, _ upsoldProduct: PhotobookProduct?, _ productPayload: [String: Any]?, _ error: Error?) -> Void) {
         
         var parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.productLayouts.count]
         var upsellDicts = [[String: Any]]()
@@ -148,7 +145,7 @@ class PhotobookAPIManager {
                 let productDict = jsonData["newProduct"] as? [String: Any],
                 let variantDicts = productDict["variants"] as? [[String: Any]],
                 let templateId = variantDicts.first?["templateId"] as? String,
-                let payload = jsonData["productPayload"],
+                let payload = jsonData["productPayload"] as? [String: Any],
                 let layouts = ProductManager.shared.currentProduct?.productLayouts,
                 let template = ProductManager.shared.products?.first(where: {$0.productTemplateId == templateId})
                 else {

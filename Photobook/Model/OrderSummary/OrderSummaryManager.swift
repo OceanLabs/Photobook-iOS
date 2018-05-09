@@ -93,17 +93,19 @@ extension OrderSummaryManager {
             uploadCoverImage()
         }
         
-        apiManager.getOrderSummary(product: product) { (summary, upsellOptions, productPayload, error) in
-            self.upsellOptions = upsellOptions
-            self.handleReceivingSummary(summary)
+        apiManager.getOrderSummary(product: product) { [weak self] (summary, upsellOptions, productPayload, error) in
+            self?.product.payload = productPayload
+            ProductManager.shared.upsoldProduct = self?.product
+            self?.upsellOptions = upsellOptions
+            self?.handleReceivingSummary(summary)
         }
     }
     
     private func applyUpsells() {
         NotificationCenter.default.post(name: OrderSummaryManager.notificationWillUpdate, object: self)
         
-        ProductManager.shared.applyUpsells(Array<UpsellOption>(selectedUpsellOptions)) { (summary, error) in
-            self.handleReceivingSummary(summary)
+        ProductManager.shared.applyUpsells(Array<UpsellOption>(selectedUpsellOptions)) { [weak self] (summary, error) in
+            self?.handleReceivingSummary(summary)
         }
     }
     
@@ -143,8 +145,8 @@ extension OrderSummaryManager {
             return
         }
         
-        APIClient.shared.uploadImage(coverImage, imageName: "OrderSummaryPreviewImage.png", context: .pig, endpoint: "upload/", completion: { (json, error) in
-            self.isUploadingCoverImage = false
+        APIClient.shared.uploadImage(coverImage, imageName: "OrderSummaryPreviewImage.png", context: .pig, endpoint: "upload/", completion: { [weak self] (json, error) in
+            self?.isUploadingCoverImage = false
             
             if let error = error {
                 print(error.localizedDescription)
@@ -156,8 +158,8 @@ extension OrderSummaryManager {
                 return
             }
             
-            self.coverImageUrl = url
-            if self.summary != nil {
+            self?.coverImageUrl = url
+            if self?.summary != nil {
                 NotificationCenter.default.post(name: OrderSummaryManager.notificationPreviewImageReady, object: self)
             }
         })
