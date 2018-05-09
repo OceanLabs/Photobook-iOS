@@ -19,16 +19,16 @@ class DetailsTests: PhotobookUITest {
         let emailTextField = automation.app.cells["emailCell"].textFields["userInputTextField"]
         let phoneTextField = automation.app.cells["phoneCell"].textFields["userInputTextField"]
         
-        XCTAssertNotNil(nameTextField.value)
+        XCTAssertNotNil(nameTextField.value as? String)
         XCTAssertEqual(nameTextField.value as! String, "Required")
         
-        XCTAssertNotNil(lastNameTextField.value)
+        XCTAssertNotNil(lastNameTextField.value as? String)
         XCTAssertEqual(lastNameTextField.value as! String, "Required")
         
-        XCTAssertNotNil(emailTextField.value)
+        XCTAssertNotNil(emailTextField.value as? String)
         XCTAssertEqual(emailTextField.value as! String, "Required")
         
-        XCTAssertNotNil(phoneTextField.value)
+        XCTAssertNotNil(phoneTextField.value as? String)
         XCTAssertEqual(phoneTextField.value as! String, "Required")
         
         let addressErrorMessageLabel = automation.app.staticTexts["addressErrorMessageLabel"]

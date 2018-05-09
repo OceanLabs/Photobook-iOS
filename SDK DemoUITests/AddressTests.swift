@@ -19,13 +19,13 @@ class AddressTests: PhotobookUITest {
         let cityTextField = automation.app.textFields["cityTextField"]
         let zipOrPostalCodeTextField = automation.app.textFields["zipOrPostcodeTextField"]
         
-        XCTAssertNotNil(line1TextField.value)
+        XCTAssertNotNil(line1TextField.value as? String)
         XCTAssertEqual(line1TextField.value as! String, "Required")
         
-        XCTAssertNotNil(cityTextField.value)
+        XCTAssertNotNil(cityTextField.value as? String)
         XCTAssertEqual(cityTextField.value as! String, "Required")
         
-        XCTAssertNotNil(zipOrPostalCodeTextField.value)
+        XCTAssertNotNil(zipOrPostalCodeTextField.value as? String)
         XCTAssertEqual(zipOrPostalCodeTextField.value as! String, "Required")
         
         automation.app.navigationBars["Address"].buttons["Save"].tap()
