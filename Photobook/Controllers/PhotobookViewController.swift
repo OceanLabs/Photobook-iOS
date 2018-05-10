@@ -106,6 +106,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         (tabBarController?.tabBar as? PhotobookTabBar)?.isBackgroundHidden = true
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        updateNavBar()
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         

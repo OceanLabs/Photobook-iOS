@@ -37,14 +37,14 @@ class ReceiptTableViewController: UITableViewController {
         return order.cachedCost
     }
     
-    private var state:State = .uploading {
+    private var state: State = .uploading {
         didSet {
             if state != oldValue {
                 updateViews()
             }
         }
     }
-    private var lastProcessingError:OrderProcessingError?
+    private var lastProcessingError: OrderProcessingError?
     
     @IBOutlet weak var dismissBarButtonItem: UIBarButtonItem!
     var dismissClosure: ((UITabBarController?) -> Void)?
@@ -63,42 +63,45 @@ class ReceiptTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        (navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(.clear)
+        
+        OrderManager.shared.orderProcessingDelegate = self
+        
         Analytics.shared.trackScreenViewed(.receipt)
         
         navigationItem.leftBarButtonItem = UIBarButtonItem()
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     
         updateViews()
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingCompleted), name: OrderManager.NotificationName.completed, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingFailed(_:)), name: OrderManager.NotificationName.failed, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(pendingUploadsChanged), name: OrderManager.NotificationName.pendingUploadStatusUpdated, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(orderProcessingWillFinish), name: OrderManager.NotificationName.willFinishOrder, object: nil)
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         
         if order.orderId != nil {
             progressOverlayViewController.hide()
             state = .completed
         } else if OrderManager.shared.isProcessingOrder {
             if state == .paymentFailed {
-                //re entered screen from payment methods screen
+                // Re-entered screen from payment methods screen
                 state = .paymentRetry
                 return
             }
             
+            // Check if there are pending uploads for the current order
+            OrderManager.shared.hasPendingUploads { [weak welf = self] (pendingTasks) in
+                if !pendingTasks {
+                    welf?.state = .error
+                    welf?.lastProcessingError = .upload
+                    welf?.tableView.reloadData()
+                }
+            }
+            
         } else {
-            //start processing
+            // Start processing
             OrderManager.shared.startProcessing(order: order)
             
-            //ask for notification permission
+            // Ask for notification permission
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: { [weak welf = self] in
                 welf?.notificationsSetup()
             })
@@ -106,7 +109,7 @@ class ReceiptTableViewController: UITableViewController {
 
     }
     
-    //MARK: Population
+    // MARK: - Population
     
     private func updateViews() {
         tableView.reloadData()
@@ -117,7 +120,7 @@ class ReceiptTableViewController: UITableViewController {
         dismissBarButtonItem.tintColor = state.allowDismissing ? nil : .clear
     }
     
-    //MARK: Actions
+    // MARK: - Actions
     
     @IBAction private func primaryActionButtonTapped(_ sender: UIBarButtonItem) {
         switch state {
@@ -125,7 +128,7 @@ class ReceiptTableViewController: UITableViewController {
             if let lastProcessingError = lastProcessingError {
                 switch lastProcessingError {
                 case .upload:
-                    OrderManager.shared.startProcessing(order: order)
+                    OrderManager.shared.uploadAssets()
                     self.state = .uploading
                 case .pdf, .submission:
                     OrderManager.shared.finishOrder()
@@ -339,57 +342,9 @@ class ReceiptTableViewController: UITableViewController {
             return UITableViewCell()
         }
     }
-    
-    //MARK: - Order Processing
-    
-    @objc func pendingUploadsChanged() {
-        tableView.reloadData()
-    }
-    
-    @objc func orderProcessingCompleted() {
-        order.lastSubmissionDate = Date()
-        NotificationCenter.default.post(name: OrdersNotificationName.orderWasSuccessful, object: order)
-        
-        progressOverlayViewController.hide()
-        state = .completed
-    }
-
-    @objc func orderProcessingFailed(_ notification: NSNotification) {
-        //send a local notification
-        let userNotification = UNMutableNotificationContent()
-        
-        //determine error
-        if let error = notification.userInfo?["error"] as? OrderProcessingError {
-            switch error {
-            case .payment:
-                state = .paymentFailed
-                userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitlePaymentFailed", value: "Payment Failed", comment: "title of a notification notfifying about failed photobook payment")
-                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyPaymentFailed", value: "Update your payment method to finish photobook checkout", comment: "body of a notification notfifying about failed photobook payment")
-            case .cancelled:
-                state = .cancelled
-                userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitleCancelled", value: "Photobook Cancelled", comment: "title of a notification notfifying about failed photobook that had to be cancelled")
-                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyCancelled", value: "Something went wrong and we couldn't process your photbook", comment: "body of a notification notfifying about failed photobook that had to be cancelled")
-            default:
-                state = .error
-                userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitleProcessingFailed", value: "Couldn't Finish Photobook", comment: "title of a notification notfifying about failed photobook processing")
-                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyProcessingFailed", value: "Something went wrong and your photobook couldn't be sent to our servers", comment: "body of a notification notfifying about failed photobook processing")
-            }
-            lastProcessingError = error
-        }
-        progressOverlayViewController.hide()
-    
-        //send local notification
-        let request = UNNotificationRequest(identifier: "ReceiptTableViewController.OrderProcessingFailed", content: userNotification, trigger:nil)
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-    }
-    
-    @objc func orderProcessingWillFinish() {
-        progressOverlayViewController.show(message: Constants.loadingFinishingOrderText)
-    }
-    
 }
 
-extension ReceiptTableViewController : PaymentAuthorizationManagerDelegate {
+extension ReceiptTableViewController: PaymentAuthorizationManagerDelegate {
     
     func costUpdated() {
         updateViews()
@@ -414,5 +369,55 @@ extension ReceiptTableViewController : PaymentAuthorizationManagerDelegate {
     func modalPresentationDidFinish() {
         modalPresentationDismissedGroup.leave()
     }
+}
+
+extension ReceiptTableViewController: OrderProcessingDelegate {
     
+    func orderDidComplete(error: OrderProcessingError?) {
+        
+        guard error == nil else {
+
+            let userNotification = UNMutableNotificationContent()
+            
+            // Determine error
+            switch error! {
+            case .payment:
+                state = .paymentFailed
+                userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitlePaymentFailed", value: "Payment Failed", comment: "title of a notification notfifying about failed photobook payment")
+                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyPaymentFailed", value: "Update your payment method to finish photobook checkout", comment: "body of a notification notifying about failed photobook payment")
+            case .cancelled:
+                state = .cancelled
+                userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitleCancelled", value: "Photobook Cancelled", comment: "title of a notification notfifying about failed photobook that had to be cancelled")
+                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyCancelled", value: "Something went wrong and we couldn't process your photobook", comment: "body of a notification notifying about failed photobook that had to be cancelled")
+            default:
+                state = .error
+                userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitleProcessingFailed", value: "Couldn't Finish Photobook", comment: "title of a notification notfifying about failed photobook processing")
+                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyProcessingFailed", value: "Something went wrong and your photobook couldn't be sent to our servers", comment: "body of a notification notifying about failed photobook processing")
+            }
+            
+            lastProcessingError = error
+            progressOverlayViewController.hide()
+            
+            // Send local notification
+            let request = UNNotificationRequest(identifier: "ReceiptTableViewController.OrderProcessingFailed", content: userNotification, trigger:nil)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+
+            return
+        }
+        
+        // Completed
+        order.lastSubmissionDate = Date()
+        NotificationCenter.default.post(name: OrdersNotificationName.orderWasSuccessful, object: order)
+        
+        progressOverlayViewController.hide()
+        state = .completed
+    }
+    
+    func uploadStatusDidUpdate() {
+        tableView.reloadData()
+    }
+    
+    func orderWillFinish() {
+        progressOverlayViewController.show(message: Constants.loadingFinishingOrderText)
+    }
 }
