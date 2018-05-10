@@ -20,7 +20,7 @@ class DefaultAssetManager: AssetManager {
     }
     
     func fetchAssets(in assetCollection: PHAssetCollection, options: PHFetchOptions) -> PHFetchResult<PHAsset> {
-        return PHAsset.fetchAssets(in: assetCollection as! PHAssetCollection, options: options)
+        return PHAsset.fetchAssets(in: assetCollection, options: options)
     }
 }
 
