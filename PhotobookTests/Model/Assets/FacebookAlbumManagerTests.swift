@@ -30,7 +30,7 @@ class FacebookAlbumManagerTests: XCTestCase {
         facebookApiManager.accessToken = "ClownKey"
         var called = false
         
-        let album = PhotosAlbum(TestAssetCollection())
+        let album = PhotosAlbum(TestPHAssetCollection())
         facebookAlbumManager.albums = [album]
         facebookAlbumManager.loadAlbums { error in
             called = true

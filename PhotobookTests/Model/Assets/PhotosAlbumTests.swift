@@ -12,7 +12,7 @@ import Photos
 
 class PhotosAlbumTests: XCTestCase {
     
-    let assetCollection = TestAssetCollection()
+    let assetCollection = TestPHAssetCollection()
     var photosAlbum: PhotosAlbum!
     
     var assets: [TestPHAsset]!
@@ -24,6 +24,7 @@ class PhotosAlbumTests: XCTestCase {
         for i in 0 ..< 10 {
             let asset = TestPHAsset()
             asset.localIdentifierStub = "local\(i)"
+            asset.listIdentifier = assetCollection.localIdentifier
             assets.append(asset)
         }
 
@@ -61,6 +62,7 @@ class PhotosAlbumTests: XCTestCase {
     func testChangedAssets() {
         let newAsset = TestPHAsset()
         newAsset.localIdentifierStub = "local11"
+        newAsset.listIdentifier = assetCollection.localIdentifier
         
         photosAlbum.loadAssetsFromPhotoLibrary()
         

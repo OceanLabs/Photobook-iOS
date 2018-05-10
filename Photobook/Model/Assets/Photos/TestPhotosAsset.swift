@@ -14,6 +14,8 @@ class TestPhotosAsset: PhotosAsset {
     private var stubSize = CGSize(width: 3000.0, height: 2000.0)
     var height: CGFloat = 2000.0
     
+    var identifierStub: String! = "PhotosAssetID"
+    
     override var size: CGSize { return stubSize }
     init(_ asset: PHAsset = PHAsset(), size: CGSize? = nil) {
         super.init(asset, albumIdentifier: "album")
@@ -26,5 +28,10 @@ class TestPhotosAsset: PhotosAsset {
     required init?(coder aDecoder: NSCoder) {
         super.init(PHAsset(), albumIdentifier: "")
         identifier = "id"
+    }
+    
+    override var identifier: String! {
+        get { return identifierStub }
+        set {}
     }
 }

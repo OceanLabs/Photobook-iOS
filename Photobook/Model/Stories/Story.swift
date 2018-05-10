@@ -8,27 +8,18 @@
 
 import Photos
 
-protocol CollectionList {
-    var localizedTitle: String? { get }
-    var localIdentifier: String { get }
-    var startDate: Date? { get }
-    var endDate: Date? { get }
-}
-
-extension PHCollectionList: CollectionList {}
-
 protocol CollectionManager {
-    func fetchMoments(inMomentList collectionList: CollectionList, options: PHFetchOptions) -> PHFetchResult<PHAssetCollection>
+    func fetchMoments(inMomentList collectionList: PHCollectionList) -> PHFetchResult<PHAssetCollection>
 }
 
 class DefaultCollectionManager: CollectionManager {
-    func fetchMoments(inMomentList collectionList: CollectionList, options: PHFetchOptions) -> PHFetchResult<PHAssetCollection> {
-        return PHAssetCollection.fetchMoments(inMomentList: collectionList as! PHCollectionList, options: options)
+    func fetchMoments(inMomentList collectionList: PHCollectionList) -> PHFetchResult<PHAssetCollection> {
+        return PHAssetCollection.fetchMoments(inMomentList: collectionList as! PHCollectionList, options: PHFetchOptions())
     }
 }
 
 class Story {
-    let collectionList: CollectionList
+    let collectionList: PHCollectionList
     let collectionForCoverPhoto: PHAssetCollection
     var components: [String]!
     var photoCount = 0
@@ -56,7 +47,7 @@ class Story {
         return dateString().uppercased()
     }()
     
-    init(list: CollectionList, coverCollection: PHAssetCollection) {
+    init(list: PHCollectionList, coverCollection: PHAssetCollection) {
         collectionList = list
         collectionForCoverPhoto = coverCollection
     }
@@ -124,7 +115,7 @@ extension Story: Album {
         fetchOptions.includeHiddenAssets = false
         fetchOptions.includeAllBurstAssets = false
         
-        let moments = collectionManager.fetchMoments(inMomentList: collectionList, options: PHFetchOptions())
+        let moments = collectionManager.fetchMoments(inMomentList: collectionList)
         moments.enumerateObjects { (collection: PHAssetCollection, index: Int,  stop: UnsafeMutablePointer<ObjCBool>) in
             
             fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: true) ]

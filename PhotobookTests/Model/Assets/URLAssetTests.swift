@@ -99,7 +99,7 @@ class URLAssetTests: XCTestCase {
                 }
                 XCTFail("Used incorrect URL for URL image request")
             })
-            wait(for: [expectation], timeout: 1.0)
+            wait(for: [expectation], timeout: 5.0)
         }
     }
     

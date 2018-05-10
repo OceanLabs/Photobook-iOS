@@ -11,7 +11,7 @@ import Photos
 
 protocol AssetManager {
     func fetchAssets(withLocalIdentifiers identifiers: [String], options: PHFetchOptions?) -> PHAsset?
-    func fetchAssets(in: AssetCollection, options: PHFetchOptions) -> PHFetchResult<PHAsset>
+    func fetchAssets(in: PHAssetCollection, options: PHFetchOptions) -> PHFetchResult<PHAsset>
 }
 
 class DefaultAssetManager: AssetManager {
@@ -19,7 +19,7 @@ class DefaultAssetManager: AssetManager {
         return PHAsset.fetchAssets(withLocalIdentifiers: identifiers, options: options).firstObject
     }
     
-    func fetchAssets(in assetCollection: AssetCollection, options: PHFetchOptions) -> PHFetchResult<PHAsset> {
+    func fetchAssets(in assetCollection: PHAssetCollection, options: PHFetchOptions) -> PHFetchResult<PHAsset> {
         return PHAsset.fetchAssets(in: assetCollection as! PHAssetCollection, options: options)
     }
 }

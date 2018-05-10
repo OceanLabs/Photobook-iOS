@@ -9,13 +9,6 @@
 import UIKit
 import Photos
 
-protocol AssetCollection {
-    var localizedTitle: String? { get }
-    var localIdentifier: String { get }
-    var estimatedAssetCount: Int { get }
-    func coverAsset(useFirstImageInCollection: Bool, completionHandler: @escaping (Asset?, Error?) -> Void)
-}
-
 protocol ChangeManager {
     func details(for fetchResult: PHFetchResult<PHAsset>) -> PHFetchResultChangeDetails<PHAsset>?
 }
@@ -26,18 +19,16 @@ extension PHChange: ChangeManager {
     }
 }
 
-extension PHAssetCollection: AssetCollection {}
-
 class PhotosAlbum: Album {
     
-    let assetCollection: AssetCollection
+    let assetCollection: PHAssetCollection
     var assets = [Asset]()
     var hasMoreAssetsToLoad = false
 
     private var fetchedAssets: PHFetchResult<PHAsset>?
     var assetManager: AssetManager = DefaultAssetManager()
     
-    init(_ assetCollection: AssetCollection) {
+    init(_ assetCollection: PHAssetCollection) {
         self.assetCollection = assetCollection
     }
     
@@ -77,7 +68,6 @@ class PhotosAlbum: Album {
         
         self.assets = assets
         self.fetchedAssets = fetchedAssets
-        //print("crap")
     }
     
     func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {

@@ -13,7 +13,7 @@ import Photos
 class StoryTests: XCTestCase {
     
     var story: Story!
-    var list = TestCollectionList()
+    var list = TestPHCollectionList()
     var coverCollection = PHAssetCollection()
     let calendar = Calendar(identifier: Calendar.Identifier.gregorian)
     
@@ -101,7 +101,6 @@ class StoryTests: XCTestCase {
         let startDate = calendar.date(from: startComponents)
         
         let endDate = calendar.date(bySetting: .day, value: 5, of: startDate!)
-        
         list.startDateStub = startDate
         list.endDateStub = endDate
         
@@ -168,13 +167,17 @@ class StoryTests: XCTestCase {
         var assets = [TestPHAsset]()
         var assetCollections = [TestPHAssetCollection]()
         for i in 0 ..< 10 {
-            let asset = TestPHAsset()
-            asset.localIdentifierStub = "asset\(i)"
-            assets.append(asset)
-
             let assetCollection = TestPHAssetCollection()
             assetCollection.localIdentifierStub = "collection\(i)"
+            assetCollection.listIdentifier = list.localIdentifier
             assetCollections.append(assetCollection)
+
+            for j in 0 ..< 5 {
+                let asset = TestPHAsset()
+                asset.localIdentifierStub = "asset\(j)"
+                asset.listIdentifier = assetCollection.localIdentifier
+                assets.append(asset)
+            }
         }
 
         let testCollectionManager = TestCollectionManager()
@@ -186,7 +189,7 @@ class StoryTests: XCTestCase {
         story.assetsManager = testAssetManager
         
         story.loadAssets { _ in
-            XCTAssertEqual(self.story.assets.count, 100)
+            XCTAssertEqual(self.story.assets.count, 50)
         }
     }
 
