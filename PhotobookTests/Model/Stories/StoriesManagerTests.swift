@@ -71,13 +71,10 @@ class StoriesManagerTests: XCTestCase {
 
         let expectation = XCTestExpectation(description: "Should be empty")
         storiesManager.loadTopStories() {
-            guard storiesManager.stories.count == 0 else {
-                XCTFail()
-                return
-            }
+            guard storiesManager.stories.count == 0 else { return }
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: 5.0)
+        wait(for: [expectation], timeout: 1.0)
     }
     
     func testLoadTopStories_shouldNotLoadOldStories() {
@@ -91,13 +88,10 @@ class StoriesManagerTests: XCTestCase {
         
         let expectation = XCTestExpectation(description: "Should have 3 stories")
         storiesManager.loadTopStories() {
-            guard storiesManager.stories.count == 3 else {
-                XCTFail()
-                return
-            }
+            guard storiesManager.stories.count == 3 else { return }
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: 5.0)
+        wait(for: [expectation], timeout: 1.0)
     }
     
     func testLoadStopStories_shouldOnlyAddStoriesWithAMinNumberOfAssets() {
@@ -112,13 +106,10 @@ class StoriesManagerTests: XCTestCase {
         
         let expectation = XCTestExpectation(description: "Should have 4 stories")
         storiesManager.loadTopStories() {
-            guard storiesManager.stories.count == 4 else {
-                XCTFail()
-                return
-            }
+            guard storiesManager.stories.count == 4 else { return }
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: 5.0)
+        wait(for: [expectation], timeout: 1.0)
     }
     
     func testLoadTopStories_shouldBreakDownTheLocationsInTheTitle() {
@@ -135,10 +126,7 @@ class StoriesManagerTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Should breakdown the titles")
         storiesManager.loadTopStories() {
             let stories = storiesManager.stories
-            guard stories.count == 5 else {
-                XCTFail()
-                return
-            }
+            guard stories.count == 5 else { return }
             
             // Assumes the loading is in a descending order by date
             XCTAssertEqual(stories[0].components, ["Munich"])
@@ -148,7 +136,7 @@ class StoriesManagerTests: XCTestCase {
             XCTAssertEqual(stories[4].components, ["Barcelona", "Madrid"])
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: 5.0)
+        wait(for: [expectation], timeout: 1.0)
     }
     
     func testPerformAutoSelectionIfNeeded_doesNothingIfAlreadyDone() {
@@ -158,16 +146,13 @@ class StoriesManagerTests: XCTestCase {
 
         let expectation = XCTestExpectation(description: "Should not select assets")
         storiesManager.loadTopStories() {
-            guard let story = storiesManager.stories.first else {
-                XCTFail("Story not found")
-                return
-            }
+            guard let story = storiesManager.stories.first else { return }
             story.hasPerformedAutoSelection = true
             storiesManager.performAutoSelectionIfNeeded(on: story)
             self.XCTAssertEqualOptional(storiesManager.selectedAssetsManager(for: story)?.selectedAssets.count, 0)
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: 5.0)
+        wait(for: [expectation], timeout: 1.0)
     }
     
     func testPerformAutoSelectionIfNeeded_shouldSelectAllAssets() {
@@ -179,10 +164,7 @@ class StoriesManagerTests: XCTestCase {
         
         let expectation = XCTestExpectation(description: "Should select all assets")
         storiesManager.loadTopStories() {
-            guard let story = storiesManager.stories.first else {
-                XCTFail("Story not found")
-                return
-            }
+            guard let story = storiesManager.stories.first else { return }
             
             // Simulate the loading of physical assets
             var photoAssets = [TestPhotosAsset]()
@@ -200,7 +182,7 @@ class StoriesManagerTests: XCTestCase {
             self.XCTAssertEqualOptional(selectedAssets, story.photoCount)
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: 5.0)
+        wait(for: [expectation], timeout: 1.0)
     }
     
     func testPerformAutoSelectionIfNeeded_shouldSelectMinimumNumberOfAssets() {
@@ -217,10 +199,7 @@ class StoriesManagerTests: XCTestCase {
 
         let expectation = XCTestExpectation(description: "Should select min assets")
         storiesManager.loadTopStories() {
-            guard let story = storiesManager.stories.last else {
-                XCTFail("Story not found")
-                return
-            }
+            guard let story = storiesManager.stories.last else { return }
 
             // Simulate the loading of physical assets
             var photoAssets = [TestPhotosAsset]()
@@ -238,7 +217,7 @@ class StoriesManagerTests: XCTestCase {
             self.XCTAssertEqualOptional(selectedAssets, storiesManager.productManager.minimumRequiredAssets)
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: 5.0)
+        wait(for: [expectation], timeout: 1.0)
     }
     
     // Test the case when selecting evenly from non-integer segments. E.g. 33 photos, 20 min assets = pick a photo from every 1.65 photos.
@@ -256,10 +235,7 @@ class StoriesManagerTests: XCTestCase {
         
         let expectation = XCTestExpectation(description: "Should select min assets")
         storiesManager.loadTopStories() {
-            guard let story = storiesManager.stories.last else {
-                XCTFail("Story not found")
-                return
-            }
+            guard let story = storiesManager.stories.last else { return }
             
             // Simulate the loading of physical assets
             var photoAssets = [TestPhotosAsset]()
@@ -277,6 +253,6 @@ class StoriesManagerTests: XCTestCase {
             self.XCTAssertEqualOptional(selectedAssets, storiesManager.productManager.minimumRequiredAssets)
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: 5.0)
+        wait(for: [expectation], timeout: 1.0)
     }
 }
