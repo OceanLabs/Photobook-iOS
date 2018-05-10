@@ -14,7 +14,7 @@ protocol CollectionManager {
 
 class DefaultCollectionManager: CollectionManager {
     func fetchMoments(inMomentList collectionList: PHCollectionList) -> PHFetchResult<PHAssetCollection> {
-        return PHAssetCollection.fetchMoments(inMomentList: collectionList as! PHCollectionList, options: PHFetchOptions())
+        return PHAssetCollection.fetchMoments(inMomentList: collectionList, options: PHFetchOptions())
     }
 }
 
