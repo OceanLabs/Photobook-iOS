@@ -51,7 +51,7 @@ class FacebookAlbum {
         return "\(identifier)/photos?fields=picture,source,id,images&limit=\(Constants.pageSize)"
     }
     
-    var facebookManager: FacebookApiManager = DefaultFacebookApiManager()
+    lazy var facebookManager: FacebookApiManager = DefaultFacebookApiManager()
     
     private func fetchAssets(graphPath: String, completionHandler: ((Error?) -> Void)?) {
         facebookManager.request(withGraphPath: graphPath, parameters: nil) { [weak welf = self] (result, error) in

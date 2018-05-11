@@ -26,7 +26,7 @@ class PhotosAlbum: Album {
     var hasMoreAssetsToLoad = false
 
     private var fetchedAssets: PHFetchResult<PHAsset>?
-    var assetManager: AssetManager = DefaultAssetManager()
+    lazy var assetManager: AssetManager = DefaultAssetManager()
     
     init(_ assetCollection: PHAssetCollection) {
         self.assetCollection = assetCollection

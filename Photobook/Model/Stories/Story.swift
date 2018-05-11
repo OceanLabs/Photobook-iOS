@@ -36,8 +36,8 @@ class Story {
         return collectionList.localizedTitle!.uppercased()
     }
     
-    var collectionManager: CollectionManager = DefaultCollectionManager()
-    var assetsManager: AssetManager = DefaultAssetManager()
+    lazy var collectionManager: CollectionManager = DefaultCollectionManager()
+    lazy var assetsManager: AssetManager = DefaultAssetManager()
     
     lazy var subtitle: String? = {
         if isWeekend {

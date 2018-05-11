@@ -43,10 +43,10 @@ class StoriesManager: NSObject {
         static let maxStoriesToDisplay = 16
     }
     
-    var collectionListManager: CollectionListManager = DefaultCollectionListManager()
-    var collectionManager: CollectionManager = DefaultCollectionManager()
-    var assetManager: AssetManager = DefaultAssetManager()
-    var productManager: ProductManager = ProductManager.shared
+    lazy var collectionListManager: CollectionListManager = DefaultCollectionListManager()
+    lazy var collectionManager: CollectionManager = DefaultCollectionManager()
+    lazy var assetManager: AssetManager = DefaultAssetManager()
+    lazy var productManager: ProductManager = ProductManager.shared
     
     override init() {
         super.init()

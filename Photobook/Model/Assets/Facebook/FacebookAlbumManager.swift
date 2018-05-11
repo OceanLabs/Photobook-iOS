@@ -21,7 +21,7 @@ class FacebookAlbumManager {
     
     private var after: String?
     
-    var facebookManager: FacebookApiManager = DefaultFacebookApiManager()
+    lazy var facebookManager: FacebookApiManager = DefaultFacebookApiManager()
     
     func fetchAlbums(graphPath: String, completionHandler: ((Error?) -> Void)?) {
         guard let token = facebookManager.accessToken else {

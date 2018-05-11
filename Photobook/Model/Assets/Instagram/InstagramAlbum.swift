@@ -57,8 +57,8 @@ class InstagramAlbum {
         return nextUrl != nil
     }
     
-    var instagramApiManager: InstagramApiManager = DefaultInstagramApiManager()
-    var keychainHandler: KeychainHandler = DefaultKeychainHandler()
+    lazy var instagramApiManager: InstagramApiManager = DefaultInstagramApiManager()
+    lazy var keychainHandler: KeychainHandler = DefaultKeychainHandler()
     
     func fetchAssets(url: String, completionHandler:((_ error: Error?)->())?) {
         guard let token = keychainHandler.tokenKey else {

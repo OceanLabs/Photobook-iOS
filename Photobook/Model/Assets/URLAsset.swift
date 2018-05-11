@@ -71,7 +71,7 @@ class DefaultWebImageManager: WebImageManager {
     var uploadUrl: String?
     var size: CGSize { return images.last!.size }
     
-    var webImageManager: WebImageManager = DefaultWebImageManager()
+    lazy var webImageManager: WebImageManager = DefaultWebImageManager()
     var screenScale = UIScreen.main.usableScreenScale()
     
     /// Init
