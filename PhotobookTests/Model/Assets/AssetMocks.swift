@@ -111,7 +111,7 @@ class TestAssetManager: AssetManager {
     
     var phAssetsStub: [TestPHAsset]?
     
-    func fetchAssets(withLocalIdentifiers identifiers: [String], options: PHFetchOptions?) -> PHAsset? {
+    func fetchAsset(withLocalIdentifier identifier: String, options: PHFetchOptions?) -> PHAsset? {
         return phAssetsStub?.first
     }
     
