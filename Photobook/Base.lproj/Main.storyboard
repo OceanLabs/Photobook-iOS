@@ -4983,7 +4983,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     <subviews>
                                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Required" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pbI-iM-EF9">
                                             <rect key="frame" x="68" y="0.0" width="275" height="44"/>
-                                            <accessibility key="accessibilityConfiguration" identifier="TextField"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="textField"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" priority="750" constant="44" id="y7k-uY-V9R"/>
                                             </constraints>
@@ -5014,8 +5014,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                 <constraint firstAttribute="height" constant="1" id="F11-OJ-Vlv"/>
                                             </constraints>
                                         </view>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bbr-BM-nTt">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bbr-BM-nTt">
                                             <rect key="frame" x="16" y="45" width="343" height="16"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="messageLabel"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>

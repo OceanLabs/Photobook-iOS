@@ -15,9 +15,9 @@ class CreditCardTests: PhotobookUITest {
         automation.goToPaymentMethodFromBasket()
         automation.goToCreditCardFromPaymentMethod()
         
-        let numberTextField = automation.app.textFields["numberTextField"]
-        let expiryDateTextField = automation.app.textFields["expiryDateTextField"]
-        let cvvTextField = automation.app.textFields["cvvTextField"]
+        let numberTextField = automation.app.cells["numberCell"].textFields["textField"]
+        let expiryDateTextField = automation.app.cells["expiryDateCell"].textFields["textField"]
+        let cvvTextField = automation.app.cells["cvvCell"].textFields["textField"]
         
         XCTAssertNotNil(numberTextField.value as? String)
         XCTAssertEqual(numberTextField.value as! String, "Required")
@@ -43,9 +43,44 @@ class CreditCardTests: PhotobookUITest {
         XCTAssertTrue(numberTextField.isHittable, "Should not have navigated away since the required information is not entered")
         
         cvvTextField.tap()
-        automation.app.secureTextFields["cvvTextField"].typeText(automation.testCreditCardCVV) // Changes to secure text field
+        automation.app.cells["cvvCell"].secureTextFields["textField"].typeText(automation.testCreditCardCVV) // Changes to secure text field
         automation.app.navigationBars["Card Details"].buttons["Save"].tap()
         XCTAssertFalse(numberTextField.exists, "We should have all the required information at this point so we should have navigated away")
+    }
+    
+    func testInvalidCardDetails() {
+        automation.goToBasket()
+        automation.goToPaymentMethodFromBasket()
+        automation.goToCreditCardFromPaymentMethod()
+        
+        let numberMessageLabel = automation.app.cells["numberCell"].staticTexts["messageLabel"]
+        XCTAssertEqual(numberMessageLabel.label, "", "We should not be showing an error message at this time")
+        
+        let expiryDateMessageLabel = automation.app.cells["expiryDateCell"].staticTexts["messageLabel"]
+        XCTAssertEqual(expiryDateMessageLabel.label, "", "We should not be showing an error message at this time")
+        
+        let cvvMessageLabel = automation.app.cells["cvvCell"].staticTexts["messageLabel"]
+        XCTAssertEqual(cvvMessageLabel.label, "", "We should not be showing an error message at this time")
+        
+        let numberTextField = automation.app.cells["numberCell"].textFields["textField"]
+        numberTextField.tap()
+        numberTextField.typeText("1111111111111111")
+        
+        let cvvTextField = automation.app.cells["cvvCell"].textFields["textField"]
+        cvvTextField.tap()
+        automation.app.cells["cvvCell"].secureTextFields["textField"].typeText("1") // Changes to secure text field
+        
+        automation.app.navigationBars["Card Details"].buttons["Save"].tap()
+        XCTAssertEqual(numberMessageLabel.label, "This doesn't seem to be a valid card number", "We should be showing an error message now")
+        XCTAssertEqual(cvvMessageLabel.label, "The CVV is invalid. It should contain 3-4 digits.", "We should be showing an error message now")
+        
+        // Tapping on the fields should make the message go away
+        numberTextField.tap()
+        
+        XCTAssertEqual(numberMessageLabel.label, "", "We should not be showing an error message any more")
+        automation.app.cells["cvvCell"].secureTextFields["textField"].tap()
+        XCTAssertEqual(cvvMessageLabel.label, "", "We should not be showing an error message any more")
+        
     }
 
 }
