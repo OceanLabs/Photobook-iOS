@@ -10,13 +10,13 @@ import UIKit
 import Photos
 
 protocol AssetManager {
-    func fetchAssets(withLocalIdentifiers identifiers: [String], options: PHFetchOptions?) -> PHAsset?
+    func fetchAsset(withLocalIdentifier identifier: String, options: PHFetchOptions?) -> PHAsset?
     func fetchAssets(in: PHAssetCollection, options: PHFetchOptions) -> PHFetchResult<PHAsset>
 }
 
 class DefaultAssetManager: AssetManager {
-    func fetchAssets(withLocalIdentifiers identifiers: [String], options: PHFetchOptions?) -> PHAsset? {
-        return PHAsset.fetchAssets(withLocalIdentifiers: identifiers, options: options).firstObject
+    func fetchAsset(withLocalIdentifier identifier: String, options: PHFetchOptions?) -> PHAsset? {
+        return PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: options).firstObject
     }
     
     func fetchAssets(in assetCollection: PHAssetCollection, options: PHFetchOptions) -> PHFetchResult<PHAsset> {
@@ -43,7 +43,7 @@ class DefaultAssetManager: AssetManager {
     var identifier: String! {
         didSet {
             if photosAsset.localIdentifier != identifier,
-               let asset = PhotosAsset.assetManager.fetchAssets(withLocalIdentifiers: [identifier], options: PHFetchOptions()) {
+               let asset = PhotosAsset.assetManager.fetchAsset(withLocalIdentifier: identifier, options: PHFetchOptions()) {
                     photosAsset = asset
             }
         }
@@ -139,7 +139,7 @@ class DefaultAssetManager: AssetManager {
     @objc public required convenience init?(coder aDecoder: NSCoder) {
         guard let assetId = aDecoder.decodeObject(of: NSString.self, forKey: "identifier") as String?,
               let albumIdentifier = aDecoder.decodeObject(of: NSString.self, forKey: "albumIdentifier") as String?,
-              let asset = PhotosAsset.assetManager.fetchAssets(withLocalIdentifiers: [assetId], options: nil) else
+              let asset = PhotosAsset.assetManager.fetchAsset(withLocalIdentifier: assetId, options: nil) else
             { return nil }
             
         self.init(asset, albumIdentifier: albumIdentifier)
