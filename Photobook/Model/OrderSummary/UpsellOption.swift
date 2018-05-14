@@ -11,16 +11,20 @@ import UIKit
 class UpsellOption: Codable, Equatable {
     var type: String
     var displayName: String
+    var targetTemplateId: String?
     
     var dict: [String: Any] {
         get {
-            return ["type": type, "displayName": displayName]
+            var dictionary = ["type": type, "displayName": displayName]
+            if let targetTemplateId = targetTemplateId { dictionary["targetTemplateId"] = targetTemplateId }
+            return dictionary
         }
     }
     
-    init(type: String, displayName: String) {
+    init(type: String, displayName: String, targetTemplateId: String? = nil) {
         self.type = type
         self.displayName = displayName
+        self.targetTemplateId = targetTemplateId
     }
     
     convenience init?(_ dict: [String: Any]) {
@@ -30,7 +34,9 @@ class UpsellOption: Codable, Equatable {
             return nil
         }
         
-        self.init(type: type, displayName: displayName)
+        let targetTemplateId = dict["targetTemplateId"] as? String
+        
+        self.init(type: type, displayName: displayName, targetTemplateId: targetTemplateId)
     }
 }
 

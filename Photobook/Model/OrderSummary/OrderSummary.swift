@@ -69,13 +69,13 @@ class OrderSummary {
     }
     
     convenience init?(_ dict: [String:Any]) {
-        guard let dictionaries = dict["lineItems"] as? [[String:Any]], let totalDict = dict["total"] as? [String: Any], let total = Price(totalDict) else {
+        guard let dictionaries = dict["lineItems"] as? [[String:Any]],
+            let totalDict = dict["total"] as? [String: Any],
+            let total = Price(totalDict),
+            let imageUrl = dict["previewImageUrl"] as? String else {
             print("OrderSummary: couldn't initialise")
             return nil
         }
-        
-        //TODO: mock data
-        let imageUrl = "https://image.kite.ly/render/?product_id=twill_tote_bag&variant=back2_melange_black&format=jpeg&debug=false&background=efefef"
         
         var details = [Detail]()
         for d in dictionaries {

@@ -198,6 +198,20 @@ extension OrderSummaryViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: false)
         if indexPath.section == Constants.sectionOptions,
             let upsellOption = OrderSummaryManager.shared.upsellOptions?[indexPath.row] {
+            
+            //remove options with same type that is going to be selected
+            let selectedSameTypeUpsellOptions = OrderSummaryManager.shared.selectedUpsellOptions.filter { (optionInCollection) -> Bool in
+                return optionInCollection.type != upsellOption.type
+            }
+            for option in selectedSameTypeUpsellOptions {
+                if let row = OrderSummaryManager.shared.upsellOptions?.index(of: option) {
+                    let optionIndexPath = IndexPath(row: row, section: Constants.sectionOptions)
+                    (tableView.cellForRow(at: optionIndexPath) as? OrderSummaryUpsellTableViewCell)?.setEnabled(false)
+                    OrderSummaryManager.shared.deselectUpsellOption(option)
+                }
+            }
+            
+            
             //handle changed upsell selection
             OrderSummaryManager.shared.toggleUpsellOption(upsellOption)
             progressOverlayViewController.show(message: NSLocalizedString("OrderSummary/Loading", value: "Loading order details", comment: "Loading product summary"))

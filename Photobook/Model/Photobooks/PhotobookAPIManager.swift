@@ -19,7 +19,7 @@ class PhotobookAPIManager {
     static let imageUploadIdentifierPrefix = "PhotobookAPIManager-AssetUploader-"
     
     struct EndPoints {
-        static let products = "/ios/initial-data/"
+        static let products = "/ios/initial-data"
         static let summary = "/ios/get_summary"
         static let applyUpsells = "/ios/apply_upsells"
         static let createPdf = "/ios/generate_photobook_pdf"
@@ -107,7 +107,7 @@ class PhotobookAPIManager {
     
     func getOrderSummary(product:PhotobookProduct, completionHandler: @escaping (_ summary: OrderSummary?, _ upsellOptions: [UpsellOption]?, _ productPayload: [String: Any]?, _ error: Error?) -> Void) {
         
-        let parameters = ["productId": product.template.id, "pageCount": product.productLayouts.count]
+        let parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.productLayouts.count, "color": product.coverColor.rawValue]
         apiClient.post(context: .photobook, endpoint: EndPoints.summary, parameters: parameters, headers: authorizationHeader()) { (jsonData, error) in
             
             guard let jsonData = jsonData as? [String: Any],
@@ -132,7 +132,7 @@ class PhotobookAPIManager {
     
     func applyUpsells(product:PhotobookProduct, upsellOptions:[UpsellOption], completionHandler: @escaping (_ summary: OrderSummary?, _ upsoldProduct: PhotobookProduct?, _ productPayload: [String: Any]?, _ error: Error?) -> Void) {
         
-        var parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.productLayouts.count]
+        var parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.productLayouts.count, "color": product.coverColor.rawValue]
         var upsellDicts = [[String: Any]]()
         for upsellOption in upsellOptions {
             upsellDicts.append(upsellOption.dict)
