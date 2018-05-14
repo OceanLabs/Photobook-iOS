@@ -102,12 +102,14 @@ class AddressTableViewController: UITableViewController {
             cell.textField.placeholder = FormConstants.requiredText
             cell.textField.text = address.line1
             line1TextField = cell.textField
+            line1TextField.accessibilityIdentifier = "line1TextField"
         case .line2:
             cell.label.text = NSLocalizedString("AddressEntry/Line2", value: "Line2", comment: "Address Entry screen line2 textfield title")
             cell.textField.textContentType = .streetAddressLine1
             cell.textField.returnKeyType = .next
             cell.textField.text = address.line2
             line2TextField = cell.textField
+            line2TextField.accessibilityIdentifier = "line2TextField"
         case .city:
             cell.label.text = NSLocalizedString("AddressEntry/City", value: "City", comment: "Address Entry screen City textfield title")
             cell.textField.textContentType = .addressCity
@@ -115,6 +117,7 @@ class AddressTableViewController: UITableViewController {
             cell.textField.placeholder = FormConstants.requiredText
             cell.textField.text = address.city
             cityTextField = cell.textField
+            cityTextField.accessibilityIdentifier = "cityTextField"
         case .stateOrCounty:
             if address.country.codeAlpha3 == "USA" {
                 cell.label.text = NSLocalizedString("AddressEntry/State", value: "State", comment: "State of the recipient address (U.S. addresses only)")
@@ -125,6 +128,7 @@ class AddressTableViewController: UITableViewController {
             cell.textField.returnKeyType = .next
             cell.textField.text = address.stateOrCounty
             stateOrCountyTextField = cell.textField
+            stateOrCountyTextField.accessibilityIdentifier = "stateOrCountyTextField"
         case .zipOrPostcode:
             if address.country.codeAlpha3 == "USA" {
                 cell.label.text = NSLocalizedString("AddressEntry/ZipCode", value: "Zip Code", comment: "Zip code of the recipient address (U.S. addresses only)")
@@ -137,10 +141,12 @@ class AddressTableViewController: UITableViewController {
             cell.textField.placeholder = FormConstants.requiredText
             cell.textField.text = address.zipOrPostcode
             zipOrPostcodeTextField = cell.textField
+            zipOrPostcodeTextField.accessibilityIdentifier = "zipOrPostcodeTextField"
         case .country:
             cell.label.text = NSLocalizedString("AddressEntry/Country", value: "Country", comment: "Address Entry screen Country textfield title")
             cell.textField.isUserInteractionEnabled = false
             cell.textField.text = address.country.name
+            cell.textField.accessibilityIdentifier = "countryTextField"
         }
     }
     

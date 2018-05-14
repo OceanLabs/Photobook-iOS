@@ -182,6 +182,7 @@ extension DeliveryDetailsTableViewController {
                 cell.textField.text = details.firstName
                 cell.topSeparator.isHidden = false
                 cell.separatorLeadingConstraint.constant = Constants.leadingSeparatorInset
+                cell.accessibilityIdentifier = "nameCell"
                 firstNameTextField = cell.textField
             case .lastName:
                 cell.label?.text = NSLocalizedString("DeliveryDetails/LastName", value: "Last Name", comment: "Delivery Details screen last name textfield title")
@@ -193,6 +194,7 @@ extension DeliveryDetailsTableViewController {
                 cell.textField.text = details.lastName
                 cell.topSeparator.isHidden = true
                 cell.separatorLeadingConstraint.constant = Constants.leadingSeparatorInset
+                cell.accessibilityIdentifier = "lastNameCell"
                 lastNameTextField = cell.textField
             case .email:
                 cell.label?.text = NSLocalizedString("DeliveryDetails/Email", value: "Email", comment: "Delivery Details screen Email textfield title")
@@ -204,6 +206,7 @@ extension DeliveryDetailsTableViewController {
                 cell.textField.text = details.email
                 cell.topSeparator.isHidden = true
                 cell.separatorLeadingConstraint.constant = Constants.leadingSeparatorInset
+                cell.accessibilityIdentifier = "emailCell"
                 emailTextField = cell.textField
             case .phone:
                 cell.label?.text = NSLocalizedString("DeliveryDetails/Phone", value: "Phone", comment: "Delivery Details screen Phone textfield title")
@@ -214,6 +217,7 @@ extension DeliveryDetailsTableViewController {
                 cell.textField.text = details.phone
                 cell.topSeparator.isHidden = true
                 cell.separatorLeadingConstraint.constant = 0
+                cell.accessibilityIdentifier = "phoneCell"
                 phoneTextField = cell.textField
             }
             return cell
