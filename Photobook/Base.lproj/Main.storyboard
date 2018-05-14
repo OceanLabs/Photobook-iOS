@@ -3639,6 +3639,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zQs-sL-P80">
                                                 <rect key="frame" x="0.0" y="218" width="275" height="50"/>
                                                 <color key="backgroundColor" red="0.1318541765" green="0.52277827259999998" blue="0.96682602169999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="accessPhotosButton"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="6zU-9w-b7S"/>
                                                 </constraints>
@@ -6132,6 +6133,6 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <image name="uploading-spinner" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="V0I-No-StO"/>
+        <segue reference="qeW-AA-Oo4"/>
     </inferredMetricsTieBreakers>
 </document>

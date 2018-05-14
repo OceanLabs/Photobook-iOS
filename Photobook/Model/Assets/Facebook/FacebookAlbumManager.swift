@@ -21,14 +21,15 @@ class FacebookAlbumManager {
     
     private var after: String?
     
+    lazy var facebookManager: FacebookApiManager = DefaultFacebookApiManager()
+    
     func fetchAlbums(graphPath: String, completionHandler: ((Error?) -> Void)?) {
-        guard let token = FBSDKAccessToken.current() else {
+        guard let token = facebookManager.accessToken else {
             completionHandler?(ErrorMessage(text: CommonLocalizedStrings.serviceAccessError(serviceName: FacebookClient.Constants.serviceName)))
             return
         }
         
-        let graphRequest = FBSDKGraphRequest(graphPath: graphPath, parameters: [:])
-        _ = graphRequest?.start(completionHandler: { [weak welf = self] _, result, error in
+        facebookManager.request(withGraphPath: graphPath, parameters: [:]) { [weak welf = self] result, error in
             if let error = error {
                 let error = ErrorMessage(text: error.localizedDescription)
                 completionHandler?(error)
@@ -47,7 +48,7 @@ class FacebookAlbumManager {
                 let photoCount = album["count"] as? Int,
                 let name = album["name"] as? String,
                 let coverPhoto = (album["cover_photo"] as? [String: Any])?["id"] as? String,
-                let coverPhotoUrl = URL(string: "https://graph.facebook.com/\(coverPhoto)/picture?access_token=\(token.tokenString!)")
+                let coverPhotoUrl = URL(string: "https://graph.facebook.com/\(coverPhoto)/picture?access_token=\(token)")
                     else { continue }
                 
                 if let stelf = welf {
@@ -73,14 +74,17 @@ class FacebookAlbumManager {
             } else {
                 NotificationCenter.default.post(name: AssetsNotificationName.albumsWereAdded, object: albumAdditions)
             }
-        })
+        }
     }
 }
 
 extension FacebookAlbumManager: AlbumManager {
     
     func loadAlbums(completionHandler: ((Error?) -> Void)?) {
-        guard albums.isEmpty else { completionHandler?(nil); return }
+        guard albums.isEmpty else {
+            completionHandler?(nil)
+            return
+        }
         
         fetchAlbums(graphPath: Constants.graphPath, completionHandler: completionHandler)
     }

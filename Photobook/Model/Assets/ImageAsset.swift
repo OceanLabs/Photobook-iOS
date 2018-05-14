@@ -10,10 +10,10 @@
 @objc public class ImageAsset: NSObject, NSCoding, Asset {
     
     /// Image representation of the asset
-    @objc public var image: UIImage
+    @objc internal(set) public var image: UIImage
     
     /// Date associated with this asset
-    @objc public var date: Date? = nil
+    @objc internal(set) public var date: Date? = nil
     
     var identifier = UUID().uuidString
     var albumIdentifier: String? = nil
@@ -25,7 +25,7 @@
     /// - Parameters:
     ///   - image: Image representation of the asset
     ///   - date: Associated date
-    @objc public init(image: UIImage, date: Date?) {
+    @objc public init(image: UIImage, date: Date? = nil) {
         self.image = image
         self.date = date
     }
@@ -39,18 +39,20 @@
         
         let imageData = NSKeyedArchiver.archivedData(withRootObject: image)
         aCoder.encode(imageData, forKey: "image")
+        aCoder.encode(date, forKey: "date")
     }
     
-    @objc public required init?(coder aDecoder: NSCoder) {
-        guard let identifier = aDecoder.decodeObject(of: NSString.self, forKey: "identifier") as String?,
-              let imageData = aDecoder.decodeObject(of: NSData.self, forKey: "image") as Data?,
+    @objc public required convenience init?(coder aDecoder: NSCoder) {
+        guard let imageData = aDecoder.decodeObject(of: NSData.self, forKey: "image") as Data?,
               let image = NSKeyedUnarchiver.unarchiveObject(with: imageData) as? UIImage else {
             return nil
         }
         
-        self.image = image
-        self.identifier = identifier
+        self.init(image: image)
+        self.identifier = aDecoder.decodeObject(of: NSString.self, forKey: "identifier")! as String
+        self.date = aDecoder.decodeObject(of: NSDate.self, forKey: "date") as Date?
         uploadUrl = aDecoder.decodeObject(of: NSString.self, forKey: "uploadUrl") as String?
+        
     }
 
     func image(size: CGSize, loadThumbnailFirst: Bool, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
