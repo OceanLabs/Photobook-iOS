@@ -74,7 +74,7 @@ class Order: Codable {
         let promoDiscount = validPromoCode == promoCode ? "-£5.00" : nil
         var promoCodeInvalidReason:String?
         if promoCode != nil && promoDiscount == nil {
-            promoCodeInvalidReason = "Invalid code 🤷"
+            promoCodeInvalidReason = NSLocalizedString("Checkout/PromoCodeIsInvalid", value: "Invalid code 🤷", comment: "Label that informs the user that the promo code they have entered is not valid")
         }
         
         self.cachedCost = Cost(hash: hashValue, lineItems: [lineItem], shippingMethods: [shippingMethod, shippingMethod2], promoDiscount: promoDiscount, promoCodeInvalidReason: promoCodeInvalidReason)

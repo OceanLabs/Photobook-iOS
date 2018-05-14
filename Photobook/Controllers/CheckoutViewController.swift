@@ -48,37 +48,40 @@ class CheckoutViewController: UIViewController {
         static let title = NSLocalizedString("Controllers/CheckoutViewController/Title", value: "Payment", comment: "Payment screen title")
     }
     
-    @IBOutlet weak var itemImageView: UIImageView!
-    @IBOutlet weak var itemTitleLabel: UILabel!
-    @IBOutlet weak var itemPriceLabel: UILabel!
-    @IBOutlet weak var itemAmountButton: UIButton!
+    @IBOutlet private weak var itemImageView: UIImageView!
+    @IBOutlet private weak var itemTitleLabel: UILabel!
+    @IBOutlet private weak var itemPriceLabel: UILabel!
+    @IBOutlet private weak var itemAmountButton: UIButton!
     
-    @IBOutlet weak var promoCodeActivityIndicator: UIActivityIndicatorView!
-    @IBOutlet weak var promoCodeView: UIView!
-    @IBOutlet weak var promoCodeTextField: UITextField!
-    @IBOutlet weak var promoCodeClearButton: UIButton!
-    @IBOutlet weak var deliveryDetailsView: UIView!
-    @IBOutlet weak var deliveryDetailsLabel: UILabel!
-    @IBOutlet weak var shippingMethodView: UIView!
-    @IBOutlet weak var shippingMethodLabel: UILabel!
-    @IBOutlet weak var paymentMethodView: UIView!
-    @IBOutlet weak var paymentMethodTitleLabel: UILabel!
-    @IBOutlet weak var paymentMethodLabel: UILabel!
-    @IBOutlet weak var paymentMethodIconImageView: UIImageView!
-    @IBOutlet weak var payButtonContainerView: UIView!
-    @IBOutlet weak var payButton: UIButton!
+    @IBOutlet private weak var promoCodeActivityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var promoCodeView: UIView!
+    @IBOutlet private weak var promoCodeTextField: UITextField!
+    @IBOutlet private weak var promoCodeClearButton: UIButton!
+    @IBOutlet private weak var deliveryDetailsView: UIView!
+    @IBOutlet private weak var deliveryDetailsLabel: UILabel!
+    @IBOutlet private weak var shippingMethodView: UIView!
+    @IBOutlet private weak var shippingMethodLabel: UILabel!
+    @IBOutlet private weak var paymentMethodView: UIView!
+    @IBOutlet private weak var paymentMethodTitleLabel: UILabel!
+    @IBOutlet private weak var paymentMethodLabel: UILabel!
+    @IBOutlet private weak var paymentMethodIconImageView: UIImageView!
+    @IBOutlet private weak var payButtonContainerView: UIView!
+    @IBOutlet private weak var payButton: UIButton!
+    @IBOutlet private weak var infoLabelDeliveryDetails: UILabel!
+    @IBOutlet private weak var infoLabelShipping: UILabel!
+    
     private var applePayButton: PKPaymentButton?
     private var payButtonOriginalColor:UIColor!
 
     @IBOutlet var promoCodeDismissGestureRecognizer: UITapGestureRecognizer!
     
-    @IBOutlet weak var hideDeliveryDetailsConstraint: NSLayoutConstraint!
-    @IBOutlet weak var showDeliveryDetailsConstraint: NSLayoutConstraint!
-    @IBOutlet weak var optionsViewBottomContraint: NSLayoutConstraint!
-    @IBOutlet weak var optionsViewTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var promoCodeViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var promoCodeAccessoryConstraint: NSLayoutConstraint!
-    @IBOutlet weak var promoCodeNormalConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var hideDeliveryDetailsConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var showDeliveryDetailsConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var optionsViewBottomContraint: NSLayoutConstraint!
+    @IBOutlet private weak var optionsViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var promoCodeViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var promoCodeAccessoryConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var promoCodeNormalConstraint: NSLayoutConstraint!
     
     private var previousPromoText: String? //stores previously entered promo string to determine if it has changed
     
@@ -208,14 +211,14 @@ class CheckoutViewController: UIViewController {
     
     private func updateViews() {
         
-        //product
+        // Product
         itemTitleLabel.text = OrderManager.shared.basketOrder.products.first!.template.name
         itemPriceLabel.text = OrderManager.shared.basketOrder.cachedCost?.lineItems?.first?.formattedCost
         itemAmountButton.setTitle("\(OrderManager.shared.basketOrder.products.first!.itemCount)", for: .normal)
         itemAmountButton.accessibilityValue = itemAmountButton.title(for: .normal)
         updateItemImage()
         
-        //promo code
+        // Promo code
         if let promoDiscount = OrderManager.shared.basketOrder.validCost?.promoDiscount {
             promoCodeTextField.text = promoDiscount
             previousPromoText = promoDiscount
@@ -223,9 +226,10 @@ class CheckoutViewController: UIViewController {
             promoCodeAccessoryConstraint.priority = .defaultHigh
             promoCodeNormalConstraint.priority = .defaultLow
         }
-        checkPromoCode()
         
-        //payment method icon
+        let promoCodeIsInvalid = checkPromoCode()
+        
+        // Payment Method Icon
         showDeliveryDetailsConstraint.priority = .defaultHigh
         hideDeliveryDetailsConstraint.priority = .defaultLow
         deliveryDetailsView.isHidden = false
@@ -258,13 +262,13 @@ class CheckoutViewController: UIViewController {
             paymentMethodLabel.isHidden = true
         }
         
-        //shipping
+        // Shipping
         shippingMethodLabel.text = ""
         if let validCost = OrderManager.shared.basketOrder.validCost, let selectedShippingMethod = validCost.shippingMethod(id: OrderManager.shared.basketOrder.shippingMethod) {
             shippingMethodLabel.text = selectedShippingMethod.shippingCostFormatted
         }
         
-        //address
+        // Address
         var addressString = ""
         if let address = OrderManager.shared.basketOrder.deliveryDetails?.address, let line1 = address.line1 {
             
@@ -278,12 +282,21 @@ class CheckoutViewController: UIViewController {
             deliveryDetailsLabel.text = addressString
         }
         
-        //CTA button
+        // CTA button
         adaptPayButton()
+        
+        // Accessibility
+        deliveryDetailsView.accessibilityLabel = infoLabelDeliveryDetails.text! + ": " + (deliveryDetailsLabel.text ?? "")
+        shippingMethodView.accessibilityLabel = infoLabelShipping.text! + ": " + (shippingMethodLabel.text ?? "")
+        paymentMethodView.accessibilityLabel = paymentMethodTitleLabel.text! + " " + (OrderManager.shared.basketOrder.paymentMethod?.description ?? "")
+        
+        if promoCodeIsInvalid {
+            UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, promoCodeTextField)
+        }
     }
     
     private func adaptPayButton() {
-        //hide all
+        // Hide all
         applePayButton?.isHidden = true
         applePayButton?.isEnabled = false
         payButton.isHidden = true
@@ -308,20 +321,28 @@ class CheckoutViewController: UIViewController {
             payButton.isEnabled = true
             payButton.alpha = 1.0
             payButton.backgroundColor = payButtonOriginalColor
-            if paymentMethod == nil {
+            
+            var payButtonAccessibilityLabel = payButtonText
+            var payButtonHint: String?
+            
+            let paymentMethodIsValid = self.paymentMethodIsValid()
+            let deliveryDetailsAreValid = self.deliveryDetailsAreValid()
+            if !paymentMethodIsValid || !deliveryDetailsAreValid {
                 payButton.alpha = 0.5
                 payButton.backgroundColor = UIColor.lightGray
+                payButtonAccessibilityLabel += ". Disabled."
+                
+                if !paymentMethodIsValid && !deliveryDetailsAreValid {
+                    payButtonHint = NSLocalizedString("Accessibility/AddPaymentMethodAndDeliveryDetailsHint", value: "Add a payment method and delivery details to place your order.", comment: "Accessibility hint letting the user know that they need to add a payment method and delivery details to be able to place the order.")
+                } else if !paymentMethodIsValid {
+                    payButtonHint = NSLocalizedString("Accessibility/AddPaymentMethodHint", value: "Add a payment method to place your order.", comment: "Accessibility hint letting the user know that they need to add a payment method to be able to place the order.")
+                } else if !deliveryDetailsAreValid {
+                    payButtonHint = NSLocalizedString("Accessibility/AddDeliveryDetailsHint", value: "Enter delivery details to place your order.", comment: "Accessibility hint letting the user know that they need to enter delivery details to be able to place the order.")
+                }
             }
+            payButton.accessibilityLabel = payButtonAccessibilityLabel
+            payButton.accessibilityHint = payButtonHint
         }
-    }
-    
-    private func paymentMethodIsValid() -> Bool {
-        guard OrderManager.shared.basketOrder.orderIsFree || (OrderManager.shared.basketOrder.paymentMethod != nil && (OrderManager.shared.basketOrder.paymentMethod != .creditCard || Card.currentCard != nil)) else {
-            indicatePaymentMethodError()
-            return false
-        }
-        
-        return true
     }
     
     private func indicatePaymentMethodError() {
@@ -333,12 +354,11 @@ class CheckoutViewController: UIViewController {
     }
     
     private func deliveryDetailsAreValid() -> Bool {
-        guard (!OrderManager.shared.basketOrder.orderIsFree && OrderManager.shared.basketOrder.paymentMethod == .applePay) || (OrderManager.shared.basketOrder.deliveryDetails?.address?.isValid ?? false) else {
-            indicateDeliveryDetailsError()
-            return false
-        }
-        
-        return true
+        return (!OrderManager.shared.basketOrder.orderIsFree && OrderManager.shared.basketOrder.paymentMethod == .applePay) || (OrderManager.shared.basketOrder.deliveryDetails?.address?.isValid ?? false)
+    }
+    
+    private func paymentMethodIsValid() -> Bool {
+        return OrderManager.shared.basketOrder.orderIsFree || (OrderManager.shared.basketOrder.paymentMethod != nil && (OrderManager.shared.basketOrder.paymentMethod != .creditCard || Card.currentCard != nil))
     }
     
     private func indicateDeliveryDetailsError() {
@@ -346,12 +366,21 @@ class CheckoutViewController: UIViewController {
         deliveryDetailsLabel.textColor = Constants.detailsLabelColorRequired
     }
     
-    private func detailFieldsAreValid() -> Bool {
+    private func checkRequiredInformation() -> Bool {
         let paymentMethodIsValid = self.paymentMethodIsValid()
-        return deliveryDetailsAreValid() && paymentMethodIsValid
+        if !paymentMethodIsValid {
+            indicatePaymentMethodError()
+        }
+        
+        let deliveryDetailsAreValid = self.deliveryDetailsAreValid()
+        if !deliveryDetailsAreValid {
+            indicateDeliveryDetailsError()
+        }
+        
+        return deliveryDetailsAreValid && paymentMethodIsValid
     }
     
-    private func checkPromoCode() {
+    private func checkPromoCode() -> Bool {
         //promo code
         if let invalidReason = OrderManager.shared.basketOrder.validCost?.promoCodeInvalidReason {
             promoCodeTextField.attributedPlaceholder = NSAttributedString(string: invalidReason, attributes: [NSAttributedStringKey.foregroundColor: Constants.detailsLabelColorRequired])
@@ -361,7 +390,11 @@ class CheckoutViewController: UIViewController {
             self.promoCodeClearButton.isHidden = true
             self.promoCodeAccessoryConstraint.priority = .defaultLow
             self.promoCodeNormalConstraint.priority = .defaultHigh
+            
+            return true
         }
+        
+        return false
     }
     
     private func handlePromoCodeChanges() {
@@ -456,7 +489,7 @@ class CheckoutViewController: UIViewController {
     }
     
     @IBAction func payButtonTapped(_ sender: UIButton) {
-        guard detailFieldsAreValid() else { return }
+        guard checkRequiredInformation() else { return }
         
         guard let cost = OrderManager.shared.basketOrder.validCost else {
             progressOverlayViewController.show(message: Constants.loadingPaymentText)

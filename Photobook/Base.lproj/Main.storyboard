@@ -2565,7 +2565,7 @@
                                         <subviews>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XZ1-hM-Xzz">
                                                 <rect key="frame" x="128" y="0.0" width="232" height="45"/>
-                                                <accessibility key="accessibilityConfiguration" identifier="promoCodeTextField"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="promoCodeTextField" label="Promo Code"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="alphabet" returnKeyType="done"/>
                                                 <connections>
@@ -2574,6 +2574,9 @@
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Promo Code" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fSF-Qp-4EQ">
                                                 <rect key="frame" x="15" y="12" width="98" height="21"/>
+                                                <accessibility key="accessibilityConfiguration">
+                                                    <bool key="isElement" value="NO"/>
+                                                </accessibility>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                                 <color key="textColor" red="0.18220192190000001" green="0.18219646810000001" blue="0.1821995676" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -2626,6 +2629,9 @@
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Delivery Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ILs-SO-o4W">
                                                 <rect key="frame" x="15" y="12.5" width="122" height="21"/>
+                                                <accessibility key="accessibilityConfiguration">
+                                                    <bool key="isElement" value="NO"/>
+                                                </accessibility>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                                 <color key="textColor" red="0.18220192190000001" green="0.18219646810000001" blue="0.1821995676" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -2647,6 +2653,10 @@
                                             </label>
                                         </subviews>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <accessibilityTraits key="traits" button="YES"/>
+                                            <bool key="isElement" value="YES"/>
+                                        </accessibility>
                                         <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="aac-o1-mRo" secondAttribute="trailing" constant="15" id="46L-ov-FnZ"/>
@@ -2677,12 +2687,18 @@
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="$X" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Ly-Ux-QDk">
                                                 <rect key="frame" x="310" y="12.5" width="22" height="21"/>
+                                                <accessibility key="accessibilityConfiguration">
+                                                    <bool key="isElement" value="NO"/>
+                                                </accessibility>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.18220192190000001" green="0.18219646810000001" blue="0.1821995676" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Shipping" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6bw-zg-fmD">
                                                 <rect key="frame" x="15" y="12.5" width="69.5" height="20.5"/>
+                                                <accessibility key="accessibilityConfiguration">
+                                                    <bool key="isElement" value="NO"/>
+                                                </accessibility>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -2697,6 +2713,10 @@
                                             </imageView>
                                         </subviews>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <accessibilityTraits key="traits" button="YES"/>
+                                            <bool key="isElement" value="YES"/>
+                                        </accessibility>
                                         <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstItem="Dl2-2v-Iad" firstAttribute="centerY" secondItem="Dfm-Yd-PFG" secondAttribute="centerY" id="90B-lH-nuD"/>
@@ -2727,6 +2747,10 @@
                                             </view>
                                             <label opaque="NO" contentMode="scaleToFill" text="Payment Method" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" translatesAutoresizingMaskIntoConstraints="NO" id="XKU-uH-msU">
                                                 <rect key="frame" x="15" y="12.5" width="134" height="21"/>
+                                                <accessibility key="accessibilityConfiguration">
+                                                    <accessibilityTraits key="traits" staticText="YES"/>
+                                                    <bool key="isElement" value="NO"/>
+                                                </accessibility>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                             </label>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="apple-pay-method" translatesAutoresizingMaskIntoConstraints="NO" id="d2G-D9-1PL">
@@ -2750,6 +2774,10 @@
                                             </label>
                                         </subviews>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <accessibilityTraits key="traits" button="YES"/>
+                                            <bool key="isElement" value="YES"/>
+                                        </accessibility>
                                         <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="vdH-53-tRh" secondAttribute="trailing" id="1Vc-xg-kt2"/>
@@ -2960,6 +2988,8 @@
                         <outlet property="deliveryDetailsLabel" destination="9zA-0G-vdb" id="sb1-Ng-ci4"/>
                         <outlet property="deliveryDetailsView" destination="5cM-ch-BDN" id="bhA-gD-7n3"/>
                         <outlet property="hideDeliveryDetailsConstraint" destination="y6K-Bk-c6V" id="Tsc-27-tcC"/>
+                        <outlet property="infoLabelDeliveryDetails" destination="ILs-SO-o4W" id="ZGN-RK-WGp"/>
+                        <outlet property="infoLabelShipping" destination="6bw-zg-fmD" id="937-NJ-cjD"/>
                         <outlet property="itemAmountButton" destination="qMT-Lg-lj2" id="cvA-U1-5tI"/>
                         <outlet property="itemImageView" destination="ATQ-7e-lXt" id="f5G-Y4-me1"/>
                         <outlet property="itemPriceLabel" destination="T6M-C9-pKv" id="C3f-Xd-sBx"/>
