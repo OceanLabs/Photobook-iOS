@@ -68,16 +68,24 @@ class PaymentAuthorizationManager: NSObject {
     ///
     /// - Parameter cost: The total cost of the order
     private func authorizeCreditCard(cost: Cost) {
-        guard var currentCard = Card.currentCard else { return }
+        guard let currentCard = Card.currentCard else { return }
         
-        currentCard.clientId = stripePublicKey
-        currentCard.authorise() { (error, token) in
-            guard let token = token, error == nil else {
-                self.delegate?.paymentAuthorizationDidFinish(token: nil, error: error, completionHandler: nil)
+        if let key = stripePublicKey {
+            Stripe.setDefaultPublishableKey(key)
+        }
+        
+        let cardParams = STPCardParams()
+        cardParams.number = currentCard.number
+        cardParams.expMonth = UInt(currentCard.expireMonth)
+        cardParams.expYear = UInt(currentCard.expireYear)
+        cardParams.cvc = currentCard.cvv2
+        
+        STPAPIClient.shared().createToken(withCard: cardParams) { [weak welf = self] (token, error) in
+            if let error = error {
+                welf?.delegate?.paymentAuthorizationDidFinish(token: nil, error: error, completionHandler: nil)
                 return
             }
-            
-            self.delegate?.paymentAuthorizationDidFinish(token: token, error: nil, completionHandler: nil)
+            welf?.delegate?.paymentAuthorizationDidFinish(token: token!.tokenId, error: nil, completionHandler: nil)
         }
     }
     

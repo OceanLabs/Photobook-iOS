@@ -83,7 +83,7 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             guard let card = Card.currentCard else { fallthrough }
             
             let cell = tableView.dequeueReusableCell(withIdentifier: PaymentMethodTableViewCell.reuseIdentifier, for: indexPath) as! PaymentMethodTableViewCell
-            cell.method = card.isAmex ? "•••• •••••• •\(card.numberMasked)" : "•••• •••• •••• \(card.numberMasked)"
+            cell.method = card.numberMasked
             cell.icon = card.cardIcon
             cell.ticked = selectedPaymentMethod == .creditCard
             cell.separator.isHidden = true
