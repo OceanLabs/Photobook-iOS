@@ -72,7 +72,7 @@ class CreditCardTests: PhotobookUITest {
         
         automation.app.navigationBars["Card Details"].buttons["Save"].tap()
         XCTAssertEqual(numberMessageLabel.label, "This doesn't seem to be a valid card number", "We should be showing an error message now")
-        XCTAssertEqual(cvvMessageLabel.label, "The CVV is invalid. It should contain 3-4 digits.", "We should be showing an error message now")
+        XCTAssertEqual(cvvMessageLabel.label, "The CVV is invalid. It should contain 3 to 4 digits.", "We should be showing an error message now")
         
         // Tapping on the fields should make the message go away
         numberTextField.tap()

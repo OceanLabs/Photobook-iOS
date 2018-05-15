@@ -4984,7 +4984,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <viewLayoutGuide key="safeArea" id="kUJ-ce-tjQ"/>
                     </view>
                     <navigationItem key="navigationItem" title="Payment Methods" id="vav-b1-Mv0">
-                        <barButtonItem key="backBarButtonItem" title=" " id="VMo-4k-rjk"/>
+                        <barButtonItem key="backBarButtonItem" title="Back" id="VMo-4k-rjk"/>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <connections>

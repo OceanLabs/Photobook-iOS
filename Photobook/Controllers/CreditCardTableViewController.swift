@@ -132,7 +132,7 @@ class CreditCardTableViewController: UITableViewController {
         else if (cvvTextField.text ?? "").count < 3 {
             if let cell = (tableView.cellForRow(at: IndexPath(row: Constants.cvvRow, section: 0)) as? UserInputTableViewCell){
                 tableView.beginUpdates()
-                cell.errorMessage = NSLocalizedString("CVVError", value: "The CVV is invalid. It should contain 3-4 digits.", comment: "Error displayed when the CVV field is empty or shorter than 3-4 digits")
+                cell.errorMessage = NSLocalizedString("CVVError", value: "The CVV is invalid. It should contain 3 to 4 digits.", comment: "Error displayed when the CVV field is empty or shorter than 3 to 4 digits")
                 cell.textField.textColor = FormConstants.errorColor
                 tableView.endUpdates()
             }
