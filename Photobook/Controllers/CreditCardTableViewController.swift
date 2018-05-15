@@ -69,7 +69,13 @@ class CreditCardTableViewController: UITableViewController {
         super.viewDidLoad()
         
         title = NSLocalizedString("CreditCardTitle", value: "Card Details", comment: "Title for the credit card screen")
+        
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: .UIKeyboardDidHide, object: nil)
     }
+    
+//    @objc private func keyboardDidHide() {
+//        UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, "Keyboard did hide")
+//    }
     
     @objc private func nextTextField() {
         if cardNumberTextField.isFirstResponder {
@@ -106,40 +112,40 @@ class CreditCardTableViewController: UITableViewController {
     private func saveCardDetails() {
         view.endEditing(false)
         
-        var creditCardIsValid = false
+        var creditCardInvalidReason: String?
         if cardNumberTextField.text?.isEmpty ?? true || cardNumberTextField.text == FormConstants.requiredText {
             let cell = (tableView.cellForRow(at: IndexPath(row: Constants.creditCardRow, section: 0)) as! UserInputTableViewCell)
             cell.textField.text = FormConstants.requiredText
             cell.textField.textColor = FormConstants.errorColor
+            creditCardInvalidReason = NSLocalizedString("Accessibility/CreditCardNumberCantBeEmpty", value: "Card number can't be empty.", comment: "Accessibility error messages informing the user that the credit card number can't be empty")
         }
         else if !cardNumberTextField.text!.isValidCardNumber() || cardNumberTextField.text!.cardType() == nil {
             tableView.beginUpdates()
             let cell = (tableView.cellForRow(at: IndexPath(row: Constants.creditCardRow, section: 0)) as! UserInputTableViewCell)
-            cell.errorMessage = NSLocalizedString("CardNumberError", value: "This doesn't seem to be a valid card number", comment: "Error displayed when the card number field is missing or invalid")
+            cell.errorMessage = NSLocalizedString("CardNumberError", value: "This doesn't seem to be a valid card number.", comment: "Error displayed when the card number field is missing or invalid")
+            creditCardInvalidReason = NSLocalizedString("Accessibility/CardNumberError", value: "The card number doesn't seem to be valid.", comment: "Error displayed when the card number field is missing or invalid")
             cell.textField.textColor = FormConstants.errorColor
             tableView.endUpdates()
-        } else {
-            creditCardIsValid = true
         }
         
-        var cvvIsValid = false
+        var cvvInvalidReason: String?
         if cvvTextField.text?.isEmpty ?? true || cvvTextField.text == FormConstants.requiredText {
             let cell = (tableView.cellForRow(at: IndexPath(row: Constants.cvvRow, section: 0)) as! UserInputTableViewCell)
             cell.textField.text = FormConstants.requiredText
             cell.textField.textColor = FormConstants.errorColor
             cell.textField.isSecureTextEntry = false
+            cvvInvalidReason = NSLocalizedString("Accessibility/CCVCantBeEmpty", value: "CVV can't be empty.", comment: "Accessibility error messages informing the user that CCV can't be empty")
         }
         else if (cvvTextField.text ?? "").count < 3 {
             if let cell = (tableView.cellForRow(at: IndexPath(row: Constants.cvvRow, section: 0)) as? UserInputTableViewCell){
                 tableView.beginUpdates()
-                cell.errorMessage = NSLocalizedString("CVVError", value: "The CVV is invalid. It should contain 3 to 4 digits.", comment: "Error displayed when the CVV field is empty or shorter than 3 to 4 digits")
+                cvvInvalidReason = NSLocalizedString("CVVError", value: "The CVV is invalid. It should contain 3 to 4 digits.", comment: "Error displayed when the CVV field is empty or shorter than 3 to 4 digits")
+                cell.errorMessage = cvvInvalidReason
                 cell.textField.textColor = FormConstants.errorColor
                 tableView.endUpdates()
             }
-        } else {
-            cvvIsValid = true
         }
-
+        
         if selectedExpiryMonth == nil || selectedExpiryYear == nil {
             let cell = (tableView.cellForRow(at: IndexPath(row: Constants.expiryDateRow, section: 0)) as! UserInputTableViewCell)
             cell.textField.text = FormConstants.requiredText
@@ -152,18 +158,29 @@ class CreditCardTableViewController: UITableViewController {
         let thisMonth = components.month!
         let thisYear = components.year!
         
+        var expiryDateInvalidReason: String?
         if thisYear == selectedExpiryYear && thisMonth > selectedExpiryMonth {
             if let cell = (tableView.cellForRow(at: IndexPath(row: Constants.expiryDateRow, section: 0)) as? UserInputTableViewCell) {
                 tableView.beginUpdates()
-                cell.errorMessage = NSLocalizedString("ExpiryDateInThePastError", value: "The expiry date is in the past", comment: "Error displayed when the expiry date entered is in the past")
+                expiryDateInvalidReason = NSLocalizedString("ExpiryDateInThePastError", value: "The expiry date is in the past.", comment: "Error displayed when the expiry date entered is in the past")
+                cell.errorMessage = expiryDateInvalidReason
                 cell.textField.textColor = FormConstants.errorColor
                 tableView.endUpdates()
             }
-            return
         }
         
-        guard creditCardIsValid && cvvIsValid else { return }
-
+        guard creditCardInvalidReason == nil,
+            cvvInvalidReason == nil,
+            expiryDateInvalidReason == nil
+            else {
+                var errorMessage = NSLocalizedString("Accessibility/CreditCardDetailsAreInvalid", value: "Card details are invalid.", comment: "Accessibility error message letting the user know that the credit card details they have entered are invalid/incomplete.")
+                errorMessage += (creditCardInvalidReason ?? "") + (expiryDateInvalidReason ?? "") + (cvvInvalidReason ?? "")
+                
+                UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, errorMessage)
+                return
+        }
+        
+        
         let card = Card(number: cardNumberTextField.text!, expireMonth: selectedExpiryMonth, expireYear: selectedExpiryYear, cvv2: cvvTextField.text!)
         Card.currentCard = card
         
