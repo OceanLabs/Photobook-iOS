@@ -210,6 +210,7 @@ extension CreditCardTableViewController{
             cell.textField.textContentType = .creditCardNumber
             cell.topSeparator.isHidden = false
             cell.separatorLeadingConstraint.constant = Constants.leadingSeparatorInset
+            cell.accessibilityIdentifier = "numberCell"
         case Constants.expiryDateRow:
             expiryDateTextField = cell.textField
             cell.label?.text = NSLocalizedString("ExpiryDate", value: "Expiry Date", comment: "")
@@ -219,6 +220,7 @@ extension CreditCardTableViewController{
             cell.textField.placeholder = "Required"
             cell.topSeparator.isHidden = true
             cell.separatorLeadingConstraint.constant = Constants.leadingSeparatorInset
+            cell.accessibilityIdentifier = "expiryDateCell"
         case Constants.cvvRow:
             cvvTextField = cell.textField
             cell.label?.text = NSLocalizedString("CVV", comment: "Credit card security number")
@@ -228,6 +230,7 @@ extension CreditCardTableViewController{
             cell.topSeparator.isHidden = true
             cell.separatorLeadingConstraint.constant = 0
             cell.textField.keyboardType = .numberPad
+            cell.accessibilityIdentifier = "cvvCell"
         default:
             break
         }

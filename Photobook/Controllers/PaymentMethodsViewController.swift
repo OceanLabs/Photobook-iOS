@@ -69,6 +69,7 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             cell.icon = UIImage(namedInPhotobookBundle:"apple-pay-method")
             cell.ticked = selectedPaymentMethod == .applePay
             cell.separator.isHidden = true
+            cell.accessibilityIdentifier = "applePayCell"
             return cell
         case 0 + supportsApplePay: // PayPal
             let cell = tableView.dequeueReusableCell(withIdentifier: PaymentMethodTableViewCell.reuseIdentifier, for: indexPath) as! PaymentMethodTableViewCell
@@ -76,6 +77,7 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             cell.icon = UIImage(namedInPhotobookBundle:"paypal-method")
             cell.ticked = selectedPaymentMethod == .payPal
             cell.separator.isHidden = false
+            cell.accessibilityIdentifier = "payPalCell"
             return cell
         case 1 + supportsApplePay: // Saved card
             guard let card = Card.currentCard else { fallthrough }
@@ -85,6 +87,7 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             cell.icon = card.cardIcon
             cell.ticked = selectedPaymentMethod == .creditCard
             cell.separator.isHidden = true
+            cell.accessibilityIdentifier = "creditCardCell"
             return cell
         default:
             return tableView.dequeueReusableCell(withIdentifier: "AddPaymentMethodCell", for: indexPath)

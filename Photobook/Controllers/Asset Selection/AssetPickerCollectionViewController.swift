@@ -191,10 +191,10 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         
         for albumChange in albumsChanges {
             if albumChange.album.identifier == self.album.identifier {
-                var indexPathsAdded = [IndexPath]()
-                for assetAdded in albumChange.assetsAdded {
-                    if let index = self.album.assets.index(where: { $0.identifier == assetAdded.identifier }) {
-                        indexPathsAdded.append(IndexPath(item: index, section: 0))
+                var indexPathsInserted = [IndexPath]()
+                for assetInserted in albumChange.assetsInserted {
+                    if let index = self.album.assets.index(where: { $0.identifier == assetInserted.identifier }) {
+                        indexPathsInserted.append(IndexPath(item: index, section: 0))
                     }
                 }
                 
@@ -205,7 +205,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
                 
                 collectionView.performBatchUpdates({
                     collectionView.deleteItems(at: indexPathsRemoved)
-                    collectionView.insertItems(at: indexPathsAdded)
+                    collectionView.insertItems(at: indexPathsInserted)
                     collectionView.reloadSections(IndexSet(integer: 1))
                 }, completion: nil)
                 

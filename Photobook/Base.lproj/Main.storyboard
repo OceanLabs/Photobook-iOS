@@ -3639,6 +3639,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zQs-sL-P80">
                                                 <rect key="frame" x="0.0" y="218" width="275" height="50"/>
                                                 <color key="backgroundColor" red="0.1318541765" green="0.52277827259999998" blue="0.96682602169999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="accessPhotosButton"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="6zU-9w-b7S"/>
                                                 </constraints>
@@ -4611,7 +4612,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     <subviews>
                                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Required" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="c3a-IO-Ki5">
                                             <rect key="frame" x="68" y="0.0" width="275" height="44"/>
-                                            <accessibility key="accessibilityConfiguration" identifier="TextField"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="userInputTextField"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" priority="750" constant="44" id="dRO-O7-tqP"/>
                                             </constraints>
@@ -4642,8 +4643,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                 <constraint firstAttribute="height" constant="1" id="SmN-Lx-rAp"/>
                                             </constraints>
                                         </view>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yL9-8P-d2z">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yL9-8P-d2z">
                                             <rect key="frame" x="16" y="45" width="343" height="16"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="userInputMessageLabel"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <color key="textColor" red="0.4275171160697937" green="0.42716902494430542" blue="0.4470638632774353" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <nil key="highlightedColor"/>
@@ -4720,8 +4722,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                 <constraint firstAttribute="height" constant="1" id="Ita-VG-Jfh"/>
                                             </constraints>
                                         </view>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="45s-9M-gdM">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="45s-9M-gdM">
                                             <rect key="frame" x="16" y="51" width="343" height="16"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="addressErrorMessageLabel"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -4872,6 +4875,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apple Pay" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MRq-gJ-qjX">
                                                     <rect key="frame" x="77" y="12" width="76.5" height="20.5"/>
+                                                    <accessibility key="accessibilityConfiguration" identifier="paymentMethodNameLabel"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -4980,7 +4984,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     <subviews>
                                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Required" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pbI-iM-EF9">
                                             <rect key="frame" x="68" y="0.0" width="275" height="44"/>
-                                            <accessibility key="accessibilityConfiguration" identifier="TextField"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="userInputTextField"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" priority="750" constant="44" id="y7k-uY-V9R"/>
                                             </constraints>
@@ -5011,8 +5015,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                 <constraint firstAttribute="height" constant="1" id="F11-OJ-Vlv"/>
                                             </constraints>
                                         </view>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bbr-BM-nTt">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bbr-BM-nTt">
                                             <rect key="frame" x="16" y="45" width="343" height="16"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="messageLabel"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -5133,7 +5138,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     <subviews>
                                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ijx-6I-L2F">
                                             <rect key="frame" x="68" y="0.0" width="283" height="42"/>
-                                            <accessibility key="accessibilityConfiguration" identifier="TextField"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="userInputTextField"/>
                                             <nil key="textColor"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no"/>
@@ -6132,6 +6137,6 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <image name="uploading-spinner" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="V0I-No-StO"/>
+        <segue reference="qeW-AA-Oo4"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -8,6 +8,16 @@
 
 import Photos
 
+protocol CollectionListManager {
+    func fetchMomentLists(options: PHFetchOptions?) -> PHFetchResult<PHCollectionList>
+}
+
+class DefaultCollectionListManager: CollectionListManager {
+    func fetchMomentLists(options: PHFetchOptions?) -> PHFetchResult<PHCollectionList> {
+        return PHCollectionList.fetchMomentLists(with: .momentListCluster, options: options)
+    }
+}
+
 struct StoriesNotificationName {
     static let storiesWereUpdated = Notification.Name("ly.kite.sdk.storiesWereUpdatedNotificationName")
 }
@@ -32,6 +42,11 @@ class StoriesManager: NSObject {
     private struct Constants {
         static let maxStoriesToDisplay = 16
     }
+    
+    lazy var collectionListManager: CollectionListManager = DefaultCollectionListManager()
+    lazy var collectionManager: CollectionManager = DefaultCollectionManager()
+    lazy var assetManager: AssetManager = DefaultAssetManager()
+    lazy var productManager: ProductManager = ProductManager.shared
     
     override init() {
         super.init()
@@ -104,19 +119,17 @@ class StoriesManager: NSObject {
         options.predicate = NSPredicate(format: "startDate > %@", threeYearsAgo! as CVarArg)
         options.sortDescriptors = [ NSSortDescriptor(key: "endDate", ascending: false) ]
         
-        let momentLists = PHCollectionList.fetchMomentLists(with: .momentListCluster, options: options)
+        let momentLists = collectionListManager.fetchMomentLists(options: options)
         momentLists.enumerateObjects { [weak welf = self] (list: PHCollectionList, index: Int, stop: UnsafeMutablePointer<ObjCBool>) in
             // Access individual moments and get the total estimated photo count
             var totalAssetCount = 0
             
-            let moments = PHAssetCollection.fetchMoments(inMomentList: list, options: PHFetchOptions())
-            
-            
+            guard let moments = welf?.collectionManager.fetchMoments(inMomentList: list) else { return }
             moments.enumerateObjects { (collection: PHAssetCollection, index: Int,  stop: UnsafeMutablePointer<ObjCBool>) in
                 //only use images
                 let fetchOptions = PHFetchOptions()
                 fetchOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
-                let filteredCollection = PHAsset.fetchAssets(in: collection, options: fetchOptions)
+                guard let filteredCollection = welf?.assetManager.fetchAssets(in: collection, options: fetchOptions) else { return }
                 
                 totalAssetCount += filteredCollection.count
             }
@@ -136,7 +149,7 @@ class StoriesManager: NSObject {
             }
             
             // Minimum asset count
-            guard totalAssetCount > ProductManager.shared.minimumRequiredAssets else { return }
+            guard totalAssetCount >= (welf?.productManager.minimumRequiredAssets ?? Int.max) else { return }
             
             let story = Story(list: list, coverCollection: moments.firstObject!)
             story.components = locationComponents
@@ -218,12 +231,15 @@ class StoriesManager: NSObject {
     }
     
     private func breakDownLocation(title location: String) -> [String] {
-        if let mainLocation = location.index(of: "-") {
-            return [ String(location.prefix(upTo: mainLocation)) ]
-        }
         return location.components(separatedBy: CharacterSet(charactersIn: ",&")).map { (item) -> String in
-            return item.trimmingCharacters(in: CharacterSet(charactersIn: " "))
-        }
+                return item.trimmingCharacters(in: CharacterSet(charactersIn: " "))
+            }.map { (item) -> String in
+                if let range = item.range(of: " - ") {
+                    return String(item.prefix(upTo: range.lowerBound))
+                } else {
+                    return item
+                }
+            }
     }
     
     func selectedAssetsManager(for story: Story) -> SelectedAssetsManager?{
@@ -240,7 +256,7 @@ class StoriesManager: NSObject {
         var selectedAssets = [Asset]()
         var unusedAssets = [Asset]()
         
-        let minimumAssets = ProductManager.shared.minimumRequiredAssets
+        let minimumAssets = productManager.minimumRequiredAssets
         let subarrayLength = minimumAssets // For readability
         let subarrayCount: Int = story.photoCount / subarrayLength
         let assetsFromEachSubarray: Int = minimumAssets / subarrayCount
@@ -294,8 +310,7 @@ extension StoriesManager: PHPhotoLibraryChangeObserver {
             var indexesRemoved = [Int]()
             for asset in story.assets {
                 guard let asset = asset as? PhotosAsset else { continue }
-                if let changeDetails = changeInstance.changeDetails(for: asset.photosAsset),
-                    changeDetails.objectWasDeleted {
+                if asset.wasRemoved(in: changeInstance) {
                     assetsRemoved.append(asset)
                     
                     if let index = story.assets.index(where: { $0.identifier == asset.identifier}) {
@@ -303,7 +318,7 @@ extension StoriesManager: PHPhotoLibraryChangeObserver {
                     }
                 }
             }
-            albumChanges.append(AlbumChange(album: story, assetsRemoved: assetsRemoved, indexesRemoved: indexesRemoved, assetsAdded: []))
+            albumChanges.append(AlbumChange(album: story, assetsRemoved: assetsRemoved, indexesRemoved: indexesRemoved, assetsInserted: []))
             
             // Remove assets from this story from the end as to not mess up the indexes
             for assetIndex in indexesRemoved.reversed() {
