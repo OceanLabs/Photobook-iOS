@@ -60,8 +60,7 @@ class Automation {
     }
     
     func goToDeliveryDetailsFromBasket() {
-        let element = app.otherElements["Basket"].children(matching: .other).element(boundBy: 1)
-        element.children(matching: .other).element(boundBy: 2).tap()
+        app.buttons["deliveryDetailsView"].tap()
     }
     
     func fillDeliveryDetailsAndSave() {
@@ -129,7 +128,7 @@ class Automation {
     }
     
     func goToPaymentMethodFromBasket() {
-        XCUIApplication().otherElements["Basket"].children(matching: .other).element(boundBy: 1).children(matching: .other).element(boundBy: 4).tap()
+        app.buttons["paymentMethodView"].tap()
     }
     
     func goToCreditCardFromPaymentMethod() {

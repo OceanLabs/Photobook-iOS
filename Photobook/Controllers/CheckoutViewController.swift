@@ -239,7 +239,7 @@ class CheckoutViewController: UIViewController {
             case .creditCard:
                 if let card = Card.currentCard {
                     paymentMethodIconImageView.image = card.cardIcon
-                    paymentMethodIconImageView.accessibilityValue = card.number.cardType()?.stringValue()
+                    paymentMethodView.accessibilityValue = card.number.cardType()?.stringValue()
                     paymentMethodTitleLabel.text = Constants.payingWithText
                 } else {
                     paymentMethodIconImageView.image = nil
@@ -248,14 +248,14 @@ class CheckoutViewController: UIViewController {
                 }
             case .applePay:
                 paymentMethodIconImageView.image = UIImage(namedInPhotobookBundle: "apple-pay-method")
-                paymentMethodIconImageView.accessibilityValue = "Apple Pay"
+                paymentMethodView.accessibilityValue = "Apple Pay"
                 showDeliveryDetailsConstraint.priority = .defaultLow
                 hideDeliveryDetailsConstraint.priority = .defaultHigh
                 deliveryDetailsView.isHidden = true
                 paymentMethodTitleLabel.text = Constants.payingWithText
             case .payPal:
                 paymentMethodIconImageView.image = UIImage(namedInPhotobookBundle: "paypal-method")
-                paymentMethodIconImageView.accessibilityValue = "PayPal"
+                paymentMethodView.accessibilityValue = "PayPal"
                 paymentMethodTitleLabel.text = Constants.payingWithText
             }
             paymentMethodIconImageView.isHidden = false
@@ -286,9 +286,13 @@ class CheckoutViewController: UIViewController {
         adaptPayButton()
         
         // Accessibility
-        deliveryDetailsView.accessibilityLabel = infoLabelDeliveryDetails.text! + ": " + (deliveryDetailsLabel.text ?? "")
-        shippingMethodView.accessibilityLabel = infoLabelShipping.text! + ": " + (shippingMethodLabel.text ?? "")
-        paymentMethodView.accessibilityLabel = paymentMethodTitleLabel.text! + " " + (OrderManager.shared.basketOrder.paymentMethod?.description ?? "")
+        deliveryDetailsView.accessibilityLabel = infoLabelDeliveryDetails.text
+        deliveryDetailsView.accessibilityValue = deliveryDetailsLabel.text
+        
+        shippingMethodView.accessibilityLabel = infoLabelShipping.text
+        shippingMethodView.accessibilityValue = shippingMethodLabel.text
+        
+        paymentMethodView.accessibilityLabel = paymentMethodTitleLabel.text
         
         if promoCodeIsInvalid {
             UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, promoCodeTextField)
@@ -351,6 +355,8 @@ class CheckoutViewController: UIViewController {
         paymentMethodLabel.text = Constants.labelRequiredText
         paymentMethodLabel.textColor = Constants.detailsLabelColorRequired
         paymentMethodTitleLabel.text = Constants.paymentMethodText
+        
+        paymentMethodView.accessibilityValue = Constants.labelRequiredText
     }
     
     private func deliveryDetailsAreValid() -> Bool {
@@ -364,6 +370,8 @@ class CheckoutViewController: UIViewController {
     private func indicateDeliveryDetailsError() {
         deliveryDetailsLabel.text = Constants.labelRequiredText
         deliveryDetailsLabel.textColor = Constants.detailsLabelColorRequired
+        
+        deliveryDetailsView.accessibilityValue = Constants.labelRequiredText
     }
     
     private func checkRequiredInformation() -> Bool {
