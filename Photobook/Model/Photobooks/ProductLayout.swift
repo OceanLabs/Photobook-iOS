@@ -45,6 +45,20 @@ class ProductLayout: Codable {
         }
     }
     
+    var lineBreaks: [Int]? {
+        get { return nil }
+        set {
+            guard var text = productLayoutText?.text, let breaks = newValue else {
+                productLayoutText!.htmlText = self.text
+                return
+            }
+            for line in (0 ..< breaks.count).reversed() {
+                text.insert(contentsOf: "<br />", at: text.index(text.startIndex, offsetBy: breaks[line]))
+            }
+            productLayoutText!.htmlText = text
+        }
+    }
+    
     var fontType: FontType? {
         get {
             return productLayoutText?.fontType

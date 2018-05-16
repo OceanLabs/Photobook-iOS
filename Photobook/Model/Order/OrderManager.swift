@@ -316,23 +316,21 @@ class OrderManager {
             return
         }
         
-        //check if this is a photobook api manager asset upload
+        // Check if this is a photobook api manager asset upload
         if let reference = dictionary["task_reference"] as? String, !reference.hasPrefix(PhotobookAPIManager.imageUploadIdentifierPrefix) {
-            //not intended for this class
             return
         }
         
         if let error = dictionary["error"] as? APIClientError {
-           didFailUpload(error)
+            didFailUpload(error)
             return
         }
         
-        guard let reference = dictionary["task_reference"] as? String,
-            let url = dictionary["full"] as? String else {
-                
-                didFailUpload(APIClientError.parsing)
-                return
+        guard let reference = dictionary["task_reference"] as? String, let url = dictionary["full"] as? String else {
+            didFailUpload(APIClientError.parsing)
+            return
         }
+        
         let referenceId = reference.suffix(reference.count - PhotobookAPIManager.imageUploadIdentifierPrefix.count)
         
         let assets = order.assetsToUpload().filter({ $0.identifier == referenceId })

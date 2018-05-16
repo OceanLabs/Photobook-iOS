@@ -379,14 +379,14 @@ class PhotobookProduct: Codable {
         for productLayout in productLayouts {
             var page = [String: Any]()
             
-            var layoutBoxes = [[String:Any]]()
+            var layoutBoxes = [[String: Any]]()
             
             //image layout box
             if let asset = productLayout.asset,
                 let imageLayoutBox = productLayout.layout.imageLayoutBox,
                 let productLayoutAsset = productLayout.productLayoutAsset {
                 
-                var layoutBox = [String:Any]()
+                var layoutBox = [String: Any]()
                 
                 //adjust container and transform to page dimensions
                 productLayoutAsset.containerSize = imageLayoutBox.rectContained(in: CGSize(width: template.pageWidth, height: template.pageHeight)).size
@@ -403,7 +403,7 @@ class PhotobookProduct: Codable {
                 //1. translation
                 //on web the image with scale factor 1 fills the width of the container and is aligned to the top left corner.
                 //first we calculate the offset in points to align the image center with the container center
-                let yOffset = productLayoutAsset.containerSize.height*0.5 - productLayoutAsset.containerSize.width*0.5*(1/assetAspectRatio) //offset in points to match initial origins within layout
+                let yOffset = productLayoutAsset.containerSize.height * 0.5 - productLayoutAsset.containerSize.width * 0.5 * (1.0 / assetAspectRatio) //offset in points to match initial origins within layout
                 
                 //match anchors
                 var transformX = productLayoutAsset.transform.tx
@@ -416,16 +416,16 @@ class PhotobookProduct: Codable {
                 
                 //3. rotation
                 //straightfoward as it's just the angle
-                let rotation = atan2(productLayoutAsset.transform.b, productLayoutAsset.transform.a) * (180 / .pi)
+                let rotation = productLayoutAsset.transform.angle * (180 / .pi)
                 
                 //convert to css percentages
                 transformX = transformX / productLayoutAsset.containerSize.width
-                transformY = transformY / (productLayoutAsset.containerSize.height*(1/assetAspectRatio))
+                transformY = transformY / (productLayoutAsset.containerSize.height * (1.0 / assetAspectRatio))
                 
                 var containedItem = [String: Any]()
                 var picture = [String: Any]()
                 picture["url"] = asset.uploadUrl
-                picture["dimensions"] = ["height":asset.size.height, "width":asset.size.width]
+                picture["dimensions"] = ["height": asset.size.height, "width": asset.size.width]
                 picture["thumbnailUrl"] = asset.uploadUrl //mock data
                 containedItem["picture"] = picture
                 containedItem["relativeStartPoint"] = ["x": transformX, "y": transformY]
@@ -444,7 +444,7 @@ class PhotobookProduct: Codable {
                 let textLayoutBox = productLayout.layout.textLayoutBox,
                 let productLayoutText = productLayout.productLayoutText {
                 
-                var layoutBox = [String:Any]()
+                var layoutBox = [String: Any]()
                 
                 //adjust container and transform to page dimensions
                 productLayoutText.containerSize = textLayoutBox.rectContained(in: CGSize(width: template.pageWidth, height: template.pageHeight)).size
@@ -462,7 +462,7 @@ class PhotobookProduct: Codable {
                 font["fontWeight"] = productLayoutText.fontType.apiPhotobookFontWeight()
                 font["lineHeight"] = productLayoutText.fontType.apiPhotobookLineHeight()
                 containedItem["font"] = font
-                containedItem["text"] = text
+                containedItem["text"] = productLayoutText.htmlText ?? text
                 containedItem["color"] = pageColor.fontColor().hex
                 
                 layoutBox["containedItem"] = containedItem
@@ -483,20 +483,20 @@ class PhotobookProduct: Codable {
         productVariant["id"] = template.id
         productVariant["name"] = template.name
         productVariant["templateId"] = template.productTemplateId
-        productVariant["pageWidth"] =  template.pageWidth*2
+        productVariant["pageWidth"] =  template.pageWidth * 2
         productVariant["pageHeight"] = template.pageHeight
         //TODO: replace mock data
-        productVariant["cost"] = ["EUR":"25.00", "USD":"30.00", "GBP":"23.00"]
-        productVariant["costPerPage"] = ["EUR":"1.30", "USD":"1.50", "GBP":"1.00"]
+        productVariant["cost"] = ["EUR": "25.00", "USD": "30.00", "GBP": "23.00"]
+        productVariant["costPerPage"] = ["EUR": "1.30", "USD": "1.50", "GBP": "1.00"]
         productVariant["description"] = "description"
         productVariant["finishTypes"] = [["name":"gloss", "cost":["EUR":"1.30", "USD":"1.50", "GBP":"1.00"]]]
         productVariant["minPages"] = 20
         productVariant["maxPages"] = 70
         productVariant["coverSize"] = ["mm":["width":template.pageWidth, "height":template.pageHeight]]
-        productVariant["size"] = ["mm":["width":template.pageWidth*2, "height":template.pageHeight]] //TODO: handle double size on backend // ["mm":["width":300, "height":300]]
+        productVariant["size"] = ["mm":["width":template.pageWidth * 2, "height":template.pageHeight]] //TODO: handle double size on backend // ["mm":["width":300, "height":300]]
         productVariant["pageStep"] = 0
         //productVariant["bleed"] = ["px":ProductManager.shared.bleed(forPageSize: CGSize(width: product.pageWidth, height: product.pageHeight)), "mm":ProductManager.shared.bleed(forPageSize: CGSize(width: product.pageWidth, height: product.pageHeight))]
-        productVariant["bleed"] = ["px":0, "mm":0]
+        productVariant["bleed"] = ["px": 0, "mm": 0]
         productVariant["spine"] = ["ranges": ["20-38": 0,
                                               "40-54": 0,
                                               "56-70": 0,
@@ -504,7 +504,7 @@ class PhotobookProduct: Codable {
                                               "90-104": 0,
                                               "106-120": 0,
                                               "122-134": 0,
-                                              "136-140": 0], "multiplier":1] //mock data end
+                                              "136-140": 0], "multiplier": 1] //mock data end
         
         photobook["productVariant"] = productVariant
         

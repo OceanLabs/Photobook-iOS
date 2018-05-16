@@ -9,8 +9,8 @@
 import UIKit
 
 protocol TextEditingDelegate: class {
-    func didChangeFontType(to fontType: FontType)
-    func didChangeText(to text: String?)
+    func didChangeFontType()
+    func didChangeText()
     func shouldReactToKeyboardAppearance() -> Bool
 }
 
@@ -319,8 +319,11 @@ extension TextEditingViewController: UITextViewDelegate {
         guard text.rangeOfCharacter(from: CharacterSet.newlines) == nil else {
             guard !isAnimatingOnScreen else { return false }
             
+            productLayout.text = textView.text
+            productLayout.lineBreaks = textView.lineBreakIndexes()
+
             textView.resignFirstResponder()
-            delegate?.didChangeText(to: textView.text)
+            delegate?.didChangeText()
             return false
         }
         
@@ -333,6 +336,7 @@ extension TextEditingViewController: TextToolBarViewDelegate {
     func didSelectFontType(_ fontType: FontType) {
         setTextViewAttributes(with: fontType, fontColor: pageColor.fontColor())
         
-        delegate?.didChangeFontType(to: fontType)
+        productLayout.fontType = fontType
+        delegate?.didChangeFontType()
     }
 }

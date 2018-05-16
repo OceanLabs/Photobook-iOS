@@ -719,14 +719,12 @@ extension PageSetupViewController: ColorSelectorDelegate {
 
 extension PageSetupViewController: TextEditingDelegate {
     
-    func didChangeText(to text: String?) {
-        productLayout.text = text
+    func didChangeText() {
         pageView.setupTextBox()
         tappedToolButton(previouslySelectedButton)
     }
     
-    func didChangeFontType(to fontType: FontType) {
-        productLayout.fontType = fontType
+    func didChangeFontType() {
         pageView.setupTextBox()
     }
     
