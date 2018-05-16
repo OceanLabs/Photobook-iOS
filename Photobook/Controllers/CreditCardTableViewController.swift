@@ -69,13 +69,7 @@ class CreditCardTableViewController: UITableViewController {
         super.viewDidLoad()
         
         title = NSLocalizedString("CreditCardTitle", value: "Card Details", comment: "Title for the credit card screen")
-        
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: .UIKeyboardDidHide, object: nil)
     }
-    
-//    @objc private func keyboardDidHide() {
-//        UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, "Keyboard did hide")
-//    }
     
     @objc private func nextTextField() {
         if cardNumberTextField.isFirstResponder {
