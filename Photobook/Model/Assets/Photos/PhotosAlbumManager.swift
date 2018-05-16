@@ -153,13 +153,11 @@ extension PhotosAlbumManager: PHPhotoLibraryChangeObserver {
         
         DispatchQueue.main.sync {
             for album in albums {
-                guard let album = album as? PhotosAlbum,
-                    let fetchedResult = album.fetchedAssets
-                    else { continue }
-                if let changeDetails = changeInstance.changeDetails(for: fetchedResult),
-                    !changeDetails.removedObjects.isEmpty || !changeDetails.insertedObjects.isEmpty {
-                    let assetsAdded = PhotosAsset.assets(from: changeDetails.insertedObjects, albumId: album.identifier)
-                    let assetsRemoved = PhotosAsset.assets(from: changeDetails.removedObjects, albumId: album.identifier)
+                guard let album = album as? PhotosAlbum else { continue }
+                let (assetsInserted, assetsRemoved) = album.changedAssets(for: changeInstance)
+                
+                if let assetsInserted = assetsInserted, let assetsRemoved = assetsRemoved,
+                    !assetsInserted.isEmpty || !assetsRemoved.isEmpty {
                     
                     var indexesRemoved = [Int]()
                     for assetRemoved in assetsRemoved {
@@ -168,7 +166,7 @@ extension PhotosAlbumManager: PHPhotoLibraryChangeObserver {
                         }
                     }
                     
-                    albumChanges.append(AlbumChange(album: album, assetsRemoved: assetsRemoved, indexesRemoved: indexesRemoved, assetsAdded: assetsAdded))
+                    albumChanges.append(AlbumChange(album: album, assetsRemoved: assetsRemoved, indexesRemoved: indexesRemoved, assetsInserted: assetsInserted))
                 }
             }
             
@@ -189,7 +187,6 @@ extension PhotosAlbumManager: PHPhotoLibraryChangeObserver {
             }
         }
     }
-    
 }
 
 extension PhotosAlbumManager: PickerAnalytics {

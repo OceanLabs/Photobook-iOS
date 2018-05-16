@@ -57,7 +57,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private weak var collectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet private weak var collectionViewBottomConstraint: NSLayoutConstraint!
     
-    @IBOutlet private weak var ctaContainerBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private var ctaContainerBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var ctaButton: UIButton!
     
     @IBOutlet private weak var collectionView: UICollectionView!
@@ -104,6 +104,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         super.viewWillDisappear(animated)
         
         (tabBarController?.tabBar as? PhotobookTabBar)?.isBackgroundHidden = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        updateNavBar()
     }
     
     override func viewDidLayoutSubviews() {

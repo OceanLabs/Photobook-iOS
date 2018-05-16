@@ -32,6 +32,16 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2E56434520A97CF900ECC98F"
+               BuildableName = "HelperPhotobookUITests.xctest"
+               BlueprintName = "HelperPhotobookUITests"
+               ReferencedContainer = "container:Photobook.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "6FB670661FB5BAD40062D630"
                BuildableName = "PhotobookTests.xctest"
                BlueprintName = "PhotobookTests"

@@ -29,7 +29,7 @@ struct Card {
     
     var number: String
     var numberMasked: String {
-        return String(number[number.index(number.endIndex, offsetBy: -5)...])
+        return String(number[number.index(number.endIndex, offsetBy: -5)...]).trimmingCharacters(in: .whitespaces)
     }
     var expireMonth: Int
     var expireYear: Int

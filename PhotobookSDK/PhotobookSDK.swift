@@ -73,6 +73,10 @@ import SDWebImage
         
         if ProcessInfo.processInfo.arguments.contains("UITESTINGENVIRONMENT") {
             OrderManager.shared.cancelProcessing {}
+            OrderManager.shared.basketOrder.deliveryDetails = nil
+            UserDefaults.standard.removeObject(forKey: "ly.kite.sdk.savedDetailsKey")
+            UserDefaults.standard.removeObject(forKey: "ly.kite.sdk.savedAddressesKey")
+            UserDefaults.standard.synchronize()
         }
         
         let navigationController = PhotobookNavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)

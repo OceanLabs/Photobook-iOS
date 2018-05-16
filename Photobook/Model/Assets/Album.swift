@@ -46,7 +46,7 @@ struct AlbumChange {
     var album: Album
     var assetsRemoved: [Asset]
     var indexesRemoved: [Int]
-    var assetsAdded: [Asset]
+    var assetsInserted: [Asset]
 }
 
 struct AlbumAddition {
