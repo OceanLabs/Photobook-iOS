@@ -82,7 +82,7 @@ class CountryPickerTableViewController: UITableViewController {
         cell.accessoryType = selected ? .checkmark : .none
         
         cell.accessibilityLabel = countryName
-        cell.accessibilityHint = selected ? nil : NSLocalizedString("Accessibility/DoubleTapToSelectListItem", value: "Double tap to select.", comment: "Accessibility hint letting the user know that they can double tap to select a list item")
+        cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
 
         return cell
     }

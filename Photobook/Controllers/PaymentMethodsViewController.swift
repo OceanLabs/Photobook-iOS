@@ -74,8 +74,8 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             
             cell.separator.isHidden = true
             cell.accessibilityIdentifier = "applePayCell"
-            cell.accessibilityLabel = (selected ? NSLocalizedString("Accessibility/ListItemSelected", value: "Selected", comment: "Accessibility message to let the user know that an item in a list is selected.") : "") + ". " + method
-            cell.accessibilityHint = selected ? nil : NSLocalizedString("Accessibility/DoubleTapToSelectListItem", value: "Double tap to select.", comment: "Accessibility hint letting the user know that they can double tap to select a list item")
+            cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + ". " + method
+            cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
             return cell
         case 0 + supportsApplePay: // PayPal
             let cell = tableView.dequeueReusableCell(withIdentifier: PaymentMethodTableViewCell.reuseIdentifier, for: indexPath) as! PaymentMethodTableViewCell
@@ -89,8 +89,8 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             
             cell.separator.isHidden = false
             cell.accessibilityIdentifier = "payPalCell"
-            cell.accessibilityLabel = (selected ? NSLocalizedString("Accessibility/ListItemSelected", value: "Selected", comment: "Accessibility message to let the user know that an item in a list is selected.") : "") + ". " + method
-            cell.accessibilityHint = selected ? nil : NSLocalizedString("Accessibility/DoubleTapToSelectListItem", value: "Double tap to select.", comment: "Accessibility hint letting the user know that they can double tap to select a list item")
+            cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + ". " + method
+            cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
             return cell
         case 1 + supportsApplePay: // Saved card
             guard let card = Card.currentCard else { fallthrough }
@@ -106,8 +106,8 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             
             cell.separator.isHidden = true
             cell.accessibilityIdentifier = "creditCardCell"
-            cell.accessibilityLabel = (selected ? NSLocalizedString("Accessibility/ListItemSelected", value: "Selected", comment: "Accessibility message to let the user know that an item in a list is selected.") : "") + ". " + method
-            cell.accessibilityHint = selected ? nil : NSLocalizedString("Accessibility/DoubleTapToSelectListItem", value: "Double tap to select.", comment: "Accessibility hint letting the user know that they can double tap to select a list item")
+            cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + ". " + method
+            cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
             return cell
         default:
             return tableView.dequeueReusableCell(withIdentifier: "AddPaymentMethodCell", for: indexPath)

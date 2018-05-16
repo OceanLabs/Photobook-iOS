@@ -4658,6 +4658,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         </textField>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R27-zb-Ogp">
                                             <rect key="frame" x="16" y="12.5" width="42" height="20.5"/>
+                                            <accessibility key="accessibilityConfiguration">
+                                                <bool key="isElement" value="NO"/>
+                                            </accessibility>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -4678,7 +4681,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yL9-8P-d2z">
                                             <rect key="frame" x="16" y="45" width="343" height="16"/>
-                                            <accessibility key="accessibilityConfiguration" identifier="userInputMessageLabel"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="userInputMessageLabel">
+                                                <bool key="isElement" value="NO"/>
+                                            </accessibility>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <color key="textColor" red="0.4275171160697937" green="0.42716902494430542" blue="0.4470638632774353" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <nil key="highlightedColor"/>
@@ -4704,6 +4709,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         <constraint firstItem="c3a-IO-Ki5" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="lRW-hh-ayF" secondAttribute="leading" priority="750" constant="64.5" id="u9c-YT-dfy"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" notEnabled="YES"/>
+                                </accessibility>
                                 <connections>
                                     <outlet property="label" destination="R27-zb-Ogp" id="V2l-nT-Jqt"/>
                                     <outlet property="messageBottomConstraint" destination="4Zp-Hm-yn1" id="Dch-dj-k8V"/>
@@ -4757,7 +4765,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="45s-9M-gdM">
                                             <rect key="frame" x="16" y="51" width="343" height="16"/>
-                                            <accessibility key="accessibilityConfiguration" identifier="addressErrorMessageLabel"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="addressErrorMessageLabel">
+                                                <bool key="isElement" value="NO"/>
+                                            </accessibility>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
