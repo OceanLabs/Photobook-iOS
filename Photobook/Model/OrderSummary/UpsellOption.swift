@@ -41,13 +41,15 @@ class UpsellOption: Codable, Equatable {
 }
 
 func ==(lhs: UpsellOption, rhs: UpsellOption) -> Bool {
-    return lhs.type == rhs.type
+    return lhs.hashValue == rhs.hashValue
 }
 
 extension UpsellOption: Hashable {
     var hashValue: Int {
         get {
-            return type.hashValue
+            var value = type.hashValue ^ displayName.hashValue
+            if let targetTemplateId = targetTemplateId { value = value ^ targetTemplateId.hashValue}
+            return value
         }
     }
 }

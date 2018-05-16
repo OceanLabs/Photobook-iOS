@@ -199,9 +199,9 @@ extension OrderSummaryViewController: UITableViewDelegate {
         if indexPath.section == Constants.sectionOptions,
             let upsellOption = OrderSummaryManager.shared.upsellOptions?[indexPath.row] {
             
-            //remove options with same type that is going to be selected
+            //deselect options with same type as the one that is going to be selected because we can't apply, for instance, two conflicting size upgrades to a specific template
             let selectedSameTypeUpsellOptions = OrderSummaryManager.shared.selectedUpsellOptions.filter { (optionInCollection) -> Bool in
-                return optionInCollection.type != upsellOption.type
+                return optionInCollection != upsellOption && optionInCollection.type == upsellOption.type
             }
             for option in selectedSameTypeUpsellOptions {
                 if let row = OrderSummaryManager.shared.upsellOptions?.index(of: option) {

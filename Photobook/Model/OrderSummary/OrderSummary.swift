@@ -91,10 +91,12 @@ class OrderSummary {
         
         guard let pigBaseUrl = pigBaseUrl else { return nil }
         
-        let urlString = pigBaseUrl + "&image=" + imageUrl + "&size=\(size.width)x\(size.height)" + "&fill_mode=fit"
+        let width = Int(size.width)
+        let height = Int(size.height)
+        
+        let urlString = pigBaseUrl + "&image=" + imageUrl + "&size=\(width)x\(height)" + "&fill_mode=match"
         guard let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) else { return nil }
         
         return url
     }
-    
 }
