@@ -5181,6 +5181,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         </textField>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1LC-Ug-O7X">
                                             <rect key="frame" x="16" y="11.5" width="42" height="20.5"/>
+                                            <accessibility key="accessibilityConfiguration">
+                                                <bool key="isElement" value="NO"/>
+                                            </accessibility>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -5195,6 +5198,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         <constraint firstItem="ijx-6I-L2F" firstAttribute="leading" secondItem="1LC-Ug-O7X" secondAttribute="trailing" constant="10" id="yeZ-Ip-o1M"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" notEnabled="YES"/>
+                                </accessibility>
                                 <connections>
                                     <outlet property="label" destination="1LC-Ug-O7X" id="nKB-Uy-BgH"/>
                                     <outlet property="textField" destination="ijx-6I-L2F" id="pLG-ZJ-ELe"/>
