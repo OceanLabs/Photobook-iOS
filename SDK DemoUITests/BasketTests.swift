@@ -53,24 +53,26 @@ class BasketTests: PhotobookUITest {
         automation.goToBasket()
         automation.addNewCreditCardFromBasket()
         
-        let paymentMethodIconImageView = automation.app.images["paymentMethodIcon"]
-        let paymentMethodIconImageViewValue = paymentMethodIconImageView.value as? String
-        XCTAssertNotNil(paymentMethodIconImageViewValue)
-        XCTAssertEqual(paymentMethodIconImageViewValue, "Visa")
+        let paymentMethodView = automation.app.buttons["paymentMethodView"]
+        let paymentMethodViewValue = paymentMethodView.value as? String
+        XCTAssertNotNil(paymentMethodViewValue)
+        XCTAssertEqual(paymentMethodViewValue!, "Visa")
         
-        let addressEntryLabel = automation.app.staticTexts["addressEntryLabel"]
-        XCTAssertFalse(addressEntryLabel.exists, "We should be showing nothing at this point")
+        let deliveryDetailsView = automation.app.buttons["deliveryDetailsView"]
+        XCTAssertTrue(deliveryDetailsView.value as? String == nil || (deliveryDetailsView.value as! String).isEmpty, "We should be showing no details or warning at this point")
         
         let payButton = automation.app.buttons["payButton"]
         payButton.tap()
         
         XCTAssertTrue(payButton.isHittable, "Moved to another screen when we should have stayed on the basket screen")
         
-        XCTAssertEqual(addressEntryLabel.label, "Required", "We didn't show the user that delivery details are required")
+        XCTAssertNotNil(deliveryDetailsView.value as? String)
+        XCTAssertEqual(deliveryDetailsView.value as! String, "Required", "We didn't show the user that delivery details are required")
         
         automation.fillDeliveryDetailsFromBasket()
         
-        XCTAssertTrue(addressEntryLabel.label.contains("\(automation.testAddressLine1), \(automation.testPostalCode), "), "We didn't show the preview of the delivery details")
+        XCTAssertNotNil(deliveryDetailsView.value as? String)
+        XCTAssertTrue((deliveryDetailsView.value as! String).contains("\(automation.testAddressLine1), \(automation.testPostalCode), "), "We didn't show the preview of the delivery details")
     }
     
 }
