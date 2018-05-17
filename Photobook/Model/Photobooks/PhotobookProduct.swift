@@ -381,6 +381,9 @@ class PhotobookProduct: Codable {
             
             var layoutBoxes = [[String: Any]]()
             
+            let isDoubleLayout = productLayout.layout.isDoubleLayout
+            let pageSize = CGSize(width: isDoubleLayout ? template.pageWidth * 2 : template.pageWidth, height: template.pageHeight)
+            
             //image layout box
             if let asset = productLayout.asset,
                 let imageLayoutBox = productLayout.layout.imageLayoutBox,
@@ -389,7 +392,7 @@ class PhotobookProduct: Codable {
                 var layoutBox = [String: Any]()
                 
                 //adjust container and transform to page dimensions
-                productLayoutAsset.containerSize = imageLayoutBox.rectContained(in: CGSize(width: template.pageWidth, height: template.pageHeight)).size
+                productLayoutAsset.containerSize = imageLayoutBox.rectContained(in: pageSize).size
                 productLayoutAsset.adjustTransform()
                 
                 layoutBox["contentType"] = "image"
@@ -447,10 +450,10 @@ class PhotobookProduct: Codable {
                 var layoutBox = [String: Any]()
                 
                 //adjust container and transform to page dimensions
-                productLayoutText.containerSize = textLayoutBox.rectContained(in: CGSize(width: template.pageWidth, height: template.pageHeight)).size
+                productLayoutText.containerSize = textLayoutBox.rectContained(in: pageSize).size
                 
                 layoutBox["contentType"] = "text"
-                layoutBox["isDoubleLayout"] = productLayout.layout.isDoubleLayout
+                layoutBox["isDoubleLayout"] = isDoubleLayout
                 layoutBox["dimensionsPercentages"] = ["height": textLayoutBox.rect.height, "width": textLayoutBox.rect.width]
                 layoutBox["relativeStartPoint"] = ["x": textLayoutBox.rect.origin.x, "y": textLayoutBox.rect.origin.y]
                 
@@ -480,36 +483,9 @@ class PhotobookProduct: Codable {
         
         var productVariant = [String:Any]()
         
-        productVariant["id"] = template.id
-        productVariant["name"] = template.name
-        productVariant["templateId"] = template.productTemplateId
-        productVariant["pageWidth"] =  template.pageWidth * 2
-        productVariant["pageHeight"] = template.pageHeight
-        //TODO: replace mock data
-        productVariant["cost"] = ["EUR": "25.00", "USD": "30.00", "GBP": "23.00"]
-        productVariant["costPerPage"] = ["EUR": "1.30", "USD": "1.50", "GBP": "1.00"]
-        productVariant["description"] = "description"
-        productVariant["finishTypes"] = [["name":"gloss", "cost":["EUR":"1.30", "USD":"1.50", "GBP":"1.00"]]]
-        productVariant["minPages"] = 20
-        productVariant["maxPages"] = 70
-        productVariant["coverSize"] = ["mm":["width":template.pageWidth, "height":template.pageHeight]]
-        productVariant["size"] = ["mm":["width":template.pageWidth * 2, "height":template.pageHeight]] //TODO: handle double size on backend // ["mm":["width":300, "height":300]]
-        productVariant["pageStep"] = 0
-        //productVariant["bleed"] = ["px":ProductManager.shared.bleed(forPageSize: CGSize(width: product.pageWidth, height: product.pageHeight)), "mm":ProductManager.shared.bleed(forPageSize: CGSize(width: product.pageWidth, height: product.pageHeight))]
-        productVariant["bleed"] = ["px": 0, "mm": 0]
-        productVariant["spine"] = ["ranges": ["20-38": 0,
-                                              "40-54": 0,
-                                              "56-70": 0,
-                                              "72-88": 0,
-                                              "90-104": 0,
-                                              "106-120": 0,
-                                              "122-134": 0,
-                                              "136-140": 0], "multiplier": 1] //mock data end
-        
-        photobook["productVariant"] = productVariant
+        productVariant["productVariantId"] = template.id
         
         //config
-        
         var photobookConfig = [String:Any]()
         
         photobookConfig["coverColor"] = coverColor.uiColor().hex
@@ -517,7 +493,7 @@ class PhotobookProduct: Codable {
         
         var spineText = [String:Any]()
         
-        spineText["text"] = spineText
+        spineText["text"] = self.spineText
         spineText["color"] = coverColor.fontColor().hex
         
         var font = [String:Any]()
