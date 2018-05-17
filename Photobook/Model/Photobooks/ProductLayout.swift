@@ -44,21 +44,7 @@ class ProductLayout: Codable {
             productLayoutText!.text = newValue
         }
     }
-    
-    var lineBreaks: [Int]? {
-        get { return nil }
-        set {
-            guard var text = productLayoutText?.text, let breaks = newValue else {
-                productLayoutText!.htmlText = self.text
-                return
-            }
-            for line in (0 ..< breaks.count).reversed() {
-                text.insert(contentsOf: "<br />", at: text.index(text.startIndex, offsetBy: breaks[line]))
-            }
-            productLayoutText!.htmlText = text
-        }
-    }
-    
+        
     var fontType: FontType? {
         get {
             return productLayoutText?.fontType
@@ -115,6 +101,21 @@ class ProductLayout: Codable {
                 productLayoutAsset!.containerSize = layout.imageLayoutBox!.rect.size
             }
         }
+    }
+    
+    func setText(_ text: String, withLineBreaks breaks: [Int]?) {
+        self.text = text
+
+        guard let breaks = breaks else {
+            productLayoutText!.htmlText = text
+            return
+        }
+        
+        var text = text
+        for line in (0 ..< breaks.count).reversed() {
+            text.insert(contentsOf: "<br />", at: text.index(text.startIndex, offsetBy: breaks[line]))
+        }
+        productLayoutText!.htmlText = text
     }
     
     func shallowCopy() -> ProductLayout {

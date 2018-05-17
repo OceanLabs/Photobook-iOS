@@ -319,8 +319,7 @@ extension TextEditingViewController: UITextViewDelegate {
         guard text.rangeOfCharacter(from: CharacterSet.newlines) == nil else {
             guard !isAnimatingOnScreen else { return false }
             
-            productLayout.text = textView.text
-            productLayout.lineBreaks = textView.lineBreakIndexes()
+            productLayout.setText(textView.text, withLineBreaks: textView.lineBreakIndexes())
 
             textView.resignFirstResponder()
             delegate?.didChangeText()
