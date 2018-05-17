@@ -84,42 +84,24 @@ class DeliveryDetailsTableViewController: UITableViewController {
             navigationController?.popViewController(animated: true)
         } else {
             var errorMessage = ""
-            
-            var addCommaFlag = false
             if firstNameInvalidReason == FormConstants.requiredText {
-                errorMessage += DetailsFieldLabels.name
-                addCommaFlag = true
+                errorMessage += DetailsFieldLabels.name + ", "
             }
             if lastNameInvalidReason == FormConstants.requiredText {
-                if addCommaFlag {
-                    errorMessage += ", "
-                }
-                errorMessage += DetailsFieldLabels.lastName
-                addCommaFlag = true
+                errorMessage += DetailsFieldLabels.lastName + ", "
             }
             if emailInvalidReason == FormConstants.requiredText {
-                if addCommaFlag {
-                    errorMessage += ", "
-                }
-                errorMessage += DetailsFieldLabels.email
-                addCommaFlag = true
+                errorMessage += DetailsFieldLabels.email + ", "
             }
             if phoneInvalidReason == FormConstants.requiredText {
-                if addCommaFlag {
-                    errorMessage += ", "
-                }
-                errorMessage += DetailsFieldLabels.phone
-                addCommaFlag = true
+                errorMessage += DetailsFieldLabels.phone + ", "
             }
             if !addressIsValid {
-                if addCommaFlag {
-                    errorMessage += ", "
-                }
-                errorMessage += DetailsFieldLabels.address
+                errorMessage += DetailsFieldLabels.address + ", "
             }
             
             if !errorMessage.isEmpty {
-                errorMessage = NSLocalizedString("Accessibility/AddressRequiredInformationMissing", value: "Required information missing:", comment: "Accessibility message informing the user that some of the required information is missing") + errorMessage + ". "
+                errorMessage = NSLocalizedString("Accessibility/AddressRequiredInformationMissing", value: "Required information missing:", comment: "Accessibility message informing the user that some of the required information is missing") + errorMessage.trimmingCharacters(in: CharacterSet(charactersIn: ",")) + ". "
             }
             
             let phoneIsInvalid = phoneInvalidReason != nil && phoneInvalidReason != FormConstants.requiredText

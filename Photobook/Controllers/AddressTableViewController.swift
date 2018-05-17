@@ -72,25 +72,16 @@ class AddressTableViewController: UITableViewController {
             navigationController?.popViewController(animated: true)
         } else {
             var errorMessage = NSLocalizedString("Accessibility/AddressRequiredInformationMissing", value: "Required information missing:", comment: "Accessibility message informing the user that some of the required information is missing")
-            var addCommaFlag = false
             if !line1IsValid {
-                errorMessage += AddressFieldLabels.line1
-                addCommaFlag = true
+                errorMessage += AddressFieldLabels.line1 + ", "
             }
             if !cityIsValid {
-                if addCommaFlag {
-                    errorMessage += ", "
-                }
-                errorMessage += AddressFieldLabels.city
-                addCommaFlag = true
+                errorMessage += AddressFieldLabels.city + ", "
             }
             if !postCodeIsValid {
-                if addCommaFlag {
-                    errorMessage += ", "
-                }
-                errorMessage += AddressFieldLabels.postcode
+                errorMessage += AddressFieldLabels.postcode + ", "
             }
-            UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, errorMessage)
+            UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, errorMessage.trimmingCharacters(in: CharacterSet(charactersIn: ",")))
         }
     }
     
