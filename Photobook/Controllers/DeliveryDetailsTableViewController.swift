@@ -101,7 +101,7 @@ class DeliveryDetailsTableViewController: UITableViewController {
             }
             
             if !errorMessage.isEmpty {
-                errorMessage = NSLocalizedString("Accessibility/AddressRequiredInformationMissing", value: "Required information missing:", comment: "Accessibility message informing the user that some of the required information is missing") + errorMessage.trimmingCharacters(in: CharacterSet(charactersIn: ",")) + ". "
+                errorMessage = NSLocalizedString("Accessibility/AddressRequiredInformationMissing", value: "Required information missing:", comment: "Accessibility message informing the user that some of the required information is missing") + errorMessage.trimmingCharacters(in: CharacterSet(charactersIn: ", ")) + ". "
             }
             
             let phoneIsInvalid = phoneInvalidReason != nil && phoneInvalidReason != FormConstants.requiredText

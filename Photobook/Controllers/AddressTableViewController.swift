@@ -81,7 +81,7 @@ class AddressTableViewController: UITableViewController {
             if !postCodeIsValid {
                 errorMessage += AddressFieldLabels.postcode + ", "
             }
-            UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, errorMessage.trimmingCharacters(in: CharacterSet(charactersIn: ",")))
+            UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, errorMessage.trimmingCharacters(in: CharacterSet(charactersIn: ", ")))
         }
     }
     
