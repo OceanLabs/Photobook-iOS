@@ -37,7 +37,7 @@ class SpineFrameView: UIView {
         textLabelWidthConstraint.constant = bounds.height * product.template.spineTextRatio
 
         if !(text ?? "").isEmpty {
-            let fontSize = fontType.sizeForScreenToPageRatio(bounds.height / product.template.pageHeight)
+            let fontSize = fontType.sizeForScreenToPageRatio(bounds.height / product.template.coverSize.height)
             textLabel.attributedText = fontType.attributedText(with: text!, fontSize: fontSize, fontColor: color.fontColor(), isSpineText: true)
         } else {
             textLabel.text = ""

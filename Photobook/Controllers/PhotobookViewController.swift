@@ -838,7 +838,7 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
         }
 
         let pageWidth = (view.bounds.width - Constants.cellSideMargin * 2.0 - PhotobookConstants.horizontalPageToCoverMargin * 2.0) / 2.0
-        let pageHeight = pageWidth / product.template.aspectRatio
+        let pageHeight = pageWidth / product.template.pageAspectRatio
 
         // PhotoboookCollectionViewCell works when the collectionView uses dynamic heights by setting up the aspect ratio of its pages.
         // This however, causes problems with the drag & drop functionality and that is why the cell height is calculated by using the measurements set on the storyboard.

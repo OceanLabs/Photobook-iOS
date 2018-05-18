@@ -47,7 +47,7 @@ class Order: Codable {
         if let promoCode = promoCode { stringHash += "pc:\(promoCode)," }
         
         for product in products {
-            if let productName = product.template.name { stringHash += "jb:\(productName)," }
+            stringHash += "jb:\(product.template.name),"
         }
         
         stringHash += "up:("
@@ -103,7 +103,7 @@ class Order: Codable {
         
         for product in products {
             jobs.append([
-                "template_id" : product.template.productTemplateId ?? "",
+                "template_id" : product.template.templateId,
                 "multiples" : product.itemCount,
                 "assets": [["inside_pdf" : product.photobookId ?? ""]]
                 ])

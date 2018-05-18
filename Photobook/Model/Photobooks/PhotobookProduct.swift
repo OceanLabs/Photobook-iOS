@@ -78,11 +78,11 @@ class PhotobookProduct: Codable {
     
     var truncatedTextLayoutIndices: [Int]? {
         var temp = [Int]()
-        
-        let pageSize = CGSize(width: template.pageWidth!, height: template.pageHeight!)
-        
+                
         for (index, productLayout) in productLayouts.enumerated() {
             guard let textBox = productLayout.layout.textLayoutBox, let text = productLayout.text, text.count > 0 else { continue }
+            
+            let pageSize = index == 0 ? template.coverSize : template.pageSize
             
             let fontType = productLayout.fontType ?? .plain
             let fontSize = fontType.sizeForScreenToPageRatio()
@@ -127,7 +127,7 @@ class PhotobookProduct: Codable {
         
         // Create layouts for the remaining assets
         // Fill minimum pages with Placeholder assets if needed
-        let numberOfPlaceholderLayoutsNeeded = max(template.minimumRequiredAssets - assets.count - 1, 0)
+        let numberOfPlaceholderLayoutsNeeded = max(template.minPages - assets.count - 1, 0)
         tempLayouts.append(contentsOf: createLayoutsForAssets(assets: assets, from: imageOnlyLayouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
         productLayouts = tempLayouts
     }
@@ -365,8 +365,9 @@ class PhotobookProduct: Codable {
         }
     }
     
-    func bleed(forPageSize size: CGSize) -> CGFloat {
-        let scaleFactor = size.height / template.pageHeight
+    func bleed(forPageSize size: CGSize, type: PageType? = nil) -> CGFloat {
+        let pageHeight = type != nil && type! == .cover ? template.coverSize.height : template.pageSize.height
+        let scaleFactor = size.height / pageHeight
         return bleed * scaleFactor
     }
     

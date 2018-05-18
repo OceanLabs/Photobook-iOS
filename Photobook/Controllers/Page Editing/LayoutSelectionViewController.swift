@@ -29,7 +29,7 @@ class LayoutSelectionViewController: UIViewController {
             collectionView.backgroundColor = .clear
             
             // Adapt the size of the cells to the book aspect ratio
-            let aspectRatio = product.template.aspectRatio!
+            let aspectRatio = product.template.pageAspectRatio
             let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
             flowLayout.itemSize = CGSize(width: aspectRatio * flowLayout.itemSize.height + Constants.photobookSideMargin, height: flowLayout.itemSize.height)
         }

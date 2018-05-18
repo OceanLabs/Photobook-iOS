@@ -31,13 +31,10 @@ class ProductManager {
     private(set) var upsellOptions: [UpsellOption]?
     
     var minimumRequiredAssets: Int {
-        let defaultMinimum = 20
-        
-        return currentProduct?.template.minimumRequiredAssets ?? ProductManager.shared.products?.first?.minimumRequiredAssets ?? defaultMinimum
+        return currentProduct?.template.minPages ?? 20
     }
     var maximumAllowedAssets: Int {
-        // TODO: get this from the photobook
-        return 70
+        return currentProduct?.template.maxPages ?? 70
     }
     
     private(set) var currentProduct: PhotobookProduct?
