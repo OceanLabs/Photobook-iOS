@@ -10,57 +10,34 @@ import UIKit
 
 class OrderSummary {
     
-    struct Price {
-        let amount: Decimal
-        let currencyCode: String
-        var formatted: String? {
-            get {
-                return amount.formattedCost(currencyCode: currencyCode)
-            }
-        }
-        
-        init(amount: Decimal, currencyCode: String) {
-            self.amount = amount
-            self.currencyCode = currencyCode
-        }
-        
-        init?(_ dict: [String:Any]) {
-            guard let amountDouble = dict["amount"] as? Double,
-                let currencyCode = dict["currencyCode"] as? String else {
-                //invalid
-                print("OrderSummary.Price: couldn't initialise")
-                return nil
-            }
-            
-            self.init(amount: Decimal(amountDouble), currencyCode: currencyCode)
-        }
-    }
-    
     struct Detail {
         var name: String
-        var price: Price
+        var price: String
         
-        init(name: String, price: Price) {
+        init(name: String, price: String) {
             self.name = name
             self.price = price
         }
         
         init?(_ dict: [String:Any]) {
-            guard let name = dict["name"] as? String, let priceDict = dict["price"] as? [String:Any], let price = Price(priceDict) else {
+            guard let name = dict["name"] as? String,
+                let priceDict = dict["price"] as? [String:Any],
+                let amountDouble = priceDict["amount"] as? Double,
+                let currencyCode = priceDict["currencyCode"] as? String else {
                 //invalid
                 print("OrderSummary.Detail: couldn't initialise")
                 return nil
             }
             
-            self.init(name: name, price: price)
+            self.init(name: name, price: Decimal(amountDouble).formattedCost(currencyCode: currencyCode))
         }
     }
     
     var details = [Detail]()
-    var total: Price?
+    var total: String
     private var pigBaseUrl: String?
     
-    private init(details: [Detail], total: Price, pigBaseUrl: String) {
+    private init(details: [Detail], total: String, pigBaseUrl: String) {
         self.details = details
         self.total = total
         self.pigBaseUrl = pigBaseUrl
@@ -69,7 +46,8 @@ class OrderSummary {
     convenience init?(_ dict: [String:Any]) {
         guard let dictionaries = dict["lineItems"] as? [[String:Any]],
             let totalDict = dict["total"] as? [String: Any],
-            let total = Price(totalDict),
+            let totalDouble = totalDict["amount"] as? Double,
+            let currencyCode = totalDict["currencyCode"] as? String,
             let imageUrl = dict["previewImageUrl"] as? String else {
             print("OrderSummary: couldn't initialise")
             return nil
@@ -82,7 +60,7 @@ class OrderSummary {
             }
         }
         
-        self.init(details: details, total: total, pigBaseUrl: imageUrl)
+        self.init(details: details, total: Decimal(totalDouble).formattedCost(currencyCode: currencyCode), pigBaseUrl: imageUrl)
     }
     
     func previewImageUrl(withCoverImageUrl imageUrl: String, size: CGSize) -> URL? {

@@ -259,12 +259,12 @@ extension OrderSummaryViewController: UITableViewDataSource {
         case Constants.sectionDetails:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrderSummaryDetailTableViewCell", for: indexPath) as! OrderSummaryDetailTableViewCell
             cell.titleLabel.text = OrderSummaryManager.shared.summary?.details[indexPath.row].name
-            cell.priceLabel.text = OrderSummaryManager.shared.summary?.details[indexPath.row].price.formatted
+            cell.priceLabel.text = OrderSummaryManager.shared.summary?.details[indexPath.row].price
             return cell
         case Constants.sectionTotal:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrderSummaryTotalTableViewCell", for: indexPath) as! OrderSummaryTotalTableViewCell
             let summary = OrderSummaryManager.shared.summary!
-            cell.priceLabel.text = summary.total?.formatted
+            cell.priceLabel.text = summary.total
             return cell
         case Constants.sectionOptions:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrderSummaryUpsellTableViewCell", for: indexPath) as! OrderSummaryUpsellTableViewCell
