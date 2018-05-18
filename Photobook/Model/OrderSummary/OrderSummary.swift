@@ -43,7 +43,7 @@ class OrderSummary {
         self.pigBaseUrl = pigBaseUrl
     }
     
-    convenience init?(_ dict: [String:Any]) {
+    static func parse(_ dict: [String:Any]) -> OrderSummary? {
         guard let dictionaries = dict["lineItems"] as? [[String:Any]],
             let totalDict = dict["total"] as? [String: Any],
             let totalDouble = totalDict["amount"] as? Double,
@@ -60,7 +60,7 @@ class OrderSummary {
             }
         }
         
-        self.init(details: details, total: Decimal(totalDouble).formattedCost(currencyCode: currencyCode), pigBaseUrl: imageUrl)
+        return OrderSummary(details: details, total: Decimal(totalDouble).formattedCost(currencyCode: currencyCode), pigBaseUrl: imageUrl)
     }
     
     func previewImageUrl(withCoverImageUrl imageUrl: String, size: CGSize) -> URL? {

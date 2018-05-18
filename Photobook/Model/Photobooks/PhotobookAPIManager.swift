@@ -126,7 +126,7 @@ class PhotobookAPIManager {
                 }
             }
             
-            completionHandler(OrderSummary(summaryDict), upsellOptions, payload, nil)
+            completionHandler(OrderSummary.parse(summaryDict), upsellOptions, payload, nil)
         }
     }
     
@@ -161,7 +161,7 @@ class PhotobookAPIManager {
             }
             let newProduct = PhotobookProduct(template: template, assets: assets)
             
-            completionHandler(OrderSummary(summaryDict), newProduct, payload, nil)
+            completionHandler(OrderSummary.parse(summaryDict), newProduct, payload, nil)
         }
     }
     
