@@ -33,8 +33,8 @@ class OrderSummary {
         }
     }
     
-    var details = [Detail]()
-    var total: String
+    private(set) var details = [Detail]()
+    private(set) var total: String
     private var pigBaseUrl: String?
     
     private init(details: [Detail], total: String, pigBaseUrl: String) {
