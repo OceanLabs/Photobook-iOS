@@ -11,30 +11,28 @@ import UIKit
 class OrderSummary {
     
     struct Price {
-        let amount: Double
+        let amount: Decimal
         let currencyCode: String
         var formatted: String? {
             get {
-                let formatter = NumberFormatter()
-                formatter.numberStyle = .currency
-                formatter.currencyCode = currencyCode
-                return formatter.string(from: NSNumber(value: amount))
+                return amount.formattedCost(currencyCode: currencyCode)
             }
         }
         
-        init(amount: Double, currencyCode: String) {
+        init(amount: Decimal, currencyCode: String) {
             self.amount = amount
             self.currencyCode = currencyCode
         }
         
         init?(_ dict: [String:Any]) {
-            guard let amount = dict["amount"] as? Double, let currencyCode = dict["currencyCode"] as? String else {
+            guard let amountDouble = dict["amount"] as? Double,
+                let currencyCode = dict["currencyCode"] as? String else {
                 //invalid
                 print("OrderSummary.Price: couldn't initialise")
                 return nil
             }
             
-            self.init(amount: amount, currencyCode: currencyCode)
+            self.init(amount: Decimal(amountDouble), currencyCode: currencyCode)
         }
     }
     
