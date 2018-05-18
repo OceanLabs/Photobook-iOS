@@ -2078,6 +2078,9 @@
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ORz-yc-dFH">
                                                             <rect key="frame" x="-28" y="103.5" width="66" height="0.0"/>
+                                                            <accessibility key="accessibilityConfiguration">
+                                                                <bool key="isElement" value="NO"/>
+                                                            </accessibility>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="66" id="qsC-jx-jNX"/>
                                                             </constraints>
@@ -2178,6 +2181,9 @@
                                                 </view>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TX9-mc-br7">
                                                     <rect key="frame" x="66" y="0.0" width="44" height="207"/>
+                                                    <accessibility key="accessibilityConfiguration" hint="Double tap to edit" label="Spine">
+                                                        <accessibilityTraits key="traits" none="YES"/>
+                                                    </accessibility>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="44" id="j3a-qC-nAu"/>
                                                     </constraints>
@@ -2200,6 +2206,7 @@
                                         </constraints>
                                         <connections>
                                             <outlet property="coverFrameView" destination="7hj-ms-TMa" id="nuZ-hx-d2U"/>
+                                            <outlet property="spineButton" destination="TX9-mc-br7" id="pQ3-dA-zmM"/>
                                             <outlet property="spineFrameView" destination="aKo-Fy-w8j" id="tb1-tQ-r4s"/>
                                         </connections>
                                     </collectionViewCell>
