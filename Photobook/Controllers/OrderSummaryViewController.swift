@@ -47,6 +47,7 @@ class OrderSummaryViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryManagerDidUpdateSummary), name: OrderSummaryManager.notificationDidUpdateSummary, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryManagerPreviewImageReady), name: OrderSummaryManager.notificationPreviewImageReady, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryManagerPreviewImageFailed), name: OrderSummaryManager.notificationPreviewImageFailed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryManagerConnectionError), name: OrderSummaryManager.notificationConnectionError, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryManagerApplyUpsellFailed), name: OrderSummaryManager.notificationApplyUpsellFailed, object: nil)
         
         emptyScreenViewController.show(message: Constants.stringLoading, activity: true)
@@ -180,6 +181,15 @@ extension OrderSummaryViewController {
     
     @objc func orderSummaryManagerPreviewImageFailed() {
         hideProgressIndicator()
+    }
+    
+    @objc func orderSummaryManagerConnectionError() {
+        hideProgressIndicator()
+        
+        emptyScreenViewController.show(message: CommonLocalizedStrings.checkConnectionAndRetry, title: nil, image: nil, activity: false, buttonTitle: CommonLocalizedStrings.retry, buttonAction: {
+            self.emptyScreenViewController.show(message: Constants.stringLoading, activity: true)
+            OrderSummaryManager.shared.refresh()
+        })
     }
     
     @objc func orderSummaryManagerApplyUpsellFailed() {

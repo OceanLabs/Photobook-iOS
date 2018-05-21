@@ -14,6 +14,7 @@ class OrderSummaryManager {
     static let notificationPreviewImageReady = Notification.Name("ly.kite.sdk.orderSummaryManager.previewImageReady")
     static let notificationPreviewImageFailed = Notification.Name("ly.kite.sdk.orderSummaryManager.previewImageFailed")
     static let notificationDidUpdateSummary = Notification.Name("ly.kite.sdk.orderSummaryManager.didUpdateSummary")
+    static let notificationConnectionError = Notification.Name("ly.kite.sdk.orderSummaryManager.connectionError")
     static let notificationApplyUpsellFailed = Notification.Name("ly.kite.sdk.orderSummaryManager.applyUpsellFailed")
     
     private lazy var apiManager = PhotobookAPIManager()
@@ -83,7 +84,7 @@ class OrderSummaryManager {
         NotificationCenter.default.post(name: OrderSummaryManager.notificationWillUpdate, object: self)
         
         ProductManager.shared.applyUpsells(Array<UpsellOption>(selectedUpsellOptions)) { [weak self] (summary, error) in
-            if let error = error as? PhotobookAPIError, error == PhotobookAPIError.productUnavailable {
+            if error != nil {
                 failure?()
                 NotificationCenter.default.post(name: OrderSummaryManager.notificationApplyUpsellFailed, object: self)
                 return
@@ -112,6 +113,12 @@ extension OrderSummaryManager {
         }
         
         apiManager.getOrderSummary(product: product) { [weak self] (summary, upsellOptions, productPayload, error) in
+            
+            if let error = error as? APIClientError, case APIClientError.connection = error {
+                NotificationCenter.default.post(name: OrderSummaryManager.notificationConnectionError, object: self)
+                return
+            }
+            
             self?.product.payload = productPayload
             ProductManager.shared.upsoldProduct = self?.product
             self?.upsellOptions = upsellOptions

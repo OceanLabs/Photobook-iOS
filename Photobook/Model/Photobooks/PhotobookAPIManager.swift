@@ -111,6 +111,11 @@ class PhotobookAPIManager {
         let parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.productLayouts.count, "color": product.coverColor.rawValue]
         apiClient.post(context: .photobook, endpoint: EndPoints.summary, parameters: parameters, headers: authorizationHeader()) { (jsonData, error) in
             
+            if let error = error as? APIClientError {
+                completionHandler(nil, nil, nil, error)
+                return
+            }
+            
             guard let jsonData = jsonData as? [String: Any],
                 let summaryDict = jsonData["summary"] as? [String: Any],
                 let upsellOptionsDict = jsonData["upsells"] as? [[String: Any]],
@@ -140,6 +145,11 @@ class PhotobookAPIManager {
         }
         parameters["upsells"] = upsellDicts
         apiClient.post(context: .photobook, endpoint: EndPoints.applyUpsells, parameters: parameters, headers: authorizationHeader()) { (jsonData, error) in
+            
+            if let error = error as? APIClientError {
+                completionHandler(nil, nil, nil, error)
+                return
+            }
                                                                                         
             guard let jsonData = jsonData as? [String: Any],
                 let summaryDict = jsonData["summary"] as? [String: Any],
