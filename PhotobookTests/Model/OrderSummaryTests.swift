@@ -26,13 +26,13 @@ class OrderSummaryTests: XCTestCase {
     }
     
     func testValidSummary() {
-        let orderSummary = OrderSummary(validDictionary)
+        let orderSummary = OrderSummary.parse(validDictionary)
         XCTAssertNotNil(orderSummary)
     }
     
     func testValidPreviewImageUrl() {
 
-        guard let validSummary = OrderSummary(validDictionary) else {
+        guard let validSummary = OrderSummary.parse(validDictionary) else {
             XCTFail()
             return
         }
@@ -46,7 +46,7 @@ class OrderSummaryTests: XCTestCase {
                                                  "total":["currencyCode":"GBP", "amount":35.0],
                                                  "previewImageUrl":"somethingelse"]
         
-        guard let invalidUrlSummary = OrderSummary(invalidUrlDictionary) else {
+        guard let invalidUrlSummary = OrderSummary.parse(invalidUrlDictionary) else {
             XCTFail("Could not initialise OrderSummary object")
             return
         }

@@ -12,6 +12,7 @@ enum PhotobookAPIError: Error {
     case missingPhotobookInfo
     case couldNotBuildCreationParameters
     case couldNotSaveTempImageData
+    case productUnavailable
 }
 
 class PhotobookAPIManager {
@@ -146,11 +147,16 @@ class PhotobookAPIManager {
                 let variantDicts = productDict["variants"] as? [[String: Any]],
                 let templateId = variantDicts.first?["templateId"] as? String,
                 let payload = jsonData["productPayload"] as? [String: Any],
-                let layouts = ProductManager.shared.currentProduct?.productLayouts,
-                let template = ProductManager.shared.products?.first(where: {$0.productTemplateId == templateId})
+                let layouts = ProductManager.shared.currentProduct?.productLayouts
                 else {
                     completionHandler(nil, nil, nil, APIClientError.parsing)
                     return
+            }
+            
+            guard let template = ProductManager.shared.products?.first(where: {$0.productTemplateId == templateId}) else {
+                //template of new product not available
+                completionHandler(nil, nil, nil, PhotobookAPIError.productUnavailable)
+                return
             }
             
             var assets = [Asset]()

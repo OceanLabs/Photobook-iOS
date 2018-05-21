@@ -14,6 +14,7 @@ class OrderSummaryManager {
     static let notificationPreviewImageReady = Notification.Name("ly.kite.sdk.orderSummaryManager.previewImageReady")
     static let notificationPreviewImageFailed = Notification.Name("ly.kite.sdk.orderSummaryManager.previewImageFailed")
     static let notificationDidUpdateSummary = Notification.Name("ly.kite.sdk.orderSummaryManager.didUpdateSummary")
+    static let notificationApplyUpsellFailed = Notification.Name("ly.kite.sdk.orderSummaryManager.applyUpsellFailed")
     
     private lazy var apiManager = PhotobookAPIManager()
     
@@ -66,12 +67,29 @@ class OrderSummaryManager {
     
     func selectUpsellOption(_ option:UpsellOption) {
         selectedUpsellOptions.insert(option)
-        applyUpsells()
+        applyUpsells { [weak self] in
+            self?.selectedUpsellOptions.remove(option)
+        }
     }
     
     func deselectUpsellOption(_ option:UpsellOption) {
         selectedUpsellOptions.remove(option)
-        applyUpsells()
+        applyUpsells { [weak self] in
+            self?.selectedUpsellOptions.insert(option)
+        }
+    }
+    
+    func applyUpsells(_ failure:(() -> Void)? = nil) {
+        NotificationCenter.default.post(name: OrderSummaryManager.notificationWillUpdate, object: self)
+        
+        ProductManager.shared.applyUpsells(Array<UpsellOption>(selectedUpsellOptions)) { [weak self] (summary, error) in
+            if let error = error as? PhotobookAPIError, error == PhotobookAPIError.productUnavailable {
+                failure?()
+                NotificationCenter.default.post(name: OrderSummaryManager.notificationApplyUpsellFailed, object: self)
+                return
+            }
+            self?.handleReceivingSummary(summary)
+        }
     }
     
     func isUpsellOptionSelected(_ option:UpsellOption) -> Bool {
@@ -97,14 +115,6 @@ extension OrderSummaryManager {
             self?.product.payload = productPayload
             ProductManager.shared.upsoldProduct = self?.product
             self?.upsellOptions = upsellOptions
-            self?.handleReceivingSummary(summary)
-        }
-    }
-    
-    private func applyUpsells() {
-        NotificationCenter.default.post(name: OrderSummaryManager.notificationWillUpdate, object: self)
-        
-        ProductManager.shared.applyUpsells(Array<UpsellOption>(selectedUpsellOptions)) { [weak self] (summary, error) in
             self?.handleReceivingSummary(summary)
         }
     }

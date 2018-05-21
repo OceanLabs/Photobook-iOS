@@ -47,6 +47,7 @@ class OrderSummaryViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryManagerDidUpdateSummary), name: OrderSummaryManager.notificationDidUpdateSummary, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryManagerPreviewImageReady), name: OrderSummaryManager.notificationPreviewImageReady, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryManagerPreviewImageFailed), name: OrderSummaryManager.notificationPreviewImageFailed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryManagerApplyUpsellFailed), name: OrderSummaryManager.notificationApplyUpsellFailed, object: nil)
         
         emptyScreenViewController.show(message: Constants.stringLoading, activity: true)
         
@@ -126,6 +127,13 @@ class OrderSummaryViewController: UIViewController {
         }
     }
     
+    func hideProgressIndicator() {
+        timer?.invalidate()
+        previewImageActivityIndicatorView.stopAnimating()
+        previewImageProgressView.isHidden = true
+        progressOverlayViewController.hide(animated: true)
+    }
+    
 }
 
 //MARK: - Notifications
@@ -166,18 +174,36 @@ extension OrderSummaryViewController {
         OrderSummaryManager.shared.fetchPreviewImage(withSize: size) { [weak welf = self] (image) in
             welf?.previewImageView.image = image
             
-            welf?.timer?.invalidate()
-            welf?.previewImageProgressView.isHidden = true
-            welf?.previewImageActivityIndicatorView.stopAnimating()
+            welf?.hideProgressIndicator()
         }
     }
     
     @objc func orderSummaryManagerPreviewImageFailed() {
-        self.timer?.invalidate()
-        self.previewImageProgressView.isHidden = true
-        self.previewImageActivityIndicatorView.stopAnimating()
+        hideProgressIndicator()
     }
-
+    
+    @objc func orderSummaryManagerApplyUpsellFailed() {
+        hideProgressIndicator()
+        
+        //show message bar
+        let message = ErrorMessage(text: NSLocalizedString("Controllers/OrderSummaryViewController/UpsellFailMessage", value: "Couldn't apply upsell option", comment: "An upsell uption couldn't be applied due to an unknown reason"))
+        
+        var offsetTop: CGFloat = 0
+        
+        if let navigationBar = navigationController?.navigationBar as? PhotobookNavigationBar {
+            offsetTop = navigationBar.barHeight
+        }
+        MessageBarViewController.show(message: message, parentViewController: self, offsetTop: offsetTop, centred: true, dismissAfter: 3.0)
+        
+        if let selectedIndices = tableView.indexPathsForSelectedRows {
+            for selectedIndex in selectedIndices {
+                tableView.deselectRow(at: selectedIndex, animated: false)
+            }
+        }
+        let sectionsToUpdate = Constants.sectionOptions...Constants.sectionOptions
+        tableView.reloadSections(IndexSet(integersIn: sectionsToUpdate), with: .automatic)
+    }
+    
 }
 
 extension OrderSummaryViewController: UITableViewDelegate {
