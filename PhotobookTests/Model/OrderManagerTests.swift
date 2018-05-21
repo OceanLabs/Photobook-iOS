@@ -29,15 +29,31 @@ class OrderManagerTests: XCTestCase {
         wait(for: [expectation], timeout: 30)
         
         let validDictionary = ([
-            "id": 10,
-            "name": "210 x 210",
-            "productTemplateId": "RPI_WRAP_210X210_SM",
-            "pageHeight": 450.34,
-            "spineTextRatio": 0.8,
-            "aspectRatio": 1.38,
+            "kiteId": "HDBOOK-127x127",
+            "displayName": "Square 127x127",
+            "templateId": "hdbook_127x127",
+            "spineTextRatio": 0.87,
             "coverLayouts": [ 9, 10 ],
-            "layouts": [ 10, 11, 12, 13 ]
-            ]) as [String: AnyObject]
+            "layouts": [ 10, 11, 12, 13 ],
+            "variants": [
+                [
+                    "minPages": 20,
+                    "maxPages": 100,
+                    "coverSize": [
+                        "mm": [
+                            "height": 127,
+                            "width": 129
+                        ]
+                    ],
+                    "size": [
+                        "mm": [
+                            "height": 121,
+                            "width": 216
+                        ]
+                    ]
+                ]
+            ]
+        ]) as [String: AnyObject]
         
         guard let photobookTemplate = PhotobookTemplate.parse(validDictionary) else {
             XCTFail("Failed to parse photobook dictionary")
@@ -83,7 +99,8 @@ class OrderManagerTests: XCTestCase {
         
         XCTAssertEqual(unarchivedOrder.products.first!.template.id, product.template.id)
         XCTAssertEqual(unarchivedOrder.products.first!.template.name, product.template.name)
-        XCTAssertEqual(unarchivedOrder.products.first!.template.aspectRatio, product.template.aspectRatio)
+        XCTAssertEqual(unarchivedOrder.products.first!.template.coverAspectRatio, product.template.coverAspectRatio)
+        XCTAssertEqual(unarchivedOrder.products.first!.template.pageAspectRatio, product.template.pageAspectRatio)
         XCTAssertEqual(unarchivedOrder.products.first!.template.layouts, product.template.layouts)
         XCTAssertEqual(unarchivedOrder.products.first!.template.coverLayouts, product.template.coverLayouts)
 
