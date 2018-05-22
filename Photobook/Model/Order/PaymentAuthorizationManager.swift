@@ -8,6 +8,7 @@
 
 import UIKit
 import Stripe
+import PassKit
 
 #if !COCOAPODS
 import PayPalMobileSDK
@@ -99,7 +100,7 @@ class PaymentAuthorizationManager: NSObject {
 
         let paymentRequest = Stripe.paymentRequest(withMerchantIdentifier: applePayMerchantId, country: "US", currency: OrderManager.shared.basketOrder.currencyCode)
         
-        paymentRequest.paymentSummaryItems = cost.summaryItemsForApplePay(payTo: PaymentAuthorizationManager.applePayPayTo, shippingMethodId: OrderManager.shared.basketOrder.shippingMethod!)
+        paymentRequest.paymentSummaryItems = summaryItemsForApplePay(cost: cost, shippingMethodId: OrderManager.shared.basketOrder.shippingMethod!)
         paymentRequest.requiredShippingAddressFields = [.postalAddress, .name, .email, .phone]
         
         guard let paymentController = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) else { return }
@@ -234,20 +235,34 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
         
         OrderManager.shared.basketOrder.updateCost { [weak welf = self] (error: Error?) in
             
-            guard let cachedCost = OrderManager.shared.basketOrder.cachedCost else {
+            guard let stelf = welf, let cachedCost = OrderManager.shared.basketOrder.cachedCost else {
                 completion(.failure, [PKShippingMethod](), [PKPaymentSummaryItem]())
                 return
             }
 
             guard error == nil else {
-                completion(.failure, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: PaymentAuthorizationManager.applePayPayTo, shippingMethodId: OrderManager.shared.basketOrder.shippingMethod!))
+                completion(.failure, [PKShippingMethod](), stelf.summaryItemsForApplePay(cost: cachedCost, shippingMethodId: OrderManager.shared.basketOrder.shippingMethod!))
                 return
             }
 
             //Cost is expected to change here so update views
             welf?.delegate?.costUpdated()
             
-            completion(.success, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: PaymentAuthorizationManager.applePayPayTo, shippingMethodId: OrderManager.shared.basketOrder.shippingMethod!))
+            completion(.success, [PKShippingMethod](), stelf.summaryItemsForApplePay(cost: cachedCost, shippingMethodId: OrderManager.shared.basketOrder.shippingMethod!))
         }
+    }
+    
+    private func summaryItemsForApplePay(cost: Cost?, shippingMethodId: Int) -> [PKPaymentSummaryItem] {
+        guard
+            let lineItems = cost?.lineItems, lineItems.count > 0,
+            let totalCost = cost?.shippingMethod(id: shippingMethodId)?.totalCost as NSDecimalNumber?
+        else {
+            return [PKPaymentSummaryItem]()
+        }
+        
+        var summaryItems = lineItems.map { return PKPaymentSummaryItem(label: $0.name, amount: $0.cost as NSDecimalNumber) }
+        summaryItems.append(PKPaymentSummaryItem(label: PaymentAuthorizationManager.applePayPayTo, amount: totalCost))
+        
+        return summaryItems
     }
 }
