@@ -37,9 +37,10 @@ class Address: NSCopying, Codable, Hashable {
     
     var isValid: Bool {
         get{            
-            guard let line1 = line1, !line1.isEmpty else { return false }
-            guard let city = city, !city.isEmpty else { return false }
-            guard let zipOrPostcode = zipOrPostcode, !zipOrPostcode.isEmpty else { return false }
+            guard let line1 = line1, !line1.isEmpty,
+                  let city = city, !city.isEmpty,
+                  let zipOrPostcode = zipOrPostcode, !zipOrPostcode.isEmpty
+                else { return false }
             
             return true
         }
@@ -61,8 +62,8 @@ class Address: NSCopying, Codable, Hashable {
         return s
     }
     
-    func jsonRepresentation() -> [String : String] {
-        var json = [String : String]()
+    func jsonRepresentation() -> [String: String] {
+        var json = [String: String]()
         
         json["address_line_1"] = line1
         json["address_line_2"] = line2
