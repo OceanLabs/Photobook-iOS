@@ -109,14 +109,22 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let selected = indexPath.row == selectedLayoutIndex
+        
         if pageType == .cover {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CoverLayoutSelectionCollectionViewCell.reuseIdentifier, for: indexPath) as! CoverLayoutSelectionCollectionViewCell
             
             cell.layout = layouts[indexPath.row]
             cell.image = image // Pass the image to avoid reloading
             cell.asset = asset
-            cell.isBorderVisible = (indexPath.row == selectedLayoutIndex)
+            cell.isBorderVisible = selected
             cell.coverColor = coverColor
+            
+            cell.isAccessibilityElement = true
+            cell.accessibilityHint = CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
+            let layoutName = NSLocalizedString("Accessibility/Editing/LayoutSelection", value: "Layout \(indexPath.row + 1)", comment: "Accessibility label for the different page layouts. Example: Layout 1, Layout 2 etc")
+            cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + layoutName
+            
             return cell
         }
         
@@ -132,6 +140,11 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
         cell.coverColor = coverColor
         cell.pageColor = pageColor
         cell.isEditingDoubleLayout = isEditingDoubleLayout
+        
+        cell.isAccessibilityElement = true
+        cell.accessibilityHint = CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
+        let layoutName = NSLocalizedString("Accessibility/Editing/LayoutSelection", value: "Layout \(indexPath.row + 1).", comment: "Accessibility label for the different page layouts. Example: Layout 1, Layout 2 etc")
+        cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + layoutName
 
         return cell
     }
