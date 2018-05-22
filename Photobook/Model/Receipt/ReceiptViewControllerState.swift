@@ -133,7 +133,7 @@ enum ReceiptViewControllerState: Int {
         static let titleUploading = NSLocalizedString("ReceiptViewControllerState/TitleUploading", value: "Processing Order", comment: "Receipt sceen title when uploading images")
         
         static let infoTitleCompleted = NSLocalizedString("ReceiptViewControllerState/InfoTitleCompleted", value: "Ready to Print", comment: "Status title if order has been completed and product is ready to print")
-        static let infoDescriptionCompleted = NSLocalizedString("ReceiptViewControllerState/InfoDescriptionCompleted", value: "We have received your photos and we will begin processing your photobook shortly", comment: "Info text when order has been completed")
+        static let infoDescriptionCompleted = NSLocalizedString("ReceiptViewControllerState/InfoDescriptionCompleted", value: "We have received your photos and we will begin processing your photo book shortly", comment: "Info text when order has been completed")
         static let infoTitleError = NSLocalizedString("ReceiptViewControllerState/InfoTitleError", value: "Something Went Wrong!", comment: "Status title if order couldn't be completed")
         static let infoDescriptionError = NSLocalizedString("ReceiptViewControllerState/InfoDescriptionError", value: "Something happened and we can't receive your photos at this point. You can retry or cancel and be refunded", comment: "Info text when order couldn't be completed")
         static let infoTitleCancelled = NSLocalizedString("ReceiptViewControllerState/InfoTitleCancelled", value: "Order Cancelled", comment: "Status title if was cancelled")
