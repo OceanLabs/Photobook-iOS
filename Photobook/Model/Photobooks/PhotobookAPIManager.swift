@@ -85,6 +85,8 @@ class PhotobookAPIManager {
                 completionHandler(nil, nil, nil, APIClientError.parsing)
                 return
             }
+            // Sort products by cover width
+            tempPhotobooks.sort(by: { return $0.coverSize.width < $1.coverSize.width })
             
             completionHandler(tempPhotobooks, tempLayouts, nil, nil)
         }
