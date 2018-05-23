@@ -30,10 +30,10 @@ class ProductManager {
     // List of all available upsell options
     private(set) var upsellOptions: [UpsellOption]?
     
-    var minimumRequiredAssets: Int {
+    var minimumRequiredPages: Int {
         return currentProduct?.template.minPages ?? 20
     }
-    var maximumAllowedAssets: Int {
+    var maximumAllowedPages: Int {
         return currentProduct?.template.maxPages ?? 70
     }
     
@@ -65,18 +65,22 @@ class ProductManager {
         }
     }
     
-    func coverLayouts(for photobook: PhotobookTemplate) -> [Layout]? {
+    private func coverLayouts(for photobook: PhotobookTemplate) -> [Layout]? {
         guard let layouts = layouts else { return nil }
         return layouts.filter { photobook.coverLayouts.contains($0.id) }
     }
     
-    func layouts(for photobook: PhotobookTemplate) -> [Layout]? {
+    private func layouts(for photobook: PhotobookTemplate) -> [Layout]? {
         guard let layouts = layouts else { return nil }
         return layouts.filter { photobook.layouts.contains($0.id) }
     }
     
     func setCurrentProduct(with photobook: PhotobookTemplate, assets: [Asset]) -> PhotobookProduct? {
-        currentProduct = PhotobookProduct(template: photobook, assets: assets, productManager: self)
+        guard let availableCoverLayouts = coverLayouts(for: photobook),
+              let availableLayouts = layouts(for: photobook)
+        else { return nil }
+        
+        currentProduct = PhotobookProduct(template: photobook, assets: assets, coverLayouts: availableCoverLayouts, layouts: availableLayouts)
         return currentProduct
     }
 }

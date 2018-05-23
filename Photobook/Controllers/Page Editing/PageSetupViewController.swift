@@ -122,10 +122,10 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             if pageType == .cover {
                 selectedColor = product.coverColor
-                availableLayouts = ProductManager.shared.coverLayouts(for: product!.template)
+                availableLayouts = ProductManager.shared.currentProduct!.coverLayouts
             } else {
                 selectedColor = product.pageColor
-                availableLayouts = ProductManager.shared.layouts(for: product!.template)
+                availableLayouts = ProductManager.shared.currentProduct!.layouts
             }
         }
     }

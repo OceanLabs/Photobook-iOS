@@ -10,28 +10,8 @@ import XCTest
 import Photos
 @testable import Photobook
 
-class TestProductManager: ProductManager {
-    
-    var minimumRequiredAssetsStub: Int = 20
-    var layoutsStub: [Layout]?
-    var coverLayoutsStub: [Layout]?
-    
-    override var minimumRequiredAssets: Int {
-        return minimumRequiredAssetsStub
-    }
-    
-    override func coverLayouts(for photobook: PhotobookTemplate) -> [Layout]? {
-        return coverLayoutsStub
-    }
-    
-    override func layouts(for photobook: PhotobookTemplate) -> [Layout]? {
-        return layoutsStub
-    }
-}
-
 class PhotobookProductTests: XCTestCase {
 
-    let productManager = TestProductManager()
     let template = PhotobookTemplate(id: "hdbook", name: "template", templateId: "photobook", coverSize: CGSize(width: 200.0, height: 100.0), pageSize: CGSize(width: 200.0, height: 100.0), spineTextRatio: 0.8, coverLayouts: Array(1...5), layouts: Array(1...5))
     let assets: [Asset] = {
         var temp = [TestPhotosAsset]()
@@ -57,10 +37,8 @@ class PhotobookProductTests: XCTestCase {
             coverLayouts.append(Layout(id: i, category: "cover\(i)", imageLayoutBox: layoutBox, textLayoutBox: layoutBox, isDoubleLayout: false))
             layouts.append(Layout(id: i, category: "page\(i)", imageLayoutBox: layoutBox, textLayoutBox: layoutBox, isDoubleLayout: i == 5))
         }
-        productManager.layoutsStub = layouts
-        productManager.coverLayoutsStub = coverLayouts
         
-        photobookProduct = PhotobookProduct(template: template, assets: assets, productManager: productManager)
+        photobookProduct = PhotobookProduct(template: template, assets: assets, coverLayouts: coverLayouts, layouts: layouts)
     }
     
     // MARK: - Init
@@ -236,7 +214,7 @@ class PhotobookProductTests: XCTestCase {
         
         var productLayouts = [ProductLayout]()
         for i in 0 ..< 5 {
-            productLayouts.append(ProductLayout(layout: productManager.layoutsStub![i]))
+            productLayouts.append(ProductLayout(layout: photobookProduct.layouts![i]))
         }
         
         photobookProduct.addPages(at: index, pages: productLayouts)

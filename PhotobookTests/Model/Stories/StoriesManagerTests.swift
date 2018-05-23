@@ -102,7 +102,7 @@ class StoriesManagerTests: XCTestCase {
 
         let storiesManager = managerWithSetup(collectionLists: collectionLists, assetCollections: assetCollections, assets: assets)
 
-        storiesManager.productManager = TestProductManager(apiManager: PhotobookAPIManager())
+        storiesManager.productManager = ProductManager(apiManager: PhotobookAPIManager())
         
         let expectation = XCTestExpectation(description: "Should have 4 stories")
         storiesManager.loadTopStories() {
@@ -160,7 +160,7 @@ class StoriesManagerTests: XCTestCase {
         
         let storiesManager = managerWithSetup(collectionLists: collectionLists, assetCollections: assetCollections, assets: assets)
 
-        storiesManager.productManager = TestProductManager(apiManager: PhotobookAPIManager())
+        storiesManager.productManager = ProductManager(apiManager: PhotobookAPIManager())
         
         let expectation = XCTestExpectation(description: "Should select all assets")
         storiesManager.loadTopStories() {
@@ -195,7 +195,7 @@ class StoriesManagerTests: XCTestCase {
 
         let storiesManager = managerWithSetup(collectionLists: collectionLists, assetCollections: assetCollections, assets: assets)
 
-        storiesManager.productManager = TestProductManager(apiManager: PhotobookAPIManager())
+        storiesManager.productManager = ProductManager(apiManager: PhotobookAPIManager())
 
         let expectation = XCTestExpectation(description: "Should select min assets")
         storiesManager.loadTopStories() {
@@ -214,7 +214,7 @@ class StoriesManagerTests: XCTestCase {
             let selectedAssets = storiesManager.selectedAssetsManager(for: story)?.selectedAssets.count
 
             // Check that min number of assets have been selected
-            self.XCTAssertEqualOptional(selectedAssets, storiesManager.productManager.minimumRequiredAssets)
+            self.XCTAssertEqualOptional(selectedAssets, storiesManager.productManager.minimumRequiredPages)
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 1.0)
@@ -231,7 +231,7 @@ class StoriesManagerTests: XCTestCase {
         
         let storiesManager = managerWithSetup(collectionLists: collectionLists, assetCollections: assetCollections, assets: assets)
         
-        storiesManager.productManager = TestProductManager(apiManager: PhotobookAPIManager())
+        storiesManager.productManager = ProductManager(apiManager: PhotobookAPIManager())
         
         let expectation = XCTestExpectation(description: "Should select min assets")
         storiesManager.loadTopStories() {
@@ -250,7 +250,7 @@ class StoriesManagerTests: XCTestCase {
             let selectedAssets = storiesManager.selectedAssetsManager(for: story)?.selectedAssets.count
             
             // Check that min number of assets have been selected
-            self.XCTAssertEqualOptional(selectedAssets, storiesManager.productManager.minimumRequiredAssets)
+            self.XCTAssertEqualOptional(selectedAssets, storiesManager.productManager.minimumRequiredPages)
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 1.0)
