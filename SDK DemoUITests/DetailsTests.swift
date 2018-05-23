@@ -81,7 +81,7 @@ class DetailsTests: PhotobookUITest {
         XCTAssertEqual(emailMessageLabel.label, "", "We should not be showing an error message at this time")
         emailTextField.tap()
         emailTextField.typeText("i.am.a.clown.email.com\n")
-        XCTAssertEqual(emailMessageLabel.label, "Email is invalid", "We should be showing an error message at this time")
+        XCTAssertEqual(emailMessageLabel.label, "Email is invalid.", "We should be showing an error message at this time")
         
         emailTextField.tap()
         emailTextField.typeText("this.is.a.valid.email@tada.com\n")
@@ -91,7 +91,7 @@ class DetailsTests: PhotobookUITest {
         XCTAssertEqual(phoneMessageLabel.label, "Required by the postal service in case there are any issues with the delivery", "We should not be showing an error message at this time")
         phoneTextField.tap()
         phoneTextField.typeText("1234\n")
-        XCTAssertEqual(phoneMessageLabel.label, "Phone is invalid", "We should be showing an error message at this time")
+        XCTAssertEqual(phoneMessageLabel.label, "Phone is invalid.", "We should be showing an error message at this time")
         
         phoneTextField.tap()
         phoneTextField.typeText("1234567890\n")

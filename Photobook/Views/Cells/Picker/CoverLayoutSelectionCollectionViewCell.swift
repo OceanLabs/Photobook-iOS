@@ -30,7 +30,7 @@ class CoverLayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         
         backgroundColor = .clear
         
-        let aspectRatio = product.template.aspectRatio!
+        let aspectRatio = product.template.coverAspectRatio
         
         coverFrameView.width = (bounds.height - 2.0 * Constants.photobookVerticalMargin) * aspectRatio
         

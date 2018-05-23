@@ -32,8 +32,6 @@ class PhotobookProduct: Codable {
         case template, photobookId, productLayouts, coverColor, pageColor, spineText, spineFontType, productUpsellOptions, itemCount
     }
     
-    private unowned var productManager = ProductManager.shared
-    
     private let bleed: CGFloat = 8.5
 
     private var currentPortraitLayout = 0
@@ -51,15 +49,18 @@ class PhotobookProduct: Codable {
     // The id of the uploaded PDF
     var photobookId: String?
     
-    var isAddingPagesAllowed: Bool {
-        // TODO: Use pages count instead of assets/layout count
-        return productManager.maximumAllowedAssets > productLayouts.count
+    var isAddingPagesAllowed: Bool { return template.maxPages >= numberOfPages + 2 }
+    var isRemovingPagesAllowed: Bool { return numberOfPages - 2 >= template.minPages }
+    
+    private var numberOfPages: Int {
+        let doubleLayouts = productLayouts.filter { $0.layout.isDoubleLayout }.count
+        let singleLayouts = productLayouts.count - doubleLayouts
+        return singleLayouts + 2 * doubleLayouts
     }
-    var isRemovingPagesAllowed: Bool {
-        // TODO: Use pages count instead of assets/layout count
-        return productManager.minimumRequiredAssets < productLayouts.count - 1 // Don't include cover for min calculation
-    }
-
+    
+    var coverLayouts: [Layout]!
+    var layouts: [Layout]!
+    
     var emptyLayoutIndices: [Int]? {
         var temp = [Int]()
         var index = 0
@@ -78,11 +79,11 @@ class PhotobookProduct: Codable {
     
     var truncatedTextLayoutIndices: [Int]? {
         var temp = [Int]()
-        
-        let pageSize = CGSize(width: template.pageWidth!, height: template.pageHeight!)
-        
+                
         for (index, productLayout) in productLayouts.enumerated() {
             guard let textBox = productLayout.layout.textLayoutBox, let text = productLayout.text, text.count > 0 else { continue }
+            
+            let pageSize = index == 0 ? template.coverSize : template.pageSize
             
             let fontType = productLayout.fontType ?? .plain
             let fontSize = fontType.sizeForScreenToPageRatio()
@@ -98,17 +99,15 @@ class PhotobookProduct: Codable {
         return temp.count > 0 ? temp : nil
     }
     
-    init?(template: PhotobookTemplate, assets: [Asset], productManager: ProductManager = ProductManager.shared) {
-        guard
-            let coverLayouts = productManager.coverLayouts(for: template), !coverLayouts.isEmpty,
-            let layouts = productManager.layouts(for: template), !layouts.isEmpty
-        else {
+    init?(template: PhotobookTemplate, assets: [Asset], coverLayouts: [Layout], layouts: [Layout]) {
+        guard !coverLayouts.isEmpty, !layouts.isEmpty else {
             print("PhotobookProduct: Missing layouts for selected photobook")
             return nil
         }
         
         self.template = template
-        self.productManager = productManager
+        self.coverLayouts = coverLayouts
+        self.layouts = layouts
         
         let imageOnlyLayouts = layouts.filter({ $0.imageLayoutBox != nil })
         
@@ -127,19 +126,26 @@ class PhotobookProduct: Codable {
         
         // Create layouts for the remaining assets
         // Fill minimum pages with Placeholder assets if needed
-        let numberOfPlaceholderLayoutsNeeded = max(template.minimumRequiredAssets - assets.count - 1, 0)
+        let numberOfPlaceholderLayoutsNeeded = max(template.minPages - assets.count - 1, 0)
         tempLayouts.append(contentsOf: createLayoutsForAssets(assets: assets, from: imageOnlyLayouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
         productLayouts = tempLayouts
     }
     
     func setTemplate(_ template: PhotobookTemplate, withAssets assets: [Asset]? = nil, coverLayouts: [Layout], layouts: [Layout]) {
-        
+        guard !coverLayouts.isEmpty, !layouts.isEmpty else {
+            print("PhotobookProduct: Missing layouts for selected photobook")
+            return
+        }
+
         // Reset the current layout since we are changing products
         currentLandscapeLayout = 0
         currentPortraitLayout = 0
         
         // Switching products
         self.template = template
+        self.coverLayouts = coverLayouts
+        self.layouts = layouts
+        
         for pageLayout in productLayouts {
             let availableLayouts = pageLayout === productLayouts.first ? coverLayouts : layouts
             
@@ -290,8 +296,6 @@ class PhotobookProduct: Codable {
     }
     
     private func addPages(at index: Int, number: Int, pages: [ProductLayout]? = nil) {
-        guard let layouts = productManager.layouts(for: template)
-            else { return }
         let newProductLayouts = pages ?? createLayoutsForAssets(assets: [], from: layouts, placeholderLayouts: number)
         
         productLayouts.insert(contentsOf: newProductLayouts, at: index)
@@ -365,8 +369,9 @@ class PhotobookProduct: Codable {
         }
     }
     
-    func bleed(forPageSize size: CGSize) -> CGFloat {
-        let scaleFactor = size.height / template.pageHeight
+    func bleed(forPageSize size: CGSize, type: PageType? = nil) -> CGFloat {
+        let pageHeight = type != nil && type! == .cover ? template.coverSize.height : template.pageSize.height
+        let scaleFactor = size.height / pageHeight
         return bleed * scaleFactor
     }
     
@@ -374,24 +379,27 @@ class PhotobookProduct: Codable {
         
         var photobook = [String: Any]()
         
-        //Pages
+        // Pages
         var pages = [[String: Any]]()
-        for productLayout in productLayouts {
+        for (index, productLayout) in productLayouts.enumerated() {
             var page = [String: Any]()
             
             var layoutBoxes = [[String: Any]]()
             
+            let isCover = index == 0
             let isDoubleLayout = productLayout.layout.isDoubleLayout
-            let pageSize = CGSize(width: isDoubleLayout ? template.pageWidth * 2 : template.pageWidth, height: template.pageHeight)
             
-            //image layout box
+            let templateSize = isCover ? template.coverSize : template.pageSize
+            let pageSize = CGSize(width: isDoubleLayout ? templateSize.width * 2 : templateSize.width, height: templateSize.height)
+            
+            // Image layout box
             if let asset = productLayout.asset,
                 let imageLayoutBox = productLayout.layout.imageLayoutBox,
                 let productLayoutAsset = productLayout.productLayoutAsset {
                 
                 var layoutBox = [String: Any]()
                 
-                //adjust container and transform to page dimensions
+                // Adjust container and transform to page dimensions
                 productLayoutAsset.containerSize = imageLayoutBox.rectContained(in: pageSize).size
                 productLayoutAsset.adjustTransform()
                 
@@ -400,7 +408,7 @@ class PhotobookProduct: Codable {
                 layoutBox["dimensionsPercentages"] = ["height": imageLayoutBox.rect.height, "width": imageLayoutBox.rect.width]
                 layoutBox["relativeStartPoint"] = ["x": imageLayoutBox.rect.origin.x, "y": imageLayoutBox.rect.origin.y]
                 
-                //convert transform into css format on the backend
+                // Convert transform into css format on the backend
                 let assetAspectRatio = asset.size.width / asset.size.height
                 
                 //1. translation

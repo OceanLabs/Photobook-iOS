@@ -17,6 +17,7 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
     
     static let reuseIdentifier = NSStringFromClass(PhotobookCoverCollectionViewCell.self).components(separatedBy: ".").last!
     
+    @IBOutlet private weak var spineButton: UIButton!
     @IBOutlet private weak var spineFrameView: SpineFrameView!
     @IBOutlet private weak var coverFrameView: CoverFrameView! {
         didSet { coverFrameView.interaction = .wholePage }
@@ -51,7 +52,7 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        coverFrameView.aspectRatio = product.template.aspectRatio
+        coverFrameView.aspectRatio = product.template.coverAspectRatio
     }
     
     func loadCoverAndSpine() {
@@ -59,7 +60,7 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
         
         coverFrameView.pageView.pageIndex = 0
         coverFrameView.pageView.productLayout = product.productLayouts.first
-        coverFrameView.pageView.bleed = product.bleed(forPageSize: coverFrameView.pageView.bounds.size)
+        coverFrameView.pageView.bleed = product.bleed(forPageSize: coverFrameView.pageView.bounds.size, type: .cover)
         coverFrameView.pageView.setupImageBox()
         coverFrameView.pageView.setupTextBox(mode: .userTextOnly)
         
@@ -69,6 +70,8 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
                 spineFrameView.fontType = product.spineFontType
                 spineFrameView.setNeedsLayout()
                 spineFrameView.layoutIfNeeded()
+                spineButton.accessibilityValue = product.spineText
+            
         }
         
         if coverFrameView.color != product.coverColor {
@@ -76,6 +79,16 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
             spineFrameView.color = product.coverColor
             coverFrameView.resetCoverColor()
             spineFrameView.resetSpineColor()
+        }
+    }
+    
+    func updateVoiceOver(isRearranging: Bool) {
+        if isRearranging {
+            coverFrameView.isAccessibilityElement = false
+        } else {
+            coverFrameView.isAccessibilityElement = true
+            coverFrameView.accessibilityLabel = NSLocalizedString("Accessibility/PhotobookPreview/CoverLabel", value: "Cover", comment: "Accessibility label for the book cover")
+            coverFrameView.accessibilityHint = CommonLocalizedStrings.accessibilityDoubleTapToEdit
         }
     }
     

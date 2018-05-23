@@ -68,7 +68,7 @@ class FullScreenImageViewController: UIViewController {
     @IBAction func tapGestureRecognized(_ sender: Any) {
         guard let selectedAssetsManager = selectedAssetsManager else { return }
         guard selectedAssetsManager.toggleSelected(asset) else {
-            let alertController = UIAlertController(title: NSLocalizedString("ImagePicker/TooManyPicturesAlertTitle", value: "Too many pictures", comment: "Alert title informing the user that they have reached the maximum number of images"), message: NSLocalizedString("ImagePicker/TooManyPicturesAlertMessage", value: "Your photobook cannot contain more than \(ProductManager.shared.maximumAllowedAssets)", comment: "Alert message informing the user that they have reached the maximum number of images"), preferredStyle: .alert)
+            let alertController = UIAlertController(title: NSLocalizedString("ImagePicker/TooManyPicturesAlertTitle", value: "Too many pictures", comment: "Alert title informing the user that they have reached the maximum number of images"), message: NSLocalizedString("ImagePicker/TooManyPicturesAlertMessage", value: "Your photo book cannot contain more than \(ProductManager.shared.maximumAllowedPages)", comment: "Alert message informing the user that they have reached the maximum number of images"), preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
             present(alertController, animated: true, completion: nil)
             return

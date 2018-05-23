@@ -149,7 +149,7 @@ class StoriesManager: NSObject {
             }
             
             // Minimum asset count
-            guard totalAssetCount >= (welf?.productManager.minimumRequiredAssets ?? Int.max) else { return }
+            guard totalAssetCount >= (welf?.productManager.minimumRequiredPages ?? Int.max) else { return }
             
             let story = Story(list: list, coverCollection: moments.firstObject!)
             story.components = locationComponents
@@ -256,7 +256,7 @@ class StoriesManager: NSObject {
         var selectedAssets = [Asset]()
         var unusedAssets = [Asset]()
         
-        let minimumAssets = productManager.minimumRequiredAssets
+        let minimumAssets = productManager.minimumRequiredPages
         let subarrayLength = minimumAssets // For readability
         let subarrayCount: Int = story.photoCount / subarrayLength
         let assetsFromEachSubarray: Int = minimumAssets / subarrayCount

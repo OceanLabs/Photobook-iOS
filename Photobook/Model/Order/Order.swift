@@ -47,7 +47,7 @@ class Order: Codable {
         if let promoCode = promoCode { stringHash += "pc:\(promoCode)," }
         
         for product in products {
-            if let productName = product.template.name { stringHash += "jb:\(productName)," }
+            stringHash += "jb:\(product.template.name),"
         }
         
         stringHash += "up:("
@@ -74,7 +74,7 @@ class Order: Codable {
         let promoDiscount = validPromoCode == promoCode ? "-£5.00" : nil
         var promoCodeInvalidReason:String?
         if promoCode != nil && promoDiscount == nil {
-            promoCodeInvalidReason = "Invalid code 🤷"
+            promoCodeInvalidReason = NSLocalizedString("Checkout/PromoCodeIsInvalid", value: "Invalid code 🤷", comment: "Label that informs the user that the promo code they have entered is not valid")
         }
         
         self.cachedCost = Cost(hash: hashValue, lineItems: [lineItem], shippingMethods: [shippingMethod, shippingMethod2], promoDiscount: promoDiscount, promoCodeInvalidReason: promoCodeInvalidReason)
@@ -103,7 +103,7 @@ class Order: Codable {
         
         for product in products {
             jobs.append([
-                "template_id" : product.template.productTemplateId ?? "",
+                "template_id" : product.template.templateId,
                 "multiples" : product.itemCount,
                 "assets": [["inside_pdf" : product.photobookId ?? ""]]
                 ])

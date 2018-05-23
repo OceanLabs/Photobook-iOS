@@ -16,10 +16,18 @@ enum PhotobookAPIError: Error {
 
 class PhotobookAPIManager {
     
+    var apiKey: String? {
+        didSet {
+            guard let apiKey = apiKey else { return }
+            headers = ["Authorization": "ApiKey \(apiKey)"]
+        }
+    }
+    
     static let imageUploadIdentifierPrefix = "PhotobookAPIManager-AssetUploader-"
+    private var headers: [String: String]?
     
     struct EndPoints {
-        static let products = "/ios/initial-data/"
+        static let products = "/ios/get_initial_data"
         static let summary = "/ios/summary"
         static let applyUpsell = "/ios/upsell.apply"
         static let createPdf = "/ios/generate_photobook_pdf"
@@ -28,13 +36,10 @@ class PhotobookAPIManager {
 
     private var apiClient = APIClient.shared
     
-    private var mockJsonFileName: String?
-    
     #if DEBUG
-    convenience init(apiClient: APIClient, mockJsonFileName: String?) {
+    convenience init(apiClient: APIClient) {
         self.init()
         self.apiClient = apiClient
-        self.mockJsonFileName = mockJsonFileName
     }
     #endif
     
@@ -42,28 +47,18 @@ class PhotobookAPIManager {
     ///
     /// - Parameter completionHandler: Closure to be called when the request completes
     func requestPhotobookInfo(_ completionHandler:@escaping ([PhotobookTemplate]?, [Layout]?, [UpsellOption]?, Error?) -> ()) {
-        
-        apiClient.get(context: .photobook, endpoint: EndPoints.products) { (jsonData, error) in
+
+        apiClient.get(context: .photobook, endpoint: EndPoints.products, parameters: nil, headers: headers) { (jsonData, error) in
             
-            // TEMP: Fake api response. Don't run for tests.
-            var jsonData = jsonData
-            if NSClassFromString("XCTest") == nil {
-                jsonData = JSON.parse(file: "photobooks")
-            } else {
-                if let mockJsonFileName = self.mockJsonFileName {
-                    jsonData = JSON.parse(file: mockJsonFileName)
-                }
-                if jsonData == nil, error != nil {
-                    completionHandler(nil, nil, nil, error!)
-                    return
-                }
+            if jsonData == nil, error != nil {
+                completionHandler(nil, nil, nil, error!)
+                return
             }
             
             guard
                 let photobooksData = jsonData as? [String: AnyObject],
                 let productsData = photobooksData["products"] as? [[String: AnyObject]],
-                let layoutsData = photobooksData["layouts"] as? [[String: AnyObject]],
-                let upsellData = photobooksData["upsellOptions"] as? [[String: AnyObject]]
+                let layoutsData = photobooksData["layouts"] as? [[String: AnyObject]]
             else {
                 completionHandler(nil, nil, nil, APIClientError.parsing)
                 return
@@ -97,17 +92,10 @@ class PhotobookAPIManager {
                 completionHandler(nil, nil, nil, APIClientError.parsing)
                 return
             }
+            // Sort products by cover width
+            tempPhotobooks.sort(by: { return $0.coverSize.width < $1.coverSize.width })
             
-            // Parse photobook upsell options
-            var tempUpsellOptions = [UpsellOption]()
-            
-            for upsellOptionDictionary in upsellData {
-                if let upsellOption = UpsellOption(upsellOptionDictionary) {
-                    tempUpsellOptions.append(upsellOption)
-                }
-            }
-
-            completionHandler(tempPhotobooks, tempLayouts, tempUpsellOptions, nil)
+            completionHandler(tempPhotobooks, tempLayouts, nil, nil)
         }
     }
     

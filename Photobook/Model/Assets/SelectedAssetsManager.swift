@@ -115,7 +115,7 @@ class SelectedAssetsManager: NSObject {
         if isSelected(asset) {
             deselect(asset)
             return true
-        } else if count < ProductManager.shared.maximumAllowedAssets {
+        } else if count < ProductManager.shared.maximumAllowedPages {
             select(asset)
             return true
         } else {
@@ -132,9 +132,8 @@ class SelectedAssetsManager: NSObject {
     }
     
     func willSelectingAllExceedTotalAllowed(_ album:Album) -> Bool {
-        return selectedAssets.count - selectedAssets(for: album).count + album.assets.count > ProductManager.shared.maximumAllowedAssets
+        return selectedAssets.count - selectedAssets(for: album).count + album.assets.count > ProductManager.shared.maximumAllowedPages
     }
-    
     
     func selectAllAssets(for album: Album) {
         select(album.assets)
