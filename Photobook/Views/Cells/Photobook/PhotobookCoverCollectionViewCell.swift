@@ -17,6 +17,7 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
     
     static let reuseIdentifier = NSStringFromClass(PhotobookCoverCollectionViewCell.self).components(separatedBy: ".").last!
     
+    @IBOutlet private weak var spineButton: UIButton!
     @IBOutlet private weak var spineFrameView: SpineFrameView!
     @IBOutlet private weak var coverFrameView: CoverFrameView! {
         didSet { coverFrameView.interaction = .wholePage }
@@ -69,6 +70,8 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
                 spineFrameView.fontType = product.spineFontType
                 spineFrameView.setNeedsLayout()
                 spineFrameView.layoutIfNeeded()
+                spineButton.accessibilityValue = product.spineText
+            
         }
         
         if coverFrameView.color != product.coverColor {
@@ -76,6 +79,16 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
             spineFrameView.color = product.coverColor
             coverFrameView.resetCoverColor()
             spineFrameView.resetSpineColor()
+        }
+    }
+    
+    func updateVoiceOver(isRearranging: Bool) {
+        if isRearranging {
+            coverFrameView.isAccessibilityElement = false
+        } else {
+            coverFrameView.isAccessibilityElement = true
+            coverFrameView.accessibilityLabel = NSLocalizedString("Accessibility/PhotobookPreview/CoverLabel", value: "Cover", comment: "Accessibility label for the book cover")
+            coverFrameView.accessibilityHint = CommonLocalizedStrings.accessibilityDoubleTapToEdit
         }
     }
     
