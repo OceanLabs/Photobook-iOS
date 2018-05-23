@@ -5283,6 +5283,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <bool key="isElement" value="YES"/>
+                                        </accessibility>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="46" id="BZF-Ch-DoA"/>
                                             <constraint firstItem="aa4-Lu-6kd" firstAttribute="centerX" secondItem="05M-fh-sfo" secondAttribute="centerX" id="KgZ-55-7eo"/>
@@ -5305,6 +5308,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <bool key="isElement" value="YES"/>
+                                        </accessibility>
                                         <constraints>
                                             <constraint firstItem="Eu9-Lf-Rdk" firstAttribute="width" secondItem="9Ur-zt-sYJ" secondAttribute="width" id="6kJ-QG-TK5"/>
                                             <constraint firstItem="Eu9-Lf-Rdk" firstAttribute="centerY" secondItem="9Ur-zt-sYJ" secondAttribute="centerY" id="HKP-Ej-3qv"/>
