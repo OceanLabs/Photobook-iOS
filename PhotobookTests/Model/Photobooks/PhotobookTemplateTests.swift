@@ -12,14 +12,14 @@ import XCTest
 class PhotobookTests: XCTestCase {
     
     var validDictionary = ([
-        "kiteId": "HDBOOK-127x127",
         "displayName": "Square 127x127",
-        "templateId": "hdbook_127x127",
         "spineTextRatio": 0.87,
         "coverLayouts": [ 9, 10 ],
         "layouts": [ 10, 11, 12, 13 ],
         "variants": [
             [
+                "kiteId": "HDBOOK-127x127",
+                "templateId": "hdbook_127x127",
                 "minPages": 20,
                 "maxPages": 100,
                 "coverSize": ["mm": ["height": 127, "width": 129]],
@@ -35,7 +35,18 @@ class PhotobookTests: XCTestCase {
     
     func testParse_shouldReturnNilIfIdIsMissing() {
         var photobookDictionary = validDictionary
-        photobookDictionary["kiteId"] = nil
+        
+        let invalidVariants = [
+            [
+                "templateId": "hdbook_127x127",
+                "minPages": 20,
+                "maxPages": 100,
+                "coverSize": ["mm": ["height": 127, "width": 129]],
+                "size": ["mm": ["height": 121, "width": 216]]
+            ]]
+        
+        photobookDictionary["variants"] = invalidVariants as AnyObject
+
         let photobookBox = PhotobookTemplate.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if id is missing")
     }

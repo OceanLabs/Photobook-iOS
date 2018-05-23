@@ -15,55 +15,18 @@ class OrderManagerTests: XCTestCase {
     var productManager: ProductManager!
     let photosAsset = TestPhotosAsset()
     
+    let apiClient = APIClientMock()
+    lazy var photobookAPIManager = PhotobookAPIManager(apiClient: apiClient)
+
     override func setUp() {
         super.setUp()
         
-        let photobookAPIManager = PhotobookAPIManager(apiClient: APIClient.shared, mockJsonFileName: "photobooks")
+        apiClient.response = JSON.parse(file: "photobooks")
         productManager = ProductManager(apiManager: photobookAPIManager)
+        productManager.initialise(completion: nil)
         
-        let expectation = self.expectation(description: "Wait for product initialization")
-        productManager.initialise(completion: { _ in
-            expectation.fulfill()
-        })
+        _ = productManager.setCurrentProduct(with: productManager.products!.first!, assets: [])
         
-        wait(for: [expectation], timeout: 30)
-        
-        let validDictionary = ([
-            "kiteId": "HDBOOK-127x127",
-            "displayName": "Square 127x127",
-            "templateId": "hdbook_127x127",
-            "spineTextRatio": 0.87,
-            "coverLayouts": [ 9, 10 ],
-            "layouts": [ 10, 11, 12, 13 ],
-            "variants": [
-                [
-                    "minPages": 20,
-                    "maxPages": 100,
-                    "coverSize": [
-                        "mm": [
-                            "height": 127,
-                            "width": 129
-                        ]
-                    ],
-                    "size": [
-                        "mm": [
-                            "height": 121,
-                            "width": 216
-                        ]
-                    ]
-                ]
-            ]
-        ]) as [String: AnyObject]
-        
-        guard let photobookTemplate = PhotobookTemplate.parse(validDictionary) else {
-            XCTFail("Failed to parse photobook dictionary")
-            return
-        }
-        
-        guard let product = productManager.setCurrentProduct(with: photobookTemplate, assets: []) else {
-            XCTFail("Failed to initialise the Photobook product")
-            return
-        }
         productManager.currentProduct?.productLayouts = [ProductLayout]()
         
         let layoutBox = LayoutBox(id: 1, rect: CGRect(x: 0.01, y: 0.01, width: 0.5, height: 0.1))
@@ -80,7 +43,7 @@ class OrderManagerTests: XCTestCase {
 
         productManager.currentProduct?.productLayouts.append(productLayout)
         
-        OrderManager.shared.basketOrder.products = [product]
+        OrderManager.shared.basketOrder.products = [productManager.currentProduct!]
     }
 
     func testSaveBasketOrder() {

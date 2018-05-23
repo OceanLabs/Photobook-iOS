@@ -23,7 +23,7 @@ class APIClientMock: APIClient {
 class PhotobookAPIManagerTests: XCTestCase {
     
     let apiClient = APIClientMock()
-    lazy var photobookAPIManager = PhotobookAPIManager(apiClient: apiClient, mockJsonFileName: nil)
+    lazy var photobookAPIManager = PhotobookAPIManager(apiClient: apiClient)
     
     override func tearDown() {
         apiClient.response = nil
@@ -86,7 +86,6 @@ class PhotobookAPIManagerTests: XCTestCase {
             XCTAssertNil(error, "PhotobookInfo: Error should be nil with a valid response")
             XCTAssertEqual((photobooks ?? []).count, 4, "PhotobookInfo: Photobooks should include layouts products")
             XCTAssertEqual((layouts ?? []).count, 54, "PhotobookInfo: Layouts should include 54 layouts")
-            XCTAssertEqual((upsellOptions ?? []).count, 2, "PhotobookInfo: Layouts should include 2 upsell options")
         }
     }
 }

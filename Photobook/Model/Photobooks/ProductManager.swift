@@ -46,7 +46,7 @@ class ProductManager {
     /// Requests the photobook details so the user can start building their photobook
     ///
     /// - Parameter completion: Completion block with an optional error
-    func initialise(completion:((Error?)->())?) {
+    func initialise(completion: ((Error?) -> ())?) {
         apiManager.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, upsellOptions, error) in
             guard error == nil else {
                 completion?(error!)

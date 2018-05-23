@@ -44,12 +44,15 @@ class PhotobookTemplate: Codable {
     static func parse(_ dictionary: [String: AnyObject]) -> PhotobookTemplate? {
         
         guard
-            let id = dictionary["kiteId"] as? String,
             let name = dictionary["displayName"] as? String,
-            let templateId = dictionary["templateId"] as? String,
-            let variants = dictionary["variants"] as? [[String: Any]],
-            let variantDictionary = variants.first,
-            
+            let spineTextRatio = dictionary["spineTextRatio"] as? CGFloat, spineTextRatio > 0.0,
+            let coverLayouts = dictionary["coverLayouts"] as? [Int], !coverLayouts.isEmpty,
+            let layouts = dictionary["layouts"] as? [Int], !layouts.isEmpty,
+
+            let variantDictionary = (dictionary["variants"] as? [[String: AnyObject]])?.first,
+        
+            let id = variantDictionary["kiteId"] as? String,
+            let templateId = variantDictionary["templateId"] as? String,
             let coverSizeDictionary = variantDictionary["coverSize"] as? [String: Any],
             let coverSizeMm = coverSizeDictionary["mm"] as? [String: Any],
             let coverWidth = coverSizeMm["width"] as? Double,
@@ -58,11 +61,7 @@ class PhotobookTemplate: Codable {
             let pageSizeDictionary = variantDictionary["size"] as? [String: Any],
             let pageSizeMm = pageSizeDictionary["mm"] as? [String: Any],
             let pageWidth = pageSizeMm["width"] as? Double,
-            let pageHeight = pageSizeMm["height"] as? Double,
-
-            let spineTextRatio = dictionary["spineTextRatio"] as? CGFloat, spineTextRatio > 0.0,
-            let coverLayouts = dictionary["coverLayouts"] as? [Int], !coverLayouts.isEmpty,
-            let layouts = dictionary["layouts"] as? [Int], !layouts.isEmpty
+            let pageHeight = pageSizeMm["height"] as? Double
         else { return nil }
         
         let coverSize = CGSize(width: coverWidth * PhotobookTemplate.mmToPtMultiplier, height: coverHeight * PhotobookTemplate.mmToPtMultiplier)
