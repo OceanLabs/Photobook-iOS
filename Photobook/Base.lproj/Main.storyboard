@@ -3955,6 +3955,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CeI-dF-0wW">
                                         <rect key="frame" x="165.5" y="529" width="44" height="44"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <accessibility key="accessibilityConfiguration" label="Rotate 90 degrees counter-clock-wise"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="44" id="1Yf-6o-sSE"/>
                                             <constraint firstAttribute="height" constant="44" id="6ej-kU-dqy"/>
