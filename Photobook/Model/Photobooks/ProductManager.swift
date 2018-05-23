@@ -37,6 +37,10 @@ class ProductManager {
         return currentProduct?.template.maxPages ?? 70
     }
     
+    var apiKey: String? {
+        didSet { apiManager.apiKey = apiKey }
+    }
+    
     private(set) var currentProduct: PhotobookProduct?
     
     func reset() {

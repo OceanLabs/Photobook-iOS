@@ -16,8 +16,15 @@ enum PhotobookAPIError: Error {
 
 class PhotobookAPIManager {
     
+    var apiKey: String? {
+        didSet {
+            guard let apiKey = apiKey else { return }
+            headers = ["Authorization": "ApiKey \(apiKey)"]
+        }
+    }
+    
     static let imageUploadIdentifierPrefix = "PhotobookAPIManager-AssetUploader-"
-    private static var headers = ["Authorization": "ApiKey 57c832e42dfdda93d072c6a42c41fbcddf100805"]
+    private var headers: [String: String]?
     
     struct EndPoints {
         static let products = "/ios/get_initial_data"
@@ -41,7 +48,7 @@ class PhotobookAPIManager {
     /// - Parameter completionHandler: Closure to be called when the request completes
     func requestPhotobookInfo(_ completionHandler:@escaping ([PhotobookTemplate]?, [Layout]?, [UpsellOption]?, Error?) -> ()) {
 
-        apiClient.get(context: .photobook, endpoint: EndPoints.products, parameters: nil, headers: PhotobookAPIManager.headers) { (jsonData, error) in
+        apiClient.get(context: .photobook, endpoint: EndPoints.products, parameters: nil, headers: headers) { (jsonData, error) in
             
             if jsonData == nil, error != nil {
                 completionHandler(nil, nil, nil, error!)
