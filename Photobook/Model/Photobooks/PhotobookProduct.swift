@@ -404,7 +404,7 @@ class PhotobookProduct: Codable {
                 productLayoutAsset.adjustTransform()
                 
                 layoutBox["contentType"] = "image"
-                layoutBox["isDoubleLayout"] = productLayout.layout.isDoubleLayout
+                layoutBox["isDoubleLayout"] = isDoubleLayout
                 layoutBox["dimensionsPercentages"] = ["height": imageLayoutBox.rect.height, "width": imageLayoutBox.rect.width]
                 layoutBox["relativeStartPoint"] = ["x": imageLayoutBox.rect.origin.x, "y": imageLayoutBox.rect.origin.y]
                 
@@ -468,7 +468,6 @@ class PhotobookProduct: Codable {
                 var containedItem = [String: Any]()
                 var font = [String: Any]()
                 font["fontFamily"] = productLayoutText.fontType.apiFontFamily
-                font["fontSizePx"] = productLayoutText.fontType.apiPhotobookFontSizePx()
                 font["fontSize"] = productLayoutText.fontType.apiPhotobookFontSize()
                 font["fontWeight"] = productLayoutText.fontType.apiPhotobookFontWeight()
                 font["lineHeight"] = productLayoutText.fontType.apiPhotobookLineHeight()
@@ -487,27 +486,23 @@ class PhotobookProduct: Codable {
         
         photobook["pages"] = pages
         
-        //product
+        // Product
+        photobook["productVariantId"] = template.id
         
-        var productVariant = [String:Any]()
-        
-        productVariant["productVariantId"] = template.id
-        
-        //config
-        var photobookConfig = [String:Any]()
+        // Config
+        var photobookConfig = [String: Any]()
         
         photobookConfig["coverColor"] = coverColor.uiColor().hex
         photobookConfig["pageColor"] = pageColor.uiColor().hex
         
-        var spineText = [String:Any]()
+        var spineText = [String: Any]()
         
         spineText["text"] = self.spineText
         spineText["color"] = coverColor.fontColor().hex
         
-        var font = [String:Any]()
+        var font = [String: Any]()
         
         font["fontFamily"] = spineFontType.apiFontFamily
-        font["fontSizePx"] = spineFontType.apiPhotobookFontSizePx()
         font["fontSize"] = spineFontType.apiPhotobookFontSize()
         font["fontWeight"] = spineFontType.apiPhotobookFontWeight()
         font["lineHeight"] = spineFontType.apiPhotobookLineHeight()
@@ -517,7 +512,6 @@ class PhotobookProduct: Codable {
         photobookConfig["spineText"] = spineText
         
         photobook["photobookConfig"] = photobookConfig
-        
         
         return photobook
     }

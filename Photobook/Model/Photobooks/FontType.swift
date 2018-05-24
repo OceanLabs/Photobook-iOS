@@ -117,8 +117,4 @@ extension FontType {
     func apiPhotobookFontSize() -> String {
         return "\(photobookFontSize())pt"
     }
-    
-    func apiPhotobookFontSizePx() -> CGFloat {
-        return photobookFontSize() * 3.779527559
-    }
 }
