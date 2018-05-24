@@ -200,9 +200,7 @@ class CheckoutViewController: UIViewController {
     }
 
     func itemImageSizePx() -> CGSize {
-        let scaleFactor = UIScreen.main.scale
-        let size = CGSize(width: itemImageView.frame.size.width * scaleFactor, height: itemImageView.frame.size.height * scaleFactor)
-        return size
+        return itemImageView.frame.size * UIScreen.main.scale
     }
     
     func updateItemImage(_ image: UIImage) {

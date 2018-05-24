@@ -125,8 +125,8 @@ class PhotobookAPIManager {
                 let upsellOptionsDict = jsonData["upsells"] as? [[String: Any]],
                 let payload = jsonData["productPayload"] as? [String: Any]
                 else {
-                completionHandler(nil, nil, nil, APIClientError.parsing)
-                return
+                    completionHandler(nil, nil, nil, APIClientError.parsing)
+                    return
             }
             
             var upsellOptions = [UpsellOption]()

@@ -63,13 +63,7 @@ class OrderSummaryViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        if let checkoutViewController = checkoutViewController {
-            orderSummaryManager.fetchPreviewImage(withSize: checkoutViewController.itemImageSizePx()) { (image) in
-                if let image = image {
-                    checkoutViewController.updateItemImage(image)
-                }
-            }
-        }
+        updateCheckoutViewControllerPreviewImage()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -79,6 +73,16 @@ class OrderSummaryViewController: UIViewController {
             OrderManager.shared.basketOrder.products = [self.product] //We currently only support one item at a time
             
             checkoutViewController = segue.destination as? CheckoutViewController
+        }
+    }
+    
+    private func updateCheckoutViewControllerPreviewImage() {
+        if let checkoutViewController = checkoutViewController {
+            orderSummaryManager.fetchPreviewImage(withSize: checkoutViewController.itemImageSizePx()) { (image) in
+                if let image = image {
+                    checkoutViewController.updateItemImage(image)
+                }
+            }
         }
     }
     
@@ -268,13 +272,7 @@ extension OrderSummaryViewController: OrderSummaryManagerDelegate {
         }
         
         //also update checkout vc if available
-        if let checkoutViewController = checkoutViewController {
-            orderSummaryManager.fetchPreviewImage(withSize: checkoutViewController.itemImageSizePx()) { (image) in
-                if let image = image {
-                    checkoutViewController.updateItemImage(image)
-                }
-            }
-        }
+        updateCheckoutViewControllerPreviewImage()
     }
     
     func orderSummaryManager(_ manager: OrderSummaryManager, didUpdateSummary summary: OrderSummary) {
