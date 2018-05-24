@@ -25,57 +25,45 @@ class OrderSummaryTests: XCTestCase {
         super.tearDown()
     }
     
-    func testValidSummary() {
+    func testParse_shouldSucceedWithValidSummary() {
         let orderSummary = OrderSummary.parse(validDictionary)
         XCTAssertNotNil(orderSummary)
     }
     
-    func testInvalidLineItems() {
-        
-        //invalid line item
-        var invalidDictionary:[String:Any] = ["lineItems":[["name":"book", "price":["currencyCode":"GBP"]],
+    func testParse_shouldFailWithMissingLineItems() {
+        let invalidDictionary:[String:Any] = ["total":["currencyCode":"GBP", "amount":35.0],
+                             "previewImageUrl":"https://image.kite.ly/render/?product_id=twill_tote_bag&variant=back2_melange_black&format=jpeg"]
+        let orderSummary = OrderSummary.parse(invalidDictionary)
+        XCTAssertNil(orderSummary)
+    }
+    
+    func testParse_shouldFailWithInvalidLineItems() {
+        let invalidDictionary:[String:Any] = ["lineItems":[["name":"book", "price":["currencyCode":"GBP"]],
                                                            ["name":"Glossy finish", "price":["currencyCode":"GBP", "amount":5.0]]],
                                               "total":["currencyCode":"GBP", "amount":35.0],
                                               "previewImageUrl":"https://image.kite.ly/render/?product_id=twill_tote_bag&variant=back2_melange_black&format=jpeg"]
-        var orderSummary = OrderSummary.parse(invalidDictionary)
-        XCTAssertNil(orderSummary)
-        
-        //missing lineItems
-        invalidDictionary = ["total":["currencyCode":"GBP", "amount":35.0],
-                             "previewImageUrl":"https://image.kite.ly/render/?product_id=twill_tote_bag&variant=back2_melange_black&format=jpeg"]
-        orderSummary = OrderSummary.parse(invalidDictionary)
+        let orderSummary = OrderSummary.parse(invalidDictionary)
         XCTAssertNil(orderSummary)
     }
     
-    func testInvalidTotal() {
-        
-        //invalid total dictionary
-        var invalidDictionary:[String:Any] = ["lineItems":[["name":"book", "price":["currencyCode":"GBP", "amount":30.0]],
+    func testParse_shouldFailWithMissingTotal() {
+        let  invalidDictionary:[String:Any] = ["lineItems":[["name":"book", "price":["currencyCode":"GBP", "amount":30.0]],
+                                          ["name":"Glossy finish", "price":["currencyCode":"GBP", "amount":5.0]]],
+                             "previewImageUrl":"https://image.kite.ly/render/?product_id=twill_tote_bag&variant=back2_melange_black&format=jpeg"]
+        let orderSummary = OrderSummary.parse(invalidDictionary)
+        XCTAssertNil(orderSummary)
+    }
+    
+    func testParse_shouldFailWithInvalidTotal() {
+        let invalidDictionary:[String:Any] = ["lineItems":[["name":"book", "price":["currencyCode":"GBP", "amount":30.0]],
                                                               ["name":"Glossy finish", "price":["currencyCode":"GBP", "amount":5.0]]],
                                                  "total":["amount":35.0],
                                                  "previewImageUrl":"https://image.kite.ly/render/?product_id=twill_tote_bag&variant=back2_melange_black&format=jpeg"]
-        var orderSummary = OrderSummary.parse(invalidDictionary)
-        XCTAssertNil(orderSummary)
-        
-        //missing total
-        invalidDictionary = ["lineItems":[["name":"book", "price":["currencyCode":"GBP", "amount":30.0]],
-                                                              ["name":"Glossy finish", "price":["currencyCode":"GBP", "amount":5.0]]],
-                                                 "previewImageUrl":"https://image.kite.ly/render/?product_id=twill_tote_bag&variant=back2_melange_black&format=jpeg"]
-        orderSummary = OrderSummary.parse(invalidDictionary)
+        let orderSummary = OrderSummary.parse(invalidDictionary)
         XCTAssertNil(orderSummary)
     }
     
-    func testValidPreviewImageUrl() {
-
-        guard let validSummary = OrderSummary.parse(validDictionary) else {
-            XCTFail()
-            return
-        }
-        
-        XCTAssertNotNil(validSummary.previewImageUrl(withCoverImageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxaHHyizN8O0OXTTQcZXbesl-6J-X0QWhZ1wcYiflygU4KiM2T8Q", size: CGSize(width: 300, height: 150)))
-        XCTAssertNil(validSummary.previewImageUrl(withCoverImageUrl: "https://encrypted-tbn 0.gstatic.com/images?q=tbn:ANd9GcSxaHHyizN8O0OXTTQcZXbesl-6J-X0QWhZ1wcYiflygU4KiM2T8Q", size: CGSize(width: 300, height: 150)))
-        
-        
+    func testParse_shouldFailWithInvalidPreviewImageUrl() {
         let invalidUrlDictionary:[String:Any] = ["lineItems":[["name":"book", "price":["currencyCode":"GBP", "amount":30.0]],
                                                               ["name":"Glossy finish", "price":["currencyCode":"GBP", "amount":5.0]]],
                                                  "total":["currencyCode":"GBP", "amount":35.0],
@@ -87,6 +75,24 @@ class OrderSummaryTests: XCTestCase {
         }
         
         XCTAssertNil(invalidUrlSummary.previewImageUrl(withCoverImageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxaHHyizN8O0OXTTQcZXbesl-6J-X0QWhZ1wcYiflygU4KiM2T8Q", size: CGSize(width: 300, height: 150)))
+    }
+    
+    func testPreviewImageUrl_shouldSucceedWithValidCoverUrl() {
+        guard let validSummary = OrderSummary.parse(validDictionary) else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssertNotNil(validSummary.previewImageUrl(withCoverImageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxaHHyizN8O0OXTTQcZXbesl-6J-X0QWhZ1wcYiflygU4KiM2T8Q", size: CGSize(width: 300, height: 150)))
+    }
+    
+    func testPreviewImageUrl_shouldFailWithInvalidCoverUrl() {
+        guard let validSummary = OrderSummary.parse(validDictionary) else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssertNil(validSummary.previewImageUrl(withCoverImageUrl: "https://encrypted-tbn 0.gstatic.com/images?q=tbn:ANd9GcSxaHHyizN8O0OXTTQcZXbesl-6J-X0QWhZ1wcYiflygU4KiM2T8Q", size: CGSize(width: 300, height: 150)))
     }
     
 }
