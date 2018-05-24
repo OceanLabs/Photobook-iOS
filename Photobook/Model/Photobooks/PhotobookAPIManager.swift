@@ -161,8 +161,7 @@ class PhotobookAPIManager {
                 let productDict = jsonData["newProduct"] as? [String: Any],
                 let variantDicts = productDict["variants"] as? [[String: Any]],
                 let templateId = variantDicts.first?["templateId"] as? String,
-                let payload = jsonData["productPayload"] as? [String: Any],
-                let layouts = ProductManager.shared.currentProduct?.productLayouts
+                let payload = jsonData["productPayload"] as? [String: Any]
                 else {
                     completionHandler(nil, nil, nil, APIClientError.parsing)
                     return
