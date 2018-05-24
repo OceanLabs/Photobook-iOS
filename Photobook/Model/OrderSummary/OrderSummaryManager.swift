@@ -41,7 +41,7 @@ class OrderSummaryManager {
     }
     private(set) var selectedUpsellOptions = Set<UpsellOption>()
     
-    var delegate: OrderSummaryManagerDelegate?
+    weak var delegate: OrderSummaryManagerDelegate?
     
     func refresh() {
         if upsellOptions?.isEmpty ?? true {
