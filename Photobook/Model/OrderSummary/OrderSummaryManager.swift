@@ -12,8 +12,7 @@ import SDWebImage
 protocol OrderSummaryManagerDelegate: class {
     func orderSummaryManagerWillUpdate(_ manager: OrderSummaryManager)
     func orderSummaryManagerPreviewImageFinished(_ manager: OrderSummaryManager, success: Bool)
-    func orderSummaryManager(_ manager: OrderSummaryManager, didUpdateSummary summary: OrderSummary)
-    func orderSummaryManager(_ manager: OrderSummaryManager, updateSummaryFailedWithError error: Error?)
+    func orderSummaryManager(_ manager: OrderSummaryManager, didUpdateSummary summary: OrderSummary?, error: Error?)
     func orderSummaryManager(_ manager: OrderSummaryManager, failedToApplyUpsell upsell: UpsellOption, error:Error?)
 }
 
@@ -115,7 +114,7 @@ extension OrderSummaryManager {
             
             if let strongSelf = self {
                 guard let summary = summary else {
-                    strongSelf.delegate?.orderSummaryManager(strongSelf, updateSummaryFailedWithError: error)
+                    strongSelf.delegate?.orderSummaryManager(strongSelf, didUpdateSummary: nil, error: error)
                     return
                 }
                 
@@ -128,7 +127,7 @@ extension OrderSummaryManager {
     
     private func handleReceivingSummary(_ summary: OrderSummary) {
         self.summary = summary
-        delegate?.orderSummaryManager(self, didUpdateSummary: summary)
+        delegate?.orderSummaryManager(self, didUpdateSummary: summary, error: nil)
         if coverImageUrl != nil {
             delegate?.orderSummaryManagerPreviewImageFinished(self, success: true)
         }

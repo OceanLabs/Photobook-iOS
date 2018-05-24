@@ -275,10 +275,10 @@ extension OrderSummaryViewController: OrderSummaryManagerDelegate {
         updateCheckoutViewControllerPreviewImage()
     }
     
-    func orderSummaryManager(_ manager: OrderSummaryManager, didUpdateSummary summary: OrderSummary) {
-        progressOverlayViewController.hide(animated: true)
+    func orderSummaryManager(_ manager: OrderSummaryManager, didUpdateSummary summary: OrderSummary?, error: Error?) {
         
         if orderSummaryManager.summary != nil {
+            progressOverlayViewController.hide(animated: true)
             emptyScreenViewController.hide(animated: true)
             
             let numberOfOptions = orderSummaryManager.upsellOptions?.count ?? 0
@@ -286,22 +286,15 @@ extension OrderSummaryViewController: OrderSummaryManagerDelegate {
             tableView.reloadSections(IndexSet(integersIn: sectionsToUpdate), with: .automatic)
         } else {
             
-            emptyScreenViewController.show(message: Constants.stringLoadingFail, title: nil, image: nil, activity: false, buttonTitle: CommonLocalizedStrings.retry, buttonAction: {
+            hideProgressIndicator()
+            
+            let errorMessage = error?.localizedDescription ?? CommonLocalizedStrings.somethingWentWrong
+            
+            emptyScreenViewController.show(message: errorMessage, title: nil, image: nil, activity: false, buttonTitle: CommonLocalizedStrings.retry, buttonAction: {
                 self.emptyScreenViewController.show(message: Constants.stringLoading, activity: true)
                 self.orderSummaryManager.refresh()
             })
         }
-    }
-    
-    func orderSummaryManager(_ manager: OrderSummaryManager, updateSummaryFailedWithError error: Error?) {
-        hideProgressIndicator()
-        
-        let errorMessage = error?.localizedDescription ?? CommonLocalizedStrings.somethingWentWrong
-        
-        emptyScreenViewController.show(message: errorMessage, title: nil, image: nil, activity: false, buttonTitle: CommonLocalizedStrings.retry, buttonAction: {
-            self.emptyScreenViewController.show(message: Constants.stringLoading, activity: true)
-            self.orderSummaryManager.refresh()
-        })
     }
     
     func orderSummaryManager(_ manager: OrderSummaryManager, failedToApplyUpsell upsell: UpsellOption, error: Error?) {
