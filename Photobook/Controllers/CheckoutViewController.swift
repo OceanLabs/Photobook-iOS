@@ -112,7 +112,6 @@ class CheckoutViewController: UIViewController {
         }
         
         registerForKeyboardNotifications()
-        NotificationCenter.default.addObserver(self, selector: #selector(orderSummaryPreviewImageReady), name: OrderSummaryManager.notificationPreviewImageReady, object: nil)
         
         //clear fields
         deliveryDetailsLabel.text = nil
@@ -199,14 +198,15 @@ class CheckoutViewController: UIViewController {
             self.updateViews()
         }
     }
-    
-    private func updateItemImage() {
+
+    func itemImageSizePx() -> CGSize {
         let scaleFactor = UIScreen.main.scale
         let size = CGSize(width: itemImageView.frame.size.width * scaleFactor, height: itemImageView.frame.size.height * scaleFactor)
-        
-        OrderSummaryManager.shared.fetchPreviewImage(withSize: size) { (image) in
-            self.itemImageView.image = image
-        }
+        return size
+    }
+    
+    func updateItemImage(_ image: UIImage) {
+        self.itemImageView.image = image
     }
     
     private func updateViews() {
@@ -216,7 +216,6 @@ class CheckoutViewController: UIViewController {
         itemPriceLabel.text = OrderManager.shared.basketOrder.cachedCost?.lineItems?.first?.formattedCost
         itemAmountButton.setTitle("\(OrderManager.shared.basketOrder.products.first!.itemCount)", for: .normal)
         itemAmountButton.accessibilityValue = itemAmountButton.title(for: .normal)
-        updateItemImage()
         
         // Promo code
         if let promoDiscount = OrderManager.shared.basketOrder.validCost?.promoDiscount {
@@ -533,12 +532,6 @@ class CheckoutViewController: UIViewController {
             progressOverlayViewController.show(message: Constants.loadingPaymentText)
             paymentManager.authorizePayment(cost: cost, method: paymentMethod)
         }
-    }
-    
-    //MARK: Order Summary Notifications
-    
-    @objc func orderSummaryPreviewImageReady() {
-        updateItemImage()
     }
     
     //MARK: Keyboard Notifications

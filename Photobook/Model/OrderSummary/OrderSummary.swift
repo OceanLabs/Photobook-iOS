@@ -57,6 +57,8 @@ class OrderSummary {
         for d in dictionaries {
             if let detail = Detail(d) {
                 details.append(detail)
+            } else {
+                return nil //all line items have to be valid
             }
         }
         

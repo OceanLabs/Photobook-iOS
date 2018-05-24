@@ -50,12 +50,6 @@ class Order: Codable {
             if let productName = product.template.name { stringHash += "jb:\(productName)," }
         }
         
-        stringHash += "up:("
-        for upsell in OrderSummaryManager.shared.selectedUpsellOptions {
-            stringHash += "\(upsell.hashValue),"
-        }
-        stringHash += ")"
-        
         return stringHash.hashValue
     }
     

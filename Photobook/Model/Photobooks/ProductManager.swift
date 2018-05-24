@@ -39,11 +39,12 @@ class ProductManager {
     
     private(set) var currentProduct: PhotobookProduct? {
         willSet {
-            OrderSummaryManager.shared.reset()
-            upsoldProduct = nil
+            upsoldTemplate = nil
+            upsoldPayload = nil
         }
     }
-    var upsoldProduct: PhotobookProduct?
+    var upsoldTemplate: PhotobookTemplate?
+    var upsoldPayload: [String: Any]?
     
     func reset() {
         currentProduct = nil
@@ -72,9 +73,9 @@ class ProductManager {
             return
         }
         
-        apiManager.applyUpsells(product: currentProduct, upsellOptions: upsells) { (summary, upsoldProduct, productPayload, error) in
-            self.upsoldProduct = upsoldProduct
-            self.upsoldProduct?.payload = productPayload
+        apiManager.applyUpsells(product: currentProduct, upsellOptions: upsells) { (summary, upsoldTemplate, productPayload, error) in
+            self.upsoldTemplate = upsoldTemplate
+            self.upsoldPayload = productPayload
             
             completionHandler(summary, error)
         }

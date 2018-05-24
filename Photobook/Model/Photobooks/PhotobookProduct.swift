@@ -47,7 +47,6 @@ class PhotobookProduct: Codable {
     var pageColor: ProductColor = .white
     var productLayouts = [ProductLayout]()
     var itemCount: Int = 1
-    var payload: [String: Any]?
     
     // The id of the uploaded PDF
     var photobookId: String?

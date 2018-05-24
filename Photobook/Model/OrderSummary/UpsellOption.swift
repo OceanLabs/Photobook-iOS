@@ -27,7 +27,7 @@ class UpsellOption: Codable, Equatable {
         self.targetTemplateId = targetTemplateId
     }
     
-    convenience init?(_ dict: [String: Any]) {
+    static func parse(_ dict: [String: Any]) -> UpsellOption? {
         guard let type = dict["type"] as? String, let displayName = dict["displayName"] as? String else {
             //invalid
             print("UpsellOption: couldn't initialise object")
@@ -36,7 +36,7 @@ class UpsellOption: Codable, Equatable {
         
         let targetTemplateId = dict["targetTemplateId"] as? String
         
-        self.init(type: type, displayName: displayName, targetTemplateId: targetTemplateId)
+        return UpsellOption(type: type, displayName: displayName, targetTemplateId: targetTemplateId)
     }
 }
 

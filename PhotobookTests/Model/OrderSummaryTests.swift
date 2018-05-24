@@ -14,7 +14,7 @@ class OrderSummaryTests: XCTestCase {
     let validDictionary:[String:Any] = ["lineItems":[["name":"book", "price":["currencyCode":"GBP", "amount":30.0]],
                                                      ["name":"Glossy finish", "price":["currencyCode":"GBP", "amount":5.0]]],
                                         "total":["currencyCode":"GBP", "amount":35.0],
-                                        "previewImageUrl":"https://image.kite.ly/render/?product_id=twill_tote_bag&variant=back2_melange_black&format=jpeg&debug=false&background=efefef"]
+                                        "previewImageUrl":"https://image.kite.ly/render/?product_id=twill_tote_bag&variant=back2_melange_black&format=jpeg"]
     
     override func setUp() {
         super.setUp()
@@ -28,6 +28,41 @@ class OrderSummaryTests: XCTestCase {
     func testValidSummary() {
         let orderSummary = OrderSummary.parse(validDictionary)
         XCTAssertNotNil(orderSummary)
+    }
+    
+    func testInvalidLineItems() {
+        
+        //invalid line item
+        var invalidDictionary:[String:Any] = ["lineItems":[["name":"book", "price":["currencyCode":"GBP"]],
+                                                           ["name":"Glossy finish", "price":["currencyCode":"GBP", "amount":5.0]]],
+                                              "total":["currencyCode":"GBP", "amount":35.0],
+                                              "previewImageUrl":"https://image.kite.ly/render/?product_id=twill_tote_bag&variant=back2_melange_black&format=jpeg"]
+        var orderSummary = OrderSummary.parse(invalidDictionary)
+        XCTAssertNil(orderSummary)
+        
+        //missing lineItems
+        invalidDictionary = ["total":["currencyCode":"GBP", "amount":35.0],
+                             "previewImageUrl":"https://image.kite.ly/render/?product_id=twill_tote_bag&variant=back2_melange_black&format=jpeg"]
+        orderSummary = OrderSummary.parse(invalidDictionary)
+        XCTAssertNil(orderSummary)
+    }
+    
+    func testInvalidTotal() {
+        
+        //invalid total dictionary
+        var invalidDictionary:[String:Any] = ["lineItems":[["name":"book", "price":["currencyCode":"GBP", "amount":30.0]],
+                                                              ["name":"Glossy finish", "price":["currencyCode":"GBP", "amount":5.0]]],
+                                                 "total":["amount":35.0],
+                                                 "previewImageUrl":"https://image.kite.ly/render/?product_id=twill_tote_bag&variant=back2_melange_black&format=jpeg"]
+        var orderSummary = OrderSummary.parse(invalidDictionary)
+        XCTAssertNil(orderSummary)
+        
+        //missing total
+        invalidDictionary = ["lineItems":[["name":"book", "price":["currencyCode":"GBP", "amount":30.0]],
+                                                              ["name":"Glossy finish", "price":["currencyCode":"GBP", "amount":5.0]]],
+                                                 "previewImageUrl":"https://image.kite.ly/render/?product_id=twill_tote_bag&variant=back2_melange_black&format=jpeg"]
+        orderSummary = OrderSummary.parse(invalidDictionary)
+        XCTAssertNil(orderSummary)
     }
     
     func testValidPreviewImageUrl() {

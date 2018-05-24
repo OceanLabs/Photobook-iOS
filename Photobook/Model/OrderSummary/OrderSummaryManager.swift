@@ -9,13 +9,23 @@
 import UIKit
 import SDWebImage
 
+protocol OrderSummaryManagerDelegate: class {
+    func orderSummaryManagerWillUpdate(_ manager: OrderSummaryManager)
+    func orderSummaryManagerPreviewImageFinished(_ manager: OrderSummaryManager, success: Bool)
+    func orderSummaryManager(_ manager: OrderSummaryManager, didUpdateSummary summary: OrderSummary)
+    func orderSummaryManager(_ manager: OrderSummaryManager, updateSummaryFailedWithError error: Error?)
+    func orderSummaryManager(_ manager: OrderSummaryManager, failedToApplyUpsell upsell: UpsellOption, error:Error?)
+}
+
+extension OrderSummaryManagerDelegate {
+    func orderSummaryManagerWillUpdate(_ manager: OrderSummaryManager) {}
+    func orderSummaryManagerPreviewImageFinished(_ manager: OrderSummaryManager, success: Bool) {}
+    func orderSummaryManager(_ manager: OrderSummaryManager, didUpdateSummary summary: OrderSummary) {}
+    func orderSummaryManager(_ manager: OrderSummaryManager, updateSummaryFailedWithError error: Error?) {}
+    func orderSummaryManager(_ manager: OrderSummaryManager, failedToApplyUpsell upsell: UpsellOption, error:Error?) {}
+}
+
 class OrderSummaryManager {
-    static let notificationWillUpdate = Notification.Name("ly.kite.sdk.orderSummaryManager.willUpdate")
-    static let notificationPreviewImageReady = Notification.Name("ly.kite.sdk.orderSummaryManager.previewImageReady")
-    static let notificationPreviewImageFailed = Notification.Name("ly.kite.sdk.orderSummaryManager.previewImageFailed")
-    static let notificationDidUpdateSummary = Notification.Name("ly.kite.sdk.orderSummaryManager.didUpdateSummary")
-    static let notificationConnectionError = Notification.Name("ly.kite.sdk.orderSummaryManager.connectionError")
-    static let notificationApplyUpsellFailed = Notification.Name("ly.kite.sdk.orderSummaryManager.applyUpsellFailed")
     
     private lazy var apiManager = PhotobookAPIManager()
     
@@ -34,21 +44,12 @@ class OrderSummaryManager {
     
     var coverPageSnapshotImage: UIImage?
     
-    private var product: PhotobookProduct! {
+    var product: PhotobookProduct! {
         return ProductManager.shared.currentProduct
     }
     private(set) var selectedUpsellOptions = Set<UpsellOption>()
     
-    static let shared = OrderSummaryManager()
-    
-    func reset() {
-        upsellOptions = nil
-        selectedUpsellOptions.removeAll()
-        
-        previewImageUrl = nil
-        coverImageUrl = nil
-        isUploadingCoverImage = false
-    }
+    var delegate: OrderSummaryManagerDelegate?
     
     func refresh() {
         if upsellOptions?.isEmpty ?? true {
@@ -68,27 +69,33 @@ class OrderSummaryManager {
     
     func selectUpsellOption(_ option:UpsellOption) {
         selectedUpsellOptions.insert(option)
-        applyUpsells { [weak self] in
-            self?.selectedUpsellOptions.remove(option)
+        applyUpsells { [weak self] (error) in
+            if let strongSelf = self {
+                strongSelf.selectedUpsellOptions.remove(option)
+                strongSelf.delegate?.orderSummaryManager(strongSelf, failedToApplyUpsell: option, error: error)
+            }
         }
     }
     
     func deselectUpsellOption(_ option:UpsellOption) {
         selectedUpsellOptions.remove(option)
-        applyUpsells { [weak self] in
-            self?.selectedUpsellOptions.insert(option)
+        applyUpsells { [weak self] (error) in
+            if let strongSelf = self {
+                strongSelf.selectedUpsellOptions.insert(option)
+                strongSelf.delegate?.orderSummaryManager(strongSelf, failedToApplyUpsell: option, error: error)
+            }
         }
     }
     
-    func applyUpsells(_ failure:(() -> Void)? = nil) {
-        NotificationCenter.default.post(name: OrderSummaryManager.notificationWillUpdate, object: self)
+    func applyUpsells(_ failure:((_ error: Error?) -> Void)? = nil) {
+        delegate?.orderSummaryManagerWillUpdate(self)
         
         ProductManager.shared.applyUpsells(Array<UpsellOption>(selectedUpsellOptions)) { [weak self] (summary, error) in
-            if error != nil {
-                failure?()
-                NotificationCenter.default.post(name: OrderSummaryManager.notificationApplyUpsellFailed, object: self)
+            guard let summary = summary, error == nil else {
+                failure?(error)
                 return
             }
+            
             self?.handleReceivingSummary(summary)
         }
     }
@@ -103,7 +110,7 @@ extension OrderSummaryManager {
     
     /// Initial summary fetch
     private func fetchOrderSummary() {
-        NotificationCenter.default.post(name: OrderSummaryManager.notificationWillUpdate, object: self)
+        self.delegate?.orderSummaryManagerWillUpdate(self)
         
         summary = nil
         previewImageUrl = nil
@@ -114,23 +121,24 @@ extension OrderSummaryManager {
         
         apiManager.getOrderSummary(product: product) { [weak self] (summary, upsellOptions, productPayload, error) in
             
-            if let error = error as? APIClientError, case APIClientError.connection = error {
-                NotificationCenter.default.post(name: OrderSummaryManager.notificationConnectionError, object: self)
-                return
+            if let strongSelf = self {
+                guard let summary = summary else {
+                    strongSelf.delegate?.orderSummaryManager(strongSelf, updateSummaryFailedWithError: error)
+                    return
+                }
+                
+                ProductManager.shared.upsoldPayload = productPayload
+                strongSelf.upsellOptions = upsellOptions
+                strongSelf.handleReceivingSummary(summary)
             }
-            
-            self?.product.payload = productPayload
-            ProductManager.shared.upsoldProduct = self?.product
-            self?.upsellOptions = upsellOptions
-            self?.handleReceivingSummary(summary)
         }
     }
     
-    private func handleReceivingSummary(_ summary: OrderSummary?) {
+    private func handleReceivingSummary(_ summary: OrderSummary) {
         self.summary = summary
-        NotificationCenter.default.post(name: OrderSummaryManager.notificationDidUpdateSummary, object: self)
-        if self.coverImageUrl != nil {
-            NotificationCenter.default.post(name: OrderSummaryManager.notificationPreviewImageReady, object: self)
+        delegate?.orderSummaryManager(self, didUpdateSummary: summary)
+        if coverImageUrl != nil {
+            delegate?.orderSummaryManagerPreviewImageFinished(self, success: true)
         }
     }
     
@@ -157,27 +165,33 @@ extension OrderSummaryManager {
         isUploadingCoverImage = true
         
         guard let coverImage = coverPageSnapshotImage else {
-            self.isUploadingCoverImage = false
-            NotificationCenter.default.post(name: OrderSummaryManager.notificationPreviewImageFailed, object: self)
+            isUploadingCoverImage = false
+            delegate?.orderSummaryManagerPreviewImageFinished(self, success: false)
             return
         }
         
         APIClient.shared.uploadImage(coverImage, imageName: "OrderSummaryPreviewImage.png", context: .pig, endpoint: "upload/", completion: { [weak self] (json, error) in
-            self?.isUploadingCoverImage = false
+            
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.isUploadingCoverImage = false
             
             if let error = error {
                 print(error.localizedDescription)
+                return
             }
             
             guard let dictionary = json as? [String:AnyObject], let url = dictionary["full"] as? String else {
                 print("OrderSummaryManager: Couldn't parse URL of uploaded image")
-                NotificationCenter.default.post(name: OrderSummaryManager.notificationPreviewImageFailed, object: self)
+                strongSelf.delegate?.orderSummaryManagerPreviewImageFinished(strongSelf, success: false)
                 return
             }
             
-            self?.coverImageUrl = url
-            if self?.summary != nil {
-                NotificationCenter.default.post(name: OrderSummaryManager.notificationPreviewImageReady, object: self)
+            strongSelf.coverImageUrl = url
+            if strongSelf.summary != nil {
+                strongSelf.delegate?.orderSummaryManagerPreviewImageFinished(strongSelf, success: true)
             }
         })
     }
