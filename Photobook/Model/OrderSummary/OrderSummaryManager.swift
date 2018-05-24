@@ -17,14 +17,6 @@ protocol OrderSummaryManagerDelegate: class {
     func orderSummaryManager(_ manager: OrderSummaryManager, failedToApplyUpsell upsell: UpsellOption, error:Error?)
 }
 
-extension OrderSummaryManagerDelegate {
-    func orderSummaryManagerWillUpdate(_ manager: OrderSummaryManager) {}
-    func orderSummaryManagerPreviewImageFinished(_ manager: OrderSummaryManager, success: Bool) {}
-    func orderSummaryManager(_ manager: OrderSummaryManager, didUpdateSummary summary: OrderSummary) {}
-    func orderSummaryManager(_ manager: OrderSummaryManager, updateSummaryFailedWithError error: Error?) {}
-    func orderSummaryManager(_ manager: OrderSummaryManager, failedToApplyUpsell upsell: UpsellOption, error:Error?) {}
-}
-
 class OrderSummaryManager {
     
     private lazy var apiManager = PhotobookAPIManager()
