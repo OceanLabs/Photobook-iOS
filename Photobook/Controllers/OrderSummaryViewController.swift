@@ -310,7 +310,7 @@ extension OrderSummaryViewController: OrderSummaryManagerDelegate {
         hideProgressIndicator()
         
         //show message bar
-        let message = ErrorMessage(text: NSLocalizedString("Controllers/OrderSummaryViewController/UpsellFailMessage", value: "Couldn't apply upsell option", comment: "An upsell uption couldn't be applied due to an unknown reason"))
+        let message = ErrorMessage(text: CommonLocalizedStrings.somethingWentWrong)
         
         var offsetTop: CGFloat = 0
         
