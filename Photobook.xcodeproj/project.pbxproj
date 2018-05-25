@@ -293,6 +293,7 @@
 		2EDF607D20A2FFB4000F7A61 /* AddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDF607C20A2FFB4000F7A61 /* AddressTests.swift */; };
 		2EDF607F20A32C63000F7A61 /* PaymentMethodTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDF607E20A32C63000F7A61 /* PaymentMethodTests.swift */; };
 		2EDF608120A33CA6000F7A61 /* CreditCardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDF608020A33CA6000F7A61 /* CreditCardTests.swift */; };
+		2EE4BE7420B81F8100A54A77 /* PhotobookPreviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE4BE7320B81F8100A54A77 /* PhotobookPreviewTests.swift */; };
 		2EEC03D3209212B3008725B7 /* OrderSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEC03D2209212B3008725B7 /* OrderSummaryTests.swift */; };
 		2EF312B720591EEE001BE3CF /* IntroDismissSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF312B620591EEE001BE3CF /* IntroDismissSegue.swift */; };
 		3D046AAB9F5CFA5F5150C0DF /* Pods_PhotobookTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1561A4A2B130A5F1A92351A0 /* Pods_PhotobookTests.framework */; };
@@ -594,6 +595,7 @@
 		2EDF607C20A2FFB4000F7A61 /* AddressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressTests.swift; sourceTree = "<group>"; };
 		2EDF607E20A32C63000F7A61 /* PaymentMethodTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodTests.swift; sourceTree = "<group>"; };
 		2EDF608020A33CA6000F7A61 /* CreditCardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditCardTests.swift; sourceTree = "<group>"; };
+		2EE4BE7320B81F8100A54A77 /* PhotobookPreviewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookPreviewTests.swift; sourceTree = "<group>"; };
 		2EEC03BE2091C8BF008725B7 /* Analytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Analytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EEC03C02091C8BF008725B7 /* Bolts.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Bolts.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EEC03C22091C8BF008725B7 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -976,6 +978,7 @@
 			isa = PBXGroup;
 			children = (
 				2E87059C208E0183004B4B36 /* PhotobookUITest.swift */,
+				2EE4BE7320B81F8100A54A77 /* PhotobookPreviewTests.swift */,
 				2EEC03D2209212B3008725B7 /* OrderSummaryTests.swift */,
 				2E52B4A320909EEF00D5C20B /* BasketTests.swift */,
 				2E0E8B70209C979700E556FB /* DetailsTests.swift */,
@@ -2003,6 +2006,7 @@
 				2EDF607F20A32C63000F7A61 /* PaymentMethodTests.swift in Sources */,
 				2EDF608120A33CA6000F7A61 /* CreditCardTests.swift in Sources */,
 				2E0E8B71209C979700E556FB /* DetailsTests.swift in Sources */,
+				2EE4BE7420B81F8100A54A77 /* PhotobookPreviewTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
