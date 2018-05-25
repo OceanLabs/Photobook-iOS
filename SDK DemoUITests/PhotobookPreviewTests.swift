@@ -24,4 +24,20 @@ class PhotobookPreviewTests: PhotobookUITest {
         XCTAssertNotEqual(titleButton.label, originalTitle)
     }
     
+    func testEnterTextOnSpine() {
+        automation.goToPhotobookReview()
+        
+        let spineLabel = automation.app.staticTexts["spineLabel"]
+        XCTAssertTrue(spineLabel.label.isEmpty, "The spine label should be empty at the beginning")
+        
+        let spineButton = automation.app.collectionViews/*@START_MENU_TOKEN@*/.otherElements["spineButton"]/*[[".cells",".otherElements[\"Spine\"]",".otherElements[\"spineButton\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/
+        spineButton.tap()
+        
+        let spineTextField = automation.app.textFields["spineTextField"]
+        spineTextField.typeText("The Story of the Grand Clown Fiesta\n")
+        
+        XCTAssertTrue(spineButton.isHittable, "Did not return to Photobook preview")
+        XCTAssertEqual(spineLabel.label, "The Story of the Grand Clown Fiesta")
+    }
+    
 }
