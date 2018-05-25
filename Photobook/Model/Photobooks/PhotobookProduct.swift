@@ -40,6 +40,7 @@ class PhotobookProduct: Codable {
     private var currentLandscapeLayout = 0
     
     var template: PhotobookTemplate
+    var payload: [String: Any]?
     var productUpsellOptions: [UpsellOption]? //TODO: Get this from the initial-data endpoint
     var spineText: String?
     var spineFontType: FontType = .plain
@@ -58,6 +59,15 @@ class PhotobookProduct: Codable {
     var isRemovingPagesAllowed: Bool {
         // TODO: Use pages count instead of assets/layout count
         return productManager.minimumRequiredAssets < productLayouts.count - 1 // Don't include cover for min calculation
+    }
+    
+    var options: [String: Any] {
+        get {
+            guard let payload = payload, let options = payload["options"] as? [String: Any] else {
+                return [:]
+            }
+            return options
+        }
     }
 
     var emptyLayoutIndices: [Int]? {
@@ -419,5 +429,23 @@ class PhotobookProduct: Codable {
             assets.append(asset)
         }
         return assets
+    }
+}
+
+extension PhotobookProduct: Hashable, Equatable {
+    
+    static func ==(lhs: PhotobookProduct, rhs: PhotobookProduct) -> Bool {
+        return lhs.hashValue == rhs.hashValue
+    }
+    
+    var hashValue: Int {
+        get {
+            var stringHash = ""
+            
+            stringHash += "pt:\(template.productTemplateId),"
+            stringHash += "po:\(options)"
+            
+            return stringHash.hashValue
+        }
     }
 }

@@ -46,11 +46,14 @@ class Order: Codable {
         if let deliveryDetails = deliveryDetails { stringHash += "ad:\(deliveryDetails.hashValue)," }
         if let promoCode = promoCode { stringHash += "pc:\(promoCode)," }
         
+        //TODO: include shipping options
+        
+        var productsHash: Int = 0
         for product in products {
-            if let productName = product.template.name { stringHash += "jb:\(productName)," }
+            productsHash = productsHash ^ product.hashValue
         }
         
-        return stringHash.hashValue
+        return stringHash.hashValue ^ productsHash
     }
     
     var hasValidCachedCost: Bool {

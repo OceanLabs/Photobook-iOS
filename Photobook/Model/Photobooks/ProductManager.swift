@@ -45,6 +45,23 @@ class ProductManager {
     }
     var upsoldTemplate: PhotobookTemplate?
     var upsoldPayload: [String: Any]?
+    var upsoldProduct: PhotobookProduct? {
+        get {
+            guard let product = currentProduct else {
+                return currentProduct
+            }
+            var assets = [Asset]()
+            for layout in product.productLayouts {
+                if let asset = layout.asset { assets.append(asset) }
+            }
+            
+            let template = upsoldTemplate ?? product.template //use new template if it had been returned by upsell endpoint, otherwise default to original template
+            
+            let newProduct = PhotobookProduct(template: template, assets: assets, productManager: self)
+            newProduct?.payload = upsoldPayload //apply payload
+            return newProduct //return new instance
+        }
+    }
     
     func reset() {
         currentProduct = nil
