@@ -40,4 +40,30 @@ class PhotobookPreviewTests: PhotobookUITest {
         XCTAssertEqual(spineLabel.label, "The Story of the Grand Clown Fiesta")
     }
     
+    func testRearrange() {
+        automation.goToPhotobookReview()
+        
+        automation.app.buttons["titleButton"].tap()
+        automation.app.sheets.buttons.matching(NSPredicate(format: "label CONTAINS \"Landscape\"")).firstMatch.tap()
+        
+        automation.app.navigationBars.firstMatch.buttons["Rearrange"].tap()
+        
+        automation.app.collectionViews.otherElements["Pages 2 and 3"].tap()
+        automation.app.menuItems["Copy"].tap()
+        
+        wait(0.5) // Wait for the menu to animate away
+        
+        automation.app.collectionViews.otherElements["Pages 2 and 3"].tap()
+        automation.app.menuItems["Paste"].tap()
+        
+        wait(0.5) // Wait for the insertion animation
+        
+        let pages2_3Screenshot = automation.app.collectionViews.otherElements["Pages 2 and 3"].screenshot().image
+        let pages4_5Screenshot = automation.app.collectionViews.otherElements["Pages 4 and 5"].screenshot().image
+        XCTAssertTrue(1 == 2)
+        
+    }
+    
+    
+    
 }
