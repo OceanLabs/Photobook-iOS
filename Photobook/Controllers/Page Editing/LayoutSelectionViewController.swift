@@ -128,9 +128,9 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
                 if imageLayoutBox.isSquare() {
                     imageDescription = NSLocalizedString("Accessibility/Editing/SquareImage", value: "Square Image", comment: "Accessibility label for a square image")
                 } else if imageLayoutBox.isLandscape() {
-                    imageDescription = NSLocalizedString("Accessibility/Editing/LandscapeImage", value: "Landscape Image", comment: "Accessibility label for a landscape orientaion image")
+                    imageDescription = NSLocalizedString("Accessibility/Editing/LandscapeImage", value: "Landscape Image", comment: "Accessibility label for a landscape orientation image")
                 } else {
-                    imageDescription = NSLocalizedString("Accessibility/Editing/PortaitImage", value: "Portrait Image", comment: "Accessibility label for a portrait orientation image")
+                    imageDescription = NSLocalizedString("Accessibility/Editing/PortraitImage", value: "Portrait Image", comment: "Accessibility label for a portrait orientation image")
                 }
             }
             var layoutName = NSLocalizedString("Accessibility/Editing/LayoutSelection", value: "Layout \(indexPath.item + 1)", comment: "Accessibility label for the different page layouts. Example: Layout 1, Layout 2 etc") + ", "
