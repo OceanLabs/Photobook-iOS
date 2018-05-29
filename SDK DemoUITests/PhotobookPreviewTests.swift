@@ -43,10 +43,6 @@ class PhotobookPreviewTests: PhotobookUITest {
     func testRearrange() {
         automation.goToPhotobookReview()
         
-        // Switch to a landscape book so that the pasted spread fits in smaller simulators like the SE
-        automation.app.buttons["titleButton"].tap()
-        automation.app.sheets.buttons.matching(NSPredicate(format: "label CONTAINS \"Landscape\"")).firstMatch.tap()
-        
         automation.app.navigationBars.firstMatch.buttons["Rearrange"].tap()
         
         automation.app.collectionViews.otherElements["Pages 2 and 3"].tap()
@@ -68,6 +64,19 @@ class PhotobookPreviewTests: PhotobookUITest {
         
         wait(0.5) // Wait for the menu to animate away
         XCTAssertFalse(automation.app.collectionViews.otherElements["Pages 20 and 21"].exists)
+    }
+    
+    func testAddPages() {
+        automation.goToPhotobookReview()
+        
+        automation.app.navigationBars.firstMatch.buttons["Rearrange"].tap()
+        
+        automation.app.collectionViews.buttons["Add pages after page 1"].tap()
+        
+        wait(0.5) // Wait for the insertion animation
+        
+        automation.app.collectionViews.firstMatch.swipeUp()
+        automation.app.collectionViews.firstMatch.swipeUp()
     }
     
 }
