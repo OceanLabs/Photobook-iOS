@@ -48,7 +48,7 @@ class ProductManager {
     var upsoldProduct: PhotobookProduct? {
         get {
             guard let product = currentProduct else {
-                return currentProduct
+                return nil
             }
             var assets = [Asset]()
             for layout in product.productLayouts {
