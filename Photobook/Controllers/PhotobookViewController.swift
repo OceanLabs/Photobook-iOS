@@ -211,6 +211,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         if !isRearranging {
             titleButton.setTitle(product.template.name, for: .normal)
             titleButton.sizeToFit()
+            navigationItem.rightBarButtonItem?.tintColor = Constants.rearrangeGreyColor
             navigationItem.titleView = titleButton
             return
         }
