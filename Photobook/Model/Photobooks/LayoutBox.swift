@@ -20,7 +20,7 @@ struct LayoutBox: Codable {
         return rect.width > rect.height
     }
     
-    func isSquare() -> Bool {
+    func isSquareEnoughForVoiceOver() -> Bool {
         let ratio = rect.width / rect.height
         return ratio > 0.85 && ratio < 1.15
     }

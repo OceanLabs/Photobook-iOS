@@ -100,7 +100,7 @@ class LayoutSelectionViewController: UIViewController {
     func accessibilityLayoutName(for layout: Layout, at indexPath: IndexPath) -> String {
         var imageDescription = ""
         if let imageLayoutBox = layout.imageLayoutBox {
-            if imageLayoutBox.isSquare() {
+            if imageLayoutBox.isSquareEnoughForVoiceOver() {
                 imageDescription = NSLocalizedString("Accessibility/Editing/SquareImage", value: "Square Image", comment: "Accessibility label for a square image")
             } else if imageLayoutBox.isLandscape() {
                 imageDescription = NSLocalizedString("Accessibility/Editing/LandscapeImage", value: "Landscape Image", comment: "Accessibility label for a landscape orientation image")
