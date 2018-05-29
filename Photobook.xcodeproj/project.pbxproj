@@ -84,7 +84,6 @@
 		2E7C6F06201F4E670071E6B8 /* ReceiptTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C6F05201F4E670071E6B8 /* ReceiptTableViewController.swift */; };
 		2E7C822E2088B472002FF9D0 /* DiskUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C822D2088B472002FF9D0 /* DiskUtils.swift */; };
 		2E7C822F2088B472002FF9D0 /* DiskUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C822D2088B472002FF9D0 /* DiskUtils.swift */; };
-		2E7DE57220BC0EFD0015AEB8 /* AIImageCompare.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DE57020BC0EFD0015AEB8 /* AIImageCompare.m */; };
 		2E870588208E0182004B4B36 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E870587208E0182004B4B36 /* AppDelegate.swift */; };
 		2E87058A208E0182004B4B36 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E870589208E0182004B4B36 /* ViewController.swift */; };
 		2E87058D208E0182004B4B36 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E87058B208E0182004B4B36 /* Main.storyboard */; };
@@ -539,9 +538,6 @@
 		2E7C3696202095FB008033E7 /* ReceiptLineItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptLineItemTableViewCell.swift; sourceTree = "<group>"; };
 		2E7C6F05201F4E670071E6B8 /* ReceiptTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptTableViewController.swift; sourceTree = "<group>"; };
 		2E7C822D2088B472002FF9D0 /* DiskUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskUtils.swift; sourceTree = "<group>"; };
-		2E7DE56F20BC0EFC0015AEB8 /* SDK DemoUITests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SDK DemoUITests-Bridging-Header.h"; sourceTree = "<group>"; };
-		2E7DE57020BC0EFD0015AEB8 /* AIImageCompare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIImageCompare.m; sourceTree = "<group>"; };
-		2E7DE57120BC0EFD0015AEB8 /* AIImageCompare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIImageCompare.h; sourceTree = "<group>"; };
 		2E870585208E0181004B4B36 /* SDK Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SDK Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E870587208E0182004B4B36 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2E870589208E0182004B4B36 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -992,10 +988,7 @@
 				2E02B212208F4D830083DDAB /* Automation.swift */,
 				2E02B210208F26B80083DDAB /* XCUIElementExtensions.swift */,
 				2E02B214208F5D2F0083DDAB /* XCTestCaseExtensions.swift */,
-				2E7DE57120BC0EFD0015AEB8 /* AIImageCompare.h */,
-				2E7DE57020BC0EFD0015AEB8 /* AIImageCompare.m */,
 				2E87059E208E0183004B4B36 /* Info.plist */,
-				2E7DE56F20BC0EFC0015AEB8 /* SDK DemoUITests-Bridging-Header.h */,
 			);
 			path = "SDK DemoUITests";
 			sourceTree = "<group>";
@@ -2007,7 +2000,6 @@
 				2E02B215208F5D2F0083DDAB /* XCTestCaseExtensions.swift in Sources */,
 				2E52B4A420909EEF00D5C20B /* BasketTests.swift in Sources */,
 				2E02B213208F4D830083DDAB /* Automation.swift in Sources */,
-				2E7DE57220BC0EFD0015AEB8 /* AIImageCompare.m in Sources */,
 				2E87059D208E0183004B4B36 /* PhotobookUITest.swift in Sources */,
 				2E02B211208F26B80083DDAB /* XCUIElementExtensions.swift in Sources */,
 				2EEC03D3209212B3008725B7 /* OrderSummaryTests.swift in Sources */,
@@ -2784,7 +2776,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "ly.kite.SDK-DemoUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "SDK DemoUITests/SDK DemoUITests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2805,7 +2796,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "ly.kite.SDK-DemoUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "SDK DemoUITests/SDK DemoUITests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2826,7 +2816,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "ly.kite.SDK-DemoUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "SDK DemoUITests/SDK DemoUITests-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = "SDK Demo";
@@ -2846,7 +2835,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "ly.kite.SDK-DemoUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "SDK DemoUITests/SDK DemoUITests-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = "SDK Demo";
