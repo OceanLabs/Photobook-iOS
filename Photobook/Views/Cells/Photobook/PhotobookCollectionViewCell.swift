@@ -88,6 +88,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
                 leftPageView.aspectRatio = isDoubleLayout ? aspectRatio * 2.0 : aspectRatio
                 rightPageView.aspectRatio = isDoubleLayout ? 0.0 : aspectRatio
             } else {
+                leftPageView.aspectRatio = aspectRatio
                 rightPageView.aspectRatio = aspectRatio
             }
         }
