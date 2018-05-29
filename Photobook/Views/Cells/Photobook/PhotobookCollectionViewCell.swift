@@ -155,6 +155,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
                 photobookFrameView.accessibilityIdentifier = "Pages \(leftIndex) and \(rightIndex)"
             } else {
                 photobookFrameView.accessibilityLabel = NSLocalizedString("Accessibility/PhotobookPreview/PageLabel", value: "Page \(leftIndex ?? rightIndex!)", comment: "Accessibility label for the book page number")
+                photobookFrameView.accessibilityIdentifier = nil
             }
             photobookFrameView.accessibilityHint = NSLocalizedString("Accessibility/PhotobookPreview/DoubleTapForOptionsHint", value: "Double tap for options", comment: "Accessibility hint letting the user know that they can double tap to get options")
         } else {
