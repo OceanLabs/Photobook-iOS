@@ -96,6 +96,31 @@ class LayoutSelectionViewController: UIViewController {
     private var product: PhotobookProduct! {
         return ProductManager.shared.currentProduct
     }
+    
+    func accessibilityLayoutName(for layout: Layout, at indexPath: IndexPath) -> String {
+        var imageDescription = ""
+        if let imageLayoutBox = layout.imageLayoutBox {
+            if imageLayoutBox.isSquare() {
+                imageDescription = NSLocalizedString("Accessibility/Editing/SquareImage", value: "Square Image", comment: "Accessibility label for a square image")
+            } else if imageLayoutBox.isLandscape() {
+                imageDescription = NSLocalizedString("Accessibility/Editing/LandscapeImage", value: "Landscape Image", comment: "Accessibility label for a landscape orientation image")
+            } else {
+                imageDescription = NSLocalizedString("Accessibility/Editing/PortraitImage", value: "Portrait Image", comment: "Accessibility label for a portrait orientation image")
+            }
+        }
+        var layoutName = NSLocalizedString("Accessibility/Editing/LayoutSelection", value: "Layout \(indexPath.item + 1)", comment: "Accessibility label for the different page layouts. Example: Layout 1, Layout 2 etc") + ", "
+        if layout.imageLayoutBox != nil && layout.textLayoutBox != nil {
+            layoutName += NSLocalizedString("Accessibility/Editing/ImageAndTextLayout", value: "\(imageDescription) and Text", comment: "Accessibility label for a page layout that includes image and text")
+        } else if layout.imageLayoutBox != nil {
+            layoutName += NSLocalizedString("Accessibility/Editing/ImageOnlyLayout", value: "\(imageDescription) only", comment: "Accessibility label for a page layout that includes only an image.")
+        } else if layout.textLayoutBox != nil {
+            layoutName += NSLocalizedString("Accessibility/Editing/TextOnlyLayout", value: "Text only", comment: "Accessibility label for a page layout that includes only text.")
+        } else {
+            layoutName += NSLocalizedString("Accessibility/Editing/BlankLayout", value: "Blank", comment: "Accessibility label for a page layout that is blank.")
+        }
+        
+        return layoutName
+    }
 }
 
 extension LayoutSelectionViewController: UICollectionViewDataSource {
@@ -123,28 +148,8 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
             
             cell.isAccessibilityElement = true
             cell.accessibilityHint = CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
-            var imageDescription = ""
-            if let imageLayoutBox = layout.imageLayoutBox {
-                if imageLayoutBox.isSquare() {
-                    imageDescription = NSLocalizedString("Accessibility/Editing/SquareImage", value: "Square Image", comment: "Accessibility label for a square image")
-                } else if imageLayoutBox.isLandscape() {
-                    imageDescription = NSLocalizedString("Accessibility/Editing/LandscapeImage", value: "Landscape Image", comment: "Accessibility label for a landscape orientation image")
-                } else {
-                    imageDescription = NSLocalizedString("Accessibility/Editing/PortraitImage", value: "Portrait Image", comment: "Accessibility label for a portrait orientation image")
-                }
-            }
-            var layoutName = NSLocalizedString("Accessibility/Editing/LayoutSelection", value: "Layout \(indexPath.item + 1)", comment: "Accessibility label for the different page layouts. Example: Layout 1, Layout 2 etc") + ", "
-            if layout.imageLayoutBox != nil && layout.textLayoutBox != nil {
-                layoutName += NSLocalizedString("Accessibility/Editing/ImageAndTextLayout", value: "\(imageDescription) and Text", comment: "Accessibility label for a page layout that includes image and text")
-            } else if layout.imageLayoutBox != nil {
-                layoutName += NSLocalizedString("Accessibility/Editing/ImageOnlyLayout", value: "\(imageDescription) only", comment: "Accessibility label for a page layout that includes only an image.")
-            } else if layout.textLayoutBox != nil {
-                layoutName += NSLocalizedString("Accessibility/Editing/TextOnlyLayout", value: "Text only", comment: "Accessibility label for a page layout that includes only text.")
-            } else {
-                layoutName += NSLocalizedString("Accessibility/Editing/BlankLayout", value: "Blank", comment: "Accessibility label for a page layout that is blank.")
-            }
             
-            cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + layoutName
+            cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + accessibilityLayoutName(for: layout, at: indexPath)
             
             return cell
         }
@@ -165,28 +170,8 @@ extension LayoutSelectionViewController: UICollectionViewDataSource {
         
         cell.isAccessibilityElement = true
         cell.accessibilityHint = CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
-        var imageDescription = ""
-        if let imageLayoutBox = layout.imageLayoutBox {
-            if imageLayoutBox.isSquare() {
-                imageDescription = NSLocalizedString("Accessibility/Editing/SquareImage", value: "Square Image", comment: "Accessibility label for a square image")
-            } else if imageLayoutBox.isLandscape() {
-                imageDescription = NSLocalizedString("Accessibility/Editing/LandscapeImage", value: "Landscape Image", comment: "Accessibility label for a landscape orientaion image")
-            } else {
-                imageDescription = NSLocalizedString("Accessibility/Editing/PortaitImage", value: "Portrait Image", comment: "Accessibility label for a portrait orientation image")
-            }
-        }
-        var layoutName = NSLocalizedString("Accessibility/Editing/LayoutSelection", value: "Layout \(indexPath.item + 1)", comment: "Accessibility label for the different page layouts. Example: Layout 1, Layout 2 etc") + ", "
-        if layout.imageLayoutBox != nil && layout.textLayoutBox != nil {
-            layoutName += NSLocalizedString("Accessibility/Editing/ImageAndTextLayout", value: "\(imageDescription) and Text", comment: "Accessibility label for a page layout that includes image and text")
-        } else if layout.imageLayoutBox != nil {
-            layoutName += NSLocalizedString("Accessibility/Editing/ImageOnlyLayout", value: "\(imageDescription) only", comment: "Accessibility label for a page layout that includes only an image.")
-        } else if layout.textLayoutBox != nil {
-            layoutName += NSLocalizedString("Accessibility/Editing/TextOnlyLayout", value: "Text only", comment: "Accessibility label for a page layout that includes only text.")
-        } else {
-            layoutName += NSLocalizedString("Accessibility/Editing/BlankLayout", value: "Blank", comment: "Accessibility label for a page layout that is blank.")
-        }
         
-        cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + layoutName
+        cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + accessibilityLayoutName(for: layout, at: indexPath)
 
         return cell
     }
