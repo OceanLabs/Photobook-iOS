@@ -2086,7 +2086,7 @@
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ORz-yc-dFH">
                                                             <rect key="frame" x="-28" y="103.5" width="66" height="0.0"/>
-                                                            <accessibility key="accessibilityConfiguration">
+                                                            <accessibility key="accessibilityConfiguration" identifier="spineLabel">
                                                                 <bool key="isElement" value="NO"/>
                                                             </accessibility>
                                                             <constraints>
@@ -2189,7 +2189,7 @@
                                                 </view>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TX9-mc-br7">
                                                     <rect key="frame" x="66" y="0.0" width="44" height="207"/>
-                                                    <accessibility key="accessibilityConfiguration" hint="Double tap to edit" label="Spine">
+                                                    <accessibility key="accessibilityConfiguration" hint="Double tap to edit" identifier="spineButton" label="Spine">
                                                         <accessibilityTraits key="traits" none="YES"/>
                                                     </accessibility>
                                                     <constraints>
@@ -5574,6 +5574,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Puf-aO-D14">
                                 <rect key="frame" x="26" y="225.5" width="323" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <accessibility key="accessibilityConfiguration" identifier="spineTextField"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="XzQ-Le-fuS"/>
                                     <constraint firstAttribute="width" priority="250" constant="345" id="wbo-Jd-JtS"/>
