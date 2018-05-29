@@ -24,6 +24,13 @@ enum ProductColor: String, Codable {
         case .black: return .black
         }
     }
+    
+    var accessibilityLabel: String {
+        switch self {
+        case .white: return NSLocalizedString("Accessibility/Editing/WhiteColor", value: "White Color", comment: "The color white")
+        case .black: return NSLocalizedString("Accessibility/Editing/BlackColor", value: "Black Color", comment: "The color black")
+        }
+    }
 }
 
 class PhotobookProduct: Codable {

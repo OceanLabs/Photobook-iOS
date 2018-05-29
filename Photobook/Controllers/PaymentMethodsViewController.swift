@@ -74,7 +74,7 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             
             cell.separator.isHidden = true
             cell.accessibilityIdentifier = "applePayCell"
-            cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + ". " + method
+            cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + method
             cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
             return cell
         case 0 + supportsApplePay: // PayPal
@@ -89,7 +89,7 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             
             cell.separator.isHidden = false
             cell.accessibilityIdentifier = "payPalCell"
-            cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + ". " + method
+            cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + method
             cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
             return cell
         case 1 + supportsApplePay: // Saved card
@@ -106,7 +106,7 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             
             cell.separator.isHidden = true
             cell.accessibilityIdentifier = "creditCardCell"
-            cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + ". " + method
+            cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + method
             cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
             return cell
         default:
