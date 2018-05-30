@@ -37,31 +37,7 @@ class ProductManager {
         return 70
     }
     
-    private(set) var currentProduct: PhotobookProduct? {
-        willSet {
-            upsoldTemplate = nil
-            upsoldPayload = nil
-        }
-    }
-    var upsoldTemplate: PhotobookTemplate?
-    var upsoldPayload: [String: Any]?
-    var upsoldProduct: PhotobookProduct? {
-        get {
-            guard let product = currentProduct else {
-                return nil
-            }
-            var assets = [Asset]()
-            for layout in product.productLayouts {
-                if let asset = layout.asset { assets.append(asset) }
-            }
-            
-            let template = upsoldTemplate ?? product.template //use new template if it had been returned by upsell endpoint, otherwise default to original template
-            
-            let newProduct = PhotobookProduct(template: template, assets: assets, productManager: self)
-            newProduct?.payload = upsoldPayload //apply payload
-            return newProduct //return new instance
-        }
-    }
+    private(set) var currentProduct: PhotobookProduct?
     
     func reset() {
         currentProduct = nil
@@ -90,9 +66,8 @@ class ProductManager {
             return
         }
         
-        apiManager.applyUpsells(product: currentProduct, upsellOptions: upsells) { (summary, upsoldTemplate, productPayload, error) in
-            self.upsoldTemplate = upsoldTemplate
-            self.upsoldPayload = productPayload
+        apiManager.applyUpsells(product: currentProduct, upsellOptions: upsells) { [weak self] (summary, upsoldTemplate, productPayload, error) in
+            self?.currentProduct?.setUpsellData(template: upsoldTemplate, payload: productPayload)
             
             completionHandler(summary, error)
         }

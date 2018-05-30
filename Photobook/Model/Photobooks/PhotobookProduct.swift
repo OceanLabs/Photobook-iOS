@@ -29,7 +29,7 @@ enum ProductColor: String, Codable {
 class PhotobookProduct: Codable {
     
     private enum CodingKeys: String, CodingKey {
-        case template, photobookId, productLayouts, coverColor, pageColor, spineText, spineFontType, productUpsellOptions, itemCount
+        case template, productLayouts, coverColor, pageColor, spineText, spineFontType, productUpsellOptions, itemCount, upsoldTemplate, upsoldPayload
     }
     
     private unowned var productManager = ProductManager.shared
@@ -40,17 +40,13 @@ class PhotobookProduct: Codable {
     private var currentLandscapeLayout = 0
     
     var template: PhotobookTemplate
-    var payload: [String: Any]?
-    var productUpsellOptions: [UpsellOption]? //TODO: Get this from the initial-data endpoint
+    var productUpsellOptions: [UpsellOption]?
     var spineText: String?
     var spineFontType: FontType = .plain
     var coverColor: ProductColor = .white
     var pageColor: ProductColor = .white
     var productLayouts = [ProductLayout]()
     var itemCount: Int = 1
-    
-    // The id of the uploaded PDF
-    var photobookId: String?
     
     var isAddingPagesAllowed: Bool {
         // TODO: Use pages count instead of assets/layout count
@@ -61,12 +57,35 @@ class PhotobookProduct: Codable {
         return productManager.minimumRequiredAssets < productLayouts.count - 1 // Don't include cover for min calculation
     }
     
-    var options: [String: Any] {
+    private var upsoldTemplate: PhotobookTemplate?
+    private var upsoldPayload: Data? //json data because it's codable
+    var upsoldOptions: [String: Any]? { //extract options list from payload json data
         get {
-            guard let payload = payload, let options = payload["options"] as? [String: Any] else {
-                return [:]
+            guard let upsoldPayload = upsoldPayload,
+            let payloadObject = try? JSONSerialization.jsonObject(with: upsoldPayload, options: []),
+            let payloadDictionary = payloadObject as? [String: Any],
+            let options = payloadDictionary["options"] as? [String: Any] else {
+                return nil
             }
+            
             return options
+        }
+    }
+    
+    func setUpsellData(template: PhotobookTemplate?, payload: [String: Any]?) {
+        upsoldTemplate = template
+        if let payload = payload {
+            upsoldPayload = try? JSONSerialization.data(withJSONObject: payload, options: [])
+        } else {
+            upsoldPayload = nil
+        }
+    }
+    
+    func applyUpsells() {
+        if let upsoldTemplate = upsoldTemplate,
+            let coverLayouts = ProductManager.shared.coverLayouts(for: upsoldTemplate),
+            let layouts = ProductManager.shared.layouts(for: upsoldTemplate) {
+            setTemplate(upsoldTemplate, coverLayouts: coverLayouts, layouts: layouts)
         }
     }
 
@@ -382,8 +401,6 @@ class PhotobookProduct: Codable {
     
     func photobookParameters() -> [String: Any]? {
         
-        guard let photobookId = photobookId else { return nil }
-        
         // TODO: confirm schema
         var photobook = [String: Any]()
         
@@ -417,7 +434,6 @@ class PhotobookProduct: Codable {
             pages.append(page)
         }
         photobook["pages"] = pages
-        photobook["pdfId"] = photobookId
         
         return photobook
     }
@@ -443,7 +459,9 @@ extension PhotobookProduct: Hashable, Equatable {
             var stringHash = ""
             
             stringHash += "pt:\(template.productTemplateId),"
-            stringHash += "po:\(options)"
+            if let upsoldOptions = upsoldOptions {
+                stringHash += "po:\(upsoldOptions)"
+            }
             
             return stringHash.hashValue
         }

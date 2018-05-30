@@ -118,7 +118,7 @@ extension OrderSummaryManager {
                     return
                 }
                 
-                ProductManager.shared.upsoldPayload = productPayload
+                strongSelf.product.setUpsellData(template: strongSelf.product.template, payload: productPayload)
                 strongSelf.upsellOptions = upsellOptions
                 strongSelf.handleReceivingSummary(summary)
             }

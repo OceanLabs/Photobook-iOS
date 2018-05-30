@@ -101,8 +101,7 @@ class Order: Codable {
         for product in products {
             jobs.append([
                 "template_id" : product.template.productTemplateId ?? "",
-                "multiples" : product.itemCount,
-                "assets": [["inside_pdf" : product.photobookId ?? ""]]
+                "multiples" : product.itemCount
                 ])
         }
         

@@ -69,13 +69,8 @@ class OrderSummaryViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "OrderSummarySegueName" {
             
-            guard let upsoldProduct = ProductManager.shared.upsoldProduct else {
-                //TODO: handle error
-                return
-            }
-            
             // Add current item to the basket
-            OrderManager.shared.basketOrder.products = [upsoldProduct] //We currently only support one item at a time
+            OrderManager.shared.basketOrder.products = [product] //We currently only support one item at a time
             
             checkoutViewController = segue.destination as? CheckoutViewController
         }
