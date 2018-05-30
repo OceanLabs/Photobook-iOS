@@ -16,6 +16,14 @@ struct FormConstants {
 
 class DeliveryDetailsTableViewController: UITableViewController {
     
+    private struct DetailsFieldLabels {
+        static let name = NSLocalizedString("DeliveryDetails/Name", value: "Name", comment: "Delivery Details screen first name textfield title")
+        static let lastName = NSLocalizedString("DeliveryDetails/LastName", value: "Last Name", comment: "Delivery Details screen last name textfield title")
+        static let email = NSLocalizedString("DeliveryDetails/Email", value: "Email", comment: "Delivery Details screen Email textfield title")
+        static let phone = NSLocalizedString("DeliveryDetails/Phone", value: "Phone", comment: "Delivery Details screen Phone textfield title")
+        static let address = NSLocalizedString("DeliveryDetails/Address", value: "Address", comment: "Delivery Details screen Address textfield title")
+    }
+    
     private var details = (OrderManager.shared.basketOrder.deliveryDetails?.copy() as? DeliveryDetails ?? DeliveryDetails.loadLatestDetails()) ?? DeliveryDetails()
     
     private weak var firstNameTextField: UITextField!
@@ -62,29 +70,64 @@ class DeliveryDetailsTableViewController: UITableViewController {
     @IBAction private func saveTapped(_ sender: Any) {
         view.endEditing(false)
         
-        var detailsAreValid = true
         tableView.beginUpdates()
-        detailsAreValid = check(firstNameTextField) && detailsAreValid
-        detailsAreValid = check(lastNameTextField) && detailsAreValid
-        detailsAreValid = check(emailTextField, type: .email) && detailsAreValid
-        detailsAreValid = check(phoneTextField, type: .phone) && detailsAreValid
-        detailsAreValid = checkAddress() && detailsAreValid
+        let firstNameInvalidReason = check(firstNameTextField)
+        let lastNameInvalidReason = check(lastNameTextField)
+        let emailInvalidReason = check(emailTextField, type: .email)
+        let phoneInvalidReason = check(phoneTextField, type: .phone)
+        let addressIsValid = checkAddress()
         tableView.endUpdates()
         
-        if detailsAreValid {
+        if firstNameInvalidReason == nil && lastNameInvalidReason == nil && emailInvalidReason == nil && phoneInvalidReason == nil && addressIsValid {
             details.saveDetailsAsLatest()
             OrderManager.shared.basketOrder.deliveryDetails = details
             navigationController?.popViewController(animated: true)
+        } else {
+            var errorMessage = ""
+            if firstNameInvalidReason == FormConstants.requiredText {
+                errorMessage += DetailsFieldLabels.name + ", "
+            }
+            if lastNameInvalidReason == FormConstants.requiredText {
+                errorMessage += DetailsFieldLabels.lastName + ", "
+            }
+            if emailInvalidReason == FormConstants.requiredText {
+                errorMessage += DetailsFieldLabels.email + ", "
+            }
+            if phoneInvalidReason == FormConstants.requiredText {
+                errorMessage += DetailsFieldLabels.phone + ", "
+            }
+            if !addressIsValid {
+                errorMessage += DetailsFieldLabels.address + ", "
+            }
+            
+            if !errorMessage.isEmpty {
+                errorMessage = NSLocalizedString("Accessibility/AddressRequiredInformationMissing", value: "Required information missing:", comment: "Accessibility message informing the user that some of the required information is missing") + errorMessage.trimmingCharacters(in: CharacterSet(charactersIn: ", ")) + ". "
+            }
+            
+            let phoneIsInvalid = phoneInvalidReason != nil && phoneInvalidReason != FormConstants.requiredText
+            let emailIsInvalid = emailInvalidReason != nil && emailInvalidReason != FormConstants.requiredText
+            
+            if  phoneIsInvalid || emailIsInvalid {
+                errorMessage += NSLocalizedString("Accessibility/InvalidInformation", value: "Some of the entered information is invalid.", comment: "Accessibility message letting the user know that some of the information they entered is invalid")
+                if emailIsInvalid {
+                    errorMessage += emailInvalidReason!
+                }
+                if phoneIsInvalid {
+                    errorMessage += phoneInvalidReason!
+                }
+            }
+            
+            UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, errorMessage)
         }
     }
     
-    private func check(_ textField: UITextField, type: EntryType? = nil) -> Bool {
+    private func check(_ textField: UITextField, type: EntryType? = nil) -> String? {
         textField.text = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         
         guard let text = textField.text, !text.isEmpty, text != FormConstants.requiredText else {
             textField.text = FormConstants.requiredText
             textField.textColor = FormConstants.errorColor
-            return false
+            return FormConstants.requiredText
         }
         
         switch type ?? .generic {
@@ -92,23 +135,25 @@ class DeliveryDetailsTableViewController: UITableViewController {
             let cell = (tableView.cellForRow(at: IndexPath(row: DetailsRow.email.rawValue, section: 0)) as? UserInputTableViewCell)
             if let text = cell?.textField.text,
                 !text.isValidEmailAddress() {
-                cell?.errorMessage = NSLocalizedString("DeliveryDetails/Email is invalid", value: "Email is invalid", comment: "Error message saying that the email address is invalid")
+                let invalidReason = NSLocalizedString("DeliveryDetails/Email is invalid", value: "Email is invalid.", comment: "Error message saying that the email address is invalid")
+                cell?.errorMessage = invalidReason
                 cell?.textField.textColor = FormConstants.errorColor
-                return false
+                return invalidReason
             }
         case .phone:
             let cell = (tableView.cellForRow(at: IndexPath(row: DetailsRow.phone.rawValue, section: 0)) as? UserInputTableViewCell)
             if let text = cell?.textField.text,
                 text.count < FormConstants.minPhoneNumberLength || text == FormConstants.requiredText {
-                cell?.errorMessage = NSLocalizedString("DeliveryDetails/Phone is invalid", value: "Phone is invalid", comment: "Error message saying that the phone number is invalid")
+                let invalidReason = NSLocalizedString("DeliveryDetails/Phone is invalid", value: "Phone is invalid.", comment: "Error message saying that the phone number is invalid")
+                cell?.errorMessage = invalidReason
                 cell?.textField.textColor = FormConstants.errorColor
-                return false
+                return invalidReason
             }
         default:
             break
         }
         
-        return true
+        return nil
     }
     
     private func checkAddress() -> Bool {
@@ -173,7 +218,7 @@ extension DeliveryDetailsTableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: "userInput", for: indexPath) as! UserInputTableViewCell
             switch row {
             case .name:
-                cell.label?.text = NSLocalizedString("DeliveryDetails/Name", value: "Name", comment: "Delivery Details screen first name textfield title")
+                cell.label?.text = DetailsFieldLabels.name
                 cell.message = nil
                 cell.textField.textContentType = .givenName
                 cell.textField.keyboardType = .default
@@ -182,9 +227,11 @@ extension DeliveryDetailsTableViewController {
                 cell.textField.text = details.firstName
                 cell.topSeparator.isHidden = false
                 cell.separatorLeadingConstraint.constant = Constants.leadingSeparatorInset
+                cell.accessibilityIdentifier = "nameCell"
+                cell.textField.accessibilityLabel = cell.label?.text
                 firstNameTextField = cell.textField
             case .lastName:
-                cell.label?.text = NSLocalizedString("DeliveryDetails/LastName", value: "Last Name", comment: "Delivery Details screen last name textfield title")
+                cell.label?.text = DetailsFieldLabels.lastName
                 cell.message = nil
                 cell.textField.textContentType = .familyName
                 cell.textField.keyboardType = .default
@@ -193,9 +240,11 @@ extension DeliveryDetailsTableViewController {
                 cell.textField.text = details.lastName
                 cell.topSeparator.isHidden = true
                 cell.separatorLeadingConstraint.constant = Constants.leadingSeparatorInset
+                cell.accessibilityIdentifier = "lastNameCell"
+                cell.textField.accessibilityLabel = cell.label?.text
                 lastNameTextField = cell.textField
             case .email:
-                cell.label?.text = NSLocalizedString("DeliveryDetails/Email", value: "Email", comment: "Delivery Details screen Email textfield title")
+                cell.label?.text = DetailsFieldLabels.email
                 cell.message = nil
                 cell.textField.textContentType = .emailAddress
                 cell.textField.keyboardType = .emailAddress
@@ -204,9 +253,11 @@ extension DeliveryDetailsTableViewController {
                 cell.textField.text = details.email
                 cell.topSeparator.isHidden = true
                 cell.separatorLeadingConstraint.constant = Constants.leadingSeparatorInset
+                cell.accessibilityIdentifier = "emailCell"
+                cell.textField.accessibilityLabel = cell.label?.text
                 emailTextField = cell.textField
             case .phone:
-                cell.label?.text = NSLocalizedString("DeliveryDetails/Phone", value: "Phone", comment: "Delivery Details screen Phone textfield title")
+                cell.label?.text = DetailsFieldLabels.phone
                 cell.message = Constants.phoneExplanation
                 cell.textField.textContentType = .telephoneNumber
                 cell.textField.keyboardType = .phonePad
@@ -214,6 +265,9 @@ extension DeliveryDetailsTableViewController {
                 cell.textField.text = details.phone
                 cell.topSeparator.isHidden = true
                 cell.separatorLeadingConstraint.constant = 0
+                cell.accessibilityIdentifier = "phoneCell"
+                cell.textField.accessibilityLabel = cell.label?.text
+                cell.textField.accessibilityHint = Constants.phoneExplanation
                 phoneTextField = cell.textField
             }
             return cell
@@ -223,8 +277,12 @@ extension DeliveryDetailsTableViewController {
                 let address = Address.savedAddresses[indexPath.item]
                 cell.topLabel.text = address.line1
                 cell.bottomLabel.text = address.descriptionWithoutLine1()
-                cell.checkmark.isHidden = address != details.address
+                
+                let selected = address == details.address
+                cell.checkmark.isHidden = !selected
                 cell.topSeparator.isHidden = indexPath.row != 0
+                cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + (address.line1 ?? "") + ", " + address.descriptionWithoutLine1()
+                cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
                 
                 return cell
             }

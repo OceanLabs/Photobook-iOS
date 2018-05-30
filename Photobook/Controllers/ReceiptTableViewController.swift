@@ -388,11 +388,11 @@ extension ReceiptTableViewController: OrderProcessingDelegate {
             case .cancelled:
                 state = .cancelled
                 userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitleCancelled", value: "Photobook Cancelled", comment: "title of a notification notfifying about failed photobook that had to be cancelled")
-                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyCancelled", value: "Something went wrong and we couldn't process your photobook", comment: "body of a notification notifying about failed photobook that had to be cancelled")
+                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyCancelled", value: "Something went wrong and we couldn't process your photo book", comment: "body of a notification notifying about failed photobook that had to be cancelled")
             default:
                 state = .error
                 userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitleProcessingFailed", value: "Couldn't Finish Photobook", comment: "title of a notification notfifying about failed photobook processing")
-                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyProcessingFailed", value: "Something went wrong and your photobook couldn't be sent to our servers", comment: "body of a notification notifying about failed photobook processing")
+                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyProcessingFailed", value: "Something went wrong and your photo book couldn't be sent to our servers", comment: "body of a notification notifying about failed photobook processing")
             }
             
             lastProcessingError = error

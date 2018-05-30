@@ -57,7 +57,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private weak var collectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet private weak var collectionViewBottomConstraint: NSLayoutConstraint!
     
-    @IBOutlet private weak var ctaContainerBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private var ctaContainerBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var ctaButton: UIButton!
     
     @IBOutlet private weak var collectionView: UICollectionView!
@@ -75,6 +75,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         button.semanticContentAttribute = .forceRightToLeft
         button.imageEdgeInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: Constants.titleArrowOffset)
         button.addTarget(self, action: #selector(didTapOnTitle), for: .touchUpInside)
+        button.accessibilityIdentifier = "titleButton"
         return button
     }()
 
@@ -211,6 +212,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         if !isRearranging {
             titleButton.setTitle(product.template.name, for: .normal)
             titleButton.sizeToFit()
+            navigationItem.rightBarButtonItem?.tintColor = Constants.rearrangeGreyColor
             navigationItem.titleView = titleButton
             return
         }
@@ -245,7 +247,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         
         alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
-        
+                
         present(alertController, animated: true, completion: nil)
     }
     
@@ -264,6 +266,16 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBAction private func didTapRearrange(_ sender: UIBarButtonItem) {
         isRearranging = !isRearranging
         
+        for cell in collectionView.visibleCells {
+            (cell as? PhotobookCollectionViewCell)?.updateVoiceOver(isRearranging: isRearranging)
+            (cell as? PhotobookCoverCollectionViewCell)?.updateVoiceOver(isRearranging: isRearranging)
+            
+            if isRearranging {
+                guard let indexPath = collectionView.indexPath(for: cell) else { continue }
+                (cell as? PhotobookCollectionViewCell)?.isPlusButtonVisible = indexPath.item != 0
+            }
+        }
+        
         // Update drag interaction enabled status
         let interactiveCellClosure: ((Bool) -> Void) = { (isRearranging) in
             UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
@@ -276,7 +288,13 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 self.collectionView.transform = isRearranging ? CGAffineTransform(translationX: 0.0, y: -self.collectionView.frame.height * (1.0 - Constants.rearrangeScale) / 2.0).scaledBy(x: Constants.rearrangeScale, y: Constants.rearrangeScale) : .identity
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
-            }, completion: nil)
+            }, completion: { _ in
+                if !isRearranging {
+                    for cell in self.collectionView.visibleCells {
+                        (cell as? PhotobookCollectionViewCell)?.isPlusButtonVisible = false
+                    }
+                }
+            })
         }
 
         interactiveCellClosure(isRearranging)
@@ -374,7 +392,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
         
     @IBAction private func didTapBack() {
-        let alertController = UIAlertController(title: NSLocalizedString("Photobook/BackAlertTitle", value: "Are you sure?", comment: "Title for alert asking the user to go back"), message: NSLocalizedString("Photobook/BackAlertMessage", value: "This will discard any changes made to your photobook", comment: "Message for alert asking the user to go back"), preferredStyle: .alert)
+        let alertController = UIAlertController(title: NSLocalizedString("Photobook/BackAlertTitle", value: "Are you sure?", comment: "Title for alert asking the user to go back"), message: NSLocalizedString("Photobook/BackAlertMessage", value: "This will discard any changes made to your photo book", comment: "Message for alert asking the user to go back"), preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Yes", value: "Yes", comment: "Affirmative button title for alert asking the user confirmation for an action"), style: .destructive, handler: { _ in
             
             // Clear photobook
@@ -439,6 +457,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 {
                     if cell.leftIndex == removedIndex || cell.rightIndex == removedIndex {
                         cell.loadPages()
+                        cell.updateVoiceOver(isRearranging: isRearranging)
                     }
                 }
             }
@@ -700,6 +719,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 cell.rightIndex = rightIndex
             }
             cell.loadPages()
+            cell.updateVoiceOver(isRearranging: isRearranging)
         }
     }
     
@@ -806,7 +826,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             
             cell.leftIndex = leftIndex
             cell.rightIndex = rightIndex
-            cell.isPlusButtonVisible = indexPath.item != 0
+            cell.isPlusButtonVisible = indexPath.item != 0 && isRearranging
             
             return cell
         }
@@ -827,8 +847,10 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? PhotobookCollectionViewCell {
             cell.loadPages()
+            cell.updateVoiceOver(isRearranging: isRearranging)
         } else if let cell = cell as? PhotobookCoverCollectionViewCell {
             cell.loadCoverAndSpine()
+            cell.updateVoiceOver(isRearranging: isRearranging)
         }
     }
     
@@ -1024,7 +1046,7 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
     }
     
     private func showNotAllowedToAddMorePagesAlert() {
-        let alertController = UIAlertController(title: NSLocalizedString("Photobook/TooManyPagesAlertTitle", value: "Too many pages", comment: "Alert title informing the user that they have reached the maximum number of pages"), message: NSLocalizedString("Photobook/TooManyPagesAlertMessage", value: "You cannot add any more pages to your photobook", comment: "Alert message informing the user that they have reached the maximum number of pages"), preferredStyle: .alert)
+        let alertController = UIAlertController(title: NSLocalizedString("Photobook/TooManyPagesAlertTitle", value: "Too many pages", comment: "Alert title informing the user that they have reached the maximum number of pages"), message: NSLocalizedString("Photobook/TooManyPagesAlertMessage", value: "You cannot add any more pages to your photo book", comment: "Alert message informing the user that they have reached the maximum number of pages"), preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
         present(alertController, animated: true, completion: nil)
     }

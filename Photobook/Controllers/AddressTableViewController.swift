@@ -23,6 +23,17 @@ class AddressTableViewController: UITableViewController {
     private weak var cityTextField: UITextField!
     private weak var stateOrCountyTextField: UITextField!
     private weak var zipOrPostcodeTextField: UITextField!
+    
+    private struct AddressFieldLabels {
+        static let line1 = NSLocalizedString("AddressEntry/Line1", value: "Line1", comment: "Address Entry screen line1 textfield title")
+        static let line2 = NSLocalizedString("AddressEntry/Line2", value: "Line2", comment: "Address Entry screen line2 textfield title")
+        static let city = NSLocalizedString("AddressEntry/City", value: "City", comment: "Address Entry screen City textfield title")
+        static let state = NSLocalizedString("AddressEntry/State", value: "State", comment: "State of the recipient address (U.S. addresses only)")
+        static let county = NSLocalizedString("AddressEntry/County", value: "County", comment: "Address Entry screen County textfield title")
+        static let zip = NSLocalizedString("AddressEntry/ZipCode", value: "Zip Code", comment: "Zip code of the recipient address (U.S. addresses only)")
+        static let postcode = NSLocalizedString("AddressEntry/Postcode", value: "Postcode", comment: "Address Entry screen Postcode textfield title")
+        static let country = NSLocalizedString("AddressEntry/Country", value: "Country", comment: "Address Entry screen Country textfield title")
+    }
 
     private enum Row: Int {
         case line1, line2, city, stateOrCounty, zipOrPostcode, country
@@ -46,12 +57,11 @@ class AddressTableViewController: UITableViewController {
     @IBAction private func saveTapped(_ sender: Any) {
         view.endEditing(false)
         
-        var detailsAreValid = true
-        detailsAreValid = check(line1TextField) && detailsAreValid
-        detailsAreValid = check(cityTextField) && detailsAreValid
-        detailsAreValid = check(zipOrPostcodeTextField) && detailsAreValid
+        let line1IsValid = check(line1TextField)
+        let cityIsValid = check(cityTextField)
+        let postCodeIsValid = check(zipOrPostcodeTextField)
         
-        if detailsAreValid {
+        if line1IsValid && cityIsValid && postCodeIsValid {
             address.line1 = line1TextField.text
             address.line2 = line2TextField.text
             address.city = cityTextField.text
@@ -60,6 +70,18 @@ class AddressTableViewController: UITableViewController {
             
             self.delegate?.addressTableViewControllerDidSave(address: address)
             navigationController?.popViewController(animated: true)
+        } else {
+            var errorMessage = NSLocalizedString("Accessibility/AddressRequiredInformationMissing", value: "Required information missing:", comment: "Accessibility message informing the user that some of the required information is missing")
+            if !line1IsValid {
+                errorMessage += AddressFieldLabels.line1 + ", "
+            }
+            if !cityIsValid {
+                errorMessage += AddressFieldLabels.city + ", "
+            }
+            if !postCodeIsValid {
+                errorMessage += AddressFieldLabels.postcode + ", "
+            }
+            UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, errorMessage.trimmingCharacters(in: CharacterSet(charactersIn: ", ")))
         }
     }
     
@@ -96,40 +118,48 @@ class AddressTableViewController: UITableViewController {
         
         switch row {
         case .line1:
-            cell.label.text = NSLocalizedString("AddressEntry/Line1", value: "Line1", comment: "Address Entry screen line1 textfield title")
+            cell.label.text = AddressFieldLabels.line1
             cell.textField.textContentType = .streetAddressLine1
             cell.textField.returnKeyType = .next
             cell.textField.placeholder = FormConstants.requiredText
             cell.textField.text = address.line1
             line1TextField = cell.textField
+            line1TextField.accessibilityIdentifier = "line1TextField"
+            line1TextField.accessibilityLabel = cell.label.text
         case .line2:
-            cell.label.text = NSLocalizedString("AddressEntry/Line2", value: "Line2", comment: "Address Entry screen line2 textfield title")
+            cell.label.text = AddressFieldLabels.line2
             cell.textField.textContentType = .streetAddressLine1
             cell.textField.returnKeyType = .next
             cell.textField.text = address.line2
             line2TextField = cell.textField
+            line2TextField.accessibilityIdentifier = "line2TextField"
+            line2TextField.accessibilityLabel = cell.label.text
         case .city:
-            cell.label.text = NSLocalizedString("AddressEntry/City", value: "City", comment: "Address Entry screen City textfield title")
+            cell.label.text = AddressFieldLabels.city
             cell.textField.textContentType = .addressCity
             cell.textField.returnKeyType = .next
             cell.textField.placeholder = FormConstants.requiredText
             cell.textField.text = address.city
             cityTextField = cell.textField
+            cityTextField.accessibilityIdentifier = "cityTextField"
+            cityTextField.accessibilityLabel = cell.label.text
         case .stateOrCounty:
             if address.country.codeAlpha3 == "USA" {
-                cell.label.text = NSLocalizedString("AddressEntry/State", value: "State", comment: "State of the recipient address (U.S. addresses only)")
+                cell.label.text = AddressFieldLabels.state
             } else {
-                cell.label.text = NSLocalizedString("AddressEntry/County", value: "County", comment: "Address Entry screen County textfield title")
+                cell.label.text = AddressFieldLabels.county
             }
             cell.textField.textContentType = .addressState
             cell.textField.returnKeyType = .next
             cell.textField.text = address.stateOrCounty
             stateOrCountyTextField = cell.textField
+            stateOrCountyTextField.accessibilityIdentifier = "stateOrCountyTextField"
+            stateOrCountyTextField.accessibilityLabel = cell.label.text
         case .zipOrPostcode:
             if address.country.codeAlpha3 == "USA" {
-                cell.label.text = NSLocalizedString("AddressEntry/ZipCode", value: "Zip Code", comment: "Zip code of the recipient address (U.S. addresses only)")
+                cell.label.text = AddressFieldLabels.zip
             } else {
-                cell.label.text = NSLocalizedString("AddressEntry/Postcode", value: "Postcode", comment: "Address Entry screen Postcode textfield title")
+                cell.label.text = AddressFieldLabels.postcode
             }
             cell.textField.textContentType = .postalCode
             cell.textField.returnKeyType = .done
@@ -137,10 +167,16 @@ class AddressTableViewController: UITableViewController {
             cell.textField.placeholder = FormConstants.requiredText
             cell.textField.text = address.zipOrPostcode
             zipOrPostcodeTextField = cell.textField
+            zipOrPostcodeTextField.accessibilityIdentifier = "zipOrPostcodeTextField"
+            zipOrPostcodeTextField.accessibilityLabel = cell.label.text
         case .country:
-            cell.label.text = NSLocalizedString("AddressEntry/Country", value: "Country", comment: "Address Entry screen Country textfield title")
+            cell.label.text = AddressFieldLabels.country
             cell.textField.isUserInteractionEnabled = false
             cell.textField.text = address.country.name
+            cell.textField.accessibilityIdentifier = "countryTextField"
+            cell.textField.accessibilityLabel = cell.label.text
+            cell.textField.accessibilityTraits = UIAccessibilityTraitStaticText
+            cell.textField.accessibilityHint = NSLocalizedString("Accessibility/DoubleTapToChangeHint", value: "Double tap to change", comment: "Accessibility hint letting the user know that they can double tap to change the selected value")
         }
     }
     

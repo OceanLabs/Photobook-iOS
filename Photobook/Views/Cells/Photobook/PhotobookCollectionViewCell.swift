@@ -88,6 +88,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
                 leftPageView.aspectRatio = isDoubleLayout ? aspectRatio * 2.0 : aspectRatio
                 rightPageView.aspectRatio = isDoubleLayout ? 0.0 : aspectRatio
             } else {
+                leftPageView.aspectRatio = aspectRatio
                 rightPageView.aspectRatio = aspectRatio
             }
         }
@@ -135,6 +136,41 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
             photobookFrameView.coverColor = product.coverColor
             photobookFrameView.pageColor = product.pageColor
             photobookFrameView.resetPageColor()
+        }
+        
+        if let index = leftIndex {
+            plusButton.accessibilityLabel = NSLocalizedString("", value: "Add pages after page \(index - 1)", comment: "")
+        }
+    }
+    
+    func updateVoiceOver(isRearranging: Bool) {
+        guard leftIndex != nil || rightIndex != nil else { return }
+        if isRearranging {
+            photobookFrameView.isAccessibilityElement = leftIndex != nil && (rightIndex != nil || product.productLayouts[leftIndex!].layout.isDoubleLayout)
+            leftPageView.isAccessibilityElement = false
+            rightPageView.isAccessibilityElement = false
+            
+            if let leftIndex = leftIndex, let rightIndex = rightIndex, leftIndex != rightIndex {
+                photobookFrameView.accessibilityLabel = NSLocalizedString("Accessibility/PhotobookPreview/PagesLabel", value: "Pages \(leftIndex) and \(rightIndex)", comment: "Accessibility label for the book pages' numbers")
+                photobookFrameView.accessibilityIdentifier = "Pages \(leftIndex) and \(rightIndex)"
+            } else {
+                photobookFrameView.accessibilityLabel = NSLocalizedString("Accessibility/PhotobookPreview/PageLabel", value: "Page \(leftIndex ?? rightIndex!)", comment: "Accessibility label for the book page number")
+                photobookFrameView.accessibilityIdentifier = nil
+            }
+            photobookFrameView.accessibilityHint = NSLocalizedString("Accessibility/PhotobookPreview/DoubleTapForOptionsHint", value: "Double tap for options", comment: "Accessibility hint letting the user know that they can double tap to get options")
+        } else {
+            photobookFrameView.isAccessibilityElement = false
+            leftPageView.isAccessibilityElement = leftIndex != nil
+            rightPageView.isAccessibilityElement = rightIndex != nil
+            
+            if let leftIndex = leftIndex {
+                leftPageView.accessibilityLabel = NSLocalizedString("Accessibility/PhotobookPreview/LeftPageLabel", value: "Page \(leftIndex)", comment: "Accessibility label for the book page number")
+                leftPageView.accessibilityHint = CommonLocalizedStrings.accessibilityDoubleTapToEdit
+            }
+            if let rightIndex = rightIndex {
+                rightPageView.accessibilityLabel = NSLocalizedString("Accessibility/PhotobookPreview/RightPageLabel", value: "Page \(rightIndex)", comment: "Accessibility label for the book page number")
+                rightPageView.accessibilityHint = CommonLocalizedStrings.accessibilityDoubleTapToEdit
+            }
         }
     }
         

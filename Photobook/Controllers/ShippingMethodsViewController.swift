@@ -53,9 +53,13 @@ extension ShippingMethodsViewController: UITableViewDataSource {
         cell.method = shippingMethod.name
         cell.deliveryTime = shippingMethod.deliveryTime
         cell.cost = shippingMethod.shippingCostFormatted
-        cell.ticked = OrderManager.shared.basketOrder.shippingMethod == shippingMethod.id
+        
+        let selected = OrderManager.shared.basketOrder.shippingMethod == shippingMethod.id
+        cell.ticked = selected
         cell.separatorLeadingConstraint.constant = indexPath.row == shippingMethods.count - 1 ? 0.0 : Constants.leadingSeparatorInset
         cell.topSeparator.isHidden = indexPath.row != 0
+        cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + "\(shippingMethod.name). \(shippingMethod.deliveryTime). \(shippingMethod.shippingCostFormatted)"
+        cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
         
         return cell
     }

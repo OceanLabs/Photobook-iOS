@@ -24,12 +24,19 @@ enum ProductColor: String, Codable {
         case .black: return .black
         }
     }
+    
+    var accessibilityLabel: String {
+        switch self {
+        case .white: return NSLocalizedString("Accessibility/Editing/WhiteColor", value: "White Color", comment: "The color white")
+        case .black: return NSLocalizedString("Accessibility/Editing/BlackColor", value: "Black Color", comment: "The color black")
+        }
+    }
 }
 
 class PhotobookProduct: Codable {
     
     private enum CodingKeys: String, CodingKey {
-        case template, photobookId, productLayouts, coverColor, pageColor, spineText, spineFontType, productUpsellOptions, itemCount
+        case template, productLayouts, coverColor, pageColor, spineText, spineFontType, productUpsellOptions, itemCount, upsoldTemplate, upsoldOptions
     }
     
     private unowned var productManager = ProductManager.shared
@@ -40,16 +47,13 @@ class PhotobookProduct: Codable {
     private var currentLandscapeLayout = 0
     
     var template: PhotobookTemplate
-    var productUpsellOptions: [UpsellOption]? //TODO: Get this from the initial-data endpoint
+    var productUpsellOptions: [UpsellOption]?
     var spineText: String?
     var spineFontType: FontType = .plain
     var coverColor: ProductColor = .white
     var pageColor: ProductColor = .white
     var productLayouts = [ProductLayout]()
     var itemCount: Int = 1
-    
-    // The id of the uploaded PDF
-    var photobookId: String?
     
     var isAddingPagesAllowed: Bool {
         // TODO: Use pages count instead of assets/layout count
@@ -58,6 +62,22 @@ class PhotobookProduct: Codable {
     var isRemovingPagesAllowed: Bool {
         // TODO: Use pages count instead of assets/layout count
         return productManager.minimumRequiredAssets < productLayouts.count - 1 // Don't include cover for min calculation
+    }
+    
+    private var upsoldTemplate: PhotobookTemplate?
+    private(set) var upsoldOptions: [String: Any]?
+    
+    func setUpsellData(template: PhotobookTemplate?, payload: [String: Any]?) {
+        upsoldTemplate = template
+        upsoldOptions = payload?["options"] as? [String: Any]
+    }
+    
+    func applyUpsells() {
+        if let upsoldTemplate = upsoldTemplate,
+            let coverLayouts = ProductManager.shared.coverLayouts(for: upsoldTemplate),
+            let layouts = ProductManager.shared.layouts(for: upsoldTemplate) {
+            setTemplate(upsoldTemplate, coverLayouts: coverLayouts, layouts: layouts)
+        }
     }
 
     var emptyLayoutIndices: [Int]? {
@@ -96,6 +116,39 @@ class PhotobookProduct: Codable {
             }
         }
         return temp.count > 0 ? temp : nil
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(template, forKey: .template)
+        try container.encode(productLayouts, forKey: .productLayouts)
+        try container.encode(coverColor, forKey: .coverColor)
+        try container.encode(pageColor, forKey: .pageColor)
+        try container.encode(spineText, forKey: .spineText)
+        try container.encode(spineFontType, forKey: .spineFontType)
+        try container.encode(productUpsellOptions, forKey: .productUpsellOptions)
+        try container.encode(itemCount, forKey: .itemCount)
+        try container.encode(upsoldTemplate, forKey: .upsoldTemplate)
+        if let upsoldOptions = upsoldOptions,
+            let upsoldOptionData = try? JSONSerialization.data(withJSONObject: upsoldOptions, options: []) {
+            try container.encode(upsoldOptionData, forKey: .upsoldOptions)
+        }
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        template = try values.decode(PhotobookTemplate.self, forKey: .template)
+        productLayouts = try values.decode([ProductLayout].self, forKey: .productLayouts)
+        coverColor = try values.decode(ProductColor.self, forKey: .coverColor)
+        pageColor = try values.decode(ProductColor.self, forKey: .pageColor)
+        spineText = try values.decodeIfPresent(String.self, forKey: .spineText)
+        spineFontType = try values.decode(FontType.self, forKey: .spineFontType)
+        productUpsellOptions = try values.decodeIfPresent([UpsellOption].self, forKey: .productUpsellOptions)
+        itemCount = try values.decode(Int.self, forKey: .itemCount)
+        upsoldTemplate = try values.decode(PhotobookTemplate.self, forKey: .upsoldTemplate)
+        if let upsoldOptionsData = try values.decodeIfPresent(Data.self, forKey: .upsoldOptions) {
+            upsoldOptions = (try? JSONSerialization.jsonObject(with: upsoldOptionsData, options: [])) as? [String: Any]
+        }
     }
     
     init?(template: PhotobookTemplate, assets: [Asset], productManager: ProductManager = ProductManager.shared) {
@@ -372,8 +425,6 @@ class PhotobookProduct: Codable {
     
     func photobookParameters() -> [String: Any]? {
         
-        guard let photobookId = photobookId else { return nil }
-        
         // TODO: confirm schema
         var photobook = [String: Any]()
         
@@ -407,7 +458,6 @@ class PhotobookProduct: Codable {
             pages.append(page)
         }
         photobook["pages"] = pages
-        photobook["pdfId"] = photobookId
         
         return photobook
     }
@@ -419,5 +469,25 @@ class PhotobookProduct: Codable {
             assets.append(asset)
         }
         return assets
+    }
+}
+
+extension PhotobookProduct: Hashable, Equatable {
+    
+    static func ==(lhs: PhotobookProduct, rhs: PhotobookProduct) -> Bool {
+        return lhs.hashValue == rhs.hashValue
+    }
+    
+    var hashValue: Int {
+        get {
+            var stringHash = ""
+            
+            stringHash += "pt:\(template.productTemplateId),"
+            if let upsoldOptions = upsoldOptions {
+                stringHash += "po:\(upsoldOptions)"
+            }
+            
+            return stringHash.hashValue
+        }
     }
 }

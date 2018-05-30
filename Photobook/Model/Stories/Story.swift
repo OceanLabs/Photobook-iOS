@@ -8,6 +8,16 @@
 
 import Photos
 
+protocol CollectionManager {
+    func fetchMoments(inMomentList collectionList: PHCollectionList) -> PHFetchResult<PHAssetCollection>
+}
+
+class DefaultCollectionManager: CollectionManager {
+    func fetchMoments(inMomentList collectionList: PHCollectionList) -> PHFetchResult<PHAssetCollection> {
+        return PHAssetCollection.fetchMoments(inMomentList: collectionList, options: PHFetchOptions())
+    }
+}
+
 class Story {
     let collectionList: PHCollectionList
     let collectionForCoverPhoto: PHAssetCollection
@@ -25,6 +35,9 @@ class Story {
     var title: String {
         return collectionList.localizedTitle!.uppercased()
     }
+    
+    lazy var collectionManager: CollectionManager = DefaultCollectionManager()
+    lazy var assetsManager: AssetManager = DefaultAssetManager()
     
     lazy var subtitle: String? = {
         if isWeekend {
@@ -92,18 +105,23 @@ extension Story: Album {
     }
     
     func loadAssets(completionHandler: ((Error?) -> Void)?) {
-        guard assets.isEmpty else { completionHandler?(nil); return }
+        guard assets.isEmpty else {
+            completionHandler?(nil)
+            return
+        }
+        
         let fetchOptions = PHFetchOptions()
         fetchOptions.wantsIncrementalChangeDetails = false
         fetchOptions.includeHiddenAssets = false
         fetchOptions.includeAllBurstAssets = false
         
-        let moments = PHAssetCollection.fetchMoments(inMomentList: collectionList, options: PHFetchOptions())
+        let moments = collectionManager.fetchMoments(inMomentList: collectionList)
         moments.enumerateObjects { (collection: PHAssetCollection, index: Int,  stop: UnsafeMutablePointer<ObjCBool>) in
             
             fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: true) ]
-            fetchOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue) //only images
-            let fetchedAssets = PHAsset.fetchAssets(in: collection, options: fetchOptions)
+            fetchOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue) // Only images
+            
+            let fetchedAssets = self.assetsManager.fetchAssets(in: collection, options: fetchOptions)
             fetchedAssets.enumerateObjects({ (asset, _, _) in
                 self.assets.append(PhotosAsset(asset, albumIdentifier: self.identifier))
             })

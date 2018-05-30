@@ -9,6 +9,23 @@
 import UIKit
 import FBSDKLoginKit
 
+protocol FacebookApiManager {
+    var accessToken: String? { get }
+    func request(withGraphPath path: String, parameters: [String: Any]?, completion: @escaping (Any?, Error?) -> Void)
+}
+
+class DefaultFacebookApiManager: FacebookApiManager {
+    var accessToken: String? {
+        return FBSDKAccessToken.current().tokenString
+    }
+    func request(withGraphPath path: String, parameters: [String : Any]?, completion: @escaping (Any?, Error?) -> Void) {
+        let graphRequest = FBSDKGraphRequest(graphPath: path, parameters: parameters)
+        _ = graphRequest?.start { _, result, error in
+            completion(result, error)
+        }
+    }
+}
+
 class FacebookAlbum {
     
     private struct Constants {
@@ -24,24 +41,20 @@ class FacebookAlbum {
     }
     
     var numberOfAssets: Int
-    
     var localizedName: String?
-    
     var identifier: String
-    
     var assets = [Asset]()
-        
     var coverPhotoUrl: URL
-    
-    var after: String?
+    private var after: String?
     
     var graphPath: String {
         return "\(identifier)/photos?fields=picture,source,id,images&limit=\(Constants.pageSize)"
     }
     
+    lazy var facebookManager: FacebookApiManager = DefaultFacebookApiManager()
+    
     private func fetchAssets(graphPath: String, completionHandler: ((Error?) -> Void)?) {
-        let graphRequest = FBSDKGraphRequest(graphPath: graphPath, parameters: [:])
-        _ = graphRequest?.start(completionHandler: { [weak welf = self] _, result, error in
+        facebookManager.request(withGraphPath: graphPath, parameters: nil) { [weak welf = self] (result, error) in
             if let error = error {
                 completionHandler?(ErrorMessage(text: error.localizedDescription))
                 return
@@ -69,10 +82,10 @@ class FacebookAlbum {
                     urlAssetImages.append(URLAssetImage(url: url, size: CGSize(width: width, height: height)))
                 }
                 
-                let newAsset = URLAsset(identifier: identifier, albumIdentifier: self.identifier, images: urlAssetImages)
-                
-                newAssets.append(newAsset)
-                welf?.assets.append(newAsset)
+                if let newAsset = URLAsset(identifier: identifier, images: urlAssetImages, albumIdentifier: self.identifier) {
+                    newAssets.append(newAsset)
+                    welf?.assets.append(newAsset)
+                }
             }
             
             // Get the next page cursor
@@ -84,9 +97,9 @@ class FacebookAlbum {
             } else {
                 self.after = nil
             }
-        
+            
             completionHandler?(nil)
-        })
+        }
     }
 }
 
@@ -107,7 +120,7 @@ extension FacebookAlbum: Album {
     }
     
     func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
-        completionHandler(URLAsset(identifier: coverPhotoUrl.absoluteString, albumIdentifier: identifier, images: [URLAssetImage(url: coverPhotoUrl, size: .zero)]), nil)
+        completionHandler(URLAsset(identifier: coverPhotoUrl.absoluteString, images: [URLAssetImage(url: coverPhotoUrl, size: .zero)], albumIdentifier: identifier), nil)
     }
 }
 

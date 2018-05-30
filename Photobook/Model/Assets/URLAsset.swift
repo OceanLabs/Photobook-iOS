@@ -9,6 +9,19 @@
 import UIKit
 import SDWebImage
 
+protocol WebImageManager {
+    func loadImage(with url: URL, completion: @escaping (UIImage?, Data?, Error?) -> Void)
+}
+
+class DefaultWebImageManager: WebImageManager {
+    
+    func loadImage(with url: URL, completion: @escaping (UIImage?, Data?, Error?) -> Void) {
+        SDWebImageManager.shared().loadImage(with: url, options: [], progress: nil) { (image, data, error, _, _, _) in
+            completion(image, data, error)
+        }
+    }
+}
+
 /// Location for an image of a specific size
 @objc public class URLAssetImage: NSObject, NSCoding {
     
@@ -26,16 +39,17 @@ import SDWebImage
     }
     
     @objc public func encode(with aCoder: NSCoder) {
-        aCoder.encode(size, forKey: "size")
+        let stringSize = NSStringFromCGSize(size)
+        aCoder.encode(stringSize, forKey: "size")
         aCoder.encode(url, forKey: "url")
     }
 
     @objc public required convenience init?(coder aDecoder: NSCoder) {
-        guard let size = aDecoder.decodeObject(forKey: "size") as? CGSize,
+        guard let stringSize = aDecoder.decodeObject(of: NSString.self, forKey: "size") as String?,
               let url = aDecoder.decodeObject(forKey: "url") as? URL
             else { return nil }
         
-        self.init(url: url, size: size)
+        self.init(url: url, size: CGSizeFromString(stringSize))
     }
 }
 
@@ -43,32 +57,36 @@ import SDWebImage
 @objc public class URLAsset: NSObject, NSCoding, Asset {
     
     /// Unique identifier
-    @objc public var identifier: String!
+    @objc internal(set) public var identifier: String!
     
     /// Album unique identifier
-    @objc public var albumIdentifier: String?
+    @objc internal(set) public var albumIdentifier: String?
     
     /// Date associated with this asset
-    @objc public var date: Date?
+    @objc internal(set) public var date: Date?
     
     /// Array of URL per size available for the asset
-    @objc public var images: [URLAssetImage]
+    @objc internal(set) public var images: [URLAssetImage]
     
     var uploadUrl: String?
-    var size: CGSize {
-        return images.last?.size ?? .zero
-    }
+    var size: CGSize { return images.last!.size }
+    
+    lazy var webImageManager: WebImageManager = DefaultWebImageManager()
+    var screenScale = UIScreen.main.usableScreenScale()
     
     /// Init
     ///
     /// - Parameters:
     ///   - identifier: Identifier for the asset
-    ///   - albumIdentifier: Identifier for the album the asset belongs to
     ///   - images: Array of sizes and associated URLs
-    @objc public init(identifier: String, albumIdentifier: String? = nil, images: [URLAssetImage]) {
+    ///   - albumIdentifier: Identifier for the album the asset belongs to
+    ///   - date: Date associated to this asset
+    @objc public init?(identifier: String, images: [URLAssetImage], albumIdentifier: String? = nil, date: Date? = nil) {
+        guard images.count > 0 else { return nil }
         self.images = images.sorted(by: { $0.size.width < $1.size.width })
-        self.albumIdentifier = albumIdentifier
         self.identifier = identifier
+        self.albumIdentifier = albumIdentifier
+        self.date = date
     }
     
     /// Init with only one URL
@@ -77,7 +95,7 @@ import SDWebImage
     ///   - url: The URL of the remote image
     ///   - size: The size of the image.
     @objc public convenience init(_ url: URL, size: CGSize) {
-        self.init(identifier: url.absoluteString, images: [URLAssetImage(url: url, size: size)])
+        self.init(identifier: url.absoluteString, images: [URLAssetImage(url: url, size: size)])!
     }
     
     @objc public func encode(with aCoder: NSCoder) {
@@ -90,11 +108,12 @@ import SDWebImage
     
     @objc public required convenience init?(coder aDecoder: NSCoder) {
         guard let identifier = aDecoder.decodeObject(of: NSString.self, forKey: "identifier") as String?,
-            let albumIdentifier = aDecoder.decodeObject(of: NSString.self, forKey: "albumIdentifier") as String?,
             let images = aDecoder.decodeObject(forKey: "images") as? [URLAssetImage]
             else { return nil }
         
-        self.init(identifier: identifier,  albumIdentifier: albumIdentifier, images: images)
+        let albumIdentifier = aDecoder.decodeObject(of: NSString.self, forKey: "albumIdentifier") as String?
+        
+        self.init(identifier: identifier, images: images, albumIdentifier: albumIdentifier)
         uploadUrl = aDecoder.decodeObject(of: NSString.self, forKey: "uploadUrl") as String?
         date = aDecoder.decodeObject(of: NSDate.self, forKey: "date") as Date?
     }
@@ -102,7 +121,7 @@ import SDWebImage
     func image(size: CGSize, loadThumbnailFirst: Bool, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
         
         // Convert points to pixels
-        var imageSize = CGSize(width: size.width * UIScreen.main.usableScreenScale(), height: size.height * UIScreen.main.usableScreenScale())
+        var imageSize = CGSize(width: size.width * screenScale, height: size.height * screenScale)
         
         // Modify the requested size to match the image aspect ratio
         if let maxSize = images.last?.size, maxSize != .zero {
@@ -111,13 +130,9 @@ import SDWebImage
         
         // Find the smallest image that is larger than what we want
         let comparisonClosure: (URLAssetImage) -> Bool = imageSize.width >= imageSize.height ? { $0.size.width >= imageSize.width } : { $0.size.height >= imageSize.height }
-        let image = images.first (where: comparisonClosure) ?? images.last
-        guard let url = image?.url else {
-            completionHandler(nil, ErrorMessage(text: CommonLocalizedStrings.somethingWentWrong))
-            return
-        }
+        let image = images.first (where: comparisonClosure) ?? images.last!
         
-        SDWebImageManager.shared().loadImage(with: url, options: [], progress: nil, completed: { image, _, error, _, _, _ in
+        webImageManager.loadImage(with: image.url, completion: { image, _, error in
             DispatchQueue.global(qos: .background).async {
                 let image = image?.shrinkToSize(imageSize)
                 DispatchQueue.main.async {
@@ -129,15 +144,16 @@ import SDWebImage
     }
     
     func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension, Error?) -> Void) {
-        guard let url = images.last?.url else {
-            completionHandler(nil, .unsupported, ErrorMessage(text: CommonLocalizedStrings.somethingWentWrong))
-            return
-        }
         
-        SDWebImageManager.shared().loadImage(with: url, options: [], progress: nil, completed: { image, data, error, _, _, _ in
-            var imageData = data
+        webImageManager.loadImage(with: images.last!.url, completion: { image, data, error in
+            var imageData: Data?
             if let image = image {
                 imageData = UIImageJPEGRepresentation(image, 1)
+            } else if let data = data, UIImage(data: data) != nil {
+                imageData = data
+            } else {
+                completionHandler(nil, .unsupported, ErrorMessage(text: CommonLocalizedStrings.somethingWentWrong))
+                return
             }
             completionHandler(imageData, .jpg, error)
         })

@@ -60,28 +60,27 @@ class Automation {
     }
     
     func goToDeliveryDetailsFromBasket() {
-        let element = app.otherElements["Basket"].children(matching: .other).element(boundBy: 1)
-        element.children(matching: .other).element(boundBy: 2).tap()
+        app.buttons["deliveryDetailsView"].tap()
     }
     
     func fillDeliveryDetailsAndSave() {
         let tablesQuery = app.tables
-        let nameTextField = tablesQuery.cells.containing(.staticText, identifier:"Name")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        let nameTextField = tablesQuery.cells.containing(.staticText, identifier:"Name").textFields["userInputTextField"]
         nameTextField.tap()
         nameTextField.clearTextField()
         nameTextField.typeText(testName)
         
-        let lastNameTextField = tablesQuery.cells.containing(.staticText, identifier:"Last Name")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        let lastNameTextField = tablesQuery.cells.containing(.staticText, identifier:"Last Name").textFields["userInputTextField"]
         lastNameTextField.tap()
         lastNameTextField.clearTextField()
         lastNameTextField.typeText(testLastName)
         
-        let emailTextField = tablesQuery.cells.containing(.staticText, identifier:"Email")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        let emailTextField = tablesQuery.cells.containing(.staticText, identifier:"Email").textFields["userInputTextField"]
         emailTextField.tap()
         emailTextField.clearTextField()
         emailTextField.typeText(testEmail)
         
-        let phoneTextField = tablesQuery.cells.containing(.staticText, identifier:"Phone")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        let phoneTextField = tablesQuery.cells.containing(.staticText, identifier:"Phone").textFields["userInputTextField"]
         phoneTextField.tap()
         phoneTextField.clearTextField()
         phoneTextField.typeText(testPhone)
@@ -99,20 +98,20 @@ class Automation {
     
     func fillAddressAndSave() {
         let tablesQuery = app.tables
-        let line1TextField = tablesQuery.cells.containing(.staticText, identifier:"Line1")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        let line1TextField = tablesQuery.cells.containing(.staticText, identifier:"Line1").textFields["line1TextField"]
         line1TextField.tap()
         line1TextField.clearTextField()
         line1TextField.typeText(testAddressLine1)
         
         
-        let cityTextField = tablesQuery.cells.containing(.staticText, identifier:"City")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        let cityTextField = tablesQuery.cells.containing(.staticText, identifier:"City").textFields["cityTextField"]
         cityTextField.tap()
         cityTextField.clearTextField()
         cityTextField.typeText(testCity)
         
-        var zipOrPostalTextField = tablesQuery.cells.containing(.staticText, identifier:"Zip Code")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        var zipOrPostalTextField = tablesQuery.cells.containing(.staticText, identifier:"Zip Code").textFields["zipOrPostcodeTextField"]
         if !zipOrPostalTextField.exists {
-            zipOrPostalTextField = tablesQuery.cells.containing(.staticText, identifier:"Postcode")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+            zipOrPostalTextField = tablesQuery.cells.containing(.staticText, identifier:"Postcode").textFields["zipOrPostcodeTextField"]
         }
         zipOrPostalTextField.tap()
         zipOrPostalTextField.clearTextField()
@@ -129,7 +128,7 @@ class Automation {
     }
     
     func goToPaymentMethodFromBasket() {
-        XCUIApplication().otherElements["Basket"].children(matching: .other).element(boundBy: 1).children(matching: .other).element(boundBy: 4).tap()
+        app.buttons["paymentMethodView"].tap()
     }
     
     func goToCreditCardFromPaymentMethod() {
@@ -137,7 +136,7 @@ class Automation {
     }
     
     func fillCreditCardAndSave() {
-        let cardNumberTextField = app.tables.cells.containing(.staticText, identifier:"Card Number")/*@START_MENU_TOKEN@*/.textFields["TextField"]/*[[".textFields[\"Required\"]",".textFields[\"TextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        let cardNumberTextField = app.tables.cells["numberCell"].textFields["userInputTextField"]
         cardNumberTextField.tap()
         cardNumberTextField.typeText(testCreditCardNumber)
         
@@ -148,7 +147,7 @@ class Automation {
         
         app.toolbars["Toolbar"].buttons["Next"].tap()
         
-        let cvvTextField = app.tables/*@START_MENU_TOKEN@*/.secureTextFields["TextField"]/*[[".cells",".secureTextFields[\"Required\"]",".secureTextFields[\"TextField\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/
+        let cvvTextField = app.cells["cvvCell"].secureTextFields["userInputTextField"]
         cvvTextField.typeText(testCreditCardCVV)
         
         app.navigationBars["Card Details"].buttons["Save"].tap()

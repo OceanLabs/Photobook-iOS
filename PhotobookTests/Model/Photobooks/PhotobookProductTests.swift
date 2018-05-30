@@ -12,15 +12,20 @@ import Photos
 
 class TestProductManager: ProductManager {
     
-    var stubLayouts: [Layout]?
-    var stubCoverLayouts: [Layout]?
+    var minimumRequiredAssetsStub: Int = 20
+    var layoutsStub: [Layout]?
+    var coverLayoutsStub: [Layout]?
+    
+    override var minimumRequiredAssets: Int {
+        return minimumRequiredAssetsStub
+    }
     
     override func coverLayouts(for photobook: PhotobookTemplate) -> [Layout]? {
-        return stubCoverLayouts
+        return coverLayoutsStub
     }
     
     override func layouts(for photobook: PhotobookTemplate) -> [Layout]? {
-        return stubLayouts
+        return layoutsStub
     }
 }
 
@@ -52,8 +57,8 @@ class PhotobookProductTests: XCTestCase {
             coverLayouts.append(Layout(id: i, category: "cover\(i)", imageLayoutBox: layoutBox, textLayoutBox: layoutBox, isDoubleLayout: false))
             layouts.append(Layout(id: i, category: "page\(i)", imageLayoutBox: layoutBox, textLayoutBox: layoutBox, isDoubleLayout: i == 5))
         }
-        productManager.stubLayouts = layouts
-        productManager.stubCoverLayouts = coverLayouts
+        productManager.layoutsStub = layouts
+        productManager.coverLayoutsStub = coverLayouts
         
         photobookProduct = PhotobookProduct(template: template, assets: assets, productManager: productManager)
     }
@@ -75,13 +80,13 @@ class PhotobookProductTests: XCTestCase {
     // MARK: - EmptyLayoutIndices
     func testEmptyLayoutIndices_shouldReturnLastTen() {
         let emptyLayoutIndices = photobookProduct.emptyLayoutIndices
-        XCTAssertTrue(emptyLayoutIndices == Array(11...19))
+        XCTAssertEqual(emptyLayoutIndices, Array(11...19))
     }
     
     func testEmptyLayoutIndices_shouldCountDoublePageLayoutsAsTwoIndeces() {
         photobookProduct.productLayouts[12].layout.isDoubleLayout = true
         let emptyLayoutIndices = photobookProduct.emptyLayoutIndices
-        XCTAssertTrue(emptyLayoutIndices == Array(11...20))
+        XCTAssertEqual(emptyLayoutIndices, Array(11...20))
     }
 
     func testEmptyLayoutIndices_shouldIgnoreEmptyTextIfLayoutHasAPhoto() {
@@ -149,7 +154,7 @@ class PhotobookProductTests: XCTestCase {
     func testSetText() {
         let text = "This is alternative text"
         photobookProduct.setText(text, forPage: 1)
-        XCTAssertTrue(photobookProduct.productLayouts[1].text == text)
+        XCTAssertEqual(photobookProduct.productLayouts[1].text, text)
     }
     
     // MARK: - Indices & Spreads
@@ -230,7 +235,7 @@ class PhotobookProductTests: XCTestCase {
         
         var productLayouts = [ProductLayout]()
         for i in 0 ..< 5 {
-            productLayouts.append(ProductLayout(layout: productManager.stubLayouts![i]))
+            productLayouts.append(ProductLayout(layout: productManager.layoutsStub![i]))
         }
         
         photobookProduct.addPages(at: index, pages: productLayouts)
