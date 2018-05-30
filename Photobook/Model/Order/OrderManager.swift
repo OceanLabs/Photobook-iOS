@@ -369,6 +369,9 @@ class OrderManager {
                 cancelProcessing() {
                     self.orderProcessingDelegate?.orderDidComplete(error: .cancelled)
                 }
+            default:
+                //unknown error or not relevant for image upload. Should never happen. Cancel processing
+                orderProcessingDelegate?.orderDidComplete(error: OrderProcessingError.cancelled)
             }
         } else if let _ = error as? APIClientError {
             // Connection / server errors or parsing error
