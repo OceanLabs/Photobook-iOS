@@ -58,7 +58,14 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private weak var collectionViewBottomConstraint: NSLayoutConstraint!
     
     @IBOutlet private var ctaContainerBottomConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var ctaButton: UIButton!
+    @IBOutlet private weak var ctaButton: UIButton! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                ctaButton.titleLabel?.font = UIFontMetrics.default.scaledFont(for: ctaButton.titleLabel!.font)
+                ctaButton.titleLabel?.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
     
     @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var ctaButtonContainer: UIView!
@@ -69,7 +76,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     private var titleButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17.0, weight: .semibold)
+        var font = UIFont.systemFont(ofSize: 17.0, weight: .semibold)
+        if #available(iOS 11.0, *) {
+            font = UIFontMetrics.default.scaledFont(for: font)
+            button.titleLabel?.adjustsFontForContentSizeCategory = true
+        }
+        button.titleLabel?.font = font
         button.setTitleColor(.black, for: .normal)
         button.setImage(UIImage(namedInPhotobookBundle:"chevron-down"), for: .normal)
         button.semanticContentAttribute = .forceRightToLeft
@@ -117,6 +129,13 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         super.viewDidLayoutSubviews()
         
         adjustInsets()
+        adjustButtonLabels()
+    }
+    
+    private func adjustButtonLabels() {
+        titleButton.titleLabel?.sizeToFit()
+        titleButton.sizeToFit()
+        ctaButton.titleLabel?.sizeToFit()
     }
     
     private func adjustInsets() {
