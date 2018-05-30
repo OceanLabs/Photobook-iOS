@@ -227,15 +227,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             alertController.addAction(UIAlertAction(title: photobook.name, style: .default, handler: { [weak welf = self] (_) in
                 guard welf?.product.template.id != photobook.id else { return }
                 
-                guard
-                    let coverLayouts = ProductManager.shared.currentProduct?.coverLayouts,
-                    let layouts = ProductManager.shared.currentProduct?.layouts
-                else {
-                    print("ProductManager: Missing layouts for selected photobook")
-                    return
-                }
-                
-                welf?.product.setTemplate(photobook, coverLayouts: coverLayouts, layouts: layouts)
+                _ = ProductManager.shared.setCurrentProduct(with: photobook)
                 
                 welf?.setupTitleView()
                 welf?.collectionView.reloadData()

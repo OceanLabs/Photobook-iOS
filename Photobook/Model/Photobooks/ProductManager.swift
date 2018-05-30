@@ -75,12 +75,17 @@ class ProductManager {
         return layouts.filter { photobook.layouts.contains($0.id) }
     }
     
-    func setCurrentProduct(with photobook: PhotobookTemplate, assets: [Asset]) -> PhotobookProduct? {
+    func setCurrentProduct(with photobook: PhotobookTemplate, assets: [Asset]? = nil) -> PhotobookProduct? {
         guard let availableCoverLayouts = coverLayouts(for: photobook),
               let availableLayouts = layouts(for: photobook)
         else { return nil }
         
-        currentProduct = PhotobookProduct(template: photobook, assets: assets, coverLayouts: availableCoverLayouts, layouts: availableLayouts)
+        // Replacing template
+        if currentProduct != nil {
+            currentProduct?.setTemplate(photobook, coverLayouts: availableCoverLayouts, layouts: availableLayouts)
+        } else if let assets = assets { // First time or replacing product
+            currentProduct = PhotobookProduct(template: photobook, assets: assets, coverLayouts: availableCoverLayouts, layouts: availableLayouts)
+        }
         return currentProduct
     }
 }

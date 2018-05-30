@@ -131,7 +131,7 @@ class PhotobookProduct: Codable {
         productLayouts = tempLayouts
     }
     
-    func setTemplate(_ template: PhotobookTemplate, withAssets assets: [Asset]? = nil, coverLayouts: [Layout], layouts: [Layout]) {
+    func setTemplate(_ template: PhotobookTemplate, coverLayouts: [Layout], layouts: [Layout]) {
         guard !coverLayouts.isEmpty, !layouts.isEmpty else {
             print("PhotobookProduct: Missing layouts for selected photobook")
             return
