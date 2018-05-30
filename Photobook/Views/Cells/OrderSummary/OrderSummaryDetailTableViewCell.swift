@@ -9,7 +9,7 @@
 import UIKit
 
 class OrderSummaryDetailTableViewCell: UITableViewCell {
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet weak var titleLabel: UILabel?
+    @IBOutlet weak var priceLabel: UILabel?
     
 }
