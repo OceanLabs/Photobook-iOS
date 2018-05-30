@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WZR-4z-wzI">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WZR-4z-wzI">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -3012,6 +3012,7 @@
                         <outlet property="itemImageView" destination="ATQ-7e-lXt" id="f5G-Y4-me1"/>
                         <outlet property="itemPriceLabel" destination="T6M-C9-pKv" id="C3f-Xd-sBx"/>
                         <outlet property="itemTitleLabel" destination="AgL-tq-2Ud" id="zCF-ob-SvB"/>
+                        <outlet property="itemTypeLabel" destination="ekw-fg-lyA" id="5GP-XF-REa"/>
                         <outlet property="optionsViewBottomContraint" destination="9br-cn-uPh" id="s6C-j1-S0A"/>
                         <outlet property="optionsViewTopConstraint" destination="DUA-9A-pkr" id="XAc-Kg-b2B"/>
                         <outlet property="payButton" destination="Gka-ba-muo" id="c6O-1g-k45"/>
@@ -3024,6 +3025,7 @@
                         <outlet property="promoCodeActivityIndicator" destination="Oxp-hX-5vJ" id="H5Y-Km-jje"/>
                         <outlet property="promoCodeClearButton" destination="LNv-Iw-alh" id="Cks-1j-sam"/>
                         <outlet property="promoCodeDismissGestureRecognizer" destination="Qur-Ct-kYp" id="pXO-tP-Oib"/>
+                        <outlet property="promoCodeLabel" destination="fSF-Qp-4EQ" id="oWN-EP-RSJ"/>
                         <outlet property="promoCodeNormalConstraint" destination="gxw-q2-8G2" id="uft-kC-yky"/>
                         <outlet property="promoCodeTextField" destination="XZ1-hM-Xzz" id="KrN-em-xvm"/>
                         <outlet property="promoCodeView" destination="QrE-ug-05V" id="z8q-2f-7Rh"/>
