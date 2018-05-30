@@ -29,7 +29,7 @@ enum ProductColor: String, Codable {
 class PhotobookProduct: Codable {
     
     private enum CodingKeys: String, CodingKey {
-        case template, productLayouts, coverColor, pageColor, spineText, spineFontType, productUpsellOptions, itemCount, upsoldTemplate, upsoldPayload
+        case template, productLayouts, coverColor, pageColor, spineText, spineFontType, productUpsellOptions, itemCount, upsoldTemplate, upsoldOptions
     }
     
     private unowned var productManager = ProductManager.shared
@@ -58,27 +58,11 @@ class PhotobookProduct: Codable {
     }
     
     private var upsoldTemplate: PhotobookTemplate?
-    private var upsoldPayload: Data? //json data because it's codable
-    var upsoldOptions: [String: Any]? { //extract options list from payload json data
-        get {
-            guard let upsoldPayload = upsoldPayload,
-            let payloadObject = try? JSONSerialization.jsonObject(with: upsoldPayload, options: []),
-            let payloadDictionary = payloadObject as? [String: Any],
-            let options = payloadDictionary["options"] as? [String: Any] else {
-                return nil
-            }
-            
-            return options
-        }
-    }
+    private(set) var upsoldOptions: [String: Any]?
     
     func setUpsellData(template: PhotobookTemplate?, payload: [String: Any]?) {
         upsoldTemplate = template
-        if let payload = payload {
-            upsoldPayload = try? JSONSerialization.data(withJSONObject: payload, options: [])
-        } else {
-            upsoldPayload = nil
-        }
+        upsoldOptions = payload?["options"] as? [String: Any]
     }
     
     func applyUpsells() {
@@ -125,6 +109,39 @@ class PhotobookProduct: Codable {
             }
         }
         return temp.count > 0 ? temp : nil
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(template, forKey: .template)
+        try container.encode(productLayouts, forKey: .productLayouts)
+        try container.encode(coverColor, forKey: .coverColor)
+        try container.encode(pageColor, forKey: .pageColor)
+        try container.encode(spineText, forKey: .spineText)
+        try container.encode(spineFontType, forKey: .spineFontType)
+        try container.encode(productUpsellOptions, forKey: .productUpsellOptions)
+        try container.encode(itemCount, forKey: .itemCount)
+        try container.encode(upsoldTemplate, forKey: .upsoldTemplate)
+        if let upsoldOptions = upsoldOptions,
+            let upsoldOptionData = try? JSONSerialization.data(withJSONObject: upsoldOptions, options: []) {
+            try container.encode(upsoldOptionData, forKey: .upsoldOptions)
+        }
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        template = try values.decode(PhotobookTemplate.self, forKey: .template)
+        productLayouts = try values.decode([ProductLayout].self, forKey: .productLayouts)
+        coverColor = try values.decode(ProductColor.self, forKey: .coverColor)
+        pageColor = try values.decode(ProductColor.self, forKey: .pageColor)
+        spineText = try values.decodeIfPresent(String.self, forKey: .spineText)
+        spineFontType = try values.decode(FontType.self, forKey: .spineFontType)
+        productUpsellOptions = try values.decodeIfPresent([UpsellOption].self, forKey: .productUpsellOptions)
+        itemCount = try values.decode(Int.self, forKey: .itemCount)
+        upsoldTemplate = try values.decode(PhotobookTemplate.self, forKey: .upsoldTemplate)
+        if let upsoldOptionsData = try values.decodeIfPresent(Data.self, forKey: .upsoldOptions) {
+            upsoldOptions = (try? JSONSerialization.jsonObject(with: upsoldOptionsData, options: [])) as? [String: Any]
+        }
     }
     
     init?(template: PhotobookTemplate, assets: [Asset], productManager: ProductManager = ProductManager.shared) {
