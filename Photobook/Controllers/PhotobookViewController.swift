@@ -75,6 +75,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         button.semanticContentAttribute = .forceRightToLeft
         button.imageEdgeInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: Constants.titleArrowOffset)
         button.addTarget(self, action: #selector(didTapOnTitle), for: .touchUpInside)
+        button.accessibilityIdentifier = "titleButton"
         return button
     }()
 
@@ -211,6 +212,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         if !isRearranging {
             titleButton.setTitle(product.template.name, for: .normal)
             titleButton.sizeToFit()
+            navigationItem.rightBarButtonItem?.tintColor = Constants.rearrangeGreyColor
             navigationItem.titleView = titleButton
             return
         }
@@ -245,7 +247,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         
         alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
-        
+                
         present(alertController, animated: true, completion: nil)
     }
     

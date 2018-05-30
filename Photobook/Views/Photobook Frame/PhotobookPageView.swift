@@ -194,8 +194,8 @@ class PhotobookPageView: UIView {
         assetImageView.image = image
         assetImageView.center = CGPoint(x: containerView.bounds.midX, y: containerView.bounds.midY)
         
-        productLayout!.productLayoutAsset!.containerSize = containerView.bounds.size
-        assetImageView.transform = productLayout!.productLayoutAsset!.transform
+        productLayoutAsset.containerSize = containerView.bounds.size
+        assetImageView.transform = productLayoutAsset.transform
     }
     
     func setupTextBox(mode: TextBoxMode = .placeHolder) {

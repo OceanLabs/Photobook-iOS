@@ -20,6 +20,11 @@ struct LayoutBox: Codable {
         return rect.width > rect.height
     }
     
+    func isSquareEnoughForVoiceOver() -> Bool {
+        let ratio = rect.width / rect.height
+        return ratio > 0.85 && ratio < 1.15
+    }
+    
     func rectContained(in pageSize: CGSize) -> CGRect {
         let x = rect.minX * pageSize.width
         let y = rect.minY * pageSize.height
