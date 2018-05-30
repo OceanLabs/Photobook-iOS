@@ -11,40 +11,45 @@ import UIKit
 class UpsellOption: Codable, Equatable {
     var type: String
     var displayName: String
-    private var payloadData: Data?
-    var payload: AnyObject? {
-        guard let data = payloadData else { return nil }
-        
-        return try? JSONSerialization.jsonObject(with: data, options: []) as AnyObject
+    var targetTemplateId: String?
+    
+    var dict: [String: Any] {
+        get {
+            var dictionary = ["type": type, "displayName": displayName]
+            if let targetTemplateId = targetTemplateId { dictionary["targetTemplateId"] = targetTemplateId }
+            return dictionary
+        }
     }
     
-    init(type: String, displayName: String, payload: Data?) {
+    init(type: String, displayName: String, targetTemplateId: String? = nil) {
         self.type = type
         self.displayName = displayName
-        self.payloadData = payload
+        self.targetTemplateId = targetTemplateId
     }
     
-    convenience init?(_ dict: [String: Any]) {
+    static func parse(_ dict: [String: Any]) -> UpsellOption? {
         guard let type = dict["type"] as? String, let displayName = dict["displayName"] as? String else {
             //invalid
             print("UpsellOption: couldn't initialise object")
             return nil
         }
         
-        let payloadData = try? JSONSerialization.data(withJSONObject: dict["payload"] as Any, options: [])
+        let targetTemplateId = dict["targetTemplateId"] as? String
         
-        self.init(type: type, displayName: displayName, payload: payloadData)
+        return UpsellOption(type: type, displayName: displayName, targetTemplateId: targetTemplateId)
     }
 }
 
 func ==(lhs: UpsellOption, rhs: UpsellOption) -> Bool {
-    return lhs.type == rhs.type
+    return lhs.hashValue == rhs.hashValue
 }
 
 extension UpsellOption: Hashable {
     var hashValue: Int {
         get {
-            return type.hashValue
+            var value = type.hashValue ^ displayName.hashValue
+            if let targetTemplateId = targetTemplateId { value = value ^ targetTemplateId.hashValue}
+            return value
         }
     }
 }

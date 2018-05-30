@@ -9,11 +9,16 @@
 import UIKit
 import SDWebImage
 
+protocol OrderSummaryManagerDelegate: class {
+    func orderSummaryManagerWillUpdate(_ manager: OrderSummaryManager)
+    func orderSummaryManagerPreviewImageFinished(_ manager: OrderSummaryManager, success: Bool)
+    func orderSummaryManager(_ manager: OrderSummaryManager, didUpdateSummary summary: OrderSummary?, error: Error?)
+    func orderSummaryManager(_ manager: OrderSummaryManager, failedToApplyUpsell upsell: UpsellOption, error:Error?)
+}
+
 class OrderSummaryManager {
-    static let notificationWillUpdate = Notification.Name("ly.kite.sdk.orderSummaryManager.willUpdate")
-    static let notificationPreviewImageReady = Notification.Name("ly.kite.sdk.orderSummaryManager.previewImageReady")
-    static let notificationPreviewImageFailed = Notification.Name("ly.kite.sdk.orderSummaryManager.previewImageFailed")
-    static let notificationDidUpdateSummary = Notification.Name("ly.kite.sdk.orderSummaryManager.didUpdateSummary")
+    
+    private lazy var apiManager = PhotobookAPIManager()
     
     //layouts configured by previous UX
     private var layouts: [ProductLayout] {
@@ -24,49 +29,108 @@ class OrderSummaryManager {
     private var coverImageUrl:String?
     private var isUploadingCoverImage = false
     
-    var upsellOptions: [UpsellOption]? {
-        get {
-            return ProductManager.shared.upsellOptions
-        }
-    }
-    var selectedUpsellOptions: Set<UpsellOption> = []
+    private(set) var upsellOptions: [UpsellOption]?
     private(set) var summary: OrderSummary?
-    private(set) var upsoldProduct: PhotobookTemplate? //product to place the order with. Reflects user's selected upsell options.
     private var previewImageUrl: String?
     
     var coverPageSnapshotImage: UIImage?
     
-    private var product: PhotobookProduct! {
+    var product: PhotobookProduct! {
         return ProductManager.shared.currentProduct
     }
+    private(set) var selectedUpsellOptions = Set<UpsellOption>()
     
-    static let shared = OrderSummaryManager()
+    weak var delegate: OrderSummaryManagerDelegate?
     
     func refresh() {
-        NotificationCenter.default.post(name: OrderSummaryManager.notificationWillUpdate, object: self)
+        if upsellOptions?.isEmpty ?? true {
+            fetchOrderSummary()
+        } else {
+            applyUpsells()
+        }
+    }
+    
+    func toggleUpsellOption(_ option:UpsellOption) {
+        if isUpsellOptionSelected(option) {
+            deselectUpsellOption(option)
+        } else {
+            selectUpsellOption(option)
+        }
+    }
+    
+    func selectUpsellOption(_ option:UpsellOption) {
+        selectedUpsellOptions.insert(option)
+        applyUpsells { [weak self] (error) in
+            if let strongSelf = self {
+                strongSelf.selectedUpsellOptions.remove(option)
+                strongSelf.delegate?.orderSummaryManager(strongSelf, failedToApplyUpsell: option, error: error)
+            }
+        }
+    }
+    
+    func deselectUpsellOption(_ option:UpsellOption) {
+        selectedUpsellOptions.remove(option)
+        applyUpsells { [weak self] (error) in
+            if let strongSelf = self {
+                strongSelf.selectedUpsellOptions.insert(option)
+                strongSelf.delegate?.orderSummaryManager(strongSelf, failedToApplyUpsell: option, error: error)
+            }
+        }
+    }
+    
+    func applyUpsells(_ failure:((_ error: Error?) -> Void)? = nil) {
+        delegate?.orderSummaryManagerWillUpdate(self)
+        
+        ProductManager.shared.applyUpsells(Array<UpsellOption>(selectedUpsellOptions)) { [weak self] (summary, error) in
+            guard let summary = summary, error == nil else {
+                failure?(error)
+                return
+            }
+            
+            self?.handleReceivingSummary(summary)
+        }
+    }
+    
+    func isUpsellOptionSelected(_ option:UpsellOption) -> Bool {
+        return selectedUpsellOptions.contains(option)
+    }
+}
+
+// MARK - API Requests
+extension OrderSummaryManager {
+    
+    /// Initial summary fetch
+    private func fetchOrderSummary() {
+        self.delegate?.orderSummaryManagerWillUpdate(self)
         
         summary = nil
         previewImageUrl = nil
-        upsoldProduct = nil
         
         if coverImageUrl == nil {
             uploadCoverImage()
         }
         
-        fetchProductDetails()
-    }
-    
-    func toggleUpsellOption(_ option:UpsellOption) {
-        if isUpsellOptionSelected(option) {
-            selectedUpsellOptions.remove(option)
-        } else {
-            selectedUpsellOptions.insert(option)
+        apiManager.getOrderSummary(product: product) { [weak self] (summary, upsellOptions, productPayload, error) in
+            
+            if let strongSelf = self {
+                guard let summary = summary else {
+                    strongSelf.delegate?.orderSummaryManager(strongSelf, didUpdateSummary: nil, error: error)
+                    return
+                }
+                
+                strongSelf.product.setUpsellData(template: strongSelf.product.template, payload: productPayload)
+                strongSelf.upsellOptions = upsellOptions
+                strongSelf.handleReceivingSummary(summary)
+            }
         }
-        refresh()
     }
     
-    func isUpsellOptionSelected(_ option:UpsellOption) -> Bool {
-        return selectedUpsellOptions.contains(option)
+    private func handleReceivingSummary(_ summary: OrderSummary) {
+        self.summary = summary
+        delegate?.orderSummaryManager(self, didUpdateSummary: summary, error: nil)
+        if coverImageUrl != nil {
+            delegate?.orderSummaryManagerPreviewImageFinished(self, success: true)
+        }
     }
     
     func fetchPreviewImage(withSize size:CGSize, completion:@escaping (UIImage?) -> Void) {
@@ -88,55 +152,37 @@ class OrderSummaryManager {
         }
     }
     
-    private func fetchProductDetails() {
-        
-        //TODO: mock data REMOVE
-        let randomInt = arc4random_uniform(3)
-        let filename = "order_summary_\(randomInt)"
-        print("mock file: " + filename)
-        
-        guard let summaryDict = JSON.parse(file: filename) as? [String:Any] else {
-            NotificationCenter.default.post(name: OrderSummaryManager.notificationDidUpdateSummary, object: self)
-            return
-        }
-        
-        //summary
-        guard let summary = OrderSummary(summaryDict) else {
-            NotificationCenter.default.post(name: OrderSummaryManager.notificationDidUpdateSummary, object: self)
-            return
-        }
-        self.summary = summary
-        NotificationCenter.default.post(name: OrderSummaryManager.notificationDidUpdateSummary, object: self)
-        if coverImageUrl != nil {
-            NotificationCenter.default.post(name: OrderSummaryManager.notificationPreviewImageReady, object: self)
-        }
-    }
-    
     private func uploadCoverImage() {
         isUploadingCoverImage = true
         
         guard let coverImage = coverPageSnapshotImage else {
-            self.isUploadingCoverImage = false
-            NotificationCenter.default.post(name: OrderSummaryManager.notificationPreviewImageFailed, object: self)
+            isUploadingCoverImage = false
+            delegate?.orderSummaryManagerPreviewImageFinished(self, success: false)
             return
         }
         
-        APIClient.shared.uploadImage(coverImage, imageName: "OrderSummaryPreviewImage.png", context: .pig, endpoint: "upload/", completion: { (json, error) in
-            self.isUploadingCoverImage = false
+        APIClient.shared.uploadImage(coverImage, imageName: "OrderSummaryPreviewImage.png", context: .pig, endpoint: "upload/", completion: { [weak self] (json, error) in
+            
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.isUploadingCoverImage = false
             
             if let error = error {
                 print(error.localizedDescription)
+                return
             }
             
             guard let dictionary = json as? [String:AnyObject], let url = dictionary["full"] as? String else {
                 print("OrderSummaryManager: Couldn't parse URL of uploaded image")
-                NotificationCenter.default.post(name: OrderSummaryManager.notificationPreviewImageFailed, object: self)
+                strongSelf.delegate?.orderSummaryManagerPreviewImageFinished(strongSelf, success: false)
                 return
             }
             
-            self.coverImageUrl = url
-            if self.summary != nil {
-                NotificationCenter.default.post(name: OrderSummaryManager.notificationPreviewImageReady, object: self)
+            strongSelf.coverImageUrl = url
+            if strongSelf.summary != nil {
+                strongSelf.delegate?.orderSummaryManagerPreviewImageFinished(strongSelf, success: true)
             }
         })
     }

@@ -568,6 +568,13 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         for button in toolbarButtons { button.isSelected = (button === sender) }
         
         isAnimatingTool = true
+        
+        assetPlacementViewController.accessibilityElementsHidden = true
+        textEditingViewController.accessibilityElementsHidden = true
+        assetSelectionContainerView.accessibilityElementsHidden = true
+        layoutSelectionContainerView.accessibilityElementsHidden = true
+        colorSelectionContainerView.accessibilityElementsHidden = true
+        photobookContainerView.accessibilityElementsHidden = true
 
         switch tool {
         case .selectAsset, .selectLayout, .selectColor:
@@ -587,6 +594,11 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
                 isAnimatingTool = false
             }
 
+            assetSelectionContainerView.accessibilityElementsHidden = false
+            layoutSelectionContainerView.accessibilityElementsHidden = false
+            colorSelectionContainerView.accessibilityElementsHidden = false
+            photobookContainerView.accessibilityElementsHidden = false
+            
             UIView.animate(withDuration: 0.1, animations: {
                 self.photobookContainerView.alpha = 1.0
                 self.assetSelectionContainerView.alpha = tool.rawValue == Tool.selectAsset.rawValue ? 1.0 : 0.0
@@ -601,6 +613,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             assetPlacementViewController.initialContainerRect = containerRect
             assetPlacementViewController.previewAssetImage = assetImageView.image
             assetPlacementViewController.pageType = pageType
+            assetPlacementViewController.accessibilityElementsHidden = false
+
             if textEditingWasSelected {
                 textEditingViewController.animateOff {
                     self.view.sendSubview(toBack: self.textEditingContainerView)
@@ -616,6 +630,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         case .editText:
             view.bringSubview(toFront: textEditingContainerView)
             self.textEditingContainerView.alpha = 1.0
+            
+            textEditingViewController.accessibilityElementsHidden = false
             
             textEditingViewController.productLayout = productLayout!
             textEditingViewController.assetImage = assetImageView.image

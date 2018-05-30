@@ -1,6 +1,7 @@
 {
 "products": [
     {
+     "id": 1,
      "displayName": "Square 127x127",
      "spineTextRatio": 0.87,
      "coverLayouts": [ 14, 15, 16, 17, 18 ],
@@ -27,6 +28,7 @@
                 ]
      },
     {
+     "id": 2,
      "displayName": "Square 210x210",
      "spineTextRatio": 0.76,
      "coverLayouts": [ 40, 41, 42, 43, 44 ],
@@ -53,6 +55,7 @@
                 ]
      },
      {
+     "id": 3,
      "displayName": "Landscape 210x152",
      "spineTextRatio": 0.72,
      "coverLayouts": [ 1, 2, 3, 4, 5 ],
@@ -79,6 +82,7 @@
                 ]
      },
      {
+     "id": 4,
      "displayName": "Landscape 297x210",
      "spineTextRatio": 0.76,
      "coverLayouts": [ 27, 28, 29, 30, 31 ],

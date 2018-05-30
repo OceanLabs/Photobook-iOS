@@ -20,7 +20,10 @@ class ColorSelectionViewController: UIViewController {
             guard productColorButtons != nil else { return }
             let index = productColors.index(of: selectedColor)
             for (i, productColorButton) in productColorButtons.enumerated() {
-                productColorButton.isBorderVisible = (i == index)
+                let selected = i == index
+                productColorButton.isBorderVisible = selected
+                productColorButton.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + productColors[i].accessibilityLabel
+                productColorButton.accessibilityHint = !selected ? CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem : nil
             }
         }
     }

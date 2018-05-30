@@ -281,7 +281,7 @@ extension DeliveryDetailsTableViewController {
                 let selected = address == details.address
                 cell.checkmark.isHidden = !selected
                 cell.topSeparator.isHidden = indexPath.row != 0
-                cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + ". " + (address.line1 ?? "") + ", " + address.descriptionWithoutLine1()
+                cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + (address.line1 ?? "") + ", " + address.descriptionWithoutLine1()
                 cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
                 
                 return cell
