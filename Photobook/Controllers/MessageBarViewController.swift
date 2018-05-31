@@ -41,7 +41,14 @@ class MessageBarViewController: UIViewController {
     static let identifier = NSStringFromClass(MessageBarViewController.self).components(separatedBy: ".").last!
     
     // Outlets
-    @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var label: UILabel! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                label.font = UIFontMetrics.default.scaledFont(for: label.font)
+                label.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
     @IBOutlet weak var containerView: UIView!
     var messageViewHeightConstraint: NSLayoutConstraint?
     

@@ -41,6 +41,14 @@ class OrderSummaryViewController: UIViewController {
         }
     }
     
+    @IBOutlet weak var loadingPreviewLabel: UILabel! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                loadingPreviewLabel.font = UIFontMetrics.default.scaledFont(for: loadingPreviewLabel.font)
+                loadingPreviewLabel.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
     
     private var timer: Timer?
     

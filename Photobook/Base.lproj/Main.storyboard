@@ -4410,6 +4410,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     <connections>
                         <outlet property="coverSnapshotPageView" destination="8EI-2U-Avm" id="z4R-KX-vwj"/>
                         <outlet property="ctaButton" destination="2YI-pQ-v5X" id="Xua-aP-cay"/>
+                        <outlet property="loadingPreviewLabel" destination="Aeb-t6-4vD" id="dtU-h1-dEd"/>
                         <outlet property="orderDetailsLabel" destination="3RN-ib-X8q" id="Rt3-jj-1KY"/>
                         <outlet property="previewImageActivityIndicatorView" destination="fjl-yz-TyM" id="nKn-bA-MEj"/>
                         <outlet property="previewImageProgressView" destination="7kK-HX-kKi" id="eSa-nk-MGN"/>
