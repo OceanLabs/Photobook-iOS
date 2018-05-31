@@ -4821,6 +4821,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="button" destination="Lc6-6j-BG5" id="FpK-BB-UKs"/>
                                     <outlet property="messageBottomConstraint" destination="OZ5-g6-0s4" id="aaF-ie-Xm2"/>
                                     <outlet property="messageLabel" destination="45s-9M-gdM" id="LEP-C0-IYB"/>
                                     <outlet property="separator" destination="7Vf-Xw-x5i" id="Q6B-cd-zAG"/>
@@ -4985,7 +4986,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             <outlet property="tickImageView" destination="Tbh-Fr-A3E" id="17N-e9-P4E"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="AddPaymentMethodCell" id="QKZ-tw-CMz">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="AddPaymentMethodCell" id="QKZ-tw-CMz" customClass="AddPaymentMethodTableViewCell" customModule="Photobook" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="99.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QKZ-tw-CMz" id="lcN-zV-epN">
@@ -5007,6 +5008,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                 <constraint firstItem="TZW-eX-Xow" firstAttribute="leading" secondItem="lcN-zV-epN" secondAttribute="leading" constant="16" id="aEv-KM-MS5"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="addPaymentMethodButton" destination="TZW-eX-Xow" id="P1p-J8-cqf"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
@@ -5155,7 +5159,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="checkmark" indentationWidth="10" reuseIdentifier="country" textLabel="yYO-hR-Fdk" style="IBUITableViewCellStyleDefault" id="FU3-m8-5Es">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="checkmark" indentationWidth="10" reuseIdentifier="country" textLabel="yYO-hR-Fdk" style="IBUITableViewCellStyleDefault" id="FU3-m8-5Es" customClass="CountryTableViewCell" customModule="Photobook" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FU3-m8-5Es" id="ADJ-fp-SY7">
@@ -5171,6 +5175,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="label" destination="yYO-hR-Fdk" id="0z6-vt-7J0"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>

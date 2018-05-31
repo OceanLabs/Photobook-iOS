@@ -14,8 +14,22 @@ class DeliveryAddressTableViewCell: UITableViewCell {
 
     @IBOutlet weak var topSeparator: UIView!
     @IBOutlet weak var separator: UIView!
-    @IBOutlet weak var topLabel: UILabel!
-    @IBOutlet weak var bottomLabel: UILabel!
+    @IBOutlet weak var topLabel: UILabel! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                topLabel.font = UIFontMetrics.default.scaledFont(for: topLabel.font)
+                topLabel.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
+    @IBOutlet weak var bottomLabel: UILabel! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                bottomLabel.font = UIFontMetrics.default.scaledFont(for: bottomLabel.font)
+                bottomLabel.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
     @IBOutlet weak var checkmark: UIImageView!
     
 
