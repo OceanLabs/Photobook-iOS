@@ -180,12 +180,4 @@ class LayoutUtils {
         }
         return rotateTo
     }
-    
-    static func convertToMM(pt: CGFloat) -> CGFloat {
-        return pt * 0.352778
-    }
-    
-    static func convertToPt(mm: CGFloat) -> CGFloat {
-        return mm * 3.779527559
-    }
 }
