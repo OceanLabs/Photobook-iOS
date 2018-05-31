@@ -14,9 +14,10 @@ class PhotobookTemplate: Codable {
     
     private static let mmToPtMultiplier = 2.83464566929134
     
-    var id: String
+    var id: Int
     var name: String
     var templateId: String
+    var kiteId: String
     var coverSize: CGSize
     var pageSize: CGSize
     var coverAspectRatio: CGFloat { return coverSize.width / coverSize.height }
@@ -29,10 +30,11 @@ class PhotobookTemplate: Codable {
     
     // TODO: Currencies?
     
-    init(id: String, name: String, templateId: String, coverSize: CGSize, pageSize: CGSize, spineTextRatio: CGFloat, coverLayouts: [Int], layouts: [Int]) {
+    init(id: Int, name: String, templateId: String, kiteId: String, coverSize: CGSize, pageSize: CGSize, spineTextRatio: CGFloat, coverLayouts: [Int], layouts: [Int]) {
         self.id = id
         self.name = name
         self.templateId = templateId
+        self.kiteId = kiteId
         self.coverSize = coverSize
         self.pageSize = pageSize
         self.spineTextRatio = spineTextRatio
@@ -44,6 +46,7 @@ class PhotobookTemplate: Codable {
     static func parse(_ dictionary: [String: AnyObject]) -> PhotobookTemplate? {
         
         guard
+            let id = dictionary["id"] as? Int,
             let name = dictionary["displayName"] as? String,
             let spineTextRatio = dictionary["spineTextRatio"] as? CGFloat, spineTextRatio > 0.0,
             let coverLayouts = dictionary["coverLayouts"] as? [Int], !coverLayouts.isEmpty,
@@ -51,7 +54,7 @@ class PhotobookTemplate: Codable {
 
             let variantDictionary = (dictionary["variants"] as? [[String: AnyObject]])?.first,
         
-            let id = variantDictionary["kiteId"] as? String,
+            let kiteId = variantDictionary["kiteId"] as? String,
             let templateId = variantDictionary["templateId"] as? String,
             let coverSizeDictionary = variantDictionary["coverSize"] as? [String: Any],
             let coverSizeMm = coverSizeDictionary["mm"] as? [String: Any],
@@ -67,7 +70,7 @@ class PhotobookTemplate: Codable {
         let coverSize = CGSize(width: coverWidth * PhotobookTemplate.mmToPtMultiplier, height: coverHeight * PhotobookTemplate.mmToPtMultiplier)
         let pageSize = CGSize(width: pageWidth * PhotobookTemplate.mmToPtMultiplier * 0.5, height: pageHeight * PhotobookTemplate.mmToPtMultiplier) // The width is that of a full spread
         
-        let photobookTemplate = PhotobookTemplate(id: id, name: name, templateId: templateId, coverSize: coverSize, pageSize: pageSize, spineTextRatio: spineTextRatio, coverLayouts: coverLayouts, layouts: layouts)
+        let photobookTemplate = PhotobookTemplate(id: id, name: name, templateId: templateId, kiteId: kiteId, coverSize: coverSize, pageSize: pageSize, spineTextRatio: spineTextRatio, coverLayouts: coverLayouts, layouts: layouts)
 
         if let minPages = variantDictionary["minPages"] as? Int { photobookTemplate.minPages = minPages }
         if let maxPages = variantDictionary["maxPages"] as? Int { photobookTemplate.maxPages = maxPages }

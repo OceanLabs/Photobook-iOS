@@ -45,7 +45,7 @@ import SDWebImage
     /// Kite public API key
     @objc public var kiteApiKey: String! {
         didSet {
-            ProductManager.shared.apiKey = kiteApiKey
+            PhotobookAPIManager.apiKey = kiteApiKey
             KiteAPIClient.shared.apiKey = kiteApiKey
         }
     }

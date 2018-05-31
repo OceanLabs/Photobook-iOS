@@ -147,6 +147,7 @@
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="B62-6k-8NO">
                                             <rect key="frame" x="67.5" y="7.5" width="48" height="29"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration" label="Select Layout"/>
                                             <state key="normal" image="editLayout_off"/>
                                             <state key="selected" image="editLayout_on"/>
                                             <state key="highlighted" image="editLayout_on"/>
@@ -159,6 +160,7 @@
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="IiS-nN-9sR">
                                             <rect key="frame" x="115.5" y="7.5" width="48" height="29"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration" label="Select Image"/>
                                             <state key="normal" image="selectPhoto_off"/>
                                             <state key="selected" image="selectPhoto_on"/>
                                             <state key="highlighted" image="selectPhoto_on"/>
@@ -171,6 +173,7 @@
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="z11-V0-D9v">
                                             <rect key="frame" x="163.5" y="7.5" width="48" height="29"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration" label="Select page color"/>
                                             <state key="normal" image="editColor_off"/>
                                             <state key="selected" image="editColor_on"/>
                                             <state key="highlighted" image="editColor_on"/>
@@ -183,6 +186,7 @@
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0YB-mk-uec">
                                             <rect key="frame" x="211.5" y="7.5" width="48" height="29"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration" label="Rotate image"/>
                                             <state key="normal" image="editPhoto_off"/>
                                             <state key="selected" image="editPhoto_on"/>
                                             <state key="highlighted" image="editPhoto_on"/>
@@ -195,6 +199,7 @@
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="kmD-zJ-1We">
                                             <rect key="frame" x="259.5" y="7.5" width="48" height="29"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration" label="Edit page text"/>
                                             <state key="normal" image="editText_off"/>
                                             <state key="selected" image="editText_on"/>
                                             <state key="highlighted" image="editText_on"/>
@@ -254,6 +259,7 @@
                                                             <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CLX-rE-8ac">
                                                                 <rect key="frame" x="29" y="163" width="116" height="21"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <accessibility key="accessibilityConfiguration" hint="Double tap to edit"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="8"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
@@ -356,6 +362,7 @@
                                                     <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f1I-iY-MP8">
                                                         <rect key="frame" x="20" y="163.00000000000003" width="116" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <accessibility key="accessibilityConfiguration" hint="Double tap to edit"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="8"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
@@ -400,6 +407,7 @@
                                                     <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="dbm-j0-eAm">
                                                         <rect key="frame" x="19.333333333333371" y="162.66666666666669" width="116" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <accessibility key="accessibilityConfiguration" hint="Double tap to edit"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="6"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
@@ -2078,7 +2086,7 @@
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ORz-yc-dFH">
                                                             <rect key="frame" x="-28" y="103.5" width="66" height="0.0"/>
-                                                            <accessibility key="accessibilityConfiguration">
+                                                            <accessibility key="accessibilityConfiguration" identifier="spineLabel">
                                                                 <bool key="isElement" value="NO"/>
                                                             </accessibility>
                                                             <constraints>
@@ -2181,7 +2189,7 @@
                                                 </view>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TX9-mc-br7">
                                                     <rect key="frame" x="66" y="0.0" width="44" height="207"/>
-                                                    <accessibility key="accessibilityConfiguration" hint="Double tap to edit" label="Spine">
+                                                    <accessibility key="accessibilityConfiguration" hint="Double tap to edit" identifier="spineButton" label="Spine">
                                                         <accessibilityTraits key="traits" none="YES"/>
                                                     </accessibility>
                                                     <constraints>
@@ -3947,6 +3955,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CeI-dF-0wW">
                                         <rect key="frame" x="165.5" y="529" width="44" height="44"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <accessibility key="accessibilityConfiguration" label="Rotate 90 degrees counter-clock-wise"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="44" id="1Yf-6o-sSE"/>
                                             <constraint firstAttribute="height" constant="44" id="6ej-kU-dqy"/>
@@ -4550,6 +4559,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ln9-RM-QIh">
                                                     <rect key="frame" x="40" y="40.5" width="18" height="18"/>
+                                                    <accessibility key="accessibilityConfiguration">
+                                                        <bool key="isElement" value="NO"/>
+                                                    </accessibility>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="11"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
@@ -4590,6 +4602,10 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ziZ-7a-GKa">
                                                     <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                                     <color key="backgroundColor" red="0.82352941176470584" green="0.83137254901960778" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <accessibility key="accessibilityConfiguration" label="Add more photos">
+                                                        <accessibilityTraits key="traits" button="YES"/>
+                                                        <bool key="isElement" value="YES"/>
+                                                    </accessibility>
                                                 </view>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="addMore" translatesAutoresizingMaskIntoConstraints="NO" id="DKi-IA-yMx">
                                                     <rect key="frame" x="19" y="19" width="26" height="26"/>
@@ -5268,6 +5284,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <bool key="isElement" value="YES"/>
+                                        </accessibility>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="46" id="BZF-Ch-DoA"/>
                                             <constraint firstItem="aa4-Lu-6kd" firstAttribute="centerX" secondItem="05M-fh-sfo" secondAttribute="centerX" id="KgZ-55-7eo"/>
@@ -5290,6 +5309,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <bool key="isElement" value="YES"/>
+                                        </accessibility>
                                         <constraints>
                                             <constraint firstItem="Eu9-Lf-Rdk" firstAttribute="width" secondItem="9Ur-zt-sYJ" secondAttribute="width" id="6kJ-QG-TK5"/>
                                             <constraint firstItem="Eu9-Lf-Rdk" firstAttribute="centerY" secondItem="9Ur-zt-sYJ" secondAttribute="centerY" id="HKP-Ej-3qv"/>
@@ -5552,6 +5574,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Puf-aO-D14">
                                 <rect key="frame" x="26" y="225.5" width="323" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <accessibility key="accessibilityConfiguration" identifier="spineTextField"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="XzQ-Le-fuS"/>
                                     <constraint firstAttribute="width" priority="250" constant="345" id="wbo-Jd-JtS"/>

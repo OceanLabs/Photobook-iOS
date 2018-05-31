@@ -104,8 +104,11 @@ extension AssetSelectorViewController: UICollectionViewDataSource {
         let asset = assets[indexPath.row]
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AssetSelectorAssetCollectionViewCell.reuseIdentifier, for: indexPath) as! AssetSelectorAssetCollectionViewCell
-        cell.isBorderVisible = selectedAssetIndex == indexPath.row
-        cell.timesUsed = (timesUsed[asset.identifier] ?? 0)
+        let selected = selectedAssetIndex == indexPath.row
+        cell.isBorderVisible = selected
+        
+        let timesUsed = (self.timesUsed[asset.identifier] ?? 0)
+        cell.timesUsed = timesUsed
         
         cell.assetIdentifier = asset.identifier
         let itemSize = (collectionView.collectionViewLayout as! UICollectionViewFlowLayout).itemSize
@@ -113,6 +116,11 @@ extension AssetSelectorViewController: UICollectionViewDataSource {
         cell.assetImageView.setImage(from: asset, size: itemSize, validCellCheck: {
             return cell.assetIdentifier == asset.identifier
         })
+        
+        cell.isAccessibilityElement = true
+        
+        let imageName = timesUsed == 1 ? NSLocalizedString("Accessibility/Editing/imageUsed1Times", value: "Image used 1 time", comment: "Accessibility label for an image used 1 time") : NSLocalizedString("Accessibility/Editing/imageUsedNTimes", value: "Image used \(timesUsed) times", comment: "Accessibility label for an image used multiple times")
+        cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + imageName
         
         return cell
     }

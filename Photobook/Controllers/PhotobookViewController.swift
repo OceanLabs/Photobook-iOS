@@ -75,6 +75,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         button.semanticContentAttribute = .forceRightToLeft
         button.imageEdgeInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: Constants.titleArrowOffset)
         button.addTarget(self, action: #selector(didTapOnTitle), for: .touchUpInside)
+        button.accessibilityIdentifier = "titleButton"
         return button
     }()
 
@@ -211,6 +212,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         if !isRearranging {
             titleButton.setTitle(product.template.name, for: .normal)
             titleButton.sizeToFit()
+            navigationItem.rightBarButtonItem?.tintColor = Constants.rearrangeGreyColor
             navigationItem.titleView = titleButton
             return
         }
@@ -227,15 +229,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             alertController.addAction(UIAlertAction(title: photobook.name, style: .default, handler: { [weak welf = self] (_) in
                 guard welf?.product.template.id != photobook.id else { return }
                 
-                guard
-                    let coverLayouts = ProductManager.shared.currentProduct?.coverLayouts,
-                    let layouts = ProductManager.shared.currentProduct?.layouts
-                else {
-                    print("ProductManager: Missing layouts for selected photobook")
-                    return
-                }
-                
-                welf?.product.setTemplate(photobook, coverLayouts: coverLayouts, layouts: layouts)
+                _ = ProductManager.shared.setCurrentProduct(with: photobook)
                 
                 welf?.setupTitleView()
                 welf?.collectionView.reloadData()
@@ -243,7 +237,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         
         alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
-        
+                
         present(alertController, animated: true, completion: nil)
     }
     

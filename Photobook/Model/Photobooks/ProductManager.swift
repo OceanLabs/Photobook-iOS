@@ -27,20 +27,14 @@ class ProductManager {
     // List of all available layouts
     private(set) var layouts: [Layout]?
     
-    // List of all available upsell options
-    private(set) var upsellOptions: [UpsellOption]?
-    
     var minimumRequiredPages: Int {
         return currentProduct?.template.minPages ?? 20
     }
+
     var maximumAllowedPages: Int {
         return currentProduct?.template.maxPages ?? 70
     }
-    
-    var apiKey: String? {
-        didSet { apiManager.apiKey = apiKey }
-    }
-    
+        
     private(set) var currentProduct: PhotobookProduct?
     
     func reset() {
@@ -50,8 +44,8 @@ class ProductManager {
     /// Requests the photobook details so the user can start building their photobook
     ///
     /// - Parameter completion: Completion block with an optional error
-    func initialise(completion: ((Error?) -> ())?) {
-        apiManager.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, upsellOptions, error) in
+    func initialise(completion:((Error?)->())?) {
+        apiManager.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, error) in
             guard error == nil else {
                 completion?(error!)
                 return
@@ -59,9 +53,21 @@ class ProductManager {
             
             welf?.products = photobooks
             welf?.layouts = layouts
-            welf?.upsellOptions = upsellOptions
             
             completion?(nil)
+        }
+    }
+    
+    func applyUpsells(_ upsells:[UpsellOption], completionHandler: @escaping (_ summary: OrderSummary?, _ error: Error?) -> Void) {
+        guard let currentProduct = currentProduct else {
+            completionHandler(nil, nil)
+            return
+        }
+        
+        apiManager.applyUpsells(product: currentProduct, upsellOptions: upsells) { [weak self] (summary, upsoldTemplate, productPayload, error) in
+            self?.currentProduct?.setUpsellData(template: upsoldTemplate, payload: productPayload)
+            
+            completionHandler(summary, error)
         }
     }
     
@@ -75,12 +81,25 @@ class ProductManager {
         return layouts.filter { photobook.layouts.contains($0.id) }
     }
     
-    func setCurrentProduct(with photobook: PhotobookTemplate, assets: [Asset]) -> PhotobookProduct? {
-        guard let availableCoverLayouts = coverLayouts(for: photobook),
-              let availableLayouts = layouts(for: photobook)
-        else { return nil }
+    func setProduct(_ product: PhotobookProduct, with template: PhotobookTemplate) {
+        guard let availableCoverLayouts = coverLayouts(for: template),
+            let availableLayouts = layouts(for: template)
+        else { return }
         
-        currentProduct = PhotobookProduct(template: photobook, assets: assets, coverLayouts: availableCoverLayouts, layouts: availableLayouts)
+        product.setTemplate(template, coverLayouts: availableCoverLayouts, layouts: availableLayouts)
+    }
+    
+    func setCurrentProduct(with template: PhotobookTemplate, assets: [Asset]? = nil) -> PhotobookProduct? {
+        // Replacing template
+        if currentProduct != nil {
+            setProduct(currentProduct!, with: template)
+        } else if let assets = assets { // First time or replacing product
+            guard let availableCoverLayouts = coverLayouts(for: template),
+                let availableLayouts = layouts(for: template)
+            else { return currentProduct }
+
+            currentProduct = PhotobookProduct(template: template, assets: assets, coverLayouts: availableCoverLayouts, layouts: availableLayouts)
+        }
         return currentProduct
     }
 }
