@@ -4304,7 +4304,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
                                                         </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Option" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a4Z-Yu-VjU">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Option" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a4Z-Yu-VjU">
                                                             <rect key="frame" x="10" y="0.0" width="284" height="64"/>
                                                             <accessibility key="accessibilityConfiguration">
                                                                 <bool key="isElement" value="NO"/>
@@ -4409,6 +4409,8 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="coverSnapshotPageView" destination="8EI-2U-Avm" id="z4R-KX-vwj"/>
+                        <outlet property="ctaButton" destination="2YI-pQ-v5X" id="Xua-aP-cay"/>
+                        <outlet property="orderDetailsLabel" destination="3RN-ib-X8q" id="Rt3-jj-1KY"/>
                         <outlet property="previewImageActivityIndicatorView" destination="fjl-yz-TyM" id="nKn-bA-MEj"/>
                         <outlet property="previewImageProgressView" destination="7kK-HX-kKi" id="eSa-nk-MGN"/>
                         <outlet property="previewImageView" destination="coG-HL-VIW" id="Pm7-Lr-Sdt"/>
