@@ -138,7 +138,7 @@ class PhotobookProduct: Codable {
         spineFontType = try values.decode(FontType.self, forKey: .spineFontType)
         productUpsellOptions = try values.decodeIfPresent([UpsellOption].self, forKey: .productUpsellOptions)
         itemCount = try values.decode(Int.self, forKey: .itemCount)
-        upsoldTemplate = try values.decode(PhotobookTemplate.self, forKey: .upsoldTemplate)
+        upsoldTemplate = try values.decodeIfPresent(PhotobookTemplate.self, forKey: .upsoldTemplate)
         if let upsoldOptionsData = try values.decodeIfPresent(Data.self, forKey: .upsoldOptions) {
             upsoldOptions = (try? JSONSerialization.jsonObject(with: upsoldOptionsData, options: [])) as? [String: Any]
         }
