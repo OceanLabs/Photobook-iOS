@@ -39,8 +39,6 @@ class PhotobookProduct: Codable {
         case template, productLayouts, coverColor, pageColor, spineText, spineFontType, productUpsellOptions, itemCount, upsoldTemplate, upsoldOptions
     }
     
-    private unowned var productManager = ProductManager.shared
-    
     private let bleed: CGFloat = 8.5
 
     private var currentPortraitLayout = 0
@@ -55,31 +53,26 @@ class PhotobookProduct: Codable {
     var productLayouts = [ProductLayout]()
     var itemCount: Int = 1
     
-    var isAddingPagesAllowed: Bool {
-        // TODO: Use pages count instead of assets/layout count
-        return productManager.maximumAllowedAssets > productLayouts.count
-    }
-    var isRemovingPagesAllowed: Bool {
-        // TODO: Use pages count instead of assets/layout count
-        return productManager.minimumRequiredAssets < productLayouts.count - 1 // Don't include cover for min calculation
+    var isAddingPagesAllowed: Bool { return template.maxPages >= numberOfPages + 2 }
+    var isRemovingPagesAllowed: Bool { return numberOfPages - 2 >= template.minPages }
+    
+    private var numberOfPages: Int {
+        let doubleLayouts = productLayouts.filter { $0.layout.isDoubleLayout }.count
+        let singleLayouts = productLayouts.count - doubleLayouts
+        return singleLayouts + 2 * doubleLayouts
     }
     
-    private var upsoldTemplate: PhotobookTemplate?
-    private(set) var upsoldOptions: [String: Any]?
+    var coverLayouts: [Layout]!
+    var layouts: [Layout]!
+    
+    var upsoldTemplate: PhotobookTemplate?
+    var upsoldOptions: [String: Any]?
     
     func setUpsellData(template: PhotobookTemplate?, payload: [String: Any]?) {
         upsoldTemplate = template
         upsoldOptions = payload?["options"] as? [String: Any]
     }
     
-    func applyUpsells() {
-        if let upsoldTemplate = upsoldTemplate,
-            let coverLayouts = ProductManager.shared.coverLayouts(for: upsoldTemplate),
-            let layouts = ProductManager.shared.layouts(for: upsoldTemplate) {
-            setTemplate(upsoldTemplate, coverLayouts: coverLayouts, layouts: layouts)
-        }
-    }
-
     var emptyLayoutIndices: [Int]? {
         var temp = [Int]()
         var index = 0
@@ -98,11 +91,11 @@ class PhotobookProduct: Codable {
     
     var truncatedTextLayoutIndices: [Int]? {
         var temp = [Int]()
-        
-        let pageSize = CGSize(width: template.pageWidth!, height: template.pageHeight!)
-        
+                
         for (index, productLayout) in productLayouts.enumerated() {
             guard let textBox = productLayout.layout.textLayoutBox, let text = productLayout.text, text.count > 0 else { continue }
+            
+            let pageSize = index == 0 ? template.coverSize : template.pageSize
             
             let fontType = productLayout.fontType ?? .plain
             let fontSize = fontType.sizeForScreenToPageRatio()
@@ -145,23 +138,21 @@ class PhotobookProduct: Codable {
         spineFontType = try values.decode(FontType.self, forKey: .spineFontType)
         productUpsellOptions = try values.decodeIfPresent([UpsellOption].self, forKey: .productUpsellOptions)
         itemCount = try values.decode(Int.self, forKey: .itemCount)
-        upsoldTemplate = try values.decode(PhotobookTemplate.self, forKey: .upsoldTemplate)
+        upsoldTemplate = try values.decodeIfPresent(PhotobookTemplate.self, forKey: .upsoldTemplate)
         if let upsoldOptionsData = try values.decodeIfPresent(Data.self, forKey: .upsoldOptions) {
             upsoldOptions = (try? JSONSerialization.jsonObject(with: upsoldOptionsData, options: [])) as? [String: Any]
         }
     }
     
-    init?(template: PhotobookTemplate, assets: [Asset], productManager: ProductManager = ProductManager.shared) {
-        guard
-            let coverLayouts = productManager.coverLayouts(for: template), !coverLayouts.isEmpty,
-            let layouts = productManager.layouts(for: template), !layouts.isEmpty
-        else {
+    init?(template: PhotobookTemplate, assets: [Asset], coverLayouts: [Layout], layouts: [Layout]) {
+        guard !coverLayouts.isEmpty, !layouts.isEmpty else {
             print("PhotobookProduct: Missing layouts for selected photobook")
             return nil
         }
         
         self.template = template
-        self.productManager = productManager
+        self.coverLayouts = coverLayouts
+        self.layouts = layouts
         
         let imageOnlyLayouts = layouts.filter({ $0.imageLayoutBox != nil })
         
@@ -180,19 +171,26 @@ class PhotobookProduct: Codable {
         
         // Create layouts for the remaining assets
         // Fill minimum pages with Placeholder assets if needed
-        let numberOfPlaceholderLayoutsNeeded = max(template.minimumRequiredAssets - assets.count - 1, 0)
+        let numberOfPlaceholderLayoutsNeeded = max(template.minPages - assets.count - 1, 0)
         tempLayouts.append(contentsOf: createLayoutsForAssets(assets: assets, from: imageOnlyLayouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
         productLayouts = tempLayouts
     }
     
-    func setTemplate(_ template: PhotobookTemplate, withAssets assets: [Asset]? = nil, coverLayouts: [Layout], layouts: [Layout]) {
-        
+    func setTemplate(_ template: PhotobookTemplate, coverLayouts: [Layout], layouts: [Layout]) {
+        guard !coverLayouts.isEmpty, !layouts.isEmpty else {
+            print("PhotobookProduct: Missing layouts for selected photobook")
+            return
+        }
+
         // Reset the current layout since we are changing products
         currentLandscapeLayout = 0
         currentPortraitLayout = 0
         
         // Switching products
         self.template = template
+        self.coverLayouts = coverLayouts
+        self.layouts = layouts
+        
         for pageLayout in productLayouts {
             let availableLayouts = pageLayout === productLayouts.first ? coverLayouts : layouts
             
@@ -343,8 +341,6 @@ class PhotobookProduct: Codable {
     }
     
     private func addPages(at index: Int, number: Int, pages: [ProductLayout]? = nil) {
-        guard let layouts = productManager.layouts(for: template)
-            else { return }
         let newProductLayouts = pages ?? createLayoutsForAssets(assets: [], from: layouts, placeholderLayouts: number)
         
         productLayouts.insert(contentsOf: newProductLayouts, at: index)
@@ -418,8 +414,9 @@ class PhotobookProduct: Codable {
         }
     }
     
-    func bleed(forPageSize size: CGSize) -> CGFloat {
-        let scaleFactor = size.height / template.pageHeight
+    func bleed(forPageSize size: CGSize, type: PageType? = nil) -> CGFloat {
+        let pageHeight = type != nil && type! == .cover ? template.coverSize.height : template.pageSize.height
+        let scaleFactor = size.height / pageHeight
         return bleed * scaleFactor
     }
     
@@ -482,7 +479,7 @@ extension PhotobookProduct: Hashable, Equatable {
         get {
             var stringHash = ""
             
-            stringHash += "pt:\(template.productTemplateId),"
+            stringHash += "pt:\(template.id),"
             if let upsoldOptions = upsoldOptions {
                 stringHash += "po:\(upsoldOptions)"
             }

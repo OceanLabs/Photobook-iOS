@@ -43,7 +43,12 @@ import SDWebImage
     @objc public var applePayMerchantId: String! { didSet { PaymentAuthorizationManager.applePayMerchantId = applePayMerchantId } }
     
     /// Kite public API key
-    @objc public var kiteApiKey: String! { didSet { KiteAPIClient.shared.apiKey = kiteApiKey } }
+    @objc public var kiteApiKey: String! {
+        didSet {
+            PhotobookAPIManager.apiKey = kiteApiKey
+            KiteAPIClient.shared.apiKey = kiteApiKey
+        }
+    }
     
     /// Shared client
     @objc public static let shared = PhotobookSDK()

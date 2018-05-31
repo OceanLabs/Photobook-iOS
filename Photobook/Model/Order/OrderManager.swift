@@ -113,6 +113,14 @@ class OrderManager {
         saveOrder(basketOrder, file: Storage.basketOrderBackupFile)
     }
     
+    func applyUpsellsToOrder(_ order: Order) {
+        for product in order.products {
+            guard let upsoldTemplate = product.upsoldTemplate,
+                  product.template != upsoldTemplate else { continue }
+            ProductManager.shared.setProduct(product, with: upsoldTemplate)
+        }
+    }
+    
     private func saveOrder(_ order: Order, file: String) {
         guard let data = try? PropertyListEncoder().encode(order) else {
             fatalError("OrderManager: encoding of order failed")

@@ -21,6 +21,7 @@ class PhotobookManager: NSObject {
     static func setupPayments() {
         PaymentAuthorizationManager.applePayPayTo = "Kite.ly (via HD Photobooks)"
         PaymentAuthorizationManager.applePayMerchantId = "merchant.ly.kite.sdk"
+        PhotobookAPIManager.apiKey = "57c832e42dfdda93d072c6a42c41fbcddf100805"
         KiteAPIClient.shared.apiKey = "57c832e42dfdda93d072c6a42c41fbcddf100805"
     }
     
@@ -74,6 +75,8 @@ class PhotobookManager: NSObject {
         })
         
         // Load the products here, so that the user avoids a loading screen on PhotobookViewController
-        ProductManager.shared.initialise(completion: nil)
+        if NSClassFromString("XCTest") == nil {
+            ProductManager.shared.initialise(completion: nil)
+        }
     }
 }

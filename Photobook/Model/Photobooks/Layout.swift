@@ -32,11 +32,13 @@ struct Layout: Equatable, Codable {
         
         var layout = Layout(id: id, category: category, imageLayoutBox: nil, textLayoutBox: nil, isDoubleLayout: false)
         
-        if let imageLayoutBoxDictionary = layoutDictionary["imageLayoutBox"] as? [String: AnyObject] {
-            layout.imageLayoutBox = LayoutBox.parse(imageLayoutBoxDictionary)
-        }
-        if let textLayoutBoxDictionary = layoutDictionary["textLayoutBox"] as? [String: AnyObject] {
-            layout.textLayoutBox = LayoutBox.parse(textLayoutBoxDictionary)
+        if let layoutBoxesDictionary = layoutDictionary["layoutBoxes"] as? [[String: AnyObject]] {
+            for layoutBoxDictionary in layoutBoxesDictionary {
+                guard let type = layoutBoxDictionary["type"] as? String else { continue }
+                
+                if type == "image" { layout.imageLayoutBox = LayoutBox.parse(layoutBoxDictionary) }
+                else if type == "text" { layout.textLayoutBox = LayoutBox.parse(layoutBoxDictionary) }
+            }
         }
         if let doubleLayout = layoutDictionary["doubleLayout"] as? Bool {
             layout.isDoubleLayout = doubleLayout

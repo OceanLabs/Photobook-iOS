@@ -244,21 +244,11 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         guard let photobooks = ProductManager.shared.products else { return }
         
         let alertController = UIAlertController(title: nil, message: NSLocalizedString("Photobook/ChangeSizeTitle", value: "Changing the size keeps your layout intact", comment: "Information when the user wants to change the photo book's size"), preferredStyle: .actionSheet)
-        for photobook in photobooks{
+        for photobook in photobooks {
             alertController.addAction(UIAlertAction(title: photobook.name, style: .default, handler: { [weak welf = self] (_) in
                 guard welf?.product.template.id != photobook.id else { return }
                 
-                guard
-                    let coverLayouts = ProductManager.shared.coverLayouts(for: photobook),
-                    !coverLayouts.isEmpty,
-                    let layouts = ProductManager.shared.layouts(for: photobook),
-                    !layouts.isEmpty
-                    else {
-                        print("ProductManager: Missing layouts for selected photobook")
-                        return
-                }
-                
-                welf?.product.setTemplate(photobook, coverLayouts: coverLayouts, layouts: layouts)
+                _ = ProductManager.shared.setCurrentProduct(with: photobook)
                 
                 welf?.setupTitleView()
                 welf?.collectionView.reloadData()
@@ -879,7 +869,7 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
         }
 
         let pageWidth = (view.bounds.width - Constants.cellSideMargin * 2.0 - PhotobookConstants.horizontalPageToCoverMargin * 2.0) / 2.0
-        let pageHeight = pageWidth / product.template.aspectRatio
+        let pageHeight = pageWidth / product.template.pageAspectRatio
 
         // PhotoboookCollectionViewCell works when the collectionView uses dynamic heights by setting up the aspect ratio of its pages.
         // This however, causes problems with the drag & drop functionality and that is why the cell height is calculated by using the measurements set on the storyboard.

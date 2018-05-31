@@ -100,7 +100,7 @@ class Order: Codable {
         
         for product in products {
             jobs.append([
-                "template_id" : product.template.productTemplateId ?? "",
+                "template_id" : product.template.templateId,
                 "multiples" : product.itemCount
                 ])
         }

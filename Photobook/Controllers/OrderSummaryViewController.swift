@@ -128,7 +128,7 @@ class OrderSummaryViewController: UIViewController {
         
         coverSnapshotPageView.pageIndex = 0
         coverSnapshotPageView.backgroundColor = .clear
-        coverSnapshotPageView.frame.size = CGSize(width: dimensionForPage, height: dimensionForPage / product.template.aspectRatio)
+        coverSnapshotPageView.frame.size = CGSize(width: dimensionForPage, height: dimensionForPage / product.template.coverAspectRatio)
         coverSnapshotPageView.productLayout = product.productLayouts.first
         
         coverSnapshotPageView.color = product.coverColor

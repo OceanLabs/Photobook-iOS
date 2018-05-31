@@ -27,16 +27,14 @@ class ProductManager {
     // List of all available layouts
     private(set) var layouts: [Layout]?
     
-    var minimumRequiredAssets: Int {
-        let defaultMinimum = 20
+    var minimumRequiredPages: Int {
+        return currentProduct?.template.minPages ?? 20
+    }
+
+    var maximumAllowedPages: Int {
+        return currentProduct?.template.maxPages ?? 70
+    }
         
-        return currentProduct?.template.minimumRequiredAssets ?? ProductManager.shared.products?.first?.minimumRequiredAssets ?? defaultMinimum
-    }
-    var maximumAllowedAssets: Int {
-        // TODO: get this from the photobook
-        return 70
-    }
-    
     private(set) var currentProduct: PhotobookProduct?
     
     func reset() {
@@ -73,18 +71,35 @@ class ProductManager {
         }
     }
     
-    func coverLayouts(for photobook: PhotobookTemplate) -> [Layout]? {
+    private func coverLayouts(for photobook: PhotobookTemplate) -> [Layout]? {
         guard let layouts = layouts else { return nil }
         return layouts.filter { photobook.coverLayouts.contains($0.id) }
     }
     
-    func layouts(for photobook: PhotobookTemplate) -> [Layout]? {
+    private func layouts(for photobook: PhotobookTemplate) -> [Layout]? {
         guard let layouts = layouts else { return nil }
         return layouts.filter { photobook.layouts.contains($0.id) }
     }
     
-    func setCurrentProduct(with photobook: PhotobookTemplate, assets: [Asset]) -> PhotobookProduct? {
-        currentProduct = PhotobookProduct(template: photobook, assets: assets, productManager: self)
+    func setProduct(_ product: PhotobookProduct, with template: PhotobookTemplate) {
+        guard let availableCoverLayouts = coverLayouts(for: template),
+            let availableLayouts = layouts(for: template)
+        else { return }
+        
+        product.setTemplate(template, coverLayouts: availableCoverLayouts, layouts: availableLayouts)
+    }
+    
+    func setCurrentProduct(with template: PhotobookTemplate, assets: [Asset]? = nil) -> PhotobookProduct? {
+        // Replacing template
+        if currentProduct != nil {
+            setProduct(currentProduct!, with: template)
+        } else if let assets = assets { // First time or replacing product
+            guard let availableCoverLayouts = coverLayouts(for: template),
+                let availableLayouts = layouts(for: template)
+            else { return currentProduct }
+
+            currentProduct = PhotobookProduct(template: template, assets: assets, coverLayouts: availableCoverLayouts, layouts: availableLayouts)
+        }
         return currentProduct
     }
 }
