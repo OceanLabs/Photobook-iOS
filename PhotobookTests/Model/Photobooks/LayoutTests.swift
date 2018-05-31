@@ -34,13 +34,6 @@ class LayoutTests: XCTestCase {
         let layoutBox = Layout.parse(layoutDictionary)
         XCTAssertNil(layoutBox, "Parse: Should return nil if category is missing")
     }
-
-    func testParse_shouldParseDoublePageInformation() {
-        var layoutDictionary = validDictionary
-        layoutDictionary["isDoublePage"] = 1 as AnyObject
-        let layoutBox = Layout.parse(layoutDictionary)
-        XCTAssertTrue(layoutBox != nil && layoutBox!.isDoubleLayout, "Parse: Should parse double page information")
-    }
     
     func testEquality_shouldBeEqual() {
         let layout1 = Layout(id: 1, category: "Category1", imageLayoutBox: nil, textLayoutBox: nil, isDoubleLayout: false)
