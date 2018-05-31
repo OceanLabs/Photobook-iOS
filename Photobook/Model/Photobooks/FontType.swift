@@ -11,17 +11,21 @@ import Foundation
 @objc enum FontType: Int, Codable {
     case plain, classic, solid
     
-    private func fontWithSize(_ size: CGFloat) -> UIFont {
-        let name: String
-        switch self {
-        case .plain: name = "OpenSans-Regular"
-        case .classic: name = "Lora-Regular"
-        case .solid: name = "Montserrat-Bold"
+    var fontFamily:String {
+        get {
+            switch self {
+            case .plain: return "OpenSans-Regular"
+            case .classic: return "Lora-Regular"
+            case .solid: return "Montserrat-Bold"
+            }
         }
-        return UIFont(name: name, size: size)!
     }
     
-    private func paragraphStyle(isSpineText: Bool) -> NSParagraphStyle {
+    private func fontWithSize(_ size: CGFloat) -> UIFont {
+        return UIFont(name: fontFamily, size: size)!
+    }
+    
+    func paragraphStyle(isSpineText: Bool) -> NSParagraphStyle {
         let paragraphStyle = NSMutableParagraphStyle()
 
         switch self {
@@ -37,13 +41,14 @@ import Foundation
         return paragraphStyle.copy() as! NSParagraphStyle
     }
     
-    private func photobookFontSize() -> CGFloat {
+    func photobookFontSize() -> CGFloat {
         switch self {
         case .plain: return 8.0
         case .classic: return 11.0
         case .solid: return 13.0
         }
     }
+    
     
     /// Typing attributes for a photobook input field
     ///
@@ -82,5 +87,34 @@ import Foundation
     func sizeForScreenToPageRatio(_ screenToPageRatio: CGFloat? = nil) -> CGFloat {
         let photobookToOnScreenScale = screenToPageRatio != nil ? screenToPageRatio! : 1.0
         return photobookFontSize() * photobookToOnScreenScale
+    }
+}
+
+/// Values for Photobook API
+extension FontType {
+    var apiFontFamily:String {
+        get {
+            switch self {
+            case .plain: return "\'Open Sans\', sans-serif"
+            case .classic: return "Lora, serif"
+            case .solid: return "Montserrat, sans-serif"
+            }
+        }
+    }
+    
+    func apiPhotobookFontWeight() -> CGFloat {
+        switch self {
+        case .plain: return 400
+        case .classic: return 400
+        case .solid: return 700
+        }
+    }
+    
+    func apiPhotobookLineHeight() -> CGFloat {
+        return 1.2
+    }
+    
+    func apiPhotobookFontSize() -> String {
+        return "\(photobookFontSize())pt"
     }
 }

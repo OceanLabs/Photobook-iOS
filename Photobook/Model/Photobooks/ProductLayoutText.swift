@@ -13,11 +13,13 @@ import UIKit
 class ProductLayoutText: Codable {
     var containerSize: CGSize!
     var text: String?
+    var htmlText: String?
     var fontType: FontType = .plain
     
     func deepCopy() -> ProductLayoutText {
         let aLayoutText = ProductLayoutText()
         aLayoutText.text = text
+        aLayoutText.htmlText = htmlText
         aLayoutText.fontType = fontType
         aLayoutText.containerSize = containerSize
         return aLayoutText

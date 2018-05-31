@@ -147,6 +147,7 @@
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="B62-6k-8NO">
                                             <rect key="frame" x="67.5" y="7.5" width="48" height="29"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration" label="Select Layout"/>
                                             <state key="normal" image="editLayout_off"/>
                                             <state key="selected" image="editLayout_on"/>
                                             <state key="highlighted" image="editLayout_on"/>
@@ -159,6 +160,7 @@
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="IiS-nN-9sR">
                                             <rect key="frame" x="115.5" y="7.5" width="48" height="29"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration" label="Select Image"/>
                                             <state key="normal" image="selectPhoto_off"/>
                                             <state key="selected" image="selectPhoto_on"/>
                                             <state key="highlighted" image="selectPhoto_on"/>
@@ -171,6 +173,7 @@
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="z11-V0-D9v">
                                             <rect key="frame" x="163.5" y="7.5" width="48" height="29"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration" label="Select page color"/>
                                             <state key="normal" image="editColor_off"/>
                                             <state key="selected" image="editColor_on"/>
                                             <state key="highlighted" image="editColor_on"/>
@@ -183,6 +186,7 @@
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0YB-mk-uec">
                                             <rect key="frame" x="211.5" y="7.5" width="48" height="29"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration" label="Rotate image"/>
                                             <state key="normal" image="editPhoto_off"/>
                                             <state key="selected" image="editPhoto_on"/>
                                             <state key="highlighted" image="editPhoto_on"/>
@@ -195,6 +199,7 @@
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="kmD-zJ-1We">
                                             <rect key="frame" x="259.5" y="7.5" width="48" height="29"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration" label="Edit page text"/>
                                             <state key="normal" image="editText_off"/>
                                             <state key="selected" image="editText_on"/>
                                             <state key="highlighted" image="editText_on"/>
@@ -254,6 +259,7 @@
                                                             <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CLX-rE-8ac">
                                                                 <rect key="frame" x="29" y="163" width="116" height="21"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <accessibility key="accessibilityConfiguration" hint="Double tap to edit"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="8"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
@@ -356,6 +362,7 @@
                                                     <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f1I-iY-MP8">
                                                         <rect key="frame" x="20" y="163.00000000000003" width="116" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <accessibility key="accessibilityConfiguration" hint="Double tap to edit"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="8"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
@@ -400,6 +407,7 @@
                                                     <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="dbm-j0-eAm">
                                                         <rect key="frame" x="19.333333333333371" y="162.66666666666669" width="116" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <accessibility key="accessibilityConfiguration" hint="Double tap to edit"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="6"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
@@ -2078,6 +2086,9 @@
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ORz-yc-dFH">
                                                             <rect key="frame" x="-28" y="103.5" width="66" height="0.0"/>
+                                                            <accessibility key="accessibilityConfiguration" identifier="spineLabel">
+                                                                <bool key="isElement" value="NO"/>
+                                                            </accessibility>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="66" id="qsC-jx-jNX"/>
                                                             </constraints>
@@ -2178,6 +2189,9 @@
                                                 </view>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TX9-mc-br7">
                                                     <rect key="frame" x="66" y="0.0" width="44" height="207"/>
+                                                    <accessibility key="accessibilityConfiguration" hint="Double tap to edit" identifier="spineButton" label="Spine">
+                                                        <accessibilityTraits key="traits" none="YES"/>
+                                                    </accessibility>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="44" id="j3a-qC-nAu"/>
                                                     </constraints>
@@ -2200,6 +2214,7 @@
                                         </constraints>
                                         <connections>
                                             <outlet property="coverFrameView" destination="7hj-ms-TMa" id="nuZ-hx-d2U"/>
+                                            <outlet property="spineButton" destination="TX9-mc-br7" id="pQ3-dA-zmM"/>
                                             <outlet property="spineFrameView" destination="aKo-Fy-w8j" id="tb1-tQ-r4s"/>
                                         </connections>
                                     </collectionViewCell>
@@ -2565,7 +2580,7 @@
                                         <subviews>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XZ1-hM-Xzz">
                                                 <rect key="frame" x="128" y="0.0" width="232" height="45"/>
-                                                <accessibility key="accessibilityConfiguration" identifier="promoCodeTextField"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="promoCodeTextField" label="Promo Code"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="alphabet" returnKeyType="done"/>
                                                 <connections>
@@ -2574,6 +2589,9 @@
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Promo Code" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fSF-Qp-4EQ">
                                                 <rect key="frame" x="15" y="12" width="98" height="21"/>
+                                                <accessibility key="accessibilityConfiguration">
+                                                    <bool key="isElement" value="NO"/>
+                                                </accessibility>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                                 <color key="textColor" red="0.18220192190000001" green="0.18219646810000001" blue="0.1821995676" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -2626,6 +2644,9 @@
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Delivery Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ILs-SO-o4W">
                                                 <rect key="frame" x="15" y="12.5" width="122" height="21"/>
+                                                <accessibility key="accessibilityConfiguration">
+                                                    <bool key="isElement" value="NO"/>
+                                                </accessibility>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                                 <color key="textColor" red="0.18220192190000001" green="0.18219646810000001" blue="0.1821995676" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -2640,13 +2661,19 @@
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9zA-0G-vdb">
                                                 <rect key="frame" x="269" y="12" width="63" height="21"/>
-                                                <accessibility key="accessibilityConfiguration" identifier="addressEntryLabel"/>
+                                                <accessibility key="accessibilityConfiguration">
+                                                    <bool key="isElement" value="NO"/>
+                                                </accessibility>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.18220192190000001" green="0.18219646810000001" blue="0.1821995676" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="deliveryDetailsView">
+                                            <accessibilityTraits key="traits" button="YES"/>
+                                            <bool key="isElement" value="YES"/>
+                                        </accessibility>
                                         <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="aac-o1-mRo" secondAttribute="trailing" constant="15" id="46L-ov-FnZ"/>
@@ -2677,12 +2704,18 @@
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="$X" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Ly-Ux-QDk">
                                                 <rect key="frame" x="310" y="12.5" width="22" height="21"/>
+                                                <accessibility key="accessibilityConfiguration">
+                                                    <bool key="isElement" value="NO"/>
+                                                </accessibility>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.18220192190000001" green="0.18219646810000001" blue="0.1821995676" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Shipping" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6bw-zg-fmD">
                                                 <rect key="frame" x="15" y="12.5" width="69.5" height="20.5"/>
+                                                <accessibility key="accessibilityConfiguration">
+                                                    <bool key="isElement" value="NO"/>
+                                                </accessibility>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -2697,6 +2730,10 @@
                                             </imageView>
                                         </subviews>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="shippingMethodView">
+                                            <accessibilityTraits key="traits" button="YES"/>
+                                            <bool key="isElement" value="YES"/>
+                                        </accessibility>
                                         <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstItem="Dl2-2v-Iad" firstAttribute="centerY" secondItem="Dfm-Yd-PFG" secondAttribute="centerY" id="90B-lH-nuD"/>
@@ -2727,11 +2764,14 @@
                                             </view>
                                             <label opaque="NO" contentMode="scaleToFill" text="Payment Method" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" translatesAutoresizingMaskIntoConstraints="NO" id="XKU-uH-msU">
                                                 <rect key="frame" x="15" y="12.5" width="134" height="21"/>
+                                                <accessibility key="accessibilityConfiguration">
+                                                    <accessibilityTraits key="traits" staticText="YES"/>
+                                                    <bool key="isElement" value="NO"/>
+                                                </accessibility>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                             </label>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="apple-pay-method" translatesAutoresizingMaskIntoConstraints="NO" id="d2G-D9-1PL">
                                                 <rect key="frame" x="288" y="0.5" width="44" height="44"/>
-                                                <accessibility key="accessibilityConfiguration" identifier="paymentMethodIcon"/>
                                             </imageView>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="1000" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" image="chevron-right" translatesAutoresizingMaskIntoConstraints="NO" id="eoN-wz-njW">
                                                 <rect key="frame" x="347" y="16" width="13" height="13"/>
@@ -2743,13 +2783,19 @@
                                             </imageView>
                                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Required" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AvW-ih-enk">
                                                 <rect key="frame" x="262" y="12" width="69" height="21"/>
-                                                <accessibility key="accessibilityConfiguration" identifier="paymentMethodSelectionLabel"/>
+                                                <accessibility key="accessibilityConfiguration">
+                                                    <bool key="isElement" value="NO"/>
+                                                </accessibility>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.18220192190000001" green="0.18219646810000001" blue="0.1821995676" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="paymentMethodView">
+                                            <accessibilityTraits key="traits" button="YES"/>
+                                            <bool key="isElement" value="YES"/>
+                                        </accessibility>
                                         <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="vdH-53-tRh" secondAttribute="trailing" id="1Vc-xg-kt2"/>
@@ -2960,6 +3006,8 @@
                         <outlet property="deliveryDetailsLabel" destination="9zA-0G-vdb" id="sb1-Ng-ci4"/>
                         <outlet property="deliveryDetailsView" destination="5cM-ch-BDN" id="bhA-gD-7n3"/>
                         <outlet property="hideDeliveryDetailsConstraint" destination="y6K-Bk-c6V" id="Tsc-27-tcC"/>
+                        <outlet property="infoLabelDeliveryDetails" destination="ILs-SO-o4W" id="ZGN-RK-WGp"/>
+                        <outlet property="infoLabelShipping" destination="6bw-zg-fmD" id="937-NJ-cjD"/>
                         <outlet property="itemAmountButton" destination="qMT-Lg-lj2" id="cvA-U1-5tI"/>
                         <outlet property="itemImageView" destination="ATQ-7e-lXt" id="f5G-Y4-me1"/>
                         <outlet property="itemPriceLabel" destination="T6M-C9-pKv" id="C3f-Xd-sBx"/>
@@ -3907,6 +3955,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CeI-dF-0wW">
                                         <rect key="frame" x="165.5" y="529" width="44" height="44"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <accessibility key="accessibilityConfiguration" label="Rotate 90 degrees counter-clock-wise"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="44" id="1Yf-6o-sSE"/>
                                             <constraint firstAttribute="height" constant="44" id="6ej-kU-dqy"/>
@@ -4510,6 +4559,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ln9-RM-QIh">
                                                     <rect key="frame" x="40" y="40.5" width="18" height="18"/>
+                                                    <accessibility key="accessibilityConfiguration">
+                                                        <bool key="isElement" value="NO"/>
+                                                    </accessibility>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="11"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
@@ -4550,6 +4602,10 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ziZ-7a-GKa">
                                                     <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                                     <color key="backgroundColor" red="0.82352941176470584" green="0.83137254901960778" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <accessibility key="accessibilityConfiguration" label="Add more photos">
+                                                        <accessibilityTraits key="traits" button="YES"/>
+                                                        <bool key="isElement" value="YES"/>
+                                                    </accessibility>
                                                 </view>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="addMore" translatesAutoresizingMaskIntoConstraints="NO" id="DKi-IA-yMx">
                                                     <rect key="frame" x="19" y="19" width="26" height="26"/>
@@ -4625,6 +4681,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         </textField>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R27-zb-Ogp">
                                             <rect key="frame" x="16" y="12.5" width="42" height="20.5"/>
+                                            <accessibility key="accessibilityConfiguration">
+                                                <bool key="isElement" value="NO"/>
+                                            </accessibility>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -4645,7 +4704,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yL9-8P-d2z">
                                             <rect key="frame" x="16" y="45" width="343" height="16"/>
-                                            <accessibility key="accessibilityConfiguration" identifier="userInputMessageLabel"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="userInputMessageLabel">
+                                                <bool key="isElement" value="NO"/>
+                                            </accessibility>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <color key="textColor" red="0.4275171160697937" green="0.42716902494430542" blue="0.4470638632774353" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <nil key="highlightedColor"/>
@@ -4671,6 +4732,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         <constraint firstItem="c3a-IO-Ki5" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="lRW-hh-ayF" secondAttribute="leading" priority="750" constant="64.5" id="u9c-YT-dfy"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" notEnabled="YES"/>
+                                </accessibility>
                                 <connections>
                                     <outlet property="label" destination="R27-zb-Ogp" id="V2l-nT-Jqt"/>
                                     <outlet property="messageBottomConstraint" destination="4Zp-Hm-yn1" id="Dch-dj-k8V"/>
@@ -4724,7 +4788,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Message" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="45s-9M-gdM">
                                             <rect key="frame" x="16" y="51" width="343" height="16"/>
-                                            <accessibility key="accessibilityConfiguration" identifier="addressErrorMessageLabel"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="addressErrorMessageLabel">
+                                                <bool key="isElement" value="NO"/>
+                                            </accessibility>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -4954,7 +5020,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <viewLayoutGuide key="safeArea" id="kUJ-ce-tjQ"/>
                     </view>
                     <navigationItem key="navigationItem" title="Payment Methods" id="vav-b1-Mv0">
-                        <barButtonItem key="backBarButtonItem" title=" " id="VMo-4k-rjk"/>
+                        <barButtonItem key="backBarButtonItem" title="Back" id="VMo-4k-rjk"/>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <connections>
@@ -5148,6 +5214,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         </textField>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1LC-Ug-O7X">
                                             <rect key="frame" x="16" y="11.5" width="42" height="20.5"/>
+                                            <accessibility key="accessibilityConfiguration">
+                                                <bool key="isElement" value="NO"/>
+                                            </accessibility>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -5162,6 +5231,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         <constraint firstItem="ijx-6I-L2F" firstAttribute="leading" secondItem="1LC-Ug-O7X" secondAttribute="trailing" constant="10" id="yeZ-Ip-o1M"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" notEnabled="YES"/>
+                                </accessibility>
                                 <connections>
                                     <outlet property="label" destination="1LC-Ug-O7X" id="nKB-Uy-BgH"/>
                                     <outlet property="textField" destination="ijx-6I-L2F" id="pLG-ZJ-ELe"/>
@@ -5212,6 +5284,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <bool key="isElement" value="YES"/>
+                                        </accessibility>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="46" id="BZF-Ch-DoA"/>
                                             <constraint firstItem="aa4-Lu-6kd" firstAttribute="centerX" secondItem="05M-fh-sfo" secondAttribute="centerX" id="KgZ-55-7eo"/>
@@ -5234,6 +5309,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <bool key="isElement" value="YES"/>
+                                        </accessibility>
                                         <constraints>
                                             <constraint firstItem="Eu9-Lf-Rdk" firstAttribute="width" secondItem="9Ur-zt-sYJ" secondAttribute="width" id="6kJ-QG-TK5"/>
                                             <constraint firstItem="Eu9-Lf-Rdk" firstAttribute="centerY" secondItem="9Ur-zt-sYJ" secondAttribute="centerY" id="HKP-Ej-3qv"/>
@@ -5496,6 +5574,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Puf-aO-D14">
                                 <rect key="frame" x="26" y="225.5" width="323" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <accessibility key="accessibilityConfiguration" identifier="spineTextField"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="XzQ-Le-fuS"/>
                                     <constraint firstAttribute="width" priority="250" constant="345" id="wbo-Jd-JtS"/>

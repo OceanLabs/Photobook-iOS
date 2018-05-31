@@ -65,29 +65,49 @@ extension PaymentMethodsViewController: UITableViewDataSource {
         switch indexPath.item {
         case -1 + supportsApplePay: // Apple Pay
             let cell = tableView.dequeueReusableCell(withIdentifier: PaymentMethodTableViewCell.reuseIdentifier, for: indexPath) as! PaymentMethodTableViewCell
-            cell.method = "ApplePay"
+            let method = "ApplePay"
+            cell.method = method
             cell.icon = UIImage(namedInPhotobookBundle:"apple-pay-method")
-            cell.ticked = selectedPaymentMethod == .applePay
+            
+            let selected = selectedPaymentMethod == .applePay
+            cell.ticked = selected
+            
             cell.separator.isHidden = true
             cell.accessibilityIdentifier = "applePayCell"
+            cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + method
+            cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
             return cell
         case 0 + supportsApplePay: // PayPal
             let cell = tableView.dequeueReusableCell(withIdentifier: PaymentMethodTableViewCell.reuseIdentifier, for: indexPath) as! PaymentMethodTableViewCell
-            cell.method = "PayPal"
+            let method = "PayPal"
+            cell.method = method
+            
             cell.icon = UIImage(namedInPhotobookBundle:"paypal-method")
-            cell.ticked = selectedPaymentMethod == .payPal
+            
+            let selected = selectedPaymentMethod == .payPal
+            cell.ticked = selected
+            
             cell.separator.isHidden = false
             cell.accessibilityIdentifier = "payPalCell"
+            cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + method
+            cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
             return cell
         case 1 + supportsApplePay: // Saved card
             guard let card = Card.currentCard else { fallthrough }
             
             let cell = tableView.dequeueReusableCell(withIdentifier: PaymentMethodTableViewCell.reuseIdentifier, for: indexPath) as! PaymentMethodTableViewCell
-            cell.method = card.numberMasked
+            let method = card.numberMasked
+            cell.method = method
+            
             cell.icon = card.cardIcon
-            cell.ticked = selectedPaymentMethod == .creditCard
+            
+            let selected = selectedPaymentMethod == .creditCard
+            cell.ticked = selected
+            
             cell.separator.isHidden = true
             cell.accessibilityIdentifier = "creditCardCell"
+            cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + method
+            cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
             return cell
         default:
             return tableView.dequeueReusableCell(withIdentifier: "AddPaymentMethodCell", for: indexPath)

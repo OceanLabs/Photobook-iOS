@@ -113,6 +113,14 @@ class OrderManager {
         saveOrder(basketOrder, file: Storage.basketOrderBackupFile)
     }
     
+    func applyUpsellsToOrder(_ order: Order) {
+        for product in order.products {
+            guard let upsoldTemplate = product.upsoldTemplate,
+                  product.template != upsoldTemplate else { continue }
+            ProductManager.shared.setProduct(product, with: upsoldTemplate)
+        }
+    }
+    
     private func saveOrder(_ order: Order, file: String) {
         guard let data = try? PropertyListEncoder().encode(order) else {
             fatalError("OrderManager: encoding of order failed")
@@ -221,10 +229,14 @@ class OrderManager {
     
     func finishOrder() {
         
+        guard let photobook = ProductManager.shared.currentProduct else {
+            return
+        }
+
         orderProcessingDelegate?.orderWillFinish()
         
         // 1 - Create PDF
-        apiManager.createPhotobookPdf { [weak welf = self] (urls, error) in
+        apiManager.createPdf(withPhotobook: photobook) { [weak welf = self] (urls, error) in
             
             if let swelf = welf, swelf.isCancelling {
                 swelf.processingOrder = nil
@@ -312,23 +324,21 @@ class OrderManager {
             return
         }
         
-        //check if this is a photobook api manager asset upload
+        // Check if this is a photobook api manager asset upload
         if let reference = dictionary["task_reference"] as? String, !reference.hasPrefix(PhotobookAPIManager.imageUploadIdentifierPrefix) {
-            //not intended for this class
             return
         }
         
         if let error = dictionary["error"] as? APIClientError {
-           didFailUpload(error)
+            didFailUpload(error)
             return
         }
         
-        guard let reference = dictionary["task_reference"] as? String,
-            let url = dictionary["full"] as? String else {
-                
-                didFailUpload(APIClientError.parsing)
-                return
+        guard let reference = dictionary["task_reference"] as? String, let url = dictionary["full"] as? String else {
+            didFailUpload(APIClientError.parsing)
+            return
         }
+        
         let referenceId = reference.suffix(reference.count - PhotobookAPIManager.imageUploadIdentifierPrefix.count)
         
         let assets = order.assetsToUpload().filter({ $0.identifier == referenceId })
@@ -369,6 +379,9 @@ class OrderManager {
                 cancelProcessing() {
                     self.orderProcessingDelegate?.orderDidComplete(error: .cancelled)
                 }
+            default:
+                //unknown error or not relevant for image upload. Should never happen. Cancel processing
+                orderProcessingDelegate?.orderDidComplete(error: OrderProcessingError.cancelled)
             }
         } else if let _ = error as? APIClientError {
             // Connection / server errors or parsing error

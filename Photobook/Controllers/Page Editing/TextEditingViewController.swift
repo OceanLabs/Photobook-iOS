@@ -9,8 +9,8 @@
 import UIKit
 
 protocol TextEditingDelegate: class {
-    func didChangeFontType(to fontType: FontType)
-    func didChangeText(to text: String?)
+    func didChangeFontType()
+    func didChangeText()
     func shouldReactToKeyboardAppearance() -> Bool
 }
 
@@ -37,6 +37,7 @@ class TextEditingViewController: UIViewController {
     var productLayout: ProductLayout! {
         didSet { hasAnImageLayout = (productLayout.layout.imageLayoutBox != nil) }
     }
+    var pageType: PageType!
     var assetImage: UIImage?
     var pageColor: ProductColor!
     var initialContainerRect: CGRect?
@@ -211,12 +212,12 @@ class TextEditingViewController: UIViewController {
     
     private func setup() {
         // Figure out the height of the textView
-        guard
-            let pageRatio = product.template.aspectRatio,
-            let textLayoutBox = productLayout?.layout.textLayoutBox
+        guard let textLayoutBox = productLayout?.layout.textLayoutBox
         else {
             fatalError("Text editing failed due to missing layout info.")
         }
+        
+        let pageRatio = pageType == .cover ? product.template.coverAspectRatio : product.template.pageAspectRatio
         
         textView.inputAccessoryView = textToolBarView
         textView.text = productLayout.text
@@ -292,7 +293,8 @@ class TextEditingViewController: UIViewController {
     }
 
     private func setTextViewAttributes(with fontType: FontType, fontColor: UIColor) {
-        let fontSize = fontType.sizeForScreenToPageRatio(pageView.bounds.height / product.template.pageHeight)
+        let pageHeight = pageType == .cover ? product.template.coverSize.height : product.template.pageSize.height
+        let fontSize = fontType.sizeForScreenToPageRatio(pageView.bounds.height / pageHeight)
         textView.attributedText = fontType.attributedText(with: textView.text, fontSize: fontSize, fontColor: fontColor)
         textView.typingAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor)
     }
@@ -319,8 +321,10 @@ extension TextEditingViewController: UITextViewDelegate {
         guard text.rangeOfCharacter(from: CharacterSet.newlines) == nil else {
             guard !isAnimatingOnScreen else { return false }
             
+            productLayout.setText(textView.text, withLineBreaks: textView.lineBreakIndexes())
+
             textView.resignFirstResponder()
-            delegate?.didChangeText(to: textView.text)
+            delegate?.didChangeText()
             return false
         }
         
@@ -333,6 +337,7 @@ extension TextEditingViewController: TextToolBarViewDelegate {
     func didSelectFontType(_ fontType: FontType) {
         setTextViewAttributes(with: fontType, fontColor: pageColor.fontColor())
         
-        delegate?.didChangeFontType(to: fontType)
+        productLayout.fontType = fontType
+        delegate?.didChangeFontType()
     }
 }

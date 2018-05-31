@@ -24,15 +24,20 @@ enum ProductColor: String, Codable {
         case .black: return .black
         }
     }
+    
+    var accessibilityLabel: String {
+        switch self {
+        case .white: return NSLocalizedString("Accessibility/Editing/WhiteColor", value: "White Color", comment: "The color white")
+        case .black: return NSLocalizedString("Accessibility/Editing/BlackColor", value: "Black Color", comment: "The color black")
+        }
+    }
 }
 
 class PhotobookProduct: Codable {
     
     private enum CodingKeys: String, CodingKey {
-        case template, photobookId, productLayouts, coverColor, pageColor, spineText, spineFontType, productUpsellOptions, itemCount
+        case template, productLayouts, coverColor, pageColor, spineText, spineFontType, productUpsellOptions, itemCount, upsoldTemplate, upsoldOptions
     }
-    
-    private unowned var productManager = ProductManager.shared
     
     private let bleed: CGFloat = 8.5
 
@@ -40,7 +45,7 @@ class PhotobookProduct: Codable {
     private var currentLandscapeLayout = 0
     
     var template: PhotobookTemplate
-    var productUpsellOptions: [UpsellOption]? //TODO: Get this from the initial-data endpoint
+    var productUpsellOptions: [UpsellOption]?
     var spineText: String?
     var spineFontType: FontType = .plain
     var coverColor: ProductColor = .white
@@ -48,18 +53,26 @@ class PhotobookProduct: Codable {
     var productLayouts = [ProductLayout]()
     var itemCount: Int = 1
     
-    // The id of the uploaded PDF
-    var photobookId: String?
+    var isAddingPagesAllowed: Bool { return template.maxPages >= numberOfPages + 2 }
+    var isRemovingPagesAllowed: Bool { return numberOfPages - 2 >= template.minPages }
     
-    var isAddingPagesAllowed: Bool {
-        // TODO: Use pages count instead of assets/layout count
-        return productManager.maximumAllowedAssets > productLayouts.count
+    private var numberOfPages: Int {
+        let doubleLayouts = productLayouts.filter { $0.layout.isDoubleLayout }.count
+        let singleLayouts = productLayouts.count - doubleLayouts
+        return singleLayouts + 2 * doubleLayouts
     }
-    var isRemovingPagesAllowed: Bool {
-        // TODO: Use pages count instead of assets/layout count
-        return productManager.minimumRequiredAssets < productLayouts.count - 1 // Don't include cover for min calculation
+    
+    var coverLayouts: [Layout]!
+    var layouts: [Layout]!
+    
+    var upsoldTemplate: PhotobookTemplate?
+    var upsoldOptions: [String: Any]?
+    
+    func setUpsellData(template: PhotobookTemplate?, payload: [String: Any]?) {
+        upsoldTemplate = template
+        upsoldOptions = payload?["options"] as? [String: Any]
     }
-
+    
     var emptyLayoutIndices: [Int]? {
         var temp = [Int]()
         var index = 0
@@ -78,11 +91,11 @@ class PhotobookProduct: Codable {
     
     var truncatedTextLayoutIndices: [Int]? {
         var temp = [Int]()
-        
-        let pageSize = CGSize(width: template.pageWidth!, height: template.pageHeight!)
-        
+                
         for (index, productLayout) in productLayouts.enumerated() {
             guard let textBox = productLayout.layout.textLayoutBox, let text = productLayout.text, text.count > 0 else { continue }
+            
+            let pageSize = index == 0 ? template.coverSize : template.pageSize
             
             let fontType = productLayout.fontType ?? .plain
             let fontSize = fontType.sizeForScreenToPageRatio()
@@ -98,17 +111,48 @@ class PhotobookProduct: Codable {
         return temp.count > 0 ? temp : nil
     }
     
-    init?(template: PhotobookTemplate, assets: [Asset], productManager: ProductManager = ProductManager.shared) {
-        guard
-            let coverLayouts = productManager.coverLayouts(for: template), !coverLayouts.isEmpty,
-            let layouts = productManager.layouts(for: template), !layouts.isEmpty
-        else {
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(template, forKey: .template)
+        try container.encode(productLayouts, forKey: .productLayouts)
+        try container.encode(coverColor, forKey: .coverColor)
+        try container.encode(pageColor, forKey: .pageColor)
+        try container.encode(spineText, forKey: .spineText)
+        try container.encode(spineFontType, forKey: .spineFontType)
+        try container.encode(productUpsellOptions, forKey: .productUpsellOptions)
+        try container.encode(itemCount, forKey: .itemCount)
+        try container.encode(upsoldTemplate, forKey: .upsoldTemplate)
+        if let upsoldOptions = upsoldOptions,
+            let upsoldOptionData = try? JSONSerialization.data(withJSONObject: upsoldOptions, options: []) {
+            try container.encode(upsoldOptionData, forKey: .upsoldOptions)
+        }
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        template = try values.decode(PhotobookTemplate.self, forKey: .template)
+        productLayouts = try values.decode([ProductLayout].self, forKey: .productLayouts)
+        coverColor = try values.decode(ProductColor.self, forKey: .coverColor)
+        pageColor = try values.decode(ProductColor.self, forKey: .pageColor)
+        spineText = try values.decodeIfPresent(String.self, forKey: .spineText)
+        spineFontType = try values.decode(FontType.self, forKey: .spineFontType)
+        productUpsellOptions = try values.decodeIfPresent([UpsellOption].self, forKey: .productUpsellOptions)
+        itemCount = try values.decode(Int.self, forKey: .itemCount)
+        upsoldTemplate = try values.decodeIfPresent(PhotobookTemplate.self, forKey: .upsoldTemplate)
+        if let upsoldOptionsData = try values.decodeIfPresent(Data.self, forKey: .upsoldOptions) {
+            upsoldOptions = (try? JSONSerialization.jsonObject(with: upsoldOptionsData, options: [])) as? [String: Any]
+        }
+    }
+    
+    init?(template: PhotobookTemplate, assets: [Asset], coverLayouts: [Layout], layouts: [Layout]) {
+        guard !coverLayouts.isEmpty, !layouts.isEmpty else {
             print("PhotobookProduct: Missing layouts for selected photobook")
             return nil
         }
         
         self.template = template
-        self.productManager = productManager
+        self.coverLayouts = coverLayouts
+        self.layouts = layouts
         
         let imageOnlyLayouts = layouts.filter({ $0.imageLayoutBox != nil })
         
@@ -127,19 +171,26 @@ class PhotobookProduct: Codable {
         
         // Create layouts for the remaining assets
         // Fill minimum pages with Placeholder assets if needed
-        let numberOfPlaceholderLayoutsNeeded = max(template.minimumRequiredAssets - assets.count - 1, 0)
+        let numberOfPlaceholderLayoutsNeeded = max(template.minPages - assets.count - 1, 0)
         tempLayouts.append(contentsOf: createLayoutsForAssets(assets: assets, from: imageOnlyLayouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
         productLayouts = tempLayouts
     }
     
-    func setTemplate(_ template: PhotobookTemplate, withAssets assets: [Asset]? = nil, coverLayouts: [Layout], layouts: [Layout]) {
-        
+    func setTemplate(_ template: PhotobookTemplate, coverLayouts: [Layout], layouts: [Layout]) {
+        guard !coverLayouts.isEmpty, !layouts.isEmpty else {
+            print("PhotobookProduct: Missing layouts for selected photobook")
+            return
+        }
+
         // Reset the current layout since we are changing products
         currentLandscapeLayout = 0
         currentPortraitLayout = 0
         
         // Switching products
         self.template = template
+        self.coverLayouts = coverLayouts
+        self.layouts = layouts
+        
         for pageLayout in productLayouts {
             let availableLayouts = pageLayout === productLayouts.first ? coverLayouts : layouts
             
@@ -290,8 +341,6 @@ class PhotobookProduct: Codable {
     }
     
     private func addPages(at index: Int, number: Int, pages: [ProductLayout]? = nil) {
-        guard let layouts = productManager.layouts(for: template)
-            else { return }
         let newProductLayouts = pages ?? createLayoutsForAssets(assets: [], from: layouts, placeholderLayouts: number)
         
         productLayouts.insert(contentsOf: newProductLayouts, at: index)
@@ -365,49 +414,149 @@ class PhotobookProduct: Codable {
         }
     }
     
-    func bleed(forPageSize size: CGSize) -> CGFloat {
-        let scaleFactor = size.height / template.pageHeight
+    func bleed(forPageSize size: CGSize, type: PageType? = nil) -> CGFloat {
+        let pageHeight = type != nil && type! == .cover ? template.coverSize.height : template.pageSize.height
+        let scaleFactor = size.height / pageHeight
         return bleed * scaleFactor
     }
     
-    func photobookParameters() -> [String: Any]? {
+    func pdfParameters() -> [String: Any]? {
         
-        guard let photobookId = photobookId else { return nil }
-        
-        // TODO: confirm schema
         var photobook = [String: Any]()
         
+        // Pages
         var pages = [[String: Any]]()
-        for productLayout in productLayouts {
+        for (index, productLayout) in productLayouts.enumerated() {
             var page = [String: Any]()
             
+            var layoutBoxes = [[String: Any]]()
+            
+            let isCover = index == 0
+            let isDoubleLayout = productLayout.layout.isDoubleLayout
+            
+            let templateSize = isCover ? template.coverSize : template.pageSize
+            let pageSize = CGSize(width: isDoubleLayout ? templateSize.width * 2 : templateSize.width, height: templateSize.height)
+            
+            // Image layout box
             if let asset = productLayout.asset,
                 let imageLayoutBox = productLayout.layout.imageLayoutBox,
                 let productLayoutAsset = productLayout.productLayoutAsset {
                 
-                page["contentType"] = "image"
-                page["dimensionsPercentages"] = ["height": imageLayoutBox.rect.height, "width": imageLayoutBox.rect.width]
-                page["relativeStartPoint"] = ["x": imageLayoutBox.rect.origin.x, "y": imageLayoutBox.rect.origin.y]
+                var layoutBox = [String: Any]()
                 
-                // Set the container size to 1,1 so that the transform is relativized
-                productLayoutAsset.containerSize = CGSize(width: 1, height: 1)
+                // Adjust container and transform to page dimensions
+                productLayoutAsset.containerSize = imageLayoutBox.rectContained(in: pageSize).size
                 productLayoutAsset.adjustTransform()
+                
+                layoutBox["contentType"] = "image"
+                layoutBox["isDoubleLayout"] = isDoubleLayout
+                layoutBox["dimensionsPercentages"] = ["height": imageLayoutBox.rect.height, "width": imageLayoutBox.rect.width]
+                layoutBox["relativeStartPoint"] = ["x": imageLayoutBox.rect.origin.x, "y": imageLayoutBox.rect.origin.y]
+                
+                // Convert transform into css format on the backend
+                let assetAspectRatio = asset.size.width / asset.size.height
+                
+                //1. translation
+                //on web the image with scale factor 1 fills the width of the container and is aligned to the top left corner.
+                //first we calculate the offset in points to align the image center with the container center
+                let yOffset = productLayoutAsset.containerSize.height * 0.5 - productLayoutAsset.containerSize.width * 0.5 * (1.0 / assetAspectRatio) //offset in points to match initial origins within layout
+                
+                //match anchors
+                var transformX = productLayoutAsset.transform.tx
+                var transformY = productLayoutAsset.transform.ty + yOffset
+                
+                //2. zoom
+                //on the pdf back-end scale 1 fills the width of the container. scale 1 on ios is original image width
+                let scaledWidth = asset.size.width * productLayoutAsset.transform.scale
+                let zoom = scaledWidth/productLayoutAsset.containerSize.width
+                
+                //3. rotation
+                //straightfoward as it's just the angle
+                let rotation = productLayoutAsset.transform.angle * (180 / .pi)
+                
+                //convert to css percentages
+                transformX = transformX / productLayoutAsset.containerSize.width
+                transformY = transformY / (productLayoutAsset.containerSize.height * (1.0 / assetAspectRatio))
                 
                 var containedItem = [String: Any]()
                 var picture = [String: Any]()
                 picture["url"] = asset.uploadUrl
-                picture["relativeStartPoint"] = ["x": productLayoutAsset.transform.tx, "y": productLayoutAsset.transform.ty]
-                picture["rotation"] = productLayoutAsset.transform.angle
-                picture["zoom"] = productLayoutAsset.transform.scale
-                
+                picture["dimensions"] = ["height": asset.size.height, "width": asset.size.width]
+                picture["thumbnailUrl"] = asset.uploadUrl //mock data
                 containedItem["picture"] = picture
-                page["containedItem"] = containedItem
+                containedItem["relativeStartPoint"] = ["x": transformX, "y": transformY]
+                containedItem["rotation"] = rotation
+                containedItem["zoom"] = zoom // X & Y axes scale should be the same, use the scale for X axis
+                containedItem["baseWidthPercent"] = 1 //mock data
+                containedItem["flipped"] = false
                 
+                layoutBox["containedItem"] = containedItem
+                
+                layoutBoxes.append(layoutBox)
             }
+            
+            //text layout box
+            if let text = productLayout.text,
+                let textLayoutBox = productLayout.layout.textLayoutBox,
+                let productLayoutText = productLayout.productLayoutText {
+                
+                var layoutBox = [String: Any]()
+                
+                //adjust container and transform to page dimensions
+                productLayoutText.containerSize = textLayoutBox.rectContained(in: pageSize).size
+                
+                layoutBox["contentType"] = "text"
+                layoutBox["isDoubleLayout"] = isDoubleLayout
+                layoutBox["dimensionsPercentages"] = ["height": textLayoutBox.rect.height, "width": textLayoutBox.rect.width]
+                layoutBox["relativeStartPoint"] = ["x": textLayoutBox.rect.origin.x, "y": textLayoutBox.rect.origin.y]
+                
+                var containedItem = [String: Any]()
+                var font = [String: Any]()
+                font["fontFamily"] = productLayoutText.fontType.apiFontFamily
+                font["fontSize"] = productLayoutText.fontType.apiPhotobookFontSize()
+                font["fontWeight"] = productLayoutText.fontType.apiPhotobookFontWeight()
+                font["lineHeight"] = productLayoutText.fontType.apiPhotobookLineHeight()
+                containedItem["font"] = font
+                containedItem["text"] = productLayoutText.htmlText ?? text
+                containedItem["color"] = pageColor.fontColor().hex
+                
+                layoutBox["containedItem"] = containedItem
+                
+                layoutBoxes.append(layoutBox)
+            }
+            
+            page["layoutBoxes"] = layoutBoxes
             pages.append(page)
         }
+        
         photobook["pages"] = pages
-        photobook["pdfId"] = photobookId
+        
+        // Product
+        photobook["productVariantId"] = template.kiteId
+        
+        // Config
+        var photobookConfig = [String: Any]()
+        
+        photobookConfig["coverColor"] = coverColor.uiColor().hex
+        photobookConfig["pageColor"] = pageColor.uiColor().hex
+        
+        var spineText = [String: Any]()
+        
+        spineText["text"] = self.spineText
+        spineText["color"] = coverColor.fontColor().hex
+        
+        var font = [String: Any]()
+        
+        font["fontFamily"] = spineFontType.apiFontFamily
+        font["fontSize"] = spineFontType.apiPhotobookFontSize()
+        font["fontWeight"] = spineFontType.apiPhotobookFontWeight()
+        font["lineHeight"] = spineFontType.apiPhotobookLineHeight()
+        
+        spineText["font"] = font
+        
+        photobookConfig["spineText"] = spineText
+        
+        photobook["photobookConfig"] = photobookConfig
         
         return photobook
     }
@@ -419,5 +568,25 @@ class PhotobookProduct: Codable {
             assets.append(asset)
         }
         return assets
+    }
+}
+
+extension PhotobookProduct: Hashable, Equatable {
+    
+    static func ==(lhs: PhotobookProduct, rhs: PhotobookProduct) -> Bool {
+        return lhs.hashValue == rhs.hashValue
+    }
+    
+    var hashValue: Int {
+        get {
+            var stringHash = ""
+            
+            stringHash += "pt:\(template.id),"
+            if let upsoldOptions = upsoldOptions {
+                stringHash += "po:\(upsoldOptions)"
+            }
+            
+            return stringHash.hashValue
+        }
     }
 }

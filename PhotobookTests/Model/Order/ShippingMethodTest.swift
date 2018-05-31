@@ -149,6 +149,6 @@ class ShippingMethodTest: XCTestCase {
     
     func testDeliveryTime_containsMaxAndMinDeliveryTimes() {
         let shippingMethod = ShippingMethod.parse(dictionary: validDictionary)
-        XCTAssertTrue(shippingMethod?.deliveryTime.contains("2-6") ?? false)
+        XCTAssertEqualOptional(shippingMethod?.deliveryTime, "2 to 6 working days")
     }
 }
