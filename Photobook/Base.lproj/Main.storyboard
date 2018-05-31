@@ -3484,8 +3484,11 @@ United Kingdom</string>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="orderNumberHeaderLabel" destination="BY5-g7-Mdn" id="qZ6-a8-SSb"/>
                                     <outlet property="orderNumberLabel" destination="qOB-Nd-uRD" id="vcA-ZL-2qM"/>
+                                    <outlet property="shippingAddressHeaderLabel" destination="Lku-4W-wR0" id="IkW-yI-Bqp"/>
                                     <outlet property="shippingAddressLabel" destination="0qf-Zl-tHB" id="WVY-fU-Ry8"/>
+                                    <outlet property="shippingMethodHeaderLabel" destination="Rrq-Tu-d4Y" id="vyC-QK-ikx"/>
                                     <outlet property="shippingMethodLabel" destination="99D-Eb-VKk" id="A0p-qf-P6b"/>
                                 </connections>
                             </tableViewCell>
@@ -3607,6 +3610,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="itemLabel" destination="YkY-h9-Mt3" id="FlY-X1-fuY"/>
                                     <outlet property="totalCostLabel" destination="Vj9-s8-xAr" id="gKD-RI-4WK"/>
                                 </connections>
                             </tableViewCell>
@@ -6229,6 +6233,6 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <image name="uploading-spinner" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="qeW-AA-Oo4"/>
+        <segue reference="V0I-No-StO"/>
     </inferredMetricsTieBreakers>
 </document>
