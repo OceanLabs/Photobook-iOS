@@ -103,7 +103,7 @@ class PhotobookAPIManager {
     
     func getOrderSummary(product: PhotobookProduct, completionHandler: @escaping (_ summary: OrderSummary?, _ upsellOptions: [UpsellOption]?, _ productPayload: [String: Any]?, _ error: Error?) -> Void) {
         
-        let parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.productLayouts.count, "color": product.coverColor.rawValue]
+        let parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.productLayouts.count - 1, "color": product.coverColor.rawValue]
         apiClient.post(context: .photobook, endpoint: EndPoints.summary, parameters: parameters, headers: PhotobookAPIManager.headers) { (jsonData, error) in
             
             if let error = error {
