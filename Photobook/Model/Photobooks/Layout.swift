@@ -40,7 +40,7 @@ struct Layout: Equatable, Codable {
                 else if type == "text" { layout.textLayoutBox = LayoutBox.parse(layoutBoxDictionary) }
             }
         }
-        if let doubleLayout = layoutDictionary["doubleLayout"] as? Bool {
+        if let doubleLayout = layoutDictionary["isDoublePage"] as? Bool {
             layout.isDoubleLayout = doubleLayout
         }
         

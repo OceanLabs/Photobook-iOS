@@ -19,7 +19,7 @@ class OrderSummary {
             self.price = price
         }
         
-        init?(_ dict: [String:Any]) {
+        init?(_ dict: [String: Any]) {
             guard let name = dict["name"] as? String,
                 let priceDict = dict["price"] as? [String:Any],
                 let amountDouble = priceDict["amount"] as? Double,

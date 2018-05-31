@@ -54,7 +54,6 @@ class PhotobookAPIManager {
             if jsonData == nil, error != nil {
                 completionHandler(nil, nil, error!)
                 return
-
             }
             
             guard
@@ -182,7 +181,6 @@ class PhotobookAPIManager {
                 completionHandler(nil, error)
                 return
             }
-            print(insideUrl)
             completionHandler([coverUrl, insideUrl], nil)
         }
     }
