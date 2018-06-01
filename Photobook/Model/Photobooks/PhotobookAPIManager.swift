@@ -54,7 +54,6 @@ class PhotobookAPIManager {
             if jsonData == nil, error != nil {
                 completionHandler(nil, nil, error!)
                 return
-
             }
             
             guard
@@ -104,7 +103,7 @@ class PhotobookAPIManager {
     
     func getOrderSummary(product: PhotobookProduct, completionHandler: @escaping (_ summary: OrderSummary?, _ upsellOptions: [UpsellOption]?, _ productPayload: [String: Any]?, _ error: Error?) -> Void) {
         
-        let parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.productLayouts.count, "color": product.coverColor.rawValue]
+        let parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.numberOfPages, "color": product.coverColor.rawValue]
         apiClient.post(context: .photobook, endpoint: EndPoints.summary, parameters: parameters, headers: PhotobookAPIManager.headers) { (jsonData, error) in
             
             if let error = error {
@@ -135,7 +134,7 @@ class PhotobookAPIManager {
     
     func applyUpsells(product:PhotobookProduct, upsellOptions:[UpsellOption], completionHandler: @escaping (_ summary: OrderSummary?, _ upsoldTemplate: PhotobookTemplate?, _ productPayload: [String: Any]?, _ error: Error?) -> Void) {
         
-        var parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.productLayouts.count, "color": product.coverColor.rawValue]
+        var parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.numberOfPages, "color": product.coverColor.rawValue]
         var upsellDicts = [[String: Any]]()
         for upsellOption in upsellOptions {
             upsellDicts.append(upsellOption.dict)
@@ -182,7 +181,6 @@ class PhotobookAPIManager {
                 completionHandler(nil, error)
                 return
             }
-            print(insideUrl)
             completionHandler([coverUrl, insideUrl], nil)
         }
     }

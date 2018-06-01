@@ -295,7 +295,7 @@ class OrderManager {
     }
     
     private func pollOrderSuccess(completion: @escaping (_ errorMessage: ErrorMessage?) -> Void) {
-        //TODO: poll order success and provide option to change payment method if fails
+        // TODO: poll order success and provide option to change payment method if fails
         completion(nil)
     }
     

@@ -49,6 +49,7 @@
 		2E25272E2015EDB1004C12AF /* CountryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E25272D2015EDB1004C12AF /* CountryTests.swift */; };
 		2E2563912018BBCF0096DFC5 /* AddressTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2563902018BBCF0096DFC5 /* AddressTableViewController.swift */; };
 		2E2563932018C3950096DFC5 /* AddressFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2563922018C3950096DFC5 /* AddressFieldTableViewCell.swift */; };
+		2E3A86E720C00A4200F1E6E2 /* CheckoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3A86E620C00A4200F1E6E2 /* CheckoutTests.swift */; };
 		2E3E6A5420036FB60044EDFC /* PhotobookCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3E6A5220036FB60044EDFC /* PhotobookCollectionViewCell.swift */; };
 		2E4B83892068E50C00059AA7 /* ReceiptViewControllerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FA530B2063F3B200669758 /* ReceiptViewControllerState.swift */; };
 		2E4B838B2068E59E00059AA7 /* ReceiptProgressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97ABBC9204D445900238C8A /* ReceiptProgressTableViewCell.swift */; };
@@ -297,6 +298,7 @@
 		6F0A682E1FE0243400B7E56C /* EmptyScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0A682D1FE0243400B7E56C /* EmptyScreenViewController.swift */; };
 		6F0A68321FE1291200B7E56C /* PageSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0A68311FE1291200B7E56C /* PageSetupViewController.swift */; };
 		6F0A68361FE16D1200B7E56C /* LayoutSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0A68351FE16D1200B7E56C /* LayoutSelectionViewController.swift */; };
+		6F0FC86F20C04D6D00158F7C /* UIColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FD10B02077C9ED000A45E4 /* UIColorExtensions.swift */; };
 		6F139E0C1FB45DD8005B937E /* StoriesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F139E0B1FB45DD8005B937E /* StoriesManager.swift */; };
 		6F139E0F1FB45EFC005B937E /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F139E0E1FB45EFC005B937E /* Story.swift */; };
 		6F17F325207657FD00001888 /* UIFontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F17F324207657FD00001888 /* UIFontExtensions.swift */; };
@@ -517,6 +519,7 @@
 		2E25272D2015EDB1004C12AF /* CountryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryTests.swift; sourceTree = "<group>"; };
 		2E2563902018BBCF0096DFC5 /* AddressTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressTableViewController.swift; sourceTree = "<group>"; };
 		2E2563922018C3950096DFC5 /* AddressFieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressFieldTableViewCell.swift; sourceTree = "<group>"; };
+		2E3A86E620C00A4200F1E6E2 /* CheckoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutTests.swift; sourceTree = "<group>"; };
 		2E3E6A5220036FB60044EDFC /* PhotobookCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotobookCollectionViewCell.swift; sourceTree = "<group>"; };
 		2E4C9E872049492400F5AD48 /* FacebookAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookAlbum.swift; sourceTree = "<group>"; };
 		2E4C9E8920494D6B00F5AD48 /* AlbumsCollectionViewController+Facebook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlbumsCollectionViewController+Facebook.swift"; sourceTree = "<group>"; };
@@ -986,6 +989,7 @@
 			isa = PBXGroup;
 			children = (
 				2E87059C208E0183004B4B36 /* PhotobookUITest.swift */,
+				2E3A86E620C00A4200F1E6E2 /* CheckoutTests.swift */,
 				2EE4BE7320B81F8100A54A77 /* PhotobookPreviewTests.swift */,
 				2EEC03D2209212B3008725B7 /* OrderSummaryTests.swift */,
 				2E52B4A320909EEF00D5C20B /* BasketTests.swift */,
@@ -2024,6 +2028,7 @@
 				2EDF608120A33CA6000F7A61 /* CreditCardTests.swift in Sources */,
 				2E0E8B71209C979700E556FB /* DetailsTests.swift in Sources */,
 				2EE4BE7420B81F8100A54A77 /* PhotobookPreviewTests.swift in Sources */,
+				2E3A86E720C00A4200F1E6E2 /* CheckoutTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2094,6 +2099,7 @@
 				2ED14BE82063AA4000ED2E2C /* SpineFrameView.swift in Sources */,
 				2ED14BB32063AA4000ED2E2C /* AssetSelectorViewController.swift in Sources */,
 				2E4B838B2068E59E00059AA7 /* ReceiptProgressTableViewCell.swift in Sources */,
+				6F0FC86F20C04D6D00158F7C /* UIColorExtensions.swift in Sources */,
 				6F87460E207CC8DB001923B7 /* PublicProtocols.swift in Sources */,
 				2ED14BDB2063AA4000ED2E2C /* UserInputTableViewCell.swift in Sources */,
 				2E5CCC2B207B76870003000F /* GlobalConstants.swift in Sources */,

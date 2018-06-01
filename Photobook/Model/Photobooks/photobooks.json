@@ -777,7 +777,7 @@
     {
         "id": 53,
         "category": "doublePage",
-        "doubleLayout": true,
+        "isDoublePage": true,
         "layoutBoxes": [
         	{
         		"id": 169,
@@ -789,7 +789,7 @@
     {
         "id": 54,
         "category": "doublePage",
-        "doubleLayout": true,
+        "isDoublePage": true,
         "layoutBoxes": [
         	{
         		"id": 170,

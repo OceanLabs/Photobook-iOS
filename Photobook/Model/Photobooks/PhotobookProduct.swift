@@ -56,9 +56,9 @@ class PhotobookProduct: Codable {
     var isAddingPagesAllowed: Bool { return template.maxPages >= numberOfPages + 2 }
     var isRemovingPagesAllowed: Bool { return numberOfPages - 2 >= template.minPages }
     
-    private var numberOfPages: Int {
+    var numberOfPages: Int {
         let doubleLayouts = productLayouts.filter { $0.layout.isDoubleLayout }.count
-        let singleLayouts = productLayouts.count - doubleLayouts
+        let singleLayouts = productLayouts.count - doubleLayouts - 1 // Don't count the cover
         return singleLayouts + 2 * doubleLayouts
     }
     
@@ -156,14 +156,23 @@ class PhotobookProduct: Codable {
         
         let imageOnlyLayouts = layouts.filter({ $0.imageLayoutBox != nil })
         
+        var assets = assets
         var tempLayouts = [ProductLayout]()
         
-        // Use a random photo for the cover, but not the first
-        let productLayoutAsset = ProductLayoutAsset()
-        var coverAsset = assets.first
-        if assets.count > 1 {
-            coverAsset = assets[(Int(arc4random()) % (assets.count - 1)) + 1] // Exclude 0
+        // TEMP: Use the first asset and remove it if the number assets matches the number of required pages + cover.
+        //       Otherwise, pick one photo at random.
+        var coverAsset: Asset?
+        if assets.count % 2 != 0 {
+            coverAsset = assets.remove(at: 0)
+        } else {
+            // Use a random photo for the cover, but not the first
+            coverAsset = assets.first
+            if assets.count > 1 {
+                coverAsset = assets[(Int(arc4random()) % (assets.count - 1)) + 1] // Exclude 0
+            }
         }
+        
+        let productLayoutAsset = ProductLayoutAsset()
         productLayoutAsset.asset = coverAsset
         let coverLayout = coverLayouts.first(where: { $0.imageLayoutBox != nil } )
         let productLayout = ProductLayout(layout: coverLayout!, productLayoutAsset: productLayoutAsset)
@@ -206,7 +215,7 @@ class PhotobookProduct: Codable {
         }
     }
     
-    private func createLayoutsForAssets(assets: [Asset], from layouts:[Layout], placeholderLayouts: Int = 0) -> [ProductLayout] {
+    private func createLayoutsForAssets(assets: [Asset], from layouts: [Layout], placeholderLayouts: Int = 0) -> [ProductLayout] {
         var portraitLayouts = layouts.filter { !$0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
         var landscapeLayouts = layouts.filter { $0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
         let doubleLayout = layouts.first { $0.isDoubleLayout }
