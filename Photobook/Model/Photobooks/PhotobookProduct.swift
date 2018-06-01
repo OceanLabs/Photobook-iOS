@@ -56,9 +56,9 @@ class PhotobookProduct: Codable {
     var isAddingPagesAllowed: Bool { return template.maxPages >= numberOfPages + 2 }
     var isRemovingPagesAllowed: Bool { return numberOfPages - 2 >= template.minPages }
     
-    private var numberOfPages: Int {
+    var numberOfPages: Int {
         let doubleLayouts = productLayouts.filter { $0.layout.isDoubleLayout }.count
-        let singleLayouts = productLayouts.count - doubleLayouts
+        let singleLayouts = productLayouts.count - doubleLayouts - 1 // Don't count the cover
         return singleLayouts + 2 * doubleLayouts
     }
     
