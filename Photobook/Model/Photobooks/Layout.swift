@@ -41,6 +41,11 @@ struct Layout: Equatable, Codable {
             }
         }
         
+        // TEMP: Avoid parsing double layouts as the PDF generation does not support them
+        if let doubleLayout = layoutDictionary["isDoublePage"] as? Bool, doubleLayout {
+            return nil
+        }
+        
         return layout
     }
     
