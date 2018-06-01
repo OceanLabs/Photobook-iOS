@@ -229,10 +229,14 @@ class OrderManager {
     
     func finishOrder() {
         
+        guard let photobook = ProductManager.shared.currentProduct else {
+            return
+        }
+
         orderProcessingDelegate?.orderWillFinish()
         
         // 1 - Create PDF
-        apiManager.createPhotobookPdf { [weak welf = self] (urls, error) in
+        apiManager.createPdf(withPhotobook: photobook) { [weak welf = self] (urls, error) in
             
             if let swelf = welf, swelf.isCancelling {
                 swelf.processingOrder = nil
@@ -291,7 +295,7 @@ class OrderManager {
     }
     
     private func pollOrderSuccess(completion: @escaping (_ errorMessage: ErrorMessage?) -> Void) {
-        //TODO: poll order success and provide option to change payment method if fails
+        // TODO: poll order success and provide option to change payment method if fails
         completion(nil)
     }
     
@@ -320,23 +324,21 @@ class OrderManager {
             return
         }
         
-        //check if this is a photobook api manager asset upload
+        // Check if this is a photobook api manager asset upload
         if let reference = dictionary["task_reference"] as? String, !reference.hasPrefix(PhotobookAPIManager.imageUploadIdentifierPrefix) {
-            //not intended for this class
             return
         }
         
         if let error = dictionary["error"] as? APIClientError {
-           didFailUpload(error)
+            didFailUpload(error)
             return
         }
         
-        guard let reference = dictionary["task_reference"] as? String,
-            let url = dictionary["full"] as? String else {
-                
-                didFailUpload(APIClientError.parsing)
-                return
+        guard let reference = dictionary["task_reference"] as? String, let url = dictionary["full"] as? String else {
+            didFailUpload(APIClientError.parsing)
+            return
         }
+        
         let referenceId = reference.suffix(reference.count - PhotobookAPIManager.imageUploadIdentifierPrefix.count)
         
         let assets = order.assetsToUpload().filter({ $0.identifier == referenceId })

@@ -54,7 +54,6 @@ class PhotobookAPIManager {
             if jsonData == nil, error != nil {
                 completionHandler(nil, nil, error!)
                 return
-
             }
             
             guard
@@ -104,7 +103,7 @@ class PhotobookAPIManager {
     
     func getOrderSummary(product: PhotobookProduct, completionHandler: @escaping (_ summary: OrderSummary?, _ upsellOptions: [UpsellOption]?, _ productPayload: [String: Any]?, _ error: Error?) -> Void) {
         
-        let parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.productLayouts.count, "color": product.coverColor.rawValue]
+        let parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.numberOfPages, "color": product.coverColor.rawValue]
         apiClient.post(context: .photobook, endpoint: EndPoints.summary, parameters: parameters, headers: PhotobookAPIManager.headers) { (jsonData, error) in
             
             if let error = error {
@@ -135,7 +134,7 @@ class PhotobookAPIManager {
     
     func applyUpsells(product:PhotobookProduct, upsellOptions:[UpsellOption], completionHandler: @escaping (_ summary: OrderSummary?, _ upsoldTemplate: PhotobookTemplate?, _ productPayload: [String: Any]?, _ error: Error?) -> Void) {
         
-        var parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.productLayouts.count, "color": product.coverColor.rawValue]
+        var parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.numberOfPages, "color": product.coverColor.rawValue]
         var upsellDicts = [[String: Any]]()
         for upsellOption in upsellOptions {
             upsellDicts.append(upsellOption.dict)
@@ -173,10 +172,17 @@ class PhotobookAPIManager {
     /// Creates a PDF representation of current photobook. Two PDFs for cover and pages are provided as a URL.
     /// Note that those get generated asynchronously on the server and when the server returns 200 the process might still fail, affecting the placement of orders using them
     ///
-    /// - Parameter completionHandler: Closure to be called with PDF URLs if successful, or an error if it fails
-    func createPhotobookPdf(completionHandler: @escaping (_ urls: [String]?, _ error: Error?) -> Void) {
-        completionHandler(["https://kite.ly/someurl", "https://kite.ly/someotherurl"], nil)
-        //TODO: send request
+    /// - Parameters:
+    ///   - photobook: Photobook product to use for creating the PDF
+    ///   - completionHandler: Closure to be called with PDF URLs if successful, or an error if it fails
+    func createPdf(withPhotobook photobook: PhotobookProduct, completionHandler: @escaping (_ urls: [String]?, _ error: Error?) -> Void) {
+        apiClient.post(context: .photobook, endpoint: "ios/generate_pdf", parameters: photobook.pdfParameters(), headers: PhotobookAPIManager.headers) { (response, error) in
+            guard let response = response as? [String: Any], let coverUrl = response["coverUrl"] as? String, let insideUrl = response["insideUrl"] as? String else {
+                completionHandler(nil, error)
+                return
+            }
+            completionHandler([coverUrl, insideUrl], nil)
+        }
     }
     
 }

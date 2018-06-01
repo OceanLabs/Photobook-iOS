@@ -56,9 +56,9 @@ class PhotobookProduct: Codable {
     var isAddingPagesAllowed: Bool { return template.maxPages >= numberOfPages + 2 }
     var isRemovingPagesAllowed: Bool { return numberOfPages - 2 >= template.minPages }
     
-    private var numberOfPages: Int {
+    var numberOfPages: Int {
         let doubleLayouts = productLayouts.filter { $0.layout.isDoubleLayout }.count
-        let singleLayouts = productLayouts.count - doubleLayouts
+        let singleLayouts = productLayouts.count - doubleLayouts - 1 // Don't count the cover
         return singleLayouts + 2 * doubleLayouts
     }
     
@@ -156,14 +156,23 @@ class PhotobookProduct: Codable {
         
         let imageOnlyLayouts = layouts.filter({ $0.imageLayoutBox != nil })
         
+        var assets = assets
         var tempLayouts = [ProductLayout]()
         
-        // Use a random photo for the cover, but not the first
-        let productLayoutAsset = ProductLayoutAsset()
-        var coverAsset = assets.first
-        if assets.count > 1 {
-            coverAsset = assets[(Int(arc4random()) % (assets.count - 1)) + 1] // Exclude 0
+        // TEMP: Use the first asset and remove it if the number of assets matches the number of required pages + cover.
+        //       Otherwise, pick one photo at random.
+        var coverAsset: Asset?
+        if assets.count % 2 != 0 {
+            coverAsset = assets.remove(at: 0)
+        } else {
+            // Use a random photo for the cover, but not the first
+            coverAsset = assets.first
+            if assets.count > 1 {
+                coverAsset = assets[(Int(arc4random()) % (assets.count - 1)) + 1] // Exclude 0
+            }
         }
+        
+        let productLayoutAsset = ProductLayoutAsset()
         productLayoutAsset.asset = coverAsset
         let coverLayout = coverLayouts.first(where: { $0.imageLayoutBox != nil } )
         let productLayout = ProductLayout(layout: coverLayout!, productLayoutAsset: productLayoutAsset)
@@ -206,7 +215,7 @@ class PhotobookProduct: Codable {
         }
     }
     
-    private func createLayoutsForAssets(assets: [Asset], from layouts:[Layout], placeholderLayouts: Int = 0) -> [ProductLayout] {
+    private func createLayoutsForAssets(assets: [Asset], from layouts: [Layout], placeholderLayouts: Int = 0) -> [ProductLayout] {
         var portraitLayouts = layouts.filter { !$0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
         var landscapeLayouts = layouts.filter { $0.isLandscape() && !$0.isEmptyLayout() && !$0.isDoubleLayout }
         let doubleLayout = layouts.first { $0.isDoubleLayout }
@@ -420,41 +429,143 @@ class PhotobookProduct: Codable {
         return bleed * scaleFactor
     }
     
-    func photobookParameters() -> [String: Any]? {
+    func pdfParameters() -> [String: Any]? {
         
-        // TODO: confirm schema
         var photobook = [String: Any]()
         
+        // Pages
         var pages = [[String: Any]]()
-        for productLayout in productLayouts {
+        for (index, productLayout) in productLayouts.enumerated() {
             var page = [String: Any]()
             
+            var layoutBoxes = [[String: Any]]()
+            
+            let isCover = index == 0
+            let isDoubleLayout = productLayout.layout.isDoubleLayout
+            
+            let templateSize = isCover ? template.coverSize : template.pageSize
+            let pageSize = CGSize(width: isDoubleLayout ? templateSize.width * 2 : templateSize.width, height: templateSize.height)
+            
+            // Image layout box
             if let asset = productLayout.asset,
                 let imageLayoutBox = productLayout.layout.imageLayoutBox,
                 let productLayoutAsset = productLayout.productLayoutAsset {
                 
-                page["contentType"] = "image"
-                page["dimensionsPercentages"] = ["height": imageLayoutBox.rect.height, "width": imageLayoutBox.rect.width]
-                page["relativeStartPoint"] = ["x": imageLayoutBox.rect.origin.x, "y": imageLayoutBox.rect.origin.y]
+                var layoutBox = [String: Any]()
                 
-                // Set the container size to 1,1 so that the transform is relativized
-                productLayoutAsset.containerSize = CGSize(width: 1, height: 1)
+                // Adjust container and transform to page dimensions
+                productLayoutAsset.containerSize = imageLayoutBox.rectContained(in: pageSize).size
                 productLayoutAsset.adjustTransform()
+                
+                layoutBox["contentType"] = "image"
+                layoutBox["isDoubleLayout"] = isDoubleLayout
+                layoutBox["dimensionsPercentages"] = ["height": imageLayoutBox.rect.height, "width": imageLayoutBox.rect.width]
+                layoutBox["relativeStartPoint"] = ["x": imageLayoutBox.rect.origin.x, "y": imageLayoutBox.rect.origin.y]
+                
+                // Convert transform into css format on the backend
+                let assetAspectRatio = asset.size.width / asset.size.height
+                
+                //1. translation
+                //on web the image with scale factor 1 fills the width of the container and is aligned to the top left corner.
+                //first we calculate the offset in points to align the image center with the container center
+                let yOffset = productLayoutAsset.containerSize.height * 0.5 - productLayoutAsset.containerSize.width * 0.5 * (1.0 / assetAspectRatio) //offset in points to match initial origins within layout
+                
+                //match anchors
+                var transformX = productLayoutAsset.transform.tx
+                var transformY = productLayoutAsset.transform.ty + yOffset
+                
+                //2. zoom
+                //on the pdf back-end scale 1 fills the width of the container. scale 1 on ios is original image width
+                let scaledWidth = asset.size.width * productLayoutAsset.transform.scale
+                let zoom = scaledWidth/productLayoutAsset.containerSize.width
+                
+                //3. rotation
+                //straightfoward as it's just the angle
+                let rotation = productLayoutAsset.transform.angle * (180 / .pi)
+                
+                //convert to css percentages
+                transformX = transformX / productLayoutAsset.containerSize.width
+                transformY = transformY / (productLayoutAsset.containerSize.height * (1.0 / assetAspectRatio))
                 
                 var containedItem = [String: Any]()
                 var picture = [String: Any]()
                 picture["url"] = asset.uploadUrl
-                picture["relativeStartPoint"] = ["x": productLayoutAsset.transform.tx, "y": productLayoutAsset.transform.ty]
-                picture["rotation"] = productLayoutAsset.transform.angle
-                picture["zoom"] = productLayoutAsset.transform.scale
-                
+                picture["dimensions"] = ["height": asset.size.height, "width": asset.size.width]
+                picture["thumbnailUrl"] = asset.uploadUrl //mock data
                 containedItem["picture"] = picture
-                page["containedItem"] = containedItem
+                containedItem["relativeStartPoint"] = ["x": transformX, "y": transformY]
+                containedItem["rotation"] = rotation
+                containedItem["zoom"] = zoom // X & Y axes scale should be the same, use the scale for X axis
+                containedItem["baseWidthPercent"] = 1 //mock data
+                containedItem["flipped"] = false
                 
+                layoutBox["containedItem"] = containedItem
+                
+                layoutBoxes.append(layoutBox)
             }
+            
+            //text layout box
+            if let text = productLayout.text,
+                let textLayoutBox = productLayout.layout.textLayoutBox,
+                let productLayoutText = productLayout.productLayoutText {
+                
+                var layoutBox = [String: Any]()
+                
+                //adjust container and transform to page dimensions
+                productLayoutText.containerSize = textLayoutBox.rectContained(in: pageSize).size
+                
+                layoutBox["contentType"] = "text"
+                layoutBox["isDoubleLayout"] = isDoubleLayout
+                layoutBox["dimensionsPercentages"] = ["height": textLayoutBox.rect.height, "width": textLayoutBox.rect.width]
+                layoutBox["relativeStartPoint"] = ["x": textLayoutBox.rect.origin.x, "y": textLayoutBox.rect.origin.y]
+                
+                var containedItem = [String: Any]()
+                var font = [String: Any]()
+                font["fontFamily"] = productLayoutText.fontType.apiFontFamily
+                font["fontSize"] = productLayoutText.fontType.apiPhotobookFontSize()
+                font["fontWeight"] = productLayoutText.fontType.apiPhotobookFontWeight()
+                font["lineHeight"] = productLayoutText.fontType.apiPhotobookLineHeight()
+                containedItem["font"] = font
+                containedItem["text"] = productLayoutText.htmlText ?? text
+                containedItem["color"] = pageColor.fontColor().hex
+                
+                layoutBox["containedItem"] = containedItem
+                
+                layoutBoxes.append(layoutBox)
+            }
+            
+            page["layoutBoxes"] = layoutBoxes
             pages.append(page)
         }
+        
         photobook["pages"] = pages
+        
+        // Product
+        photobook["productVariantId"] = template.kiteId
+        
+        // Config
+        var photobookConfig = [String: Any]()
+        
+        photobookConfig["coverColor"] = coverColor.uiColor().hex
+        photobookConfig["pageColor"] = pageColor.uiColor().hex
+        
+        var spineText = [String: Any]()
+        
+        spineText["text"] = self.spineText
+        spineText["color"] = coverColor.fontColor().hex
+        
+        var font = [String: Any]()
+        
+        font["fontFamily"] = spineFontType.apiFontFamily
+        font["fontSize"] = spineFontType.apiPhotobookFontSize()
+        font["fontWeight"] = spineFontType.apiPhotobookFontWeight()
+        font["lineHeight"] = spineFontType.apiPhotobookLineHeight()
+        
+        spineText["font"] = font
+        
+        photobookConfig["spineText"] = spineText
+        
+        photobook["photobookConfig"] = photobookConfig
         
         return photobook
     }

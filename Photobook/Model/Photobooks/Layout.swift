@@ -40,8 +40,10 @@ struct Layout: Equatable, Codable {
                 else if type == "text" { layout.textLayoutBox = LayoutBox.parse(layoutBoxDictionary) }
             }
         }
-        if let doubleLayout = layoutDictionary["doubleLayout"] as? Bool {
-            layout.isDoubleLayout = doubleLayout
+        
+        // TEMP: Avoid parsing double layouts as the PDF generation does not support them
+        if let doubleLayout = layoutDictionary["isDoublePage"] as? Bool, doubleLayout {
+            return nil
         }
         
         return layout
