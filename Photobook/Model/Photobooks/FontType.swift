@@ -11,7 +11,7 @@ import Foundation
 @objc enum FontType: Int, Codable {
     case plain, classic, solid
     
-    var fontFamily:String {
+    var fontFamily: String {
         get {
             switch self {
             case .plain: return "OpenSans-Regular"
@@ -48,7 +48,6 @@ import Foundation
         case .solid: return 13.0
         }
     }
-    
     
     /// Typing attributes for a photobook input field
     ///
@@ -92,7 +91,7 @@ import Foundation
 
 /// Values for Photobook API
 extension FontType {
-    var apiFontFamily:String {
+    var apiFontFamily: String {
         get {
             switch self {
             case .plain: return "\'Open Sans\', sans-serif"

@@ -159,7 +159,7 @@ class PhotobookProduct: Codable {
         var assets = assets
         var tempLayouts = [ProductLayout]()
         
-        // TEMP: Use the first asset and remove it if the number assets matches the number of required pages + cover.
+        // TEMP: Use the first asset and remove it if the number of assets matches the number of required pages + cover.
         //       Otherwise, pick one photo at random.
         var coverAsset: Asset?
         if assets.count % 2 != 0 {
