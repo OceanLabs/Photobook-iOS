@@ -70,6 +70,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var ctaButtonContainer: UIView!
     @IBOutlet private var backButton: UIButton?
+    @IBOutlet private weak var ctaButtonHeightConstraint: NSLayoutConstraint!
     private lazy var cancelBarButtonItem: UIBarButtonItem = {
         return UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(tappedCancel(_:)))
     }()
@@ -82,6 +83,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             button.titleLabel?.adjustsFontForContentSizeCategory = true
         }
         button.titleLabel?.font = font
+        button.titleLabel?.lineBreakMode = .byTruncatingTail
         button.setTitleColor(.black, for: .normal)
         button.setImage(UIImage(namedInPhotobookBundle:"chevron-down"), for: .normal)
         button.semanticContentAttribute = .forceRightToLeft
@@ -169,6 +171,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         if #available(iOS 11.0, *) {
             navigationItem.largeTitleDisplayMode = .never
+            ctaButtonHeightConstraint.constant = UIFontMetrics.default.scaledValue(for: 50)
         } else {
             ctaContainerBottomConstraint.isActive = false
             ctaContainerBottomConstraint = NSLayoutConstraint(item: view, attribute: .bottom, relatedBy: .equal, toItem: ctaButton, attribute: .bottom, multiplier: 1, constant: ctaContainerBottomConstraint.constant)

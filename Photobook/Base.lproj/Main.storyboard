@@ -2552,6 +2552,7 @@
                         <outlet property="collectionViewTrailingConstraint" destination="Hji-0y-uul" id="JI1-Tf-r5q"/>
                         <outlet property="ctaButton" destination="MlZ-hI-WeW" id="kgG-iN-1sX"/>
                         <outlet property="ctaButtonContainer" destination="9PF-H7-3d7" id="hMk-Zi-KJ0"/>
+                        <outlet property="ctaButtonHeightConstraint" destination="hjF-VC-ege" id="0zx-Ps-D9v"/>
                         <outlet property="ctaContainerBottomConstraint" destination="rfz-gH-PGi" id="lFe-AT-iaM"/>
                     </connections>
                 </viewController>
