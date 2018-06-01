@@ -36,7 +36,7 @@ class ReceiptDetailsTableViewCell: UITableViewCell {
             }
         }
     }
-    @IBOutlet weak var shippingAddressHeaderLabel: UILabel! {
+    @IBOutlet private weak var shippingAddressHeaderLabel: UILabel! {
         didSet {
             if #available(iOS 11.0, *) {
                 shippingAddressHeaderLabel.font = UIFontMetrics.default.scaledFont(for: shippingAddressHeaderLabel.font)
@@ -44,7 +44,7 @@ class ReceiptDetailsTableViewCell: UITableViewCell {
             }
         }
     }
-    @IBOutlet weak var shippingMethodHeaderLabel: UILabel! {
+    @IBOutlet private weak var shippingMethodHeaderLabel: UILabel! {
         didSet {
             if #available(iOS 11.0, *) {
                 shippingMethodHeaderLabel.font = UIFontMetrics.default.scaledFont(for: shippingMethodHeaderLabel.font)
@@ -52,7 +52,7 @@ class ReceiptDetailsTableViewCell: UITableViewCell {
             }
         }
     }
-    @IBOutlet weak var orderNumberHeaderLabel: UILabel! {
+    @IBOutlet private weak var orderNumberHeaderLabel: UILabel! {
         didSet {
             if #available(iOS 11.0, *) {
                 orderNumberHeaderLabel.font = UIFontMetrics.default.scaledFont(for: orderNumberHeaderLabel.font)

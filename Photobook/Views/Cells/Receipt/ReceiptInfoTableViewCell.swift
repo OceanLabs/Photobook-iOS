@@ -36,7 +36,7 @@ class ReceiptInfoTableViewCell: UITableViewCell {
             }
         }
     }
-    @IBOutlet weak var actionButtonContainerView: UIView!
+    @IBOutlet private weak var actionButtonContainerView: UIView!
     @IBOutlet weak var primaryActionButton: UIButton! {
         didSet {
             if #available(iOS 11.0, *) {
@@ -54,10 +54,10 @@ class ReceiptInfoTableViewCell: UITableViewCell {
         }
     }
     
-    @IBOutlet weak var showActionButtonsConstraint: NSLayoutConstraint!
-    @IBOutlet weak var hideActionButtonsConstraint: NSLayoutConstraint!
-    @IBOutlet weak var showSecondaryActionButtonConstraint: NSLayoutConstraint!
-    @IBOutlet weak var hideSecondaryActionButtonConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var showActionButtonsConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var hideActionButtonsConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var showSecondaryActionButtonConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var hideSecondaryActionButtonConstraint: NSLayoutConstraint!
     
     func setSecondaryActionButtonHidden(_ hidden:Bool) {
         secondaryActionButton.isHidden = hidden

@@ -16,10 +16,10 @@ class UserInputTableViewCell: UITableViewCell {
         static let messageBottomMargin: CGFloat = 17.0
     }
 
-    @IBOutlet weak var messageTopConstraint: NSLayoutConstraint?
+    @IBOutlet private weak var messageTopConstraint: NSLayoutConstraint?
     @IBOutlet weak var separatorLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var topSeparator: UIView!
-    @IBOutlet weak var messageBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var messageBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var label: UILabel? {
         didSet {
             if #available(iOS 11.0, *) {
@@ -28,7 +28,7 @@ class UserInputTableViewCell: UITableViewCell {
             }
         }
     }
-    @IBOutlet weak var button: UIButton? {
+    @IBOutlet private weak var button: UIButton? {
         didSet {
             if #available(iOS 11.0, *) {
                 button?.titleLabel?.font = UIFontMetrics.default.scaledFont(for: button!.titleLabel!.font)
@@ -44,8 +44,8 @@ class UserInputTableViewCell: UITableViewCell {
             }
         }
     }
-    @IBOutlet weak var separator: UIView!
-    @IBOutlet weak var messageLabel: UILabel! {
+    @IBOutlet private weak var separator: UIView!
+    @IBOutlet private weak var messageLabel: UILabel! {
         didSet {
             if #available(iOS 11.0, *) {
                 messageLabel.font = UIFontMetrics.default.scaledFont(for: messageLabel.font)

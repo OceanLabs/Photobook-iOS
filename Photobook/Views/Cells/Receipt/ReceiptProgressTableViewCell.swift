@@ -12,7 +12,7 @@ class ReceiptProgressTableViewCell: UITableViewCell {
 
     static let reuseIdentifier = NSStringFromClass(ReceiptProgressTableViewCell.self).components(separatedBy: ".").last!
     
-    @IBOutlet weak var titleLabel: UILabel! {
+    @IBOutlet private weak var titleLabel: UILabel! {
         didSet {
             if #available(iOS 11.0, *) {
                 titleLabel.font = UIFontMetrics.default.scaledFont(for: titleLabel.font)
@@ -20,7 +20,7 @@ class ReceiptProgressTableViewCell: UITableViewCell {
             }
         }
     }
-    @IBOutlet weak var descriptionLabel: UILabel! {
+    @IBOutlet private weak var descriptionLabel: UILabel! {
         didSet {
             if #available(iOS 11.0, *) {
                 descriptionLabel.font = UIFontMetrics.default.scaledFont(for: descriptionLabel.font)
@@ -28,8 +28,8 @@ class ReceiptProgressTableViewCell: UITableViewCell {
             }
         }
     }
-    @IBOutlet weak var progressView: UIProgressView!
-    @IBOutlet weak var progressLabel: UILabel! {
+    @IBOutlet private weak var progressView: UIProgressView!
+    @IBOutlet private weak var progressLabel: UILabel! {
         didSet {
             if #available(iOS 11.0, *) {
                 progressLabel.font = UIFontMetrics.default.scaledFont(for: progressLabel.font)
@@ -37,7 +37,7 @@ class ReceiptProgressTableViewCell: UITableViewCell {
             }
         }
     }
-    @IBOutlet weak var infoLabel: UILabel! {
+    @IBOutlet private weak var infoLabel: UILabel! {
         didSet {
             if #available(iOS 11.0, *) {
                 infoLabel.font = UIFontMetrics.default.scaledFont(for: infoLabel.font)
@@ -46,7 +46,7 @@ class ReceiptProgressTableViewCell: UITableViewCell {
         }
     }
     
-    @IBOutlet weak var progressSpinnerImageView: UIImageView!
+    @IBOutlet private weak var progressSpinnerImageView: UIImageView!
     
     func startProgressAnimation() {
         let fromValue = progressSpinnerImageView.layer.presentation()?.value(forKeyPath: "transform.rotation") as? CGFloat ?? 0.0

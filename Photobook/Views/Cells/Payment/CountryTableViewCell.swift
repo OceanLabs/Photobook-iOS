@@ -10,7 +10,7 @@ import UIKit
 
 class CountryTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var label: UILabel! {
+    @IBOutlet private weak var label: UILabel! {
         didSet {
             if #available(iOS 11.0, *) {
                 label.font = UIFontMetrics.default.scaledFont(for: label.font)

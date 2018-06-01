@@ -13,7 +13,7 @@ class DeliveryAddressTableViewCell: UITableViewCell {
     static let reuseIdentifier = NSStringFromClass(DeliveryAddressTableViewCell.self).components(separatedBy: ".").last!
 
     @IBOutlet weak var topSeparator: UIView!
-    @IBOutlet weak var separator: UIView!
+    @IBOutlet private weak var separator: UIView!
     @IBOutlet weak var topLabel: UILabel! {
         didSet {
             if #available(iOS 11.0, *) {

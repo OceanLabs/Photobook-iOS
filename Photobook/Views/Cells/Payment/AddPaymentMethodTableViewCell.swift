@@ -10,7 +10,7 @@ import UIKit
 
 class AddPaymentMethodTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var addPaymentMethodButton: UIButton! {
+    @IBOutlet private weak var addPaymentMethodButton: UIButton! {
         didSet {
             if #available(iOS 11.0, *) {
                 addPaymentMethodButton.titleLabel?.font = UIFontMetrics.default.scaledFont(for: addPaymentMethodButton.titleLabel!.font)
