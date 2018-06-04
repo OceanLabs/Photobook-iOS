@@ -179,9 +179,17 @@ extension OrderSummaryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case Constants.sectionDetails:
-            return 35
+            if #available(iOS 11.0, *) {
+                return UIFontMetrics.default.scaledValue(for: 35)
+            } else {
+                return 35
+            }
         case Constants.sectionTotal:
-            return 45
+            if #available(iOS 11.0, *) {
+                return UIFontMetrics.default.scaledValue(for: 45)
+            } else {
+                return 45
+            }
         case Constants.sectionOptions:
             if #available(iOS 11.0, *) {
                 return UIFontMetrics.default.scaledValue(for: 63)
