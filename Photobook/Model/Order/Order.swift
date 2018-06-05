@@ -41,6 +41,16 @@ class Order: Codable {
         return orderIsFree
     }
     
+    var orderDescription: String? {
+        guard products.count > 0 else { return nil }
+        
+        if products.count == 1 {
+            return products.first!.template.name
+        }
+        
+        return String(format: NSLocalizedString("Order/Description", value: "%@ & %d others", comment: "Description of an order"), products.first!.template.name, products.count - 1)
+    }
+    
     var hashValue: Int {
         var stringHash = ""
         if let deliveryDetails = deliveryDetails { stringHash += "ad:\(deliveryDetails.hashValue)," }

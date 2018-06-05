@@ -344,6 +344,12 @@
 		6F5A59F2200CBDD80006BFCA /* SpineFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5A59F1200CBDD80006BFCA /* SpineFrameView.swift */; };
 		6F5C5D2C20B429CA008073A6 /* CostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5C5D2B20B429CA008073A6 /* CostTests.swift */; };
 		6F5C5D2E20B4511A008073A6 /* LineItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5C5D2D20B4511A008073A6 /* LineItem.swift */; };
+		6F6151D220C5469400DBA543 /* PaymentAuthorizationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6151D120C5469400DBA543 /* PaymentAuthorizationManagerTests.swift */; };
+		6F6151D420C54CAF00DBA543 /* FatalErrorUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6151D320C54CAF00DBA543 /* FatalErrorUtil.swift */; };
+		6F6151D520C54CB500DBA543 /* FatalErrorUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6151D320C54CAF00DBA543 /* FatalErrorUtil.swift */; };
+		6F6151D720C6900E00DBA543 /* CurrencyRoundingBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6151D620C6900E00DBA543 /* CurrencyRoundingBehavior.swift */; };
+		6F6151D820C6900E00DBA543 /* CurrencyRoundingBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6151D620C6900E00DBA543 /* CurrencyRoundingBehavior.swift */; };
+		6F6151DA20C69D3600DBA543 /* OrderMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6151D920C69D3600DBA543 /* OrderMocks.swift */; };
 		6F6B7A77200E137B002E2FC2 /* PhotobookCoverCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6B7A76200E137B002E2FC2 /* PhotobookCoverCollectionViewCell.swift */; };
 		6F87460D207CC8D6001923B7 /* PublicProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F87460C207CC8D6001923B7 /* PublicProtocols.swift */; };
 		6F87460E207CC8DB001923B7 /* PublicProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F87460C207CC8D6001923B7 /* PublicProtocols.swift */; };
@@ -662,6 +668,10 @@
 		6F5A59F1200CBDD80006BFCA /* SpineFrameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpineFrameView.swift; sourceTree = "<group>"; };
 		6F5C5D2B20B429CA008073A6 /* CostTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostTests.swift; sourceTree = "<group>"; };
 		6F5C5D2D20B4511A008073A6 /* LineItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineItem.swift; sourceTree = "<group>"; };
+		6F6151D120C5469400DBA543 /* PaymentAuthorizationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentAuthorizationManagerTests.swift; sourceTree = "<group>"; };
+		6F6151D320C54CAF00DBA543 /* FatalErrorUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FatalErrorUtil.swift; sourceTree = "<group>"; };
+		6F6151D620C6900E00DBA543 /* CurrencyRoundingBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyRoundingBehavior.swift; sourceTree = "<group>"; };
+		6F6151D920C69D3600DBA543 /* OrderMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderMocks.swift; sourceTree = "<group>"; };
 		6F6B7A76200E137B002E2FC2 /* PhotobookCoverCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookCoverCollectionViewCell.swift; sourceTree = "<group>"; };
 		6F87460C207CC8D6001923B7 /* PublicProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicProtocols.swift; sourceTree = "<group>"; };
 		6F92BD011FFE3B8100460466 /* AssetSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetSelectorViewController.swift; sourceTree = "<group>"; };
@@ -1246,13 +1256,15 @@
 		6FA4761520A9A67100DCD9EC /* Order */ = {
 			isa = PBXGroup;
 			children = (
-				6F4F02EA1FDEDC4C009D562A /* OrderManagerTests.swift */,
 				6FA4761620A9A72700DCD9EC /* CardTests.swift */,
 				6F5C5D2B20B429CA008073A6 /* CostTests.swift */,
 				6F963D7220B45421001C9688 /* LineItemTests.swift */,
 				6F963D7420B462AA001C9688 /* ShippingMethodTest.swift */,
-				6F963D7620B46960001C9688 /* AddressTests.swift */,
 				6F963D7A20BEA876001C9688 /* DeliveryDetailsTests.swift */,
+				6F963D7620B46960001C9688 /* AddressTests.swift */,
+				6F4F02EA1FDEDC4C009D562A /* OrderManagerTests.swift */,
+				6F6151D120C5469400DBA543 /* PaymentAuthorizationManagerTests.swift */,
+				6F6151D920C69D3600DBA543 /* OrderMocks.swift */,
 			);
 			path = Order;
 			sourceTree = "<group>";
@@ -1296,8 +1308,8 @@
 		6FB670711FB5BAE70062D630 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				6FA4761520A9A67100DCD9EC /* Order */,
 				6F3E306F20A1B3E2006381BD /* Stories */,
+				6FA4761520A9A67100DCD9EC /* Order */,
 				6FE3CEB7208784BE00BB1BAB /* Photobooks */,
 				6F34E66720987D6D001A7D59 /* Assets */,
 				2E25272B2015EDA9004C12AF /* CreditCardTests.swift */,
@@ -1405,6 +1417,8 @@
 				2E8B27F62045A44800A0B403 /* ErrorMessage.swift */,
 				2E5CCC29207B76870003000F /* GlobalConstants.swift */,
 				2E7C822D2088B472002FF9D0 /* DiskUtils.swift */,
+				6F6151D320C54CAF00DBA543 /* FatalErrorUtil.swift */,
+				6F6151D620C6900E00DBA543 /* CurrencyRoundingBehavior.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -1887,6 +1901,7 @@
 				2EF312B720591EEE001BE3CF /* IntroDismissSegue.swift in Sources */,
 				B90F28822003B7A300FF3D15 /* OrderSummaryUpsellTableViewCell.swift in Sources */,
 				2ED79FE91FBAEDE90046B96C /* AssetPickerCollectionViewController.swift in Sources */,
+				6F6151D420C54CAF00DBA543 /* FatalErrorUtil.swift in Sources */,
 				6F3920F320175D7300D6C30B /* TextLabelPlaceholderBoxView.swift in Sources */,
 				2E0B58801FB30F2100F31A9E /* AppDelegate.swift in Sources */,
 				6FFE21CB202CA7F9004EC0EA /* SpineTextEditingViewController.swift in Sources */,
@@ -1937,6 +1952,7 @@
 				2E086D1520529C8A00CF8096 /* InstagramClient.swift in Sources */,
 				2EA88C64203C321E00CADCAD /* ErrorUtils.swift in Sources */,
 				6FB8868620691B7700DADB04 /* ImageAsset.swift in Sources */,
+				6F6151D720C6900E00DBA543 /* CurrencyRoundingBehavior.swift in Sources */,
 				2E4C9E882049492400F5AD48 /* FacebookAlbum.swift in Sources */,
 				B9BE9F941FBF33320002C459 /* AssetCollectorCollectionViewCell.swift in Sources */,
 				2E0B58A01FB3297300F31A9E /* AlbumCollectionViewCell.swift in Sources */,
@@ -2115,6 +2131,7 @@
 				2ED14C112063AA4000ED2E2C /* InstagramClient.swift in Sources */,
 				2ED14C032063AA4000ED2E2C /* PhotosAsset.swift in Sources */,
 				2ED14C042063AA4000ED2E2C /* InstagramAlbum.swift in Sources */,
+				6F6151D520C54CB500DBA543 /* FatalErrorUtil.swift in Sources */,
 				6FE3CEBF208DC85000BB1BAB /* CGRectExtensions.swift in Sources */,
 				2ED14C1E2063AA4000ED2E2C /* SwiftLuhn.swift in Sources */,
 				2ED14BB82063AA4000ED2E2C /* CreditCardTableViewController.swift in Sources */,
@@ -2167,6 +2184,7 @@
 				2ED14BD22063AA4000ED2E2C /* AssetSelectorAddMoreCollectionViewCell.swift in Sources */,
 				2ED14BE12063AA4000ED2E2C /* OutOfBoundsTouchView.swift in Sources */,
 				2ED14C2A2063AA4000ED2E2C /* JSON.swift in Sources */,
+				6F6151D820C6900E00DBA543 /* CurrencyRoundingBehavior.swift in Sources */,
 				2ED14BE42063AA4000ED2E2C /* PhotobookTabBar.swift in Sources */,
 				2ED14C012063AA4000ED2E2C /* PhotosAlbumManager.swift in Sources */,
 				2ED14BF42063AA4000ED2E2C /* PhotobookTemplate.swift in Sources */,
@@ -2205,6 +2223,7 @@
 				6F3E3060209AF1B9006381BD /* XCTestCaseExtensions.swift in Sources */,
 				6F963D7720B46960001C9688 /* AddressTests.swift in Sources */,
 				6F963D7320B45421001C9688 /* LineItemTests.swift in Sources */,
+				6F6151DA20C69D3600DBA543 /* OrderMocks.swift in Sources */,
 				6F3E305E2099F7F9006381BD /* URLAssetTests.swift in Sources */,
 				6FA4761720A9A72700DCD9EC /* CardTests.swift in Sources */,
 				6FC7E8891FC47B4500D2BCDA /* PhotobookTemplateTests.swift in Sources */,
@@ -2225,6 +2244,7 @@
 				6F963D7B20BEA876001C9688 /* DeliveryDetailsTests.swift in Sources */,
 				6FEF3EAB208F48EB00595A5B /* PhotobookProductTests.swift in Sources */,
 				6F2F30081FDE9EA3003543E2 /* ProductLayoutAssetTests.swift in Sources */,
+				6F6151D220C5469400DBA543 /* PaymentAuthorizationManagerTests.swift in Sources */,
 				6FB670731FB5BB1A0062D630 /* StoryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

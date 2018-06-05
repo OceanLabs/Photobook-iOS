@@ -19,7 +19,10 @@ class ShippingMethod: Codable {
     let totalCostFormatted: String
     let maxDeliveryTime: Int
     let minDeliveryTime: Int
-    
+    var totalCostRounded: NSDecimalNumber {
+        return (totalCost as NSDecimalNumber).rounding(accordingToBehavior: CurrencyRoundingBehavior())
+    }
+
     var deliveryTime: String {
         return String.localizedStringWithFormat(NSLocalizedString("ShippingMethod/DeliveryTime", value:"%d to %d working days", comment: "Delivery estimates for a specific delivery method"), minDeliveryTime, maxDeliveryTime)
     }
