@@ -19,7 +19,6 @@ class TestPhotosAsset: PhotosAsset {
     override var size: CGSize { return stubSize }
     init(_ asset: PHAsset = PHAsset(), size: CGSize? = nil) {
         super.init(asset, albumIdentifier: "album")
-        identifier = "id"
         if let size = size {
             stubSize = size
         }
@@ -27,7 +26,6 @@ class TestPhotosAsset: PhotosAsset {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(PHAsset(), albumIdentifier: "")
-        identifier = "id"
     }
     
     override var identifier: String! {

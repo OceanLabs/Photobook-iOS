@@ -34,7 +34,7 @@ class Order: Codable {
     
     var orderIsFree: Bool {
         var orderIsFree = false
-        if let cost = validCost, let selectedMethod = shippingMethod, let shippingMethod = cost.shippingMethod(id: selectedMethod){
+        if let cost = validCost, let selectedMethod = shippingMethod, let shippingMethod = cost.shippingMethod(id: selectedMethod) {
             orderIsFree = shippingMethod.totalCost == 0.0
         }
         
