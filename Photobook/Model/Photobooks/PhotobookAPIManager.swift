@@ -132,7 +132,7 @@ class PhotobookAPIManager {
         }
     }
     
-    func applyUpsells(product:PhotobookProduct, upsellOptions:[UpsellOption], completionHandler: @escaping (_ summary: OrderSummary?, _ upsoldTemplate: PhotobookTemplate?, _ productPayload: [String: Any]?, _ error: Error?) -> Void) {
+    func applyUpsells(product: PhotobookProduct, upsellOptions:[UpsellOption], completionHandler: @escaping (_ summary: OrderSummary?, _ upsoldTemplateId: String?, _ productPayload: [String: Any]?, _ error: Error?) -> Void) {
         
         var parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.numberOfPages, "color": product.coverColor.rawValue]
         var upsellDicts = [[String: Any]]()
@@ -158,14 +158,8 @@ class PhotobookAPIManager {
                     completionHandler(nil, nil, nil, APIClientError.parsing)
                     return
             }
-            
-            guard let template = ProductManager.shared.products?.first(where: {$0.templateId == templateId}) else {
-                //template of new product not available
-                completionHandler(nil, nil, nil, PhotobookAPIError.productUnavailable)
-                return
-            }
         
-            completionHandler(summary, template, payload, nil)
+            completionHandler(summary, templateId, payload, nil)
         }
     }
     

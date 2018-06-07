@@ -7,20 +7,25 @@
 //
 
 import UIKit
-import SDWebImage
 
 protocol OrderSummaryManagerDelegate: class {
-    func orderSummaryManagerWillUpdate(_ manager: OrderSummaryManager)
-    func orderSummaryManagerPreviewImageFinished(_ manager: OrderSummaryManager, success: Bool)
-    func orderSummaryManager(_ manager: OrderSummaryManager, didUpdateSummary summary: OrderSummary?, error: Error?)
-    func orderSummaryManager(_ manager: OrderSummaryManager, failedToApplyUpsell upsell: UpsellOption, error:Error?)
+    func orderSummaryManagerWillUpdate()
+    func orderSummaryManagerDidSetPreviewImageUrl()
+    func orderSummaryManagerFailedToSetPreviewImageUrl()
+    func orderSummaryManagerDidUpdate(_ summary: OrderSummary?, error: Error?)
+    func orderSummaryManagerFailedToApply(_ upsell: UpsellOption, error:Error?)
 }
 
 class OrderSummaryManager {
     
-    private lazy var apiManager = PhotobookAPIManager()
+    var coverPageSnapshotImage: UIImage? { didSet { uploadCoverImage() } }
+    var templates: [PhotobookTemplate]!
+    var product: PhotobookProduct!
+    lazy var apiManager = PhotobookAPIManager()
+    lazy var apiClient = APIClient.shared
+    weak var delegate: OrderSummaryManagerDelegate?
     
-    //layouts configured by previous UX
+    // Layouts configured by previous UX
     private var layouts: [ProductLayout] {
         get {
             return product.productLayouts
@@ -33,16 +38,9 @@ class OrderSummaryManager {
     private(set) var summary: OrderSummary?
     private var previewImageUrl: String?
     
-    var coverPageSnapshotImage: UIImage?
-    
-    var product: PhotobookProduct! {
-        return ProductManager.shared.currentProduct
-    }
     private(set) var selectedUpsellOptions = Set<UpsellOption>()
     
-    weak var delegate: OrderSummaryManagerDelegate?
-    
-    func refresh() {
+    func getSummary() {
         if upsellOptions?.isEmpty ?? true {
             fetchOrderSummary()
         } else {
@@ -50,7 +48,7 @@ class OrderSummaryManager {
         }
     }
     
-    func toggleUpsellOption(_ option:UpsellOption) {
+    func toggleUpsellOption(_ option: UpsellOption) {
         if isUpsellOptionSelected(option) {
             deselectUpsellOption(option)
         } else {
@@ -58,36 +56,19 @@ class OrderSummaryManager {
         }
     }
     
-    func selectUpsellOption(_ option:UpsellOption) {
+    func selectUpsellOption(_ option: UpsellOption) {
         selectedUpsellOptions.insert(option)
-        applyUpsells { [weak self] (error) in
-            if let strongSelf = self {
-                strongSelf.selectedUpsellOptions.remove(option)
-                strongSelf.delegate?.orderSummaryManager(strongSelf, failedToApplyUpsell: option, error: error)
-            }
+        applyUpsells { [weak welf = self] (error) in
+            welf?.selectedUpsellOptions.remove(option)
+            welf?.delegate?.orderSummaryManagerFailedToApply(option, error: error)
         }
     }
     
-    func deselectUpsellOption(_ option:UpsellOption) {
+    func deselectUpsellOption(_ option: UpsellOption) {
         selectedUpsellOptions.remove(option)
-        applyUpsells { [weak self] (error) in
-            if let strongSelf = self {
-                strongSelf.selectedUpsellOptions.insert(option)
-                strongSelf.delegate?.orderSummaryManager(strongSelf, failedToApplyUpsell: option, error: error)
-            }
-        }
-    }
-    
-    func applyUpsells(_ failure:((_ error: Error?) -> Void)? = nil) {
-        delegate?.orderSummaryManagerWillUpdate(self)
-        
-        ProductManager.shared.applyUpsells(Array<UpsellOption>(selectedUpsellOptions)) { [weak self] (summary, error) in
-            guard let summary = summary, error == nil else {
-                failure?(error)
-                return
-            }
-            
-            self?.handleReceivingSummary(summary)
+        applyUpsells { [weak welf = self] (error) in
+            welf?.selectedUpsellOptions.insert(option)
+            welf?.delegate?.orderSummaryManagerFailedToApply(option, error: error)
         }
     }
     
@@ -101,39 +82,54 @@ extension OrderSummaryManager {
     
     /// Initial summary fetch
     private func fetchOrderSummary() {
-        self.delegate?.orderSummaryManagerWillUpdate(self)
+        delegate?.orderSummaryManagerWillUpdate()
         
         summary = nil
         previewImageUrl = nil
         
-        if coverImageUrl == nil {
-            uploadCoverImage()
-        }
-        
         apiManager.getOrderSummary(product: product) { [weak self] (summary, upsellOptions, productPayload, error) in
             
-            if let strongSelf = self {
-                guard let summary = summary else {
-                    strongSelf.delegate?.orderSummaryManager(strongSelf, didUpdateSummary: nil, error: error)
-                    return
-                }
-                
-                strongSelf.product.setUpsellData(template: strongSelf.product.template, payload: productPayload)
-                strongSelf.upsellOptions = upsellOptions
-                strongSelf.handleReceivingSummary(summary)
+            guard let strongSelf = self else { return }
+            guard let summary = summary else {
+                strongSelf.delegate?.orderSummaryManagerDidUpdate(nil, error: error)
+                return
             }
+            
+            strongSelf.product.setUpsellData(template: strongSelf.product.template, payload: productPayload)
+            strongSelf.upsellOptions = upsellOptions
+            strongSelf.handleReceivingSummary(summary)
+        }
+    }
+    
+    private func applyUpsells(_ failure:((_ error: Error?) -> Void)? = nil) {
+        delegate?.orderSummaryManagerWillUpdate()
+        
+        apiManager.applyUpsells(product: product, upsellOptions: Array<UpsellOption>(selectedUpsellOptions)) { [weak welf = self] (summary, upsoldTemplateId, productPayload, error) in
+            
+            guard let summary = summary, error == nil else {
+                failure?(error)
+                return
+            }
+
+            guard let upsoldTemplate = welf?.templates?.first(where: {$0.templateId == upsoldTemplateId}) else {
+                failure?(PhotobookAPIError.productUnavailable)
+                return
+            }
+            
+            welf?.product.setUpsellData(template: upsoldTemplate, payload: productPayload)
+            welf?.handleReceivingSummary(summary)
         }
     }
     
     private func handleReceivingSummary(_ summary: OrderSummary) {
         self.summary = summary
-        delegate?.orderSummaryManager(self, didUpdateSummary: summary, error: nil)
-        if coverImageUrl != nil {
-            delegate?.orderSummaryManagerPreviewImageFinished(self, success: true)
+        delegate?.orderSummaryManagerDidUpdate(summary, error: nil)
+        if isPreviewImageUrlReady() {
+            delegate?.orderSummaryManagerDidSetPreviewImageUrl()
         }
     }
     
-    func fetchPreviewImage(withSize size:CGSize, completion:@escaping (UIImage?) -> Void) {
+    func fetchPreviewImage(withSize size: CGSize, completion: @escaping (UIImage?) -> Void) {
         
         guard let coverImageUrl = coverImageUrl else {
             completion(nil)
@@ -142,48 +138,46 @@ extension OrderSummaryManager {
         
         if let summary = summary,
             let imageUrl = summary.previewImageUrl(withCoverImageUrl: coverImageUrl, size: size) {
-            SDWebImageManager.shared().loadImage(with: imageUrl, options: [], progress: nil, completed: { image, _, error, _, _, _ in
-                DispatchQueue.main.async {
-                    completion(image)
-                }
-            })
+            apiClient.downloadImage(imageUrl) { (image, _) in
+                completion(image)
+            }
         } else {
             completion(nil)
         }
     }
     
     private func uploadCoverImage() {
-        isUploadingCoverImage = true
         
         guard let coverImage = coverPageSnapshotImage else {
-            isUploadingCoverImage = false
-            delegate?.orderSummaryManagerPreviewImageFinished(self, success: false)
+            delegate?.orderSummaryManagerFailedToSetPreviewImageUrl()
             return
         }
         
-        APIClient.shared.uploadImage(coverImage, imageName: "OrderSummaryPreviewImage.png", context: .pig, endpoint: "upload/", completion: { [weak self] (json, error) in
+        isUploadingCoverImage = true
+        apiClient.uploadImage(coverImage, imageName: "OrderSummaryPreviewImage.png", context: .pig, endpoint: "upload/", completion: { [weak welf = self] (json, error) in
             
-            guard let strongSelf = self else {
-                return
-            }
-            
-            strongSelf.isUploadingCoverImage = false
+            welf?.isUploadingCoverImage = false
             
             if let error = error {
                 print(error.localizedDescription)
+                welf?.delegate?.orderSummaryManagerFailedToSetPreviewImageUrl()
                 return
             }
             
-            guard let dictionary = json as? [String:AnyObject], let url = dictionary["full"] as? String else {
+            guard let dictionary = json as? [String: AnyObject], let url = dictionary["full"] as? String else {
                 print("OrderSummaryManager: Couldn't parse URL of uploaded image")
-                strongSelf.delegate?.orderSummaryManagerPreviewImageFinished(strongSelf, success: false)
+                welf?.delegate?.orderSummaryManagerFailedToSetPreviewImageUrl()
                 return
             }
             
-            strongSelf.coverImageUrl = url
-            if strongSelf.summary != nil {
-                strongSelf.delegate?.orderSummaryManagerPreviewImageFinished(strongSelf, success: true)
+            welf?.coverImageUrl = url
+            if welf?.isPreviewImageUrlReady() ?? false {
+                welf?.delegate?.orderSummaryManagerDidSetPreviewImageUrl()
             }
         })
+    }
+    
+    private func isPreviewImageUrlReady() -> Bool {
+        return coverImageUrl != nil && summary != nil && summary?.previewImageUrl(withCoverImageUrl: coverImageUrl!, size: .zero) != nil
     }
 }

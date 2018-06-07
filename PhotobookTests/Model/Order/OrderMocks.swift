@@ -36,3 +36,36 @@ extension TestPaymentAuthorizationManagerDelegate: PaymentAuthorizationManagerDe
         self.viewControllerToPresent = viewControllerToPresent
     }
 }
+
+class TestOrderSummaryManagerDelegate: OrderSummaryManagerDelegate {
+    
+    var calledWillUpdate = false
+    var calledDidSetPreviewImageUrl = false
+    var calledFailedToSetPreviewImageUrl = false
+    
+    var summary: OrderSummary?
+    var upsellOption: UpsellOption?
+    var error: Error?
+    
+    func orderSummaryManagerWillUpdate() {
+        calledWillUpdate = true
+    }
+    
+    func orderSummaryManagerDidSetPreviewImageUrl() {
+        calledDidSetPreviewImageUrl = true
+    }
+    
+    func orderSummaryManagerFailedToSetPreviewImageUrl() {
+        calledFailedToSetPreviewImageUrl = true
+    }
+    
+    func orderSummaryManagerDidUpdate(_ summary: OrderSummary?, error: Error?) {
+        self.summary = summary
+        self.error = error
+    }
+    
+    func orderSummaryManagerFailedToApply(_ upsell: UpsellOption, error: Error?) {
+        self.upsellOption = upsell
+        self.error = error
+    }
+}

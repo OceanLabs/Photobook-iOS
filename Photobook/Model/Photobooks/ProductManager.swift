@@ -57,20 +57,7 @@ class ProductManager {
             completion?(nil)
         }
     }
-    
-    func applyUpsells(_ upsells:[UpsellOption], completionHandler: @escaping (_ summary: OrderSummary?, _ error: Error?) -> Void) {
-        guard let currentProduct = currentProduct else {
-            completionHandler(nil, nil)
-            return
-        }
         
-        apiManager.applyUpsells(product: currentProduct, upsellOptions: upsells) { [weak self] (summary, upsoldTemplate, productPayload, error) in
-            self?.currentProduct?.setUpsellData(template: upsoldTemplate, payload: productPayload)
-            
-            completionHandler(summary, error)
-        }
-    }
-    
     private func coverLayouts(for photobook: PhotobookTemplate) -> [Layout]? {
         guard let layouts = layouts else { return nil }
         return layouts.filter { photobook.coverLayouts.contains($0.id) }
