@@ -54,7 +54,7 @@ import Stripe
     }
     
     /// Shared client
-    @objc public static let shared = {
+    @objc public static let shared: PhotobookSDK = {
         let sdk = PhotobookSDK()
         sdk.setEnvironment(environment: .live)
         return sdk
