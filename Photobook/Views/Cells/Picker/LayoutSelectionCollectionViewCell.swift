@@ -39,12 +39,10 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     var isEditingDoubleLayout = false // True if the original layout was a double page
     
     private var pageView: PhotobookPageView! {
-        guard let pageType = pageType else { return nil }
-        
         switch pageType {
-        case .left, .last:
+        case .left?, .last?:
             return photobookFrameView.leftPageView
-        case .right, .first:
+        case .right?, .first?:
             return photobookFrameView.rightPageView
         default:
             return nil
@@ -53,9 +51,9 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     
     private var oppositePageView: PhotobookPageView? {
         switch pageType {
-        case .left:
+        case .left?:
             return photobookFrameView.rightPageView
-        case .right:
+        case .right?:
             return photobookFrameView.leftPageView
         default:
             return nil
@@ -63,12 +61,10 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     }
 
     private weak var assetContainerView: UIView! {
-        guard let pageType = pageType else { return nil }
-        
         switch pageType {
-        case .left, .last:
+        case .left?, .last?:
             return leftAssetContainerView
-        case .right, .first:
+        case .right?, .first?:
             return rightAssetContainerView
         default:
             return nil
@@ -76,12 +72,10 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
     }
     
     private weak var assetImageView: UIImageView! {
-        guard let pageType = pageType else { return nil }
-        
         switch pageType {
-        case .left, .last:
+        case .left?, .last?:
             return leftAssetImageView
-        case .right, .first:
+        case .right?, .first?:
             return rightAssetImageView
         default:
             return nil
