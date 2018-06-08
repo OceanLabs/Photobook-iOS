@@ -34,11 +34,21 @@ class Order: Codable {
     
     var orderIsFree: Bool {
         var orderIsFree = false
-        if let cost = validCost, let selectedMethod = shippingMethod, let shippingMethod = cost.shippingMethod(id: selectedMethod){
+        if let cost = validCost, let selectedMethod = shippingMethod, let shippingMethod = cost.shippingMethod(id: selectedMethod) {
             orderIsFree = shippingMethod.totalCost == 0.0
         }
         
         return orderIsFree
+    }
+    
+    var orderDescription: String? {
+        guard products.count > 0 else { return nil }
+        
+        if products.count == 1 {
+            return products.first!.template.name
+        }
+        
+        return String(format: NSLocalizedString("Order/Description", value: "%@ & %d others", comment: "Description of an order"), products.first!.template.name, products.count - 1)
     }
     
     var hashValue: Int {

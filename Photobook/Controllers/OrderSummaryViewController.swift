@@ -73,10 +73,14 @@ class OrderSummaryViewController: UIViewController {
         
         emptyScreenViewController.show(message: Constants.stringLoading, activity: true)
         
+        orderSummaryManager.templates = ProductManager.shared.products
+        orderSummaryManager.product = ProductManager.shared.currentProduct
         orderSummaryManager.delegate = self
-        takeCoverSnapshot { [weak self] (image) in
-            self?.orderSummaryManager.coverPageSnapshotImage = image
-            self?.orderSummaryManager.refresh()
+        
+        orderSummaryManager.getSummary()
+        
+        takeCoverSnapshot { [weak welf = self] (image) in
+            welf?.orderSummaryManager.coverPageSnapshotImage = image
         }
     }
     
@@ -102,12 +106,11 @@ class OrderSummaryViewController: UIViewController {
     }
     
     private func updateCheckoutViewControllerPreviewImage() {
-        if let checkoutViewController = checkoutViewController {
-            orderSummaryManager.fetchPreviewImage(withSize: checkoutViewController.itemImageSizePx()) { (image) in
-                if let image = image {
-                    checkoutViewController.updateItemImage(image)
-                }
-            }
+        guard let checkoutViewController = checkoutViewController else { return }
+
+        orderSummaryManager.fetchPreviewImage(withSize: checkoutViewController.itemImageSizePx()) { (image) in
+            guard let image = image else { return }
+            checkoutViewController.updateItemImage(image)
         }
     }
     
@@ -284,7 +287,8 @@ extension OrderSummaryViewController: UITableViewDataSource {
 }
 
 extension OrderSummaryViewController: OrderSummaryManagerDelegate {
-    func orderSummaryManagerWillUpdate(_ manager: OrderSummaryManager) {
+
+    func orderSummaryManagerWillUpdate() {
         previewImageView.image = nil
         
         // Don't show a loading view if the request takes less than 0.3 seconds
@@ -293,12 +297,11 @@ extension OrderSummaryViewController: OrderSummaryManagerDelegate {
         RunLoop.current.add(timer!, forMode: .defaultRunLoopMode)
     }
     
-    func orderSummaryManagerPreviewImageFinished(_ manager: OrderSummaryManager, success: Bool) {
-        guard success == true else {
-            hideProgressIndicator()
-            return
-        }
-        
+    func orderSummaryManagerFailedToSetPreviewImageUrl() {
+        hideProgressIndicator()
+    }
+    
+    func orderSummaryManagerDidSetPreviewImageUrl() {
         let scaleFactor = UIScreen.main.scale
         let size = CGSize(width: previewImageView.frame.size.width * scaleFactor, height: previewImageView.frame.size.height * scaleFactor)
         
@@ -312,7 +315,7 @@ extension OrderSummaryViewController: OrderSummaryManagerDelegate {
         updateCheckoutViewControllerPreviewImage()
     }
     
-    func orderSummaryManager(_ manager: OrderSummaryManager, didUpdateSummary summary: OrderSummary?, error: Error?) {
+    func orderSummaryManagerDidUpdate(_ summary: OrderSummary?, error: Error?) {
         
         if orderSummaryManager.summary != nil {
             progressOverlayViewController.hide(animated: true)
@@ -322,19 +325,18 @@ extension OrderSummaryViewController: OrderSummaryManagerDelegate {
             let sectionsToUpdate = tableView.numberOfRows(inSection: 2) == numberOfOptions ? 0...1 : 0...2
             tableView.reloadSections(IndexSet(integersIn: sectionsToUpdate), with: .automatic)
         } else {
-            
             hideProgressIndicator()
             
             let errorMessage = error?.localizedDescription ?? CommonLocalizedStrings.somethingWentWrong
             
             emptyScreenViewController.show(message: errorMessage, title: nil, image: nil, activity: false, buttonTitle: CommonLocalizedStrings.retry, buttonAction: {
                 self.emptyScreenViewController.show(message: Constants.stringLoading, activity: true)
-                self.orderSummaryManager.refresh()
+                self.orderSummaryManager.getSummary()
             })
         }
     }
     
-    func orderSummaryManager(_ manager: OrderSummaryManager, failedToApplyUpsell upsell: UpsellOption, error: Error?) {
+    func orderSummaryManagerFailedToApply(_ upsell: UpsellOption, error: Error?) {
         hideProgressIndicator()
         
         //show message bar
