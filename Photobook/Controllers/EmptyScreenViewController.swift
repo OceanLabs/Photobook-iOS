@@ -21,9 +21,30 @@ class EmptyScreenViewController: UIViewController {
     
     private static let imageHeight: CGFloat = 260.0
     @IBOutlet private var imageView: UIImageView!
-    @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var textLabel: UILabel!
-    @IBOutlet private weak var button: UIButton!
+    @IBOutlet private weak var titleLabel: UILabel! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                titleLabel.font = UIFontMetrics.default.scaledFont(for: titleLabel.font)
+                titleLabel.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
+    @IBOutlet private weak var textLabel: UILabel! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                textLabel.font = UIFontMetrics.default.scaledFont(for: textLabel.font)
+                textLabel.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
+    @IBOutlet private weak var button: UIButton! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                button.titleLabel?.font = UIFontMetrics.default.scaledFont(for: button.titleLabel!.font)
+                button.titleLabel?.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
     @IBOutlet private weak var imageViewHeightConstraint: NSLayoutConstraint!
     
     @IBOutlet private weak var activityIndicatorView: UIActivityIndicatorView!

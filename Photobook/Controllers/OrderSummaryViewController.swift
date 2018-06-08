@@ -24,6 +24,31 @@ class OrderSummaryViewController: UIViewController {
     @IBOutlet weak var previewImageActivityIndicatorView: UIActivityIndicatorView!
     @IBOutlet weak var previewImageProgressView: UIView!
     @IBOutlet weak var coverSnapshotPageView: PhotobookPageView!
+    @IBOutlet weak var orderDetailsLabel: UILabel! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                orderDetailsLabel.font = UIFontMetrics.default.scaledFont(for: orderDetailsLabel.font)
+                orderDetailsLabel.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
+    @IBOutlet weak var ctaButton: UIButton! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                ctaButton.titleLabel?.font = UIFontMetrics.default.scaledFont(for: ctaButton.titleLabel!.font)
+                ctaButton.titleLabel?.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
+    
+    @IBOutlet weak var loadingPreviewLabel: UILabel! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                loadingPreviewLabel.font = UIFontMetrics.default.scaledFont(for: loadingPreviewLabel.font)
+                loadingPreviewLabel.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
     
     private var timer: Timer?
     
@@ -154,11 +179,23 @@ extension OrderSummaryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case Constants.sectionDetails:
-            return 35
+            if #available(iOS 11.0, *) {
+                return UIFontMetrics.default.scaledValue(for: 35)
+            } else {
+                return 35
+            }
         case Constants.sectionTotal:
-            return 45
+            if #available(iOS 11.0, *) {
+                return UIFontMetrics.default.scaledValue(for: 45)
+            } else {
+                return 45
+            }
         case Constants.sectionOptions:
-            return 63
+            if #available(iOS 11.0, *) {
+                return UIFontMetrics.default.scaledValue(for: 63)
+            } else {
+                return 63
+            }
         default:
             return 0
         }
@@ -228,8 +265,8 @@ extension OrderSummaryViewController: UITableViewDataSource {
         switch indexPath.section {
         case Constants.sectionDetails:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrderSummaryDetailTableViewCell", for: indexPath) as! OrderSummaryDetailTableViewCell
-            cell.titleLabel.text = orderSummaryManager.summary?.details[indexPath.row].name
-            cell.priceLabel.text = orderSummaryManager.summary?.details[indexPath.row].price
+            cell.titleLabel?.text = orderSummaryManager.summary?.details[indexPath.row].name
+            cell.priceLabel?.text = orderSummaryManager.summary?.details[indexPath.row].price
             return cell
         case Constants.sectionTotal:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrderSummaryTotalTableViewCell", for: indexPath) as! OrderSummaryTotalTableViewCell

@@ -13,9 +13,23 @@ class DeliveryAddressTableViewCell: UITableViewCell {
     static let reuseIdentifier = NSStringFromClass(DeliveryAddressTableViewCell.self).components(separatedBy: ".").last!
 
     @IBOutlet weak var topSeparator: UIView!
-    @IBOutlet weak var separator: UIView!
-    @IBOutlet weak var topLabel: UILabel!
-    @IBOutlet weak var bottomLabel: UILabel!
+    @IBOutlet private weak var separator: UIView!
+    @IBOutlet weak var topLabel: UILabel! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                topLabel.font = UIFontMetrics.default.scaledFont(for: topLabel.font)
+                topLabel.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
+    @IBOutlet weak var bottomLabel: UILabel! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                bottomLabel.font = UIFontMetrics.default.scaledFont(for: bottomLabel.font)
+                bottomLabel.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
     @IBOutlet weak var checkmark: UIImageView!
     
 

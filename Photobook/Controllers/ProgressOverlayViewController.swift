@@ -10,8 +10,15 @@ import UIKit
 
 class ProgressOverlayViewController: UIViewController {
 
-    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
-    @IBOutlet weak var descriptionTextView: UILabel!
+    @IBOutlet private weak var activityIndicatorView: UIActivityIndicatorView!
+    @IBOutlet private weak var descriptionTextView: UILabel! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                descriptionTextView.font = UIFontMetrics.default.scaledFont(for: descriptionTextView.font)
+                descriptionTextView.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
     
     private weak var parentController: UIViewController? {
         didSet {
