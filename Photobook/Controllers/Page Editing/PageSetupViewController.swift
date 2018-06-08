@@ -81,28 +81,28 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private weak var rightAssetImageView: UIImageView!
     
     private weak var assetContainerView: UIView! {
-        guard let pageType = pageType else { return nil }
-        
         switch pageType {
-        case .left, .last:
+        case .left?, .last?:
             return leftAssetContainerView
-        case .right, .first:
+        case .right?, .first?:
             return rightAssetContainerView
-        case .cover:
+        case .cover?:
             return coverAssetContainerView
+        default:
+            return nil
         }
     }
 
     private weak var assetImageView: UIImageView! {
-        guard let pageType = pageType else { return nil }
-        
         switch pageType {
-        case .left, .last:
+        case .left?, .last?:
             return leftAssetImageView
-        case .right, .first:
+        case .right?, .first?:
             return rightAssetImageView
-        case .cover:
+        case .cover?:
             return coverAssetImageView
+        default:
+            return nil
         }
     }
     
@@ -140,22 +140,22 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private var pageView: PhotobookPageView! {
-        guard let pageType = pageType else { return nil }
-        
         switch pageType {
-        case .left, .last:
+        case .left?, .last?:
             return photobookFrameView.leftPageView
-        case .right, .first:
+        case .right?, .first?:
             return photobookFrameView.rightPageView
-        case .cover:
+        case .cover?:
             return coverFrameView.pageView
+        default:
+            return nil
         }
     }
     private var oppositePageView: PhotobookPageView? {
         switch pageType {
-        case .left:
+        case .left?:
             return photobookFrameView.rightPageView
-        case .right:
+        case .right?:
             return photobookFrameView.leftPageView
         default:
             return nil
