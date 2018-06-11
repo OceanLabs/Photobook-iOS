@@ -80,10 +80,10 @@ struct LayoutBox: Codable {
         guard
             let id = layoutBoxDictionary["id"] as? Int,
             let rectDictionary = layoutBoxDictionary["rect"] as? [String: AnyObject],
-            let x = rectDictionary["x"] as? CGFloat, x.isNormalised,
-            let y = rectDictionary["y"] as? CGFloat, y.isNormalised,
-            let width = rectDictionary["width"] as? CGFloat, width.isNormalised,
-            let height = rectDictionary["height"] as? CGFloat, height.isNormalised
+            let x = rectDictionary["x"] as? Double, x.isNormalised,
+            let y = rectDictionary["y"] as? Double, y.isNormalised,
+            let width = rectDictionary["width"] as? Double, width.isNormalised,
+            let height = rectDictionary["height"] as? Double, height.isNormalised
             else { return nil }
         
         return LayoutBox(id: id, rect: CGRect(x: x, y: y, width: width, height: height))

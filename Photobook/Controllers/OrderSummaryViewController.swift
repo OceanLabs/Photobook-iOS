@@ -89,6 +89,18 @@ class OrderSummaryViewController: UIViewController {
         (navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(.white)
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        let topInset: CGFloat
+        if #available(iOS 11, *) {
+            topInset = 0
+        } else {
+            topInset = navigationController?.navigationBar.frame.maxY ?? 0
+        }
+        tableView.contentInset = UIEdgeInsets(top: topInset, left: tableView.contentInset.left, bottom: tableView.contentInset.bottom, right: tableView.contentInset.right)
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         

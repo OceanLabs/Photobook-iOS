@@ -40,7 +40,9 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private weak var textEditingContainerView: UIView!
     
     @IBOutlet private var toolbarButtons: [UIButton]!
-    @IBOutlet private weak var toolbar: UIToolbar!
+    @IBOutlet private weak var toolbar: UIToolbar! {
+        didSet { toolbar.clipsToBounds = true }
+    }
     @IBOutlet private var cancelBarButtonItem: UIBarButtonItem!
     
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
