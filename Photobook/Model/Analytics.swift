@@ -10,7 +10,17 @@ import UIKit
 import KeychainSwift
 import Analytics
 
-class Analytics {
+@objc public protocol PhotobookAnalyticsDelegate {
+    @objc func photobookAnalyticsEventDidFire(type: AnalyticsEventType, name: String, properties: [String: Any])
+}
+
+@objc public enum AnalyticsEventType: Int {
+    case screenViewed
+    case action
+    case error
+}
+
+@objc public class Analytics: NSObject {
     
     enum ScreenName: String {
         case stories = "Stories"
@@ -87,7 +97,8 @@ class Analytics {
         static let userIdKeychainKey = "userIdKeychainKey"
     }
     
-    static let shared = Analytics()
+    @objc public static let shared = Analytics()
+    @objc public var delegate: PhotobookAnalyticsDelegate?
     
     private var appLaunchDate = Date()
     private var appBackgroundedDate: Date?
@@ -108,7 +119,8 @@ class Analytics {
         return userId
     }
     
-    init() {
+    override init() {
+        super.init()
         let analyticsConfiguration = SEGAnalyticsConfiguration(writeKey: "kFnvwFEImWDbOLGZxaQVwP86bpf4nKO8")
         analyticsConfiguration.trackApplicationLifecycleEvents = true
         SEGAnalytics.setup(with: analyticsConfiguration)
@@ -154,6 +166,7 @@ class Analytics {
         let properties = addEnvironment(to: properties)
         
         SEGAnalytics.shared().screen(screenName.rawValue, properties: properties)
+        delegate?.photobookAnalyticsEventDidFire(type: .screenViewed, name: screenName.rawValue, properties: properties)
     }
     
     func trackAction(_ actionName: ActionName, _ properties: [String: Any]? = nil){
@@ -164,6 +177,7 @@ class Analytics {
         let properties = addEnvironment(to: properties)
         
         SEGAnalytics.shared().track(actionName.rawValue, properties: properties)
+        delegate?.photobookAnalyticsEventDidFire(type: .action, name: actionName.rawValue, properties: properties)
     }
     
     func trackError(_ errorName: ErrorName) {
@@ -174,6 +188,7 @@ class Analytics {
         let properties = addEnvironment(to: [:])
         
         SEGAnalytics.shared().track(errorName.rawValue, properties: properties)
+        delegate?.photobookAnalyticsEventDidFire(type: .error, name: errorName.rawValue, properties: properties)
     }
     
     func secondsSinceAppOpen() -> Int {
