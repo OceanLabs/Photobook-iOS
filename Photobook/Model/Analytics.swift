@@ -10,7 +10,7 @@ import UIKit
 import KeychainSwift
 import Analytics
 
-@objc public protocol PhotobookAnalyticsDelegate {
+@objc public protocol AnalyticsDelegate {
     @objc func photobookAnalyticsEventDidFire(type: AnalyticsEventType, name: String, properties: [String: Any])
 }
 
@@ -98,7 +98,7 @@ import Analytics
     }
     
     @objc public static let shared = Analytics()
-    @objc public var delegate: PhotobookAnalyticsDelegate?
+    @objc public weak var delegate: AnalyticsDelegate?
     
     private var appLaunchDate = Date()
     private var appBackgroundedDate: Date?
