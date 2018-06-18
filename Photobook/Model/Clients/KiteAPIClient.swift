@@ -8,13 +8,22 @@
 
 import UIKit
 
+enum OrderSubmitStatus: String {
+    case cancelled, error, unknown, received, accepted, validated, processed
+    
+    static func fromApiString(_ string: String) -> OrderSubmitStatus? {
+        return OrderSubmitStatus(rawValue: string.lowercased())
+    }
+}
+
 class KiteAPIClient {
     
     var apiKey: String?
     
+    private static let apiVersion = "v4.0"
     private struct Endpoints {
-        static let endpointVersion = "v4.0"
-        static let orderSubmission = endpointVersion + "/print"
+        static let orderSubmission = "/print"
+        static let orderStatus = "/order/"
     }
     
     static let shared = KiteAPIClient()
@@ -34,7 +43,8 @@ class KiteAPIClient {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
         }
         
-        APIClient.shared.post(context: .kite, endpoint: Endpoints.orderSubmission, parameters: parameters, headers: kiteHeaders, completion: { response, error in
+        let endpoint = KiteAPIClient.apiVersion + Endpoints.orderSubmission
+        APIClient.shared.post(context: .kite, endpoint: endpoint, parameters: parameters, headers: kiteHeaders, completion: { response, error in
             let orderId = (response as? [String: Any])?["print_order_id"] as? String
             
             if let responseError = (response as? [String: Any])?["error"] as? [String: Any] {
@@ -60,6 +70,47 @@ class KiteAPIClient {
                 completionHandler(nil, ErrorMessage(text: CommonLocalizedStrings.somethingWentWrong))
             }
         })
+    }
+    
+    func checkOrderStatus(receipt: String, completionHandler: @escaping (_ status: OrderSubmitStatus, _ error: ErrorMessage?, _ receipt: String?) -> Void) {
+        guard apiKey != nil else {
+            fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
+        }
+
+        let endpoint = KiteAPIClient.apiVersion + Endpoints.orderStatus + receipt
+        APIClient.shared.get(context: .kite, endpoint: endpoint, parameters: nil, headers: kiteHeaders) { (response, error) in
+            guard error == nil else {
+                completionHandler(.error, ErrorMessage(error), nil)
+                return
+            }
+            
+            guard let pollingData = response as? [String: AnyObject] else {
+                completionHandler(.error, ErrorMessage(.parsing), nil)
+                return
+            }
+
+            if let errorDictionary = pollingData["error"] as? [String: AnyObject] {
+                // The order was successful but with a different (previously sent) print order id
+                if let code = errorDictionary["code"] as? String, code == "E20" {
+                    let receipt = errorDictionary["print_order_id"] as? String
+                    completionHandler(.validated, nil, receipt)
+                    return
+                }
+                if let message = errorDictionary["message"] as? String {
+                    completionHandler(.error, ErrorMessage(text: message), nil)
+                    return
+                }
+            }
+            
+            guard let statusString = pollingData["status"] as? String,
+                  let status = OrderSubmitStatus.fromApiString(statusString)
+                else {
+                    completionHandler(.error, ErrorMessage(.parsing), nil)
+                    return
+            }
+            
+            completionHandler(status, nil, nil)
+        }
     }
 
 }

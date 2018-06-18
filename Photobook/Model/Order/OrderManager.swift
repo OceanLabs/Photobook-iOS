@@ -34,8 +34,10 @@ class OrderManager {
         static let basketOrderBackupFile = photobookDirectory.appending("BasketOrder.dat")
         static let processingOrderBackupFile = photobookDirectory.appending("ProcessingOrder.dat")
     }
+    static let maxNumberOfPollingTries = 60
     
     private lazy var apiManager = PhotobookAPIManager()
+    private lazy var kiteApiClient = KiteAPIClient.shared
     private lazy var apiClient = APIClient.shared
     weak var orderProcessingDelegate: OrderProcessingDelegate?
     
@@ -95,17 +97,44 @@ class OrderManager {
         basketOrder = Order()
     }
     
-    func submitOrder(_ urls:[String], completionHandler: @escaping (_ error: ErrorMessage?) -> Void) {
+    private func submitOrder(_ urls:[String], completionHandler: @escaping (_ error: ErrorMessage?) -> Void) {
         
         Analytics.shared.trackAction(.orderSubmitted, [Analytics.PropertyNames.secondsSinceAppOpen: Analytics.shared.secondsSinceAppOpen(),
                                                        Analytics.PropertyNames.secondsInBackground: Int(Analytics.shared.secondsSpentInBackground)
             ])
         
         //TODO: change to accept two pdf urls
-        KiteAPIClient.shared.submitOrder(parameters: basketOrder.orderParameters(), completionHandler: { [weak welf = self] orderId, error in
-            welf?.basketOrder.orderId = orderId
+        kiteApiClient.submitOrder(parameters: basketOrder.orderParameters(), completionHandler: { [weak welf = self] orderId, error in
+            if let processingOrder = welf?.processingOrder {
+                processingOrder.orderId = orderId
+            }
             completionHandler(error)
         })
+    }
+    
+    private var numberOfTimesPolled = 0
+    private func pollOrderStatus(completionHandler: @escaping (_ error: ErrorMessage?) -> Void) {
+        guard let receipt = processingOrder?.orderId,
+            numberOfTimesPolled < OrderManager.maxNumberOfPollingTries else {
+                completionHandler(ErrorMessage(nil))
+            return
+        }
+        
+        kiteApiClient.checkOrderStatus(receipt: receipt) { [weak welf = self] (status, error, orderId) in
+            if status == .accepted || status == .received {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                    welf?.pollOrderStatus(completionHandler: completionHandler)
+                })
+                return
+            }
+            
+            welf?.numberOfTimesPolled = 0
+            if let orderId = orderId, let processingOrder = welf?.processingOrder {
+                processingOrder.orderId = orderId
+            }
+
+            completionHandler(error)
+        }
     }
     
     /// Saves the basket order to disk
@@ -222,8 +251,7 @@ class OrderManager {
         for asset in assetsToUpload {
             uploadAsset(asset: asset, failureHandler: { [weak welf = self] error in
                 welf?.didFailUpload(error)
-            })
-            
+            })            
         }
     }
     
@@ -270,7 +298,7 @@ class OrderManager {
                 }
                 
                 // 3 - Check for order success
-                welf?.pollOrderSuccess(completion: { [weak welf = self] (errorMessage) in
+                welf?.pollOrderStatus { [weak welf = self] (errorMessage) in
                     
                     if let swelf = welf, swelf.isCancelling {
                         swelf.processingOrder = nil
@@ -289,14 +317,9 @@ class OrderManager {
                     // Success
                     welf?.processingOrder = nil
                     welf?.orderProcessingDelegate?.orderDidComplete()
-                })
+                }
             })
         }
-    }
-    
-    private func pollOrderSuccess(completion: @escaping (_ errorMessage: ErrorMessage?) -> Void) {
-        // TODO: poll order success and provide option to change payment method if fails
-        completion(nil)
     }
     
     //MARK: - Upload
