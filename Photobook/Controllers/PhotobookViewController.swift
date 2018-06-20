@@ -58,18 +58,32 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private weak var collectionViewBottomConstraint: NSLayoutConstraint!
     
     @IBOutlet private var ctaContainerBottomConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var ctaButton: UIButton!
+    @IBOutlet private weak var ctaButton: UIButton! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                ctaButton.titleLabel?.font = UIFontMetrics.default.scaledFont(for: ctaButton.titleLabel!.font)
+                ctaButton.titleLabel?.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
     
     @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var ctaButtonContainer: UIView!
     @IBOutlet private var backButton: UIButton?
+    @IBOutlet private weak var ctaButtonHeightConstraint: NSLayoutConstraint!
     private lazy var cancelBarButtonItem: UIBarButtonItem = {
         return UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(tappedCancel(_:)))
     }()
     
     private var titleButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17.0, weight: .semibold)
+        var font = UIFont.systemFont(ofSize: 17.0, weight: .semibold)
+        if #available(iOS 11.0, *) {
+            font = UIFontMetrics.default.scaledFont(for: font)
+            button.titleLabel?.adjustsFontForContentSizeCategory = true
+        }
+        button.titleLabel?.font = font
+        button.titleLabel?.lineBreakMode = .byTruncatingTail
         button.setTitleColor(.black, for: .normal)
         button.setImage(UIImage(namedInPhotobookBundle:"chevron-down"), for: .normal)
         button.semanticContentAttribute = .forceRightToLeft
@@ -117,6 +131,13 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         super.viewDidLayoutSubviews()
         
         adjustInsets()
+        adjustButtonLabels()
+    }
+    
+    private func adjustButtonLabels() {
+        titleButton.titleLabel?.sizeToFit()
+        titleButton.sizeToFit()
+        ctaButton.titleLabel?.sizeToFit()
     }
     
     private func adjustInsets() {
@@ -150,6 +171,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         if #available(iOS 11.0, *) {
             navigationItem.largeTitleDisplayMode = .never
+            ctaButtonHeightConstraint.constant = UIFontMetrics.default.scaledValue(for: 50)
         } else {
             ctaContainerBottomConstraint.isActive = false
             ctaContainerBottomConstraint = NSLayoutConstraint(item: view, attribute: .bottom, relatedBy: .equal, toItem: ctaButton, attribute: .bottom, multiplier: 1, constant: ctaContainerBottomConstraint.constant)
@@ -229,17 +251,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             alertController.addAction(UIAlertAction(title: photobook.name, style: .default, handler: { [weak welf = self] (_) in
                 guard welf?.product.template.id != photobook.id else { return }
                 
-                guard
-                    let coverLayouts = ProductManager.shared.coverLayouts(for: photobook),
-                    !coverLayouts.isEmpty,
-                    let layouts = ProductManager.shared.layouts(for: photobook),
-                    !layouts.isEmpty
-                    else {
-                        print("ProductManager: Missing layouts for selected photobook")
-                        return
-                }
-                
-                welf?.product.setTemplate(photobook, coverLayouts: coverLayouts, layouts: layouts)
+                _ = ProductManager.shared.setCurrentProduct(with: photobook)
                 
                 welf?.setupTitleView()
                 welf?.collectionView.reloadData()
@@ -860,7 +872,7 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
         }
 
         let pageWidth = (view.bounds.width - Constants.cellSideMargin * 2.0 - PhotobookConstants.horizontalPageToCoverMargin * 2.0) / 2.0
-        let pageHeight = pageWidth / product.template.aspectRatio
+        let pageHeight = pageWidth / product.template.pageAspectRatio
 
         // PhotoboookCollectionViewCell works when the collectionView uses dynamic heights by setting up the aspect ratio of its pages.
         // This however, causes problems with the drag & drop functionality and that is why the cell height is calculated by using the measurements set on the storyboard.

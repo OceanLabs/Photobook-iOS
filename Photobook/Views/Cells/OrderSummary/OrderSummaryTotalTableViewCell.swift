@@ -9,7 +9,21 @@
 import UIKit
 
 class OrderSummaryTotalTableViewCell: UITableViewCell {
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet weak var titleLabel: UILabel! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                titleLabel.font = UIFontMetrics.default.scaledFont(for: titleLabel.font)
+                titleLabel.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
+    @IBOutlet weak var priceLabel: UILabel! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                priceLabel.font = UIFontMetrics.default.scaledFont(for: priceLabel.font)
+                priceLabel.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
     
 }

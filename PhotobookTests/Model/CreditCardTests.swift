@@ -68,20 +68,4 @@ class CreditCardTests: XCTestCase {
         let type = input.cardType()
         XCTAssert(type == .visa, "Expected Visa type but got \(type.debugDescription)")
     }
-    
-    func testCardGetters() {
-        let cardNumber = "4242424242424242"
-        let card = Card(number: cardNumber, expireMonth: 12, expireYear: 50, cvv2: "111")
-        
-        XCTAssert(card.number == cardNumber, "Card did not return correct credit card number. Expected: \(cardNumber) but got: \(card.number)")
-        XCTAssert(card.numberMasked == "24242", "Card did not return correct masked credit card number. Expected 24242 but got: \(card.numberMasked)")
-        XCTAssert(card.expireYear == 50, "Card did not return correct credit card expire year. Expected: 50 but got: \(card.expireYear)")
-        XCTAssert(card.expireMonth == 12, "Card did not return correct credit card expire year. Expected: 12 but got: \(card.expireMonth)")
-        XCTAssert(card.cvv2 == "111", "Card did not return correct credit card cvv2. Expected: 111 but got: \(card.cvv2)")
-        XCTAssert(!card.isAmex, "Card reports that it isAmex but it is not")
-        
-        let amexCard = Card(number: "378282246310005", expireMonth: 12, expireYear: 50, cvv2: "111")
-        XCTAssert(amexCard.isAmex, "Card did not report that it isAmex when it is")
-    }
-    
 }

@@ -281,7 +281,7 @@ class AssetCollectorViewController: UIViewController {
         isHidden = false
         
         if !isDeletingEnabled {
-            let requiredPhotosCount = ProductManager.shared.minimumRequiredAssets
+            let requiredPhotosCount = ProductManager.shared.minimumRequiredPages
             let fadeDuration: TimeInterval = 0.25
             if mode == .adding || (mode == .selecting && assets.count >= requiredPhotosCount) {
                 //use these

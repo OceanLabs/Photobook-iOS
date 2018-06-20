@@ -7,23 +7,6 @@
 //
 
 import UIKit
-import PassKit
-
-class LineItem: Codable {
-        
-    let id: String
-    let name: String
-    let cost: Decimal
-    let formattedCost: String
-    
-    init(id: String, name: String, cost: Decimal, formattedCost: String) {
-        self.id = id
-        self.name = name
-        self.cost = cost
-        self.formattedCost = formattedCost
-    }
-    
-}
 
 class Cost: Codable {
     
@@ -73,6 +56,13 @@ class Cost: Codable {
             
             let lineItem = LineItem(id: id, name: name, cost: cost.value, formattedCost: cost.formatted)
             lineItems.append(lineItem)
+        }
+
+        var shippingMethods = [ShippingMethod]()
+        for shippingMethodDictionary in shippingMethodsDictionary {
+            if let shippingMethod = ShippingMethod.parse(dictionary: shippingMethodDictionary) {
+                shippingMethods.append(shippingMethod)
+            }
         }
         
         return Cost(hash: 0, lineItems: lineItems, totalShippingCost: totalShippingCost, total: total, promoDiscount: promoDiscount, promoCodeInvalidReason: promoInvalidMessage)

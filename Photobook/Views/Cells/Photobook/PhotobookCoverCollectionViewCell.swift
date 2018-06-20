@@ -52,7 +52,7 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        coverFrameView.aspectRatio = product.template.aspectRatio
+        coverFrameView.aspectRatio = product.template.coverAspectRatio
     }
     
     func loadCoverAndSpine() {
@@ -60,7 +60,7 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
         
         coverFrameView.pageView.pageIndex = 0
         coverFrameView.pageView.productLayout = product.productLayouts.first
-        coverFrameView.pageView.bleed = product.bleed(forPageSize: coverFrameView.pageView.bounds.size)
+        coverFrameView.pageView.bleed = product.bleed(forPageSize: coverFrameView.pageView.bounds.size, type: .cover)
         coverFrameView.pageView.setupImageBox()
         coverFrameView.pageView.setupTextBox(mode: .userTextOnly)
         

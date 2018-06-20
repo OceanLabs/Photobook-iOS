@@ -12,10 +12,23 @@ import XCTest
 class APIClientMock: APIClient {
     
     var response: AnyObject?
+    var image: UIImage?
     var error: Error?
     
     override func get(context: APIContext, endpoint: String, parameters: [String : Any]?, headers: [String : String]? = nil, completion: @escaping (AnyObject?, Error?) -> ()) {
         completion(response, error)
+    }
+    
+    override func post(context: APIContext, endpoint: String, parameters: [String : Any]?, headers: [String : String]?, completion: @escaping (AnyObject?, Error?) -> ()) {
+        completion(response, error)
+    }
+    
+    override func uploadImage(_ image: UIImage, imageName: String, context: APIContext, endpoint: String, completion: @escaping (AnyObject?, Error?) -> ()) {
+        completion(response, error)
+    }
+    
+    override func downloadImage(_ imageUrl: URL, completion: @escaping (UIImage?, Error?) -> ()) {
+        completion(image, error)
     }
 }
 
@@ -23,7 +36,7 @@ class APIClientMock: APIClient {
 class PhotobookAPIManagerTests: XCTestCase {
     
     let apiClient = APIClientMock()
-    lazy var photobookAPIManager = PhotobookAPIManager(apiClient: apiClient, mockJsonFileName: nil)
+    lazy var photobookAPIManager = PhotobookAPIManager(apiClient: apiClient)
     
     override func tearDown() {
         apiClient.response = nil
@@ -84,8 +97,8 @@ class PhotobookAPIManagerTests: XCTestCase {
         
         photobookAPIManager.requestPhotobookInfo { (photobooks, layouts, error) in
             XCTAssertNil(error, "PhotobookInfo: Error should be nil with a valid response")
-            XCTAssertTrue((photobooks ?? []).count == 4, "PhotobookInfo: Photobooks should include layouts products")
-            XCTAssertTrue((layouts ?? []).count == 54, "PhotobookInfo: Layouts should include 54 layouts")
+            XCTAssertEqual((photobooks ?? []).count, 4, "PhotobookInfo: Photobooks should include layouts products")
+            XCTAssertEqual((layouts ?? []).count, 52, "PhotobookInfo: Layouts should include 52 layouts")
         }
     }
 }

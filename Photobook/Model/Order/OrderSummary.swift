@@ -19,7 +19,7 @@ class OrderSummary {
             self.price = price
         }
         
-        init?(_ dict: [String:Any]) {
+        init?(_ dict: [String: Any]) {
             guard let name = dict["name"] as? String,
                 let priceDict = dict["price"] as? [String:Any],
                 let amountDouble = priceDict["amount"] as? Double,
@@ -35,7 +35,7 @@ class OrderSummary {
     
     private(set) var details = [Detail]()
     private(set) var total: String
-    private var pigBaseUrl: String?
+    private var pigBaseUrl: String
     
     private init(details: [Detail], total: String, pigBaseUrl: String) {
         self.details = details
@@ -66,9 +66,6 @@ class OrderSummary {
     }
     
     func previewImageUrl(withCoverImageUrl imageUrl: String, size: CGSize) -> URL? {
-        
-        guard let pigBaseUrl = pigBaseUrl else { return nil }
-        
         let width = Int(size.width)
         let height = Int(size.height)
         

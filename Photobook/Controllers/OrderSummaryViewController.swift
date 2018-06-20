@@ -24,6 +24,31 @@ class OrderSummaryViewController: UIViewController {
     @IBOutlet weak var previewImageActivityIndicatorView: UIActivityIndicatorView!
     @IBOutlet weak var previewImageProgressView: UIView!
     @IBOutlet weak var coverSnapshotPageView: PhotobookPageView!
+    @IBOutlet weak var orderDetailsLabel: UILabel! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                orderDetailsLabel.font = UIFontMetrics.default.scaledFont(for: orderDetailsLabel.font)
+                orderDetailsLabel.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
+    @IBOutlet weak var ctaButton: UIButton! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                ctaButton.titleLabel?.font = UIFontMetrics.default.scaledFont(for: ctaButton.titleLabel!.font)
+                ctaButton.titleLabel?.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
+    
+    @IBOutlet weak var loadingPreviewLabel: UILabel! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                loadingPreviewLabel.font = UIFontMetrics.default.scaledFont(for: loadingPreviewLabel.font)
+                loadingPreviewLabel.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
     
     private var timer: Timer?
     
@@ -48,16 +73,32 @@ class OrderSummaryViewController: UIViewController {
         
         emptyScreenViewController.show(message: Constants.stringLoading, activity: true)
         
+        orderSummaryManager.templates = ProductManager.shared.products
+        orderSummaryManager.product = ProductManager.shared.currentProduct
         orderSummaryManager.delegate = self
-        takeCoverSnapshot { [weak self] (image) in
-            self?.orderSummaryManager.coverPageSnapshotImage = image
-            self?.orderSummaryManager.refresh()
+        
+        orderSummaryManager.getSummary()
+        
+        takeCoverSnapshot { [weak welf = self] (image) in
+            welf?.orderSummaryManager.coverPageSnapshotImage = image
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         (navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(.white)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        let topInset: CGFloat
+        if #available(iOS 11, *) {
+            topInset = 0
+        } else {
+            topInset = navigationController?.navigationBar.frame.maxY ?? 0
+        }
+        tableView.contentInset = UIEdgeInsets(top: topInset, left: tableView.contentInset.left, bottom: tableView.contentInset.bottom, right: tableView.contentInset.right)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -78,12 +119,11 @@ class OrderSummaryViewController: UIViewController {
     }
     
     private func updateCheckoutViewControllerPreviewImage() {
-        if let checkoutViewController = checkoutViewController {
-            orderSummaryManager.fetchPreviewImage(withSize: checkoutViewController.itemImageSizePx()) { (image) in
-                if let image = image {
-                    checkoutViewController.updateItemImage(image)
-                }
-            }
+        guard let checkoutViewController = checkoutViewController else { return }
+
+        orderSummaryManager.fetchPreviewImage(withSize: checkoutViewController.itemImageSizePx()) { (image) in
+            guard let image = image else { return }
+            checkoutViewController.updateItemImage(image)
         }
     }
     
@@ -104,7 +144,7 @@ class OrderSummaryViewController: UIViewController {
         
         coverSnapshotPageView.pageIndex = 0
         coverSnapshotPageView.backgroundColor = .clear
-        coverSnapshotPageView.frame.size = CGSize(width: dimensionForPage, height: dimensionForPage / product.template.aspectRatio)
+        coverSnapshotPageView.frame.size = CGSize(width: dimensionForPage, height: dimensionForPage / product.template.coverAspectRatio)
         coverSnapshotPageView.productLayout = product.productLayouts.first
         
         coverSnapshotPageView.color = product.coverColor
@@ -155,11 +195,23 @@ extension OrderSummaryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case Constants.sectionDetails:
-            return 35
+            if #available(iOS 11.0, *) {
+                return UIFontMetrics.default.scaledValue(for: 35)
+            } else {
+                return 35
+            }
         case Constants.sectionTotal:
-            return 45
+            if #available(iOS 11.0, *) {
+                return UIFontMetrics.default.scaledValue(for: 45)
+            } else {
+                return 45
+            }
         case Constants.sectionOptions:
-            return 63
+            if #available(iOS 11.0, *) {
+                return UIFontMetrics.default.scaledValue(for: 63)
+            } else {
+                return 63
+            }
         default:
             return 0
         }
@@ -229,8 +281,8 @@ extension OrderSummaryViewController: UITableViewDataSource {
         switch indexPath.section {
         case Constants.sectionDetails:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrderSummaryDetailTableViewCell", for: indexPath) as! OrderSummaryDetailTableViewCell
-            cell.titleLabel.text = orderSummaryManager.summary?.details[indexPath.row].name
-            cell.priceLabel.text = orderSummaryManager.summary?.details[indexPath.row].price
+            cell.titleLabel?.text = orderSummaryManager.summary?.details[indexPath.row].name
+            cell.priceLabel?.text = orderSummaryManager.summary?.details[indexPath.row].price
             return cell
         case Constants.sectionTotal:
             let cell = tableView.dequeueReusableCell(withIdentifier: "OrderSummaryTotalTableViewCell", for: indexPath) as! OrderSummaryTotalTableViewCell
@@ -248,7 +300,8 @@ extension OrderSummaryViewController: UITableViewDataSource {
 }
 
 extension OrderSummaryViewController: OrderSummaryManagerDelegate {
-    func orderSummaryManagerWillUpdate(_ manager: OrderSummaryManager) {
+
+    func orderSummaryManagerWillUpdate() {
         previewImageView.image = nil
         
         // Don't show a loading view if the request takes less than 0.3 seconds
@@ -257,12 +310,11 @@ extension OrderSummaryViewController: OrderSummaryManagerDelegate {
         RunLoop.current.add(timer!, forMode: .defaultRunLoopMode)
     }
     
-    func orderSummaryManagerPreviewImageFinished(_ manager: OrderSummaryManager, success: Bool) {
-        guard success == true else {
-            hideProgressIndicator()
-            return
-        }
-        
+    func orderSummaryManagerFailedToSetPreviewImageUrl() {
+        hideProgressIndicator()
+    }
+    
+    func orderSummaryManagerDidSetPreviewImageUrl() {
         let scaleFactor = UIScreen.main.scale
         let size = CGSize(width: previewImageView.frame.size.width * scaleFactor, height: previewImageView.frame.size.height * scaleFactor)
         
@@ -276,7 +328,7 @@ extension OrderSummaryViewController: OrderSummaryManagerDelegate {
         updateCheckoutViewControllerPreviewImage()
     }
     
-    func orderSummaryManager(_ manager: OrderSummaryManager, didUpdateSummary summary: OrderSummary?, error: Error?) {
+    func orderSummaryManagerDidUpdate(_ summary: OrderSummary?, error: Error?) {
         
         if orderSummaryManager.summary != nil {
             progressOverlayViewController.hide(animated: true)
@@ -286,19 +338,18 @@ extension OrderSummaryViewController: OrderSummaryManagerDelegate {
             let sectionsToUpdate = tableView.numberOfRows(inSection: 2) == numberOfOptions ? 0...1 : 0...2
             tableView.reloadSections(IndexSet(integersIn: sectionsToUpdate), with: .automatic)
         } else {
-            
             hideProgressIndicator()
             
             let errorMessage = error?.localizedDescription ?? CommonLocalizedStrings.somethingWentWrong
             
             emptyScreenViewController.show(message: errorMessage, title: nil, image: nil, activity: false, buttonTitle: CommonLocalizedStrings.retry, buttonAction: {
                 self.emptyScreenViewController.show(message: Constants.stringLoading, activity: true)
-                self.orderSummaryManager.refresh()
+                self.orderSummaryManager.getSummary()
             })
         }
     }
     
-    func orderSummaryManager(_ manager: OrderSummaryManager, failedToApplyUpsell upsell: UpsellOption, error: Error?) {
+    func orderSummaryManagerFailedToApply(_ upsell: UpsellOption, error: Error?) {
         hideProgressIndicator()
         
         //show message bar

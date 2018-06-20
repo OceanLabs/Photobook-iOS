@@ -193,7 +193,7 @@ class SpineTextEditingViewController: UIViewController {
     }
     
     private func setTextFieldAttributes() {
-        let fontSize = fontType.sizeForScreenToPageRatio(spineFrameViewHeightConstraint.constant / product.template.pageHeight)
+        let fontSize = fontType.sizeForScreenToPageRatio(spineFrameViewHeightConstraint.constant / product.template.coverSize.height)
         let fontColor = product.coverColor.fontColor()
         textField.attributedText = fontType.attributedText(with: textField.text, fontSize: fontSize, fontColor: fontColor, isSpineText: true)
         textField.defaultTextAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor, isSpineText: true)

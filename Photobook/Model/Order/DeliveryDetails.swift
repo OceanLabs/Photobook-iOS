@@ -10,9 +10,7 @@ import UIKit
 
 class DeliveryDetails: NSCopying, Codable {
     
-    private struct Constants {
-        static let savedDetailsKey = "ly.kite.sdk.savedDetailsKey"
-    }
+    static let savedDetailsKey = "ly.kite.sdk.savedDetailsKey"
     
     var firstName: String?
     var lastName: String?
@@ -21,7 +19,7 @@ class DeliveryDetails: NSCopying, Codable {
     var address: Address?
     
     var isValid: Bool {
-        get{
+        get {
             guard let firstName = firstName, !firstName.isEmpty,
                 let lastName = lastName, !lastName.isEmpty,
                 let address = address, address.isValid,
@@ -47,12 +45,12 @@ class DeliveryDetails: NSCopying, Codable {
     func saveDetailsAsLatest() {
         guard let detailsData = try? PropertyListEncoder().encode(self) else { return }
         
-        UserDefaults.standard.set(detailsData, forKey: Constants.savedDetailsKey)
+        UserDefaults.standard.set(detailsData, forKey: DeliveryDetails.savedDetailsKey)
         UserDefaults.standard.synchronize()
     }
     
     static func loadLatestDetails() -> DeliveryDetails? {
-        guard let detailsData = UserDefaults.standard.object(forKey: Constants.savedDetailsKey) as? Data else { return nil }
+        guard let detailsData = UserDefaults.standard.object(forKey: DeliveryDetails.savedDetailsKey) as? Data else { return nil }
         return try? PropertyListDecoder().decode(DeliveryDetails.self, from: detailsData)
     }
     

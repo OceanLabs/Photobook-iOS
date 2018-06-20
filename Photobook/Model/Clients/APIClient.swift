@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SDWebImage
 
 enum APIClientError: Error {
     case parsing
@@ -64,7 +65,7 @@ class APIClient: NSObject {
     private func baseURLString(for context: APIContext) -> String {
         switch context {
         case .none: return ""
-        case .photobook: return "https://staging-photobook-builder.herokuapp.com"
+        case .photobook: return "https://staging-photobook-builder.herokuapp.com/" //"https://photobook-builder.herokuapp.com/"
         case .pig: return "https://piglet.kite.ly/" // TODO: live endpoint is "https://image.kite.ly"
         case .kite: return "https://api.kite.ly/"
         }
@@ -106,7 +107,7 @@ class APIClient: NSObject {
         return [Int: String]()
     }()
     
-    private func createFileWith(imageData:Data, imageName:String, boundaryString:String) -> URL {
+    private func createFileWith(imageData: Data, imageName: String, boundaryString: String) -> URL {
         
         let directoryUrl = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
         let fileUrl = directoryUrl.appendingPathComponent(NSUUID().uuidString)
@@ -328,7 +329,7 @@ class APIClient: NSObject {
         }.resume()
     }
     
-    func uploadImage(_ image: UIImage, imageName: String, context: APIContext, endpoint: String, completion:@escaping (AnyObject?, Error?) -> ()) {
+    func uploadImage(_ image: UIImage, imageName: String, context: APIContext, endpoint: String, completion: @escaping (AnyObject?, Error?) -> ()) {
         
         guard let imageData = imageData(withImage: image, imageName:imageName) else {
             print("Image Upload: cannot read image data")
@@ -377,6 +378,14 @@ class APIClient: NSObject {
         let imageName = file.lastPathComponent
         
         uploadImage(fileData, imageName: imageName, reference: reference, context: context, endpoint: endpoint)
+    }
+    
+    func downloadImage(_ imageUrl: URL, completion: @escaping ((UIImage?, Error?) -> Void)) {
+        SDWebImageManager.shared().loadImage(with: imageUrl, options: [], progress: nil, completed: { image, _, error, _, _, _ in
+                DispatchQueue.main.async {
+                    completion(image, error)
+                }
+        })
     }
     
     func pendingBackgroundTaskCount(_ completion: @escaping ((Int)->Void)) {

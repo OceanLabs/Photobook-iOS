@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WZR-4z-wzI">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WZR-4z-wzI">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -2552,6 +2552,7 @@
                         <outlet property="collectionViewTrailingConstraint" destination="Hji-0y-uul" id="JI1-Tf-r5q"/>
                         <outlet property="ctaButton" destination="MlZ-hI-WeW" id="kgG-iN-1sX"/>
                         <outlet property="ctaButtonContainer" destination="9PF-H7-3d7" id="hMk-Zi-KJ0"/>
+                        <outlet property="ctaButtonHeightConstraint" destination="hjF-VC-ege" id="0zx-Ps-D9v"/>
                         <outlet property="ctaContainerBottomConstraint" destination="rfz-gH-PGi" id="lFe-AT-iaM"/>
                     </connections>
                 </viewController>
@@ -3012,6 +3013,7 @@
                         <outlet property="itemImageView" destination="ATQ-7e-lXt" id="f5G-Y4-me1"/>
                         <outlet property="itemPriceLabel" destination="T6M-C9-pKv" id="C3f-Xd-sBx"/>
                         <outlet property="itemTitleLabel" destination="AgL-tq-2Ud" id="zCF-ob-SvB"/>
+                        <outlet property="itemTypeLabel" destination="ekw-fg-lyA" id="5GP-XF-REa"/>
                         <outlet property="optionsViewBottomContraint" destination="9br-cn-uPh" id="s6C-j1-S0A"/>
                         <outlet property="optionsViewTopConstraint" destination="DUA-9A-pkr" id="XAc-Kg-b2B"/>
                         <outlet property="payButton" destination="Gka-ba-muo" id="c6O-1g-k45"/>
@@ -3024,6 +3026,7 @@
                         <outlet property="promoCodeActivityIndicator" destination="Oxp-hX-5vJ" id="H5Y-Km-jje"/>
                         <outlet property="promoCodeClearButton" destination="LNv-Iw-alh" id="Cks-1j-sam"/>
                         <outlet property="promoCodeDismissGestureRecognizer" destination="Qur-Ct-kYp" id="pXO-tP-Oib"/>
+                        <outlet property="promoCodeLabel" destination="fSF-Qp-4EQ" id="oWN-EP-RSJ"/>
                         <outlet property="promoCodeNormalConstraint" destination="gxw-q2-8G2" id="uft-kC-yky"/>
                         <outlet property="promoCodeTextField" destination="XZ1-hM-Xzz" id="KrN-em-xvm"/>
                         <outlet property="promoCodeView" destination="QrE-ug-05V" id="z8q-2f-7Rh"/>
@@ -3482,8 +3485,11 @@ United Kingdom</string>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="orderNumberHeaderLabel" destination="BY5-g7-Mdn" id="qZ6-a8-SSb"/>
                                     <outlet property="orderNumberLabel" destination="qOB-Nd-uRD" id="vcA-ZL-2qM"/>
+                                    <outlet property="shippingAddressHeaderLabel" destination="Lku-4W-wR0" id="IkW-yI-Bqp"/>
                                     <outlet property="shippingAddressLabel" destination="0qf-Zl-tHB" id="WVY-fU-Ry8"/>
+                                    <outlet property="shippingMethodHeaderLabel" destination="Rrq-Tu-d4Y" id="vyC-QK-ikx"/>
                                     <outlet property="shippingMethodLabel" destination="99D-Eb-VKk" id="A0p-qf-P6b"/>
                                 </connections>
                             </tableViewCell>
@@ -3605,6 +3611,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="itemLabel" destination="YkY-h9-Mt3" id="FlY-X1-fuY"/>
                                     <outlet property="totalCostLabel" destination="Vj9-s8-xAr" id="gKD-RI-4WK"/>
                                 </connections>
                             </tableViewCell>
@@ -4166,7 +4173,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="206.5"/>
                                             <color key="backgroundColor" red="0.93318068980000002" green="0.93361777069999996" blue="0.93681669239999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Order details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3RN-ib-X8q">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Order details" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3RN-ib-X8q">
                                             <rect key="frame" x="15" y="221.5" width="345" height="33.5"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="28"/>
                                             <nil key="textColor"/>
@@ -4209,32 +4216,37 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     </constraints>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="OrderSummaryDetailTableViewCell" textLabel="JHT-Uf-2HZ" detailTextLabel="RgV-OK-zjF" rowHeight="40" style="IBUITableViewCellStyleValue1" id="SZV-Bl-8r4" customClass="OrderSummaryDetailTableViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="OrderSummaryDetailTableViewCell" rowHeight="40" id="SZV-Bl-8r4" customClass="OrderSummaryDetailTableViewCell" customModule="Photobook" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="288" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="SZV-Bl-8r4" id="UAC-EW-iqf">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="JHT-Uf-2HZ">
-                                                    <rect key="frame" x="15" y="10" width="44" height="20.5"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FBm-pI-qyM">
+                                                    <rect key="frame" x="15" y="10" width="275" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="£XX.XX" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="RgV-OK-zjF">
-                                                    <rect key="frame" x="300" y="10" width="60" height="20.5"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="£XX.XX" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hkG-sD-ieU">
+                                                    <rect key="frame" x="300" y="10" width="60" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="hkG-sD-ieU" firstAttribute="leading" secondItem="FBm-pI-qyM" secondAttribute="trailing" constant="10" id="5Si-WG-5uJ"/>
+                                                <constraint firstItem="FBm-pI-qyM" firstAttribute="leading" secondItem="UAC-EW-iqf" secondAttribute="leading" constant="15" id="Hhd-O4-1hH"/>
+                                                <constraint firstAttribute="trailing" secondItem="hkG-sD-ieU" secondAttribute="trailing" constant="15" id="M2F-O4-eHo"/>
+                                                <constraint firstItem="FBm-pI-qyM" firstAttribute="centerY" secondItem="UAC-EW-iqf" secondAttribute="centerY" id="eUJ-5k-hQA"/>
+                                                <constraint firstItem="FBm-pI-qyM" firstAttribute="centerY" secondItem="hkG-sD-ieU" secondAttribute="centerY" id="hFB-Rc-vHR"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="priceLabel" destination="RgV-OK-zjF" id="3SG-rF-JTb"/>
-                                            <outlet property="titleLabel" destination="JHT-Uf-2HZ" id="1pv-T9-bll"/>
+                                            <outlet property="priceLabel" destination="hkG-sD-ieU" id="ddD-ev-Uni"/>
+                                            <outlet property="titleLabel" destination="FBm-pI-qyM" id="aaV-Sg-5kA"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="OrderSummaryTotalTableViewCell" rowHeight="40" id="wNE-gK-bz8" customClass="OrderSummaryTotalTableViewCell" customModule="Photobook" customModuleProvider="target">
@@ -4266,13 +4278,13 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="IKR-2j-7EN" firstAttribute="centerY" secondItem="Eao-8K-ZKG" secondAttribute="centerY" id="4Wm-xB-Mnf"/>
-                                                <constraint firstAttribute="trailing" secondItem="IKR-2j-7EN" secondAttribute="trailing" constant="15" id="5i5-fo-nSJ"/>
                                                 <constraint firstItem="dej-Vr-jGL" firstAttribute="centerY" secondItem="Eao-8K-ZKG" secondAttribute="centerY" id="URr-9m-ZIM"/>
+                                                <constraint firstItem="IKR-2j-7EN" firstAttribute="trailing" secondItem="zYd-v1-S3G" secondAttribute="trailing" id="UU3-bi-g6n"/>
                                                 <constraint firstAttribute="trailing" secondItem="zYd-v1-S3G" secondAttribute="trailing" constant="15" id="Vvc-6e-O7G"/>
                                                 <constraint firstItem="IKR-2j-7EN" firstAttribute="leading" secondItem="dej-Vr-jGL" secondAttribute="trailing" constant="10" id="cGj-3X-SRk"/>
                                                 <constraint firstItem="zYd-v1-S3G" firstAttribute="top" secondItem="Eao-8K-ZKG" secondAttribute="top" id="nM7-dq-cjg"/>
                                                 <constraint firstItem="zYd-v1-S3G" firstAttribute="leading" secondItem="Eao-8K-ZKG" secondAttribute="leading" constant="15" id="qpy-jT-vB6"/>
-                                                <constraint firstItem="dej-Vr-jGL" firstAttribute="leading" secondItem="Eao-8K-ZKG" secondAttribute="leadingMargin" id="zDb-me-fI1"/>
+                                                <constraint firstItem="dej-Vr-jGL" firstAttribute="leading" secondItem="zYd-v1-S3G" secondAttribute="leading" id="vQI-uw-5vs"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
@@ -4302,7 +4314,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
                                                         </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Option" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a4Z-Yu-VjU">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Option" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a4Z-Yu-VjU">
                                                             <rect key="frame" x="10" y="0.0" width="284" height="64"/>
                                                             <accessibility key="accessibilityConfiguration">
                                                                 <bool key="isElement" value="NO"/>
@@ -4407,6 +4419,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="coverSnapshotPageView" destination="8EI-2U-Avm" id="z4R-KX-vwj"/>
+                        <outlet property="ctaButton" destination="2YI-pQ-v5X" id="Xua-aP-cay"/>
+                        <outlet property="loadingPreviewLabel" destination="Aeb-t6-4vD" id="dtU-h1-dEd"/>
+                        <outlet property="orderDetailsLabel" destination="3RN-ib-X8q" id="Rt3-jj-1KY"/>
                         <outlet property="previewImageActivityIndicatorView" destination="fjl-yz-TyM" id="nKn-bA-MEj"/>
                         <outlet property="previewImageProgressView" destination="7kK-HX-kKi" id="eSa-nk-MGN"/>
                         <outlet property="previewImageView" destination="coG-HL-VIW" id="Pm7-Lr-Sdt"/>
@@ -4816,6 +4831,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="button" destination="Lc6-6j-BG5" id="FpK-BB-UKs"/>
                                     <outlet property="messageBottomConstraint" destination="OZ5-g6-0s4" id="aaF-ie-Xm2"/>
                                     <outlet property="messageLabel" destination="45s-9M-gdM" id="LEP-C0-IYB"/>
                                     <outlet property="separator" destination="7Vf-Xw-x5i" id="Q6B-cd-zAG"/>
@@ -4980,7 +4996,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             <outlet property="tickImageView" destination="Tbh-Fr-A3E" id="17N-e9-P4E"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="AddPaymentMethodCell" id="QKZ-tw-CMz">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="AddPaymentMethodCell" id="QKZ-tw-CMz" customClass="AddPaymentMethodTableViewCell" customModule="Photobook" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="99.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QKZ-tw-CMz" id="lcN-zV-epN">
@@ -5002,6 +5018,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                                 <constraint firstItem="TZW-eX-Xow" firstAttribute="leading" secondItem="lcN-zV-epN" secondAttribute="leading" constant="16" id="aEv-KM-MS5"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="addPaymentMethodButton" destination="TZW-eX-Xow" id="P1p-J8-cqf"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
@@ -5150,7 +5169,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="checkmark" indentationWidth="10" reuseIdentifier="country" textLabel="yYO-hR-Fdk" style="IBUITableViewCellStyleDefault" id="FU3-m8-5Es">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="checkmark" indentationWidth="10" reuseIdentifier="country" textLabel="yYO-hR-Fdk" style="IBUITableViewCellStyleDefault" id="FU3-m8-5Es" customClass="CountryTableViewCell" customModule="Photobook" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FU3-m8-5Es" id="ADJ-fp-SY7">
@@ -5166,6 +5185,9 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="label" destination="yYO-hR-Fdk" id="0z6-vt-7J0"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -5941,6 +5963,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     <connections>
                         <outlet property="contentViewBottomConstraint" destination="xx4-EJ-bc3" id="6Z5-3U-kEi"/>
                         <outlet property="contentViewHeightConstraint" destination="AL2-Ti-FC4" id="WYL-US-0fI"/>
+                        <outlet property="doneButton" destination="sUq-Tt-pzQ" id="Yl0-1P-M60"/>
                         <outlet property="optionPickerView" destination="eGL-DM-nQa" id="gC0-09-qG2"/>
                         <outlet property="optionTitleLabel" destination="J9a-xe-qHs" id="zco-Sc-yi9"/>
                     </connections>
@@ -6216,6 +6239,6 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <image name="uploading-spinner" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="qeW-AA-Oo4"/>
+        <segue reference="V0I-No-StO"/>
     </inferredMetricsTieBreakers>
 </document>

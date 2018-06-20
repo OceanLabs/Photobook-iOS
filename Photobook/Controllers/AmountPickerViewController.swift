@@ -15,10 +15,25 @@ protocol AmountPickerDelegate : class {
 
 class AmountPickerViewController: UIViewController {
     
-    @IBOutlet weak var optionTitleLabel: UILabel!
-    @IBOutlet weak var optionPickerView: UIPickerView!
-    @IBOutlet weak var contentViewBottomConstraint: NSLayoutConstraint!
-    @IBOutlet weak var contentViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var optionTitleLabel: UILabel! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                optionTitleLabel.font = UIFontMetrics.default.scaledFont(for: optionTitleLabel.font)
+                optionTitleLabel.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
+    @IBOutlet private weak var optionPickerView: UIPickerView!
+    @IBOutlet private weak var contentViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var contentViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var doneButton: UIButton! {
+        didSet {
+            if #available(iOS 11.0, *) {
+                doneButton.titleLabel?.font = UIFontMetrics.default.scaledFont(for: doneButton.titleLabel!.font)
+                doneButton.titleLabel?.adjustsFontForContentSizeCategory = true
+            }
+        }
+    }
     
     /// The name to display as title. E.g. Size, colour
     var optionName: String?

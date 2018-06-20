@@ -17,7 +17,15 @@ enum PhotobookAPIError: Error {
 
 class PhotobookAPIManager {
     
+    static var apiKey: String? {
+        didSet {
+            guard let apiKey = apiKey else { return }
+            headers = ["Authorization": "ApiKey \(apiKey)"]
+        }
+    }
+    
     static let imageUploadIdentifierPrefix = "PhotobookAPIManager-AssetUploader-"
+    private static var headers: [String: String]?
     
     struct EndPoints {
         static let products = "/ios/get_initial_data"
@@ -29,42 +37,23 @@ class PhotobookAPIManager {
     
     private var apiClient = APIClient.shared
     
-    private var mockJsonFileName: String?
-    
     #if DEBUG
-    convenience init(apiClient: APIClient, mockJsonFileName: String?) {
+    convenience init(apiClient: APIClient) {
         self.init()
         self.apiClient = apiClient
-        self.mockJsonFileName = mockJsonFileName
     }
     #endif
-    
-    private func authorizationHeader() -> [String: String]? {
-        guard let apiKey = KiteAPIClient.shared.apiKey else {
-            return nil
-        }
-        return ["Authorization": "ApiKey \(apiKey)"]
-    }
     
     /// Requests the information about photobook products and layouts from the API
     ///
     /// - Parameter completionHandler: Closure to be called when the request completes
     func requestPhotobookInfo(_ completionHandler:@escaping ([PhotobookTemplate]?, [Layout]?, Error?) -> ()) {
         
-        apiClient.get(context: .photobook, endpoint: EndPoints.products) { (jsonData, error) in
+        apiClient.get(context: .photobook, endpoint: EndPoints.products, parameters: nil, headers: PhotobookAPIManager.headers) { (jsonData, error) in
             
-            // TEMP: Fake api response. Don't run for tests.
-            var jsonData = jsonData
-            if NSClassFromString("XCTest") == nil {
-                jsonData = JSON.parse(file: "photobooks")
-            } else {
-                if let mockJsonFileName = self.mockJsonFileName {
-                    jsonData = JSON.parse(file: mockJsonFileName)
-                }
-                if jsonData == nil, error != nil {
-                    completionHandler(nil, nil, error!)
-                    return
-                }
+            if jsonData == nil, error != nil {
+                completionHandler(nil, nil, error!)
+                return
             }
             
             guard
@@ -105,14 +94,17 @@ class PhotobookAPIManager {
                 return
             }
 
+            // Sort products by cover width
+            tempPhotobooks.sort(by: { return $0.coverSize.width < $1.coverSize.width })
+            
             completionHandler(tempPhotobooks, tempLayouts, nil)
         }
     }
     
-    func getOrderSummary(product:PhotobookProduct, completionHandler: @escaping (_ summary: OrderSummary?, _ upsellOptions: [UpsellOption]?, _ productPayload: [String: Any]?, _ error: Error?) -> Void) {
+    func getOrderSummary(product: PhotobookProduct, completionHandler: @escaping (_ summary: OrderSummary?, _ upsellOptions: [UpsellOption]?, _ productPayload: [String: Any]?, _ error: Error?) -> Void) {
         
-        let parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.productLayouts.count, "color": product.coverColor.rawValue]
-        apiClient.post(context: .photobook, endpoint: EndPoints.summary, parameters: parameters, headers: authorizationHeader()) { (jsonData, error) in
+        let parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.numberOfPages, "color": product.coverColor.rawValue]
+        apiClient.post(context: .photobook, endpoint: EndPoints.summary, parameters: parameters, headers: PhotobookAPIManager.headers) { (jsonData, error) in
             
             if let error = error {
                 completionHandler(nil, nil, nil, error)
@@ -140,15 +132,15 @@ class PhotobookAPIManager {
         }
     }
     
-    func applyUpsells(product:PhotobookProduct, upsellOptions:[UpsellOption], completionHandler: @escaping (_ summary: OrderSummary?, _ upsoldTemplate: PhotobookTemplate?, _ productPayload: [String: Any]?, _ error: Error?) -> Void) {
+    func applyUpsells(product: PhotobookProduct, upsellOptions:[UpsellOption], completionHandler: @escaping (_ summary: OrderSummary?, _ upsoldTemplateId: String?, _ productPayload: [String: Any]?, _ error: Error?) -> Void) {
         
-        var parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.productLayouts.count, "color": product.coverColor.rawValue]
+        var parameters: [String: Any] = ["productId": product.template.id, "pageCount": product.numberOfPages, "color": product.coverColor.rawValue]
         var upsellDicts = [[String: Any]]()
         for upsellOption in upsellOptions {
             upsellDicts.append(upsellOption.dict)
         }
         parameters["upsells"] = upsellDicts
-        apiClient.post(context: .photobook, endpoint: EndPoints.applyUpsells, parameters: parameters, headers: authorizationHeader()) { (jsonData, error) in
+        apiClient.post(context: .photobook, endpoint: EndPoints.applyUpsells, parameters: parameters, headers: PhotobookAPIManager.headers) { (jsonData, error) in
             
             if let error = error {
                 completionHandler(nil, nil, nil, error)
@@ -166,24 +158,25 @@ class PhotobookAPIManager {
                     completionHandler(nil, nil, nil, APIClientError.parsing)
                     return
             }
-            
-            guard let template = ProductManager.shared.products?.first(where: {$0.productTemplateId == templateId}) else {
-                //template of new product not available
-                completionHandler(nil, nil, nil, PhotobookAPIError.productUnavailable)
-                return
-            }
         
-            completionHandler(summary, template, payload, nil)
+            completionHandler(summary, templateId, payload, nil)
         }
     }
     
     /// Creates a PDF representation of current photobook. Two PDFs for cover and pages are provided as a URL.
     /// Note that those get generated asynchronously on the server and when the server returns 200 the process might still fail, affecting the placement of orders using them
     ///
-    /// - Parameter completionHandler: Closure to be called with PDF URLs if successful, or an error if it fails
-    func createPhotobookPdf(completionHandler: @escaping (_ urls: [String]?, _ error: Error?) -> Void) {
-        completionHandler(["https://kite.ly/someurl", "https://kite.ly/someotherurl"], nil)
-        //TODO: send request
+    /// - Parameters:
+    ///   - photobook: Photobook product to use for creating the PDF
+    ///   - completionHandler: Closure to be called with PDF URLs if successful, or an error if it fails
+    func createPdf(withPhotobook photobook: PhotobookProduct, completionHandler: @escaping (_ urls: [String]?, _ error: Error?) -> Void) {
+        apiClient.post(context: .photobook, endpoint: "ios/generate_pdf", parameters: photobook.pdfParameters(), headers: PhotobookAPIManager.headers) { (response, error) in
+            guard let response = response as? [String: Any], let coverUrl = response["coverUrl"] as? String, let insideUrl = response["insideUrl"] as? String else {
+                completionHandler(nil, error)
+                return
+            }
+            completionHandler([coverUrl, insideUrl], nil)
+        }
     }
     
 }

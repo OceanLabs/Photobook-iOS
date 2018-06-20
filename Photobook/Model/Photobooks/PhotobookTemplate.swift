@@ -11,28 +11,33 @@ import UIKit
 
 // Defines the characteristics of a photobook / product
 class PhotobookTemplate: Codable {
+    
+    private static let mmToPtMultiplier = 2.83464566929134
+    
     var id: Int
-    var name: String!
-    var productTemplateId: String!
-    var aspectRatio: CGFloat!
-    var pageHeight: CGFloat!
-    lazy var pageWidth: CGFloat! = { return pageHeight! * aspectRatio! }()
-    var spineTextRatio: CGFloat!
-    var coverLayouts: [Int]!
-    var layouts: [Int]! // IDs of the permitted layouts
+    var name: String
+    var templateId: String
+    var kiteId: String
+    var coverSize: CGSize
+    var pageSize: CGSize
+    var coverAspectRatio: CGFloat { return coverSize.width / coverSize.height }
+    var pageAspectRatio: CGFloat { return pageSize.width / pageSize.height }
+    var spineTextRatio: CGFloat
+    var coverLayouts: [Int]
+    var layouts: [Int] // IDs of the permitted layouts
+    var minPages: Int = 20
+    var maxPages: Int = 100
     
-    // Does not include the cover asset
-    var minimumRequiredAssets: Int! = 20 // TODO: Get this from somewhere
+    // TODO: Currencies?
     
-    // TODO: Currencies? MaximumAllowed Pages/Assets?
-    
-    init(id: Int, name: String, productTemplateId: String, pageHeight: CGFloat, spineTextRatio: CGFloat, aspectRatio: CGFloat, coverLayouts: [Int], layouts: [Int]) {
+    init(id: Int, name: String, templateId: String, kiteId: String, coverSize: CGSize, pageSize: CGSize, spineTextRatio: CGFloat, coverLayouts: [Int], layouts: [Int]) {
         self.id = id
         self.name = name
-        self.productTemplateId = productTemplateId
-        self.pageHeight = pageHeight
+        self.templateId = templateId
+        self.kiteId = kiteId
+        self.coverSize = coverSize
+        self.pageSize = pageSize
         self.spineTextRatio = spineTextRatio
-        self.aspectRatio = aspectRatio
         self.coverLayouts = coverLayouts
         self.layouts = layouts
     }
@@ -42,22 +47,41 @@ class PhotobookTemplate: Codable {
         
         guard
             let id = dictionary["id"] as? Int,
-            let name = dictionary["name"] as? String,
-            let productTemplateId = dictionary["productTemplateId"] as? String,
-            let pageHeight = dictionary["pageHeight"] as? CGFloat, pageHeight > 0.0,
-            let spineTextRatio = dictionary["spineTextRatio"] as? CGFloat, spineTextRatio > 0.0,
-            let aspectRatio = dictionary["aspectRatio"] as? CGFloat, aspectRatio > 0.0,
+            let name = dictionary["displayName"] as? String,
+            let spineTextRatio = dictionary["spineTextRatio"] as? Double, spineTextRatio > 0.0,
             let coverLayouts = dictionary["coverLayouts"] as? [Int], !coverLayouts.isEmpty,
-            let layouts = dictionary["layouts"] as? [Int], !layouts.isEmpty
+            let layouts = dictionary["layouts"] as? [Int], !layouts.isEmpty,
+
+            let variantDictionary = (dictionary["variants"] as? [[String: AnyObject]])?.first,
+        
+            let kiteId = variantDictionary["kiteId"] as? String,
+            let templateId = variantDictionary["templateId"] as? String,
+            let coverSizeDictionary = variantDictionary["coverSize"] as? [String: Any],
+            let coverSizeMm = coverSizeDictionary["mm"] as? [String: Any],
+            let coverWidth = coverSizeMm["width"] as? Double,
+            let coverHeight = coverSizeMm["height"] as? Double,
+            
+            let pageSizeDictionary = variantDictionary["size"] as? [String: Any],
+            let pageSizeMm = pageSizeDictionary["mm"] as? [String: Any],
+            let pageWidth = pageSizeMm["width"] as? Double,
+            let pageHeight = pageSizeMm["height"] as? Double
         else { return nil }
         
-        return PhotobookTemplate(id: id, name: name, productTemplateId: productTemplateId, pageHeight: pageHeight, spineTextRatio: spineTextRatio, aspectRatio: aspectRatio, coverLayouts: coverLayouts, layouts: layouts)
+        let coverSize = CGSize(width: coverWidth * PhotobookTemplate.mmToPtMultiplier, height: coverHeight * PhotobookTemplate.mmToPtMultiplier)
+        let pageSize = CGSize(width: pageWidth * PhotobookTemplate.mmToPtMultiplier * 0.5, height: pageHeight * PhotobookTemplate.mmToPtMultiplier) // The width is that of a full spread
+        
+        let photobookTemplate = PhotobookTemplate(id: id, name: name, templateId: templateId, kiteId: kiteId, coverSize: coverSize, pageSize: pageSize, spineTextRatio: CGFloat(spineTextRatio), coverLayouts: coverLayouts, layouts: layouts)
+
+        if let minPages = variantDictionary["minPages"] as? Int { photobookTemplate.minPages = minPages }
+        if let maxPages = variantDictionary["maxPages"] as? Int { photobookTemplate.maxPages = maxPages }
+        
+        return photobookTemplate
     }    
 }
 
 extension PhotobookTemplate: Equatable {
     
     static func ==(lhs: PhotobookTemplate, rhs: PhotobookTemplate) -> Bool {
-        return lhs.id == rhs.id && lhs.productTemplateId == rhs.productTemplateId
+        return lhs.id == rhs.id
     }
 }

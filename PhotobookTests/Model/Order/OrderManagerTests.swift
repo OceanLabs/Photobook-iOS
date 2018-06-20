@@ -15,39 +15,18 @@ class OrderManagerTests: XCTestCase {
     var productManager: ProductManager!
     let photosAsset = TestPhotosAsset()
     
+    let apiClient = APIClientMock()
+    lazy var photobookAPIManager = PhotobookAPIManager(apiClient: apiClient)
+
     override func setUp() {
         super.setUp()
         
-        let photobookAPIManager = PhotobookAPIManager(apiClient: APIClient.shared, mockJsonFileName: "photobooks")
+        apiClient.response = JSON.parse(file: "photobooks")
         productManager = ProductManager(apiManager: photobookAPIManager)
+        productManager.initialise(completion: nil)
         
-        let expectation = self.expectation(description: "Wait for product initialization")
-        productManager.initialise(completion: { _ in
-            expectation.fulfill()
-        })
+        _ = productManager.setCurrentProduct(with: productManager.products!.first!, assets: [])
         
-        wait(for: [expectation], timeout: 30)
-        
-        let validDictionary = ([
-            "id": 10,
-            "name": "210 x 210",
-            "productTemplateId": "RPI_WRAP_210X210_SM",
-            "pageHeight": 450.34,
-            "spineTextRatio": 0.8,
-            "aspectRatio": 1.38,
-            "coverLayouts": [ 9, 10 ],
-            "layouts": [ 10, 11, 12, 13 ]
-            ]) as [String: AnyObject]
-        
-        guard let photobookTemplate = PhotobookTemplate.parse(validDictionary) else {
-            XCTFail("Failed to parse photobook dictionary")
-            return
-        }
-        
-        guard let product = productManager.setCurrentProduct(with: photobookTemplate, assets: []) else {
-            XCTFail("Failed to initialise the Photobook product")
-            return
-        }
         productManager.currentProduct?.productLayouts = [ProductLayout]()
         
         let layoutBox = LayoutBox(id: 1, rect: CGRect(x: 0.01, y: 0.01, width: 0.5, height: 0.1))
@@ -64,7 +43,7 @@ class OrderManagerTests: XCTestCase {
 
         productManager.currentProduct?.productLayouts.append(productLayout)
         
-        OrderManager.shared.basketOrder.products = [product]
+        OrderManager.shared.basketOrder.products = [productManager.currentProduct!]
     }
 
     func testSaveBasketOrder() {
@@ -83,7 +62,8 @@ class OrderManagerTests: XCTestCase {
         
         XCTAssertEqual(unarchivedOrder.products.first!.template.id, product.template.id)
         XCTAssertEqual(unarchivedOrder.products.first!.template.name, product.template.name)
-        XCTAssertEqual(unarchivedOrder.products.first!.template.aspectRatio, product.template.aspectRatio)
+        XCTAssertEqual(unarchivedOrder.products.first!.template.coverAspectRatio, product.template.coverAspectRatio)
+        XCTAssertEqual(unarchivedOrder.products.first!.template.pageAspectRatio, product.template.pageAspectRatio)
         XCTAssertEqual(unarchivedOrder.products.first!.template.layouts, product.template.layouts)
         XCTAssertEqual(unarchivedOrder.products.first!.template.coverLayouts, product.template.coverLayouts)
 

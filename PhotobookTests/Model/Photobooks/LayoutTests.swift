@@ -16,19 +16,19 @@ class LayoutTests: XCTestCase {
         "category": "squareCentred"
         ]) as [String: AnyObject]
     
-    func testParse_ShouldSucceedWithAValidDictionary() {
+    func testParse_shouldSucceedWithAValidDictionary() {
         let layout = Layout.parse(validDictionary)
         XCTAssertNotNil(layout, "Parse: Should succeed with a valid dictionary")
     }
     
-    func testParse_ShouldReturnNilIfIdIsMissing() {
+    func testParse_shouldReturnNilIfIdIsMissing() {
         var layoutDictionary = validDictionary
         layoutDictionary["id"] = nil
         let layoutBox = Layout.parse(layoutDictionary)
         XCTAssertNil(layoutBox, "Parse: Should return nil if id is missing")
     }
-
-    func testParse_ShouldReturnNilIfCategoryIsMissing() {
+    
+    func testParse_shouldReturnNilIfCategoryIsMissing() {
         var layoutDictionary = validDictionary
         layoutDictionary["category"] = nil
         let layoutBox = Layout.parse(layoutDictionary)
