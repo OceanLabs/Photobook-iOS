@@ -53,7 +53,7 @@ class PaymentAuthorizationManager: NSObject {
         return Stripe.deviceSupportsApplePay() && PaymentAuthorizationManager.applePayMerchantId != nil
     }
     
-    func authorizePayment(cost: Cost, method: PaymentMethod){
+    func authorizePayment(cost: Cost, method: PaymentMethod) {
         switch method {
         case .applePay:
             authorizeApplePay(cost: cost)
@@ -91,7 +91,7 @@ class PaymentAuthorizationManager: NSObject {
 
         let paymentRequest = Stripe.paymentRequest(withMerchantIdentifier: applePayMerchantId, country: "US", currency: OrderManager.shared.basketOrder.currencyCode)
         
-        paymentRequest.paymentSummaryItems = cost.summaryItemsForApplePay(payTo: PaymentAuthorizationManager.applePayPayTo, shippingMethodId: OrderManager.shared.basketOrder.shippingMethod!)
+        paymentRequest.paymentSummaryItems = cost.summaryItemsForApplePay(payTo: PaymentAuthorizationManager.applePayPayTo)
         paymentRequest.requiredShippingAddressFields = [.postalAddress, .name, .email, .phone]
         
         guard let paymentController = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) else { return }
@@ -109,7 +109,7 @@ class PaymentAuthorizationManager: NSObject {
         let details = OrderManager.shared.basketOrder.deliveryDetails
         let address = details?.address
 
-        guard let totalCost = cost.shippingMethod(id: OrderManager.shared.basketOrder.shippingMethod)?.totalCost,
+        guard let totalCost = cost.total,
             let firstName = details?.firstName,
             let lastName = details?.lastName,
             let line1 = address?.line1,
@@ -120,7 +120,7 @@ class PaymentAuthorizationManager: NSObject {
             else { return }
 
         let paypalAddress = PayPalShippingAddress(recipientName: String(format: "%@ %@", firstName, lastName), withLine1: line1, withLine2: address?.line2 ?? "", withCity: city, withState: address?.stateOrCounty ?? "", withPostalCode: postalCode, withCountryCode: country.codeAlpha2)
-        let payment = PayPalPayment(amount: totalCost as NSDecimalNumber, currencyCode: OrderManager.shared.basketOrder.currencyCode, shortDescription: product.name, intent: .authorize)
+        let payment = PayPalPayment(amount: totalCost.value as NSDecimalNumber, currencyCode: OrderManager.shared.basketOrder.currencyCode, shortDescription: product.name, intent: .authorize)
         payment.shippingAddress = paypalAddress
 
         let config = PayPalConfiguration()
@@ -232,14 +232,14 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
             }
 
             guard error == nil else {
-                completion(.failure, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: PaymentAuthorizationManager.applePayPayTo, shippingMethodId: OrderManager.shared.basketOrder.shippingMethod!))
+                completion(.failure, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: PaymentAuthorizationManager.applePayPayTo))
                 return
             }
 
             //Cost is expected to change here so update views
             welf?.delegate?.costUpdated()
             
-            completion(.success, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: PaymentAuthorizationManager.applePayPayTo, shippingMethodId: OrderManager.shared.basketOrder.shippingMethod!))
+            completion(.success, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: PaymentAuthorizationManager.applePayPayTo))
         }
     }
 }

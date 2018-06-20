@@ -20,13 +20,13 @@ class PhotobookAPIManager {
     static let imageUploadIdentifierPrefix = "PhotobookAPIManager-AssetUploader-"
     
     struct EndPoints {
-        static let products = "/ios/initial-data"
+        static let products = "/ios/get_initial_data"
         static let summary = "/ios/get_summary"
         static let applyUpsells = "/ios/apply_upsells"
         static let createPdf = "/ios/generate_photobook_pdf"
-        static let imageUpload = "/upload/"
+        static let imageUpload = "/upload"
     }
-
+    
     private var apiClient = APIClient.shared
     
     private var mockJsonFileName: String?

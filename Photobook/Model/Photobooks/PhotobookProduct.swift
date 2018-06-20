@@ -64,7 +64,7 @@ class PhotobookProduct: Codable {
         return productManager.minimumRequiredAssets < productLayouts.count - 1 // Don't include cover for min calculation
     }
     
-    private var upsoldTemplate: PhotobookTemplate?
+    private(set) var upsoldTemplate: PhotobookTemplate?
     private(set) var upsoldOptions: [String: Any]?
     
     func setUpsellData(template: PhotobookTemplate?, payload: [String: Any]?) {
@@ -145,7 +145,7 @@ class PhotobookProduct: Codable {
         spineFontType = try values.decode(FontType.self, forKey: .spineFontType)
         productUpsellOptions = try values.decodeIfPresent([UpsellOption].self, forKey: .productUpsellOptions)
         itemCount = try values.decode(Int.self, forKey: .itemCount)
-        upsoldTemplate = try values.decode(PhotobookTemplate.self, forKey: .upsoldTemplate)
+        upsoldTemplate = try values.decodeIfPresent(PhotobookTemplate.self, forKey: .upsoldTemplate)
         if let upsoldOptionsData = try values.decodeIfPresent(Data.self, forKey: .upsoldOptions) {
             upsoldOptions = (try? JSONSerialization.jsonObject(with: upsoldOptionsData, options: [])) as? [String: Any]
         }
@@ -242,7 +242,7 @@ class PhotobookProduct: Codable {
             }
             doubleAssetIndex = doubleAssetIndex ?? middleIndex // Use middle index even though it is a portrait photo
         }
-
+        
         for (index, asset) in assets.enumerated() {
             let productLayoutAsset = ProductLayoutAsset()
             productLayoutAsset.asset = asset
@@ -484,8 +484,9 @@ extension PhotobookProduct: Hashable, Equatable {
             
             stringHash += "pt:\(template.productTemplateId),"
             if let upsoldOptions = upsoldOptions {
-                stringHash += "po:\(upsoldOptions)"
+                stringHash += "po:\(upsoldOptions),"
             }
+            stringHash += "pc:\(itemCount),"
             
             return stringHash.hashValue
         }

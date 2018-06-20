@@ -101,8 +101,12 @@ class OrderManager {
                                                        Analytics.PropertyNames.secondsInBackground: Int(Analytics.shared.secondsSpentInBackground)
             ])
         
-        //TODO: change to accept two pdf urls
-        KiteAPIClient.shared.submitOrder(parameters: basketOrder.orderParameters(), completionHandler: { [weak welf = self] orderId, error in
+        guard let orderParameters = basketOrder.orderParameters(withPdfUrls: urls) else {
+            completionHandler(ErrorMessage(OrderProcessingError.cancelled))
+            return
+        }
+        
+        KiteAPIClient.shared.submitOrder(parameters: orderParameters, completionHandler: { [weak welf = self] orderId, error in
             welf?.basketOrder.orderId = orderId
             completionHandler(error)
         })
