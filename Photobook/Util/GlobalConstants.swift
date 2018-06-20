@@ -10,7 +10,7 @@ let photobookBundle = Bundle(for: PhotobookTemplate.self)
 let photobookMainStoryboard =  UIStoryboard(name: "Main", bundle: photobookBundle)
 
 struct CommonLocalizedStrings {
-    static let somethingWentWrong = NSLocalizedString("GenericError/Something Went Wrong", value: "Something went wrong", comment: "Generic error message")
+    static let somethingWentWrong = NSLocalizedString("GenericError/SomethingWentWrong", value: "Something Went Wrong", comment: "Generic error message title") 
     static let alertOK = NSLocalizedString("Generic/OKButtonTitle", value: "OK", comment: "Acknowledgement to an alert dialog")
     static let retry = NSLocalizedString("General/RetryButtonTitle", value: "Retry", comment: "Button title to retry operation")
     static let cancel = NSLocalizedString("General/CancelButtonTitle", value: "Cancel", comment: "Cancel an action")

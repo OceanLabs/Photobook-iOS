@@ -11,6 +11,7 @@ import UIKit
 import SDWebImage
 
 enum APIClientError: Error {
+    case generic
     case parsing
     case connection
     case server(code: Int, message: String)

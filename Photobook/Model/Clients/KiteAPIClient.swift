@@ -9,7 +9,7 @@
 import UIKit
 
 enum OrderSubmitStatus: String {
-    case cancelled, error, unknown, received, accepted, validated, processed
+    case cancelled, error, paymentError, unknown, received, accepted, validated, processed
     
     static func fromApiString(_ string: String) -> OrderSubmitStatus? {
         return OrderSubmitStatus(rawValue: string.lowercased())
@@ -45,6 +45,11 @@ class KiteAPIClient {
         
         let endpoint = KiteAPIClient.apiVersion + Endpoints.orderSubmission
         APIClient.shared.post(context: .kite, endpoint: endpoint, parameters: parameters, headers: kiteHeaders, completion: { response, error in
+            guard error == nil else {
+                completionHandler(nil, ErrorMessage(error))
+                return
+            }
+            
             let orderId = (response as? [String: Any])?["print_order_id"] as? String
             
             if let responseError = (response as? [String: Any])?["error"] as? [String: Any] {
@@ -53,22 +58,22 @@ class KiteAPIClient {
                     let errorCode = Int(errorCodeString)
                     else { completionHandler(nil, ErrorMessage(APIClientError.parsing)); return }
                 
-                if errorCode == 20 {
+                if errorCode == 20, let orderId = orderId {
                     // This is not actually an error, we can report success.
                     completionHandler(orderId, nil)
                     return
                 }
                 
                 completionHandler(nil, ErrorMessage(APIClientError.server(code: errorCode, message: message)))
+                return
             }
             
-            if orderId != nil {
+            if let orderId = orderId  {
                 completionHandler(orderId, nil)
-            } else if let error = error {
-                completionHandler(nil, ErrorMessage(error))
-            } else {
-                completionHandler(nil, ErrorMessage(text: CommonLocalizedStrings.somethingWentWrong))
+                return
             }
+            
+            completionHandler(nil, ErrorMessage(.generic))
         })
     }
     
@@ -79,33 +84,37 @@ class KiteAPIClient {
 
         let endpoint = KiteAPIClient.apiVersion + Endpoints.orderStatus + receipt
         APIClient.shared.get(context: .kite, endpoint: endpoint, parameters: nil, headers: kiteHeaders) { (response, error) in
-            guard error == nil else {
+            if let error = error as? APIClientError {
                 completionHandler(.error, ErrorMessage(error), nil)
                 return
             }
             
             guard let pollingData = response as? [String: AnyObject] else {
-                completionHandler(.error, ErrorMessage(.parsing), nil)
+                completionHandler(.error, nil, nil)
                 return
             }
 
             if let errorDictionary = pollingData["error"] as? [String: AnyObject] {
-                // The order was successful but with a different (previously sent) print order id
-                if let code = errorDictionary["code"] as? String, code == "E20" {
+                guard let code = errorDictionary["code"] as? String else {
+                    completionHandler(.error, nil, nil)
+                    return
+                }
+                
+                if code == "E20" { // The order was successful but with a different (previously sent) print order id
                     let receipt = errorDictionary["print_order_id"] as? String
                     completionHandler(.validated, nil, receipt)
-                    return
+                } else if code == "P11" { // Payment error
+                    completionHandler(.paymentError, nil, nil)
+                } else {
+                    completionHandler(.error, nil, nil)
                 }
-                if let message = errorDictionary["message"] as? String {
-                    completionHandler(.error, ErrorMessage(text: message), nil)
-                    return
-                }
+                return
             }
             
             guard let statusString = pollingData["status"] as? String,
                   let status = OrderSubmitStatus.fromApiString(statusString)
                 else {
-                    completionHandler(.error, ErrorMessage(.parsing), nil)
+                    completionHandler(.error, nil, nil)
                     return
             }
             

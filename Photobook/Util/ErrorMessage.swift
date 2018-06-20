@@ -45,7 +45,8 @@ struct ErrorMessage: Error {
             text = message
             type = .error
         default:
-            text = CommonLocalizedStrings.somethingWentWrong
+            self.title = CommonLocalizedStrings.somethingWentWrong
+            text = NSLocalizedString("GenericError/AnErrorOcurred", value: "An error occurred while processing your request.", comment: "Generic error message body")
             type = .error
         }
     }
