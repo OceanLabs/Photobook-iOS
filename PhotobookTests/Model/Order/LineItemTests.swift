@@ -57,7 +57,7 @@ class LineItemTests: XCTestCase {
     
     func testParseDetails_shouldFailWithoutACost() {
         var invalidDictionary = validDictionary
-        invalidDictionary["cost"] = nil
+        invalidDictionary["product_cost"] = nil
         
         let lineItem = LineItem.parseDetails(dictionary: invalidDictionary)
         XCTAssertNil(lineItem)
@@ -65,7 +65,7 @@ class LineItemTests: XCTestCase {
 
     func testParseDetails_shouldFailWithInvalidCurrency() {
         var invalidDictionary = validDictionary
-        invalidDictionary["cost"] = ["FFS": 45]
+        invalidDictionary["product_cost"] = ["FFS": 45]
         
         let lineItem = LineItem.parseDetails(dictionary: invalidDictionary)
         XCTAssertNil(lineItem)

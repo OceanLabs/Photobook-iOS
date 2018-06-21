@@ -26,11 +26,15 @@ struct Price: Codable {
         self.value = value
         
         //formatted string
-        let aFormatter = NumberFormatter()
-        aFormatter.numberStyle = .currency
-        aFormatter.currencyCode = currencyCode
-        guard let formatted = aFormatter.string(from: value as NSNumber) else { return nil }
-        self.formatted = formatted
+        if value > 0 {
+            let aFormatter = NumberFormatter()
+            aFormatter.numberStyle = .currency
+            aFormatter.currencyCode = currencyCode
+            guard let formatted = aFormatter.string(from: value as NSNumber) else { return nil }
+            self.formatted = formatted
+        } else {
+            self.formatted = NSLocalizedString("Model/Order/Price/FormattedFree", value: "Free", comment: "Text that gets displayed if a price is 0.0").uppercased()
+        }
     }
     
     static func parse(_ dictionary: [String: Any]) -> Price? {

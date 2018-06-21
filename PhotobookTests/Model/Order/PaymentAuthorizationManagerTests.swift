@@ -17,7 +17,6 @@ class PaymentAuthorizationManagerTests: XCTestCase {
     
     func fakeOrder() -> TestOrder {
         let order = TestOrder()
-        order.shippingMethod = 1
         
         let deliveryDetails = DeliveryDetails()
         deliveryDetails.firstName = "George"
@@ -37,10 +36,9 @@ class PaymentAuthorizationManagerTests: XCTestCase {
     }
     
     func fakeCost() -> Cost {
-        let lineItem = LineItem(id: 1, name: "item", cost: 20.0, formattedCost: "£20.00")
-        let shippingMethod = ShippingMethod(id: 1, name: "Standard", shippingCostFormatted: "£4.99", totalCost: 4.99, totalCostFormatted: "£24.99", maxDeliveryTime: 10, minDeliveryTime: 3)
+        let lineItem = LineItem(id: "hdbook_127x127", name: "item", cost: Price(currencyCode: "GBP", value: 20)!)
         
-        return Cost(hash: 1, lineItems: [lineItem], shippingMethods: [shippingMethod], promoDiscount: nil, promoCodeInvalidReason: nil)
+        return Cost(hash: 1, lineItems: [lineItem], totalShippingCost: Price(currencyCode: "GBP", value: 7)!, total: Price(currencyCode: "GBP", value: 27)!, promoDiscount: nil, promoCodeInvalidReason: nil)
     }
     
     override func setUp() {
@@ -65,13 +63,6 @@ class PaymentAuthorizationManagerTests: XCTestCase {
         paymentAuthorizationManager.authorizePayment(cost: fakeCost(), method: .applePay)
 
         XCTAssertTrue(delegate.viewControllerToPresent != nil && delegate.viewControllerToPresent! is PKPaymentAuthorizationViewController)
-    }
-    
-    func testAuthorizePayment_payPal_shouldNotPresentControllerIfCostIsMissing() {
-        let lineItem = LineItem(id: 1, name: "item", cost: 20.0, formattedCost: "£20.00")
-        let cost =  Cost(hash: 1, lineItems: [lineItem], shippingMethods: nil, promoDiscount: nil, promoCodeInvalidReason: nil)
-        
-        paymentAuthorizationManager.authorizePayment(cost: cost, method: .payPal)
     }
     
     func testAuthorizePayment_payPal_shouldPresentPaypalController() {
