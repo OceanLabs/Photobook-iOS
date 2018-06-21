@@ -40,7 +40,6 @@ class ShippingMethodTest: XCTestCase {
         
         XCTAssertEqualOptional(shippingMethod?.id, 1)
         XCTAssertEqualOptional(shippingMethod?.name, "Tracked")
-        XCTAssertEqualOptional(shippingMethod?.price.formatted, "£7.06")
         XCTAssertEqualOptional(shippingMethod?.minDeliveryTime, 5)
         XCTAssertEqualOptional(shippingMethod?.maxDeliveryTime, 7)
     }
