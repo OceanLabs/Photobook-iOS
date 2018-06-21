@@ -422,6 +422,8 @@
 		B99536E02035D8E10019B1AF /* TextEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99536DF2035D8E00019B1AF /* TextEditingViewController.swift */; };
 		B9A1433B1FDAD278000EFE0D /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A1433A1FDAD278000EFE0D /* Random.swift */; };
 		B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */; };
+		B9ACCF6020DBF79A004EA2F5 /* Price.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9216FFB20C6C34F003671B0 /* Price.swift */; };
+		B9ACCF6120DBF7A3004EA2F5 /* ShippingMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = B937E94E20CFD4B300BC21FD /* ShippingMethod.swift */; };
 		B9BC2E271FBF195200F4AA56 /* AssetCollectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BC2E261FBF195200F4AA56 /* AssetCollectorViewController.swift */; };
 		B9BE9F941FBF33320002C459 /* AssetCollectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BE9F931FBF33320002C459 /* AssetCollectorCollectionViewCell.swift */; };
 		B9D3340220220FE7003D4338 /* OrderSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D3340120220FE7003D4338 /* OrderSummary.swift */; };
@@ -935,7 +937,6 @@
 				2E17338B2010B9EE00F0D718 /* Card.swift */,
 				2E1733852010B6BA00F0D718 /* Cost.swift */,
 				6F5C5D2D20B4511A008073A6 /* LineItem.swift */,
-				2E1733872010B83100F0D718 /* ShippingMethod.swift */,
 				B937E94E20CFD4B300BC21FD /* ShippingMethod.swift */,
 				2E1733802010B50400F0D718 /* PaymentAuthorizationManager.swift */,
 				2E21DB5120177E5400D32989 /* DeliveryDetails.swift */,
@@ -2078,6 +2079,7 @@
 				2ED14C0E2063AA4000ED2E2C /* Country.swift in Sources */,
 				2ED14BE62063AA4000ED2E2C /* PhotobookPageView.swift in Sources */,
 				2ED14BDA2063AA4000ED2E2C /* PaymentMethodTableViewCell.swift in Sources */,
+				B9ACCF6120DBF7A3004EA2F5 /* ShippingMethod.swift in Sources */,
 				2ED14C022063AA4000ED2E2C /* PhotosAlbum.swift in Sources */,
 				2ED14BC32063AA4000ED2E2C /* AlbumsCollectionViewController+Facebook.swift in Sources */,
 				2ED14BCB2063AA4000ED2E2C /* StoryTableViewCell.swift in Sources */,
@@ -2109,6 +2111,7 @@
 				2ED14BB12063AA4000ED2E2C /* LayoutSelectionViewController.swift in Sources */,
 				2ED14BBD2063AA4000ED2E2C /* ReceiptTableViewController.swift in Sources */,
 				2ED14BB72063AA4000ED2E2C /* PaymentMethodsViewController.swift in Sources */,
+				B9ACCF6020DBF79A004EA2F5 /* Price.swift in Sources */,
 				2ED14C192063AA4000ED2E2C /* DecimalExtensions.swift in Sources */,
 				2ED14BF22063AA4000ED2E2C /* LayoutBox.swift in Sources */,
 				2ED14BDF2063AA4000ED2E2C /* ReceiptHeaderTableViewCell.swift in Sources */,
