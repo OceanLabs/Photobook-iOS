@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PassKit
 
 class Cost: Codable {
     
@@ -47,22 +48,8 @@ class Cost: Codable {
         
         var lineItems = [LineItem]()
         for item in lineItemsDictionary {
-            guard
-                let id = item["template_id"] as? String,
-                let name = item["description"] as? String,
-                let costDictionary = item["product_cost"] as? [String: Any],
-                let cost = Price.parse(costDictionary)
-                else { return nil }
-            
-            let lineItem = LineItem(id: id, name: name, cost: cost.value, formattedCost: cost.formatted)
+            guard let lineItem = LineItem.parseDetails(dictionary: item) else { return nil }
             lineItems.append(lineItem)
-        }
-
-        var shippingMethods = [ShippingMethod]()
-        for shippingMethodDictionary in shippingMethodsDictionary {
-            if let shippingMethod = ShippingMethod.parse(dictionary: shippingMethodDictionary) {
-                shippingMethods.append(shippingMethod)
-            }
         }
         
         return Cost(hash: 0, lineItems: lineItems, totalShippingCost: totalShippingCost, total: total, promoDiscount: promoDiscount, promoCodeInvalidReason: promoInvalidMessage)
@@ -80,7 +67,7 @@ class Cost: Codable {
         
         var summaryItems = [PKPaymentSummaryItem]()
         for item in lineItems {
-            summaryItems.append(PKPaymentSummaryItem(label: item.name, amount: item.cost as NSDecimalNumber))
+            summaryItems.append(PKPaymentSummaryItem(label: item.name, amount: item.cost.value as NSDecimalNumber))
         }
         
         summaryItems.append(PKPaymentSummaryItem(label: payTo, amount: totalCost as NSDecimalNumber))

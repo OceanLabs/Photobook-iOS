@@ -331,7 +331,7 @@ class ReceiptTableViewController: UITableViewController {
         case Section.lineItems.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptLineItemTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptLineItemTableViewCell
             cell.lineItemNameLabel.text = cost?.lineItems?[indexPath.row].name
-            cell.lineItemCostLabel.text = cost?.lineItems?[indexPath.row].formattedCost
+            cell.lineItemCostLabel.text = cost?.lineItems?[indexPath.row].cost.formatted
             return cell
         case Section.footer.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptFooterTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptFooterTableViewCell

@@ -138,7 +138,7 @@ class PaymentAuthorizationManager: NSObject {
     ///
     /// - Parameter cost: The total cost of the order
     private func authorizePayPal(cost: Cost) {
-        guard let totalCost = cost.shippingMethod(id: basketOrder.shippingMethod)?.totalCostRounded,
+        guard let totalCost = cost.total?.value,
               let details = basketOrder.deliveryDetails, details.isValid,
               let orderDescription = basketOrder.orderDescription else {
                 return
@@ -263,15 +263,15 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
         }
     }
     
-    private func summaryItemsForApplePay(cost: Cost?, shippingMethodId: Int) -> [PKPaymentSummaryItem] {
+    private func summaryItemsForApplePay(cost: Cost?) -> [PKPaymentSummaryItem] {
         guard
             let lineItems = cost?.lineItems, lineItems.count > 0,
-            let totalCost = cost?.shippingMethod(id: shippingMethodId)?.totalCost as NSDecimalNumber?
+            let totalCost = cost?.total?.value as NSDecimalNumber?
         else {
             return [PKPaymentSummaryItem]()
         }
         
-        var summaryItems = lineItems.map { return PKPaymentSummaryItem(label: $0.name, amount: $0.cost as NSDecimalNumber) }
+        var summaryItems = lineItems.map { return PKPaymentSummaryItem(label: $0.name, amount: $0.cost.value as NSDecimalNumber) }
         summaryItems.append(PKPaymentSummaryItem(label: PaymentAuthorizationManager.applePayPayTo, amount: totalCost))
         
         return summaryItems

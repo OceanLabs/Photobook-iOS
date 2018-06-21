@@ -14,6 +14,11 @@ struct Price: Codable {
     
     private(set) var currencyCode: String
     private(set) var value: Decimal
+    var roundedValue: NSDecimalNumber {
+        get {
+            return (value as NSDecimalNumber).rounding(accordingToBehavior: CurrencyRoundingBehavior())
+        }
+    }
     private(set) var formatted: String
     
     init?(currencyCode: String, value: Decimal) {
@@ -64,5 +69,15 @@ struct Price: Codable {
         }
         
         return Price(currencyCode: currencyCode, value: Decimal(value))
+    }
+    
+}
+
+extension Price : Equatable {
+    static func == (lhs: Price, rhs: Price) -> Bool {
+        return
+            lhs.currencyCode == rhs.currencyCode &&
+                lhs.roundedValue == rhs.roundedValue &&
+                lhs.formatted == rhs.formatted
     }
 }

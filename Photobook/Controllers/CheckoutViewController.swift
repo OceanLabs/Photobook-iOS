@@ -310,7 +310,7 @@ class CheckoutViewController: UIViewController {
         
         // Product
         itemTitleLabel.text = OrderManager.shared.basketOrder.cachedCost?.lineItems?.first?.name
-        itemPriceLabel.text = OrderManager.shared.basketOrder.cachedCost?.lineItems?.first?.formattedCost
+        itemPriceLabel.text = OrderManager.shared.basketOrder.cachedCost?.lineItems?.first?.cost.formatted
         itemAmountButton.setTitle("\(OrderManager.shared.basketOrder.products.first!.itemCount)", for: .normal)
         itemAmountButton.accessibilityValue = itemAmountButton.title(for: .normal)
         

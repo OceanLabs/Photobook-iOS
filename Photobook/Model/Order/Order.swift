@@ -148,7 +148,7 @@ class Order: Codable {
         var jobs = [[String: Any]]()
         //currently only one photobook possible. so use first item
         var job: [String: Any] = [
-            "template_id" : product.template.productTemplateId,
+            "template_id" : product.template.templateId,
             "multiples" : product.itemCount,
             "shipping_class" : shippingMethod.id,
             "inside_pdf" : insideUrl,

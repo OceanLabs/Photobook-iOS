@@ -67,9 +67,6 @@ class PhotobookProduct: Codable {
     private(set) var upsoldTemplate: PhotobookTemplate?
     private(set) var upsoldOptions: [String: Any]?
     
-    var upsoldTemplate: PhotobookTemplate?
-    var upsoldOptions: [String: Any]?
-    
     func setUpsellData(template: PhotobookTemplate?, payload: [String: Any]?) {
         upsoldTemplate = template
         upsoldOptions = payload?["options"] as? [String: Any]

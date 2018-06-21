@@ -73,7 +73,7 @@ class KiteAPIClient {
         var templateIdString = ""
         for product in order.products {
             if product != order.products.first { templateIdString += "," }
-            templateIdString += product.template.productTemplateId
+            templateIdString += product.template.templateId
         }
         
         APIClient.shared.get(context: .kite, endpoint: Endpoints.template + "/?template_id__in=\(templateIdString)", headers: kiteHeaders) { (response, error) in
@@ -141,8 +141,8 @@ class KiteAPIClient {
         
         var lineItems = [[String: Any]]()
         for (index, product) in order.products.enumerated() {
-            guard let variantId = product.upsoldTemplate?.productTemplateId ?? product.template.productTemplateId,
-                let options = product.upsoldOptions,
+            let variantId = product.upsoldTemplate?.templateId ?? product.template.templateId
+            guard let options = product.upsoldOptions,
                 let shippingClass = order.selectedShippingMethods?[index].id else {
                     completionHandler(nil, nil)
                     return
