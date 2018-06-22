@@ -1,77 +1,87 @@
 //
-//  Cost.swift
-//  Shopify
+//  Price.swift
+//  Photobook
 //
-//  Created by Konstadinos Karayannis on 13/07/2017.
-//  Copyright © 2017 Kite.ly. All rights reserved.
+//  Created by Julian Gruber on 05/06/2018.
+//  Copyright © 2018 Kite.ly. All rights reserved.
 //
 
 import UIKit
-import PassKit
 
-class Cost: Codable {
+struct Cost: Codable {
     
-    var orderHash: Int
-    let lineItems: [LineItem]?
-    let totalShippingCost: Price?
-    let total: Price?
-    let promoDiscount: Price?
-    let promoCodeInvalidReason: String?
+    private static let currencyCodeDefault = "GBP"
     
-    init(hash: Int, lineItems: [LineItem]?, totalShippingCost: Price, total: Price, promoDiscount: Price?, promoCodeInvalidReason: String?){
-        self.orderHash = hash
-        self.lineItems = lineItems
-        self.totalShippingCost = totalShippingCost
-        self.total = total
-        self.promoDiscount = promoDiscount
-        self.promoCodeInvalidReason = promoCodeInvalidReason
+    private(set) var currencyCode: String
+    private(set) var value: Decimal
+    var roundedValue: NSDecimalNumber {
+        get {
+            return (value as NSDecimalNumber).rounding(accordingToBehavior: CurrencyRoundingBehavior())
+        }
+    }
+    private(set) var formatted: String
+    
+    init?(currencyCode: String, value: Decimal) {
+        self.currencyCode = currencyCode
+        self.value = value
+        
+        //formatted string
+        if value > 0 {
+            let aFormatter = NumberFormatter()
+            aFormatter.numberStyle = .currency
+            aFormatter.currencyCode = currencyCode
+            guard let formatted = aFormatter.string(from: value as NSNumber) else { return nil }
+            self.formatted = formatted
+        } else {
+            self.formatted = NSLocalizedString("Model/Order/Price/FormattedFree", value: "Free", comment: "Text that gets displayed if a price is 0.0").uppercased()
+        }
     }
     
-    static func parseDetails(dictionary: [String : Any]) -> Cost? {
-        guard let lineItemsDictionary = dictionary["line_items"] as? [[String: Any]],
-            let totalShippingCostDictionary = dictionary["total_shipping_cost"] as? [String: Any],
-            let totalDictionary = dictionary["total"] as? [String: Any],
-            let totalShippingCost = Price.parse(totalShippingCostDictionary),
-            let total = Price.parse(totalDictionary) else { return nil }
+    static func parse(_ dictionary: [String: Any]) -> Cost? {
         
-        var promoDiscount: Price?
-        var promoInvalidMessage: String?
-        
-        if let promoCode = dictionary["promo_code"] as? [String: Any] {
-            if (promoCode["invalid_message"] as? String) != nil {
-                promoInvalidMessage = NSLocalizedString("Model/Cost/PromoInvalidMessage", value: "Invalid code", comment: "An invalid promo code has been entered and couldn't be applied to the order")//use generic localised string because response isn't optimised for mobile
-            }
-            if let discount = promoCode["discount"] as? [String: Any] {
-                promoDiscount = Price.parse(discount)
-            }
+        guard let valuesDict = dictionary as? [String: Double] else {
+            return nil
         }
         
-        var lineItems = [LineItem]()
-        for item in lineItemsDictionary {
-            guard let lineItem = LineItem.parseDetails(dictionary: item) else { return nil }
-            lineItems.append(lineItem)
-        }
+        var currencyCode = currencyCodeDefault
+        var value: Decimal?
+        if let localeCurrency = Locale.current.currencyCode, let v = valuesDict[localeCurrency] { //locale currency available
+            currencyCode = localeCurrency
+            value = Decimal(v)
+        } else if let v = valuesDict[currencyCode] { //default currency
+            value = Decimal(v)
+        } else { return nil } //failed to retrieve value
         
-        return Cost(hash: 0, lineItems: lineItems, totalShippingCost: totalShippingCost, total: total, promoDiscount: promoDiscount, promoCodeInvalidReason: promoInvalidMessage)
+        return Cost(currencyCode: currencyCode, value: value!)
     }
     
-    /// Create an array of PKPaymentSummaryItem from the order's lineItems and add item for total
-    ///
-    /// - Parameter payTo: A string that shows the user whom they are paying.
-    /// - Returns: an array of PKPaymentSummaryItem that's appropriate for Apple Pay 
-    func summaryItemsForApplePay(payTo: String) -> [PKPaymentSummaryItem]{
-        guard
-            let lineItems = self.lineItems,
-            let totalCost = self.total?.value
-            else { return [PKPaymentSummaryItem]() }
+    static func parse(_ dictionaries: [[String: Any]]) -> Cost? {
         
-        var summaryItems = [PKPaymentSummaryItem]()
-        for item in lineItems {
-            summaryItems.append(PKPaymentSummaryItem(label: item.name, amount: item.cost.value as NSDecimalNumber))
+        var relevantDictionary = dictionaries.first
+        
+        if let localCurrencyCode = Locale.current.currencyCode {
+            for dictionary in dictionaries {
+                if let currency = dictionary["currency"] as? String, currency == localCurrencyCode {
+                    relevantDictionary = dictionary
+                    break
+                }
+            }
         }
         
-        summaryItems.append(PKPaymentSummaryItem(label: payTo, amount: totalCost as NSDecimalNumber))
+        guard let currencyCode = relevantDictionary?["currency"] as? String, let value = relevantDictionary?["amount"] as? Double else {
+            return nil
+        }
         
-        return summaryItems
+        return Cost(currencyCode: currencyCode, value: Decimal(value))
+    }
+    
+}
+
+extension Cost : Equatable {
+    static func == (lhs: Cost, rhs: Cost) -> Bool {
+        return
+            lhs.currencyCode == rhs.currencyCode &&
+                lhs.roundedValue == rhs.roundedValue &&
+                lhs.formatted == rhs.formatted
     }
 }
