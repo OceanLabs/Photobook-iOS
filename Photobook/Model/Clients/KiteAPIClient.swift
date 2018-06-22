@@ -78,19 +78,20 @@ class KiteAPIClient {
         
         APIClient.shared.get(context: .kite, endpoint: Endpoints.template + "/?template_id__in=\(templateIdString)", headers: kiteHeaders) { (response, error) in
             
+            if let error = error {
+                completionHandler(nil, error)
+                return
+            }
+            
             //get objects for each product
             guard let jsonDict = response as? [String: Any],
-                let objects = jsonDict["objects"] as? [[String: Any]] else {
+                let objects = jsonDict["objects"] as? [[String: Any]],
+                objects.count == order.products.count else {
                 completionHandler(nil, APIClientError.parsing)
                 return
             }
             
             var objectShippingClasses = [[ShippingMethod]]()
-            
-            if objects.count != order.products.count { //inconsistent
-                completionHandler(nil, APIClientError.parsing)
-                return
-            }
             
             for object in objects {
                 var shippingClasses = [ShippingMethod]()
@@ -125,7 +126,7 @@ class KiteAPIClient {
         }
     }
     
-    func getCost(order: Order, completionHandler: @escaping (_ cost: Cost?, _ error: Error?) -> Void) {
+    func getCost(order: Order, completionHandler: @escaping (_ cost: OrderCost?, _ error: Error?) -> Void) {
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
         }
@@ -134,7 +135,6 @@ class KiteAPIClient {
         parameters["currency"] = order.currencyCode
         
         let countryCode = order.deliveryDetails?.address?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
-        //parameters["destination_country"] = address.country.codeAlpha3
         if let promoCode = order.promoCode {
             parameters["promo_code"] = promoCode
         }
@@ -161,7 +161,12 @@ class KiteAPIClient {
         
         APIClient.shared.post(context: .kite, endpoint: Endpoints.cost, parameters: parameters, headers: self.kiteHeaders, completion: { response, error in
             
-            guard let response = response as? [String: Any], let cost = Cost.parseDetails(dictionary: response) else {
+            if let error = error {
+                completionHandler(nil, error)
+                return
+            }
+            
+            guard let response = response as? [String: Any], let cost = OrderCost.parseDetails(dictionary: response) else {
                 completionHandler(nil, APIClientError.parsing)
                 return
             }

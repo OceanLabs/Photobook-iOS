@@ -34,10 +34,6 @@ class ShippingMethodsViewController: UIViewController {
         super.viewDidLoad()
         
         self.title = NSLocalizedString("ShippingMethods/Title", value: "Shipping Method", comment: "Shipping method selection screen title")
-        
-        /*if OrderManager.shared.basketOrder.shippingMethod == nil {
-            OrderManager.shared.basketOrder.shippingMethod = OrderManager.shared.basketOrder.cachedCost?.shippingMethods?.first?.id
-        }*/
     }
     
     @IBOutlet private weak var tableView: UITableView!

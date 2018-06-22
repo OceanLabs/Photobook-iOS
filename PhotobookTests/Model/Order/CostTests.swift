@@ -33,13 +33,13 @@ class CostTests: XCTestCase {
     
     func testInit() {
         let hash = 233
-        let totalShippingCost = Price(currencyCode: "GBP", value: 7.06)
-        let promoDiscount = Price(currencyCode: "GBP", value: 0)
+        let totalShippingCost = Cost(currencyCode: "GBP", value: 7.06)
+        let promoDiscount = Cost(currencyCode: "GBP", value: 0)
         let promoCodeInvalidReason = "reason"
-        let total = Price(currencyCode: "GBP", value: 28.06)
-        let lineItems = [LineItem(id: "hdbook_127x127", name: "item", cost: Price(currencyCode: "GBP", value: 21)!)]
+        let total = Cost(currencyCode: "GBP", value: 28.06)
+        let lineItems = [LineItem(id: "hdbook_127x127", name: "item", cost: Cost(currencyCode: "GBP", value: 21)!)]
         
-        let cost = Cost(hash: hash, lineItems: lineItems, totalShippingCost: totalShippingCost!, total: total!, promoDiscount: promoDiscount, promoCodeInvalidReason: promoCodeInvalidReason)
+        let cost = OrderCost(hash: hash, lineItems: lineItems, totalShippingCost: totalShippingCost!, total: total!, promoDiscount: promoDiscount, promoCodeInvalidReason: promoCodeInvalidReason)
         
         XCTAssertEqual(cost.orderHash, 233)
         XCTAssertEqualOptional(cost.lineItems?.first?.id, "hdbook_127x127")
@@ -50,7 +50,7 @@ class CostTests: XCTestCase {
     }
 
     func testParseDetails_shoudParseAValidDictionary() {
-        let cost = Cost.parseDetails(dictionary: validDictionary)
+        let cost = OrderCost.parseDetails(dictionary: validDictionary)
         
         XCTAssertNotNil(cost)
         XCTAssertEqualOptional(cost?.lineItems?.count, 1)
@@ -60,7 +60,7 @@ class CostTests: XCTestCase {
         var invalidDictionary = validDictionary
         invalidDictionary["line_items"] = nil
         
-        let cost = Cost.parseDetails(dictionary: invalidDictionary)
+        let cost = OrderCost.parseDetails(dictionary: invalidDictionary)
         XCTAssertNil(cost)
     }
     
@@ -68,7 +68,7 @@ class CostTests: XCTestCase {
         var invalidDictionary = validDictionary
         invalidDictionary["total"] = nil
         
-        let cost = Cost.parseDetails(dictionary: invalidDictionary)
+        let cost = OrderCost.parseDetails(dictionary: invalidDictionary)
         XCTAssertNil(cost)
     }
     
@@ -76,7 +76,7 @@ class CostTests: XCTestCase {
         var invalidDictionary = validDictionary
         invalidDictionary["promo_code"] = ["invalid_message": "Promo code not recognised"]
         
-        let cost = Cost.parseDetails(dictionary: invalidDictionary)
+        let cost = OrderCost.parseDetails(dictionary: invalidDictionary)
         XCTAssertNotNil(cost?.promoCodeInvalidReason)
     }
 

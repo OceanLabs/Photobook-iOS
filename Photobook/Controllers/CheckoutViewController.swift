@@ -223,7 +223,7 @@ class CheckoutViewController: UIViewController {
         }
         
         //POPULATE
-        refresh(true, true, true)
+        refresh(forceCostUpdate: true, forceShippingMethodsUpdate: true)
         emptyScreenViewController.show(message: Constants.loadingDetailsText, activity: true)
     }
     
@@ -271,11 +271,11 @@ class CheckoutViewController: UIViewController {
         
         updateViews()
         if !OrderManager.shared.basketOrder.hasValidCachedCost {
-            refresh(false)
+            refresh(showProgress: false)
         }
     }
     
-    private func refresh(_ showProgress: Bool = true, _ forceCostUpdate: Bool = false, _ forceShippingMethodsUpdate: Bool = false) {
+    private func refresh(showProgress: Bool = true, forceCostUpdate: Bool = false, forceShippingMethodsUpdate: Bool = false) {
         if showProgress {
             progressOverlayViewController.show(message: Constants.loadingDetailsText)
         }
@@ -517,7 +517,7 @@ class CheckoutViewController: UIViewController {
             }
             if OrderManager.shared.basketOrder.promoCode != nil { //it wasn't empty before
                 OrderManager.shared.basketOrder.promoCode = nil
-                refresh(false)
+                refresh(showProgress: false)
             }
             return
         }
@@ -530,7 +530,7 @@ class CheckoutViewController: UIViewController {
             promoCodeActivityIndicator.startAnimating()
             promoCodeTextField.isUserInteractionEnabled = false
             promoCodeClearButton.isHidden = true
-            refresh(false)
+            refresh(showProgress: false)
         }
     }
     
@@ -701,7 +701,7 @@ extension CheckoutViewController: AmountPickerDelegate {
         OrderManager.shared.basketOrder.products.first!.itemCount = value
         itemAmountButton.setTitle("\(value)", for: .normal)
         itemAmountButton.accessibilityValue = itemAmountButton.title(for: .normal)
-        refresh(true, false, false)
+        refresh()
     }
 }
 

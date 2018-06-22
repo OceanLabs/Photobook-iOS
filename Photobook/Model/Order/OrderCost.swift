@@ -1,5 +1,5 @@
 //
-//  Cost.swift
+//  OrderCost.swift
 //  Shopify
 //
 //  Created by Konstadinos Karayannis on 13/07/2017.
@@ -13,12 +13,12 @@ class OrderCost: Codable {
     
     var orderHash: Int
     let lineItems: [LineItem]?
-    let totalShippingCost: Price?
-    let total: Price?
-    let promoDiscount: Price?
+    let totalShippingCost: Cost?
+    let total: Cost?
+    let promoDiscount: Cost?
     let promoCodeInvalidReason: String?
     
-    init(hash: Int, lineItems: [LineItem]?, totalShippingCost: Price, total: Price, promoDiscount: Price?, promoCodeInvalidReason: String?){
+    init(hash: Int, lineItems: [LineItem]?, totalShippingCost: Cost, total: Cost, promoDiscount: Cost?, promoCodeInvalidReason: String?){
         self.orderHash = hash
         self.lineItems = lineItems
         self.totalShippingCost = totalShippingCost
@@ -31,10 +31,10 @@ class OrderCost: Codable {
         guard let lineItemsDictionary = dictionary["line_items"] as? [[String: Any]],
             let totalShippingCostDictionary = dictionary["total_shipping_cost"] as? [String: Any],
             let totalDictionary = dictionary["total"] as? [String: Any],
-            let totalShippingCost = Price.parse(totalShippingCostDictionary),
-            let total = Price.parse(totalDictionary) else { return nil }
+            let totalShippingCost = Cost.parse(totalShippingCostDictionary),
+            let total = Cost.parse(totalDictionary) else { return nil }
         
-        var promoDiscount: Price?
+        var promoDiscount: Cost?
         var promoInvalidMessage: String?
         
         if let promoCode = dictionary["promo_code"] as? [String: Any] {
@@ -42,7 +42,7 @@ class OrderCost: Codable {
                 promoInvalidMessage = NSLocalizedString("Model/Cost/PromoInvalidMessage", value: "Invalid code", comment: "An invalid promo code has been entered and couldn't be applied to the order")//use generic localised string because response isn't optimised for mobile
             }
             if let discount = promoCode["discount"] as? [String: Any] {
-                promoDiscount = Price.parse(discount)
+                promoDiscount = Cost.parse(discount)
             }
         }
         

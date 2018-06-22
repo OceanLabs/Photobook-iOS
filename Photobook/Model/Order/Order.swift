@@ -27,8 +27,8 @@ class Order: Codable {
     var orderId: String?
     var paymentToken: String?
     
-    var cachedCost: Cost?
-    var validCost: Cost? {
+    var cachedCost: OrderCost?
+    var validCost: OrderCost? {
         return hasValidCachedCost ? cachedCost : nil
     }
     
@@ -89,14 +89,14 @@ class Order: Codable {
                 KiteAPIClient.shared.getCost(order: self) { [weak self] (cost, error) in
                     self?.cachedCost = cost
                     cost?.orderHash = self?.hashValue ?? 0
-                    completionHandler(nil)
+                    completionHandler(error)
                 }
             }
         } else {
             KiteAPIClient.shared.getCost(order: self) { [weak self] (cost, error) in
                 self?.cachedCost = cost
                 cost?.orderHash = self?.hashValue ?? 0
-                completionHandler(nil)
+                completionHandler(error)
             }
         }
     }

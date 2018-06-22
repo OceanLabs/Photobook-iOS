@@ -1,5 +1,5 @@
 //
-//  Price.swift
+//  Cost.swift
 //  Photobook
 //
 //  Created by Julian Gruber on 05/06/2018.

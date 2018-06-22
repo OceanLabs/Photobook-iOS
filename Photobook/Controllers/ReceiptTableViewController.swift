@@ -33,7 +33,7 @@ class ReceiptTableViewController: UITableViewController {
     
     var order: Order!
     
-    private var cost: Cost? {
+    private var cost: OrderCost? {
         return order.cachedCost
     }
     

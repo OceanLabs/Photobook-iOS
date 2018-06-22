@@ -20,7 +20,7 @@ class LineItemTests: XCTestCase {
     func testInit() {
         let id = "item_no2"
         let name = "Item number 2"
-        let cost = Price(currencyCode: "GBP", value: 21)
+        let cost = Cost(currencyCode: "GBP", value: 21)
         
         let lineItem = LineItem(id: id, name: name, cost: cost!)
         
@@ -32,7 +32,7 @@ class LineItemTests: XCTestCase {
     func testParseDetails_shoudParseAValidDictionary() {
         let lineItem = LineItem.parseDetails(dictionary: validDictionary)
         
-        let expectedCost = Price(currencyCode: "GBP", value: 21)
+        let expectedCost = Cost(currencyCode: "GBP", value: 21)
         
         XCTAssertEqualOptional(lineItem?.id, "circus_clown1")
         XCTAssertEqualOptional(lineItem?.name, "Clown Costume")

@@ -12,9 +12,9 @@ class LineItem: Codable {
     
     let id: String
     let name: String
-    let cost: Price
+    let cost: Cost
     
-    init(id: String, name: String, cost: Price) {
+    init(id: String, name: String, cost: Cost) {
         self.id = id
         self.name = name
         self.cost = cost
@@ -25,7 +25,7 @@ class LineItem: Codable {
             let id = dictionary["template_id"] as? String,
             let name = dictionary["description"] as? String,
             let costDictionary = dictionary["product_cost"] as? [String: Any],
-            let cost = Price.parse(costDictionary)
+            let cost = Cost.parse(costDictionary)
             else { return nil }
         
         return LineItem(id: id, name: name, cost: cost)
