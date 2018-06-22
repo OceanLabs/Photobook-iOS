@@ -14,7 +14,7 @@ class ShippingMethod: Codable {
     
     let id: Int
     let name: String
-    let price: Cost
+    let price: Price
     let maxDeliveryTime: Int
     let minDeliveryTime: Int
 
@@ -22,7 +22,7 @@ class ShippingMethod: Codable {
         return String.localizedStringWithFormat(NSLocalizedString("ShippingMethod/DeliveryTime", value:"%d to %d working days", comment: "Delivery estimates for a specific delivery method"), minDeliveryTime, maxDeliveryTime)
     }
     
-    init(id: Int, name: String, price: Cost, maxDeliveryTime: Int, minDeliveryTime: Int) {
+    init(id: Int, name: String, price: Price, maxDeliveryTime: Int, minDeliveryTime: Int) {
         self.id = id
         self.name = name
         self.price = price
@@ -36,7 +36,7 @@ class ShippingMethod: Codable {
             let name = dictionary["mobile_shipping_name"] as? String,
             let costsDictionaries = dictionary["costs"] as? [[String: Any]],
             
-            let price = Cost.parse(costsDictionaries),
+            let price = Price.parse(costsDictionaries),
             
             let maxDeliveryTime = dictionary["max_delivery_time"] as? Int,
             let minDeliveryTime = dictionary["min_delivery_time"] as? Int

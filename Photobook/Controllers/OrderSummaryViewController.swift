@@ -111,7 +111,6 @@ class OrderSummaryViewController: UIViewController {
         if segue.identifier == "OrderSummarySegueName" {
             
             // Add current item to the basket
-            product.itemCount = 1
             OrderManager.shared.basketOrder.products = [product] //We currently only support one item at a time
             
             checkoutViewController = segue.destination as? CheckoutViewController

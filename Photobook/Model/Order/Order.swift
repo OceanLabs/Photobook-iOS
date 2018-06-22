@@ -27,8 +27,8 @@ class Order: Codable {
     var orderId: String?
     var paymentToken: String?
     
-    var cachedCost: OrderCost?
-    var validCost: OrderCost? {
+    var cachedCost: Cost?
+    var validCost: Cost? {
         return hasValidCachedCost ? cachedCost : nil
     }
     
@@ -84,20 +84,20 @@ class Order: Codable {
             return
         }
         
-        if availableShippingMethods == nil || forceShippingMethodUpdate {
-            updateShippingMethods { (error) in
-                KiteAPIClient.shared.getCost(order: self) { [weak self] (cost, error) in
-                    self?.cachedCost = cost
-                    cost?.orderHash = self?.hashValue ?? 0
-                    completionHandler(error)
-                }
-            }
-        } else {
+        let getCostClosure = {
             KiteAPIClient.shared.getCost(order: self) { [weak self] (cost, error) in
                 self?.cachedCost = cost
                 cost?.orderHash = self?.hashValue ?? 0
                 completionHandler(error)
             }
+        }
+        
+        if availableShippingMethods == nil || forceShippingMethodUpdate {
+            updateShippingMethods { (error) in
+                getCostClosure()
+            }
+        } else {
+            getCostClosure()
         }
     }
     
@@ -124,14 +124,19 @@ class Order: Codable {
         }
     }
     
-    func orderParameters(withPdfUrls urls: [String]) -> [String: Any]? {
+    func setShippingMethod(_ index: Int, forSection section: Int) {
+        guard let availableShippingMethods = availableShippingMethods, availableShippingMethods.count > section,
+            var selectedShippingMethods = selectedShippingMethods, selectedShippingMethods.count > section else {
+                return
+        }
+        selectedShippingMethods[section] = availableShippingMethods[section][index]
+    }
+    
+    func orderParameters() -> [String: Any]? {
         
-        guard let shippingMethod = selectedShippingMethods?.first,
-            let product = products.first,
-            urls.count == 2 else { return nil }
-        
-        let insideUrl = urls[0]
-        let coverUrl = urls[1]
+        guard let selectedShippingMethods = selectedShippingMethods, selectedShippingMethods.count == products.count else {
+            return nil
+        }
         
         var shippingAddress = deliveryDetails?.address?.jsonRepresentation()
         shippingAddress?["recipient_first_name"] = deliveryDetails?.firstName
@@ -146,16 +151,24 @@ class Order: Codable {
         parameters["promo_code"] = promoCode
         
         var jobs = [[String: Any]]()
-        //currently only one photobook possible. so use first item
-        var job: [String: Any] = [
-            "template_id" : product.template.templateId,
-            "multiples" : product.itemCount,
-            "shipping_class" : shippingMethod.id,
-            "inside_pdf" : insideUrl,
-            "cover_pdf" : coverUrl
+        for (index, product) in products.enumerated() {
+            
+            guard let options = product.upsoldOptions,
+                let insideUrl = product.insidePdfUrl,
+                let coverUrl = product.coverPdfUrl else { return nil }
+            
+            let shippingMethod = selectedShippingMethods[index]
+            
+            let job: [String: Any] = [
+                "template_id" : product.template.templateId,
+                "multiples" : product.itemCount,
+                "shipping_class" : shippingMethod.id,
+                "options" : options,
+                "inside_pdf" : insideUrl,
+                "cover_pdf" : coverUrl
             ]
-        if let options = product.upsoldOptions { job["options"] = options }
-        jobs.append(job)
+            jobs.append(job)
+        }
         
         parameters["jobs"] = jobs
         

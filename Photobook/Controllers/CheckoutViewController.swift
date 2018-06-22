@@ -280,21 +280,22 @@ class CheckoutViewController: UIViewController {
             progressOverlayViewController.show(message: Constants.loadingDetailsText)
         }
         
-        OrderManager.shared.basketOrder.updateCost(forceUpdate: forceCostUpdate, forceShippingMethodUpdate: forceShippingMethodsUpdate) { (error) in
+        OrderManager.shared.basketOrder.updateCost(forceUpdate: forceCostUpdate, forceShippingMethodUpdate: forceShippingMethodsUpdate) { [weak self] (error) in
+            
+            self?.emptyScreenViewController.hide()
+            self?.progressOverlayViewController.hide()
+            self?.promoCodeActivityIndicator.stopAnimating()
+            self?.promoCodeTextField.isUserInteractionEnabled = true
+            
             if let error = error {
                 let alert = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .alert)
                 let okAction = UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default)
                 alert.addAction(okAction)
-                self.present(alert, animated: true)
+                self?.present(alert, animated: true)
                 return
             }
             
-            self.emptyScreenViewController.hide()
-            self.progressOverlayViewController.hide()
-            self.promoCodeActivityIndicator.stopAnimating()
-            self.promoCodeTextField.isUserInteractionEnabled = true
-            
-            self.updateViews()
+            self?.updateViews()
         }
     }
 

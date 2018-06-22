@@ -126,7 +126,7 @@ class KiteAPIClient {
         }
     }
     
-    func getCost(order: Order, completionHandler: @escaping (_ cost: OrderCost?, _ error: Error?) -> Void) {
+    func getCost(order: Order, completionHandler: @escaping (_ cost: Cost?, _ error: Error?) -> Void) {
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
         }
@@ -151,7 +151,7 @@ class KiteAPIClient {
                                                     "template_id": variantId,
                                                     "country_code": countryCode,
                                                     "shipping_class": shippingClass,
-                                                    "pages": product.productLayouts.count,
+                                                    "pages": product.numberOfPages,
                                                     "options": options
             ]
             lineItems.append(productDictionary)
@@ -166,7 +166,7 @@ class KiteAPIClient {
                 return
             }
             
-            guard let response = response as? [String: Any], let cost = OrderCost.parseDetails(dictionary: response) else {
+            guard let response = response as? [String: Any], let cost = Cost.parseDetails(dictionary: response) else {
                 completionHandler(nil, APIClientError.parsing)
                 return
             }

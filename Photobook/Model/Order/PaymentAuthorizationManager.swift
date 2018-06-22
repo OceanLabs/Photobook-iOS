@@ -91,7 +91,7 @@ class PaymentAuthorizationManager: NSObject {
         return Stripe.deviceSupportsApplePay() && PaymentAuthorizationManager.applePayMerchantId != nil
     }
     
-    func authorizePayment(cost: OrderCost, method: PaymentMethod) {
+    func authorizePayment(cost: Cost, method: PaymentMethod) {
         switch method {
         case .applePay:
             authorizeApplePay(cost: cost)
@@ -105,7 +105,7 @@ class PaymentAuthorizationManager: NSObject {
     /// Ask Stripe for a charge authorization token
     ///
     /// - Parameter cost: The total cost of the order
-    private func authorizeCreditCard(cost: OrderCost) {
+    private func authorizeCreditCard(cost: Cost) {
         guard let currentCard = Card.currentCard else { return }
         
         paymentApi.createToken(withCard: currentCard) { [weak welf = self] (tokenId, error) in
@@ -116,7 +116,7 @@ class PaymentAuthorizationManager: NSObject {
     /// Present the Apple Pay authorization sheet
     ///
     /// - Parameter cost: The total cost of the order
-    private func authorizeApplePay(cost: OrderCost) {
+    private func authorizeApplePay(cost: Cost) {
         guard let applePayMerchantId = PaymentAuthorizationManager.applePayMerchantId else {
             fatalError("Missing merchant ID for ApplePay: PhotobookSDK.shared.applePayMerchantID")
         }
@@ -137,7 +137,7 @@ class PaymentAuthorizationManager: NSObject {
     /// Present the PayPal login view controller
     ///
     /// - Parameter cost: The total cost of the order
-    private func authorizePayPal(cost: OrderCost) {
+    private func authorizePayPal(cost: Cost) {
         guard let totalCost = cost.total?.value,
               let details = basketOrder.deliveryDetails, details.isValid,
               let orderDescription = basketOrder.orderDescription else {
@@ -263,7 +263,7 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
         }
     }
     
-    private func summaryItemsForApplePay(cost: OrderCost?) -> [PKPaymentSummaryItem] {
+    private func summaryItemsForApplePay(cost: Cost?) -> [PKPaymentSummaryItem] {
         guard
             let lineItems = cost?.lineItems, lineItems.count > 0,
             let totalCost = cost?.total?.value as NSDecimalNumber?

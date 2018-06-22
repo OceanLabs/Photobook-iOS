@@ -30,6 +30,12 @@ class ShippingMethodsViewController: UIViewController {
         return EmptyScreenViewController.emptyScreen(parent: self)
     }()
     
+    var order: Order {
+        get {
+            return OrderManager.shared.basketOrder
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -83,7 +89,7 @@ extension ShippingMethodsViewController: UITableViewDataSource {
 extension ShippingMethodsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        OrderManager.shared.basketOrder.selectedShippingMethods![indexPath.section] = OrderManager.shared.basketOrder.availableShippingMethods![indexPath.section][indexPath.row]
+        order.setShippingMethod(indexPath.row, forSection: indexPath.section)
         
         tableView.reloadData()
     }

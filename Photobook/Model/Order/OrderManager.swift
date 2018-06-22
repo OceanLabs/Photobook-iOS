@@ -95,19 +95,19 @@ class OrderManager {
         basketOrder = Order()
     }
     
-    func submitOrder(_ urls:[String], completionHandler: @escaping (_ error: ErrorMessage?) -> Void) {
+    func submitOrder(completionHandler: @escaping (_ error: ErrorMessage?) -> Void) {
         
         Analytics.shared.trackAction(.orderSubmitted, [Analytics.PropertyNames.secondsSinceAppOpen: Analytics.shared.secondsSinceAppOpen(),
                                                        Analytics.PropertyNames.secondsInBackground: Int(Analytics.shared.secondsSpentInBackground)
             ])
         
-        guard let orderParameters = basketOrder.orderParameters(withPdfUrls: urls) else {
+        guard let orderParameters = processingOrder?.orderParameters() else {
             completionHandler(ErrorMessage(OrderProcessingError.cancelled))
             return
         }
         
         KiteAPIClient.shared.submitOrder(parameters: orderParameters, completionHandler: { [weak welf = self] orderId, error in
-            welf?.basketOrder.orderId = orderId
+            welf?.processingOrder?.orderId = orderId
             completionHandler(error)
         })
     }
@@ -256,8 +256,10 @@ class OrderManager {
                 return
             }
             
+            photobook.setPdfUrls(urls)
+            
             // 2 - Submit order
-            welf?.submitOrder(urls, completionHandler: { [weak welf = self] (errorMessage) in
+            welf?.submitOrder(completionHandler: { [weak welf = self] (errorMessage) in
                 
                 if let swelf = welf, swelf.isCancelling {
                     swelf.processingOrder = nil

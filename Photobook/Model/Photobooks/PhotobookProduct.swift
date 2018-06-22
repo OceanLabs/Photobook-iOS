@@ -52,6 +52,8 @@ class PhotobookProduct: Codable {
     var pageColor: ProductColor = .white
     var productLayouts = [ProductLayout]()
     var itemCount: Int = 1
+    var insidePdfUrl: String?
+    var coverPdfUrl: String?
     
     var isAddingPagesAllowed: Bool { return template.maxPages >= numberOfPages + 2 }
     var isRemovingPagesAllowed: Bool { return numberOfPages - 2 >= template.minPages }
@@ -275,6 +277,13 @@ class PhotobookProduct: Codable {
         }
         
         return productLayouts
+    }
+    
+    func setPdfUrls(_ urls: [String]) {
+        if urls.count == 2 {
+            insidePdfUrl = urls[0]
+            coverPdfUrl = urls[1]
+        }
     }
     
     /// Sets one of the available layouts for a page number
