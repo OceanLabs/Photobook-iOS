@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import PassKit
 
 class Cost: Codable {
     
@@ -27,7 +26,7 @@ class Cost: Codable {
         self.promoCodeInvalidReason = promoCodeInvalidReason
     }
     
-    static func parseDetails(dictionary: [String : Any]) -> Cost? {
+    static func parseDetails(dictionary: [String: Any]) -> Cost? {
         guard let lineItemsDictionary = dictionary["line_items"] as? [[String: Any]],
             let totalShippingCostDictionary = dictionary["total_shipping_cost"] as? [String: Any],
             let totalDictionary = dictionary["total"] as? [String: Any],
@@ -40,8 +39,7 @@ class Cost: Codable {
         if let promoCode = dictionary["promo_code"] as? [String: Any] {
             if (promoCode["invalid_message"] as? String) != nil {
                 promoInvalidMessage = NSLocalizedString("Model/Cost/PromoInvalidMessage", value: "Invalid code", comment: "An invalid promo code has been entered and couldn't be applied to the order")//use generic localised string because response isn't optimised for mobile
-            }
-            if let discount = promoCode["discount"] as? [String: Any] {
+            } else if let discount = promoCode["discount"] as? [String: Any] {
                 promoDiscount = Price.parse(discount)
             }
         }
@@ -53,25 +51,5 @@ class Cost: Codable {
         }
         
         return Cost(hash: 0, lineItems: lineItems, totalShippingCost: totalShippingCost, total: total, promoDiscount: promoDiscount, promoCodeInvalidReason: promoInvalidMessage)
-    }
-    
-    /// Create an array of PKPaymentSummaryItem from the order's lineItems and add item for total
-    ///
-    /// - Parameter payTo: A string that shows the user whom they are paying.
-    /// - Returns: an array of PKPaymentSummaryItem that's appropriate for Apple Pay 
-    func summaryItemsForApplePay(payTo: String) -> [PKPaymentSummaryItem]{
-        guard
-            let lineItems = self.lineItems,
-            let totalCost = self.total?.value
-            else { return [PKPaymentSummaryItem]() }
-        
-        var summaryItems = [PKPaymentSummaryItem]()
-        for item in lineItems {
-            summaryItems.append(PKPaymentSummaryItem(label: item.name, amount: item.cost.value as NSDecimalNumber))
-        }
-        
-        summaryItems.append(PKPaymentSummaryItem(label: payTo, amount: totalCost as NSDecimalNumber))
-        
-        return summaryItems
     }
 }

@@ -20,10 +20,10 @@ class OrderTests: XCTestCase {
         return PhotobookProduct(template: photobookTemplate, assets: assets ?? [], coverLayouts: [portraitLayout, landscapeLayout], layouts: [portraitLayout, landscapeLayout])!
     }
 
-    func fakeCost(totalCost: Decimal = 0.0) -> OrderCost {
-        let lineItem = LineItem(id: "hdbook_127x127", name: "item", cost: Cost(currencyCode: "GBP", value: 20)!)
+    func fakeCost(totalCost: Decimal = 0.0) -> Cost {
+        let lineItem = LineItem(id: "hdbook_127x127", name: "item", cost: Price(currencyCode: "GBP", value: 20)!)
         
-        return OrderCost(hash: 1, lineItems: [lineItem], totalShippingCost: Price(currencyCode: "GBP", value: 7)!, total: Price(currencyCode: "GBP", value: totalCost)!, promoDiscount: nil, promoCodeInvalidReason: nil)
+        return Cost(hash: 1, lineItems: [lineItem], totalShippingCost: Price(currencyCode: "GBP", value: 7)!, total: Price(currencyCode: "GBP", value: totalCost)!, promoDiscount: nil, promoCodeInvalidReason: nil)
     }
 
     func testOrderIsFree_shouldBeFalseWithNoValidCost() {

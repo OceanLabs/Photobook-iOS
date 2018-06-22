@@ -123,7 +123,7 @@ class PaymentAuthorizationManager: NSObject {
 
         let paymentRequest = paymentApi.applePayPaymentRequest(withMerchantId: applePayMerchantId, country: "US", currency: basketOrder.currencyCode)
         
-        paymentRequest.paymentSummaryItems = cost.summaryItemsForApplePay(payTo: PaymentAuthorizationManager.applePayPayTo)
+        paymentRequest.paymentSummaryItems = summaryItemsForApplePay(cost: cost)
         paymentRequest.requiredShippingAddressFields = [.postalAddress, .name, .email, .phone]
         
         guard let paymentController = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) else { return }
@@ -251,15 +251,15 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
                 return
             }
 
-            guard error == nil else {
-                completion(.failure, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: PaymentAuthorizationManager.applePayPayTo))
+            guard error == nil, let applePaySummary = welf?.summaryItemsForApplePay(cost: cachedCost) else {
+                completion(.failure, [PKShippingMethod](), [PKPaymentSummaryItem]())
                 return
             }
 
             //Cost is expected to change here so update views
             stelf.delegate?.costUpdated()
             
-            completion(.success, [PKShippingMethod](), cachedCost.summaryItemsForApplePay(payTo: PaymentAuthorizationManager.applePayPayTo))
+            completion(.success, [PKShippingMethod](), applePaySummary)
         }
     }
     
@@ -276,4 +276,5 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
         
         return summaryItems
     }
+
 }

@@ -22,7 +22,7 @@ class ShippingMethodTest: XCTestCase {
     func testInit() {
         let id = 2
         let name = "Tracked"
-        let cost = Cost(currencyCode: "GBP", value: 7.06)
+        let cost = Price(currencyCode: "GBP", value: 7.06)
         let maxDeliveryTime = 7
         let minDeliveryTime = 5
         
