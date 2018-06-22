@@ -82,6 +82,7 @@ class AssetSelectorViewController: UIViewController {
     func reselectAsset(_ asset: Asset) {
         selectedAsset = asset
         timesUsed[selectedAsset!.identifier] = timesUsed[selectedAsset!.identifier]! + 1
+        collectionView.reloadData()
     }
 }
 
