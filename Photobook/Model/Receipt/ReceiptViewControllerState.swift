@@ -36,10 +36,10 @@ enum ReceiptViewControllerState: Int {
     var icon:UIImage? {
         get {
             switch self {
-            case .error: return UIImage(named: "receipt-upload-failed")
-            case .completed: return UIImage(named: "receipt-thumbs-up")
-            case .cancelled: return UIImage(named: "receipt-cancelled")
-            case .paymentFailed, .paymentRetry: return UIImage(named: "receipt-payment-failed")
+            case .error: return UIImage(namedInPhotobookBundle: "receipt-upload-failed")
+            case .completed: return UIImage(namedInPhotobookBundle: "receipt-thumbs-up")
+            case .cancelled: return UIImage(namedInPhotobookBundle: "receipt-cancelled")
+            case .paymentFailed, .paymentRetry: return UIImage(namedInPhotobookBundle: "receipt-payment-failed")
             default: return nil
             }
         }
