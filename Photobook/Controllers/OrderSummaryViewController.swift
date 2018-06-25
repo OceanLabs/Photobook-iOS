@@ -267,7 +267,7 @@ extension OrderSummaryViewController: UITableViewDataSource {
         case Constants.sectionDetails:
             return summary.details.count
         case Constants.sectionTotal:
-            return summary.details.count>0 ? 1 : 0
+            return summary.details.count > 0 ? 1 : 0
         case Constants.sectionOptions:
             if let upsellOptions = orderSummaryManager.upsellOptions { return upsellOptions.count }
             else { return 0 }

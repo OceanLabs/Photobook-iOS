@@ -28,7 +28,7 @@ class ReceiptTableViewController: UITableViewController {
     }
     
     private enum Section: Int {
-        case header, progress, info, details, lineItems, footer
+        case header, progress, info, details, lineItems, shipping, footer
     }
     
     var order: Order!
@@ -78,35 +78,42 @@ class ReceiptTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if order.orderId != nil {
-            progressOverlayViewController.hide()
-            state = .completed
-        } else if OrderManager.shared.isProcessingOrder {
+        if OrderManager.shared.isProcessingOrder {
+            // Navigated back from payment methods screen
             if state == .paymentFailed {
-                // Re-entered screen from payment methods screen
                 state = .paymentRetry
+                return
+            }
+
+            // If we have an orderId, submission or polling might have failed
+            if order.orderId != nil {
+                OrderManager.shared.finishOrder()
                 return
             }
             
             // Check if there are pending uploads for the current order
-            OrderManager.shared.hasPendingUploads { [weak welf = self] (pendingTasks) in
-                if !pendingTasks {
-                    welf?.state = .error
-                    welf?.lastProcessingError = .upload
+            OrderManager.shared.hasPendingUploads { [weak welf = self] (hasPendingTasks) in
+                // Check if all assets have URLs. If so, finish the order. Continue uploading otherwise.
+                if !hasPendingTasks && OrderManager.shared.processingOrder!.remainingAssetsToUpload().count == 0 {
+                    OrderManager.shared.finishOrder()
                     welf?.tableView.reloadData()
+                    return
                 }
+                
+                welf?.state = .uploading
+                OrderManager.shared.uploadAssets()
+                welf?.tableView.reloadData()
             }
-            
-        } else {
-            // Start processing
-            OrderManager.shared.startProcessing(order: order)
-            
-            // Ask for notification permission
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: { [weak welf = self] in
-                welf?.notificationsSetup()
-            })
+            return
         }
 
+        // Start processing
+        OrderManager.shared.startProcessing(order: order)
+        
+        // Ask for notification permission
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: { [weak welf = self] in
+            welf?.notificationsSetup()
+        })
     }
     
     // MARK: - Population
@@ -128,9 +135,9 @@ class ReceiptTableViewController: UITableViewController {
             if let lastProcessingError = lastProcessingError {
                 switch lastProcessingError {
                 case .upload:
+                    state = .uploading
                     OrderManager.shared.uploadAssets()
-                    self.state = .uploading
-                case .pdf, .submission:
+                case .pdf, .submission, .api(message: _):
                     OrderManager.shared.finishOrder()
                 default: break
                 }
@@ -236,14 +243,14 @@ class ReceiptTableViewController: UITableViewController {
     
     func notificationsSetup() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) { (success, error) in
-            //don't care about the result
+            // Don't care about the result
         }
     }
     
-    //MARK: Table View
+    // MARK: Table View
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 6
+        return 7
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -254,13 +261,10 @@ class ReceiptTableViewController: UITableViewController {
             return state == .uploading ? 1 : 0
         case Section.info.rawValue:
             return state == .uploading ? 0 : 1
-        case Section.details.rawValue:
-            if state == .cancelled { return 0 }
-            return 1
         case Section.lineItems.rawValue:
             if state == .cancelled { return 0 }
             return cost?.lineItems?.count ?? 0
-        case Section.footer.rawValue:
+        case Section.shipping.rawValue, Section.details.rawValue, Section.footer.rawValue:
             if state == .cancelled { return 0 }
             return 1
         default:
@@ -288,8 +292,14 @@ class ReceiptTableViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptInfoTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptInfoTableViewCell
             
             cell.iconLabel.text = state.emoji
-            cell.titleLabel.text = state.infoTitle
-            cell.descriptionLabel.text = state.infoText
+            
+            if let error = lastProcessingError, case .api(message: let message) = error {
+                cell.titleLabel.text = message.title?.uppercased() ?? CommonLocalizedStrings.somethingWentWrong.uppercased()
+                cell.descriptionLabel.text = ReceiptViewControllerState.customMessageWithNote(message: message.text)
+            } else {
+                cell.titleLabel.text = state.infoTitle
+                cell.descriptionLabel.text = state.infoText
+            }
             cell.primaryActionButton.setTitle(state.primaryActionText, for: .normal)
             cell.secondaryActionButton.setTitle(state.secondaryActionText, for: .normal)
             cell.setActionButtonsHidden(state.actionsHidden)
@@ -332,6 +342,11 @@ class ReceiptTableViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptLineItemTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptLineItemTableViewCell
             cell.lineItemNameLabel.text = cost?.lineItems?[indexPath.row].name
             cell.lineItemCostLabel.text = cost?.lineItems?[indexPath.row].cost.formatted
+            return cell
+        case Section.shipping.rawValue:
+            let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptLineItemTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptLineItemTableViewCell
+            cell.lineItemNameLabel.text = CommonLocalizedStrings.shipping
+            cell.lineItemCostLabel.text = cost?.totalShippingCost?.formatted
             return cell
         case Section.footer.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptFooterTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptFooterTableViewCell
@@ -382,15 +397,19 @@ extension ReceiptTableViewController: OrderProcessingDelegate {
             switch error! {
             case .payment:
                 state = .paymentFailed
-                userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitlePaymentFailed", value: "Payment Failed", comment: "title of a notification notfifying about failed photobook payment")
+                userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitlePaymentFailed", value: "Payment Failed", comment: "title of a notification notifying about failed photobook payment")
                 userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyPaymentFailed", value: "Update your payment method to finish photobook checkout", comment: "body of a notification notifying about failed photobook payment")
             case .cancelled:
                 state = .cancelled
-                userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitleCancelled", value: "Photobook Cancelled", comment: "title of a notification notfifying about failed photobook that had to be cancelled")
+                userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitleCancelled", value: "Photobook Cancelled", comment: "title of a notification notifying about failed photobook that had to be cancelled")
                 userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyCancelled", value: "Something went wrong and we couldn't process your photo book", comment: "body of a notification notifying about failed photobook that had to be cancelled")
+            case .api(message: let errorMessage):
+                state = .error
+                userNotification.title = errorMessage.title?.uppercased() ?? CommonLocalizedStrings.somethingWentWrong.uppercased()
+                userNotification.body = errorMessage.text
             default:
                 state = .error
-                userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitleProcessingFailed", value: "Couldn't Finish Photobook", comment: "title of a notification notfifying about failed photobook processing")
+                userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitleProcessingFailed", value: "Couldn't Finish Photobook", comment: "title of a notification notifying about failed photobook processing")
                 userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyProcessingFailed", value: "Something went wrong and your photo book couldn't be sent to our servers", comment: "body of a notification notifying about failed photobook processing")
             }
             

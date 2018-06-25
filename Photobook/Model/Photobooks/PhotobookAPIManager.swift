@@ -32,7 +32,7 @@ class PhotobookAPIManager {
         static let summary = "/ios/get_summary"
         static let applyUpsells = "/ios/apply_upsells"
         static let createPdf = "/ios/generate_photobook_pdf"
-        static let imageUpload = "/upload"
+        static let imageUpload = "/upload/"
     }
     
     private var apiClient = APIClient.shared

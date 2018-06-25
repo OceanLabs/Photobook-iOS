@@ -98,22 +98,18 @@ class DefaultAssetManager: AssetManager {
         let options = PHImageRequestOptions()
         options.isNetworkAccessAllowed = true
         
-        self.imageManager.requestImageData(for: photosAsset, options: options, resultHandler: { imageData, dataUti, _, _ in
+        imageManager.requestImageData(for: photosAsset, options: options, resultHandler: { imageData, dataUti, _, _ in
             guard let data = imageData, let dataUti = dataUti else {
                 completionHandler(nil, .unsupported, AssetLoadingException.notFound)
                 return
             }
             
-            let fileExtension: AssetDataFileExtension
-            if dataUti.contains(".png") {
-                fileExtension = .png
-            } else if dataUti.contains(".jpeg") {
-                fileExtension = .jpg
-            } else if dataUti.contains(".gif") {
-                fileExtension = .gif
-            } else {
-                fileExtension = .unsupported
+            guard let fileExtensionString = NSURL(fileURLWithPath: dataUti).pathExtension else {
+                completionHandler(nil, .unsupported, AssetLoadingException.unsupported)
+                return
             }
+            
+            let fileExtension = AssetDataFileExtension(string: fileExtensionString)
             
             // Check that the image is either jpg, png or gif otherwise convert it to jpg. So no HEICs, TIFFs or RAWs get uploaded to the back end.
             if fileExtension == .unsupported {
