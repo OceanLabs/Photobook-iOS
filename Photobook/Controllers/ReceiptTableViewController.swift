@@ -345,7 +345,7 @@ class ReceiptTableViewController: UITableViewController {
             return cell
         case Section.shipping.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptLineItemTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptLineItemTableViewCell
-            cell.lineItemNameLabel.text = NSLocalizedString("ReceiptTableViewController/Shipping", value: "Shipping", comment: "Title for the total shipping cost of the order")
+            cell.lineItemNameLabel.text = CommonLocalizedStrings.shipping
             cell.lineItemCostLabel.text = cost?.totalShippingCost?.formatted
             return cell
         case Section.footer.rawValue:

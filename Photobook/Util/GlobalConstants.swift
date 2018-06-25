@@ -21,6 +21,8 @@ struct CommonLocalizedStrings {
     static let accessibilityDoubleTapToSelectListItem = NSLocalizedString("Accessibility/DoubleTapToSelectListItem", value: "Double tap to select.", comment: "Accessibility hint letting the user know that they can double tap to select a list item")
     static let accessibilityDoubleTapToEdit = NSLocalizedString("Accessibility/DoubleTapToEdit", value: "Double tap to edit.", comment: "Accessibility hint letting the user know that they can double tap to edit an item")
 
+    static let shipping = NSLocalizedString("ReceiptTableViewController/Shipping", value: "Shipping", comment: "Title for the total shipping cost of an order")
+
     static func serviceAccessError(serviceName: String) -> String {
         return NSLocalizedString("Generic/AccessError", value: "There was an error when trying to access \(serviceName)", comment: "Generic error when trying to access a social service eg Instagram/Facebook")
     }
