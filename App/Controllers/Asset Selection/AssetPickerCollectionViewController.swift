@@ -8,10 +8,6 @@
 
 import UIKit
 
-protocol AssetPickerCollectionViewControllerDelegate: class {
-    func viewControllerForPresentingOn() -> UIViewController?
-}
-
 class AssetPickerCollectionViewController: UICollectionViewController {
     
     private struct Constants {

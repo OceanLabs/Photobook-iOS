@@ -6,6 +6,8 @@
 //  Copyright © 2017 Kite.ly. All rights reserved.
 //
 
+import UIKit
+
 struct Card {
 
     private var isAmex: Bool {

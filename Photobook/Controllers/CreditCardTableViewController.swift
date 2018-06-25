@@ -6,6 +6,8 @@
 //  Copyright © 2017 Kite.ly. All rights reserved.
 //
 
+import UIKit
+
 protocol CreditCardTableViewControllerDelegate: class {
     func didAddCreditCard(on viewController: CreditCardTableViewController)
 }

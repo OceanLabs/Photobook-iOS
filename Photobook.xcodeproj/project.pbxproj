@@ -13,7 +13,6 @@
 		2E086D112052924E00CF8096 /* AccountClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E086D102052924E00CF8096 /* AccountClient.swift */; };
 		2E086D1520529C8A00CF8096 /* InstagramClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E086D1420529C8A00CF8096 /* InstagramClient.swift */; };
 		2E086D182052A13A00CF8096 /* FacebookClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E086D172052A13A00CF8096 /* FacebookClient.swift */; };
-		2E0B58801FB30F2100F31A9E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B587F1FB30F2100F31A9E /* AppDelegate.swift */; };
 		2E0B58851FB30F2100F31A9E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E0B58831FB30F2100F31A9E /* Main.storyboard */; };
 		2E0B58871FB30F2100F31A9E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E0B58861FB30F2100F31A9E /* Assets.xcassets */; };
 		2E0B588A1FB30F2100F31A9E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E0B58881FB30F2100F31A9E /* LaunchScreen.storyboard */; };
@@ -62,13 +61,14 @@
 		2E4C9E8A20494D6B00F5AD48 /* AlbumsCollectionViewController+Facebook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8920494D6B00F5AD48 /* AlbumsCollectionViewController+Facebook.swift */; };
 		2E4C9E8C2049527900F5AD48 /* FacebookAlbumManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8B2049527900F5AD48 /* FacebookAlbumManager.swift */; };
 		2E4C9E8E204979EA00F5AD48 /* URLAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8D204979EA00F5AD48 /* URLAsset.swift */; };
+		2E50703B20E12368002889C5 /* AssetSelectorViewControllerSDKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E50703620E120B7002889C5 /* AssetSelectorViewControllerSDKExtensions.swift */; };
+		2E50703C20E1236F002889C5 /* AssetSelectorViewControllerAppExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E50703420E11FF2002889C5 /* AssetSelectorViewControllerAppExtensions.swift */; };
 		2E52B4A420909EEF00D5C20B /* BasketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E52B4A320909EEF00D5C20B /* BasketTests.swift */; };
 		2E56434920A97CF900ECC98F /* HelperPhotobookUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E56434820A97CF900ECC98F /* HelperPhotobookUITests.swift */; };
 		2E5CCC2A207B76870003000F /* GlobalConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5CCC29207B76870003000F /* GlobalConstants.swift */; };
 		2E5CCC2B207B76870003000F /* GlobalConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5CCC29207B76870003000F /* GlobalConstants.swift */; };
 		2E5CCC2D207B773D0003000F /* StoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DE64D1FB323540099A97E /* StoriesViewController.swift */; };
 		2E5CCC2E207B773D0003000F /* AlbumsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58911FB325FF00F31A9E /* AlbumsCollectionViewController.swift */; };
-		2E5CCC2F207B773D0003000F /* ModalAlbumsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA1893A2004B9C700E6D0AB /* ModalAlbumsCollectionViewController.swift */; };
 		2E5CCC30207B773D0003000F /* AlbumSearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */; };
 		2E5CCC31207B773D0003000F /* FullScreenImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9EDE1FBF1B0D00F28C00 /* FullScreenImageViewController.swift */; };
 		2E5CCC32207B773D0003000F /* AssetPickerCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */; };
@@ -131,6 +131,7 @@
 		2EA2FDFE2032DF9500BD0586 /* UIImageViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA2FDFD2032DF9500BD0586 /* UIImageViewExtensions.swift */; };
 		2EA88C62203C269C00CADCAD /* InstagramLandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA88C61203C269C00CADCAD /* InstagramLandingViewController.swift */; };
 		2EA88C64203C321E00CADCAD /* ErrorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA88C63203C321E00CADCAD /* ErrorUtils.swift */; };
+		2EAA782D20DBD4C000046EBD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EAA782C20DBD4BF00046EBD /* AppDelegate.swift */; };
 		2EB39DD51FC5AE0F009EC5B2 /* PhotobookPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB39DD41FC5AE0F009EC5B2 /* PhotobookPageView.swift */; };
 		2EB9BFAF2036E01F00EED9FA /* AssetPickerCollectionViewController+Instagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB9BFAE2036E01F00EED9FA /* AssetPickerCollectionViewController+Instagram.swift */; };
 		2EBBC0CD1FEBB72E00A4EF45 /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBBC0CC1FEBB72D00A4EF45 /* ArrayExtensions.swift */; };
@@ -297,6 +298,7 @@
 		2EEC03D3209212B3008725B7 /* OrderSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEC03D2209212B3008725B7 /* OrderSummaryTests.swift */; };
 		2EF312B720591EEE001BE3CF /* IntroDismissSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF312B620591EEE001BE3CF /* IntroDismissSegue.swift */; };
 		3D046AAB9F5CFA5F5150C0DF /* Pods_PhotobookTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1561A4A2B130A5F1A92351A0 /* Pods_PhotobookTests.framework */; };
+		609560C40DC4D257661DE218 /* Pods_Photobook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EEC03CA2091C8BF008725B7 /* Pods_Photobook.framework */; };
 		6F0A682E1FE0243400B7E56C /* EmptyScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0A682D1FE0243400B7E56C /* EmptyScreenViewController.swift */; };
 		6F0A68321FE1291200B7E56C /* PageSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0A68311FE1291200B7E56C /* PageSetupViewController.swift */; };
 		6F0A68361FE16D1200B7E56C /* LayoutSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0A68351FE16D1200B7E56C /* LayoutSelectionViewController.swift */; };
@@ -435,6 +437,7 @@
 		B9FA5302205FC3DC00669758 /* PhotobookManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FA5301205FC3DC00669758 /* PhotobookManager.swift */; };
 		B9FA530C2063F3B200669758 /* ReceiptViewControllerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FA530B2063F3B200669758 /* ReceiptViewControllerState.swift */; };
 		B9FD10B12077C9ED000A45E4 /* UIColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FD10B02077C9ED000A45E4 /* UIColorExtensions.swift */; };
+		F4A9F475CA7E55A564B39C0A /* Pods_PhotobookTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EEC03CC2091C8BF008725B7 /* Pods_PhotobookTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -503,7 +506,6 @@
 		2E086D1420529C8A00CF8096 /* InstagramClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramClient.swift; sourceTree = "<group>"; };
 		2E086D172052A13A00CF8096 /* FacebookClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookClient.swift; sourceTree = "<group>"; };
 		2E0B587C1FB30F2100F31A9E /* Photobook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Photobook.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		2E0B587F1FB30F2100F31A9E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2E0B58841FB30F2100F31A9E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2E0B58861FB30F2100F31A9E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2E0B58891FB30F2100F31A9E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -544,6 +546,8 @@
 		2E4C9E8920494D6B00F5AD48 /* AlbumsCollectionViewController+Facebook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlbumsCollectionViewController+Facebook.swift"; sourceTree = "<group>"; };
 		2E4C9E8B2049527900F5AD48 /* FacebookAlbumManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookAlbumManager.swift; sourceTree = "<group>"; };
 		2E4C9E8D204979EA00F5AD48 /* URLAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLAsset.swift; sourceTree = "<group>"; };
+		2E50703420E11FF2002889C5 /* AssetSelectorViewControllerAppExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetSelectorViewControllerAppExtensions.swift; sourceTree = "<group>"; };
+		2E50703620E120B7002889C5 /* AssetSelectorViewControllerSDKExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetSelectorViewControllerSDKExtensions.swift; sourceTree = "<group>"; };
 		2E52B4A320909EEF00D5C20B /* BasketTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketTests.swift; sourceTree = "<group>"; };
 		2E56434620A97CF900ECC98F /* HelperPhotobookUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HelperPhotobookUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E56434820A97CF900ECC98F /* HelperPhotobookUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperPhotobookUITests.swift; sourceTree = "<group>"; };
@@ -585,6 +589,7 @@
 		2EA2FDFD2032DF9500BD0586 /* UIImageViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageViewExtensions.swift; sourceTree = "<group>"; };
 		2EA88C61203C269C00CADCAD /* InstagramLandingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramLandingViewController.swift; sourceTree = "<group>"; };
 		2EA88C63203C321E00CADCAD /* ErrorUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorUtils.swift; sourceTree = "<group>"; };
+		2EAA782C20DBD4BF00046EBD /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = App/AppDelegate.swift; sourceTree = SOURCE_ROOT; };
 		2EB39DD41FC5AE0F009EC5B2 /* PhotobookPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookPageView.swift; sourceTree = "<group>"; };
 		2EB9BFAE2036E01F00EED9FA /* AssetPickerCollectionViewController+Instagram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssetPickerCollectionViewController+Instagram.swift"; sourceTree = "<group>"; };
 		2EBBC0CC1FEBB72D00A4EF45 /* ArrayExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
@@ -594,7 +599,6 @@
 		2ECB5A981FDFE71200FF39A5 /* OutOfBoundsTouchCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutOfBoundsTouchCollectionView.swift; sourceTree = "<group>"; };
 		2ECF57BB2010D0830047094C /* PaymentMethodTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodTableViewCell.swift; sourceTree = "<group>"; };
 		2ECF57BD2010D99B0047094C /* Photobook.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Photobook.entitlements; sourceTree = "<group>"; };
-		2ECF57BE201206FA0047094C /* Photobook-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Photobook-Bridging-Header.h"; sourceTree = "<group>"; };
 		2ECF57C220120D2A0047094C /* CreditCardTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreditCardTableViewController.swift; sourceTree = "<group>"; };
 		2ECF57C420120DF60047094C /* UserInputTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInputTableViewCell.swift; sourceTree = "<group>"; };
 		2ED14B992063A9CD00ED2E2C /* PhotobookSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PhotobookSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -772,6 +776,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7CBF1FFD216E73D9ACD8E2EF /* Pods_Photobook.framework in Frameworks */,
+				609560C40DC4D257661DE218 /* Pods_Photobook.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -831,6 +836,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D046AAB9F5CFA5F5150C0DF /* Pods_PhotobookTests.framework in Frameworks */,
+				F4A9F475CA7E55A564B39C0A /* Pods_PhotobookTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -842,9 +848,6 @@
 			children = (
 				6FC7E8751FBD985900D2BCDA /* APIClient.swift */,
 				2EA00E4420443ACB00371B88 /* KiteAPIClient.swift */,
-				2E086D102052924E00CF8096 /* AccountClient.swift */,
-				2E086D1420529C8A00CF8096 /* InstagramClient.swift */,
-				2E086D172052A13A00CF8096 /* FacebookClient.swift */,
 			);
 			path = Clients;
 			sourceTree = "<group>";
@@ -852,6 +855,7 @@
 		2E0B58731FB30F2100F31A9E = {
 			isa = PBXGroup;
 			children = (
+				2E50702920E10B97002889C5 /* App */,
 				2E0B587E1FB30F2100F31A9E /* Photobook */,
 				6FB670681FB5BAD40062D630 /* PhotobookTests */,
 				2ED14B9A2063A9CD00ED2E2C /* PhotobookSDK */,
@@ -880,18 +884,14 @@
 		2E0B587E1FB30F2100F31A9E /* Photobook */ = {
 			isa = PBXGroup;
 			children = (
-				2ECF57BD2010D99B0047094C /* Photobook.entitlements */,
 				6F4DE64C1FB323280099A97E /* Controllers */,
 				6F4DE6521FB451F20099A97E /* Views */,
 				6F139E0D1FB45E67005B937E /* Model */,
 				6FB670601FB49FDB0062D630 /* Extensions */,
-				2E6B9EE11FBF1CCF00F28C00 /* Segues */,
 				B9A143391FDAD25D000EFE0D /* Util */,
 				6F4DE64F1FB35AE50099A97E /* Resources */,
-				2E0B587F1FB30F2100F31A9E /* AppDelegate.swift */,
 				2E0B58831FB30F2100F31A9E /* Main.storyboard */,
 				2E0B58881FB30F2100F31A9E /* LaunchScreen.storyboard */,
-				2ECF57BE201206FA0047094C /* Photobook-Bridging-Header.h */,
 				2E0B588B1FB30F2100F31A9E /* Info.plist */,
 			);
 			path = Photobook;
@@ -910,12 +910,10 @@
 			isa = PBXGroup;
 			children = (
 				2E0B58A81FB3508B00F31A9E /* SelectedAssetsManager.swift */,
+				2E0B58981FB328B800F31A9E /* Asset.swift */,
 				2E0B58941FB3280000F31A9E /* AlbumManager.swift */,
 				2E0B58961FB3287900F31A9E /* Album.swift */,
-				2E0B58981FB328B800F31A9E /* Asset.swift */,
 				2E0B58A61FB32B3100F31A9E /* Photos */,
-				2EA24E4D2035E02D0069B12A /* Instagram */,
-				2E4C9E862049490400F5AD48 /* Facebook */,
 				2E4C9E8D204979EA00F5AD48 /* URLAsset.swift */,
 				6FB8868520691B7700DADB04 /* ImageAsset.swift */,
 			);
@@ -973,6 +971,112 @@
 			path = Facebook;
 			sourceTree = "<group>";
 		};
+		2E50702920E10B97002889C5 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				2ECF57BD2010D99B0047094C /* Photobook.entitlements */,
+				2EAA782C20DBD4BF00046EBD /* AppDelegate.swift */,
+				2E50702A20E10C3F002889C5 /* Controllers */,
+				2E50702B20E10C76002889C5 /* Views */,
+				2E50702D20E10C83002889C5 /* Model */,
+				2E50703320E11FA5002889C5 /* Extensions */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		2E50702A20E10C3F002889C5 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */,
+				6FA1893A2004B9C700E6D0AB /* ModalAlbumsCollectionViewController.swift */,
+				6F190EFF20597ABE00F249E1 /* Asset Selection */,
+				2EA24E482035AC940069B12A /* Social */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		2E50702B20E10C76002889C5 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2E50702E20E10D93002889C5 /* Cells */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2E50702D20E10C83002889C5 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B9FA5301205FC3DC00669758 /* PhotobookManager.swift */,
+				2E50703120E1113E002889C5 /* Assets */,
+				2E50703020E10E09002889C5 /* Segues */,
+				2E50702F20E10DCD002889C5 /* Clients */,
+				6FDF25E91FB9A07800F46BB0 /* Stories */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		2E50702E20E10D93002889C5 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				2E0B589E1FB3295400F31A9E /* Albums */,
+				6FDF25E81FB9A05D00F46BB0 /* Stories */,
+				2ED79FEC1FBAEE290046B96C /* Picker */,
+				B9BE9F921FBF32C90002C459 /* Collector */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		2E50702F20E10DCD002889C5 /* Clients */ = {
+			isa = PBXGroup;
+			children = (
+				2E086D102052924E00CF8096 /* AccountClient.swift */,
+				2E086D1420529C8A00CF8096 /* InstagramClient.swift */,
+				2E086D172052A13A00CF8096 /* FacebookClient.swift */,
+			);
+			path = Clients;
+			sourceTree = "<group>";
+		};
+		2E50703020E10E09002889C5 /* Segues */ = {
+			isa = PBXGroup;
+			children = (
+				2E6B9EE41FBF1CFB00F28C00 /* FullScreenImageUnwindSegue.swift */,
+				2EF312B620591EEE001BE3CF /* IntroDismissSegue.swift */,
+				2E876E0A1FC2FA15007CCFA2 /* ViewStorySegue.swift */,
+			);
+			path = Segues;
+			sourceTree = "<group>";
+		};
+		2E50703120E1113E002889C5 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				2EA24E4D2035E02D0069B12A /* Instagram */,
+				2E4C9E862049490400F5AD48 /* Facebook */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		2E50703220E118B6002889C5 /* Picker */ = {
+			isa = PBXGroup;
+			children = (
+				6FA189321FFF976200E6D0AB /* AssetSelectorAddMoreCollectionViewCell.swift */,
+				6FA189361FFFA07500E6D0AB /* BorderedCollectionViewCell.swift */,
+				6F4606DB201886BD00C7583E /* BorderedRoundedView.swift */,
+				6F3920F8201881AE00D6C30B /* BorderedViewProtocol.swift */,
+				6F1DB8DA201617B7001BECC8 /* CoverLayoutSelectionCollectionViewCell.swift */,
+				6FC0DE781FE930B0009BB799 /* LayoutSelectionCollectionViewCell.swift */,
+				6FA189301FFF96E500E6D0AB /* AssetSelectorAssetCollectionViewCell.swift */,
+			);
+			path = Picker;
+			sourceTree = "<group>";
+		};
+		2E50703320E11FA5002889C5 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				2E50703420E11FF2002889C5 /* AssetSelectorViewControllerAppExtensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		2E56434720A97CF900ECC98F /* HelperPhotobookUITests */ = {
 			isa = PBXGroup;
 			children = (
@@ -980,16 +1084,6 @@
 				2E56434A20A97CF900ECC98F /* Info.plist */,
 			);
 			path = HelperPhotobookUITests;
-			sourceTree = "<group>";
-		};
-		2E6B9EE11FBF1CCF00F28C00 /* Segues */ = {
-			isa = PBXGroup;
-			children = (
-				2E6B9EE41FBF1CFB00F28C00 /* FullScreenImageUnwindSegue.swift */,
-				2E876E0A1FC2FA15007CCFA2 /* ViewStorySegue.swift */,
-				2EF312B620591EEE001BE3CF /* IntroDismissSegue.swift */,
-			);
-			path = Segues;
 			sourceTree = "<group>";
 		};
 		2E7C369820209600008033E7 /* Receipt */ = {
@@ -1076,6 +1170,7 @@
 			isa = PBXGroup;
 			children = (
 				6F17F3362077A70E00001888 /* PhotobookSDK.swift */,
+				2E50703620E120B7002889C5 /* AssetSelectorViewControllerSDKExtensions.swift */,
 				2ED14B9B2063A9CD00ED2E2C /* PhotobookSDK.h */,
 				2ED14B9C2063A9CD00ED2E2C /* Info.plist */,
 			);
@@ -1087,13 +1182,6 @@
 			children = (
 				2ED79FED1FBAEE630046B96C /* AssetPickerCollectionViewCell.swift */,
 				2E876E081FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift */,
-				6FC0DE781FE930B0009BB799 /* LayoutSelectionCollectionViewCell.swift */,
-				6F1DB8DA201617B7001BECC8 /* CoverLayoutSelectionCollectionViewCell.swift */,
-				6FA189301FFF96E500E6D0AB /* AssetSelectorAssetCollectionViewCell.swift */,
-				6FA189321FFF976200E6D0AB /* AssetSelectorAddMoreCollectionViewCell.swift */,
-				6FA189361FFFA07500E6D0AB /* BorderedCollectionViewCell.swift */,
-				6F4606DB201886BD00C7583E /* BorderedRoundedView.swift */,
-				6F3920F8201881AE00D6C30B /* BorderedViewProtocol.swift */,
 			);
 			path = Picker;
 			sourceTree = "<group>";
@@ -1148,12 +1236,10 @@
 			children = (
 				B9FA530A2063F3A500669758 /* Receipt */,
 				6FC7E8771FBEF49E00D2BCDA /* Photobooks */,
-				6FDF25E91FB9A07800F46BB0 /* Stories */,
 				2E0B58A51FB32B2300F31A9E /* Assets */,
 				2E1733842010B5AA00F0D718 /* Order */,
 				2E086D162052A10900CF8096 /* Clients */,
 				2EA00E462044464E00371B88 /* Analytics.swift */,
-				B9FA5301205FC3DC00669758 /* PhotobookManager.swift */,
 				6F87460C207CC8D6001923B7 /* PublicProtocols.swift */,
 			);
 			path = Model;
@@ -1164,7 +1250,6 @@
 			children = (
 				6F4DE64D1FB323540099A97E /* StoriesViewController.swift */,
 				2E0B58911FB325FF00F31A9E /* AlbumsCollectionViewController.swift */,
-				6FA1893A2004B9C700E6D0AB /* ModalAlbumsCollectionViewController.swift */,
 				2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */,
 				2E6B9EDE1FBF1B0D00F28C00 /* FullScreenImageViewController.swift */,
 				2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */,
@@ -1201,8 +1286,6 @@
 		6F4DE64C1FB323280099A97E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */,
-				6F190EFF20597ABE00F249E1 /* Asset Selection */,
 				6FFE21C9202CA7AB004EC0EA /* Page Editing */,
 				6F0A682D1FE0243400B7E56C /* EmptyScreenViewController.swift */,
 				6F53E093204FFAF200B73AB8 /* MessageBarViewController.swift */,
@@ -1218,7 +1301,6 @@
 				2EC81603201B33230046643B /* ShippingMethodsViewController.swift */,
 				2E7C6F05201F4E670071E6B8 /* ReceiptTableViewController.swift */,
 				B90EB85D203701CD0005D91C /* AmountPickerViewController.swift */,
-				2EA24E482035AC940069B12A /* Social */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1253,11 +1335,8 @@
 		6F4DE6531FB452070099A97E /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				2E50703220E118B6002889C5 /* Picker */,
 				B90F28802003B74A00FF3D15 /* OrderSummary */,
-				B9BE9F921FBF32C90002C459 /* Collector */,
-				2E0B589E1FB3295400F31A9E /* Albums */,
-				6FDF25E81FB9A05D00F46BB0 /* Stories */,
-				2ED79FEC1FBAEE290046B96C /* Picker */,
 				2E3E6A5520036FC20044EDFC /* Photobook */,
 				2ECF57BA2010D0590047094C /* Payment */,
 				2E7C369820209600008033E7 /* Receipt */,
@@ -1480,7 +1559,6 @@
 				2E0B58791FB30F2100F31A9E /* Frameworks */,
 				2E0B587A1FB30F2100F31A9E /* Resources */,
 				F8D52F1350FCC9B4F21842B0 /* [CP] Embed Pods Frameworks */,
-				E0028CA487AFF9685C343BFC /* [CP] Copy Pods Resources */,
 				2E2527302015F3A5004C12AF /* ShellScript */,
 			);
 			buildRules = (
@@ -1574,7 +1652,6 @@
 				6FB670641FB5BAD40062D630 /* Frameworks */,
 				6FB670651FB5BAD40062D630 /* Resources */,
 				A50D0095660DE177EBF2A510 /* [CP] Embed Pods Frameworks */,
-				74535CCE0C6681FB9D16106B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1623,6 +1700,7 @@
 					};
 					2ED14B982063A9CD00ED2E2C = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 0940;
 						ProvisioningStyle = Automatic;
 					};
 					6FB670661FB5BAD40062D630 = {
@@ -1751,21 +1829,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		74535CCE0C6681FB9D16106B /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		9DBC4FA5FA30E14A33727097 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1797,6 +1860,7 @@
 				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
 				"${BUILT_PRODUCTS_DIR}/KeychainSwift/KeychainSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/OAuthSwift/OAuthSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/PayPal-iOS-Dynamic-Loader/PayPalDynamicLoader.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/Stripe/Stripe.framework",
 			);
@@ -1808,27 +1872,13 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OAuthSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PayPalDynamicLoader.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E0028CA487AFF9685C343BFC /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Photobook/Pods-Photobook-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F8D52F1350FCC9B4F21842B0 /* [CP] Embed Pods Frameworks */ = {
@@ -1844,6 +1894,7 @@
 				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
 				"${BUILT_PRODUCTS_DIR}/KeychainSwift/KeychainSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/OAuthSwift/OAuthSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/PayPal-iOS-Dynamic-Loader/PayPalDynamicLoader.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/Stripe/Stripe.framework",
 			);
@@ -1855,6 +1906,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OAuthSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PayPalDynamicLoader.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework",
 			);
@@ -1892,6 +1944,7 @@
 				6FA189331FFF976200E6D0AB /* AssetSelectorAddMoreCollectionViewCell.swift in Sources */,
 				2E876E091FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift in Sources */,
 				2EA88C62203C269C00CADCAD /* InstagramLandingViewController.swift in Sources */,
+				2E50703C20E1236F002889C5 /* AssetSelectorViewControllerAppExtensions.swift in Sources */,
 				6F4DE6571FB452390099A97E /* DoubleStoryTableViewCell.swift in Sources */,
 				6F3C4ACD1FC880F100DA0196 /* ProductLayoutAsset.swift in Sources */,
 				B9FA5302205FC3DC00669758 /* PhotobookManager.swift in Sources */,
@@ -1920,7 +1973,6 @@
 				2ED79FE91FBAEDE90046B96C /* AssetPickerCollectionViewController.swift in Sources */,
 				6F6151D420C54CAF00DBA543 /* FatalErrorUtil.swift in Sources */,
 				6F3920F320175D7300D6C30B /* TextLabelPlaceholderBoxView.swift in Sources */,
-				2E0B58801FB30F2100F31A9E /* AppDelegate.swift in Sources */,
 				6FFE21CB202CA7F9004EC0EA /* SpineTextEditingViewController.swift in Sources */,
 				2ECB5A971FDFE01100FF39A5 /* OutOfBoundsTouchView.swift in Sources */,
 				6F4DE6551FB4522A0099A97E /* StoryTableViewCell.swift in Sources */,
@@ -2009,6 +2061,7 @@
 				6FA189311FFF96E500E6D0AB /* AssetSelectorAssetCollectionViewCell.swift in Sources */,
 				2E1733862010B6BA00F0D718 /* Cost.swift in Sources */,
 				6F0A68321FE1291200B7E56C /* PageSetupViewController.swift in Sources */,
+				2EAA782D20DBD4C000046EBD /* AppDelegate.swift in Sources */,
 				B939FE8E200E381C00B1084B /* CheckoutViewController.swift in Sources */,
 				6F18154A2009042E00D7082D /* CoverFrameView.swift in Sources */,
 				B9BC2E271FBF195200F4AA56 /* AssetCollectorViewController.swift in Sources */,
@@ -2127,12 +2180,12 @@
 				2ED14BB02063AA4000ED2E2C /* AssetPlacementViewController.swift in Sources */,
 				2E3A86EA20C0118800F1E6E2 /* AddPaymentMethodTableViewCell.swift in Sources */,
 				2E1F246B208A28F000004F76 /* PhotobookNavigationController.swift in Sources */,
-				2E5CCC2F207B773D0003000F /* ModalAlbumsCollectionViewController.swift in Sources */,
 				2ED14C222063AA4000ED2E2C /* UIScreenExtensions.swift in Sources */,
 				2ED14BFE2063AA4000ED2E2C /* AlbumManager.swift in Sources */,
 				2ED14C1F2063AA4000ED2E2C /* UIImageExtensions.swift in Sources */,
 				2ED14BB62063AA4000ED2E2C /* CheckoutViewController.swift in Sources */,
 				2ED14BAD2063AA4000ED2E2C /* PhotobookViewController.swift in Sources */,
+				2E50703B20E12368002889C5 /* AssetSelectorViewControllerSDKExtensions.swift in Sources */,
 				2ED14C1A2063AA4000ED2E2C /* LuhnStringExtensions.swift in Sources */,
 				2ED14BD32063AA4000ED2E2C /* BorderedCollectionViewCell.swift in Sources */,
 				2ED14C102063AA4000ED2E2C /* AccountClient.swift in Sources */,
@@ -2457,7 +2510,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Photobook/Photobook.entitlements;
+				CODE_SIGN_ENTITLEMENTS = App/Photobook.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = L78L4U72YJ;
@@ -2466,7 +2519,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "Photobook/Photobook-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2479,7 +2531,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Photobook/Photobook.entitlements;
+				CODE_SIGN_ENTITLEMENTS = App/Photobook.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = L78L4U72YJ;
 				INFOPLIST_FILE = Photobook/Info.plist;
@@ -2488,7 +2540,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "Photobook/Photobook-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -2627,7 +2678,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Photobook/Photobook.entitlements;
+				CODE_SIGN_ENTITLEMENTS = App/Photobook.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = L78L4U72YJ;
@@ -2637,7 +2688,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "TEST_ENVIRONMENT DEBUG";
-				SWIFT_OBJC_BRIDGING_HEADER = "Photobook/Photobook-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2720,7 +2770,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Photobook/Photobook.entitlements;
+				CODE_SIGN_ENTITLEMENTS = App/Photobook.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = L78L4U72YJ;
 				INFOPLIST_FILE = Photobook/Info.plist;
@@ -2729,7 +2779,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = TEST_ENVIRONMENT;
-				SWIFT_OBJC_BRIDGING_HEADER = "Photobook/Photobook-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -2922,6 +2971,7 @@
 		2ED14B9E2063A9CD00ED2E2C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -2942,6 +2992,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PHOTOBOOK_SDK";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2952,6 +3003,7 @@
 		2ED14B9F2063A9CD00ED2E2C /* Debug Test */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -2972,6 +3024,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PHOTOBOOK_SDK";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2982,6 +3035,7 @@
 		2ED14BA02063A9CD00ED2E2C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -3012,6 +3066,7 @@
 		2ED14BA12063A9CD00ED2E2C /* Release Test */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;

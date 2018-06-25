@@ -20,6 +20,11 @@ import Analytics
     case error
 }
 
+protocol PickerAnalytics {
+    var selectingPhotosScreenName: Analytics.ScreenName { get }
+    var addingMorePhotosScreenName: Analytics.ScreenName { get }
+}
+
 @objc public class Analytics: NSObject {
     
     enum ScreenName: String {

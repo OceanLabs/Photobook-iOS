@@ -6,6 +6,8 @@
 //  Copyright © 2017 Kite.ly. All rights reserved.
 //
 
+import Foundation
+
 /// Simplifies error handling at VC level keeping messages independent from the API client.
 struct ErrorMessage: Error {
     private(set) var title: String?

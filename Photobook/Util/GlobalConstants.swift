@@ -6,8 +6,19 @@
 //  Copyright © 2018 Kite.ly. All rights reserved.
 //
 
+import UIKit
+
 let photobookBundle = Bundle(for: PhotobookTemplate.self)
-let photobookMainStoryboard =  UIStoryboard(name: "Main", bundle: photobookBundle)
+let photobookResourceBundle: Bundle = {
+    guard let resourcePath = photobookBundle.path(forResource: "PhotobookResources", ofType:"bundle"),
+    let resourceBundle = Bundle(path: resourcePath)
+        else {
+            return photobookBundle
+    }
+    
+    return resourceBundle
+}()
+let photobookMainStoryboard =  UIStoryboard(name: "Main", bundle: photobookResourceBundle)
 
 struct CommonLocalizedStrings {
     static let somethingWentWrong = NSLocalizedString("GenericError/Something Went Wrong", value: "Something went wrong", comment: "Generic error message")

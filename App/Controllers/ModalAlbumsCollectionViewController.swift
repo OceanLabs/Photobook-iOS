@@ -8,7 +8,11 @@
 
 import UIKit
 
-class ModalAlbumsCollectionViewController: UIViewController {
+protocol AssetPickerCollectionViewControllerDelegate: class {
+    func viewControllerForPresentingOn() -> UIViewController?
+}
+
+class ModalAlbumsCollectionViewController: UIViewController, PhotobookAssetPicker {
 
     private struct Constants {
         static let topMargin: CGFloat = 10.0

@@ -8,11 +8,6 @@
 
 import UIKit
 
-protocol PickerAnalytics {
-    var selectingPhotosScreenName: Analytics.ScreenName { get }
-    var addingMorePhotosScreenName: Analytics.ScreenName { get }
-}
-
 /// View Controller to show albums. It doesn't care about the source of those albums as long as they conform to the Album protocol.
 class AlbumsCollectionViewController: UICollectionViewController {
     

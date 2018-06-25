@@ -11,6 +11,7 @@ pod 'SDWebImage', '~> 4.3'
 pod 'FBSDKCoreKit'
 pod 'FBSDKLoginKit'
 pod 'Analytics', '~> 3.0'
+pod 'PayPal-iOS-Dynamic-Loader'
 
 target 'Photobook' do
 end

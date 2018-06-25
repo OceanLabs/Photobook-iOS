@@ -28,7 +28,7 @@
         <!--Instagram Landing View Controller-->
         <scene sceneID="eeW-YJ-knS">
             <objects>
-                <viewController storyboardIdentifier="InstagramLandingViewController" id="CJe-ow-F6K" customClass="InstagramLandingViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="InstagramLandingViewController" id="CJe-ow-F6K" customClass="InstagramLandingViewController" customModule="Photobook" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="72Z-i4-Dnc">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -103,7 +103,7 @@
         <!--Log In-->
         <scene sceneID="dqb-L8-Ndz">
             <objects>
-                <viewController id="mCf-Vp-0wQ" customClass="InstagramLoginViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="mCf-Vp-0wQ" customClass="InstagramLoginViewController" customModule="Photobook" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8fX-ux-CPD">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -133,7 +133,7 @@
         <!--Edit Page-->
         <scene sceneID="f9T-ty-1Xu">
             <objects>
-                <viewController storyboardIdentifier="PageSetupViewController" id="sIe-n5-8hl" customClass="PageSetupViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PageSetupViewController" id="sIe-n5-8hl" customClass="PageSetupViewController" customModule="Photobook" sceneMemberID="viewController">
                     <view key="view" clipsSubviews="YES" contentMode="scaleToFill" id="lbR-ma-Ckk">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -226,13 +226,13 @@
                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Q7V-q1-95p">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qHd-uS-3Hd" customClass="CoverFrameView" customModule="Photobook" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qHd-uS-3Hd" customClass="CoverFrameView" customModule="Photobook">
                                         <rect key="frame" x="30" y="88.5" width="315" height="226.5"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Shv-7M-ANA" customClass="CoverBackgroundView" customModule="Photobook" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Shv-7M-ANA" customClass="CoverBackgroundView" customModule="Photobook">
                                                 <rect key="frame" x="0.0" y="0.0" width="315" height="226.5"/>
                                                 <subviews>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o9p-sQ-fNU" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o9p-sQ-fNU" customClass="PhotobookPageView" customModule="Photobook">
                                                         <rect key="frame" x="16" y="0.0" width="299" height="226.5"/>
                                                         <subviews>
                                                             <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gqm-5A-oWZ">
@@ -299,43 +299,43 @@
                                             <outlet property="pageView" destination="o9p-sQ-fNU" id="PvU-Ju-Pcf"/>
                                         </connections>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i3e-1a-FKo" customClass="PhotobookFrameView" customModule="Photobook" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i3e-1a-FKo" customClass="PhotobookFrameView" customModule="Photobook">
                                         <rect key="frame" x="9.5" y="339.5" width="355" height="204"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="syg-US-S7e" userLabel="Cover View" customClass="PhotobookFrameCoverView" customModule="Photobook" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="syg-US-S7e" userLabel="Cover View" customClass="PhotobookFrameCoverView" customModule="Photobook">
                                                 <rect key="frame" x="0.0" y="0.5" width="355" height="203.5"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fdP-l9-3aT" userLabel="Cover Inside Image View">
                                                 <rect key="frame" x="9" y="9.5" width="337" height="185.5"/>
                                             </imageView>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7yw-nf-eJr" userLabel="Spread Background View" customClass="PhotobookFrameSpreadBackgroundView" customModule="Photobook" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7yw-nf-eJr" userLabel="Spread Background View" customClass="PhotobookFrameSpreadBackgroundView" customModule="Photobook">
                                                 <rect key="frame" x="17" y="9" width="321" height="186"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OsK-MN-4fd" customClass="PhotobookFramePagesBehindView" customModule="Photobook" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OsK-MN-4fd" customClass="PhotobookFramePagesBehindView" customModule="Photobook">
                                                 <rect key="frame" x="17" y="9" width="12" height="186"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="12" id="Va2-qR-SNF"/>
                                                 </constraints>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zfa-gp-SpN" customClass="PhotobookFramePagesBehindView" customModule="Photobook" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zfa-gp-SpN" customClass="PhotobookFramePagesBehindView" customModule="Photobook">
                                                 <rect key="frame" x="326" y="9.5" width="12" height="185"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="12" id="wlP-b5-gOr"/>
                                                 </constraints>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AuB-8K-VIu" customClass="PhotobookFramePageBackgroundView" customModule="Photobook" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AuB-8K-VIu" customClass="PhotobookFramePageBackgroundView" customModule="Photobook">
                                                 <rect key="frame" x="29" y="9" width="149" height="186"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IJ7-bZ-Y37" customClass="PhotobookFramePageBackgroundView" customModule="Photobook" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IJ7-bZ-Y37" customClass="PhotobookFramePageBackgroundView" customModule="Photobook">
                                                 <rect key="frame" x="177.5" y="8.5" width="148.5" height="186"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="urE-1B-NkH" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="urE-1B-NkH" customClass="PhotobookPageView" customModule="Photobook">
                                                 <rect key="frame" x="29" y="9.5" width="148.5" height="185.5"/>
                                                 <subviews>
                                                     <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Rk-zp-BKy">
@@ -380,7 +380,7 @@
                                                     <outlet property="pageTextLabel" destination="f1I-iY-MP8" id="7mB-5f-siZ"/>
                                                 </connections>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ext-3a-SVs" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ext-3a-SVs" customClass="PhotobookPageView" customModule="Photobook">
                                                 <rect key="frame" x="177.5" y="8.5" width="149" height="186.5"/>
                                                 <subviews>
                                                     <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VSB-Xc-eq6">
@@ -425,7 +425,7 @@
                                                     <outlet property="pageTextLabel" destination="dbm-j0-eAm" id="PH9-wB-c0u"/>
                                                 </connections>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C4w-ms-gXv" userLabel="Page Divider View" customClass="PhotobookFramePageDividerView" customModule="Photobook" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C4w-ms-gXv" userLabel="Page Divider View" customClass="PhotobookFramePageDividerView" customModule="Photobook">
                                                 <rect key="frame" x="177.5" y="9.5" width="1" height="185.5"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
@@ -609,7 +609,7 @@
         <!--Layout Selection View Controller-->
         <scene sceneID="epH-6D-bxV">
             <objects>
-                <viewController modalPresentationStyle="overCurrentContext" id="lKF-NC-kTc" customClass="LayoutSelectionViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="overCurrentContext" id="lKF-NC-kTc" customClass="LayoutSelectionViewController" customModule="Photobook" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9cr-Df-svs">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="90"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -624,7 +624,7 @@
                                     <inset key="sectionInset" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="LayoutSelectionCollectionViewCell" id="Zvy-Yk-9hm" customClass="LayoutSelectionCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <collectionViewCell multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="LayoutSelectionCollectionViewCell" id="Zvy-Yk-9hm" customClass="LayoutSelectionCollectionViewCell" customModule="Photobook">
                                         <rect key="frame" x="10" y="8" width="110" height="74"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -634,29 +634,29 @@
                                                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="blQ-JN-Gqo">
                                                     <rect key="frame" x="0.0" y="0.0" width="110" height="74"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H9U-f1-gmU" customClass="PhotobookFrameView" customModule="Photobook" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H9U-f1-gmU" customClass="PhotobookFrameView" customModule="Photobook">
                                                             <rect key="frame" x="-50" y="6" width="120" height="61.5"/>
                                                             <subviews>
-                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mEH-0m-viF" userLabel="Cover View" customClass="PhotobookFrameCoverView" customModule="Photobook" customModuleProvider="target">
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mEH-0m-viF" userLabel="Cover View" customClass="PhotobookFrameCoverView" customModule="Photobook">
                                                                     <rect key="frame" x="-0.5" y="0.5" width="120.5" height="61"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </view>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SHb-GE-xgn" userLabel="Cover Inside Image View">
                                                                     <rect key="frame" x="2.5" y="3.5" width="114.5" height="55"/>
                                                                 </imageView>
-                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UQ5-Ef-1Lx" userLabel="Spread Background View" customClass="PhotobookFrameSpreadBackgroundView" customModule="Photobook" customModuleProvider="target">
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UQ5-Ef-1Lx" userLabel="Spread Background View" customClass="PhotobookFrameSpreadBackgroundView" customModule="Photobook">
                                                                     <rect key="frame" x="4.5" y="3" width="110.5" height="55.5"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </view>
-                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dNZ-05-dgZ" customClass="PhotobookFramePageBackgroundView" customModule="Photobook" customModuleProvider="target">
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dNZ-05-dgZ" customClass="PhotobookFramePageBackgroundView" customModule="Photobook">
                                                                     <rect key="frame" x="59.5" y="3" width="55.5" height="55.5"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </view>
-                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FTd-ye-Hey" customClass="PhotobookFramePageBackgroundView" customModule="Photobook" customModuleProvider="target">
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FTd-ye-Hey" customClass="PhotobookFramePageBackgroundView" customModule="Photobook">
                                                                     <rect key="frame" x="4.5" y="3" width="55.5" height="55.5"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </view>
-                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qiS-EF-1C4" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qiS-EF-1C4" customClass="PhotobookPageView" customModule="Photobook">
                                                                     <rect key="frame" x="60" y="3.5" width="55.5" height="55"/>
                                                                     <subviews>
                                                                         <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dzW-J6-cYK">
@@ -673,7 +673,7 @@
                                                                                 </imageView>
                                                                             </subviews>
                                                                         </view>
-                                                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GZ2-Wu-tpH" customClass="TextLabelPlaceholderBoxView" customModule="Photobook" customModuleProvider="target">
+                                                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GZ2-Wu-tpH" customClass="TextLabelPlaceholderBoxView" customModule="Photobook">
                                                                             <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -691,7 +691,7 @@
                                                                         <outlet property="textLabelPlaceholderBoxView" destination="GZ2-Wu-tpH" id="3I7-RU-Zi3"/>
                                                                     </connections>
                                                                 </view>
-                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CqD-yK-VxZ" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CqD-yK-VxZ" customClass="PhotobookPageView" customModule="Photobook">
                                                                     <rect key="frame" x="4" y="3" width="55.5" height="55"/>
                                                                     <subviews>
                                                                         <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1kq-DX-noZ">
@@ -708,7 +708,7 @@
                                                                                 </imageView>
                                                                             </subviews>
                                                                         </view>
-                                                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yII-TH-7Oq" customClass="TextLabelPlaceholderBoxView" customModule="Photobook" customModuleProvider="target">
+                                                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yII-TH-7Oq" customClass="TextLabelPlaceholderBoxView" customModule="Photobook">
                                                                             <rect key="frame" x="17.333333333333339" y="13.666666666666668" width="20" height="20"/>
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -726,7 +726,7 @@
                                                                         <outlet property="textLabelPlaceholderBoxView" destination="yII-TH-7Oq" id="vpb-zZ-igS"/>
                                                                     </connections>
                                                                 </view>
-                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kCn-Ht-0Ja" userLabel="Page Divider View" customClass="PhotobookFramePageDividerView" customModule="Photobook" customModuleProvider="target">
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kCn-Ht-0Ja" userLabel="Page Divider View" customClass="PhotobookFramePageDividerView" customModule="Photobook">
                                                                     <rect key="frame" x="59.5" y="3.5" width="1" height="55"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
@@ -818,7 +818,7 @@
                                             <outlet property="roundedBackgroundView" destination="blQ-JN-Gqo" id="t72-M1-ASc"/>
                                         </connections>
                                     </collectionViewCell>
-                                    <collectionViewCell multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CoverLayoutSelectionCollectionViewCell" id="VZv-GM-JM4" customClass="CoverLayoutSelectionCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <collectionViewCell multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CoverLayoutSelectionCollectionViewCell" id="VZv-GM-JM4" customClass="CoverLayoutSelectionCollectionViewCell" customModule="Photobook">
                                         <rect key="frame" x="126" y="8" width="110" height="74"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -828,13 +828,13 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="15n-jN-NjV">
                                                     <rect key="frame" x="0.0" y="0.0" width="110" height="74"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SFY-NV-7VF" customClass="CoverFrameView" customModule="Photobook" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SFY-NV-7VF" customClass="CoverFrameView" customModule="Photobook">
                                                             <rect key="frame" x="18.5" y="6" width="73" height="62"/>
                                                             <subviews>
-                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pxt-5T-2O8" customClass="CoverBackgroundView" customModule="Photobook" customModuleProvider="target">
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pxt-5T-2O8" customClass="CoverBackgroundView" customModule="Photobook">
                                                                     <rect key="frame" x="0.0" y="0.0" width="73" height="62"/>
                                                                     <subviews>
-                                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oC0-Mt-wgy" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
+                                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oC0-Mt-wgy" customClass="PhotobookPageView" customModule="Photobook">
                                                                             <rect key="frame" x="3.5" y="0.0" width="69.5" height="62"/>
                                                                             <subviews>
                                                                                 <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Cd-Db-cE8">
@@ -851,7 +851,7 @@
                                                                                         </imageView>
                                                                                     </subviews>
                                                                                 </view>
-                                                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5kk-bD-AYQ" customClass="TextLabelPlaceholderBoxView" customModule="Photobook" customModuleProvider="target">
+                                                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5kk-bD-AYQ" customClass="TextLabelPlaceholderBoxView" customModule="Photobook">
                                                                                     <rect key="frame" x="24.333333333333336" y="16" width="20" height="20"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -943,7 +943,7 @@
         <!--Stories-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="StoriesViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="StoriesViewController" customModule="Photobook" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1319,7 +1319,7 @@
         <!--Stories-->
         <scene sceneID="CWX-gk-uYw">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="hhS-Lc-qF3" customClass="PhotobookNavigationController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="hhS-Lc-qF3" customClass="PhotobookNavigationController" customModule="Photobook" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Stories" image="Stories" selectedImage="Stories" id="2rN-mq-FR0">
                         <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="-3"/>
                     </tabBarItem>
@@ -1364,7 +1364,7 @@
         <!--Asset Collector View Controller-->
         <scene sceneID="cPZ-5K-p1g">
             <objects>
-                <viewController storyboardIdentifier="AssetCollectorViewController" modalPresentationStyle="overCurrentContext" id="HYw-Yl-MfL" customClass="AssetCollectorViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AssetCollectorViewController" modalPresentationStyle="overCurrentContext" id="HYw-Yl-MfL" customClass="AssetCollectorViewController" customModule="Photobook" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="UMO-hB-Zun">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="125"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1618,7 +1618,7 @@
         <!--Modal Albums Collection View Controller-->
         <scene sceneID="B0s-Zk-nrB">
             <objects>
-                <viewController storyboardIdentifier="ModalAlbumsCollectionViewController" modalPresentationStyle="overFullScreen" id="aEA-H0-Uj3" customClass="ModalAlbumsCollectionViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ModalAlbumsCollectionViewController" modalPresentationStyle="overFullScreen" id="aEA-H0-Uj3" customClass="ModalAlbumsCollectionViewController" customModule="Photobook" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="fMB-DX-WcM">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1654,7 +1654,7 @@
         <!--Browse-->
         <scene sceneID="F3Q-q1-ZX1">
             <objects>
-                <navigationController storyboardIdentifier="BrowseNavigationController" id="mcv-na-BVN" customClass="PhotobookNavigationController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="BrowseNavigationController" id="mcv-na-BVN" customClass="PhotobookNavigationController" customModule="Photobook" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Browse" image="Albums" id="Nyc-tf-chR">
                         <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="-3"/>
                     </tabBarItem>
@@ -1677,7 +1677,7 @@
         <!--Photobook Navigation Controller-->
         <scene sceneID="Vk2-Uq-zhi">
             <objects>
-                <navigationController id="wjj-KU-1G4" customClass="PhotobookNavigationController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController id="wjj-KU-1G4" customClass="PhotobookNavigationController" customModule="Photobook" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="ShZ-uO-ccj" customClass="PhotobookNavigationBar" customModule="Photobook" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1696,7 +1696,7 @@
         <!--Albums-->
         <scene sceneID="4ka-Hw-RNb">
             <objects>
-                <collectionViewController storyboardIdentifier="AlbumsCollectionViewController" id="dnn-z5-0C4" customClass="AlbumsCollectionViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="AlbumsCollectionViewController" id="dnn-z5-0C4" customClass="AlbumsCollectionViewController" customModule="Photobook" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" id="bn4-uC-JcP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1813,7 +1813,7 @@
         <!--Album Search Results Table View Controller-->
         <scene sceneID="K2G-GY-hbo">
             <objects>
-                <tableViewController storyboardIdentifier="AlbumSearchResultsTableViewController" id="jjT-Pf-sMB" customClass="AlbumSearchResultsTableViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="AlbumSearchResultsTableViewController" id="jjT-Pf-sMB" customClass="AlbumSearchResultsTableViewController" customModule="Photobook" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="28" sectionFooterHeight="28" id="6u8-Y8-Fjk">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1877,7 +1877,7 @@
         <!--Asset Picker Collection View Controller-->
         <scene sceneID="SlZ-pU-WSS">
             <objects>
-                <collectionViewController storyboardIdentifier="AssetPickerCollectionViewController" id="Wt4-pd-wZe" customClass="AssetPickerCollectionViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="AssetPickerCollectionViewController" id="Wt4-pd-wZe" customClass="AssetPickerCollectionViewController" customModule="Photobook" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" id="fBL-Bq-13B">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2055,12 +2055,12 @@
         <!--Photobook View Controller-->
         <scene sceneID="suS-5G-9Zz">
             <objects>
-                <viewController storyboardIdentifier="PhotobookViewController" hidesBottomBarWhenPushed="YES" id="l0p-H6-Aqd" customClass="PhotobookViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="hYx-pR-ckZ" customClass="OutOfBoundsTouchView" customModule="Photobook" customModuleProvider="target">
+                <viewController storyboardIdentifier="PhotobookViewController" hidesBottomBarWhenPushed="YES" id="l0p-H6-Aqd" customClass="PhotobookViewController" customModule="Photobook" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="hYx-pR-ckZ" customClass="OutOfBoundsTouchView" customModule="Photobook">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TBG-9p-ivA" customClass="OutOfBoundsTouchCollectionView" customModule="Photobook" customModuleProvider="target">
+                            <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TBG-9p-ivA" customClass="OutOfBoundsTouchCollectionView" customModule="Photobook">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" red="0.89019607840000003" green="0.8980392157" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="12" minimumInteritemSpacing="0.0" id="MEd-aD-PzO">
@@ -2070,17 +2070,17 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotobookCoverCollectionViewCell" id="fIJ-b9-0Xr" userLabel="Photobook Cover Cell" customClass="PhotobookCoverCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotobookCoverCollectionViewCell" id="fIJ-b9-0Xr" userLabel="Photobook Cover Cell" customClass="PhotobookCoverCollectionViewCell" customModule="Photobook">
                                         <rect key="frame" x="8" y="15" width="359" height="207"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="359" height="207"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aKo-Fy-w8j" customClass="SpineFrameView" customModule="Photobook" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aKo-Fy-w8j" customClass="SpineFrameView" customModule="Photobook">
                                                     <rect key="frame" x="83" y="0.0" width="10" height="207"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Md-3g-kuo" customClass="SpineBackgroundView" customModule="Photobook" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Md-3g-kuo" customClass="SpineBackgroundView" customModule="Photobook">
                                                             <rect key="frame" x="0.0" y="0.0" width="10" height="207"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </view>
@@ -2113,13 +2113,13 @@
                                                         <outlet property="textLabelWidthConstraint" destination="qsC-jx-jNX" id="dLc-Ol-48x"/>
                                                     </connections>
                                                 </view>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7hj-ms-TMa" customClass="CoverFrameView" customModule="Photobook" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7hj-ms-TMa" customClass="CoverFrameView" customModule="Photobook">
                                                     <rect key="frame" x="123" y="0.0" width="173" height="207"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NBy-2O-xiC" customClass="CoverBackgroundView" customModule="Photobook" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NBy-2O-xiC" customClass="CoverBackgroundView" customModule="Photobook">
                                                             <rect key="frame" x="0.0" y="0.0" width="173" height="207"/>
                                                             <subviews>
-                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SIc-aM-s7t" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SIc-aM-s7t" customClass="PhotobookPageView" customModule="Photobook">
                                                                     <rect key="frame" x="8.5" y="0.0" width="164.5" height="207"/>
                                                                     <subviews>
                                                                         <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wv5-To-CaO">
@@ -2218,50 +2218,50 @@
                                             <outlet property="spineFrameView" destination="aKo-Fy-w8j" id="tb1-tQ-r4s"/>
                                         </connections>
                                     </collectionViewCell>
-                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotobookCollectionViewCell" id="0j2-2Y-biD" userLabel="Photobook Cell" customClass="PhotobookCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotobookCollectionViewCell" id="0j2-2Y-biD" userLabel="Photobook Cell" customClass="PhotobookCollectionViewCell" customModule="Photobook">
                                         <rect key="frame" x="8" y="234" width="359" height="207"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="359" height="207"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2I1-af-on9" customClass="PhotobookFrameView" customModule="Photobook" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2I1-af-on9" customClass="PhotobookFrameView" customModule="Photobook">
                                                     <rect key="frame" x="0.0" y="0.0" width="359" height="207"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fft-iy-1CW" userLabel="Cover View" customClass="PhotobookFrameCoverView" customModule="Photobook" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fft-iy-1CW" userLabel="Cover View" customClass="PhotobookFrameCoverView" customModule="Photobook">
                                                             <rect key="frame" x="0.0" y="0.5" width="359" height="206.5"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </view>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="enN-6P-pUJ" userLabel="Cover Inside Image View">
                                                             <rect key="frame" x="5" y="5.5" width="349" height="196.5"/>
                                                         </imageView>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TZQ-n4-cxl" userLabel="Spread Background View" customClass="PhotobookFrameSpreadBackgroundView" customModule="Photobook" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TZQ-n4-cxl" userLabel="Spread Background View" customClass="PhotobookFrameSpreadBackgroundView" customModule="Photobook">
                                                             <rect key="frame" x="9" y="5" width="341" height="197"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </view>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Z1-jm-uVB" customClass="PhotobookFramePagesBehindView" customModule="Photobook" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Z1-jm-uVB" customClass="PhotobookFramePagesBehindView" customModule="Photobook">
                                                             <rect key="frame" x="343" y="5" width="7" height="197"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="7" id="3hH-bo-JKk"/>
                                                             </constraints>
                                                         </view>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qc3-ey-6Ei" customClass="PhotobookFramePagesBehindView" customModule="Photobook" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qc3-ey-6Ei" customClass="PhotobookFramePagesBehindView" customModule="Photobook">
                                                             <rect key="frame" x="9" y="5" width="7" height="197"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="7" id="WjM-f2-0TZ"/>
                                                             </constraints>
                                                         </view>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j1z-u2-5I8" customClass="PhotobookFramePageBackgroundView" customModule="Photobook" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j1z-u2-5I8" customClass="PhotobookFramePageBackgroundView" customModule="Photobook">
                                                             <rect key="frame" x="179.5" y="5" width="163.5" height="197"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </view>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QBw-XP-qvl" customClass="PhotobookFramePageBackgroundView" customModule="Photobook" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QBw-XP-qvl" customClass="PhotobookFramePageBackgroundView" customModule="Photobook">
                                                             <rect key="frame" x="16" y="5" width="163.5" height="197"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </view>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Bf-Wz-wqA" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Bf-Wz-wqA" customClass="PhotobookPageView" customModule="Photobook">
                                                             <rect key="frame" x="183" y="5" width="160" height="196.5"/>
                                                             <subviews>
                                                                 <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m5M-pH-dcx">
@@ -2305,7 +2305,7 @@
                                                                 <outlet property="pageTextLabel" destination="x7I-y4-fWV" id="iuC-FP-C2O"/>
                                                             </connections>
                                                         </view>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Vu-Py-eeg" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Vu-Py-eeg" customClass="PhotobookPageView" customModule="Photobook">
                                                             <rect key="frame" x="16" y="5.5" width="167" height="196.5"/>
                                                             <subviews>
                                                                 <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="k6d-OH-WNp">
@@ -2349,7 +2349,7 @@
                                                                 <outlet property="pageTextLabel" destination="gqw-YR-BoV" id="2Fb-BP-e6T"/>
                                                             </connections>
                                                         </view>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8PU-St-qOP" userLabel="Page Divider View" customClass="PhotobookFramePageDividerView" customModule="Photobook" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8PU-St-qOP" userLabel="Page Divider View" customClass="PhotobookFramePageDividerView" customModule="Photobook">
                                                             <rect key="frame" x="179.5" y="5.5" width="1" height="196.5"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
@@ -2568,7 +2568,7 @@
         <!--Payment-->
         <scene sceneID="uXo-B1-21M">
             <objects>
-                <viewController storyboardIdentifier="CheckoutViewController" id="9J6-1w-1sY" customClass="CheckoutViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CheckoutViewController" id="9J6-1w-1sY" customClass="CheckoutViewController" customModule="Photobook" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1R2-Xa-hY5">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3069,7 +3069,7 @@
         <!--Receipt Table View Controller-->
         <scene sceneID="zQ3-K3-cax">
             <objects>
-                <tableViewController storyboardIdentifier="ReceiptTableViewController" hidesBottomBarWhenPushed="YES" id="Ak1-TW-jZH" customClass="ReceiptTableViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="ReceiptTableViewController" hidesBottomBarWhenPushed="YES" id="Ak1-TW-jZH" customClass="ReceiptTableViewController" customModule="Photobook" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="hTU-Tu-uLE">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="1100"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3643,7 +3643,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Photobook Navigation Controller-->
         <scene sceneID="jTb-KZ-dAJ">
             <objects>
-                <navigationController navigationBarHidden="YES" id="WZR-4z-wzI" customClass="PhotobookNavigationController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController navigationBarHidden="YES" id="WZR-4z-wzI" customClass="PhotobookNavigationController" customModule="Photobook" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="VZg-cd-0O7" customClass="PhotobookNavigationBar" customModule="Photobook" customModuleProvider="target">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -3658,7 +3658,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Item-->
         <scene sceneID="c5L-BD-S21">
             <objects>
-                <viewController storyboardIdentifier="IntroViewController" id="2XF-yO-9gv" customClass="IntroViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="IntroViewController" id="2XF-yO-9gv" customClass="IntroViewController" customModule="Photobook" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ZFI-Ae-tE6">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3771,7 +3771,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Full Screen Image View Controller-->
         <scene sceneID="XBA-8v-eiC">
             <objects>
-                <viewController storyboardIdentifier="FullScreenImageViewController" id="nLV-6U-Lei" customClass="FullScreenImageViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FullScreenImageViewController" id="nLV-6U-Lei" customClass="FullScreenImageViewController" customModule="Photobook" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="84B-qY-2Nb">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3848,7 +3848,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Asset Placement View Controller-->
         <scene sceneID="Vjk-cy-rN4">
             <objects>
-                <viewController id="0tx-1H-1gY" customClass="AssetPlacementViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="0tx-1H-1gY" customClass="AssetPlacementViewController" customModule="Photobook" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2ha-XX-PVN">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -4055,7 +4055,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Progress Overlay View Controller-->
         <scene sceneID="dLC-iX-1EH">
             <objects>
-                <viewController storyboardIdentifier="ProgressOverlayViewController" id="RbI-12-Ape" customClass="ProgressOverlayViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ProgressOverlayViewController" id="RbI-12-Ape" customClass="ProgressOverlayViewController" customModule="Photobook" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="PnV-D9-W13">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -4124,12 +4124,12 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Your Order-->
         <scene sceneID="Iv0-BH-Ffz">
             <objects>
-                <viewController storyboardIdentifier="OrderSummaryViewController" id="ays-et-QoH" customClass="OrderSummaryViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="OrderSummaryViewController" id="ays-et-QoH" customClass="OrderSummaryViewController" customModule="Photobook" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="MKm-aN-ue6">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8EI-2U-Avm" customClass="PhotobookPageView" customModule="Photobook" customModuleProvider="target">
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8EI-2U-Avm" customClass="PhotobookPageView" customModule="Photobook">
                                 <rect key="frame" x="105" y="230" width="164.33333333333334" height="207"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -4216,7 +4216,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     </constraints>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="OrderSummaryDetailTableViewCell" rowHeight="40" id="SZV-Bl-8r4" customClass="OrderSummaryDetailTableViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="OrderSummaryDetailTableViewCell" rowHeight="40" id="SZV-Bl-8r4" customClass="OrderSummaryDetailTableViewCell" customModule="Photobook">
                                         <rect key="frame" x="0.0" y="288" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="SZV-Bl-8r4" id="UAC-EW-iqf">
@@ -4249,7 +4249,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             <outlet property="titleLabel" destination="FBm-pI-qyM" id="aaV-Sg-5kA"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="OrderSummaryTotalTableViewCell" rowHeight="40" id="wNE-gK-bz8" customClass="OrderSummaryTotalTableViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="OrderSummaryTotalTableViewCell" rowHeight="40" id="wNE-gK-bz8" customClass="OrderSummaryTotalTableViewCell" customModule="Photobook">
                                         <rect key="frame" x="0.0" y="328" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wNE-gK-bz8" id="Eao-8K-ZKG">
@@ -4292,7 +4292,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             <outlet property="titleLabel" destination="dej-Vr-jGL" id="Kw8-HN-iVK"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="OrderSummaryUpsellTableViewCell" rowHeight="70" id="7Vk-ZC-sDy" customClass="OrderSummaryUpsellTableViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="OrderSummaryUpsellTableViewCell" rowHeight="70" id="7Vk-ZC-sDy" customClass="OrderSummaryUpsellTableViewCell" customModule="Photobook">
                                         <rect key="frame" x="0.0" y="368" width="375" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7Vk-ZC-sDy" id="qMT-CY-ZqV">
@@ -4435,7 +4435,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Empty Screen View Controller-->
         <scene sceneID="ij0-dd-Rvf">
             <objects>
-                <viewController storyboardIdentifier="EmptyScreenViewController" id="9T6-QX-4TL" customClass="EmptyScreenViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EmptyScreenViewController" id="9T6-QX-4TL" customClass="EmptyScreenViewController" customModule="Photobook" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="PGw-Kn-0FM"/>
                         <viewControllerLayoutGuide type="bottom" id="dnx-kj-JLI"/>
@@ -4516,7 +4516,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Asset Selector View Controller-->
         <scene sceneID="iTf-mr-D4E">
             <objects>
-                <viewController id="GA7-mj-nMv" customClass="AssetSelectorViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="GA7-mj-nMv" customClass="AssetSelectorViewController" customModule="Photobook" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="mhg-GC-VRL">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="74"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -4531,7 +4531,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     <inset key="sectionInset" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AssetSelectorAssetCollectionViewCell" id="Zem-6s-gPy" customClass="AssetSelectorAssetCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AssetSelectorAssetCollectionViewCell" id="Zem-6s-gPy" customClass="AssetSelectorAssetCollectionViewCell" customModule="Photobook">
                                         <rect key="frame" x="10" y="5" width="64" height="64"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -4607,7 +4607,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             <outlet property="greyOverlayView" destination="dsP-mR-hcL" id="XQX-L0-Jzf"/>
                                         </connections>
                                     </collectionViewCell>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AssetSelectorAddMoreCollectionViewCell" id="VFV-TR-cNv" customClass="AssetSelectorAddMoreCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AssetSelectorAddMoreCollectionViewCell" id="VFV-TR-cNv" customClass="AssetSelectorAddMoreCollectionViewCell" customModule="Photobook">
                                         <rect key="frame" x="80" y="5" width="64" height="64"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -4666,7 +4666,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Delivery Details-->
         <scene sceneID="Ngh-G3-0w2">
             <objects>
-                <tableViewController storyboardIdentifier="DeliveryDetailsTableViewController" id="cGc-cG-abp" customClass="DeliveryDetailsTableViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="DeliveryDetailsTableViewController" id="cGc-cG-abp" customClass="DeliveryDetailsTableViewController" customModule="Photobook" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="Aew-e7-OI5">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -4929,7 +4929,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Payment Methods-->
         <scene sceneID="jPW-8E-fek">
             <objects>
-                <viewController storyboardIdentifier="PaymentMethodsViewController" id="eiW-1f-aeo" customClass="PaymentMethodsViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PaymentMethodsViewController" id="eiW-1f-aeo" customClass="PaymentMethodsViewController" customModule="Photobook" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="L4r-Cj-J8K"/>
                         <viewControllerLayoutGuide type="bottom" id="7aS-Kd-9up"/>
@@ -5053,7 +5053,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--CREDIT CARD-->
         <scene sceneID="Y6v-Dm-QPS">
             <objects>
-                <tableViewController id="KxV-LF-cPn" customClass="CreditCardTableViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="KxV-LF-cPn" customClass="CreditCardTableViewController" customModule="Photobook" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="gr8-os-wnD">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -5163,7 +5163,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--CHOOSE COUNTRY-->
         <scene sceneID="Ebn-ZC-YqS">
             <objects>
-                <tableViewController storyboardIdentifier="CountryPickerTableViewController" id="EWS-lF-JO7" customClass="CountryPickerTableViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="CountryPickerTableViewController" id="EWS-lF-JO7" customClass="CountryPickerTableViewController" customModule="Photobook" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="vlJ-Cb-X6W">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -5205,7 +5205,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Address-->
         <scene sceneID="CLF-SY-6GY">
             <objects>
-                <tableViewController storyboardIdentifier="AddressTableViewController" id="pRm-3l-Qzk" customClass="AddressTableViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="AddressTableViewController" id="pRm-3l-Qzk" customClass="AddressTableViewController" customModule="Photobook" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" estimatedRowHeight="44" sectionHeaderHeight="1" sectionFooterHeight="1" id="pgQ-tE-SYf">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -5289,7 +5289,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Color Selection View Controller-->
         <scene sceneID="6eA-VW-ovM">
             <objects>
-                <viewController id="DGE-Ds-4at" userLabel="Color Selection View Controller" customClass="ColorSelectionViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="DGE-Ds-4at" userLabel="Color Selection View Controller" customClass="ColorSelectionViewController" customModule="Photobook" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2s3-XS-AhA">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="120"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -5297,7 +5297,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="26" translatesAutoresizingMaskIntoConstraints="NO" id="tlX-MW-gCq">
                                 <rect key="frame" x="128.5" y="37" width="118" height="46"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="05M-fh-sfo" customClass="ProductColorButtonView" customModule="Photobook" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="05M-fh-sfo" customClass="ProductColorButtonView" customModule="Photobook">
                                         <rect key="frame" x="0.0" y="0.0" width="46" height="46"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aa4-Lu-6kd">
@@ -5322,7 +5322,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             <outlet property="roundedBackgroundView" destination="aa4-Lu-6kd" id="mgZ-jX-7mE"/>
                                         </connections>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Ur-zt-sYJ" customClass="ProductColorButtonView" customModule="Photobook" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Ur-zt-sYJ" customClass="ProductColorButtonView" customModule="Photobook">
                                         <rect key="frame" x="72" y="0.0" width="46" height="46"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Eu9-Lf-Rdk">
@@ -5369,7 +5369,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Text Editing View Controller-->
         <scene sceneID="yDx-rM-yq1">
             <objects>
-                <viewController id="tSR-55-LeJ" customClass="TextEditingViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="tSR-55-LeJ" customClass="TextEditingViewController" customModule="Photobook" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2B8-2W-mUx">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -5411,7 +5411,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="bhd-OS-of5" customClass="PhotobookTextView" customModule="Photobook" customModuleProvider="target">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="bhd-OS-of5" customClass="PhotobookTextView" customModule="Photobook">
                                 <rect key="frame" x="26" y="403" width="323" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -5451,7 +5451,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="adf-a5-e3T" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <view contentMode="scaleToFill" id="ixR-NF-UBV" customClass="TextToolBarView" customModule="Photobook" customModuleProvider="target">
+                <view contentMode="scaleToFill" id="ixR-NF-UBV" customClass="TextToolBarView" customModule="Photobook">
                     <rect key="frame" x="0.0" y="0.0" width="415" height="50"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
@@ -5529,7 +5529,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Spine Text Editing View Controller-->
         <scene sceneID="p5U-cd-YVD">
             <objects>
-                <viewController modalPresentationStyle="overFullScreen" id="6rp-6Z-yrq" userLabel="Spine Text Editing View Controller" customClass="SpineTextEditingViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="overFullScreen" id="6rp-6Z-yrq" userLabel="Spine Text Editing View Controller" customClass="SpineTextEditingViewController" customModule="Photobook" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="CZ3-Jg-WFg">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -5537,10 +5537,10 @@ Copyright © 2018 Kite. All right reserverd.</string>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kNP-gA-dkt">
                                 <rect key="frame" x="0.0" y="64" width="375" height="423"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w6A-z9-rqE" customClass="SpineFrameView" customModule="Photobook" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w6A-z9-rqE" customClass="SpineFrameView" customModule="Photobook">
                                         <rect key="frame" x="182.5" y="61.5" width="10" height="300"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hei-q7-aO2" customClass="SpineBackgroundView" customModule="Photobook" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hei-q7-aO2" customClass="SpineBackgroundView" customModule="Photobook">
                                                 <rect key="frame" x="0.0" y="0.0" width="10" height="300"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
@@ -5655,7 +5655,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kby-UO-ZuI" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <view contentMode="scaleToFill" id="dRv-pI-FWm" customClass="TextToolBarView" customModule="Photobook" customModuleProvider="target">
+                <view contentMode="scaleToFill" id="dRv-pI-FWm" customClass="TextToolBarView" customModule="Photobook">
                     <rect key="frame" x="0.0" y="0.0" width="415" height="50"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
@@ -5733,7 +5733,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--SHIPPING-->
         <scene sceneID="vWB-oI-iEP">
             <objects>
-                <viewController id="hNa-Qw-KpV" customClass="ShippingMethodsViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="hNa-Qw-KpV" customClass="ShippingMethodsViewController" customModule="Photobook" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="W8d-Lm-Ge9"/>
                         <viewControllerLayoutGuide type="bottom" id="cA8-Gg-ZKR"/>
@@ -5879,7 +5879,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Amount Picker View Controller-->
         <scene sceneID="vf1-TG-sJi">
             <objects>
-                <viewController storyboardIdentifier="AmountPickerViewController" id="auk-5U-w4y" customClass="AmountPickerViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AmountPickerViewController" id="auk-5U-w4y" customClass="AmountPickerViewController" customModule="Photobook" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="zvo-sB-TOV"/>
                         <viewControllerLayoutGuide type="bottom" id="Ztc-aU-Khy"/>
@@ -5980,7 +5980,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Photobook Navigation Controller-->
         <scene sceneID="wh3-Mz-mVO">
             <objects>
-                <navigationController storyboardIdentifier="SpineTextEditingNavigationController" automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="overFullScreen" id="9tw-R1-Syv" customClass="PhotobookNavigationController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="SpineTextEditingNavigationController" automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="overFullScreen" id="9tw-R1-Syv" customClass="PhotobookNavigationController" customModule="Photobook" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="PXF-PM-hRb" customClass="PhotobookNavigationBar" customModule="Photobook" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
@@ -5998,7 +5998,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Instagram-->
         <scene sceneID="I0K-2M-eov">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Cam-IB-Kkn" customClass="PhotobookNavigationController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Cam-IB-Kkn" customClass="PhotobookNavigationController" customModule="Photobook" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Instagram" image="Instagram" selectedImage="Instagram" id="ips-8Y-p8E">
                         <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="-3"/>
                     </tabBarItem>
@@ -6021,7 +6021,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Item-->
         <scene sceneID="clP-YU-Xki">
             <objects>
-                <navigationController storyboardIdentifier="PageSetupNavigationController" automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="overFullScreen" id="Cq6-59-xbh" customClass="PhotobookNavigationController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="PageSetupNavigationController" automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="overFullScreen" id="Cq6-59-xbh" customClass="PhotobookNavigationController" customModule="Photobook" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="O4n-MI-JUS"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="yJ7-AT-5aJ" customClass="PhotobookNavigationBar" customModule="Photobook" customModuleProvider="target">
@@ -6040,7 +6040,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Facebook Landing View Controller-->
         <scene sceneID="rhQ-gv-ywl">
             <objects>
-                <viewController storyboardIdentifier="FacebookLandingViewController" id="B0N-RZ-Y3E" customClass="FacebookLandingViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FacebookLandingViewController" id="B0N-RZ-Y3E" customClass="FacebookLandingViewController" customModule="Photobook" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="14C-ea-asI">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -6115,7 +6115,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Facebook-->
         <scene sceneID="nu1-Zs-hcg">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xtK-fB-QMj" customClass="PhotobookNavigationController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xtK-fB-QMj" customClass="PhotobookNavigationController" customModule="Photobook" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Facebook" image="Facebook" selectedImage="Facebook" id="e4B-vw-73n">
                         <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="-3"/>
                     </tabBarItem>
@@ -6138,7 +6138,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <!--Message Bar View Controller-->
         <scene sceneID="POV-eX-U0F">
             <objects>
-                <viewController storyboardIdentifier="MessageBarViewController" id="UrS-Bj-P8X" customClass="MessageBarViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MessageBarViewController" id="UrS-Bj-P8X" customClass="MessageBarViewController" customModule="Photobook" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="wNy-Sg-tvS"/>
                         <viewControllerLayoutGuide type="bottom" id="pQ1-cc-BJk"/>
@@ -6239,6 +6239,6 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <image name="uploading-spinner" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="V0I-No-StO"/>
+        <segue reference="qeW-AA-Oo4"/>
     </inferredMetricsTieBreakers>
 </document>
