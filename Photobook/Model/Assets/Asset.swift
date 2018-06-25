@@ -20,6 +20,27 @@ enum AssetLoadingException: Error {
     case gif
 }
 
+extension AssetDataFileExtension {
+    
+    init(string: String) {
+        switch string.lowercased() {
+        case "jpeg", "jpg": self = .jpg
+        case "png": self = .png
+        case "gif": self = .gif
+        default: self = .unsupported
+        }
+    }
+    
+    func string() -> String {
+        switch self {
+        case .jpg: return "jpg"
+        case .png: return "png"
+        case .gif: return "gif"
+        default: return ""
+        }
+    }
+}
+
 /// Represents a photo used in a photo book
 @objc protocol Asset: PhotobookAsset {
     

@@ -9,12 +9,13 @@
 import UIKit
 
 enum OrderProcessingError: Error {
+    case unknown
+    case api(message: ErrorMessage)
     case cancelled
     case upload
     case pdf
     case submission
     case payment
-    case server(code: Int, message: String)
 }
 
 protocol OrderProcessingDelegate: class {
@@ -34,8 +35,10 @@ class OrderManager {
         static let basketOrderBackupFile = photobookDirectory.appending("BasketOrder.dat")
         static let processingOrderBackupFile = photobookDirectory.appending("ProcessingOrder.dat")
     }
+    static let maxNumberOfPollingTries = 60
     
     private lazy var apiManager = PhotobookAPIManager()
+    private lazy var kiteApiClient = KiteAPIClient.shared
     private lazy var apiClient = APIClient.shared
     weak var orderProcessingDelegate: OrderProcessingDelegate?
     
@@ -96,20 +99,48 @@ class OrderManager {
     }
     
     func submitOrder(completionHandler: @escaping (_ error: ErrorMessage?) -> Void) {
-        
         Analytics.shared.trackAction(.orderSubmitted, [Analytics.PropertyNames.secondsSinceAppOpen: Analytics.shared.secondsSinceAppOpen(),
-                                                       Analytics.PropertyNames.secondsInBackground: Int(Analytics.shared.secondsSpentInBackground)
-            ])
+                                                       Analytics.PropertyNames.secondsInBackground: Int(Analytics.shared.secondsSpentInBackground)])
         
         guard let orderParameters = processingOrder?.orderParameters() else {
             completionHandler(ErrorMessage(OrderProcessingError.cancelled))
             return
         }
         
-        KiteAPIClient.shared.submitOrder(parameters: orderParameters, completionHandler: { [weak welf = self] orderId, error in
+        kiteApiClient.submitOrder(parameters: orderParameters, completionHandler: { [weak welf = self] orderId, error in
             welf?.processingOrder?.orderId = orderId
             completionHandler(error)
         })
+    }
+    
+    private var numberOfTimesPolled = 0
+    private func pollOrderStatus(completionHandler: @escaping (_ status: OrderSubmitStatus, _ error: ErrorMessage?) -> Void) {
+        guard let receipt = processingOrder?.orderId,
+            numberOfTimesPolled < OrderManager.maxNumberOfPollingTries else {
+                completionHandler(.error, ErrorMessage(.generic))
+            return
+        }
+        
+        kiteApiClient.checkOrderStatus(receipt: receipt) { [weak welf = self] (status, errorMessage, orderId) in
+            if let error = errorMessage {
+                completionHandler(status, error)
+                return
+            }
+            
+            if status == .accepted || status == .received {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                    welf?.pollOrderStatus(completionHandler: completionHandler)
+                })
+                return
+            }
+            
+            welf?.numberOfTimesPolled = 0
+            if let orderId = orderId, let processingOrder = welf?.processingOrder {
+                processingOrder.orderId = orderId
+            }
+            
+            completionHandler(status, nil)
+        }
     }
     
     /// Saves the basket order to disk
@@ -225,15 +256,16 @@ class OrderManager {
         // Upload images
         for asset in assetsToUpload {
             uploadAsset(asset: asset, failureHandler: { [weak welf = self] error in
-                welf?.didFailUpload(error)
+                welf?.failedUpload(with: error)
             })
-            
         }
     }
     
     func finishOrder() {
-        
-        guard let photobook = ProductManager.shared.currentProduct else {
+
+        // Multiple uploads are not supported. Pick first photobook.
+        guard let photobook = processingOrder?.products.first else {
+            orderProcessingDelegate?.orderDidComplete(error: .unknown)
             return
         }
 
@@ -268,41 +300,40 @@ class OrderManager {
                     return
                 }
                 
-                if errorMessage != nil {
-                    // Failure - Submission
+                if let errorMessage = errorMessage {
                     Analytics.shared.trackError(.orderSubmission)
-                    welf?.orderProcessingDelegate?.orderDidComplete(error: .submission)
+                    welf?.orderProcessingDelegate?.orderDidComplete(error: .api(message: errorMessage))
                     return
                 }
                 
                 // 3 - Check for order success
-                welf?.pollOrderSuccess(completion: { [weak welf = self] (errorMessage) in
+                welf?.pollOrderStatus { [weak welf = self] (status, errorMessage) in
                     
                     if let swelf = welf, swelf.isCancelling {
                         swelf.processingOrder = nil
                         swelf.cancelCompletionBlock?()
                         swelf.cancelCompletionBlock = nil
                         return
-                    }
+                    }    
                     
-                    if errorMessage != nil {
-                        // Failure - Payment
+                    if status == .paymentError {
                         Analytics.shared.trackError(.payment)
                         welf?.orderProcessingDelegate?.orderDidComplete(error: .payment)
+                        return
+                    }
+                    
+                    if let errorMessage = errorMessage {
+                        Analytics.shared.trackError(.payment)
+                        welf?.orderProcessingDelegate?.orderDidComplete(error: .api(message: errorMessage))
                         return
                     }
                     
                     // Success
                     welf?.processingOrder = nil
                     welf?.orderProcessingDelegate?.orderDidComplete()
-                })
+                }
             })
         }
-    }
-    
-    private func pollOrderSuccess(completion: @escaping (_ errorMessage: ErrorMessage?) -> Void) {
-        // TODO: poll order success and provide option to change payment method if fails
-        completion(nil)
     }
     
     //MARK: - Upload
@@ -314,7 +345,7 @@ class OrderManager {
                 return
             }
             
-            if let fileUrl = DiskUtils.saveDataToCachesDirectory(data: data, name: "\(asset.fileIdentifier).\(fileExtension)") {
+            if let fileUrl = DiskUtils.saveDataToCachesDirectory(data: data, name: "\(asset.fileIdentifier).\(fileExtension.string())") {
                 welf?.apiClient.uploadImage(fileUrl, reference: PhotobookAPIManager.imageUploadIdentifierPrefix + asset.identifier, context: .pig, endpoint: PhotobookAPIManager.EndPoints.imageUpload)
             } else {
                 failureHandler(PhotobookAPIError.couldNotSaveTempImageData)
@@ -326,7 +357,7 @@ class OrderManager {
         guard let order = processingOrder else { return }
         
         guard let dictionary = notification.userInfo as? [String: AnyObject] else {
-            print("PhotobookAPIManager: Task finished but could not cast user info")
+            failedUpload(with: APIClientError.parsing)
             return
         }
         
@@ -336,12 +367,12 @@ class OrderManager {
         }
         
         if let error = dictionary["error"] as? APIClientError {
-            didFailUpload(error)
+            failedUpload(with: error)
             return
         }
         
         guard let reference = dictionary["task_reference"] as? String, let url = dictionary["full"] as? String else {
-            didFailUpload(APIClientError.parsing)
+            failedUpload(with: APIClientError.parsing)
             return
         }
         
@@ -349,7 +380,7 @@ class OrderManager {
         
         let assets = order.assetsToUpload().filter({ $0.identifier == referenceId })
         guard assets.first != nil else {
-            didFailUpload(PhotobookAPIError.missingPhotobookInfo)
+            failedUpload(with: PhotobookAPIError.missingPhotobookInfo)
             return
         }
         
@@ -367,7 +398,7 @@ class OrderManager {
         }
     }
     
-    private func didFailUpload(_ error: Error) {
+    private func failedUpload(with error: Error) {
         guard processingOrder != nil else { return }
         
         Analytics.shared.trackError(.imageUpload)
@@ -389,9 +420,10 @@ class OrderManager {
                 //unknown error or not relevant for image upload. Should never happen. Cancel processing
                 orderProcessingDelegate?.orderDidComplete(error: OrderProcessingError.cancelled)
             }
-        } else if let _ = error as? APIClientError {
-            // Connection / server errors or parsing error
-            orderProcessingDelegate?.orderDidComplete(error: .upload)
+            return
         }
+        
+        // Connection / server / other errors
+        orderProcessingDelegate?.orderDidComplete(error: .upload)
     }
 }
