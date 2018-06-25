@@ -10,29 +10,24 @@ import UIKit
 
 class LineItem: Codable {
     
-    let id: Int
+    let id: String
     let name: String
-    let cost: Decimal
-    let formattedCost: String
+    let cost: Price
     
-    init(id: Int, name: String, cost: Decimal, formattedCost: String) {
+    init(id: String, name: String, cost: Price) {
         self.id = id
         self.name = name
         self.cost = cost
-        self.formattedCost = formattedCost
     }
     
     static func parseDetails(dictionary: [String: Any]) -> LineItem? {
         guard
-            let id = dictionary["variant_id"] as? Int,
+            let id = dictionary["template_id"] as? String,
             let name = dictionary["description"] as? String,
-            let costDictionary = dictionary["cost"] as? [String: Any],
-            let amount = costDictionary["amount"] as? String,
-            let cost = Decimal(string: amount),
-            let currency = costDictionary["currency"] as? String
+            let costDictionary = dictionary["product_cost"] as? [String: Any],
+            let cost = Price.parse(costDictionary)
             else { return nil }
         
-        let formattedCost = cost.formattedCost(currencyCode: currency)
-        return LineItem(id: id, name: name, cost: cost, formattedCost: formattedCost)
+        return LineItem(id: id, name: name, cost: cost)
     }
 }

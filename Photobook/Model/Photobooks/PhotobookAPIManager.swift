@@ -34,7 +34,7 @@ class PhotobookAPIManager {
         static let createPdf = "/ios/generate_photobook_pdf"
         static let imageUpload = "/upload/"
     }
-
+    
     private var apiClient = APIClient.shared
     
     #if DEBUG

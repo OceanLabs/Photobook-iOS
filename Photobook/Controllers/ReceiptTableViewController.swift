@@ -28,7 +28,7 @@ class ReceiptTableViewController: UITableViewController {
     }
     
     private enum Section: Int {
-        case header, progress, info, details, lineItems, footer
+        case header, progress, info, details, lineItems, shipping, footer
     }
     
     var order: Order!
@@ -250,7 +250,7 @@ class ReceiptTableViewController: UITableViewController {
     // MARK: Table View
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 6
+        return 7
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -261,13 +261,10 @@ class ReceiptTableViewController: UITableViewController {
             return state == .uploading ? 1 : 0
         case Section.info.rawValue:
             return state == .uploading ? 0 : 1
-        case Section.details.rawValue:
-            if state == .cancelled { return 0 }
-            return 1
         case Section.lineItems.rawValue:
             if state == .cancelled { return 0 }
             return cost?.lineItems?.count ?? 0
-        case Section.footer.rawValue:
+        case Section.shipping.rawValue, Section.details.rawValue, Section.footer.rawValue:
             if state == .cancelled { return 0 }
             return 1
         default:
@@ -297,7 +294,7 @@ class ReceiptTableViewController: UITableViewController {
             cell.iconLabel.text = state.emoji
             
             if let error = lastProcessingError, case .api(message: let message) = error {
-                cell.titleLabel.text = message.title?.uppercased() ?? ""
+                cell.titleLabel.text = message.title?.uppercased() ?? CommonLocalizedStrings.somethingWentWrong.uppercased()
                 cell.descriptionLabel.text = ReceiptViewControllerState.customMessageWithNote(message: message.text)
             } else {
                 cell.titleLabel.text = state.infoTitle
@@ -314,7 +311,6 @@ class ReceiptTableViewController: UITableViewController {
             return cell
         case Section.details.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptDetailsTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptDetailsTableViewCell
-            cell.shippingMethodLabel.text = cost?.shippingMethod(id: order.shippingMethod)?.name
             
             cell.orderNumberLabel.alpha = 0.35
             switch state {
@@ -345,11 +341,16 @@ class ReceiptTableViewController: UITableViewController {
         case Section.lineItems.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptLineItemTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptLineItemTableViewCell
             cell.lineItemNameLabel.text = cost?.lineItems?[indexPath.row].name
-            cell.lineItemCostLabel.text = cost?.lineItems?[indexPath.row].formattedCost
+            cell.lineItemCostLabel.text = cost?.lineItems?[indexPath.row].cost.formatted
+            return cell
+        case Section.shipping.rawValue:
+            let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptLineItemTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptLineItemTableViewCell
+            cell.lineItemNameLabel.text = NSLocalizedString("ReceiptTableViewController/Shipping", value: "Shipping", comment: "Title for the total shipping cost of the order")
+            cell.lineItemCostLabel.text = cost?.totalShippingCost?.formatted
             return cell
         case Section.footer.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptFooterTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptFooterTableViewCell
-            cell.totalCostLabel.text = cost?.shippingMethod(id: order.shippingMethod)?.totalCostFormatted
+            cell.totalCostLabel.text = cost?.total?.formatted
             return cell
         default:
             return UITableViewCell()
@@ -404,7 +405,7 @@ extension ReceiptTableViewController: OrderProcessingDelegate {
                 userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyCancelled", value: "Something went wrong and we couldn't process your photo book", comment: "body of a notification notifying about failed photobook that had to be cancelled")
             case .api(message: let errorMessage):
                 state = .error
-                userNotification.title = errorMessage.title?.uppercased() ?? ""
+                userNotification.title = errorMessage.title?.uppercased() ?? CommonLocalizedStrings.somethingWentWrong.uppercased()
                 userNotification.body = errorMessage.text
             default:
                 state = .error

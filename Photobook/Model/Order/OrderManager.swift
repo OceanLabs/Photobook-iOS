@@ -98,15 +98,17 @@ class OrderManager {
         basketOrder = Order()
     }
     
-    private func submitOrder(_ urls:[String], completionHandler: @escaping (_ error: ErrorMessage?) -> Void) {
+    func submitOrder(completionHandler: @escaping (_ error: ErrorMessage?) -> Void) {
         Analytics.shared.trackAction(.orderSubmitted, [Analytics.PropertyNames.secondsSinceAppOpen: Analytics.shared.secondsSinceAppOpen(),
                                                        Analytics.PropertyNames.secondsInBackground: Int(Analytics.shared.secondsSpentInBackground)])
         
-        // TODO: change to accept two pdf urls
-        kiteApiClient.submitOrder(parameters: basketOrder.orderParameters(), completionHandler: { [weak welf = self] orderId, error in
-            if let processingOrder = welf?.processingOrder {
-                processingOrder.orderId = orderId
-            }
+        guard let orderParameters = processingOrder?.orderParameters() else {
+            completionHandler(ErrorMessage(OrderProcessingError.cancelled))
+            return
+        }
+        
+        kiteApiClient.submitOrder(parameters: orderParameters, completionHandler: { [weak welf = self] orderId, error in
+            welf?.processingOrder?.orderId = orderId
             completionHandler(error)
         })
     }
@@ -286,8 +288,10 @@ class OrderManager {
                 return
             }
             
+            photobook.setPdfUrls(urls)
+            
             // 2 - Submit order
-            welf?.submitOrder(urls, completionHandler: { [weak welf = self] (errorMessage) in
+            welf?.submitOrder(completionHandler: { [weak welf = self] (errorMessage) in
                 
                 if let swelf = welf, swelf.isCancelling {
                     swelf.processingOrder = nil
@@ -341,7 +345,7 @@ class OrderManager {
                 return
             }
             
-            if let fileUrl = DiskUtils.saveDataToCachesDirectory(data: data, name: "\(asset.fileIdentifier).\(fileExtension)") {
+            if let fileUrl = DiskUtils.saveDataToCachesDirectory(data: data, name: "\(asset.fileIdentifier).\(fileExtension.string())") {
                 welf?.apiClient.uploadImage(fileUrl, reference: PhotobookAPIManager.imageUploadIdentifierPrefix + asset.identifier, context: .pig, endpoint: PhotobookAPIManager.EndPoints.imageUpload)
             } else {
                 failureHandler(PhotobookAPIError.couldNotSaveTempImageData)
@@ -353,7 +357,7 @@ class OrderManager {
         guard let order = processingOrder else { return }
         
         guard let dictionary = notification.userInfo as? [String: AnyObject] else {
-            print("PhotobookAPIManager: Task finished but could not cast user info")
+            failedUpload(with: APIClientError.parsing)
             return
         }
         

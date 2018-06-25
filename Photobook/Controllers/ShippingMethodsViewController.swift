@@ -13,19 +13,33 @@ protocol ShippingMethodsDelegate: class {
 class ShippingMethodsViewController: UIViewController {
     
     private struct Constants {
+        
+        static let stringLoading = NSLocalizedString("ShippingMethodsViewController/Loading", value: "Loading shipping details", comment: "Loading shipping methods")
+        static let stringLoadingFail = NSLocalizedString("ShippingMethodsViewController/LoadingFail", value: "Couldn't load shipping details", comment: "When loading shipping methods fails")
+        
         static let leadingSeparatorInset: CGFloat = 16
     }
     
     weak var delegate: ShippingMethodsDelegate?
     
+    private lazy var progressOverlayViewController: ProgressOverlayViewController = {
+        return ProgressOverlayViewController.progressOverlay(parent: self)
+    }()
+    
+    private lazy var emptyScreenViewController: EmptyScreenViewController = {
+        return EmptyScreenViewController.emptyScreen(parent: self)
+    }()
+    
+    var order: Order {
+        get {
+            return OrderManager.shared.basketOrder
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.title = NSLocalizedString("ShippingMethods/Title", value: "Shipping Method", comment: "Shipping method selection screen title")
-        
-        if OrderManager.shared.basketOrder.shippingMethod == nil {
-            OrderManager.shared.basketOrder.shippingMethod = OrderManager.shared.basketOrder.cachedCost?.shippingMethods?.first?.id
-        }
     }
     
     @IBOutlet private weak var tableView: UITableView!
@@ -38,27 +52,26 @@ class ShippingMethodsViewController: UIViewController {
 extension ShippingMethodsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let shippingMethodsCount = OrderManager.shared.basketOrder.cachedCost?.shippingMethods?.count {
-            return shippingMethodsCount
-        }
-        return 0
+        return OrderManager.shared.basketOrder.availableShippingMethods?.first?.count ?? 0 //TODO: currently only supports one section/product
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ShippingMethodTableViewCell.reuseIdentifier, for: indexPath) as! ShippingMethodTableViewCell
         
-        let shippingMethods = OrderManager.shared.basketOrder.cachedCost!.shippingMethods!
-        let shippingMethod = shippingMethods[indexPath.row]
+        let shippingMethod = OrderManager.shared.basketOrder.availableShippingMethods![indexPath.section][indexPath.row]
         
         cell.method = shippingMethod.name
         cell.deliveryTime = shippingMethod.deliveryTime
-        cell.cost = shippingMethod.shippingCostFormatted
+        cell.cost = shippingMethod.price.formatted
         
-        let selected = OrderManager.shared.basketOrder.shippingMethod == shippingMethod.id
+        var selected = false
+        if let selectedMethods = OrderManager.shared.basketOrder.selectedShippingMethods, selectedMethods.count > indexPath.section {
+            selected = selectedMethods[indexPath.section].id == shippingMethod.id
+        }
         cell.ticked = selected
-        cell.separatorLeadingConstraint.constant = indexPath.row == shippingMethods.count - 1 ? 0.0 : Constants.leadingSeparatorInset
+        cell.separatorLeadingConstraint.constant = indexPath.row == OrderManager.shared.basketOrder.availableShippingMethods!.count - 1 ? 0.0 : Constants.leadingSeparatorInset
         cell.topSeparator.isHidden = indexPath.row != 0
-        cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + "\(shippingMethod.name). \(shippingMethod.deliveryTime). \(shippingMethod.shippingCostFormatted)"
+        cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + "\(shippingMethod.name). \(shippingMethod.deliveryTime). \(shippingMethod.price.formatted)"
         cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
         
         return cell
@@ -76,8 +89,7 @@ extension ShippingMethodsViewController: UITableViewDataSource {
 extension ShippingMethodsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let shippingMethods = OrderManager.shared.basketOrder.cachedCost!.shippingMethods!
-        OrderManager.shared.basketOrder.shippingMethod = shippingMethods[indexPath.row].id
+        order.setShippingMethod(indexPath.row, forSection: indexPath.section)
         
         tableView.reloadData()
     }

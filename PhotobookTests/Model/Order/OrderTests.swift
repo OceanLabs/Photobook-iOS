@@ -21,10 +21,9 @@ class OrderTests: XCTestCase {
     }
 
     func fakeCost(totalCost: Decimal = 0.0) -> Cost {
-        let lineItem = LineItem(id: 1, name: "item", cost: 20.0, formattedCost: "£20.00")
-        let shippingMethod = ShippingMethod(id: 1, name: "Standard", shippingCostFormatted: "£4.99", totalCost: totalCost, totalCostFormatted: "£24.99", maxDeliveryTime: 10, minDeliveryTime: 3)
+        let lineItem = LineItem(id: "hdbook_127x127", name: "item", cost: Price(currencyCode: "GBP", value: 20)!)
         
-        return Cost(hash: 1, lineItems: [lineItem], shippingMethods: [shippingMethod], promoDiscount: nil, promoCodeInvalidReason: nil)
+        return Cost(hash: 1, lineItems: [lineItem], totalShippingCost: Price(currencyCode: "GBP", value: 7)!, total: Price(currencyCode: "GBP", value: totalCost)!, promoDiscount: nil, promoCodeInvalidReason: nil)
     }
 
     func testOrderIsFree_shouldBeFalseWithNoValidCost() {
@@ -34,7 +33,6 @@ class OrderTests: XCTestCase {
     
     func testOrderIsFree_shouldBeFalseWithACost() {
         let order = Order()
-        order.shippingMethod = 1
         
         let cost = fakeCost(totalCost: 4.99)
         cost.orderHash = order.hashValue
@@ -44,7 +42,6 @@ class OrderTests: XCTestCase {
 
     func testOrderIsFree_shouldBeTrueWithoutACost() {
         let order = Order()
-        order.shippingMethod = 1
         
         let cost = fakeCost()
         cost.orderHash = order.hashValue

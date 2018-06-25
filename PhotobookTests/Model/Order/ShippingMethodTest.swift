@@ -13,28 +13,24 @@ class ShippingMethodTest: XCTestCase {
     
     let validDictionary: [String: Any] = [
         "id": 1,
-        "name": "Express Delivery",
-        "shipping_cost": ["amount": "3.99", "currency": "GBP"],
-        "total_order_cost": ["amount": "20.45", "currency": "GBP"],
-        "deliver_time": ["max_days": 6, "min_days": 2]
+        "mobile_shipping_name": "Tracked",
+        "costs": [["currency": "GBP", "amount": 7.06], ["currency": "EUR", "amount": 8.04], ["currency": "USD", "amount": 9.47]],
+        "min_delivery_time": 5,
+        "max_delivery_time": 7
     ]
-
+    
     func testInit() {
         let id = 2
-        let name = "Standard Class"
-        let shippingCostFormatted = "£3.99"
-        let totalCost: Decimal = 20.45
-        let totalCostFormatted = "£20.45"
-        let maxDeliveryTime = 6
-        let minDeliveryTime = 2
+        let name = "Tracked"
+        let cost = Price(currencyCode: "GBP", value: 7.06)
+        let maxDeliveryTime = 7
+        let minDeliveryTime = 5
         
-        let shippingMethod = ShippingMethod(id: id, name: name, shippingCostFormatted: shippingCostFormatted, totalCost: totalCost, totalCostFormatted: totalCostFormatted, maxDeliveryTime: maxDeliveryTime, minDeliveryTime: minDeliveryTime)
+        let shippingMethod = ShippingMethod(id: id, name: name, price: cost!, maxDeliveryTime: maxDeliveryTime, minDeliveryTime: minDeliveryTime)
         
         XCTAssertEqual(shippingMethod.id, id)
         XCTAssertEqual(shippingMethod.name, name)
-        XCTAssertEqual(shippingMethod.shippingCostFormatted, shippingCostFormatted)
-        XCTAssertEqual(shippingMethod.totalCost, totalCost)
-        XCTAssertEqual(shippingMethod.totalCostFormatted, totalCostFormatted)
+        XCTAssertEqual(shippingMethod.price, cost)
         XCTAssertEqual(shippingMethod.maxDeliveryTime, maxDeliveryTime)
         XCTAssertEqual(shippingMethod.minDeliveryTime, minDeliveryTime)
     }
@@ -43,12 +39,9 @@ class ShippingMethodTest: XCTestCase {
         let shippingMethod = ShippingMethod.parse(dictionary: validDictionary)
         
         XCTAssertEqualOptional(shippingMethod?.id, 1)
-        XCTAssertEqualOptional(shippingMethod?.name, "Express Delivery")
-        XCTAssertEqualOptional(shippingMethod?.shippingCostFormatted, "£3.99")
-        XCTAssertEqualOptional(shippingMethod?.totalCost, 20.45)
-        XCTAssertEqualOptional(shippingMethod?.totalCostFormatted, "£20.45")
-        XCTAssertEqualOptional(shippingMethod?.minDeliveryTime, 2)
-        XCTAssertEqualOptional(shippingMethod?.maxDeliveryTime, 6)
+        XCTAssertEqualOptional(shippingMethod?.name, "Tracked")
+        XCTAssertEqualOptional(shippingMethod?.minDeliveryTime, 5)
+        XCTAssertEqualOptional(shippingMethod?.maxDeliveryTime, 7)
     }
     
     func testParse_shouldFailWithNoId() {
@@ -61,79 +54,55 @@ class ShippingMethodTest: XCTestCase {
 
     func testParse_shouldFailWithNoName() {
         var invalidDictionary = validDictionary
-        invalidDictionary["name"] = nil
+        invalidDictionary["mobile_shipping_name"] = nil
         
         let shippingMethod = ShippingMethod.parse(dictionary: invalidDictionary)
         XCTAssertNil(shippingMethod)
     }
     
-    func testParse_shouldFailWithNoShippingCost() {
+    func testParse_shouldFailWithNoCost() {
         var invalidDictionary = validDictionary
-        invalidDictionary["shipping_cost"] = nil
+        invalidDictionary["costs"] = nil
         
         let shippingMethod = ShippingMethod.parse(dictionary: invalidDictionary)
         XCTAssertNil(shippingMethod)
     }
     
-    func testParse_shouldFailWithNoShippingCostAmount() {
+    func testParse_shouldFailWithEmptyCostsArray() {
         var invalidDictionary = validDictionary
-        invalidDictionary["shipping_cost"] = ["currency": "GBP"]
-        
-        let shippingMethod = ShippingMethod.parse(dictionary: invalidDictionary)
-        XCTAssertNil(shippingMethod)
-    }
-
-    func testParse_shouldFailWithNoShippingCostCurrency() {
-        var invalidDictionary = validDictionary
-        invalidDictionary["shipping_cost"] = ["amount": "3.99"]
-        
-        let shippingMethod = ShippingMethod.parse(dictionary: invalidDictionary)
-        XCTAssertNil(shippingMethod)
-    }
-
-    func testParse_shouldFailWithNoTotalCost() {
-        var invalidDictionary = validDictionary
-        invalidDictionary["total_order_cost"] = nil
+        invalidDictionary["costs"] = []
         
         let shippingMethod = ShippingMethod.parse(dictionary: invalidDictionary)
         XCTAssertNil(shippingMethod)
     }
     
-    func testParse_shouldFailWithNoTotalCostAmount() {
+    func testParse_shouldFailWithNoCostAmount() {
         var invalidDictionary = validDictionary
-        invalidDictionary["total_order_cost"] = ["currency": "GBP"]
-        
-        let shippingMethod = ShippingMethod.parse(dictionary: invalidDictionary)
-        XCTAssertNil(shippingMethod)
-    }
-    
-    func testParse_shouldFailWithNoTotalCostCurrency() {
-        var invalidDictionary = validDictionary
-        invalidDictionary["total_order_cost"] = ["amount": "20.45"]
+        invalidDictionary["costs"] = [["currency": "GBP"]]
         
         let shippingMethod = ShippingMethod.parse(dictionary: invalidDictionary)
         XCTAssertNil(shippingMethod)
     }
 
-    func testParse_shouldFailWithNoDeliverTime() {
+    func testParse_shouldFailWithNoCostCurrency() {
         var invalidDictionary = validDictionary
-        invalidDictionary["deliver_time"] = nil
+        invalidDictionary["costs"] = [["amount": 3.99]]
         
         let shippingMethod = ShippingMethod.parse(dictionary: invalidDictionary)
         XCTAssertNil(shippingMethod)
     }
 
-    func testParse_shouldFailWithNoMaxDays() {
+    func testParse_shouldFailWithNoMaxDeliveryTime() {
         var invalidDictionary = validDictionary
-        invalidDictionary["deliver_time"] = ["min_days": 1]
+        invalidDictionary["max_delivery_time"] = nil
         
         let shippingMethod = ShippingMethod.parse(dictionary: invalidDictionary)
         XCTAssertNil(shippingMethod)
     }
 
-    func testParse_shouldFailWithNoMinDays() {
+    func testParse_shouldFailWithNoMinDeliveryTime() {
         var invalidDictionary = validDictionary
-        invalidDictionary["deliver_time"] = ["max_days": 6]
+        invalidDictionary["min_delivery_time"] = nil
         
         let shippingMethod = ShippingMethod.parse(dictionary: invalidDictionary)
         XCTAssertNil(shippingMethod)
@@ -141,14 +110,14 @@ class ShippingMethodTest: XCTestCase {
 
     func testParse_shouldHaveFreeCostIfValueIsZero() {
         var modifiedDictionary = validDictionary
-        modifiedDictionary["shipping_cost"] = ["amount": "0", "currency": "GBP"]
+        modifiedDictionary["costs"] = [["currency": "GBP", "amount": 0.0]]
         
         let shippingMethod = ShippingMethod.parse(dictionary: modifiedDictionary)
-        XCTAssertEqualOptional(shippingMethod?.shippingCostFormatted, "FREE")
+        XCTAssertEqualOptional(shippingMethod?.price.formatted, "FREE")
     }
     
     func testDeliveryTime_containsMaxAndMinDeliveryTimes() {
         let shippingMethod = ShippingMethod.parse(dictionary: validDictionary)
-        XCTAssertEqualOptional(shippingMethod?.deliveryTime, "2 to 6 working days")
+        XCTAssertEqualOptional(shippingMethod?.deliveryTime, "5 to 7 working days")
     }
 }
