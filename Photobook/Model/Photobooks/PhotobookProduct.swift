@@ -52,6 +52,8 @@ class PhotobookProduct: Codable {
     var pageColor: ProductColor = .white
     var productLayouts = [ProductLayout]()
     var itemCount: Int = 1
+    var insidePdfUrl: String?
+    var coverPdfUrl: String?
     
     var isAddingPagesAllowed: Bool { return template.maxPages >= numberOfPages + 2 }
     var isRemovingPagesAllowed: Bool { return numberOfPages - 2 >= template.minPages }
@@ -64,9 +66,8 @@ class PhotobookProduct: Codable {
     
     var coverLayouts: [Layout]!
     var layouts: [Layout]!
-    
-    var upsoldTemplate: PhotobookTemplate?
-    var upsoldOptions: [String: Any]?
+    private(set) var upsoldTemplate: PhotobookTemplate?
+    private(set) var upsoldOptions: [String: Any]?
     
     func setUpsellData(template: PhotobookTemplate?, payload: [String: Any]?) {
         upsoldTemplate = template
@@ -249,7 +250,7 @@ class PhotobookProduct: Codable {
             }
             doubleAssetIndex = doubleAssetIndex ?? middleIndex // Use middle index even though it is a portrait photo
         }
-
+        
         for (index, asset) in assets.enumerated() {
             let productLayoutAsset = ProductLayoutAsset()
             productLayoutAsset.asset = asset
@@ -276,6 +277,13 @@ class PhotobookProduct: Codable {
         }
         
         return productLayouts
+    }
+    
+    func setPdfUrls(_ urls: [String]) {
+        if urls.count == 2 {
+            insidePdfUrl = urls[0]
+            coverPdfUrl = urls[1]
+        }
     }
     
     /// Sets one of the available layouts for a page number
@@ -592,8 +600,9 @@ extension PhotobookProduct: Hashable, Equatable {
             
             stringHash += "pt:\(template.id),"
             if let upsoldOptions = upsoldOptions {
-                stringHash += "po:\(upsoldOptions)"
+                stringHash += "po:\(upsoldOptions),"
             }
+            stringHash += "pc:\(itemCount),"
             
             return stringHash.hashValue
         }

@@ -12,110 +12,48 @@ import XCTest
 class CostTests: XCTestCase {
     
     let validDictionary: [String: Any] = [
-        "line_items": [
-            ["variant_id": 1,
-             "description": "Line Item",
-             "cost": ["amount": "30.0", "currency": "GBP"]]
-        ],
-        "shipping_methods": [
-            ["id": 3,
-             "name": "standard",
-             "shipping_cost": ["amount": "2", "currency": "GBP"],
-             "total_order_cost": ["amount": "30", "currency": "GBP"],
-             "deliver_time": ["max_days": 30, "min_days": 4]],
-            ["id": 4,
-             "name": "express",
-             "shipping_cost": ["amount": "10", "currency": "GBP"],
-             "total_order_cost": ["amount": "38", "currency": "GBP"],
-             "deliver_time": ["max_days": 2, "min_days": 1]]
-        ],
+        "total_shipping_cost": ["GBP": 7.06, "EUR": 8.039999999999999],
         "promo_code": [
-            "discount": ["amount": "1.5", "currency": "GBP"]
+            "invalid_message": "<null>",
+            "discount": ["GBP": 2, "EUR": 2.5]
+        ],
+        "total": ["GBP": 26.06, "EUR": 30.53],
+        "shipping_discount": ["GBP": 0, "EUR": 0],
+        "total_product_cost": ["GBP": 21, "EUR": 24.99],
+        "line_items": [
+            ["job_id": "<null>",
+             "quantity": 1,
+             "shipping_cost": ["GBP": 7.06, "EUR": 8.039999999999999],
+             "template_id": "hdbook_127x127",
+             "product_cost": ["GBP": 21, "EUR": 24.99],
+             "description": "1 x Premium Square Photobook 12.7cm (Matte)",
+             "upsell_discount": ["GBP": 0, "EUR": 0]]
         ]
     ]
     
     func testInit() {
         let hash = 233
-        let lineItems = [LineItem(id: 1, name: "item", cost: 3.0, formattedCost: "3")]
-        let shippingMethods = [ShippingMethod(id: 1, name: "shipping", shippingCostFormatted: "£5.99", totalCost: 20.4, totalCostFormatted: "£20.40", maxDeliveryTime: 30, minDeliveryTime: 4)]
-        let promoDiscount = "discount"
+        let totalShippingCost = Price(currencyCode: "GBP", value: 7.06)
+        let promoDiscount = Price(currencyCode: "GBP", value: 0)
         let promoCodeInvalidReason = "reason"
+        let total = Price(currencyCode: "GBP", value: 28.06)
+        let lineItems = [LineItem(id: "hdbook_127x127", name: "item", cost: Price(currencyCode: "GBP", value: 21)!)]
         
-        let cost = Cost(hash: hash, lineItems: lineItems, shippingMethods: shippingMethods, promoDiscount: promoDiscount, promoCodeInvalidReason: promoCodeInvalidReason)
+        let cost = Cost(hash: hash, lineItems: lineItems, totalShippingCost: totalShippingCost!, total: total!, promoDiscount: promoDiscount, promoCodeInvalidReason: promoCodeInvalidReason)
         
         XCTAssertEqual(cost.orderHash, 233)
-        XCTAssertEqualOptional(cost.lineItems?.first?.id, 1)
+        XCTAssertEqualOptional(cost.lineItems?.first?.id, "hdbook_127x127")
         XCTAssertEqualOptional(cost.lineItems?.first?.name, "item")
-        XCTAssertEqualOptional(cost.lineItems?.first?.cost, 3)
-        XCTAssertEqualOptional(cost.lineItems?.first?.formattedCost, "3")
-        XCTAssertEqualOptional(cost.shippingMethods?.first?.id, 1)
-        XCTAssertEqualOptional(cost.shippingMethods?.first?.name, "shipping")
-        XCTAssertEqualOptional(cost.shippingMethods?.first?.shippingCostFormatted, "£5.99")
-        XCTAssertEqualOptional(cost.shippingMethods?.first?.totalCost, 20.4)
-        XCTAssertEqualOptional(cost.shippingMethods?.first?.totalCostFormatted, "£20.40")
-        XCTAssertEqualOptional(cost.shippingMethods?.first?.maxDeliveryTime, 30)
-        XCTAssertEqualOptional(cost.shippingMethods?.first?.minDeliveryTime, 4)
-        XCTAssertEqualOptional(cost.promoDiscount, "discount")
+        XCTAssertEqualOptional(cost.lineItems?.first?.cost, lineItems.first?.cost)
+        XCTAssertEqualOptional(cost.promoDiscount, promoDiscount)
         XCTAssertEqualOptional(cost.promoCodeInvalidReason, "reason")
-    }
- 
-    func testShippingMethod_shouldBeNilIfShippingMethodIsNil() {
-        let hash = 1
-        
-        let shippingMethods = [
-            ShippingMethod(id: 1, name: "shipping1", shippingCostFormatted: "£2.99", totalCost: 20.4, totalCostFormatted: "£2.40", maxDeliveryTime: 20, minDeliveryTime: 4),
-            ShippingMethod(id: 2, name: "shipping2", shippingCostFormatted: "£5.99", totalCost: 30.4, totalCostFormatted: "£3.40", maxDeliveryTime: 40, minDeliveryTime: 8)
-        ]
-
-        let cost = Cost(hash: hash, lineItems: nil, shippingMethods: shippingMethods, promoDiscount: nil, promoCodeInvalidReason: nil)
-        
-        let shippingMethod = cost.shippingMethod(id: nil)
-        
-        XCTAssertNil(shippingMethod)
-    }
-    
-    func testShippingMethod_shouldBeNilIfTheListOfShippingMethodsIsNil() {
-        let hash = 1
-        let cost = Cost(hash: hash, lineItems: nil, shippingMethods: nil, promoDiscount: nil, promoCodeInvalidReason: nil)
-        
-        let shippingMethod = cost.shippingMethod(id: 1)
-        
-        XCTAssertNil(shippingMethod)
-    }
-    
-    func testShippingMethod_shouldBeNilIfTheListOfShippingMethodsIsEmpty() {
-        let hash = 1
-        let cost = Cost(hash: hash, lineItems: nil, shippingMethods: [], promoDiscount: nil, promoCodeInvalidReason: nil)
-        
-        let shippingMethod = cost.shippingMethod(id: 1)
-        
-        XCTAssertNil(shippingMethod)
-    }
-    
-    func testShippingMethod_shouldReturnTheRightShippingMethod() {
-        let hash = 1
-        
-        let shippingMethods = [
-            ShippingMethod(id: 1, name: "shipping1", shippingCostFormatted: "£2.99", totalCost: 20.4, totalCostFormatted: "£2.40", maxDeliveryTime: 20, minDeliveryTime: 4),
-            ShippingMethod(id: 2, name: "shipping2", shippingCostFormatted: "£5.99", totalCost: 30.4, totalCostFormatted: "£3.40", maxDeliveryTime: 40, minDeliveryTime: 8),
-            ShippingMethod(id: 3, name: "shipping3", shippingCostFormatted: "£7.99", totalCost: 30.4, totalCostFormatted: "£3.40", maxDeliveryTime: 50, minDeliveryTime: 8),
-            ShippingMethod(id: 4, name: "shipping4", shippingCostFormatted: "£9.99", totalCost: 30.4, totalCostFormatted: "£3.40", maxDeliveryTime: 60, minDeliveryTime: 8),
-            ]
-        
-        let cost = Cost(hash: hash, lineItems: nil, shippingMethods: shippingMethods, promoDiscount: nil, promoCodeInvalidReason: nil)
-        
-        let shippingMethod = cost.shippingMethod(id: 3)
-        
-        XCTAssertEqualOptional(shippingMethod?.id, 3)
-        XCTAssertEqualOptional(shippingMethod?.name, "shipping3")
     }
 
     func testParseDetails_shoudParseAValidDictionary() {
         let cost = Cost.parseDetails(dictionary: validDictionary)
         
+        XCTAssertNotNil(cost)
         XCTAssertEqualOptional(cost?.lineItems?.count, 1)
-        XCTAssertEqualOptional(cost?.shippingMethods?.count, 2)
-        XCTAssertEqualOptional(cost?.promoDiscount, "£1.50")
     }
     
     func testParseDetails_shouldFailIfLineItemsAreMissing() {
@@ -126,9 +64,9 @@ class CostTests: XCTestCase {
         XCTAssertNil(cost)
     }
     
-    func testParseDetails_shouldFailIfShippingMethodsAreMissing() {
+    func testParseDetails_shouldFailIfTotalIsissing() {
         var invalidDictionary = validDictionary
-        invalidDictionary["shipping_methods"] = nil
+        invalidDictionary["total"] = nil
         
         let cost = Cost.parseDetails(dictionary: invalidDictionary)
         XCTAssertNil(cost)
@@ -139,7 +77,7 @@ class CostTests: XCTestCase {
         invalidDictionary["promo_code"] = ["invalid_message": "Promo code not recognised"]
         
         let cost = Cost.parseDetails(dictionary: invalidDictionary)
-        XCTAssertEqualOptional(cost?.promoCodeInvalidReason, "Promo code not recognised")
+        XCTAssertNotNil(cost?.promoCodeInvalidReason)
     }
 
 

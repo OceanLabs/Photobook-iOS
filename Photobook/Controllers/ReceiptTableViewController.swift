@@ -301,7 +301,6 @@ class ReceiptTableViewController: UITableViewController {
             return cell
         case Section.details.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptDetailsTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptDetailsTableViewCell
-            cell.shippingMethodLabel.text = cost?.shippingMethod(id: order.shippingMethod)?.name
             
             cell.orderNumberLabel.alpha = 0.35
             switch state {
@@ -332,11 +331,11 @@ class ReceiptTableViewController: UITableViewController {
         case Section.lineItems.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptLineItemTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptLineItemTableViewCell
             cell.lineItemNameLabel.text = cost?.lineItems?[indexPath.row].name
-            cell.lineItemCostLabel.text = cost?.lineItems?[indexPath.row].formattedCost
+            cell.lineItemCostLabel.text = cost?.lineItems?[indexPath.row].cost.formatted
             return cell
         case Section.footer.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptFooterTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptFooterTableViewCell
-            cell.totalCostLabel.text = cost?.shippingMethod(id: order.shippingMethod)?.totalCostFormatted
+            cell.totalCostLabel.text = cost?.total?.formatted
             return cell
         default:
             return UITableViewCell()

@@ -12,37 +12,36 @@ import XCTest
 class LineItemTests: XCTestCase {
     
     var validDictionary: [String: Any] = [
-        "variant_id": 2,
+        "template_id": "circus_clown1",
         "description": "Clown Costume",
-        "cost": ["amount": "3.49", "currency": "GBP"],
+        "product_cost": ["GBP": 21, "EUR": 24.99]
     ]
     
     func testInit() {
-        let id = 4
+        let id = "item_no2"
         let name = "Item number 2"
-        let cost: Decimal = 2.49
-        let formattedCost = "£2.49"
+        let cost = Price(currencyCode: "GBP", value: 21)
         
-        let lineItem = LineItem(id: id, name: name, cost: cost, formattedCost: formattedCost)
+        let lineItem = LineItem(id: id, name: name, cost: cost!)
         
         XCTAssertEqual(lineItem.id, id)
         XCTAssertEqual(lineItem.name, name)
         XCTAssertEqual(lineItem.cost, cost)
-        XCTAssertEqual(lineItem.formattedCost, formattedCost)
     }
     
     func testParseDetails_shoudParseAValidDictionary() {
         let lineItem = LineItem.parseDetails(dictionary: validDictionary)
         
-        XCTAssertEqualOptional(lineItem?.id, 2)
+        let expectedCost = Price(currencyCode: "GBP", value: 21)
+        
+        XCTAssertEqualOptional(lineItem?.id, "circus_clown1")
         XCTAssertEqualOptional(lineItem?.name, "Clown Costume")
-        XCTAssertEqualOptional(lineItem?.cost, 3.49)
-        XCTAssertEqualOptional(lineItem?.formattedCost, "£3.49")
+        XCTAssertEqualOptional(lineItem?.cost, expectedCost)
     }
     
     func testParseDetails_shouldFailWithoutAnId() {
         var invalidDictionary = validDictionary
-        invalidDictionary["variant_id"] = nil
+        invalidDictionary["template_id"] = nil
         
         let lineItem = LineItem.parseDetails(dictionary: invalidDictionary)
         XCTAssertNil(lineItem)
@@ -58,23 +57,15 @@ class LineItemTests: XCTestCase {
     
     func testParseDetails_shouldFailWithoutACost() {
         var invalidDictionary = validDictionary
-        invalidDictionary["cost"] = nil
+        invalidDictionary["product_cost"] = nil
         
         let lineItem = LineItem.parseDetails(dictionary: invalidDictionary)
         XCTAssertNil(lineItem)
     }
 
-    func testParseDetails_shouldFailWithoutACurrency() {
+    func testParseDetails_shouldFailWithInvalidCurrency() {
         var invalidDictionary = validDictionary
-        invalidDictionary["cost"] = ["amount": "3.44"]
-        
-        let lineItem = LineItem.parseDetails(dictionary: invalidDictionary)
-        XCTAssertNil(lineItem)
-    }
-
-    func testParseDetails_shouldFailWithoutAnAmount() {
-        var invalidDictionary = validDictionary
-        invalidDictionary["cost"] = ["currency": "GBP"]
+        invalidDictionary["product_cost"] = ["FFS": 45]
         
         let lineItem = LineItem.parseDetails(dictionary: invalidDictionary)
         XCTAssertNil(lineItem)
