@@ -63,6 +63,9 @@
 		2E4C9E8E204979EA00F5AD48 /* URLAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8D204979EA00F5AD48 /* URLAsset.swift */; };
 		2E50703B20E12368002889C5 /* AssetSelectorViewControllerSDKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E50703620E120B7002889C5 /* AssetSelectorViewControllerSDKExtensions.swift */; };
 		2E50703C20E1236F002889C5 /* AssetSelectorViewControllerAppExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E50703420E11FF2002889C5 /* AssetSelectorViewControllerAppExtensions.swift */; };
+		2E51FEBB20E237AE00E62102 /* PayPalDynamicLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E51FEBA20E237AE00E62102 /* PayPalDynamicLoader.framework */; };
+		2E51FEBC20E2420F00E62102 /* PayPalDynamicLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E51FEBA20E237AE00E62102 /* PayPalDynamicLoader.framework */; };
+		2E51FEBD20E2420F00E62102 /* PayPalDynamicLoader.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E51FEBA20E237AE00E62102 /* PayPalDynamicLoader.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2E52B4A420909EEF00D5C20B /* BasketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E52B4A320909EEF00D5C20B /* BasketTests.swift */; };
 		2E56434920A97CF900ECC98F /* HelperPhotobookUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E56434820A97CF900ECC98F /* HelperPhotobookUITests.swift */; };
 		2E5CCC2A207B76870003000F /* GlobalConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5CCC29207B76870003000F /* GlobalConstants.swift */; };
@@ -483,6 +486,7 @@
 				2E8705BD208E0520004B4B36 /* OAuthSwift.framework in Embed Frameworks */,
 				2E8705B3208E0520004B4B36 /* FacebookCore.framework in Embed Frameworks */,
 				2E8705AA208E042C004B4B36 /* PhotobookSDK.framework in Embed Frameworks */,
+				2E51FEBD20E2420F00E62102 /* PayPalDynamicLoader.framework in Embed Frameworks */,
 				2E8705BB208E0520004B4B36 /* KeychainSwift.framework in Embed Frameworks */,
 				2E8705BF208E0520004B4B36 /* PayPalMobileSDK.framework in Embed Frameworks */,
 				2E8705B9208E0520004B4B36 /* FBSDKLoginKit.framework in Embed Frameworks */,
@@ -548,6 +552,7 @@
 		2E4C9E8D204979EA00F5AD48 /* URLAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLAsset.swift; sourceTree = "<group>"; };
 		2E50703420E11FF2002889C5 /* AssetSelectorViewControllerAppExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetSelectorViewControllerAppExtensions.swift; sourceTree = "<group>"; };
 		2E50703620E120B7002889C5 /* AssetSelectorViewControllerSDKExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetSelectorViewControllerSDKExtensions.swift; sourceTree = "<group>"; };
+		2E51FEBA20E237AE00E62102 /* PayPalDynamicLoader.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PayPalDynamicLoader.framework; path = Carthage/Build/iOS/PayPalDynamicLoader.framework; sourceTree = "<group>"; };
 		2E52B4A320909EEF00D5C20B /* BasketTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketTests.swift; sourceTree = "<group>"; };
 		2E56434620A97CF900ECC98F /* HelperPhotobookUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HelperPhotobookUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E56434820A97CF900ECC98F /* HelperPhotobookUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperPhotobookUITests.swift; sourceTree = "<group>"; };
@@ -796,6 +801,7 @@
 				2E8705BC208E0520004B4B36 /* OAuthSwift.framework in Frameworks */,
 				2E8705B2208E0520004B4B36 /* FacebookCore.framework in Frameworks */,
 				2E8705A9208E042C004B4B36 /* PhotobookSDK.framework in Frameworks */,
+				2E51FEBC20E2420F00E62102 /* PayPalDynamicLoader.framework in Frameworks */,
 				2E8705BA208E0520004B4B36 /* KeychainSwift.framework in Frameworks */,
 				2E8705BE208E0520004B4B36 /* PayPalMobileSDK.framework in Frameworks */,
 				2E8705B8208E0520004B4B36 /* FBSDKLoginKit.framework in Frameworks */,
@@ -821,6 +827,7 @@
 				2ED14C3F2063ABB700ED2E2C /* Analytics.framework in Frameworks */,
 				2ED14C402063ABB700ED2E2C /* FacebookCore.framework in Frameworks */,
 				2ED14C412063ABB700ED2E2C /* OAuthSwift.framework in Frameworks */,
+				2E51FEBB20E237AE00E62102 /* PayPalDynamicLoader.framework in Frameworks */,
 				2ED14C422063ABB700ED2E2C /* FBSDKLoginKit.framework in Frameworks */,
 				2ED14C432063ABB700ED2E2C /* KeychainSwift.framework in Frameworks */,
 				2ED14C442063ABB700ED2E2C /* PayPalMobileSDK.framework in Frameworks */,
@@ -1189,6 +1196,7 @@
 		3BAD030253756D88DE562AFF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2E51FEBA20E237AE00E62102 /* PayPalDynamicLoader.framework */,
 				2EEC03BE2091C8BF008725B7 /* Analytics.framework */,
 				2EEC03C02091C8BF008725B7 /* Bolts.framework */,
 				2EEC03C22091C8BF008725B7 /* FBSDKCoreKit.framework */,

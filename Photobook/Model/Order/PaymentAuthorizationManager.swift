@@ -9,12 +9,7 @@
 import UIKit
 import Stripe
 import PassKit
-
-#if COCOAPODS
 import PayPalDynamicLoader
-#else
-import PayPalMobileSDK
-#endif
 
 enum PaymentMethod: Int, Codable {
     case creditCard, applePay, payPal
