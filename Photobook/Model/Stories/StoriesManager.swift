@@ -65,7 +65,7 @@ class StoriesManager: NSObject {
     func loadTopStories(completionHandler:(() -> Void)? = nil) {
         guard !loading, stories.isEmpty else { completionHandler?(); return }
         
-        var serviceQuality = DispatchQoS.QoSClass.background
+        var serviceQuality = DispatchQoS.QoSClass.default
         #if DEBUG
         if let _ = NSClassFromString("XCTest") {
             serviceQuality = DispatchQoS.QoSClass.userInteractive
