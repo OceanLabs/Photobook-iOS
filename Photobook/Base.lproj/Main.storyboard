@@ -3622,7 +3622,6 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     <size key="freeformSize" width="414" height="1100"/>
                     <connections>
                         <outlet property="dismissBarButtonItem" destination="SPh-4A-khr" id="q5j-Om-Zrg"/>
-                        <segue destination="d5b-Ic-QyB" kind="custom" identifier="ReceiptDismiss" customClass="IntroDismissSegue" customModule="Photobook" customModuleProvider="target" id="V0I-No-StO"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gyq-3W-xk4" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -6227,7 +6226,4 @@ Copyright © 2018 Kite. All right reserverd.</string>
         <image name="textfield-clear" width="16" height="16"/>
         <image name="uploading-spinner" width="12" height="12"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="qeW-AA-Oo4"/>
-    </inferredMetricsTieBreakers>
 </document>

@@ -200,20 +200,16 @@ class ReceiptTableViewController: UITableViewController {
             // Check if the Photobook app was launched into the ReceiptViewController
             if welf?.navigationController?.viewControllers.count == 1 {
                 welf?.navigationController?.isNavigationBarHidden = true
-                welf?.performSegue(withIdentifier: "ReceiptDismiss", sender: nil)
+                
+                let tabBarController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
+                let dismissSegue = IntroDismissSegue(identifier: "ReceiptDismiss", source: self, destination: tabBarController)
+                welf?.dismissClosure?(tabBarController)
+                dismissSegue.perform()
             } else {
                 welf?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
                 welf?.navigationController?.popToRootViewController(animated: true)
             }
             #endif
-        }
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard segue.identifier == "ReceiptDismiss" else { return }
-        
-        if let tabBarController = segue.destination as? UITabBarController {
-            dismissClosure?(tabBarController)
         }
     }
     
@@ -235,10 +231,6 @@ class ReceiptTableViewController: UITableViewController {
     private func showPaymentMethods() {
         let paymentViewController = storyboard?.instantiateViewController(withIdentifier: "PaymentMethodsViewController") as! PaymentMethodsViewController
         navigationController?.pushViewController(paymentViewController, animated: true)
-    }
-    
-    func proceedToTabBarController() {
-        performSegue(withIdentifier: "ReceiptDismiss", sender: nil)
     }
     
     func notificationsSetup() {
