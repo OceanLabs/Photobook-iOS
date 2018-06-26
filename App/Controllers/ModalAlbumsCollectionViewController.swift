@@ -8,10 +8,6 @@
 
 import UIKit
 
-protocol AssetPickerCollectionViewControllerDelegate: class {
-    func viewControllerForPresentingOn() -> UIViewController?
-}
-
 class ModalAlbumsCollectionViewController: UIViewController, PhotobookAssetPicker {
 
     private struct Constants {
