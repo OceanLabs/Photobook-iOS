@@ -20,8 +20,8 @@ extension UIFont {
     }
     
     static func registerFontWithFilenameString(filenameString: String) {
-        guard let frameworkBundle = Bundle(identifier: "ly.kite.Photobook"),
-            let pathForResourceString = frameworkBundle.path(forResource: filenameString, ofType: nil),
+        let frameworkBundle = Bundle(identifier: "ly.kite.Photobook") ?? photobookResourceBundle
+        guard let pathForResourceString = frameworkBundle.path(forResource: filenameString, ofType: nil),
             let fontData = NSData(contentsOfFile: pathForResourceString),
             let dataProvider = CGDataProvider(data: fontData)
             else { return }
