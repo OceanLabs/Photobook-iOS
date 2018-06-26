@@ -12,14 +12,8 @@ class ReceiptInfoTableViewCell: UITableViewCell {
 
     static let reuseIdentifier = NSStringFromClass(ReceiptInfoTableViewCell.self).components(separatedBy: ".").last!
     
-    @IBOutlet weak var iconLabel: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                iconLabel.font = UIFontMetrics.default.scaledFont(for: iconLabel.font)
-                iconLabel.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
+    
+    @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel! {
         didSet {
             if #available(iOS 11.0, *) {
