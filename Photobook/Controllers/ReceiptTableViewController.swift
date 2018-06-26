@@ -242,8 +242,15 @@ class ReceiptTableViewController: UITableViewController {
     }
     
     func notificationsSetup() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) { (success, error) in
-            // Don't care about the result
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) { (success, error) in
+                // Don't care about the result
+            }
+        } else {
+            // ios 9
+            let type: UIUserNotificationType = [UIUserNotificationType.badge, UIUserNotificationType.alert, UIUserNotificationType.sound]
+            let setting = UIUserNotificationSettings(types: type, categories: nil)
+            UIApplication.shared.registerUserNotificationSettings(setting)
         }
     }
     
@@ -390,34 +397,53 @@ extension ReceiptTableViewController: OrderProcessingDelegate {
         
         guard error == nil else {
 
-            let userNotification = UNMutableNotificationContent()
+            var notificationTitle: String?
+            var notificationBody: String?
             
             // Determine error
             switch error! {
             case .payment:
                 state = .paymentFailed
-                userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitlePaymentFailed", value: "Payment Failed", comment: "title of a notification notifying about failed photobook payment")
-                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyPaymentFailed", value: "Update your payment method to finish photobook checkout", comment: "body of a notification notifying about failed photobook payment")
+                notificationTitle = NSLocalizedString("ReceiptTableViewController/NotificationTitlePaymentFailed", value: "Payment Failed", comment: "title of a notification notifying about failed photobook payment")
+                notificationBody = NSLocalizedString("ReceiptTableViewController/NotificationBodyPaymentFailed", value: "Update your payment method to finish photobook checkout", comment: "body of a notification notifying about failed photobook payment")
             case .cancelled:
                 state = .cancelled
-                userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitleCancelled", value: "Photobook Cancelled", comment: "title of a notification notifying about failed photobook that had to be cancelled")
-                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyCancelled", value: "Something went wrong and we couldn't process your photo book", comment: "body of a notification notifying about failed photobook that had to be cancelled")
+                notificationTitle = NSLocalizedString("ReceiptTableViewController/NotificationTitleCancelled", value: "Photobook Cancelled", comment: "title of a notification notifying about failed photobook that had to be cancelled")
+                notificationBody = NSLocalizedString("ReceiptTableViewController/NotificationBodyCancelled", value: "Something went wrong and we couldn't process your photo book", comment: "body of a notification notifying about failed photobook that had to be cancelled")
             case .api(message: let errorMessage):
                 state = .error
-                userNotification.title = errorMessage.title?.uppercased() ?? CommonLocalizedStrings.somethingWentWrong.uppercased()
-                userNotification.body = errorMessage.text
+                notificationTitle = errorMessage.title?.uppercased() ?? CommonLocalizedStrings.somethingWentWrong.uppercased()
+                notificationBody = errorMessage.text
             default:
                 state = .error
-                userNotification.title = NSLocalizedString("ReceiptTableViewController/NotificationTitleProcessingFailed", value: "Couldn't Finish Photobook", comment: "title of a notification notifying about failed photobook processing")
-                userNotification.body = NSLocalizedString("ReceiptTableViewController/NotificationBodyProcessingFailed", value: "Something went wrong and your photo book couldn't be sent to our servers", comment: "body of a notification notifying about failed photobook processing")
+                notificationTitle = NSLocalizedString("ReceiptTableViewController/NotificationTitleProcessingFailed", value: "Couldn't Finish Photobook", comment: "title of a notification notifying about failed photobook processing")
+                notificationBody = NSLocalizedString("ReceiptTableViewController/NotificationBodyProcessingFailed", value: "Something went wrong and your photo book couldn't be sent to our servers", comment: "body of a notification notifying about failed photobook processing")
             }
             
             lastProcessingError = error
             progressOverlayViewController.hide()
             
             // Send local notification
-            let request = UNNotificationRequest(identifier: "ReceiptTableViewController.OrderProcessingFailed", content: userNotification, trigger:nil)
-            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            guard let title = notificationTitle, let body = notificationBody else { return }
+            
+            if #available(iOS 10.0, *) {
+                let userNotification = UNMutableNotificationContent()
+                userNotification.title = title
+                userNotification.body = body
+                userNotification.badge = 1
+                let request = UNNotificationRequest(identifier: "ReceiptTableViewController.OrderProcessingFailed", content: userNotification, trigger:nil)
+                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            } else {
+                // ios 9
+                let notification = UILocalNotification()
+                notification.alertTitle = title
+                notification.alertBody = body
+                notification.fireDate = Date()
+                notification.applicationIconBadgeNumber = 1
+                notification.soundName = UILocalNotificationDefaultSoundName
+                UIApplication.shared.cancelAllLocalNotifications()
+                UIApplication.shared.scheduleLocalNotification(notification)
+            }
 
             return
         }

@@ -111,7 +111,11 @@ extension InstagramLoginViewController: WKNavigationDelegate {
             
             let alertController = UIAlertController(title: NSLocalizedString("Social/Instagram/ResetPasswordTitle", value: "Reset Instagram Password?", comment: "Alert title asking to reset the user's Instagram password"), message: NSLocalizedString("Social/Instagram/ResetPasswordMessage", value: "This will open Safari so you can reset your password. Please return here when you are done.", comment: "Instructions for resetting the user's Instagram password"), preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: { _ in
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                } else {
+                    UIApplication.shared.openURL(url)
+                }
             }))
             alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
             present(alertController, animated: true, completion: nil)
@@ -131,7 +135,11 @@ extension InstagramLoginViewController: WKNavigationDelegate {
             
             let alertController = UIAlertController(title: NSLocalizedString("Social/Instagram/OpenInSafariTitle", value: "This link will open in Safari", comment: "Alert title asking to the user to open the link in Safari"), message: NSLocalizedString("Social/Instagram/ProceedConfirmation", value: "Do you want to proceed?", comment: "Alert message asking the user if they want to proceed"), preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: { _ in
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                } else {
+                    UIApplication.shared.openURL(url)
+                }
             }))
             alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
             present(alertController, animated: true, completion: nil)

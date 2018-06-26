@@ -104,6 +104,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     private var isDragging = false
     private weak var currentlyPanningGesture: UIPanGestureRecognizer?
     private var scrollingTimer: Timer?
+    private var timerBlock: (() -> Void)?
     
     // Scrolling at 60Hz when we are dragging looks good enough and avoids having to normalize the scroll offset
     private lazy var screenRefreshRate: Double = 1.0 / 60.0
@@ -501,7 +502,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         guard let leftData = try? PropertyListEncoder().encode(leftProductLayout) else {
             fatalError("Photobook: encoding of product layout failed")
         }
-        pasteBoard?.setItems([["ly.kite.photobook.productLayout" : leftData]])
+        pasteBoard?.items.removeAll()
+        pasteBoard?.addItems([["ly.kite.photobook.productLayout" : leftData]])
         
         if !leftProductLayout.layout.isDoubleLayout, let rightIndex = cell.rightIndex {
             let rightProductLayout = product.productLayouts[rightIndex]
@@ -610,7 +612,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         proposedDropIndexPath = nil
         collectionView.deleteItems(at: [indexPath])
         
-        if enableFeedback{
+        if enableFeedback, #available(iOS 10.0, *) {
             let generator = UIImpactFeedbackGenerator(style: .medium)
             generator.impactOccurred()
         }
@@ -620,8 +622,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         proposedDropIndexPath = indexPath
         collectionView.insertItems(at: [indexPath])
         
-        let generator = UIImpactFeedbackGenerator(style: .medium)
-        generator.impactOccurred()        
+        if #available(iOS 10.0, *) {
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.impactOccurred()
+        }
     }
     
     private func dropView() {
@@ -1029,24 +1033,27 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
         if draggingView.frame.origin.y + draggingView.frame.size.height / 2.0 > view.frame.size.height * Constants.autoScrollBottomScreenThreshold {
             guard scrollingTimer == nil else { return }
             
-            scrollingTimer = Timer(timeInterval: screenRefreshRate, repeats: true, block: { [weak welf = self] timer in
+            timerBlock = { [weak welf = self] in
                 guard welf != nil else { return }
                 if welf!.collectionView.contentOffset.y + welf!.collectionView.frame.size.height + (welf!.navigationController?.navigationBar.frame.maxY ?? 0) - Constants.proposalCellHeight < welf!.collectionView.contentSize.height {
-                    welf!.collectionView.contentOffset = CGPoint(x: welf!.collectionView.contentOffset.x, y: welf!.collectionView.contentOffset.y + Constants.autoScrollOffset);
+                    welf!.collectionView.contentOffset = CGPoint(x: welf!.collectionView.contentOffset.x, y: welf!.collectionView.contentOffset.y + Constants.autoScrollOffset)
                     if let gesture = welf!.currentlyPanningGesture{
                         welf!.didPan(gesture)
                     }
                 }
-            })
+            }
+            scrollingTimer = Timer(timeInterval: screenRefreshRate, target: self, selector: #selector(invokeTimerBlock), userInfo: [], repeats: true)
         }
         else if (draggingView.frame.origin.y + draggingView.frame.size.height / 2.0 < view.frame.size.height * Constants.autoScrollTopScreenThreshold) {
             guard scrollingTimer == nil else { return }
-            scrollingTimer = Timer(timeInterval: screenRefreshRate, repeats: true, block: { [weak welf = self] _ in
+            
+            timerBlock = { [weak welf = self] in
                 guard welf != nil else { return }
                 if welf!.collectionView.contentOffset.y > -(welf!.navigationController?.navigationBar.frame.maxY ?? 0) {
-                    welf!.collectionView.contentOffset = CGPoint(x: welf!.collectionView.contentOffset.x, y: welf!.collectionView.contentOffset.y - Constants.autoScrollOffset);
+                    welf!.collectionView.contentOffset = CGPoint(x: welf!.collectionView.contentOffset.x, y: welf!.collectionView.contentOffset.y - Constants.autoScrollOffset)
                 }
-            })
+            }
+            scrollingTimer = Timer(timeInterval: screenRefreshRate, target: self, selector: #selector(invokeTimerBlock), userInfo: nil, repeats: true)
         }
         else {
             stopTimer()
@@ -1055,6 +1062,10 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
         if let timer = scrollingTimer {
             RunLoop.current.add(timer, forMode: .defaultRunLoopMode)
         }
+    }
+    
+    @objc private func invokeTimerBlock() {
+        timerBlock?()
     }
     
     private func showNotAllowedToAddMorePagesAlert() {
