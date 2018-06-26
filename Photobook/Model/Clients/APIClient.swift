@@ -11,6 +11,7 @@ import UIKit
 import SDWebImage
 
 enum APIClientError: Error {
+    case generic
     case parsing
     case connection
     case server(code: Int, message: String)
@@ -331,7 +332,7 @@ class APIClient: NSObject {
     
     func uploadImage(_ image: UIImage, imageName: String, context: APIContext, endpoint: String, completion: @escaping (AnyObject?, Error?) -> ()) {
         
-        guard let imageData = imageData(withImage: image, imageName:imageName) else {
+        guard let imageData = imageData(withImage: image, imageName: imageName) else {
             print("Image Upload: cannot read image data")
             completion(nil, nil)
             return
@@ -414,10 +415,9 @@ extension APIClient: URLSessionDelegate, URLSessionDataDelegate {
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         guard var json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: AnyObject] else {
             if let stringData = String(data: data, encoding: String.Encoding.utf8) {
-                #if DEBUG
                 print("API Error: \(stringData)")
-                #endif
             }
+            NotificationCenter.default.post(name: APIClient.backgroundSessionTaskFinished, object: nil, userInfo: nil)
             return
         }
         

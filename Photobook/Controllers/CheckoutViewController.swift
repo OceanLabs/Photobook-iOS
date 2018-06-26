@@ -206,7 +206,7 @@ class CheckoutViewController: UIViewController {
         
         registerForKeyboardNotifications()
         
-        //clear fields
+        // Clear fields
         deliveryDetailsLabel.text = nil
         shippingMethodLabel.text = nil
         paymentMethodLabel.text = nil
@@ -216,13 +216,12 @@ class CheckoutViewController: UIViewController {
         payButtonOriginalColor = payButton.backgroundColor
         payButton.addTarget(self, action: #selector(CheckoutViewController.payButtonTapped(_:)), for: .touchUpInside)
         
-        
-        //APPLE PAY
+        // Apple Pay
         if PaymentAuthorizationManager.isApplePayAvailable {
             setupApplePayButton()
         }
         
-        //POPULATE
+        // Request cost
         refresh(forceCostUpdate: true, forceShippingMethodsUpdate: true)
         emptyScreenViewController.show(message: Constants.loadingDetailsText, activity: true)
     }
