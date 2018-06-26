@@ -410,7 +410,6 @@
 		6FE3CEC3208DFC2B00BB1BAB /* FontTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE3CEC2208DFC2B00BB1BAB /* FontTypeTests.swift */; };
 		6FEF3EAB208F48EB00595A5B /* PhotobookProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEF3EAA208F48EB00595A5B /* PhotobookProductTests.swift */; };
 		6FFE21CB202CA7F9004EC0EA /* SpineTextEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFE21CA202CA7F9004EC0EA /* SpineTextEditingViewController.swift */; };
-		7CBF1FFD216E73D9ACD8E2EF /* Pods_Photobook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35185092CEAA07251E4FD67C /* Pods_Photobook.framework */; };
 		B90EB85E203701CD0005D91C /* AmountPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90EB85D203701CD0005D91C /* AmountPickerViewController.swift */; };
 		B90F287F1FFF8D1A00FF3D15 /* OrderSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90F287E1FFF8D1A00FF3D15 /* OrderSummaryViewController.swift */; };
 		B90F28822003B7A300FF3D15 /* OrderSummaryUpsellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90F28812003B7A300FF3D15 /* OrderSummaryUpsellTableViewCell.swift */; };
@@ -785,7 +784,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7CBF1FFD216E73D9ACD8E2EF /* Pods_Photobook.framework in Frameworks */,
 				688A35F15D418F152AA3CEC9 /* Pods_Photobook_App.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
