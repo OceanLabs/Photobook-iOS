@@ -13,7 +13,7 @@ pod 'FBSDKLoginKit'
 pod 'Analytics', '~> 3.0'
 pod 'PayPal-iOS-Dynamic-Loader'
 
-target 'Photobook' do
+target 'Photobook App' do
 end
 
 target 'PhotobookTests' do

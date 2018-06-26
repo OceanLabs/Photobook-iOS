@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2ED14B982063A9CD00ED2E2C"
-               BuildableName = "PhotobookSDK.framework"
-               BlueprintName = "PhotobookSDK"
+               BuildableName = "Photobook.framework"
+               BlueprintName = "Photobook"
                ReferencedContainer = "container:Photobook.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -46,8 +46,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2ED14B982063A9CD00ED2E2C"
-            BuildableName = "PhotobookSDK.framework"
-            BlueprintName = "PhotobookSDK"
+            BuildableName = "Photobook.framework"
+            BlueprintName = "Photobook"
             ReferencedContainer = "container:Photobook.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -64,8 +64,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2ED14B982063A9CD00ED2E2C"
-            BuildableName = "PhotobookSDK.framework"
-            BlueprintName = "PhotobookSDK"
+            BuildableName = "Photobook.framework"
+            BlueprintName = "Photobook"
             ReferencedContainer = "container:Photobook.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
