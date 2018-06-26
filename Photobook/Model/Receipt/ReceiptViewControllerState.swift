@@ -33,13 +33,13 @@ enum ReceiptViewControllerState: Int {
         }
     }
     
-    var emoji: String? {
+    var icon:UIImage? {
         get {
             switch self {
-            case .error: return "😰"
-            case .completed: return "👍"
-            case .cancelled: return "😵"
-            case .paymentFailed, .paymentRetry: return "😔"
+            case .error: return UIImage(namedInPhotobookBundle: "receipt-upload-failed")
+            case .completed: return UIImage(namedInPhotobookBundle: "receipt-thumbs-up")
+            case .cancelled: return UIImage(namedInPhotobookBundle: "receipt-cancelled")
+            case .paymentFailed, .paymentRetry: return UIImage(namedInPhotobookBundle: "receipt-payment-failed")
             default: return nil
             }
         }
