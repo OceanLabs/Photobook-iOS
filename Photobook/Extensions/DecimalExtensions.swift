@@ -12,10 +12,11 @@ extension Decimal {
     
     static let minPrecision: Decimal = 0.01
     
-    func formattedCost(currencyCode: String) -> String {
+    func formattedCost(currencyCode: String, locale: Locale? = nil) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.currencyCode = currencyCode
+        formatter.locale = locale ?? Locale.current
         return formatter.string(from: self as NSNumber)!
     }
     

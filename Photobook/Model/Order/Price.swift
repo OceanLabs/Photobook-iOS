@@ -8,24 +8,30 @@
 
 import UIKit
 
-struct Price: Codable {
+class Price: Codable {
     
     private static let currencyCodeDefault = "GBP"
     
     private(set) var currencyCode: String
     private(set) var value: Decimal
-    private(set) var formatted: String
+    var formatted: String {
+        if value > 0 {
+            return value.formattedCost(currencyCode: currencyCode, locale: locale)
+        } else {
+            return NSLocalizedString("Model/Order/Price/FormattedFree", value: "Free", comment: "Text that gets displayed if a price is 0.0").uppercased()
+        }
+    }
+    private var locale = Locale.current
+    
+    #if DEBUG
+    func setLocale(_ locale: Locale) {
+        self.locale = locale
+    }
+    #endif
     
     init?(currencyCode: String, value: Decimal) {
         self.currencyCode = currencyCode
         self.value = value
-        
-        //formatted string
-        if value > 0 {
-            self.formatted = value.formattedCost(currencyCode: currencyCode)
-        } else {
-            self.formatted = NSLocalizedString("Model/Order/Price/FormattedFree", value: "Free", comment: "Text that gets displayed if a price is 0.0").uppercased()
-        }
     }
     
     static func parse(_ dictionary: [String: Any], localeCurrencyCode: String? = Locale.current.currencyCode) -> Price? {
@@ -72,7 +78,6 @@ extension Price : Equatable {
     static func == (lhs: Price, rhs: Price) -> Bool {
         return
             lhs.currencyCode == rhs.currencyCode &&
-                lhs.value ==~ rhs.value &&
-                lhs.formatted == rhs.formatted
+                lhs.value ==~ rhs.value
     }
 }
