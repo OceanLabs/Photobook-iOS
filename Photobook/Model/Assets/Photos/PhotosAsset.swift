@@ -113,13 +113,23 @@ class DefaultAssetManager: AssetManager {
             
             // Check that the image is either jpg, png or gif otherwise convert it to jpg. So no HEICs, TIFFs or RAWs get uploaded to the back end.
             if fileExtension == .unsupported {
-                guard let ciImage = CIImage(data: data),
-                    let jpegData = UIImageJPEGRepresentation(UIImage(ciImage: ciImage), 0.8)
-                else {
+                guard let ciImage = CIImage(data: data) else {
                     completionHandler(nil, .unsupported, AssetLoadingException.unsupported)
                     return
                 }
-                completionHandler(jpegData, .jpg, nil)
+                
+                var tmpJpegData: Data?
+                if #available(iOS 10.0, *) {
+                    tmpJpegData = CIContext().jpegRepresentation(of: ciImage, colorSpace: CGColorSpaceCreateDeviceRGB(), options: [kCGImageDestinationLossyCompressionQuality : 0.8])
+                } else {
+                    tmpJpegData = UIImageJPEGRepresentation(UIImage(ciImage: ciImage), 0.8)
+                }
+                
+                if let jpegData = tmpJpegData {
+                    completionHandler(jpegData, .jpg, nil)
+                } else {
+                    completionHandler(nil, .unsupported, AssetLoadingException.unsupported)
+                }
             } else {
                 completionHandler(imageData, fileExtension, nil)
             }
