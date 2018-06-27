@@ -79,7 +79,7 @@ class ModalAlbumsCollectionViewController: UIViewController, PhotobookAssetPicke
             navigationBar.willShowPrompt = true
             
             downwardArrowButton = UIButton(type: .custom)
-            downwardArrowButton.setImage(UIImage(namedInPhotobookBundle: "Drag-down-arrow"), for: .normal)
+            downwardArrowButton.setImage(UIImage(named: "Drag-down-arrow"), for: .normal)
             downwardArrowButton.setTitleColor(.black, for: .normal)
             downwardArrowButton.sizeToFit()
             downwardArrowButton.addTarget(self, action: #selector(didTapOnArrowButton(_:)), for: .touchUpInside)

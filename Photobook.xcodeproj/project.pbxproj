@@ -52,6 +52,7 @@
 		2E3A86EC20C0145600F1E6E2 /* CountryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3A86EB20C0145600F1E6E2 /* CountryTableViewCell.swift */; };
 		2E3A86ED20C0145600F1E6E2 /* CountryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3A86EB20C0145600F1E6E2 /* CountryTableViewCell.swift */; };
 		2E3E6A5420036FB60044EDFC /* PhotobookCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3E6A5220036FB60044EDFC /* PhotobookCollectionViewCell.swift */; };
+		2E4875DA20E397D400FC5D9F /* Main.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E4875D920E397D400FC5D9F /* Main.xcassets */; };
 		2E4B83892068E50C00059AA7 /* ReceiptViewControllerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FA530B2063F3B200669758 /* ReceiptViewControllerState.swift */; };
 		2E4B838B2068E59E00059AA7 /* ReceiptProgressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97ABBC9204D445900238C8A /* ReceiptProgressTableViewCell.swift */; };
 		2E4B838C2068E5B100059AA7 /* ReceiptInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97ABBCF204D52E400238C8A /* ReceiptInfoTableViewCell.swift */; };
@@ -518,6 +519,7 @@
 		2E3A86E820C0118800F1E6E2 /* AddPaymentMethodTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodTableViewCell.swift; sourceTree = "<group>"; };
 		2E3A86EB20C0145600F1E6E2 /* CountryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryTableViewCell.swift; sourceTree = "<group>"; };
 		2E3E6A5220036FB60044EDFC /* PhotobookCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotobookCollectionViewCell.swift; sourceTree = "<group>"; };
+		2E4875D920E397D400FC5D9F /* Main.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Main.xcassets; sourceTree = "<group>"; };
 		2E4C9E872049492400F5AD48 /* FacebookAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookAlbum.swift; sourceTree = "<group>"; };
 		2E4C9E8920494D6B00F5AD48 /* AlbumsCollectionViewController+Facebook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlbumsCollectionViewController+Facebook.swift"; sourceTree = "<group>"; };
 		2E4C9E8B2049527900F5AD48 /* FacebookAlbumManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookAlbumManager.swift; sourceTree = "<group>"; };
@@ -964,6 +966,7 @@
 				2E50702B20E10C76002889C5 /* Views */,
 				2E50702D20E10C83002889C5 /* Model */,
 				2E50703320E11FA5002889C5 /* Extensions */,
+				2E4875D920E397D400FC5D9F /* Main.xcassets */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -1728,6 +1731,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E4875DA20E397D400FC5D9F /* Main.xcassets in Resources */,
 				2E533AD720E3840D004F8481 /* Photobook.storyboard in Resources */,
 				2E0B588A1FB30F2100F31A9E /* LaunchScreen.storyboard in Resources */,
 				6FCE08D42021E4B700C55D2F /* Lora-Regular.ttf in Resources */,
