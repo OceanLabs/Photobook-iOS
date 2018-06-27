@@ -414,6 +414,12 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
             photobookViewController.assets = selectedAssetsManager?.selectedAssets
             photobookViewController.album = album
             photobookViewController.albumManager = albumManager
+            photobookViewController.dismissClosure = { (photobookProduct) in
+                OrderManager.shared.basketOrder.products = [photobookProduct]
+                
+                let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
+                photobookViewController.navigationController?.pushViewController(checkoutViewController, animated: true)
+            }
             navigationController?.pushViewController(photobookViewController, animated: true)
         }
         selectedAssetsManager?.orderAssetsByDate()

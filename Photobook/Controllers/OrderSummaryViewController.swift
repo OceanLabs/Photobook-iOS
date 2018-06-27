@@ -107,16 +107,12 @@ class OrderSummaryViewController: UIViewController {
         updateCheckoutViewControllerPreviewImage()
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "OrderSummarySegueName" {
-            
-            // Add current item to the basket
-            OrderManager.shared.basketOrder.products = [product] //We currently only support one item at a time
-            
-            checkoutViewController = segue.destination as? CheckoutViewController
-        }
-    }
+    var completionClosure: ((_ photobook: PhotobookProduct) -> Void)?
     
+    @IBAction func tappedCallToAction(_ sender: Any) {
+        completionClosure?(product)
+    }
+        
     private func updateCheckoutViewControllerPreviewImage() {
         guard let checkoutViewController = checkoutViewController else { return }
 

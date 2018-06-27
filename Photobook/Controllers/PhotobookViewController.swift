@@ -25,7 +25,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     var assetPickerViewController: PhotobookAssetPicker?
     
     /// Delegate to dismiss the PhotobookViewController
-    var dismissClosure: (() -> Void)?
+    var dismissClosure: ((_ photobook: PhotobookProduct) -> Void)?
     
     private var product: PhotobookProduct! {
         return ProductManager.shared.currentProduct
@@ -269,15 +269,11 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     @IBAction func tappedCancel(_ sender: UIBarButtonItem) {
-        guard let dismissClosure = dismissClosure else {
-            if presentingViewController != nil {
-                presentingViewController!.dismiss(animated: true, completion: nil)
-                return
-            }
-            navigationController?.popViewController(animated: true)
+        if isPresentedModally {
+            presentingViewController?.dismiss(animated: true, completion: nil)
             return
         }
-        dismissClosure()
+        navigationController?.popViewController(animated: true)
     }
 
     @IBAction private func didTapRearrange(_ sender: UIBarButtonItem) {
@@ -340,6 +336,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         let goToCheckout = {
             let orderSummaryViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
+            orderSummaryViewController.completionClosure = self.dismissClosure
             self.navigationController?.pushViewController(orderSummaryViewController, animated: true)
         }
         

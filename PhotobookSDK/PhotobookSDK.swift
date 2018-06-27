@@ -69,9 +69,8 @@ import Stripe
     ///
     /// - Parameter assets: Images to use to initialise the photobook. Cannot be empty. Available asset types are: ImageAsset, URLAsset & PhotosAsset.
     /// - Parameter embedInNavigation: Whether the returned view controller should be a UINavigationController. Defaults to false. Note that a navigation controller must be provided if false.
-    /// - Parameter onDismiss: Closure to execute when the Photobook UI is dismissed
     /// - Returns: A photobook UIViewController
-    @objc public func photobookViewController(with assets: [PhotobookAsset], embedInNavigation: Bool = false, onDismiss: (() -> Void)? = nil) -> UIViewController? {
+    @objc public func photobookViewController(with assets: [PhotobookAsset], embedInNavigation: Bool = false) -> UIViewController? {
         guard let assets = assets as? [Asset], assets.count > 0 else {
             print("Photobook SDK: Photobook View Controller not initialised because the assets array passed is empty or nil.")
             return nil
@@ -94,7 +93,12 @@ import Stripe
         
         let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.assets = assets
-        photobookViewController.dismissClosure = onDismiss
+        photobookViewController.completionClosure = { (photobookProduct) in
+            OrderManager.shared.basketOrder.products = [productProduct]
+            
+            let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
+            photobookViewController.navigationController?.pushViewController(checkoutViewController, animated: true)
+        }
 
         let viewControllerToReturn: UIViewController
         if embedInNavigation {
