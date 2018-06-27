@@ -53,7 +53,12 @@ class PhotobookManager: NSObject {
             // Show receipt screen to prevent user from ordering another photobook
             let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
             receiptViewController.order = OrderManager.shared.processingOrder
-            receiptViewController.dismissClosure = dismissClosure()
+            receiptViewController.dismissClosure = { viewController in
+                let tabBarController = mainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
+                configureTabBarController(tabBarController)
+                let dismissSegue = IntroDismissSegue(identifier: "ReceiptDismiss", source: viewController, destination: tabBarController)
+                dismissSegue.perform()
+            }
             rootNavigationController.viewControllers = [receiptViewController]
         }
         
@@ -81,12 +86,4 @@ class PhotobookManager: NSObject {
         }
     }
     
-    static func dismissClosure() -> (UIViewController)->Void {
-        return { viewController in
-            let tabBarController = mainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
-            configureTabBarController(tabBarController)
-            let dismissSegue = IntroDismissSegue(identifier: "ReceiptDismiss", source: viewController, destination: tabBarController)
-            dismissSegue.perform()
-        }
-    }
 }
