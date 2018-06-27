@@ -6,6 +6,8 @@
 //  Copyright © 2018 Kite.ly. All rights reserved.
 //
 
+import UIKit
+
 enum AccountError: Error {
     case notLoggedIn
 }

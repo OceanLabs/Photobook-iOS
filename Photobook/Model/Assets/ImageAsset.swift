@@ -6,6 +6,8 @@
 //  Copyright © 2018 Kite.ly. All rights reserved.
 //
 
+import UIKit
+
 /// Image resource based on a UIImage that can be used in a photo book
 @objc public class ImageAsset: NSObject, NSCoding, Asset {
     

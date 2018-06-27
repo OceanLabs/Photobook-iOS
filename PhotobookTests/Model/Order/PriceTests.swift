@@ -25,7 +25,7 @@ class PriceTests: XCTestCase {
     func testInit() {
         let currencyCode = "GBP"
         let value: Decimal = 12.2
-        let price = Price(currencyCode: currencyCode, value: value)
+        let price = Price(currencyCode: currencyCode, value: value, formattingLocale: Locale(identifier: "en_US"))
         
         XCTAssertNotNil(price)
         XCTAssertEqualOptional(price?.currencyCode, currencyCode)
@@ -34,7 +34,7 @@ class PriceTests: XCTestCase {
     }
 
     func testParseDictionary_withValidDictionary() {
-        let price = Price.parse(validDictionary, localeCurrencyCode: "GBP")
+        let price = Price.parse(validDictionary, localeCurrencyCode: "GBP", formattingLocale: Locale(identifier: "en_US"))
         
         XCTAssertNotNil(price)
         XCTAssertEqualOptional(price?.currencyCode, "GBP")
@@ -53,7 +53,7 @@ class PriceTests: XCTestCase {
     }
     
     func testParseDictionaries_withValidDictionaries() {
-        let price = Price.parse(validDictionaries, localeCurrencyCode: "GBP")
+        let price = Price.parse(validDictionaries, localeCurrencyCode: "GBP", formattingLocale: Locale(identifier: "en_US"))
         
         XCTAssertNotNil(price)
         XCTAssertEqualOptional(price?.currencyCode, "GBP")

@@ -380,7 +380,7 @@ extension AssetPickerCollectionViewController: LogoutHandler {
     
     func popToLandingScreen() {
         guard let accountManager = accountManager else { return }
-        let viewController = photobookMainStoryboard.instantiateViewController(withIdentifier: accountManager.serviceName + "LandingViewController")
+        let viewController = mainStoryboard.instantiateViewController(withIdentifier: accountManager.serviceName + "LandingViewController")
         self.navigationController?.setViewControllers([viewController, self], animated: false)
         self.navigationController?.popViewController(animated: true)
     }
@@ -568,7 +568,7 @@ extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegat
             let thumbnailImage = cell.imageView.image
             else { return nil }
         
-        let fullScreenImageViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "FullScreenImageViewController") as! FullScreenImageViewController
+        let fullScreenImageViewController = mainStoryboard.instantiateViewController(withIdentifier: "FullScreenImageViewController") as! FullScreenImageViewController
         previewingContext.sourceRect = cell.convert(cell.contentView.frame, to: collectionView)
         
         fullScreenImageViewController.asset = album.assets[indexPath.item]
