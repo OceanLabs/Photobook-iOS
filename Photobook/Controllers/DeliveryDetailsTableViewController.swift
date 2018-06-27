@@ -220,7 +220,9 @@ extension DeliveryDetailsTableViewController {
             case .name:
                 cell.label?.text = DetailsFieldLabels.name
                 cell.message = nil
-                cell.textField.textContentType = .givenName
+                if #available(iOS 10.0, *) {
+                    cell.textField.textContentType = .givenName
+                }
                 cell.textField.keyboardType = .default
                 cell.textField.returnKeyType = .next
                 cell.textField.autocapitalizationType = .words
@@ -233,7 +235,9 @@ extension DeliveryDetailsTableViewController {
             case .lastName:
                 cell.label?.text = DetailsFieldLabels.lastName
                 cell.message = nil
-                cell.textField.textContentType = .familyName
+                if #available(iOS 10.0, *) {
+                    cell.textField.textContentType = .familyName
+                }
                 cell.textField.keyboardType = .default
                 cell.textField.returnKeyType = .next
                 cell.textField.autocapitalizationType = .words
@@ -246,7 +250,9 @@ extension DeliveryDetailsTableViewController {
             case .email:
                 cell.label?.text = DetailsFieldLabels.email
                 cell.message = nil
-                cell.textField.textContentType = .emailAddress
+                if #available(iOS 10.0, *) {
+                    cell.textField.textContentType = .emailAddress
+                }
                 cell.textField.keyboardType = .emailAddress
                 cell.textField.returnKeyType = .next
                 cell.textField.autocapitalizationType = .none
@@ -259,7 +265,9 @@ extension DeliveryDetailsTableViewController {
             case .phone:
                 cell.label?.text = DetailsFieldLabels.phone
                 cell.message = Constants.phoneExplanation
-                cell.textField.textContentType = .telephoneNumber
+                if #available(iOS 10.0, *) {
+                    cell.textField.textContentType = .telephoneNumber
+                }
                 cell.textField.keyboardType = .phonePad
                 cell.textField.returnKeyType = .done
                 cell.textField.text = details.phone
