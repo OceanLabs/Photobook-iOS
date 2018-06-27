@@ -27,8 +27,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     /// Delegate to dismiss the PhotobookViewController
     var dismissClosure: (() -> Void)?
     
-    var showCancelButton: Bool = false
-    
     private var product: PhotobookProduct! {
         return ProductManager.shared.currentProduct
     }
@@ -108,7 +106,9 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     // Scrolling at 60Hz when we are dragging looks good enough and avoids having to normalize the scroll offset
     private lazy var screenRefreshRate: Double = 1.0 / 60.0
-        
+    
+    private lazy var isPresentedModally: Bool = { return (navigationController?.isBeingPresented ?? false) || isBeingPresented }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -124,6 +124,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        if navigationController == nil {
+            fatalError("PhotobookViewController: Please use a navigation controller or alternatively, set the 'embedInNavigation' parameter to true.")
+        }
         
         updateNavBar()
     }
@@ -181,7 +185,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         navigationItem.hidesBackButton = true
     
-        if showCancelButton {
+        if isPresentedModally {
             navigationItem.leftBarButtonItems = [ cancelBarButtonItem ]
         } else {
             backButton?.setTitleColor(navigationController?.navigationBar.tintColor, for: .normal)
@@ -316,7 +320,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             sender.title = NSLocalizedString("Photobook/DoneButtonTitle", value: "Done", comment: "Done button title")
             sender.tintColor = Constants.doneBlueColor
         } else {
-            let barButtonItem = showCancelButton ? cancelBarButtonItem : UIBarButtonItem(customView: backButton!)
+            let barButtonItem = isPresentedModally ? cancelBarButtonItem : UIBarButtonItem(customView: backButton!)
             navigationItem.setLeftBarButtonItems([barButtonItem], animated: true)
             sender.title = NSLocalizedString("Photobook/RearrangeButtonTitle", value: "Rearrange", comment: "Rearrange button title")
             sender.tintColor = Constants.rearrangeGreyColor

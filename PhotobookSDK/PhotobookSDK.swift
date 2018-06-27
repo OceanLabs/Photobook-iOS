@@ -68,9 +68,10 @@ import Stripe
     /// Photo book view controller initialised with the provided images
     ///
     /// - Parameter assets: Images to use to initialise the photobook. Cannot be empty. Available asset types are: ImageAsset, URLAsset & PhotosAsset.
-    /// - Parameter onDismiss: Closure to execute when the Photobook UI is ready to be dismissed
+    /// - Parameter embedInNavigation: Whether the returned view controller should be a UINavigationController. Defaults to false. Note that a navigation controller must be provided if false.
+    /// - Parameter onDismiss: Closure to execute when the Photobook UI is dismissed
     /// - Returns: A photobook UIViewController
-    @objc public func photobookViewController(with assets: [PhotobookAsset], onDismiss: (() -> Void)? = nil) -> UIViewController? {
+    @objc public func photobookViewController(with assets: [PhotobookAsset], embedInNavigation: Bool = false, onDismiss: (() -> Void)? = nil) -> UIViewController? {
         guard let assets = assets as? [Asset], assets.count > 0 else {
             print("Photobook SDK: Photobook View Controller not initialised because the assets array passed is empty or nil.")
             return nil
@@ -91,15 +92,20 @@ import Stripe
             UserDefaults.standard.synchronize()
         }
         
-        let navigationController = PhotobookNavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
         let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.assets = assets
         photobookViewController.dismissClosure = onDismiss
-        photobookViewController.showCancelButton = true
+
+        let viewControllerToReturn: UIViewController
+        if embedInNavigation {
+            let navigationController = PhotobookNavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
+            navigationController.viewControllers = [ photobookViewController ]
+            viewControllerToReturn = navigationController
+        } else {
+            viewControllerToReturn = photobookViewController
+        }
         
-        navigationController.viewControllers = [ photobookViewController ]
-        
-        return navigationController
+        return viewControllerToReturn
     }
     
     /// Receipt View Controller
@@ -117,13 +123,5 @@ import Stripe
         let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
         receiptViewController.dismissClosure = { (tabBarController) in onDismiss?() }
         return receiptViewController
-    }
-    
-    /// Restores the user's photo book, if it exists, and any ongoing upload tasks
-    ///
-    /// - Parameter completionHandler: Completion handler to be forwarded from 'handleEventsForBackgroundURLSession' in the application's app delegate
-    @objc public func restorePhotobook(_ completionHandler: @escaping (() -> Void)) {
-        _ = OrderManager.shared.loadProcessingOrder()
-        completionHandler()
     }
 }
