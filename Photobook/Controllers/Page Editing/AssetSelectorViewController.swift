@@ -131,7 +131,7 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == assets.count {
-            if let assetPickerViewController = modalImagePickerViewController() {
+            if let assetPickerViewController = assetPickerViewController as? PhotobookAssetPicker & UIViewController {
                 assetPickerViewController.addingDelegate = self
                 present(assetPickerViewController, animated: true, completion: nil)
                 return

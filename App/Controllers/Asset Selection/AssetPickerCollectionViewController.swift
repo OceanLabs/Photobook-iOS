@@ -414,6 +414,12 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
             photobookViewController.assets = selectedAssetsManager?.selectedAssets
             photobookViewController.album = album
             photobookViewController.albumManager = albumManager
+            
+            let modalAlbumsCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
+            modalAlbumsCollectionViewController.album = album
+            modalAlbumsCollectionViewController.albumManager = albumManager
+            photobookViewController.assetPickerViewController = modalAlbumsCollectionViewController
+            
             navigationController?.pushViewController(photobookViewController, animated: true)
         }
         selectedAssetsManager?.orderAssetsByDate()
