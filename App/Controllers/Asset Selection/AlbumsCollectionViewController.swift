@@ -268,6 +268,11 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
         default:
             let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
             photobookViewController.assets = selectedAssetsManager.selectedAssets
+            
+            let modalAlbumsCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
+            modalAlbumsCollectionViewController.albumManager = albumManager
+            photobookViewController.assetPickerViewController = modalAlbumsCollectionViewController
+            
             navigationController?.pushViewController(photobookViewController, animated: true)
         }
     }

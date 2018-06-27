@@ -410,16 +410,20 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
         case .adding:
             addingDelegate?.didFinishAdding(selectedAssetsManager?.selectedAssets)
         default:
+            let modalAlbumsCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
+            modalAlbumsCollectionViewController.album = album
+            modalAlbumsCollectionViewController.albumManager = albumManager
+
             let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
             photobookViewController.assets = selectedAssetsManager?.selectedAssets
-            photobookViewController.album = album
-            photobookViewController.albumManager = albumManager
+            photobookViewController.assetPickerViewController = modalAlbumsCollectionViewController
             photobookViewController.dismissClosure = { (photobookProduct) in
                 OrderManager.shared.basketOrder.products = [photobookProduct]
                 
                 let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
                 photobookViewController.navigationController?.pushViewController(checkoutViewController, animated: true)
             }
+
             navigationController?.pushViewController(photobookViewController, animated: true)
         }
         selectedAssetsManager?.orderAssetsByDate()
