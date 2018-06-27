@@ -119,7 +119,9 @@ class AddressTableViewController: UITableViewController {
         switch row {
         case .line1:
             cell.label.text = AddressFieldLabels.line1
-            cell.textField.textContentType = .streetAddressLine1
+            if #available(iOS 10.0, *) {
+                cell.textField.textContentType = .streetAddressLine1
+            }
             cell.textField.returnKeyType = .next
             cell.textField.placeholder = FormConstants.requiredText
             cell.textField.text = address.line1
@@ -128,7 +130,9 @@ class AddressTableViewController: UITableViewController {
             line1TextField.accessibilityLabel = cell.label.text
         case .line2:
             cell.label.text = AddressFieldLabels.line2
-            cell.textField.textContentType = .streetAddressLine1
+            if #available(iOS 10.0, *) {
+                cell.textField.textContentType = .streetAddressLine1
+            }
             cell.textField.returnKeyType = .next
             cell.textField.text = address.line2
             line2TextField = cell.textField
@@ -136,7 +140,9 @@ class AddressTableViewController: UITableViewController {
             line2TextField.accessibilityLabel = cell.label.text
         case .city:
             cell.label.text = AddressFieldLabels.city
-            cell.textField.textContentType = .addressCity
+            if #available(iOS 10.0, *) {
+                cell.textField.textContentType = .addressCity
+            }
             cell.textField.returnKeyType = .next
             cell.textField.placeholder = FormConstants.requiredText
             cell.textField.text = address.city
@@ -149,7 +155,9 @@ class AddressTableViewController: UITableViewController {
             } else {
                 cell.label.text = AddressFieldLabels.county
             }
-            cell.textField.textContentType = .addressState
+            if #available(iOS 10.0, *) {
+                cell.textField.textContentType = .addressState
+            }
             cell.textField.returnKeyType = .next
             cell.textField.text = address.stateOrCounty
             stateOrCountyTextField = cell.textField
@@ -161,7 +169,9 @@ class AddressTableViewController: UITableViewController {
             } else {
                 cell.label.text = AddressFieldLabels.postcode
             }
-            cell.textField.textContentType = .postalCode
+            if #available(iOS 10.0, *) {
+                cell.textField.textContentType = .postalCode
+            }
             cell.textField.returnKeyType = .done
             cell.textField.autocapitalizationType = .allCharacters
             cell.textField.placeholder = FormConstants.requiredText
