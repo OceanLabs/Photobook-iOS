@@ -6,35 +6,30 @@
 //  Copyright © 2018 Kite.ly. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
-class Price: Codable {
+struct Price: Codable {
     
     private static let currencyCodeDefault = "GBP"
     
-    private(set) var currencyCode: String
-    private(set) var value: Decimal
-    var formatted: String {
-        if value > 0 {
-            return value.formattedCost(currencyCode: currencyCode, locale: locale)
-        } else {
-            return NSLocalizedString("Model/Order/Price/FormattedFree", value: "Free", comment: "Text that gets displayed if a price is 0.0").uppercased()
-        }
-    }
-    private var locale = Locale.current
+    let currencyCode: String
+    let value: Decimal
+    let formatted: String
+    private let formattingLocale: Locale
     
-    #if DEBUG
-    func setLocale(_ locale: Locale) {
-        self.locale = locale
-    }
-    #endif
-    
-    init?(currencyCode: String, value: Decimal) {
+    init?(currencyCode: String, value: Decimal, formattingLocale: Locale = Locale.current) {
         self.currencyCode = currencyCode
         self.value = value
+        self.formattingLocale = formattingLocale
+        
+        if value > 0 {
+            self.formatted = value.formattedCost(currencyCode: currencyCode, locale: formattingLocale)
+        } else {
+            self.formatted = NSLocalizedString("Model/Order/Price/FormattedFree", value: "Free", comment: "Text that gets displayed if a price is 0.0").uppercased()
+        }
     }
     
-    static func parse(_ dictionary: [String: Any], localeCurrencyCode: String? = Locale.current.currencyCode) -> Price? {
+    static func parse(_ dictionary: [String: Any], localeCurrencyCode: String? = Locale.current.currencyCode, formattingLocale: Locale = Locale.current) -> Price? {
         
         guard let valuesDict = dictionary as? [String: Double] else {
             return nil
@@ -49,10 +44,10 @@ class Price: Codable {
             value = Decimal(v)
         } else { return nil } //failed to retrieve value
         
-        return Price(currencyCode: currencyCode, value: value!)
+        return Price(currencyCode: currencyCode, value: value!, formattingLocale: formattingLocale)
     }
     
-    static func parse(_ dictionaries: [[String: Any]], localeCurrencyCode: String? = Locale.current.currencyCode) -> Price? {
+    static func parse(_ dictionaries: [[String: Any]], localeCurrencyCode: String? = Locale.current.currencyCode, formattingLocale: Locale = Locale.current) -> Price? {
         
         var relevantDictionary = dictionaries.first
         
@@ -69,7 +64,7 @@ class Price: Codable {
             return nil
         }
         
-        return Price(currencyCode: currencyCode, value: Decimal(value))
+        return Price(currencyCode: currencyCode, value: Decimal(value), formattingLocale: formattingLocale)
     }
     
 }
