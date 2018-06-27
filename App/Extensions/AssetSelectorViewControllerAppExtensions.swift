@@ -11,7 +11,7 @@ import UIKit
 extension AssetSelectorViewController {
     
     func modalImagePickerViewController() -> (PhotobookAssetPicker & UIViewController)? {
-        let modalAlbumsCollectionViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
+        let modalAlbumsCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
         modalAlbumsCollectionViewController.album = album
         modalAlbumsCollectionViewController.albumManager = albumManager
         modalAlbumsCollectionViewController.addingDelegate = self

@@ -89,14 +89,14 @@ class ModalAlbumsCollectionViewController: UIViewController, PhotobookAssetPicke
             navigationBar.addGestureRecognizer(panGestureRecognizer)
 
             if let albumManager = albumManager {
-                let albumsCollectionViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "AlbumsCollectionViewController") as! AlbumsCollectionViewController
+                let albumsCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "AlbumsCollectionViewController") as! AlbumsCollectionViewController
                 albumsCollectionViewController.albumManager = albumManager
                 albumsCollectionViewController.collectorMode = collectorMode
                 albumsCollectionViewController.addingDelegate = self
                 albumsCollectionViewController.assetPickerDelegate = self
                 rootNavigationController.setViewControllers([albumsCollectionViewController], animated: false)
             } else if let album = album {
-                let assetPickerCollectionViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
+                let assetPickerCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
                 assetPickerCollectionViewController.collectorMode = collectorMode
                 assetPickerCollectionViewController.addingDelegate = self
                 assetPickerCollectionViewController.delegate = self

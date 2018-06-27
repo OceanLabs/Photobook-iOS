@@ -9,6 +9,8 @@
 import UIKit
 import Stripe
 
+let mainStoryboard =  UIStoryboard(name: "Main", bundle: nil)
+
 /// Shared manager for the photo book UI
 class PhotobookManager: NSObject {
     
@@ -31,7 +33,7 @@ class PhotobookManager: NSObject {
         let isProcessingOrder = OrderManager.shared.isProcessingOrder
         
         if IntroViewController.userHasDismissed && !isProcessingOrder {
-            let tabBarController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
+            let tabBarController = mainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
             configureTabBarController(tabBarController)
             return tabBarController
         }
@@ -44,17 +46,14 @@ class PhotobookManager: NSObject {
         
         if !IntroViewController.userHasDismissed {
             rootNavigationController.isNavigationBarHidden = true
-            let introViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "IntroViewController") as! IntroViewController
+            let introViewController = mainStoryboard.instantiateViewController(withIdentifier: "IntroViewController") as! IntroViewController
             rootNavigationController.viewControllers = [introViewController]
             
         } else if isProcessingOrder {
             // Show receipt screen to prevent user from ordering another photobook
             let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
             receiptViewController.order = OrderManager.shared.processingOrder
-            receiptViewController.dismissClosure = { (tabBarController) in
-                guard let tabBarController = tabBarController else { return }
-                configureTabBarController(tabBarController)
-            }
+            receiptViewController.dismissClosure = dismissClosure()
             rootNavigationController.viewControllers = [receiptViewController]
         }
         
@@ -79,6 +78,15 @@ class PhotobookManager: NSObject {
         // Load the products here, so that the user avoids a loading screen on PhotobookViewController
         if NSClassFromString("XCTest") == nil {
             ProductManager.shared.initialise(completion: nil)
+        }
+    }
+    
+    static func dismissClosure() -> (UIViewController)->Void {
+        return { viewController in
+            let tabBarController = mainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
+            configureTabBarController(tabBarController)
+            let dismissSegue = IntroDismissSegue(identifier: "ReceiptDismiss", source: viewController, destination: tabBarController)
+            dismissSegue.perform()
         }
     }
 }

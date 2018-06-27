@@ -106,7 +106,7 @@ import Stripe
     ///
     /// - Parameter onDismiss: Closure to execute when the receipt UI is ready to be dismissed
     /// - Returns: A receipt UIViewController
-    @objc public func receiptViewController(onDismiss: (() -> Void)? = nil) -> UIViewController? {
+    @objc public func receiptViewController(onDismiss: ((UIViewController) -> Void)? = nil) -> UIViewController? {
         guard isProcessingOrder else { return nil }
         
         guard KiteAPIClient.shared.apiKey != nil else {
@@ -115,7 +115,7 @@ import Stripe
         
         UIFont.loadAllFonts()
         let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
-        receiptViewController.dismissClosure = { (tabBarController) in onDismiss?() }
+        receiptViewController.dismissClosure = onDismiss
         return receiptViewController
     }
     

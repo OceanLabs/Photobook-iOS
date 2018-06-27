@@ -18,7 +18,7 @@ let photobookResourceBundle: Bundle = {
     
     return resourceBundle
 }()
-let photobookMainStoryboard =  UIStoryboard(name: "Main", bundle: photobookResourceBundle)
+let photobookMainStoryboard =  UIStoryboard(name: "Photobook", bundle: photobookResourceBundle)
 
 struct CommonLocalizedStrings {
     static let somethingWentWrong = NSLocalizedString("GenericError/SomethingWentWrong", value: "Something Went Wrong", comment: "Generic error message title") 

@@ -47,7 +47,7 @@ class ReceiptTableViewController: UITableViewController {
     private var lastProcessingError: OrderProcessingError?
     
     @IBOutlet weak var dismissBarButtonItem: UIBarButtonItem!
-    var dismissClosure: ((UITabBarController?) -> Void)?
+    var dismissClosure: ((UIViewController) -> Void)?
     
     private var modalPresentationDismissedGroup = DispatchGroup()
     private lazy var paymentManager: PaymentAuthorizationManager = {
@@ -187,7 +187,7 @@ class ReceiptTableViewController: UITableViewController {
             
             #if PHOTOBOOK_SDK
             if welf?.dismissClosure != nil {
-                welf?.dismissClosure?(nil)
+                welf?.dismissClosure?(self)
                 return
             }
             // No delegate or dismiss closure provided
@@ -200,11 +200,7 @@ class ReceiptTableViewController: UITableViewController {
             // Check if the Photobook app was launched into the ReceiptViewController
             if welf?.navigationController?.viewControllers.count == 1 {
                 welf?.navigationController?.isNavigationBarHidden = true
-                
-                let tabBarController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
-                let dismissSegue = IntroDismissSegue(identifier: "ReceiptDismiss", source: self, destination: tabBarController)
-                welf?.dismissClosure?(tabBarController)
-                dismissSegue.perform()
+                welf?.dismissClosure?(self)
             } else {
                 welf?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
                 welf?.navigationController?.popToRootViewController(animated: true)
