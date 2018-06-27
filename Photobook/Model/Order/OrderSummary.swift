@@ -35,7 +35,7 @@ class OrderSummary {
     
     private(set) var details = [Detail]()
     private(set) var total: String
-    private var pigBaseUrl: String
+    private(set) var pigBaseUrl: String
     
     private init(details: [Detail], total: String, pigBaseUrl: String) {
         self.details = details
@@ -63,15 +63,5 @@ class OrderSummary {
         }
         
         return OrderSummary(details: details, total: Decimal(totalDouble).formattedCost(currencyCode: currencyCode), pigBaseUrl: imageUrl)
-    }
-    
-    func previewImageUrl(withCoverImageUrl imageUrl: String, size: CGSize) -> URL? {
-        let width = Int(size.width)
-        let height = Int(size.height)
-        
-        let urlString = pigBaseUrl + "&image=" + imageUrl + "&size=\(width)x\(height)" + "&fill_mode=match"
-        guard let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) else { return nil }
-        
-        return url
-    }
+    }    
 }

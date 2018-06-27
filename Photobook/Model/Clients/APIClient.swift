@@ -383,9 +383,9 @@ class APIClient: NSObject {
     
     func downloadImage(_ imageUrl: URL, completion: @escaping ((UIImage?, Error?) -> Void)) {
         SDWebImageManager.shared().loadImage(with: imageUrl, options: [], progress: nil, completed: { image, _, error, _, _, _ in
-                DispatchQueue.main.async {
-                    completion(image, error)
-                }
+            DispatchQueue.main.async {
+                completion(image, error)
+            }
         })
     }
     

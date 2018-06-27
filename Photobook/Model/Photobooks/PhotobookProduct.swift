@@ -54,6 +54,9 @@ class PhotobookProduct: Codable {
     var itemCount: Int = 1
     var insidePdfUrl: String?
     var coverPdfUrl: String?
+    // For preview images
+    var pigBaseUrl: String?
+    var pigCoverUrl: String?
     
     var isAddingPagesAllowed: Bool { return template.maxPages >= numberOfPages + 2 }
     var isRemovingPagesAllowed: Bool { return numberOfPages - 2 >= template.minPages }

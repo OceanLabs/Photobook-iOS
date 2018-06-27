@@ -31,7 +31,7 @@ class OrderSummaryManager {
             return product.productLayouts
         }
     }
-    private var coverImageUrl:String?
+    private(set) var coverImageUrl:String?
     private var isUploadingCoverImage = false
     
     private(set) var upsellOptions: [UpsellOption]?
@@ -136,11 +136,8 @@ extension OrderSummaryManager {
             return
         }
         
-        if let summary = summary,
-            let imageUrl = summary.previewImageUrl(withCoverImageUrl: coverImageUrl, size: size) {
-            apiClient.downloadImage(imageUrl) { (image, _) in
-                completion(image)
-            }
+        if let summary = summary {
+            Pig.fetchPreviewImage(withBaseUrlString: summary.pigBaseUrl, coverImageUrlString: coverImageUrl, size: size, completion: completion)
         } else {
             completion(nil)
         }
@@ -178,6 +175,6 @@ extension OrderSummaryManager {
     }
     
     private func isPreviewImageUrlReady() -> Bool {
-        return coverImageUrl != nil && summary != nil && summary?.previewImageUrl(withCoverImageUrl: coverImageUrl!, size: .zero) != nil
+        return coverImageUrl != nil && summary != nil
     }
 }
