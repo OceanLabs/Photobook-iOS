@@ -13,7 +13,6 @@ import UIKit
 extension UIFont {
     
     static func loadAllFonts() {
-        registerFontWithFilenameString(filenameString: "LeagueGothic-Regular.otf")
         registerFontWithFilenameString(filenameString: "OpenSans-Regular.ttf")
         registerFontWithFilenameString(filenameString: "Montserrat-Bold.ttf")
         registerFontWithFilenameString(filenameString: "Lora-Regular.ttf")

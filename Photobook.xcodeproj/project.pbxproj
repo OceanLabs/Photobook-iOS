@@ -248,7 +248,6 @@
 		2ED14C2D2063AA4B00ED2E2C /* Lora-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08D12021E4B300C55D2F /* Lora-Regular.ttf */; };
 		2ED14C2E2063AA4B00ED2E2C /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08CF2021E4A800C55D2F /* Montserrat-Bold.ttf */; };
 		2ED14C2F2063AA4B00ED2E2C /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08D02021E4AD00C55D2F /* OpenSans-Regular.ttf */; };
-		2ED14C302063AA4B00ED2E2C /* LeagueGothic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6F4DE6501FB35B000099A97E /* LeagueGothic-Regular.otf */; };
 		2ED14C312063AA4B00ED2E2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E0B58861FB30F2100F31A9E /* Assets.xcassets */; };
 		2ED14C322063AB7200ED2E2C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E0B58831FB30F2100F31A9E /* Main.storyboard */; };
 		2ED14C3E2063ABB700ED2E2C /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C332063ABB700ED2E2C /* SDWebImage.framework */; };
@@ -569,7 +568,7 @@
 		2EA2FDFD2032DF9500BD0586 /* UIImageViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageViewExtensions.swift; sourceTree = "<group>"; };
 		2EA88C61203C269C00CADCAD /* InstagramLandingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramLandingViewController.swift; sourceTree = "<group>"; };
 		2EA88C63203C321E00CADCAD /* ErrorUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorUtils.swift; sourceTree = "<group>"; };
-		2EAA782C20DBD4BF00046EBD /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = App/AppDelegate.swift; sourceTree = SOURCE_ROOT; };
+		2EAA782C20DBD4BF00046EBD /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = App/Resources/AppDelegate.swift; sourceTree = SOURCE_ROOT; };
 		2EB39DD41FC5AE0F009EC5B2 /* PhotobookPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookPageView.swift; sourceTree = "<group>"; };
 		2EB9BFAE2036E01F00EED9FA /* AssetPickerCollectionViewController+Instagram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssetPickerCollectionViewController+Instagram.swift"; sourceTree = "<group>"; };
 		2EBBC0CC1FEBB72D00A4EF45 /* ArrayExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
@@ -841,6 +840,7 @@
 			isa = PBXGroup;
 			children = (
 				2E50702920E10B97002889C5 /* App */,
+				2E0B58831FB30F2100F31A9E /* Main.storyboard */,
 				2E0B587E1FB30F2100F31A9E /* Photobook */,
 				6FB670681FB5BAD40062D630 /* PhotobookTests */,
 				2ED14B9A2063A9CD00ED2E2C /* PhotobookSDK */,
@@ -945,6 +945,19 @@
 			path = Photobook;
 			sourceTree = "<group>";
 		};
+		2E4875DC20E39A6100FC5D9F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2ECF57BD2010D99B0047094C /* Photobook.entitlements */,
+				6F4DE6501FB35B000099A97E /* LeagueGothic-Regular.otf */,
+				2EAA782C20DBD4BF00046EBD /* AppDelegate.swift */,
+				2E0B58881FB30F2100F31A9E /* LaunchScreen.storyboard */,
+				2E0B588B1FB30F2100F31A9E /* Info.plist */,
+				2E4875D920E397D400FC5D9F /* Main.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		2E4C9E862049490400F5AD48 /* Facebook */ = {
 			isa = PBXGroup;
 			children = (
@@ -957,16 +970,11 @@
 		2E50702920E10B97002889C5 /* App */ = {
 			isa = PBXGroup;
 			children = (
-				2ECF57BD2010D99B0047094C /* Photobook.entitlements */,
-				2EAA782C20DBD4BF00046EBD /* AppDelegate.swift */,
-				2E0B58831FB30F2100F31A9E /* Main.storyboard */,
-				2E0B58881FB30F2100F31A9E /* LaunchScreen.storyboard */,
-				2E0B588B1FB30F2100F31A9E /* Info.plist */,
 				2E50702A20E10C3F002889C5 /* Controllers */,
 				2E50702B20E10C76002889C5 /* Views */,
 				2E50702D20E10C83002889C5 /* Model */,
 				2E50703320E11FA5002889C5 /* Extensions */,
-				2E4875D920E397D400FC5D9F /* Main.xcassets */,
+				2E4875DC20E39A6100FC5D9F /* Resources */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -1304,7 +1312,6 @@
 				6FCE08D12021E4B300C55D2F /* Lora-Regular.ttf */,
 				6FCE08CF2021E4A800C55D2F /* Montserrat-Bold.ttf */,
 				6FCE08D02021E4AD00C55D2F /* OpenSans-Regular.ttf */,
-				6F4DE6501FB35B000099A97E /* LeagueGothic-Regular.otf */,
 				2E0B58861FB30F2100F31A9E /* Assets.xcassets */,
 			);
 			path = Resources;
@@ -1779,7 +1786,6 @@
 				2ED14C2F2063AA4B00ED2E2C /* OpenSans-Regular.ttf in Resources */,
 				2ED14BF02063AA4000ED2E2C /* photobooks.json in Resources */,
 				2ED14C312063AA4B00ED2E2C /* Assets.xcassets in Resources */,
-				2ED14C302063AA4B00ED2E2C /* LeagueGothic-Regular.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2484,11 +2490,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = App/Photobook.entitlements;
+				CODE_SIGN_ENTITLEMENTS = App/Resources/Photobook.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = L78L4U72YJ;
-				INFOPLIST_FILE = "$(SRCROOT)/App/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/App/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = Photobook;
@@ -2504,10 +2510,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = App/Photobook.entitlements;
+				CODE_SIGN_ENTITLEMENTS = App/Resources/Photobook.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = L78L4U72YJ;
-				INFOPLIST_FILE = "$(SRCROOT)/App/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/App/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = Photobook;
@@ -2654,11 +2660,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = App/Photobook.entitlements;
+				CODE_SIGN_ENTITLEMENTS = App/Resources/Photobook.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = L78L4U72YJ;
-				INFOPLIST_FILE = "$(SRCROOT)/App/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/App/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = Photobook;
@@ -2745,10 +2751,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = App/Photobook.entitlements;
+				CODE_SIGN_ENTITLEMENTS = App/Resources/Photobook.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = L78L4U72YJ;
-				INFOPLIST_FILE = "$(SRCROOT)/App/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/App/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = Photobook;
