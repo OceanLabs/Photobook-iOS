@@ -840,7 +840,6 @@
 			isa = PBXGroup;
 			children = (
 				2E50702920E10B97002889C5 /* App */,
-				2E0B58831FB30F2100F31A9E /* Main.storyboard */,
 				2E0B587E1FB30F2100F31A9E /* Photobook */,
 				6FB670681FB5BAD40062D630 /* PhotobookTests */,
 				2ED14B9A2063A9CD00ED2E2C /* PhotobookSDK */,
@@ -975,6 +974,7 @@
 				2E50702D20E10C83002889C5 /* Model */,
 				2E50703320E11FA5002889C5 /* Extensions */,
 				2E4875DC20E39A6100FC5D9F /* Resources */,
+				2E0B58831FB30F2100F31A9E /* Main.storyboard */,
 			);
 			path = App;
 			sourceTree = "<group>";
