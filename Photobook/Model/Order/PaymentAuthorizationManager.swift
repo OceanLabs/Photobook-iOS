@@ -88,12 +88,12 @@ class PaymentAuthorizationManager: NSObject {
         var methods = [PaymentMethod]()
         
         // Apple Pay
-        if PaymentAuthorizationManager.isApplePayAvailable {
+        if isApplePayAvailable {
             methods.append(.applePay)
         }
         
         // PayPal
-        if PaymentAuthorizationManager.isPayPalAvailable {
+        if isPayPalAvailable {
             methods.append(.payPal)
         }
         
@@ -108,7 +108,7 @@ class PaymentAuthorizationManager: NSObject {
     }
     
     static var isApplePayAvailable: Bool {
-        return Stripe.deviceSupportsApplePay() && PaymentAuthorizationManager.applePayMerchantId != nil
+        return Stripe.deviceSupportsApplePay() && applePayMerchantId != nil
     }
     
     static var isPayPalAvailable: Bool {
