@@ -84,8 +84,35 @@ class PaymentAuthorizationManager: NSObject {
     
     weak var delegate: (PaymentAuthorizationManagerDelegate & UIViewController)?
     
+    static var availablePaymentMethods: [PaymentMethod] {
+        var methods = [PaymentMethod]()
+        
+        // Apple Pay
+        if isApplePayAvailable {
+            methods.append(.applePay)
+        }
+        
+        // PayPal
+        if isPayPalAvailable {
+            methods.append(.payPal)
+        }
+        
+        // Existing card
+        if Card.currentCard != nil {
+            methods.append(.creditCard)
+        }
+        
+        methods.append(.creditCard) // Adding a new card is always available
+        
+        return methods
+    }
+    
     static var isApplePayAvailable: Bool {
-        return Stripe.deviceSupportsApplePay() && PaymentAuthorizationManager.applePayMerchantId != nil
+        return Stripe.deviceSupportsApplePay() && applePayMerchantId != nil
+    }
+    
+    static var isPayPalAvailable: Bool {
+        return NSClassFromString("PayPalMobile") != nil
     }
     
     func authorizePayment(cost: Cost, method: PaymentMethod) {

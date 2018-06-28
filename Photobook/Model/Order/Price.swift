@@ -18,8 +18,11 @@ struct Price: Codable {
     private let formattingLocale: Locale
     
     init?(currencyCode: String, value: Decimal, formattingLocale: Locale = Locale.current) {
+        var decimalNumberValue = value as NSDecimalNumber
+        decimalNumberValue = decimalNumberValue.rounding(accordingToBehavior: CurrencyRoundingBehavior())
+        
         self.currencyCode = currencyCode
-        self.value = value
+        self.value = decimalNumberValue as Decimal
         self.formattingLocale = formattingLocale
         
         if value > 0 {
@@ -36,7 +39,7 @@ struct Price: Codable {
         }
         
         var currencyCode = currencyCodeDefault
-        var value: Decimal?
+        var value: Decimal
         if let localeCurrency = localeCurrencyCode, let v = valuesDict[localeCurrency] { //locale currency available
             currencyCode = localeCurrency
             value = Decimal(v)
@@ -44,7 +47,7 @@ struct Price: Codable {
             value = Decimal(v)
         } else { return nil } //failed to retrieve value
         
-        return Price(currencyCode: currencyCode, value: value!, formattingLocale: formattingLocale)
+        return Price(currencyCode: currencyCode, value: value, formattingLocale: formattingLocale)
     }
     
     static func parse(_ dictionaries: [[String: Any]], localeCurrencyCode: String? = Locale.current.currencyCode, formattingLocale: Locale = Locale.current) -> Price? {
