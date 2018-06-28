@@ -97,6 +97,11 @@ class LayoutSelectionViewController: UIViewController {
         return ProductManager.shared.currentProduct
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        collectionView.reloadData()
+    }
+    
     func accessibilityLayoutName(for layout: Layout, at indexPath: IndexPath) -> String {
         var imageDescription = ""
         if let imageLayoutBox = layout.imageLayoutBox {
