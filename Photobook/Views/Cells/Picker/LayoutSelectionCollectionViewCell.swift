@@ -139,7 +139,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
             oppositePageView!.pageIndex = oppositeIndex
             oppositePageView!.productLayout = product.productLayouts[oppositeIndex].shallowCopy()
             oppositePageView!.setupImageBox(with: oppositeImage, animated: false)
-            oppositePageView!.setupTextBox(mode: .userTextOnly)
+            oppositePageView!.setupTextBox(mode: .linesPlaceholder)
         }
 
         if photobookFrameView.coverColor != coverColor ||
