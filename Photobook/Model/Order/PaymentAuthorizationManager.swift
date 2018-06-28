@@ -88,6 +88,10 @@ class PaymentAuthorizationManager: NSObject {
         return Stripe.deviceSupportsApplePay() && PaymentAuthorizationManager.applePayMerchantId != nil
     }
     
+    static var isPayPalAvailable: Bool {
+        return NSClassFromString("PayPalMobile") != nil
+    }
+    
     func authorizePayment(cost: Cost, method: PaymentMethod) {
         switch method {
         case .applePay:
