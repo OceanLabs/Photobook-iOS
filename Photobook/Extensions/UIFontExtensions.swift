@@ -13,15 +13,14 @@ import UIKit
 extension UIFont {
     
     static func loadAllFonts() {
-        registerFontWithFilenameString(filenameString: "LeagueGothic-Regular.otf")
         registerFontWithFilenameString(filenameString: "OpenSans-Regular.ttf")
         registerFontWithFilenameString(filenameString: "Montserrat-Bold.ttf")
         registerFontWithFilenameString(filenameString: "Lora-Regular.ttf")
     }
     
     static func registerFontWithFilenameString(filenameString: String) {
-        guard let frameworkBundle = Bundle(identifier: "ly.kite.Photobook"),
-            let pathForResourceString = frameworkBundle.path(forResource: filenameString, ofType: nil),
+        let frameworkBundle = Bundle(identifier: "ly.kite.Photobook") ?? photobookResourceBundle
+        guard let pathForResourceString = frameworkBundle.path(forResource: filenameString, ofType: nil),
             let fontData = NSData(contentsOfFile: pathForResourceString),
             let dataProvider = CGDataProvider(data: fontData)
             else { return }

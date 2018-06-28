@@ -8,11 +8,6 @@
 
 import UIKit
 
-protocol PickerAnalytics {
-    var selectingPhotosScreenName: Analytics.ScreenName { get }
-    var addingMorePhotosScreenName: Analytics.ScreenName { get }
-}
-
 /// View Controller to show albums. It doesn't care about the source of those albums as long as they conform to the Album protocol.
 class AlbumsCollectionViewController: UICollectionViewController {
     
@@ -145,7 +140,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     }
     
     @IBAction func searchIconTapped(_ sender: Any) {
-        let searchResultsViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "AlbumSearchResultsTableViewController") as! AlbumSearchResultsTableViewController
+        let searchResultsViewController = mainStoryboard.instantiateViewController(withIdentifier: "AlbumSearchResultsTableViewController") as! AlbumSearchResultsTableViewController
         searchResultsViewController.delegate = self
         searchResultsViewController.albums = self.albumManager.albums
         
@@ -160,7 +155,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     }
     
     func showAlbum(album: Album){
-        let assetPickerController = photobookMainStoryboard.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
+        let assetPickerController = mainStoryboard.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
         assetPickerController.album = album
         assetPickerController.albumManager = albumManager
         assetPickerController.selectedAssetsManager = selectedAssetsManager
@@ -242,7 +237,7 @@ extension AlbumsCollectionViewController: LogoutHandler {
     
     func popToLandingScreen() {
         guard let accountManager = accountManager else { return }
-        let viewController = photobookMainStoryboard.instantiateViewController(withIdentifier: accountManager.serviceName + "LandingViewController")
+        let viewController = mainStoryboard.instantiateViewController(withIdentifier: accountManager.serviceName + "LandingViewController")
         self.navigationController?.setViewControllers([viewController, self], animated: false)
         self.navigationController?.popViewController(animated: true)
     }
@@ -273,6 +268,11 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
         default:
             let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
             photobookViewController.assets = selectedAssetsManager.selectedAssets
+            
+            let modalAlbumsCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
+            modalAlbumsCollectionViewController.albumManager = albumManager
+            photobookViewController.assetPickerViewController = modalAlbumsCollectionViewController
+            
             navigationController?.pushViewController(photobookViewController, animated: true)
         }
     }

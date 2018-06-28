@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import PhotobookSDK
+import Photobook
 
 let baseImageURL = "https://s3.amazonaws.com/psps/sdk_static/"
 

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ModalAlbumsCollectionViewController: UIViewController {
+class ModalAlbumsCollectionViewController: UIViewController, PhotobookAssetPicker {
 
     private struct Constants {
         static let topMargin: CGFloat = 10.0
@@ -79,7 +79,7 @@ class ModalAlbumsCollectionViewController: UIViewController {
             navigationBar.willShowPrompt = true
             
             downwardArrowButton = UIButton(type: .custom)
-            downwardArrowButton.setImage(UIImage(namedInPhotobookBundle: "Drag-down-arrow"), for: .normal)
+            downwardArrowButton.setImage(UIImage(named: "Drag-down-arrow"), for: .normal)
             downwardArrowButton.setTitleColor(.black, for: .normal)
             downwardArrowButton.sizeToFit()
             downwardArrowButton.addTarget(self, action: #selector(didTapOnArrowButton(_:)), for: .touchUpInside)
@@ -89,14 +89,14 @@ class ModalAlbumsCollectionViewController: UIViewController {
             navigationBar.addGestureRecognizer(panGestureRecognizer)
 
             if let albumManager = albumManager {
-                let albumsCollectionViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "AlbumsCollectionViewController") as! AlbumsCollectionViewController
+                let albumsCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "AlbumsCollectionViewController") as! AlbumsCollectionViewController
                 albumsCollectionViewController.albumManager = albumManager
                 albumsCollectionViewController.collectorMode = collectorMode
                 albumsCollectionViewController.addingDelegate = self
                 albumsCollectionViewController.assetPickerDelegate = self
                 rootNavigationController.setViewControllers([albumsCollectionViewController], animated: false)
             } else if let album = album {
-                let assetPickerCollectionViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
+                let assetPickerCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
                 assetPickerCollectionViewController.collectorMode = collectorMode
                 assetPickerCollectionViewController.addingDelegate = self
                 assetPickerCollectionViewController.delegate = self

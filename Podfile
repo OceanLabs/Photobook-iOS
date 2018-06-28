@@ -1,4 +1,4 @@
-platform :ios, '10.0'
+platform :ios, '9.0'
 use_frameworks!
 
 pod 'Stripe'
@@ -11,8 +11,9 @@ pod 'SDWebImage', '~> 4.3'
 pod 'FBSDKCoreKit'
 pod 'FBSDKLoginKit'
 pod 'Analytics', '~> 3.0'
+pod 'PayPal-iOS-Dynamic-Loader'
 
-target 'Photobook' do
+target 'Photobook App' do
 end
 
 target 'PhotobookTests' do

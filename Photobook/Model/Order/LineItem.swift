@@ -20,12 +20,12 @@ class LineItem: Codable {
         self.cost = cost
     }
     
-    static func parseDetails(dictionary: [String: Any]) -> LineItem? {
+    static func parseDetails(dictionary: [String: Any], localeCurrencyCode: String? = Locale.current.currencyCode,  formattingLocale: Locale = Locale.current) -> LineItem? {
         guard
             let id = dictionary["template_id"] as? String,
             let name = dictionary["description"] as? String,
             let costDictionary = dictionary["product_cost"] as? [String: Any],
-            let cost = Price.parse(costDictionary)
+            let cost = Price.parse(costDictionary, localeCurrencyCode: localeCurrencyCode, formattingLocale: formattingLocale)
             else { return nil }
         
         return LineItem(id: id, name: name, cost: cost)

@@ -9,10 +9,7 @@
 import UIKit
 import Stripe
 import PassKit
-
-#if !COCOAPODS
-import PayPalMobileSDK
-#endif
+import PayPalDynamicLoader
 
 enum PaymentMethod: Int, Codable {
     case creditCard, applePay, payPal
@@ -87,8 +84,35 @@ class PaymentAuthorizationManager: NSObject {
     
     weak var delegate: (PaymentAuthorizationManagerDelegate & UIViewController)?
     
+    static var availablePaymentMethods: [PaymentMethod] {
+        var methods = [PaymentMethod]()
+        
+        // Apple Pay
+        if isApplePayAvailable {
+            methods.append(.applePay)
+        }
+        
+        // PayPal
+        if isPayPalAvailable {
+            methods.append(.payPal)
+        }
+        
+        // Existing card
+        if Card.currentCard != nil {
+            methods.append(.creditCard)
+        }
+        
+        methods.append(.creditCard) // Adding a new card is always available
+        
+        return methods
+    }
+    
     static var isApplePayAvailable: Bool {
-        return Stripe.deviceSupportsApplePay() && PaymentAuthorizationManager.applePayMerchantId != nil
+        return Stripe.deviceSupportsApplePay() && applePayMerchantId != nil
+    }
+    
+    static var isPayPalAvailable: Bool {
+        return NSClassFromString("PayPalMobile") != nil
     }
     
     func authorizePayment(cost: Cost, method: PaymentMethod) {
@@ -143,35 +167,32 @@ class PaymentAuthorizationManager: NSObject {
               let orderDescription = basketOrder.orderDescription else {
                 return
         }
-        
+
         let address = details.address!
-        
-        let paypalAddress = PayPalShippingAddress(recipientName: details.fullName!, withLine1: address.line1!, withLine2: address.line2 ?? "", withCity: address.city!, withState: address.stateOrCounty ?? "", withPostalCode: address.zipOrPostcode!, withCountryCode: address.country.codeAlpha2)
-        
-        let payment = PayPalPayment(amount: totalCost as NSDecimalNumber, currencyCode: basketOrder.currencyCode, shortDescription: orderDescription, intent: .authorize)
-        payment.shippingAddress = paypalAddress
 
-        let config = PayPalConfiguration()
-        config.acceptCreditCards = false
-        config.payPalShippingAddressOption = .provided
+        let paypalAddress = OLPayPalWrapper.payPalShippingAddress(withRecipientName: details.fullName, withLine1: address.line1, withLine2: address.line2, withCity: address.city, withState: address.stateOrCounty, withPostalCode: address.zipOrPostcode, withCountryCode: address.country.codeAlpha2)
 
-        guard let paymentController = PayPalPaymentViewController(payment: payment, configuration: config, delegate: self) else { return }
+        let payment = OLPayPalWrapper.payPalPayment(withAmount: totalCost as NSDecimalNumber, currencyCode: basketOrder.currencyCode, shortDescription: orderDescription, intent: 1/*PayPalPaymentIntentAuthorize*/, shippingAddress: paypalAddress)
+
+        let config = OLPayPalWrapper.payPalConfiguration(withShippingAddressOption: 1/*PayPalShippingAddressOptionProvided*/, acceptCreditCards: false)
+
+        guard let paymentController = OLPayPalWrapper.payPalPaymentViewController(withPayment: payment, configuration: config, delegate: self) as? UIViewController else { return }
         delegate?.modalPresentationWillBegin()
         delegate?.present(paymentController, animated: true, completion: nil)
     }
 }
 
-//// MARK: - PayPalPaymentDelegate
-//
-extension PaymentAuthorizationManager: PayPalPaymentDelegate {
+// MARK: - PayPalPaymentDelegate
 
-    func payPalPaymentDidCancel(_ paymentViewController: PayPalPaymentViewController) {
+extension PaymentAuthorizationManager {
+
+    func payPalPaymentDidCancel(_ paymentViewController: UIViewController) {
         paymentViewController.dismiss(animated: true, completion: nil)
     }
 
-    func payPalPaymentViewController(_ paymentViewController: PayPalPaymentViewController, didComplete completedPayment: PayPalPayment) {
+    @objc func payPalPaymentViewController(_ paymentViewController: UIViewController, didCompletePayment completedPayment: Any) {
         paymentViewController.dismiss(animated: true, completion: {
-            guard let confirmation = completedPayment.confirmation as? [String: Any] else { return }
+            guard let confirmation = OLPayPalWrapper.confirmation(withPayment: completedPayment) as? [String: Any] else { return }
             guard let response = confirmation["response"] as? [String: Any] else { return }
             guard let token = response["id"] as? String else { return }
 

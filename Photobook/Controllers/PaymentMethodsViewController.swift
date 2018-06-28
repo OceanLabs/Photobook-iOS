@@ -13,7 +13,7 @@ class PaymentMethodsViewController: UIViewController {
     private struct Constants {
         static let creditCardSegueName = "CreditCardSegue"
     }
-
+    
     @IBOutlet weak var tableView: UITableView!
 
     fileprivate var selectedPaymentMethod: PaymentMethod? {
@@ -43,27 +43,19 @@ class PaymentMethodsViewController: UIViewController {
             destination.delegate = self
         }
     }
-    
+        
 }
 
 extension PaymentMethodsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        var numberOfPayments = 2 // PayPal + Add new card
-        
-        // Existing card
-        if Card.currentCard != nil { numberOfPayments += 1 }
-
-        // Apple Pay
-        if PaymentAuthorizationManager.isApplePayAvailable { numberOfPayments += 1 }
-        return numberOfPayments
+        return PaymentAuthorizationManager.availablePaymentMethods.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let supportsApplePay = PaymentAuthorizationManager.isApplePayAvailable ? 1 : 0
-        
-        switch indexPath.item {
-        case -1 + supportsApplePay: // Apple Pay
+        let availablePaymentMethods = PaymentAuthorizationManager.availablePaymentMethods
+        switch availablePaymentMethods[indexPath.item] {
+        case .applePay:
             let cell = tableView.dequeueReusableCell(withIdentifier: PaymentMethodTableViewCell.reuseIdentifier, for: indexPath) as! PaymentMethodTableViewCell
             let method = "ApplePay"
             cell.method = method
@@ -77,7 +69,7 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + method
             cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
             return cell
-        case 0 + supportsApplePay: // PayPal
+        case .payPal:
             let cell = tableView.dequeueReusableCell(withIdentifier: PaymentMethodTableViewCell.reuseIdentifier, for: indexPath) as! PaymentMethodTableViewCell
             let method = "PayPal"
             cell.method = method
@@ -92,7 +84,7 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + method
             cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
             return cell
-        case 1 + supportsApplePay: // Saved card
+        case .creditCard where indexPath.item != availablePaymentMethods.count - 1: // Saved card
             guard let card = Card.currentCard else { fallthrough }
             
             let cell = tableView.dequeueReusableCell(withIdentifier: PaymentMethodTableViewCell.reuseIdentifier, for: indexPath) as! PaymentMethodTableViewCell
