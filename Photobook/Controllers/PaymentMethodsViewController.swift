@@ -14,28 +14,7 @@ class PaymentMethodsViewController: UIViewController {
         static let creditCardSegueName = "CreditCardSegue"
     }
     
-    private let availablePaymentMethods: [PaymentMethod] = {
-        var methods = [PaymentMethod]()
-        
-        // Apple Pay
-        if PaymentAuthorizationManager.isApplePayAvailable {
-            methods.append(.applePay)
-        }
-        
-        // PayPal
-        if PaymentAuthorizationManager.isPayPalAvailable {
-            methods.append(.payPal)
-        }
-        
-        // Existing card
-        if Card.currentCard != nil {
-            methods.append(.creditCard)
-        }
-        
-        methods.append(.creditCard) // Adding a new card is always available
-        
-        return methods
-    }()
+    private var availablePaymentMethods: [PaymentMethod] = []
 
     @IBOutlet weak var tableView: UITableView!
 
@@ -58,6 +37,7 @@ class PaymentMethodsViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        updateAvailablePaymentMethods()
         tableView.reloadData()
     }
 
@@ -65,6 +45,29 @@ class PaymentMethodsViewController: UIViewController {
         if segue.identifier == Constants.creditCardSegueName, let destination = segue.destination as? CreditCardTableViewController {
             destination.delegate = self
         }
+    }
+    
+    private func updateAvailablePaymentMethods() {
+        var methods = [PaymentMethod]()
+        
+        // Apple Pay
+        if PaymentAuthorizationManager.isApplePayAvailable {
+            methods.append(.applePay)
+        }
+        
+        // PayPal
+        if PaymentAuthorizationManager.isPayPalAvailable {
+            methods.append(.payPal)
+        }
+        
+        // Existing card
+        if Card.currentCard != nil {
+            methods.append(.creditCard)
+        }
+        
+        methods.append(.creditCard) // Adding a new card is always available
+        
+        availablePaymentMethods = methods
     }
     
 }
