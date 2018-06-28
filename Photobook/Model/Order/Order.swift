@@ -164,8 +164,9 @@ class Order: Codable {
                 "multiples" : product.itemCount,
                 "shipping_class" : shippingMethod.id,
                 "options" : options,
-                "assets" : ["inside_pdf" : insideUrl,
-                            "cover_pdf" : coverUrl]
+                "page_count" : product.numberOfPages,
+                "inside_pdf" : insideUrl,
+                "cover_pdf" : coverUrl
             ]
             jobs.append(job)
         }
