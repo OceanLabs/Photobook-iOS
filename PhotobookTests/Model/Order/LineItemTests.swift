@@ -30,9 +30,10 @@ class LineItemTests: XCTestCase {
     }
     
     func testParseDetails_shoudParseAValidDictionary() {
-        let lineItem = LineItem.parseDetails(dictionary: validDictionary)
+        let locale = Locale(identifier: "en_US")
+        let lineItem = LineItem.parseDetails(dictionary: validDictionary, localeCurrencyCode: locale.currencyCode, formattingLocale: locale)
         
-        let expectedCost = Price(currencyCode: "GBP", value: 21)
+        let expectedCost = Price(currencyCode: "GBP", value: 21, formattingLocale: locale)
         
         XCTAssertEqualOptional(lineItem?.id, "circus_clown1")
         XCTAssertEqualOptional(lineItem?.name, "Clown Costume")

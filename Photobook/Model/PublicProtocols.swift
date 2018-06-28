@@ -7,6 +7,9 @@
 //
 
 /// Conforming classes can be notified when PhotobookAssets are added by a custom photo picker
+
+import UIKit
+
 @objc public protocol AssetCollectorAddingDelegate: class {
     func didFinishAdding(_ assets: [PhotobookAsset]?)
 }

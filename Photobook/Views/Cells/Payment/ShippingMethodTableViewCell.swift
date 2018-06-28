@@ -6,6 +6,8 @@
 //  Copyright © 2017 Kite.ly. All rights reserved.
 //
 
+import UIKit
+
 class ShippingMethodTableViewCell: UITableViewCell {
     
     static let reuseIdentifier = NSStringFromClass(ShippingMethodTableViewCell.self).components(separatedBy: ".").last!
