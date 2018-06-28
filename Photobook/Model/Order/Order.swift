@@ -164,6 +164,7 @@ class Order: Codable {
                 "multiples" : product.itemCount,
                 "shipping_class" : shippingMethod.id,
                 "options" : options,
+                "page_count" : product.numberOfPages,
                 "inside_pdf" : insideUrl,
                 "cover_pdf" : coverUrl
             ]

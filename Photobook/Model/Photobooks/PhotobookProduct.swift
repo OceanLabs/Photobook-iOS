@@ -281,8 +281,8 @@ class PhotobookProduct: Codable {
     
     func setPdfUrls(_ urls: [String]) {
         if urls.count == 2 {
-            insidePdfUrl = urls[0]
-            coverPdfUrl = urls[1]
+            coverPdfUrl = urls[0]
+            insidePdfUrl = urls[1]
         }
     }
     
