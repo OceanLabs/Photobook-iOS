@@ -62,37 +62,4 @@ class OrderSummaryTests: XCTestCase {
         let orderSummary = OrderSummary.parse(invalidDictionary)
         XCTAssertNil(orderSummary)
     }
-    
-    func testParse_shouldFailWithInvalidPreviewImageUrl() {
-        let invalidUrlDictionary:[String:Any] = ["lineItems":[["name":"book", "price":["currencyCode":"GBP", "amount":30.0]],
-                                                              ["name":"Glossy finish", "price":["currencyCode":"GBP", "amount":5.0]]],
-                                                 "total":["currencyCode":"GBP", "amount":35.0],
-                                                 "previewImageUrl":"somethingelse"]
-        
-        guard let invalidUrlSummary = OrderSummary.parse(invalidUrlDictionary) else {
-            XCTFail("Could not initialise OrderSummary object")
-            return
-        }
-        
-        XCTAssertNil(invalidUrlSummary.previewImageUrl(withCoverImageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxaHHyizN8O0OXTTQcZXbesl-6J-X0QWhZ1wcYiflygU4KiM2T8Q", size: CGSize(width: 300, height: 150)))
-    }
-    
-    func testPreviewImageUrl_shouldSucceedWithValidCoverUrl() {
-        guard let validSummary = OrderSummary.parse(validDictionary) else {
-            XCTFail()
-            return
-        }
-        
-        XCTAssertNotNil(validSummary.previewImageUrl(withCoverImageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxaHHyizN8O0OXTTQcZXbesl-6J-X0QWhZ1wcYiflygU4KiM2T8Q", size: CGSize(width: 300, height: 150)))
-    }
-    
-    func testPreviewImageUrl_shouldFailWithInvalidCoverUrl() {
-        guard let validSummary = OrderSummary.parse(validDictionary) else {
-            XCTFail()
-            return
-        }
-        
-        XCTAssertNil(validSummary.previewImageUrl(withCoverImageUrl: "https://encrypted-tbn 0.gstatic.com/images?q=tbn:ANd9GcSxaHHyizN8O0OXTTQcZXbesl-6J-X0QWhZ1wcYiflygU4KiM2T8Q", size: CGSize(width: 300, height: 150)))
-    }
-    
 }
