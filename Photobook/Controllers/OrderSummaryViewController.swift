@@ -15,6 +15,8 @@ class OrderSummaryViewController: UIViewController {
         static let sectionTotal = 1
         static let sectionOptions = 2
         
+        static let dimensionsForCoverPhotoSnapshot: CGFloat = 100.0
+        
         static let stringLoading = NSLocalizedString("OrderSummary/Loading", value: "Loading order details", comment: "Loading product summary")
         static let stringLoadingFail = NSLocalizedString("OrderSummary/LoadingFail", value: "Couldn't load order details", comment: "When loading order details fails")
     }
@@ -118,21 +120,17 @@ class OrderSummaryViewController: UIViewController {
     }
     
     private func takeCoverSnapshot(_ completion: @escaping (UIImage?)->()) {
-        // Move this up to constants
-        let dimensionForPage = 100.0 * UIScreen.main.scale
-        
         coverSnapshotPageView.alpha = 1.0
-        
         coverSnapshotPageView.pageIndex = 0
         coverSnapshotPageView.backgroundColor = .clear
-        coverSnapshotPageView.frame.size = CGSize(width: dimensionForPage, height: dimensionForPage / product.template.coverAspectRatio)
+        coverSnapshotPageView.frame.size = CGSize(width: Constants.dimensionsForCoverPhotoSnapshot, height: Constants.dimensionsForCoverPhotoSnapshot / product.template.coverAspectRatio)
         coverSnapshotPageView.productLayout = product.productLayouts.first
         
         coverSnapshotPageView.color = product.coverColor
         coverSnapshotPageView.setupTextBox(mode: .userTextOnly)
         
         if let asset = product.productLayouts.first?.asset {
-            asset.image(size: CGSize(width: dimensionForPage, height: dimensionForPage), loadThumbnailFirst: false, progressHandler: nil, completionHandler: { [weak welf = self] (image, error) in
+            asset.image(size: CGSize(width: Constants.dimensionsForCoverPhotoSnapshot, height: Constants.dimensionsForCoverPhotoSnapshot), loadThumbnailFirst: false, progressHandler: nil, completionHandler: { [weak welf = self] (image, error) in
                 guard let image = image else { return }
                 
                 welf?.coverSnapshotPageView.shouldSetImage = true

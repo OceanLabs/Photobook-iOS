@@ -18,7 +18,12 @@ protocol OrderSummaryManagerDelegate: class {
 
 class OrderSummaryManager {
     
-    var coverPageSnapshotImage: UIImage? { didSet { uploadCoverImage() } }
+    var coverPageSnapshotImage: UIImage? {
+        didSet {
+            product.coverSnapshot = coverPageSnapshotImage
+            uploadCoverImage()
+        }
+    }
     var templates: [PhotobookTemplate]!
     var product: PhotobookProduct!
     lazy var apiManager = PhotobookAPIManager()
@@ -151,27 +156,19 @@ extension OrderSummaryManager {
         }
         
         isUploadingCoverImage = true
-        apiClient.uploadImage(coverImage, imageName: "OrderSummaryPreviewImage.png", context: .pig, endpoint: "upload/", completion: { [weak welf = self] (json, error) in
-            
+        Pig.uploadImage(coverImage) { [weak welf = self] (url, error) in
             welf?.isUploadingCoverImage = false
             
-            if let error = error {
-                print(error.localizedDescription)
+            if error != nil {
                 welf?.delegate?.orderSummaryManagerFailedToSetPreviewImageUrl()
                 return
             }
-            
-            guard let dictionary = json as? [String: AnyObject], let url = dictionary["full"] as? String else {
-                print("OrderSummaryManager: Couldn't parse URL of uploaded image")
-                welf?.delegate?.orderSummaryManagerFailedToSetPreviewImageUrl()
-                return
-            }
-            
+
             welf?.coverImageUrl = url
             if welf?.isPreviewImageUrlReady() ?? false {
                 welf?.delegate?.orderSummaryManagerDidSetPreviewImageUrl()
             }
-        })
+        }
     }
     
     private func isPreviewImageUrlReady() -> Bool {
