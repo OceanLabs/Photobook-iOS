@@ -14,8 +14,6 @@ class PaymentMethodsViewController: UIViewController {
         static let creditCardSegueName = "CreditCardSegue"
     }
     
-    private var availablePaymentMethods: [PaymentMethod] = []
-
     @IBOutlet weak var tableView: UITableView!
 
     fileprivate var selectedPaymentMethod: PaymentMethod? {
@@ -37,7 +35,6 @@ class PaymentMethodsViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        updateAvailablePaymentMethods()
         tableView.reloadData()
     }
 
@@ -46,39 +43,17 @@ class PaymentMethodsViewController: UIViewController {
             destination.delegate = self
         }
     }
-    
-    private func updateAvailablePaymentMethods() {
-        var methods = [PaymentMethod]()
         
-        // Apple Pay
-        if PaymentAuthorizationManager.isApplePayAvailable {
-            methods.append(.applePay)
-        }
-        
-        // PayPal
-        if PaymentAuthorizationManager.isPayPalAvailable {
-            methods.append(.payPal)
-        }
-        
-        // Existing card
-        if Card.currentCard != nil {
-            methods.append(.creditCard)
-        }
-        
-        methods.append(.creditCard) // Adding a new card is always available
-        
-        availablePaymentMethods = methods
-    }
-    
 }
 
 extension PaymentMethodsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return availablePaymentMethods.count
+        return PaymentAuthorizationManager.availablePaymentMethods.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let availablePaymentMethods = PaymentAuthorizationManager.availablePaymentMethods
         switch availablePaymentMethods[indexPath.item] {
         case .applePay:
             let cell = tableView.dequeueReusableCell(withIdentifier: PaymentMethodTableViewCell.reuseIdentifier, for: indexPath) as! PaymentMethodTableViewCell
