@@ -756,6 +756,12 @@ extension PageSetupViewController: TextEditingDelegate {
 extension PageSetupViewController: PhotobookPageViewDelegate {
     
     func didTapOnAsset(at index: Int) {
+        guard assetImageView.image != nil else {
+            // If there is no photo, switch to the photo selection tool
+            tappedToolButton(toolbarButtons[Tool.selectAsset.rawValue])
+            return
+        }
+        // Otherwise switch to the photo placement tool
         tappedToolButton(toolbarButtons[Tool.placeAsset.rawValue])
     }
 
