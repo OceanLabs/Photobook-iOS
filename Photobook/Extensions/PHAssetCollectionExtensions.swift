@@ -11,7 +11,7 @@ import Photos
 extension PHAssetCollection {
     
     func coverAsset(useFirstImageInCollection: Bool, completionHandler: @escaping (Asset?, Error?) -> Void) {
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .default).async {
             let fetchOptions = PHFetchOptions()
             fetchOptions.fetchLimit = 1
             fetchOptions.wantsIncrementalChangeDetails = false

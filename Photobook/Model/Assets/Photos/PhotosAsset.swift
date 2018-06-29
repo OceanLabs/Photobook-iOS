@@ -79,7 +79,7 @@ class DefaultAssetManager: AssetManager {
         
         // Convert points to pixels
         imageSize = CGSize(width: imageSize.width * UIScreen.main.usableScreenScale(), height: imageSize.height * UIScreen.main.usableScreenScale())
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .default).async {
             self.imageManager.requestImage(for: self.photosAsset, targetSize: imageSize, contentMode: .aspectFill, options: options) { (image, _) in
                 DispatchQueue.main.async {
                     completionHandler(image, nil)
