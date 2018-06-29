@@ -51,6 +51,8 @@
 		2E3A86EA20C0118800F1E6E2 /* AddPaymentMethodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3A86E820C0118800F1E6E2 /* AddPaymentMethodTableViewCell.swift */; };
 		2E3A86EC20C0145600F1E6E2 /* CountryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3A86EB20C0145600F1E6E2 /* CountryTableViewCell.swift */; };
 		2E3A86ED20C0145600F1E6E2 /* CountryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3A86EB20C0145600F1E6E2 /* CountryTableViewCell.swift */; };
+		2E3C4DFA20E65911007A5788 /* AssetLoadingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3C4DF920E65911007A5788 /* AssetLoadingManager.swift */; };
+		2E3C4DFB20E679C1007A5788 /* AssetLoadingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3C4DF920E65911007A5788 /* AssetLoadingManager.swift */; };
 		2E3E6A5420036FB60044EDFC /* PhotobookCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3E6A5220036FB60044EDFC /* PhotobookCollectionViewCell.swift */; };
 		2E4875DA20E397D400FC5D9F /* Main.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E4875D920E397D400FC5D9F /* Main.xcassets */; };
 		2E4B83892068E50C00059AA7 /* ReceiptViewControllerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FA530B2063F3B200669758 /* ReceiptViewControllerState.swift */; };
@@ -515,6 +517,7 @@
 		2E3A86E620C00A4200F1E6E2 /* CheckoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutTests.swift; sourceTree = "<group>"; };
 		2E3A86E820C0118800F1E6E2 /* AddPaymentMethodTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodTableViewCell.swift; sourceTree = "<group>"; };
 		2E3A86EB20C0145600F1E6E2 /* CountryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryTableViewCell.swift; sourceTree = "<group>"; };
+		2E3C4DF920E65911007A5788 /* AssetLoadingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetLoadingManager.swift; sourceTree = "<group>"; };
 		2E3E6A5220036FB60044EDFC /* PhotobookCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotobookCollectionViewCell.swift; sourceTree = "<group>"; };
 		2E4875D920E397D400FC5D9F /* Main.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Main.xcassets; sourceTree = "<group>"; };
 		2E4C9E872049492400F5AD48 /* FacebookAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookAlbum.swift; sourceTree = "<group>"; };
@@ -888,6 +891,7 @@
 			isa = PBXGroup;
 			children = (
 				2E0B58A81FB3508B00F31A9E /* SelectedAssetsManager.swift */,
+				2E3C4DF920E65911007A5788 /* AssetLoadingManager.swift */,
 				2E0B58981FB328B800F31A9E /* Asset.swift */,
 				2E0B58941FB3280000F31A9E /* AlbumManager.swift */,
 				2E0B58961FB3287900F31A9E /* Album.swift */,
@@ -968,7 +972,6 @@
 				2E50702A20E10C3F002889C5 /* Controllers */,
 				2E50702B20E10C76002889C5 /* Views */,
 				2E50702D20E10C83002889C5 /* Model */,
-				2E50703320E11FA5002889C5 /* Extensions */,
 				2E4875DC20E39A6100FC5D9F /* Resources */,
 				2E0B58831FB30F2100F31A9E /* Main.storyboard */,
 			);
@@ -1058,13 +1061,6 @@
 				6FA189301FFF96E500E6D0AB /* AssetSelectorAssetCollectionViewCell.swift */,
 			);
 			path = Picker;
-			sourceTree = "<group>";
-		};
-		2E50703320E11FA5002889C5 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Extensions;
 			sourceTree = "<group>";
 		};
 		2E56434720A97CF900ECC98F /* HelperPhotobookUITests */ = {
@@ -2071,6 +2067,7 @@
 				B986DF2F201B445E005461A0 /* UpsellOption.swift in Sources */,
 				6F17F325207657FD00001888 /* UIFontExtensions.swift in Sources */,
 				2E3E6A5420036FB60044EDFC /* PhotobookCollectionViewCell.swift in Sources */,
+				2E3C4DFB20E679C1007A5788 /* AssetLoadingManager.swift in Sources */,
 				2ED5B3811FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift in Sources */,
 				6FC7E8811FC332A500D2BCDA /* LayoutBox.swift in Sources */,
 				2E0B58921FB325FF00F31A9E /* AlbumsCollectionViewController.swift in Sources */,
@@ -2218,6 +2215,7 @@
 				2ED14BB52063AA4000ED2E2C /* OrderSummaryViewController.swift in Sources */,
 				2ED14C2C2063AA4000ED2E2C /* ErrorMessage.swift in Sources */,
 				2ED14BDE2063AA4000ED2E2C /* ReceiptFooterTableViewCell.swift in Sources */,
+				2E3C4DFA20E65911007A5788 /* AssetLoadingManager.swift in Sources */,
 				2ED14BB92063AA4000ED2E2C /* DeliveryDetailsTableViewController.swift in Sources */,
 				2ED14BAE2063AA4000ED2E2C /* TextEditingViewController.swift in Sources */,
 				2ED14C002063AA4000ED2E2C /* Asset.swift in Sources */,
