@@ -93,8 +93,8 @@ import Stripe
         
         let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.assets = assets
-        photobookViewController.completionClosure = { (photobookProduct) in
-            OrderManager.shared.basketOrder.products = [productProduct]
+        photobookViewController.dismissClosure = { (photobookProduct) in
+            OrderManager.shared.basketOrder.products = [photobookProduct]
             
             let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
             photobookViewController.navigationController?.pushViewController(checkoutViewController, animated: true)
