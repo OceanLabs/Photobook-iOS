@@ -20,12 +20,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     /// Manager for multiple albums to use in order to have access to additional Assets when editing a page. 'album', 'albumManager' & 'assetPickerViewController' are exclusive.
     var albumManager: AlbumManager?
+
+    /// Delegate that can handle the dismissal of the photo book and also provide a custom asset picker
+    weak var photobookDelegate: PhotobookDelegate?
     
-    /// View controller allowing the user to pick additional assets. 'album', 'albumManager' & 'assetPickerViewController' are exclusive.
-    var assetPickerViewController: PhotobookAssetPicker?
-    
-    /// Delegate to dismiss the PhotobookViewController
-    var dismissClosure: ((_ photobook: PhotobookProduct) -> Void)?
+    /// Closure to call with a completed photobook product
+    var completionClosure: ((_ photobook: PhotobookProduct) -> Void)?
     
     private var product: PhotobookProduct! {
         return ProductManager.shared.currentProduct
@@ -269,11 +269,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     @IBAction func tappedCancel(_ sender: UIBarButtonItem) {
-        if isPresentedModally {
-            presentingViewController?.dismiss(animated: true, completion: nil)
-            return
-        }
-        navigationController?.popViewController(animated: true)
+        cancelPhotobook()
     }
 
     @IBAction private func didTapRearrange(_ sender: UIBarButtonItem) {
@@ -336,7 +332,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         let goToCheckout = {
             let orderSummaryViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
-            orderSummaryViewController.completionClosure = self.dismissClosure
+            orderSummaryViewController.completionClosure = self.completionClosure
             self.navigationController?.pushViewController(orderSummaryViewController, animated: true)
         }
         
@@ -406,15 +402,26 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
         
     @IBAction private func didTapBack() {
+        cancelPhotobook()
+    }
+    
+    private func cancelPhotobook() {
         let alertController = UIAlertController(title: NSLocalizedString("Photobook/BackAlertTitle", value: "Are you sure?", comment: "Title for alert asking the user to go back"), message: NSLocalizedString("Photobook/BackAlertMessage", value: "This will discard any changes made to your photo book", comment: "Message for alert asking the user to go back"), preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Yes", value: "Yes", comment: "Affirmative button title for alert asking the user confirmation for an action"), style: .destructive, handler: { _ in
             
             // Clear photobook
             ProductManager.shared.reset()
             
-            self.navigationController?.popViewController(animated: true)
-            
             Analytics.shared.trackAction(.wentBackFromPhotobookPreview)
+            
+            let controllerToDismiss = self.isPresentedModally ? self.navigationController! : self
+            if self.photobookDelegate?.wantsToDismiss?(controllerToDismiss) == nil {
+                if self.isPresentedModally {
+                    self.presentingViewController?.dismiss(animated: true, completion: nil)
+                    return
+                }
+                self.navigationController?.popViewController(animated: true)
+            }
         }))
         alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
         
@@ -753,7 +760,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         pageSetupViewController.pageIndex = index
         pageSetupViewController.album = album
         pageSetupViewController.albumManager = albumManager
-        pageSetupViewController.assetPickerViewController = assetPickerViewController
+        pageSetupViewController.photobookDelegate = photobookDelegate
         
         if barType != nil {
             pageSetupViewController.photobookNavigationBarType = barType!

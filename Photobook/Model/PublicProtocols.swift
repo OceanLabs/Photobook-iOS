@@ -10,6 +10,11 @@
 
 import UIKit
 
+@objc public protocol PhotobookDelegate {
+    @objc optional var assetPickerViewController: PhotobookAssetPicker & UIViewController { get }
+    @objc optional func wantsToDismiss(_ photobookViewController: UIViewController)
+}
+
 @objc public protocol AssetCollectorAddingDelegate: class {
     func didFinishAdding(_ assets: [PhotobookAsset]?)
 }
