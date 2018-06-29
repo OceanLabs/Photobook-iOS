@@ -10,8 +10,15 @@
 
 import UIKit
 
+/// PhotobookViewController delegate
 @objc public protocol PhotobookDelegate {
+    
+    /// Custom photo picker
     @objc optional var assetPickerViewController: PhotobookAssetPicker & UIViewController { get }
+    
+    /// Called when a photo book is dismissed
+    ///
+    /// - Parameter photobookViewController: The view controller that wants to be dismissed. If the photo book was presente modally, this will be a UINavigationController.
     @objc optional func wantsToDismiss(_ photobookViewController: UIViewController)
 }
 
