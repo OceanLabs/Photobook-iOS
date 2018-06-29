@@ -6,8 +6,6 @@
 //  Copyright © 2018 Kite.ly. All rights reserved.
 //
 
-/// Conforming classes can be notified when PhotobookAssets are added by a custom photo picker
-
 import UIKit
 
 /// PhotobookViewController delegate
@@ -22,6 +20,7 @@ import UIKit
     @objc optional func wantsToDismiss(_ photobookViewController: UIViewController)
 }
 
+/// Conforming classes can be notified when PhotobookAssets are added by a custom photo picker
 @objc public protocol AssetCollectorAddingDelegate: class {
     func didFinishAdding(_ assets: [PhotobookAsset]?)
 }
