@@ -27,15 +27,15 @@ import UIKit
     
     func paragraphStyle(isSpineText: Bool) -> NSParagraphStyle {
         let paragraphStyle = NSMutableParagraphStyle()
-
-        switch self {
-        case .plain: paragraphStyle.lineHeightMultiple = 1.25
-        case .classic: paragraphStyle.lineHeightMultiple = 1.27
-        case .solid: paragraphStyle.lineHeightMultiple = 1.23
-        }
         
         if isSpineText {
             paragraphStyle.alignment = .center
+        } else {
+            switch self {
+            case .plain: paragraphStyle.lineHeightMultiple = 1.25
+            case .classic: paragraphStyle.lineHeightMultiple = 1.27
+            case .solid: paragraphStyle.lineHeightMultiple = 1.23
+            }
         }
 
         return paragraphStyle.copy() as! NSParagraphStyle
