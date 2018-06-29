@@ -72,6 +72,12 @@ import Stripe
     /// - Parameter delegate: Delegate that can handle the dismissal of the photo book and also provide a custom photo picker
     /// - Returns: A photobook UIViewController
     @objc public func photobookViewController(with assets: [PhotobookAsset], embedInNavigation: Bool = false, delegate: PhotobookDelegate? = nil) -> UIViewController? {
+        
+        // Return the upload / receipt screen if there is an order in progress
+        guard !isProcessingOrder else {
+            return receiptViewController(delegate: delegate)
+        }
+        
         guard let assets = assets as? [Asset], assets.count > 0 else {
             print("Photobook SDK: Photobook View Controller not initialised because the assets array passed is empty or nil.")
             return nil
@@ -118,7 +124,7 @@ import Stripe
     ///
     /// - Parameter onDismiss: Closure to execute when the receipt UI is ready to be dismissed
     /// - Returns: A receipt UIViewController
-    @objc public func receiptViewController(onDismiss: ((UIViewController) -> Void)? = nil) -> UIViewController? {
+    @objc public func receiptViewController(delegate: DismissDelegate? = nil) -> UIViewController? {
         guard isProcessingOrder else { return nil }
         
         guard KiteAPIClient.shared.apiKey != nil else {
@@ -127,7 +133,8 @@ import Stripe
         
         UIFont.loadAllFonts()
         let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
-        receiptViewController.dismissClosure = onDismiss
+        receiptViewController.order = OrderManager.shared.processingOrder
+        receiptViewController.dismissDelegate = delegate
         return receiptViewController
     }
 }
