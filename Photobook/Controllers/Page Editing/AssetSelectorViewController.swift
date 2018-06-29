@@ -33,6 +33,7 @@ class AssetSelectorViewController: UIViewController {
         return temp
     }()
     private var selectedAssetIndex = -1
+    private var assetPickerViewController: (PhotobookAssetPicker & UIViewController)?
     
     var album: Album? {
         didSet {
@@ -46,7 +47,10 @@ class AssetSelectorViewController: UIViewController {
     }
     weak var photobookDelegate: PhotobookDelegate? {
         didSet {
-            if photobookDelegate != nil { collectionView.reloadData() }
+            if photobookDelegate != nil {
+                assetPickerViewController = photobookDelegate!.assetPickerViewController
+                collectionView.reloadData()
+            }
         }
     }
     
@@ -91,7 +95,7 @@ extension AssetSelectorViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // Add one for the "add more" thumbnail if an Asset picker was configured
         var count = assets.count
-        if album != nil || albumManager != nil || photobookDelegate?.assetPickerViewController != nil { count += 1 }
+        if album != nil || albumManager != nil || assetPickerViewController != nil { count += 1 }
         return count
     }
     
@@ -131,7 +135,7 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == assets.count {
-            if let assetPickerViewController = photobookDelegate?.assetPickerViewController {
+            if let assetPickerViewController = assetPickerViewController {
                 assetPickerViewController.addingDelegate = self
                 present(assetPickerViewController, animated: true, completion: nil)
                 return

@@ -410,14 +410,10 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
         case .adding:
             addingDelegate?.didFinishAdding(selectedAssetsManager?.selectedAssets)
         default:
-            let modalAlbumsCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
-            modalAlbumsCollectionViewController.album = album
-            modalAlbumsCollectionViewController.albumManager = albumManager
-
             let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
             photobookViewController.assets = selectedAssetsManager?.selectedAssets
-            photobookViewController.assetPickerViewController = modalAlbumsCollectionViewController
-            photobookViewController.dismissClosure = { (photobookProduct) in
+            photobookViewController.photobookDelegate = self
+            photobookViewController.completionClosure = { (photobookProduct) in
                 OrderManager.shared.basketOrder.products = [photobookProduct]
                 
                 let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
@@ -427,6 +423,17 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
             navigationController?.pushViewController(photobookViewController, animated: true)
         }
         selectedAssetsManager?.orderAssetsByDate()
+    }
+}
+
+extension AssetPickerCollectionViewController: PhotobookDelegate {
+    
+    var assetPickerViewController: PhotobookAssetPicker & UIViewController {
+        let modalAlbumsCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
+        modalAlbumsCollectionViewController.album = album
+        modalAlbumsCollectionViewController.albumManager = albumManager
+
+        return modalAlbumsCollectionViewController
     }
 }
 
