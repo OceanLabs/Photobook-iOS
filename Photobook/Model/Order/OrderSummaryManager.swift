@@ -18,7 +18,12 @@ protocol OrderSummaryManagerDelegate: class {
 
 class OrderSummaryManager {
     
-    var coverPageSnapshotImage: UIImage? { didSet { uploadCoverImage() } }
+    var coverPageSnapshotImage: UIImage? {
+        didSet {
+            product.coverSnapshot = coverPageSnapshotImage
+            uploadCoverImage()
+        }
+    }
     var templates: [PhotobookTemplate]!
     var product: PhotobookProduct!
     lazy var apiManager = PhotobookAPIManager()
@@ -31,7 +36,7 @@ class OrderSummaryManager {
             return product.productLayouts
         }
     }
-    private var coverImageUrl:String?
+    private(set) var coverImageUrl:String?
     private var isUploadingCoverImage = false
     
     private(set) var upsellOptions: [UpsellOption]?
@@ -136,11 +141,8 @@ extension OrderSummaryManager {
             return
         }
         
-        if let summary = summary,
-            let imageUrl = summary.previewImageUrl(withCoverImageUrl: coverImageUrl, size: size) {
-            apiClient.downloadImage(imageUrl) { (image, _) in
-                completion(image)
-            }
+        if let summary = summary {
+            Pig.fetchPreviewImage(withBaseUrlString: summary.pigBaseUrl, coverImageUrlString: coverImageUrl, size: size, completion: completion)
         } else {
             completion(nil)
         }
@@ -154,30 +156,22 @@ extension OrderSummaryManager {
         }
         
         isUploadingCoverImage = true
-        apiClient.uploadImage(coverImage, imageName: "OrderSummaryPreviewImage.png", context: .pig, endpoint: "upload/", completion: { [weak welf = self] (json, error) in
-            
+        Pig.uploadImage(coverImage) { [weak welf = self] (url, error) in
             welf?.isUploadingCoverImage = false
             
-            if let error = error {
-                print(error.localizedDescription)
+            if error != nil {
                 welf?.delegate?.orderSummaryManagerFailedToSetPreviewImageUrl()
                 return
             }
-            
-            guard let dictionary = json as? [String: AnyObject], let url = dictionary["full"] as? String else {
-                print("OrderSummaryManager: Couldn't parse URL of uploaded image")
-                welf?.delegate?.orderSummaryManagerFailedToSetPreviewImageUrl()
-                return
-            }
-            
+
             welf?.coverImageUrl = url
             if welf?.isPreviewImageUrlReady() ?? false {
                 welf?.delegate?.orderSummaryManagerDidSetPreviewImageUrl()
             }
-        })
+        }
     }
     
     private func isPreviewImageUrlReady() -> Bool {
-        return coverImageUrl != nil && summary != nil && summary?.previewImageUrl(withCoverImageUrl: coverImageUrl!, size: .zero) != nil
+        return coverImageUrl != nil && summary != nil
     }
 }

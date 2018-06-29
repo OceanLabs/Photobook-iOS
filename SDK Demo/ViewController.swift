@@ -24,10 +24,13 @@ class ViewController: UIViewController {
         PhotobookSDK.shared.setEnvironment(environment: .test)
         PhotobookSDK.shared.kiteApiKey = "78b798ff366815c833dfa848654aba43b71a883a"
         
-        guard let photobookVc = PhotobookSDK.shared.photobookViewController(with: assets) else { return }
-        
-        present(photobookVc, animated: true, completion: nil)
+        guard let photobookViewController = PhotobookSDK.shared.photobookViewController(with: assets, delegate: self) else { return }
+        navigationController?.pushViewController(photobookViewController, animated: true)
     }
-
 }
 
+extension ViewController: PhotobookDelegate {
+    func wantsToDismiss(_ photobookViewController: UIViewController) {
+        photobookViewController.navigationController?.popViewController(animated: true)
+    }
+}

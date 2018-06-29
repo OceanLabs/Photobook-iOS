@@ -20,14 +20,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     /// Manager for multiple albums to use in order to have access to additional Assets when editing a page. 'album', 'albumManager' & 'assetPickerViewController' are exclusive.
     var albumManager: AlbumManager?
+
+    /// Delegate that can handle the dismissal of the photo book and also provide a custom asset picker
+    weak var photobookDelegate: PhotobookDelegate?
     
-    /// View controller allowing the user to pick additional assets. 'album', 'albumManager' & 'assetPickerViewController' are exclusive.
-    var assetPickerViewController: PhotobookAssetPicker?
-    
-    /// Delegate to dismiss the PhotobookViewController
-    var dismissClosure: (() -> Void)?
-    
-    var showCancelButton: Bool = false
+    /// Closure to call with a completed photobook product
+    var completionClosure: ((_ photobook: PhotobookProduct) -> Void)?
     
     private var product: PhotobookProduct! {
         return ProductManager.shared.currentProduct
@@ -108,7 +106,9 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     // Scrolling at 60Hz when we are dragging looks good enough and avoids having to normalize the scroll offset
     private lazy var screenRefreshRate: Double = 1.0 / 60.0
-        
+    
+    private lazy var isPresentedModally: Bool = { return (navigationController?.isBeingPresented ?? false) || isBeingPresented }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -124,6 +124,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        if navigationController == nil {
+            fatalError("PhotobookViewController: Please use a navigation controller or alternatively, set the 'embedInNavigation' parameter to true.")
+        }
         
         updateNavBar()
     }
@@ -181,7 +185,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         navigationItem.hidesBackButton = true
     
-        if showCancelButton {
+        if isPresentedModally {
             navigationItem.leftBarButtonItems = [ cancelBarButtonItem ]
         } else {
             backButton?.setTitleColor(navigationController?.navigationBar.tintColor, for: .normal)
@@ -265,15 +269,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     @IBAction func tappedCancel(_ sender: UIBarButtonItem) {
-        guard let dismissClosure = dismissClosure else {
-            if presentingViewController != nil {
-                presentingViewController!.dismiss(animated: true, completion: nil)
-                return
-            }
-            navigationController?.popViewController(animated: true)
-            return
-        }
-        dismissClosure()
+        cancelPhotobook()
     }
 
     @IBAction private func didTapRearrange(_ sender: UIBarButtonItem) {
@@ -316,7 +312,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             sender.title = NSLocalizedString("Photobook/DoneButtonTitle", value: "Done", comment: "Done button title")
             sender.tintColor = Constants.doneBlueColor
         } else {
-            let barButtonItem = showCancelButton ? cancelBarButtonItem : UIBarButtonItem(customView: backButton!)
+            let barButtonItem = isPresentedModally ? cancelBarButtonItem : UIBarButtonItem(customView: backButton!)
             navigationItem.setLeftBarButtonItems([barButtonItem], animated: true)
             sender.title = NSLocalizedString("Photobook/RearrangeButtonTitle", value: "Rearrange", comment: "Rearrange button title")
             sender.tintColor = Constants.rearrangeGreyColor
@@ -336,6 +332,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         let goToCheckout = {
             let orderSummaryViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
+            orderSummaryViewController.completionClosure = self.completionClosure
             self.navigationController?.pushViewController(orderSummaryViewController, animated: true)
         }
         
@@ -405,15 +402,26 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
         
     @IBAction private func didTapBack() {
+        cancelPhotobook()
+    }
+    
+    private func cancelPhotobook() {
         let alertController = UIAlertController(title: NSLocalizedString("Photobook/BackAlertTitle", value: "Are you sure?", comment: "Title for alert asking the user to go back"), message: NSLocalizedString("Photobook/BackAlertMessage", value: "This will discard any changes made to your photo book", comment: "Message for alert asking the user to go back"), preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Yes", value: "Yes", comment: "Affirmative button title for alert asking the user confirmation for an action"), style: .destructive, handler: { _ in
             
             // Clear photobook
             ProductManager.shared.reset()
             
-            self.navigationController?.popViewController(animated: true)
-            
             Analytics.shared.trackAction(.wentBackFromPhotobookPreview)
+            
+            let controllerToDismiss = self.isPresentedModally ? self.navigationController! : self
+            if self.photobookDelegate?.wantsToDismiss?(controllerToDismiss) == nil {
+                if self.isPresentedModally {
+                    self.presentingViewController?.dismiss(animated: true, completion: nil)
+                    return
+                }
+                self.navigationController?.popViewController(animated: true)
+            }
         }))
         alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
         
@@ -752,7 +760,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         pageSetupViewController.pageIndex = index
         pageSetupViewController.album = album
         pageSetupViewController.albumManager = albumManager
-        pageSetupViewController.assetPickerViewController = assetPickerViewController
+        pageSetupViewController.photobookDelegate = photobookDelegate
         
         if barType != nil {
             pageSetupViewController.photobookNavigationBarType = barType!

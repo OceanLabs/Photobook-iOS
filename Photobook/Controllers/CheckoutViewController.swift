@@ -230,6 +230,31 @@ class CheckoutViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         payButton.titleLabel?.sizeToFit()
+        setPreviewImage()
+    }
+    
+    private func setPreviewImage() {
+    
+        guard itemImageView.image == nil,
+            let photobookProduct = OrderManager.shared.basketOrder.products.first,
+            let baseUrl = photobookProduct.pigBaseUrl
+            else { return }
+        
+        let size = itemImageView.frame.size * UIScreen.main.scale
+        let fetchClosure = { (_ coverUrl: String) in
+            Pig.fetchPreviewImage(withBaseUrlString: baseUrl, coverImageUrlString: coverUrl, size: size) { [weak welf = self] (image) in
+                welf?.itemImageView.image = image
+            }
+        }
+        
+        if let coverUrl = photobookProduct.pigCoverUrl { // Fetch the preview image if the cover URL is available
+            fetchClosure(coverUrl)
+        } else if let coverSnapshot = photobookProduct.coverSnapshot { // Upload cover otherwise
+            Pig.uploadImage(coverSnapshot) { (coverUrl, error) in
+                guard let coverUrl = coverUrl else { return }
+                fetchClosure(coverUrl)
+            }
+        }
     }
     
     private func setupApplePayButton() {
@@ -296,14 +321,6 @@ class CheckoutViewController: UIViewController {
             
             self?.updateViews()
         }
-    }
-
-    func itemImageSizePx() -> CGSize {
-        return itemImageView.frame.size * UIScreen.main.scale
-    }
-    
-    func updateItemImage(_ image: UIImage) {
-        self.itemImageView.image = image
     }
     
     private func updateViews() {

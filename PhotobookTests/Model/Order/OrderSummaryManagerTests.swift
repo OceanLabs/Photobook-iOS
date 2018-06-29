@@ -39,6 +39,8 @@ class OrderSummaryManagerTests: XCTestCase {
     var product: PhotobookProduct!
     
     override func setUp() {
+        Pig.apiClient = apiClient
+        
         delegate = TestOrderSummaryManagerDelegate()
         
         orderSummaryManager = OrderSummaryManager()

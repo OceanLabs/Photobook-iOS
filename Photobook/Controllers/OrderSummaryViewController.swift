@@ -15,6 +15,8 @@ class OrderSummaryViewController: UIViewController {
         static let sectionTotal = 1
         static let sectionOptions = 2
         
+        static let dimensionsForCoverPhotoSnapshot: CGFloat = 100.0
+        
         static let stringLoading = NSLocalizedString("OrderSummary/Loading", value: "Loading order details", comment: "Loading product summary")
         static let stringLoadingFail = NSLocalizedString("OrderSummary/LoadingFail", value: "Couldn't load order details", comment: "When loading order details fails")
     }
@@ -50,6 +52,8 @@ class OrderSummaryViewController: UIViewController {
         }
     }
     
+    var completionClosure: ((_ photobook: PhotobookProduct) -> Void)?
+    
     private var timer: Timer?
     
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
@@ -64,7 +68,6 @@ class OrderSummaryViewController: UIViewController {
     }
     
     private let orderSummaryManager = OrderSummaryManager()
-    private weak var checkoutViewController: CheckoutViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,29 +104,10 @@ class OrderSummaryViewController: UIViewController {
         tableView.contentInset = UIEdgeInsets(top: topInset, left: tableView.contentInset.left, bottom: tableView.contentInset.bottom, right: tableView.contentInset.right)
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-        updateCheckoutViewControllerPreviewImage()
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "OrderSummarySegueName" {
-            
-            // Add current item to the basket
-            OrderManager.shared.basketOrder.products = [product] //We currently only support one item at a time
-            
-            checkoutViewController = segue.destination as? CheckoutViewController
-        }
-    }
-    
-    private func updateCheckoutViewControllerPreviewImage() {
-        guard let checkoutViewController = checkoutViewController else { return }
-
-        orderSummaryManager.fetchPreviewImage(withSize: checkoutViewController.itemImageSizePx()) { (image) in
-            guard let image = image else { return }
-            checkoutViewController.updateItemImage(image)
-        }
+    @IBAction func tappedCallToAction(_ sender: Any) {
+        product.pigBaseUrl = orderSummaryManager.summary?.pigBaseUrl
+        product.pigCoverUrl = orderSummaryManager.coverImageUrl
+        completionClosure?(product)
     }
     
     deinit {
@@ -136,21 +120,17 @@ class OrderSummaryViewController: UIViewController {
     }
     
     private func takeCoverSnapshot(_ completion: @escaping (UIImage?)->()) {
-        // Move this up to constants
-        let dimensionForPage = 100.0 * UIScreen.main.scale
-        
         coverSnapshotPageView.alpha = 1.0
-        
         coverSnapshotPageView.pageIndex = 0
         coverSnapshotPageView.backgroundColor = .clear
-        coverSnapshotPageView.frame.size = CGSize(width: dimensionForPage, height: dimensionForPage / product.template.coverAspectRatio)
+        coverSnapshotPageView.frame.size = CGSize(width: Constants.dimensionsForCoverPhotoSnapshot, height: Constants.dimensionsForCoverPhotoSnapshot / product.template.coverAspectRatio)
         coverSnapshotPageView.productLayout = product.productLayouts.first
         
         coverSnapshotPageView.color = product.coverColor
         coverSnapshotPageView.setupTextBox(mode: .userTextOnly)
         
         if let asset = product.productLayouts.first?.asset {
-            asset.image(size: CGSize(width: dimensionForPage, height: dimensionForPage), loadThumbnailFirst: false, progressHandler: nil, completionHandler: { [weak welf = self] (image, error) in
+            asset.image(size: CGSize(width: Constants.dimensionsForCoverPhotoSnapshot, height: Constants.dimensionsForCoverPhotoSnapshot), loadThumbnailFirst: false, progressHandler: nil, completionHandler: { [weak welf = self] (image, error) in
                 guard let image = image else { return }
                 
                 welf?.coverSnapshotPageView.shouldSetImage = true
@@ -314,17 +294,12 @@ extension OrderSummaryViewController: OrderSummaryManagerDelegate {
     }
     
     func orderSummaryManagerDidSetPreviewImageUrl() {
-        let scaleFactor = UIScreen.main.scale
-        let size = CGSize(width: previewImageView.frame.size.width * scaleFactor, height: previewImageView.frame.size.height * scaleFactor)
+        let size = previewImageView.frame.size * UIScreen.main.scale
         
         orderSummaryManager.fetchPreviewImage(withSize: size) { [weak welf = self] (image) in
             welf?.previewImageView.image = image
-            
             welf?.hideProgressIndicator()
         }
-        
-        //also update checkout vc if available
-        updateCheckoutViewControllerPreviewImage()
     }
     
     func orderSummaryManagerDidUpdate(_ summary: OrderSummary?, error: Error?) {

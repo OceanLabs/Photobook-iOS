@@ -2954,7 +2954,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <segue destination="9J6-1w-1sY" kind="show" identifier="OrderSummarySegueName" id="lt6-JZ-FMN"/>
+                                            <action selector="tappedCallToAction:" destination="ays-et-QoH" eventType="touchUpInside" id="bHH-f2-FZ6"/>
                                         </connections>
                                     </button>
                                 </subviews>
