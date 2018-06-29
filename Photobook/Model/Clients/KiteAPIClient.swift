@@ -92,13 +92,13 @@ class KiteAPIClient {
             }
             
             guard let pollingData = response as? [String: AnyObject] else {
-                completionHandler(.error, nil, nil)
+                completionHandler(.error, ErrorMessage(.parsing), nil)
                 return
             }
 
             if let errorDictionary = pollingData["error"] as? [String: AnyObject] {
                 guard let code = errorDictionary["code"] as? String else {
-                    completionHandler(.error, nil, nil)
+                    completionHandler(.error, ErrorMessage(.parsing), nil)
                     return
                 }
                 
@@ -107,8 +107,10 @@ class KiteAPIClient {
                     completionHandler(.validated, nil, receipt)
                 } else if code == "P11" { // Payment error
                     completionHandler(.paymentError, nil, nil)
+                } else if let message = errorDictionary["message"] as? String {
+                    completionHandler(.error, ErrorMessage(text: message), nil)
                 } else {
-                    completionHandler(.error, nil, nil)
+                    completionHandler(.error, ErrorMessage(APIClientError.generic), nil)
                 }
                 return
             }

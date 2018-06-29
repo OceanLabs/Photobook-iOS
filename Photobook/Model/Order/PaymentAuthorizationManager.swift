@@ -133,7 +133,7 @@ class PaymentAuthorizationManager: NSObject {
         guard let currentCard = Card.currentCard else { return }
         
         paymentApi.createToken(withCard: currentCard) { [weak welf = self] (tokenId, error) in
-            welf?.delegate?.paymentAuthorizationDidFinish(token: nil, error: error, completionHandler: nil)
+            welf?.delegate?.paymentAuthorizationDidFinish(token: tokenId, error: error, completionHandler: nil)
         }
     }
     
