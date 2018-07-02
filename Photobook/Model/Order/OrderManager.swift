@@ -339,7 +339,7 @@ class OrderManager {
     //MARK: - Upload
     
     func uploadAsset(asset: Asset, failureHandler: @escaping (Error) -> Void) {
-        asset.imageData(progressHandler: nil, completionHandler: { [weak welf = self] data, fileExtension, error in
+        AssetLoadingManager.shared.imageData(for: asset, progressHandler: nil, completionHandler: { [weak welf = self] data, fileExtension, error in
             guard error == nil, let data = data, fileExtension != .unsupported else {
                 failureHandler(PhotobookAPIError.missingPhotobookInfo)
                 return

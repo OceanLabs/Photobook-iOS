@@ -133,7 +133,7 @@ class DefaultWebImageManager: WebImageManager {
         let image = images.first (where: comparisonClosure) ?? images.last!
         
         webImageManager.loadImage(with: image.url, completion: { image, _, error in
-            DispatchQueue.global(qos: .background).async {
+            DispatchQueue.global(qos: .default).async {
                 let image = image?.shrinkToSize(imageSize)
                 DispatchQueue.main.async {
                     completionHandler(image, error)

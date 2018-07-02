@@ -50,7 +50,7 @@ class PhotosAlbumManager: NSObject, AlbumManager {
             return
         }
         
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .default).async {
             var albums = [Album]()
             
             let options = PHFetchOptions()
