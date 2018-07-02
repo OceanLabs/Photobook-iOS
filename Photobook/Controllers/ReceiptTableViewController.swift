@@ -69,6 +69,7 @@ class ReceiptTableViewController: UITableViewController {
         
         Analytics.shared.trackScreenViewed(.receipt)
         
+        navigationItem.hidesBackButton = true
         navigationItem.leftBarButtonItem = UIBarButtonItem()
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     
