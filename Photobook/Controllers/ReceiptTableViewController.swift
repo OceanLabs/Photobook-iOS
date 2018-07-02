@@ -48,6 +48,7 @@ class ReceiptTableViewController: UITableViewController {
     
     @IBOutlet weak var dismissBarButtonItem: UIBarButtonItem!
     var dismissClosure: ((UIViewController) -> Void)?
+    weak var dismissDelegate: DismissDelegate?
     
     private var modalPresentationDismissedGroup = DispatchGroup()
     private lazy var paymentManager: PaymentAuthorizationManager = {
@@ -186,10 +187,10 @@ class ReceiptTableViewController: UITableViewController {
             
             
             #if PHOTOBOOK_SDK
-            if welf?.dismissClosure != nil {
-                welf?.dismissClosure?(self)
+            if welf?.dismissDelegate?.wantsToDismiss?(self) != nil {
                 return
             }
+            
             // No delegate or dismiss closure provided
             if welf?.presentingViewController != nil {
                 welf?.presentingViewController!.dismiss(animated: true, completion: nil)
