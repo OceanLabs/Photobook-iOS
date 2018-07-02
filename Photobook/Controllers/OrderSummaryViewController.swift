@@ -52,6 +52,8 @@ class OrderSummaryViewController: UIViewController {
         }
     }
     
+    @IBOutlet weak var basketDisclaimerLabel: UILabel!
+    
     var completionClosure: ((_ photobook: PhotobookProduct) -> Void)?
     
     private var timer: Timer?
@@ -74,6 +76,11 @@ class OrderSummaryViewController: UIViewController {
         
         Analytics.shared.trackScreenViewed(.summary)
         
+        #if !PHOTOBOOK_SDK
+        basketDisclaimerLabel.text = ""
+        ctaButton.setTitle(NSLocalizedString("OrderSummary/cta", value: "Continue", comment: "Title for the CTA button"), for: .normal)
+        #endif
+                
         emptyScreenViewController.show(message: Constants.stringLoading, activity: true)
         
         orderSummaryManager.templates = ProductManager.shared.products
