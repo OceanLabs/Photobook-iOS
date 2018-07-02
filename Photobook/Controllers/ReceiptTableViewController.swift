@@ -195,7 +195,8 @@ class ReceiptTableViewController: UITableViewController {
                 welf?.presentingViewController!.dismiss(animated: true, completion: nil)
                 return
             }
-            welf?.navigationController?.popViewController(animated: true)
+            welf?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+            welf?.navigationController?.popToRootViewController(animated: true)
             #else
             // Check if the Photobook app was launched into the ReceiptViewController
             if welf?.navigationController?.viewControllers.count == 1 {
