@@ -122,10 +122,9 @@ class ReceiptTableViewController: UITableViewController {
     private func updateViews() {
         tableView.reloadData()
         
-        //dismiss button
+        // Dismiss button
         dismissBarButtonItem.title = state.dismissTitle
         dismissBarButtonItem.isEnabled = state.allowDismissing
-        dismissBarButtonItem.tintColor = state.allowDismissing ? nil : .clear
     }
     
     // MARK: - Actions
@@ -236,7 +235,7 @@ class ReceiptTableViewController: UITableViewController {
                 // Don't care about the result
             }
         } else {
-            // ios 9
+            // iOS 9
             let type: UIUserNotificationType = [UIUserNotificationType.badge, UIUserNotificationType.alert, UIUserNotificationType.sound]
             let setting = UIUserNotificationSettings(types: type, categories: nil)
             UIApplication.shared.registerUserNotificationSettings(setting)

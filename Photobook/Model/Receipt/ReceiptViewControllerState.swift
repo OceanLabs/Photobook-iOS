@@ -115,12 +115,12 @@ enum ReceiptViewControllerState: Int {
         }
     }
     
-    var dismissTitle: String? {
+    var dismissTitle: String {
         get {
             switch self {
             case .completed: return Constants.dismissTitleSuccess
             case .error, .cancelled, .paymentFailed, .paymentRetry: return Constants.dismissTitleFailed
-            default: return nil
+            default: return ""
             }
         }
     }
