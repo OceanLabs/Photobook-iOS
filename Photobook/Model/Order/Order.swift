@@ -134,8 +134,11 @@ class Order: Codable {
     
     func orderParameters() -> [String: Any]? {
         
-        guard let selectedShippingMethods = selectedShippingMethods, selectedShippingMethods.count == products.count else {
-            return nil
+        guard let selectedShippingMethods = selectedShippingMethods,
+            selectedShippingMethods.count == products.count,
+            let finalTotalCost = validCost?.total
+            else {
+                return nil
         }
         
         var shippingAddress = deliveryDetails?.address?.jsonRepresentation()
@@ -144,11 +147,15 @@ class Order: Codable {
         shippingAddress?["recipient_name"] = deliveryDetails?.fullName
         
         var parameters = [String: Any]()
-        parameters["payment_charge_token"] = paymentToken
+        parameters["proof_of_payment"] = paymentToken
         parameters["shipping_address"] = shippingAddress
         parameters["customer_email"] = deliveryDetails?.email
         parameters["customer_phone"] = deliveryDetails?.phone
         parameters["promo_code"] = promoCode
+        parameters["customer_payment"] = [
+            "currency": finalTotalCost.currencyCode,
+            "amount": finalTotalCost.value
+        ]
         
         var jobs = [[String: Any]]()
         for (index, product) in products.enumerated() {
