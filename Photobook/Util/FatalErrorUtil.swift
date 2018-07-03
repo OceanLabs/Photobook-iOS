@@ -10,7 +10,6 @@ import Foundation
 
 public func fatalError(_ message: @autoclosure () -> String = "", file: StaticString = #file, line: UInt = #line) -> Never {
     FatalErrorUtil.fatalErrorClosure(message(), file, line)
-    unreachable()
 }
 
 /// This is a `noreturn` function that pauses forever
