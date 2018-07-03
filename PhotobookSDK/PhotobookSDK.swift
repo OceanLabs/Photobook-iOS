@@ -110,7 +110,9 @@ import PayPalDynamicLoader
             OrderManager.shared.basketOrder.products = [photobookProduct]
             
             let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
-            photobookViewController.navigationController?.pushViewController(checkoutViewController, animated: true)
+            if let firstViewController = photobookViewController.navigationController?.viewControllers.first {
+                photobookViewController.navigationController?.setViewControllers([firstViewController, checkoutViewController], animated: true)
+            }
         }
 
         let viewControllerToReturn: UIViewController
