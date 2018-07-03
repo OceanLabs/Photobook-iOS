@@ -29,6 +29,7 @@ class Automation {
     }
 
     func goToPhotobookReview() {
+        app.buttons["Clear processing order"].tap()
         app.buttons["Create Photobook with web photos"].tap()
         
         let checkoutButton = app.buttons["Checkout"]
@@ -41,14 +42,14 @@ class Automation {
         let checkoutButton = app.buttons["Checkout"]
         checkoutButton.tap()
         
-        let continueButton = app.buttons["Continue"]
+        let continueButton = app.buttons["ctaButton"]
         testCase.wait(for: continueButton)
     }
     
     func goToBasket() {
         goToOrderSummary()
         
-        let continueButton = app.buttons["Continue"]
+        let continueButton = app.buttons["ctaButton"]
         continueButton.tap()
         
         testCase.wait(for: app.buttons["payButton"])
