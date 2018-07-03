@@ -22,7 +22,7 @@ class Country: NSCopying, Codable {
         self.currencyCode = currencyCode
     }
     
-    class func countryForCurrentLocale() -> Country{
+    class func countryForCurrentLocale() -> Country {
         if let countryCode = (Locale.current as NSLocale).object(forKey: NSLocale.Key.countryCode) as? String,
             let country = Country.countryFor(code: countryCode){
             return country
@@ -32,7 +32,7 @@ class Country: NSCopying, Codable {
         return Country.countryFor(code: "GBR")!
     }
     
-    class func countryFor(name: String) -> Country?{
+    class func countryFor(name: String) -> Country? {
         for country in self.countries{
             if country.name == name{
                 return country
@@ -42,7 +42,7 @@ class Country: NSCopying, Codable {
         return nil
     }
     
-    class func countryFor(code: String) -> Country?{
+    class func countryFor(code: String) -> Country? {
         for country in self.countries{
             if country.codeAlpha3 == code || country.codeAlpha2 == code{
                 return country
@@ -52,12 +52,12 @@ class Country: NSCopying, Codable {
         return nil
     }
     
-    func copy(with zone: NSZone? = nil) -> Any{
+    func copy(with zone: NSZone? = nil) -> Any {
         return Country(name: self.name, codeAlpha2: self.codeAlpha2, codeAlpha3: self.codeAlpha3, currencyCode:self.currencyCode)
     }
     
     class var countries: [Country] {
-        get{
+        get {
             var countries: [Country] = [Country]()
             
             countries.append(Country(name: "Åland Islands", codeAlpha2: "AX", codeAlpha3: "ALA", currencyCode: "EUR"))

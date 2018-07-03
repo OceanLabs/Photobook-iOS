@@ -53,15 +53,15 @@ class Order: Codable {
     }
     
     var hashValue: Int {
-        var stringHash = ""
-        if let deliveryDetails = deliveryDetails { stringHash += "ad:\(deliveryDetails.hashValue)," }
-        if let promoCode = promoCode { stringHash += "pc:\(promoCode)," }
+        let country = deliveryDetails?.address?.country ?? Country.countryForCurrentLocale()
+        var stringHash = "ad:\(country.codeAlpha3.hashValue),"
+        if let promoCode = promoCode {
+            stringHash += "pc:\(promoCode),"
+        }
         
         var shippingHash: Int = 0
-        if let shippingMethods = selectedShippingMethods {
-            for shippingMethod in shippingMethods {
-                shippingHash = shippingHash ^ shippingMethod.id
-            }
+        for shippingMethod in selectedShippingMethods ?? [] {
+            shippingHash = shippingHash ^ shippingMethod.id
         }
         
         var productsHash: Int = 0
