@@ -19,15 +19,25 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uEE-tb-aOJ">
-                                <rect key="frame" x="66.5" y="350.5" width="241" height="30"/>
+                                <rect key="frame" x="52.5" y="349" width="269" height="33"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Create Photobook with web photos"/>
                                 <connections>
                                     <action selector="createPhotobookWithWebPhotos:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HEi-Uh-Z1J"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AmJ-lA-rDP">
+                                <rect key="frame" x="109" y="446.5" width="156" height="30"/>
+                                <state key="normal" title="Clear processing order"/>
+                                <connections>
+                                    <action selector="clearProcessingOrder:" destination="BYZ-38-t0r" eventType="touchUpInside" id="r1z-3Q-59r"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="AmJ-lA-rDP" firstAttribute="centerX" secondItem="uEE-tb-aOJ" secondAttribute="centerX" id="4ap-6W-PNC"/>
+                            <constraint firstItem="AmJ-lA-rDP" firstAttribute="top" secondItem="uEE-tb-aOJ" secondAttribute="bottom" constant="64.5" id="QO5-2N-Hy0"/>
                             <constraint firstItem="uEE-tb-aOJ" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="ZSk-DC-0ko"/>
                             <constraint firstItem="uEE-tb-aOJ" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="zM6-Pb-qhg"/>
                         </constraints>
