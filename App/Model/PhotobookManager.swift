@@ -8,6 +8,7 @@
 
 import UIKit
 import Stripe
+import PayPalDynamicLoader
 
 let mainStoryboard =  UIStoryboard(name: "Main", bundle: nil)
 
@@ -25,8 +26,10 @@ class PhotobookManager: NSObject {
         PaymentAuthorizationManager.applePayPayTo = "Kite.ly (via HD Photobooks)"
         PaymentAuthorizationManager.applePayMerchantId = "merchant.ly.kite.sdk"
         PhotobookAPIManager.apiKey = "57c832e42dfdda93d072c6a42c41fbcddf100805"
-        KiteAPIClient.shared.apiKey = "57c832e42dfdda93d072c6a42c41fbcddf100805"
-        Stripe.setDefaultPublishableKey("pk_test_fJtOj7oxBKrLFOneBFLj0OH3")
+        KiteAPIClient.shared.apiKey = "57c832e42dfdda93d072c6a42c41fbcddf100805" //Live: ad6635a2c5f284956df20e78ae89a4e5efa46806
+        Stripe.setDefaultPublishableKey("pk_test_FxzXniUJWigFysP0bowWbuy3")
+        OLPayPalWrapper.initializeWithClientIds(forEnvironments: ["sandbox" : "AcEcBRDxqcCKiikjm05FyD4Sfi4pkNP98AYN67sr3_yZdBe23xEk0qhdhZLM"])
+        OLPayPalWrapper.preconnect(withEnvironment: "sandbox") /*PayPalEnvironmentSandbox*/
     }
     
     static func rootViewControllerForCurrentState() -> UIViewController {

@@ -186,7 +186,7 @@ class PaymentAuthorizationManager: NSObject {
 
 extension PaymentAuthorizationManager {
 
-    func payPalPaymentDidCancel(_ paymentViewController: UIViewController) {
+    @objc func payPalPaymentDidCancel(_ paymentViewController: UIViewController) {
         paymentViewController.dismiss(animated: true, completion: nil)
     }
 
