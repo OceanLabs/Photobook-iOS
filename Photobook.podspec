@@ -14,7 +14,7 @@ Description here
   s.source       = { :git => "https://github.com/OceanLabs/Photobook-iOS.git", :tag => "v" + s.version.to_s }
   s.source_files  = ["Photobook/**/*.swift", "PhotobookSDK/**/*.swift"]
   s.swift_version = "4.1"
-  s.resource_bundles  = { 'PhotobookResources' => ['Photobook/Base.lproj/Main.storyboard', 'Photobook/Resources/Assets.xcassets', 'Photobook/Resources/Lora-Regular.ttf', 'Photobook/Resources/Montserrat-Bold.ttf', 'Photobook/Resources/OpenSans-Regular.ttf'] }
+  s.resource_bundles  = { 'PhotobookResources' => ['Photobook/Base.lproj/Photobook.storyboard', 'Photobook/Resources/Assets.xcassets', 'Photobook/Resources/Lora-Regular.ttf', 'Photobook/Resources/Montserrat-Bold.ttf', 'Photobook/Resources/OpenSans-Regular.ttf'] }
   s.module_name         = 'Photobook'
   s.dependency "KeychainSwift", "~> 11.0.0"
   s.dependency "SDWebImage", "~> 4.4.0"
