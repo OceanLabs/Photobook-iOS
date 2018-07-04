@@ -251,10 +251,16 @@ class OrderManager {
     /// Uploads the assets
     func uploadAssets() {
         
-        let assetsToUpload = processingOrder!.assetsToUpload()
+        let assetsToUpload = processingOrder!.remainingAssetsToUpload()
+        guard !assetsToUpload.isEmpty else {
+            Analytics.shared.trackAction(.uploadSuccessful)
+            finishOrder()
+            return
+        }
         
         // Upload images
         for asset in assetsToUpload {
+            guard asset.uploadUrl == nil else { continue }
             uploadAsset(asset: asset, failureHandler: { [weak welf = self] error in
                 welf?.failedUpload(with: error)
             })
