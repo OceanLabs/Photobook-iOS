@@ -19,9 +19,11 @@ let processingOrderBackupFile = photobookDirectory.appending("ProcessingOrder.da
 class ViewController: UIViewController {
 
     @IBAction func createPhotobookWithWebPhotos(_ sender: Any) {
-        var assets = [URLAsset]()
+        var assets = [PhotobookAsset]()
+        
         for imageNumber in 1...20 {
-            assets.append(URLAsset(URL(string: baseImageURL+"\(imageNumber).jpg")!, size: sizes[imageNumber]!))
+            let asset = PhotobookAsset(withUrl: URL(string: baseImageURL + "\(imageNumber).jpg")!, size: sizes[imageNumber]!)
+            assets.append(asset)
         }
         
         PhotobookSDK.shared.setEnvironment(environment: .test)

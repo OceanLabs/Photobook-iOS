@@ -29,7 +29,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     
     private var accountManager: AccountClient?
     var collectorMode: AssetCollectorMode = .selecting
-    weak var addingDelegate: AssetCollectorAddingDelegate?
+    weak var addingDelegate: PhotobookAssetAddingDelegate?
     weak var assetPickerDelegate: AssetPickerCollectionViewControllerDelegate?
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
@@ -264,7 +264,8 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
     func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
         switch collectorMode {
         case .adding:
-            addingDelegate?.didFinishAdding(selectedAssetsManager.selectedAssets)
+            let photobookAssets = PhotobookAsset.photobookAssets(with: selectedAssetsManager.selectedAssets)
+            addingDelegate?.didFinishAdding(photobookAssets)
         default:
             let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
             photobookViewController.assets = selectedAssetsManager.selectedAssets

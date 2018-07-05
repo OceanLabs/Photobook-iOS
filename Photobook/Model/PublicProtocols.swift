@@ -24,20 +24,11 @@ import UIKit
 }
 
 /// Conforming classes can be notified when PhotobookAssets are added by a custom photo picker
-@objc public protocol AssetCollectorAddingDelegate: class {
-    func didFinishAdding(_ assets: [PhotobookAsset]?)
-}
-
-extension AssetCollectorAddingDelegate {
-    func didFinishAddingAssets() {
-        didFinishAdding(nil)
-    }
+@objc public protocol PhotobookAssetAddingDelegate: class {
+    @objc func didFinishAdding(_ photobookAssets: [PhotobookAsset]?)
 }
 
 /// Protocol custom photo pickers must conform to to be used with photo books
 @objc public protocol PhotobookAssetPicker where Self: UIViewController {
-    weak var addingDelegate: AssetCollectorAddingDelegate? { get set }
+    weak var addingDelegate: PhotobookAssetAddingDelegate? { get set }
 }
-
-/// Base protocol for photobook assets
-@objc public protocol PhotobookAsset {}

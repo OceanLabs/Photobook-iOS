@@ -54,19 +54,19 @@ class DefaultWebImageManager: WebImageManager {
 }
 
 /// Remote image resource that can be used in a Photobook
-@objc public class URLAsset: NSObject, NSCoding, Asset {
+class URLAsset: NSObject, NSCoding, Asset {
     
     /// Unique identifier
-    @objc internal(set) public var identifier: String!
+    var identifier: String!
     
     /// Album unique identifier
-    @objc internal(set) public var albumIdentifier: String?
+    var albumIdentifier: String?
     
     /// Date associated with this asset
-    @objc internal(set) public var date: Date?
+    var date: Date?
     
     /// Array of URL per size available for the asset
-    @objc internal(set) public var images: [URLAssetImage]
+    var images: [URLAssetImage]
     
     var uploadUrl: String?
     var size: CGSize { return images.last!.size }
@@ -80,8 +80,8 @@ class DefaultWebImageManager: WebImageManager {
     ///   - identifier: Identifier for the asset
     ///   - images: Array of sizes and associated URLs
     ///   - albumIdentifier: Identifier for the album the asset belongs to
-    ///   - date: Date associated to this asset
-    @objc public init?(identifier: String, images: [URLAssetImage], albumIdentifier: String? = nil, date: Date? = nil) {
+    ///   - date: Date associated with this asset
+    init?(identifier: String, images: [URLAssetImage], albumIdentifier: String? = nil, date: Date? = nil) {
         guard images.count > 0 else { return nil }
         self.images = images.sorted(by: { $0.size.width < $1.size.width })
         self.identifier = identifier
@@ -94,11 +94,11 @@ class DefaultWebImageManager: WebImageManager {
     /// - Parameters:
     ///   - url: The URL of the remote image
     ///   - size: The size of the image.
-    @objc public convenience init(_ url: URL, size: CGSize) {
+    convenience init(_ url: URL, size: CGSize) {
         self.init(identifier: url.absoluteString, images: [URLAssetImage(url: url, size: size)])!
     }
     
-    @objc public func encode(with aCoder: NSCoder) {
+    func encode(with aCoder: NSCoder) {
         aCoder.encode(images, forKey: "images")
         aCoder.encode(identifier, forKey: "identifier")
         aCoder.encode(uploadUrl, forKey: "uploadUrl")
@@ -106,7 +106,7 @@ class DefaultWebImageManager: WebImageManager {
         aCoder.encode(albumIdentifier, forKey: "albumIdentifier")
     }
     
-    @objc public required convenience init?(coder aDecoder: NSCoder) {
+    required convenience init?(coder aDecoder: NSCoder) {
         guard let identifier = aDecoder.decodeObject(of: NSString.self, forKey: "identifier") as String?,
             let images = aDecoder.decodeObject(forKey: "images") as? [URLAssetImage]
             else { return nil }

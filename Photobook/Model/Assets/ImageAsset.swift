@@ -9,13 +9,13 @@
 import UIKit
 
 /// Image resource based on a UIImage that can be used in a photo book
-@objc public class ImageAsset: NSObject, NSCoding, Asset {
+class ImageAsset: NSObject, NSCoding, Asset {
     
     /// Image representation of the asset
-    @objc internal(set) public var image: UIImage
+    public var image: UIImage
     
     /// Date associated with this asset
-    @objc internal(set) public var date: Date? = nil
+    public var date: Date? = nil
     
     var identifier = UUID().uuidString
     var albumIdentifier: String? = nil
@@ -27,12 +27,12 @@ import UIKit
     /// - Parameters:
     ///   - image: Image representation of the asset
     ///   - date: Associated date
-    @objc public init(image: UIImage, date: Date? = nil) {
+    init(image: UIImage, date: Date? = nil) {
         self.image = image
         self.date = date
     }
     
-    @objc public func encode(with aCoder: NSCoder) {
+    func encode(with aCoder: NSCoder) {
         aCoder.encode(identifier, forKey: "identifier")
         if uploadUrl != nil {
             aCoder.encode(uploadUrl, forKey: "uploadUrl")
@@ -44,7 +44,7 @@ import UIKit
         aCoder.encode(date, forKey: "date")
     }
     
-    @objc public required convenience init?(coder aDecoder: NSCoder) {
+    required convenience init?(coder aDecoder: NSCoder) {
         guard let imageData = aDecoder.decodeObject(of: NSData.self, forKey: "image") as Data?,
               let image = NSKeyedUnarchiver.unarchiveObject(with: imageData) as? UIImage else {
             return nil

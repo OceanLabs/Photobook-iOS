@@ -56,7 +56,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     }
     
     var collectorMode: AssetCollectorMode = .selecting
-    weak var addingDelegate: AssetCollectorAddingDelegate?
+    weak var addingDelegate: PhotobookAssetAddingDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -408,7 +408,8 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
     func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
         switch collectorMode {
         case .adding:
-            addingDelegate?.didFinishAdding(selectedAssetsManager?.selectedAssets)
+            let photobookAssets = PhotobookAsset.photobookAssets(with: selectedAssetsManager?.selectedAssets)
+            addingDelegate?.didFinishAdding(photobookAssets)
         default:
             let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
             photobookViewController.assets = selectedAssetsManager?.selectedAssets
