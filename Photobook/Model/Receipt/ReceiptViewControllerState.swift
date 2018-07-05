@@ -98,7 +98,7 @@ enum ReceiptViewControllerState: Int {
         switch self {
         case .paymentFailed: return Constants.infoButtonTitleUpdate.uppercased()
         case .paymentRetry, .error: return Constants.infoButtonTitleRetry.uppercased()
-        case .cancelled: return Constants.infoButtonTitleStartAgain
+        case .cancelled: return Constants.infoButtonTitleStartAgain.uppercased()
         default: return nil
         }
     }
