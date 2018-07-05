@@ -289,14 +289,17 @@ class ReceiptTableViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptInfoTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptInfoTableViewCell
             
             if let error = lastProcessingError, case .api(message: let message) = error {
-                cell.titleLabel.text = message.title?.uppercased() ?? CommonLocalizedStrings.somethingWentWrong.uppercased()
-                cell.descriptionLabel.text = ReceiptViewControllerState.customMessageWithNote(message: message.text)
+                let errorCopy = ReceiptViewControllerState.customErrorWith(message)
+                cell.titleLabel.text = errorCopy.title
+                cell.descriptionLabel.text = errorCopy.description
             } else {
                 cell.titleLabel.text = state.infoTitle
                 cell.descriptionLabel.text = state.infoText
             }
             cell.iconImageView.image = state.icon
             cell.primaryActionButton.setTitle(state.primaryActionText, for: .normal)
+            cell.primaryActionButton.setTitleColor(state.primaryActionTitleColor, for: .normal)
+            cell.primaryActionButton.backgroundColor = state.primaryActionBackgroundColor
             cell.secondaryActionButton.setTitle(state.secondaryActionText, for: .normal)
             cell.setActionButtonsHidden(state.actionsHidden)
             cell.setSecondaryActionButtonHidden(state.secondaryActionHidden)
@@ -421,7 +424,7 @@ extension ReceiptTableViewController: OrderProcessingDelegate {
                 userNotification.title = title
                 userNotification.body = body
                 userNotification.badge = 1
-                let request = UNNotificationRequest(identifier: "ReceiptTableViewController.OrderProcessingFailed", content: userNotification, trigger:nil)
+                let request = UNNotificationRequest(identifier: "ReceiptTableViewController.OrderProcessingFailed", content: userNotification, trigger: nil)
                 UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             } else {
                 // ios 9

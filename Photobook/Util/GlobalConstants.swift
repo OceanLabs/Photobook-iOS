@@ -20,6 +20,11 @@ let photobookResourceBundle: Bundle = {
 }()
 let photobookMainStoryboard =  UIStoryboard(name: "Photobook", bundle: photobookResourceBundle)
 
+struct Colors {
+    static let blueTint = UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0)
+    static let greyTint = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1.0)
+}
+
 struct CommonLocalizedStrings {
     static let somethingWentWrong = NSLocalizedString("GenericError/SomethingWentWrong", value: "Something Went Wrong", comment: "Generic error message title") 
     static let alertOK = NSLocalizedString("Generic/OKButtonTitle", value: "OK", comment: "Acknowledgement to an alert dialog")

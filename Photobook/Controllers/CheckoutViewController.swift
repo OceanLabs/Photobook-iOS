@@ -349,16 +349,11 @@ class CheckoutViewController: UIViewController {
         paymentMethodIconImageView.image = nil
         if let paymentMethod = OrderManager.shared.basketOrder.paymentMethod {
             switch paymentMethod {
-            case .creditCard:
-                if let card = Card.currentCard {
-                    paymentMethodIconImageView.image = card.cardIcon
-                    paymentMethodView.accessibilityValue = card.number.cardType()?.stringValue()
-                    paymentMethodTitleLabel.text = Constants.payingWithText
-                } else {
-                    paymentMethodIconImageView.image = nil
-                    paymentMethodIconImageView.accessibilityValue = nil
-                    paymentMethodTitleLabel.text = Constants.paymentMethodText
-                }
+            case .creditCard where Card.currentCard != nil:
+                let card = Card.currentCard!
+                paymentMethodIconImageView.image = card.cardIcon
+                paymentMethodView.accessibilityValue = card.number.cardType()?.stringValue()
+                paymentMethodTitleLabel.text = Constants.payingWithText
             case .applePay:
                 paymentMethodIconImageView.image = UIImage(namedInPhotobookBundle: "apple-pay-method")
                 paymentMethodView.accessibilityValue = "Apple Pay"
@@ -370,6 +365,8 @@ class CheckoutViewController: UIViewController {
                 paymentMethodIconImageView.image = UIImage(namedInPhotobookBundle: "paypal-method")
                 paymentMethodView.accessibilityValue = "PayPal"
                 paymentMethodTitleLabel.text = Constants.payingWithText
+            default:
+                OrderManager.shared.basketOrder.paymentMethod = nil
             }
             paymentMethodIconImageView.isHidden = false
             paymentMethodLabel.isHidden = true
