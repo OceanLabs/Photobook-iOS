@@ -3729,6 +3729,7 @@ Copyright © 2018 Kite. All right reserverd.</string>
                     </tableView>
                     <navigationItem key="navigationItem" title="CREDIT CARD" id="tCL-gZ-PM9">
                         <barButtonItem key="rightBarButtonItem" style="done" systemItem="save" id="EVH-EF-Udv">
+                            <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="tappedSaveButton:" destination="KxV-LF-cPn" id="42q-bn-vJm"/>
                             </connections>
