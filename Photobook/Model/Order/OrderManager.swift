@@ -391,7 +391,7 @@ class OrderManager {
         }
         
         // Store the URL string for all assets with the same id
-        for var asset in assets {
+        for asset in assets {
             asset.uploadUrl = url
         }
         
