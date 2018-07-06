@@ -181,16 +181,27 @@ class URLAssetTests: XCTestCase {
             XCTFail("Could not create URL asset")
             return
         }
-        
-        if !archiveObject(urlAsset, to: "URLAssetTests.dat") {
-            print("Could not save urlAsset")
+        guard let data = try? PropertyListEncoder().encode(urlAsset) else {
+            XCTFail("Should encode the URLAsset to data")
+            return
         }
-        let urlAssetUnarchived = unarchiveObject(from: "URLAssetTests.dat") as? URLAsset
+        guard archiveObject(data, to: "URLAssetTests.dat") else {
+            XCTFail("Should save the URLAsset data to disk")
+            return
+        }
+        guard let unarchivedData = unarchiveObject(from: "URLAssetTests.dat") as? Data else {
+            XCTFail("Should unarchive the URLAsset as Data")
+            return
+        }
+        guard let unarchivedUrlAsset = try? PropertyListDecoder().decode(URLAsset.self, from: unarchivedData) else {
+            XCTFail("Should decode the URLAsset")
+            return
+        }
 
-        XCTAssertEqualOptional(urlAssetUnarchived?.albumIdentifier, urlAsset.albumIdentifier)
-        XCTAssertEqualOptional(urlAssetUnarchived?.identifier, urlAsset.identifier)
-        XCTAssertEqualOptional(urlAssetUnarchived?.uploadUrl, urlAsset.uploadUrl)
-        XCTAssertEqualOptional(urlAssetUnarchived?.date, urlAsset.date)
-        XCTAssertEqualOptional(urlAssetUnarchived?.images.count, urlAsset.images.count)
+        XCTAssertEqualOptional(unarchivedUrlAsset.albumIdentifier, urlAsset.albumIdentifier)
+        XCTAssertEqualOptional(unarchivedUrlAsset.identifier, urlAsset.identifier)
+        XCTAssertEqualOptional(unarchivedUrlAsset.uploadUrl, urlAsset.uploadUrl)
+        XCTAssertEqualOptional(unarchivedUrlAsset.date, urlAsset.date)
+        XCTAssertEqualOptional(unarchivedUrlAsset.images.count, urlAsset.images.count)
     }    
 }

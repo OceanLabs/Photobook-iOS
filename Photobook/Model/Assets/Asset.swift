@@ -42,7 +42,7 @@ extension AssetDataFileExtension {
 }
 
 /// Represents a photo used in a photo book.
-@objc protocol Asset {
+protocol Asset: Codable {
     
     /// Identifier
     var identifier: String! { get set }

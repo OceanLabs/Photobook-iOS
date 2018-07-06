@@ -25,7 +25,7 @@ class DefaultAssetManager: AssetManager {
 }
 
 /// Photo library resource that can be used in a Photobook
-class PhotosAsset: NSObject, NSCoding, Asset {
+class PhotosAsset: Asset {
     
     /// Photo library asset
     var photosAsset: PHAsset {
@@ -135,21 +135,30 @@ class PhotosAsset: NSObject, NSCoding, Asset {
             }
         })
     }
-        
-    func encode(with aCoder: NSCoder) {
-        aCoder.encode(albumIdentifier, forKey: "albumIdentifier")
-        aCoder.encode(identifier, forKey: "identifier")
-        aCoder.encode(uploadUrl, forKey: "uploadUrl")
+    
+    private enum CodingKeys: String, CodingKey {
+        case albumIdentifier, identifier, uploadUrl
     }
     
-    required convenience init?(coder aDecoder: NSCoder) {
-        guard let assetId = aDecoder.decodeObject(of: NSString.self, forKey: "identifier") as String?,
-              let albumIdentifier = aDecoder.decodeObject(of: NSString.self, forKey: "albumIdentifier") as String?,
-              let asset = PhotosAsset.assetManager.fetchAsset(withLocalIdentifier: assetId, options: nil) else
-            { return nil }
-            
-        self.init(asset, albumIdentifier: albumIdentifier)
-        uploadUrl = aDecoder.decodeObject(of: NSString.self, forKey: "uploadUrl") as String?
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(albumIdentifier, forKey: .albumIdentifier)
+        try container.encode(identifier, forKey: .identifier)
+        try container.encode(uploadUrl, forKey: .uploadUrl)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        
+        let assetId = try values.decode(String.self, forKey: .identifier)
+        guard let asset = PhotosAsset.assetManager.fetchAsset(withLocalIdentifier: assetId, options: nil) else {
+            throw AssetLoadingException.notFound
+        }
+        
+        photosAsset = asset
+        identifier = assetId
+        albumIdentifier = try values.decodeIfPresent(String.self, forKey: .albumIdentifier)
+        uploadUrl = try values.decodeIfPresent(String.self, forKey: .uploadUrl)        
     }
     
     static func photosAssets(from assets:[Asset]) -> [PHAsset] {

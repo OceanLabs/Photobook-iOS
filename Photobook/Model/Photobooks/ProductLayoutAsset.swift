@@ -54,18 +54,19 @@ class ProductLayoutAsset: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(transform, forKey: .transform)
         try container.encode(containerSize, forKey: .containerSize)
-        
-        if let asset = asset as? PhotosAsset {
-            let assetData = NSKeyedArchiver.archivedData(withRootObject: asset)
-            try container.encode(assetData, forKey: .asset)
-        } else if let asset = asset as? URLAsset {
-            let assetData = NSKeyedArchiver.archivedData(withRootObject: asset)
-            try container.encode(assetData, forKey: .asset)
 
+        var data: Data? = nil
+        if let asset = asset as? PhotosAsset {
+            data = try PropertyListEncoder().encode(asset)
+        } else if let asset = asset as? URLAsset {
+            data = try PropertyListEncoder().encode(asset)
+        } else if let asset = asset as? ImageAsset {
+            data = try PropertyListEncoder().encode(asset)
         } else if let asset = asset as? TestPhotosAsset {
-            let assetData = NSKeyedArchiver.archivedData(withRootObject: asset)
-            try container.encode(assetData, forKey: .asset)
+            data = try PropertyListEncoder().encode(asset)
         }
+        let assetData = NSKeyedArchiver.archivedData(withRootObject: data!)
+        try container.encode(assetData, forKey: .asset)
     }
     
     required convenience init(from decoder: Decoder) throws {
@@ -77,8 +78,16 @@ class ProductLayoutAsset: Codable {
         containerSize = try values.decodeIfPresent(CGSize.self, forKey: .containerSize)
 
         if let data = try values.decodeIfPresent(Data.self, forKey: .asset),
-            let loadedAsset = NSKeyedUnarchiver.unarchiveObject(with: data) as? Asset {
+            let unarchivedData = NSKeyedUnarchiver.unarchiveObject(with: data) as? Data {
+            if let loadedAsset = try? PropertyListDecoder().decode(PhotosAsset.self, from: unarchivedData) {
                 asset = loadedAsset
+            } else if let loadedAsset = try? PropertyListDecoder().decode(URLAsset.self, from: unarchivedData) {
+                asset = loadedAsset
+            } else if let loadedAsset = try? PropertyListDecoder().decode(ImageAsset.self, from: unarchivedData) {
+                asset = loadedAsset
+            } else if let loadedAsset = try? PropertyListDecoder().decode(TestPhotosAsset.self, from: unarchivedData) {
+                asset = loadedAsset
+            }
         }
     }
     
