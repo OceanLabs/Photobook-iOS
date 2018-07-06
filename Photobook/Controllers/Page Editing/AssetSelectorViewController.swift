@@ -164,10 +164,11 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
     }
 }
 
-extension AssetSelectorViewController: AssetCollectorAddingDelegate {
+extension AssetSelectorViewController: PhotobookAssetAddingDelegate {
     
-    func didFinishAdding(_ assets: [PhotobookAsset]?) {
-        guard let assets = assets as? [Asset], !assets.isEmpty else {
+    func didFinishAdding(_ photobookAssets: [PhotobookAsset]?) {
+                
+        guard let assets = PhotobookAsset.assets(from: photobookAssets), !assets.isEmpty else {
             self.dismiss(animated: false, completion: nil)
             return
         }
@@ -179,5 +180,5 @@ extension AssetSelectorViewController: AssetCollectorAddingDelegate {
         collectionView.reloadData()
         collectionView.scrollToItem(at: IndexPath(row: self.assets.count, section: 0), at: .centeredHorizontally, animated: true)
         self.dismiss(animated: false, completion: nil)
-    }    
+    }
 }

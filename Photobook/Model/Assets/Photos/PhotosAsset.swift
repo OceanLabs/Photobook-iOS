@@ -25,17 +25,17 @@ class DefaultAssetManager: AssetManager {
 }
 
 /// Photo library resource that can be used in a Photobook
-@objc public class PhotosAsset: NSObject, NSCoding, Asset {
+class PhotosAsset: NSObject, NSCoding, Asset {
     
     /// Photo library asset
-    @objc internal(set) public var photosAsset: PHAsset {
+    var photosAsset: PHAsset {
         didSet {
             identifier = photosAsset.localIdentifier
         }
     }
     
     /// Identifier for the album where the asset is included
-    @objc internal(set) public var albumIdentifier: String?
+    var albumIdentifier: String?
     
     var imageManager = PHImageManager.default()
     static var assetManager: AssetManager = DefaultAssetManager()
@@ -61,7 +61,7 @@ class DefaultAssetManager: AssetManager {
     /// - Parameters:
     ///   - photosAsset: Photo library asset
     ///   - albumIdentifier: Identifier for the album where the asset is included
-    @objc public init(_ photosAsset: PHAsset, albumIdentifier: String?) {
+    init(_ photosAsset: PHAsset, albumIdentifier: String?) {
         self.photosAsset = photosAsset
         self.albumIdentifier = albumIdentifier
         identifier = photosAsset.localIdentifier
@@ -136,13 +136,13 @@ class DefaultAssetManager: AssetManager {
         })
     }
         
-    @objc public func encode(with aCoder: NSCoder) {
+    func encode(with aCoder: NSCoder) {
         aCoder.encode(albumIdentifier, forKey: "albumIdentifier")
         aCoder.encode(identifier, forKey: "identifier")
         aCoder.encode(uploadUrl, forKey: "uploadUrl")
     }
     
-    @objc public required convenience init?(coder aDecoder: NSCoder) {
+    required convenience init?(coder aDecoder: NSCoder) {
         guard let assetId = aDecoder.decodeObject(of: NSString.self, forKey: "identifier") as String?,
               let albumIdentifier = aDecoder.decodeObject(of: NSString.self, forKey: "albumIdentifier") as String?,
               let asset = PhotosAsset.assetManager.fetchAsset(withLocalIdentifier: assetId, options: nil) else
@@ -171,7 +171,7 @@ class DefaultAssetManager: AssetManager {
         return assets
     }
     
-    @objc public func wasRemoved(in changeInstance: PHChange) -> Bool {
+    func wasRemoved(in changeInstance: PHChange) -> Bool {
         if let changeDetails = changeInstance.changeDetails(for: photosAsset),
             changeDetails.objectWasDeleted {
             return true
