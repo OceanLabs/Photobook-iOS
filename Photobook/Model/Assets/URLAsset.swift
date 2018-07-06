@@ -23,7 +23,7 @@ class DefaultWebImageManager: WebImageManager {
 }
 
 /// Location for an image of a specific size
-@objc public class URLAssetImage: NSObject, NSCoding, Codable {
+@objc public class URLAssetImage: NSObject, Codable {
     
     let size: CGSize
     let url: URL
@@ -36,21 +36,7 @@ class DefaultWebImageManager: WebImageManager {
     @objc public init(url: URL, size: CGSize) {
         self.size = size
         self.url = url
-    }
-    
-    @objc public func encode(with aCoder: NSCoder) {
-        let stringSize = NSStringFromCGSize(size)
-        aCoder.encode(stringSize, forKey: "size")
-        aCoder.encode(url, forKey: "url")
-    }
-
-    @objc public required convenience init?(coder aDecoder: NSCoder) {
-        guard let stringSize = aDecoder.decodeObject(of: NSString.self, forKey: "size") as String?,
-              let url = aDecoder.decodeObject(forKey: "url") as? URL
-            else { return nil }
-        
-        self.init(url: url, size: CGSizeFromString(stringSize))
-    }
+    } 
 }
 
 /// Remote image resource that can be used in a Photobook

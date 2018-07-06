@@ -41,7 +41,7 @@ class ImageAssetTests: XCTestCase {
             return
         }
         
-        XCTAssertEqualOptional(unarchivedImageAsset.image.size, image.size)
+        XCTAssertEqualOptional(unarchivedImageAsset.image?.size, image.size)
         XCTAssertEqualOptional(unarchivedImageAsset.date, date)
     }
 
@@ -69,7 +69,7 @@ class ImageAssetTests: XCTestCase {
             return
         }
 
-        XCTAssertEqual(unarchivedImageAsset.image.size, CGSize.zero)
+        XCTAssertNil(unarchivedImageAsset.image)
     }
     
     func testImage_returnsImage() {
