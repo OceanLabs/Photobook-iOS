@@ -12,10 +12,10 @@ import UIKit
 class ImageAsset: NSObject, NSCoding, Asset {
     
     /// Image representation of the asset
-    public var image: UIImage
+    var image: UIImage
     
     /// Date associated with this asset
-    public var date: Date? = nil
+    var date: Date? = nil
     
     var identifier = UUID().uuidString
     var albumIdentifier: String? = nil
