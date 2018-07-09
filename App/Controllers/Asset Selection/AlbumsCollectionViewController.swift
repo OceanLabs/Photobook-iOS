@@ -17,7 +17,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
         static let timeToDismissMessages: TimeInterval = 3.0
     }
     
-    var assetCollectorController: AssetCollectorViewController!
+    var assetCollectorViewController: AssetCollectorViewController!
     
     /// The height between the bottom of the image and bottom of the cell where the labels sit
     private let albumCellLabelsHeight: CGFloat = 50
@@ -55,9 +55,9 @@ class AlbumsCollectionViewController: UICollectionViewController {
         navigationItem.title = albumManager.title
         
         // Setup the Image Collector Controller
-        assetCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
-        assetCollectorController.mode = collectorMode
-        assetCollectorController.delegate = self
+        assetCollectorViewController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
+        assetCollectorViewController.mode = collectorMode
+        assetCollectorViewController.delegate = self
         
         // Listen to asset manager
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
@@ -248,16 +248,13 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
     
     func actionsForAssetCollectorViewControllerHiddenStateChange(_ assetCollectorViewController: AssetCollectorViewController, willChangeTo hidden: Bool) -> () -> () {
         return { [weak welf = self] in
-            let topInset: CGFloat
             let bottomInset: CGFloat
             if #available(iOS 11, *){
-                topInset = 0
                 bottomInset = hidden ? 0 : assetCollectorViewController.viewHeight
             } else {
-                topInset =  hidden ? (welf?.navigationController?.navigationBar.frame.maxY ?? 0) : 0
-                bottomInset = hidden ? assetCollectorViewController.view.frame.height - assetCollectorViewController.view.transform.ty : assetCollectorViewController.viewHeight
+                bottomInset = hidden ? assetCollectorViewController.viewHeight - assetCollectorViewController.view.transform.ty : assetCollectorViewController.viewHeight
             }
-            welf?.collectionView?.contentInset = UIEdgeInsets(top: topInset, left: 0, bottom: bottomInset, right: 0)
+            welf?.collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: bottomInset, right: 0)
         }
     }
     
@@ -270,7 +267,13 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
             let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
             photobookViewController.assets = selectedAssetsManager.selectedAssets
             photobookViewController.photobookDelegate = self
-            
+            photobookViewController.completionClosure = { (photobookProduct) in
+                OrderManager.shared.basketOrder.products = [photobookProduct]
+                
+                let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
+                photobookViewController.navigationController?.pushViewController(checkoutViewController, animated: true)
+            }
+
             navigationController?.pushViewController(photobookViewController, animated: true)
         }
     }
