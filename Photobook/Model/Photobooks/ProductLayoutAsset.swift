@@ -65,8 +65,7 @@ class ProductLayoutAsset: Codable {
         } else if let asset = asset as? TestPhotosAsset {
             data = try PropertyListEncoder().encode(asset)
         }
-        let assetData = NSKeyedArchiver.archivedData(withRootObject: data!)
-        try container.encode(assetData, forKey: .asset)
+        try container.encode(data, forKey: .asset)
     }
     
     required convenience init(from decoder: Decoder) throws {
@@ -77,15 +76,14 @@ class ProductLayoutAsset: Codable {
         transform = try values.decode(CGAffineTransform.self, forKey: .transform)
         containerSize = try values.decodeIfPresent(CGSize.self, forKey: .containerSize)
 
-        if let data = try values.decodeIfPresent(Data.self, forKey: .asset),
-            let unarchivedData = NSKeyedUnarchiver.unarchiveObject(with: data) as? Data {
-            if let loadedAsset = try? PropertyListDecoder().decode(PhotosAsset.self, from: unarchivedData) {
+        if let data = try values.decodeIfPresent(Data.self, forKey: .asset) {
+            if let loadedAsset = try? PropertyListDecoder().decode(PhotosAsset.self, from: data) {
                 asset = loadedAsset
-            } else if let loadedAsset = try? PropertyListDecoder().decode(URLAsset.self, from: unarchivedData) {
+            } else if let loadedAsset = try? PropertyListDecoder().decode(URLAsset.self, from: data) {
                 asset = loadedAsset
-            } else if let loadedAsset = try? PropertyListDecoder().decode(ImageAsset.self, from: unarchivedData) {
+            } else if let loadedAsset = try? PropertyListDecoder().decode(ImageAsset.self, from: data) {
                 asset = loadedAsset
-            } else if let loadedAsset = try? PropertyListDecoder().decode(TestPhotosAsset.self, from: unarchivedData) {
+            } else if let loadedAsset = try? PropertyListDecoder().decode(TestPhotosAsset.self, from: data) {
                 asset = loadedAsset
             }
         }
