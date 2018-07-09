@@ -113,7 +113,6 @@ class OrderSummaryViewController: UIViewController {
     
     @IBAction func tappedCallToAction(_ sender: Any) {
         product.pigBaseUrl = orderSummaryManager.summary?.pigBaseUrl
-        product.pigCoverUrl = orderSummaryManager.coverImageUrl
         completionClosure?(product)
     }
     

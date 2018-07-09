@@ -610,8 +610,9 @@ class PhotobookProduct: Codable {
         if let coverUrl = pigCoverUrl { // Fetch the preview image if the cover URL is available
             fetchClosure(coverUrl)
         } else if let coverSnapshot = coverSnapshot { // Upload cover otherwise
-            Pig.uploadImage(coverSnapshot) { (coverUrl, error) in
+            Pig.uploadImage(coverSnapshot) { [weak welf = self] coverUrl, _ in
                 guard let coverUrl = coverUrl else { return }
+                welf?.pigCoverUrl = coverUrl
                 fetchClosure(coverUrl)
             }
         }
