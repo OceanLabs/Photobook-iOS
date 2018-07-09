@@ -23,7 +23,7 @@ class DefaultWebImageManager: WebImageManager {
 }
 
 /// Location for an image of a specific size
-@objc public class URLAssetImage: NSObject, NSCoding {
+@objc public class URLAssetImage: NSObject, Codable {
     
     let size: CGSize
     let url: URL
@@ -36,25 +36,11 @@ class DefaultWebImageManager: WebImageManager {
     @objc public init(url: URL, size: CGSize) {
         self.size = size
         self.url = url
-    }
-    
-    @objc public func encode(with aCoder: NSCoder) {
-        let stringSize = NSStringFromCGSize(size)
-        aCoder.encode(stringSize, forKey: "size")
-        aCoder.encode(url, forKey: "url")
-    }
-
-    @objc public required convenience init?(coder aDecoder: NSCoder) {
-        guard let stringSize = aDecoder.decodeObject(of: NSString.self, forKey: "size") as String?,
-              let url = aDecoder.decodeObject(forKey: "url") as? URL
-            else { return nil }
-        
-        self.init(url: url, size: CGSizeFromString(stringSize))
-    }
+    } 
 }
 
 /// Remote image resource that can be used in a Photobook
-class URLAsset: NSObject, NSCoding, Asset {
+class URLAsset: Asset {
     
     /// Unique identifier
     var identifier: String!
@@ -98,24 +84,26 @@ class URLAsset: NSObject, NSCoding, Asset {
         self.init(identifier: url.absoluteString, images: [URLAssetImage(url: url, size: size)])!
     }
     
-    func encode(with aCoder: NSCoder) {
-        aCoder.encode(images, forKey: "images")
-        aCoder.encode(identifier, forKey: "identifier")
-        aCoder.encode(uploadUrl, forKey: "uploadUrl")
-        aCoder.encode(date, forKey: "date")
-        aCoder.encode(albumIdentifier, forKey: "albumIdentifier")
+    enum CodingKeys: String, CodingKey {
+        case identifier, albumIdentifier, images, date, uploadUrl
     }
     
-    required convenience init?(coder aDecoder: NSCoder) {
-        guard let identifier = aDecoder.decodeObject(of: NSString.self, forKey: "identifier") as String?,
-            let images = aDecoder.decodeObject(forKey: "images") as? [URLAssetImage]
-            else { return nil }
-        
-        let albumIdentifier = aDecoder.decodeObject(of: NSString.self, forKey: "albumIdentifier") as String?
-        
-        self.init(identifier: identifier, images: images, albumIdentifier: albumIdentifier)
-        uploadUrl = aDecoder.decodeObject(of: NSString.self, forKey: "uploadUrl") as String?
-        date = aDecoder.decodeObject(of: NSDate.self, forKey: "date") as Date?
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(identifier, forKey: .identifier)
+        try container.encode(albumIdentifier, forKey: .albumIdentifier)
+        try container.encode(uploadUrl, forKey: .uploadUrl)
+        try container.encode(date, forKey: .date)
+        try container.encode(images, forKey: .images)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        images = try values.decode([URLAssetImage].self, forKey: .images)
+        identifier = try values.decode(String.self, forKey: .identifier)
+        uploadUrl = try values.decodeIfPresent(String.self, forKey: .uploadUrl)
+        date = try values.decodeIfPresent(Date.self, forKey: .date)
+        albumIdentifier = try values.decodeIfPresent(String.self, forKey: .albumIdentifier)
     }
     
     func image(size: CGSize, loadThumbnailFirst: Bool, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {

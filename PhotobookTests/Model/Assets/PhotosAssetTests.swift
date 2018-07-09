@@ -244,13 +244,25 @@ class PhotosAssetTests: XCTestCase {
     func testPhotosAsset_canBeArchivedAndUnarchived() {
         photosAsset.uploadUrl = testUrlString
         
-        if !archiveObject(photosAsset, to: "PhotosAssetTests.dat") {
-            print("Could not save photosAsset")
+        guard let data = try? PropertyListEncoder().encode(photosAsset) else {
+            XCTFail("Should encode the PhotosAsset to data")
+            return
         }
-        let photosAssetUnarchived = unarchiveObject(from: "PhotosAssetTests.dat") as? PhotosAsset
+        guard archiveObject(data, to: "PhotosAssetTests.dat") else {
+            XCTFail("Should save the PhotosAsset data to disk")
+            return
+        }
+        guard let unarchivedData = unarchiveObject(from: "PhotosAssetTests.dat") as? Data else {
+            XCTFail("Should unarchive the PhotosAsset as Data")
+            return
+        }
+        guard let unarchivedPhotosAsset = try? PropertyListDecoder().decode(PhotosAsset.self, from: unarchivedData) else {
+            XCTFail("Should decode the PhotosAsset")
+            return
+        }
 
-        XCTAssertEqualOptional(photosAssetUnarchived?.albumIdentifier, photosAsset.albumIdentifier)
-        XCTAssertEqualOptional(photosAssetUnarchived?.identifier, photosAsset.identifier)
-        XCTAssertEqualOptional(photosAssetUnarchived?.uploadUrl, photosAsset.uploadUrl)
+        XCTAssertEqualOptional(unarchivedPhotosAsset.albumIdentifier, photosAsset.albumIdentifier)
+        XCTAssertEqualOptional(unarchivedPhotosAsset.identifier, photosAsset.identifier)
+        XCTAssertEqualOptional(unarchivedPhotosAsset.uploadUrl, photosAsset.uploadUrl)
     }
 }

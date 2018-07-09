@@ -18,7 +18,9 @@ class PhotobookProductTests: XCTestCase {
         for i in 0 ..< 10 {
             let width = i % 2 == 0 ? 2000.0 : 3000.0
             let height = i % 2 == 0 ? 3000.0 : 2000.0
-            temp.append(TestPhotosAsset(size: CGSize(width: width, height: height)))
+            let asset = TestPhotosAsset(size: CGSize(width: width, height: height))
+            asset.identifierStub = "id\(i)"
+            temp.append(asset)
         }
         return temp
     }()
@@ -48,7 +50,7 @@ class PhotobookProductTests: XCTestCase {
 
     func testInit_coverIsNotTheFirstAsset() {
         let firstAsset = photobookProduct.productLayouts.first?.asset
-        XCTAssertTrue(firstAsset != nil && firstAsset! !== assets[0])
+        XCTAssertTrue(firstAsset != nil && firstAsset!.identifier! != assets[0].identifier!)
     }
     
     func testInit_shouldHaveMinimumNumberOfLayouts() {
@@ -127,7 +129,7 @@ class PhotobookProductTests: XCTestCase {
     func testSetAsset() {
         let asset = TestPhotosAsset()
         photobookProduct.setAsset(asset, forPage: 1)
-        XCTAssertTrue(photobookProduct.productLayouts[1].asset === asset)
+        XCTAssertTrue(photobookProduct.productLayouts[1].asset!.identifier == asset.identifier)
     }
     
     func testSetText() {

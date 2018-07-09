@@ -15,13 +15,25 @@ class URLAssetImageTests: XCTestCase {
         
         let urlAssetImage = URLAssetImage(url: testUrl, size: testSize)
         
-        if !archiveObject(urlAssetImage, to: "URLAssetImageTests.dat") {
-            print("Could not save urlAssetImage")
+        guard let data = try? PropertyListEncoder().encode(urlAssetImage) else {
+            XCTFail("Should encode the URLAssetImage to data")
+            return
         }
-        let urlAssetImageUnarchived = unarchiveObject(from: "URLAssetImageTests.dat") as? URLAssetImage
+        guard archiveObject(data, to: "URLAssetImageTests.dat") else {
+            XCTFail("Should save the URLAssetImage data to disk")
+            return
+        }
+        guard let unarchivedData = unarchiveObject(from: "URLAssetImageTests.dat") as? Data else {
+            XCTFail("Should unarchive the URLAssetImage as Data")
+            return
+        }
+        guard let unarchivedUrlAssetImage = try? PropertyListDecoder().decode(URLAssetImage.self, from: unarchivedData) else {
+            XCTFail("Should decode the URLAssetImage")
+            return
+        }
 
-        XCTAssertEqualOptional(urlAssetImageUnarchived?.url, urlAssetImage.url)
-        XCTAssertEqualOptional(urlAssetImageUnarchived?.size.width, urlAssetImage.size.width)
-        XCTAssertEqualOptional(urlAssetImageUnarchived?.size.height, urlAssetImage.size.height)
+        XCTAssertEqualOptional(unarchivedUrlAssetImage.url, urlAssetImage.url)
+        XCTAssertEqualOptional(unarchivedUrlAssetImage.size.width, urlAssetImage.size.width)
+        XCTAssertEqualOptional(unarchivedUrlAssetImage.size.height, urlAssetImage.size.height)
     }
 }
