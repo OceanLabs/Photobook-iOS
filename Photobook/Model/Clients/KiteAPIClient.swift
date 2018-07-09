@@ -198,7 +198,7 @@ class KiteAPIClient {
         }
         
         var parameters = [String: Any]()
-        parameters["currency"] = order.currencyCode
+        parameters["currency"] = Locale.current.currencyCode ?? "GBP" // Fall back to GBP if locale unavailable
         
         let countryCode = order.deliveryDetails?.address?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
         if let promoCode = order.promoCode {

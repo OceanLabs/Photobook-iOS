@@ -145,7 +145,7 @@ class PaymentAuthorizationManager: NSObject {
             fatalError("Missing merchant ID for ApplePay: PhotobookSDK.shared.applePayMerchantID")
         }
 
-        let paymentRequest = paymentApi.applePayPaymentRequest(withMerchantId: applePayMerchantId, country: "US", currency: basketOrder.currencyCode)
+        let paymentRequest = paymentApi.applePayPaymentRequest(withMerchantId: applePayMerchantId, country: "US", currency: cost.total.currencyCode)
         
         paymentRequest.paymentSummaryItems = summaryItemsForApplePay(cost: cost)
         paymentRequest.requiredShippingAddressFields = [.postalAddress, .name, .email, .phone]
@@ -162,17 +162,18 @@ class PaymentAuthorizationManager: NSObject {
     ///
     /// - Parameter cost: The total cost of the order
     private func authorizePayPal(cost: Cost) {
-        guard let totalCost = cost.total?.value,
-              let details = basketOrder.deliveryDetails, details.isValid,
-              let orderDescription = basketOrder.orderDescription else {
+        let totalCost = cost.total.value
+        guard let details = basketOrder.deliveryDetails, details.isValid,
+            let orderDescription = basketOrder.orderDescription
+            else {
                 return
         }
-
+        
         let address = details.address!
 
         let paypalAddress = OLPayPalWrapper.payPalShippingAddress(withRecipientName: details.fullName, withLine1: address.line1, withLine2: address.line2, withCity: address.city, withState: address.stateOrCounty, withPostalCode: address.zipOrPostcode, withCountryCode: address.country.codeAlpha2)
 
-        let payment = OLPayPalWrapper.payPalPayment(withAmount: totalCost as NSDecimalNumber, currencyCode: basketOrder.currencyCode, shortDescription: orderDescription, intent: 1/*PayPalPaymentIntentAuthorize*/, shippingAddress: paypalAddress)
+        let payment = OLPayPalWrapper.payPalPayment(withAmount: totalCost as NSDecimalNumber, currencyCode: cost.total.currencyCode, shortDescription: orderDescription, intent: 1/*PayPalPaymentIntentAuthorize*/, shippingAddress: paypalAddress)
 
         let config = OLPayPalWrapper.payPalConfiguration(withShippingAddressOption: 1/*PayPalShippingAddressOptionProvided*/, acceptCreditCards: false)
 
@@ -267,12 +268,12 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
         
         basketOrder.updateCost { [weak welf = self] (error: Error?) in
             
-            guard let stelf = welf, let cachedCost = stelf.basketOrder.cachedCost else {
+            guard let stelf = welf, let cost = stelf.basketOrder.validCost else {
                 completion(.failure, [PKShippingMethod](), [PKPaymentSummaryItem]())
                 return
             }
 
-            guard error == nil, let applePaySummary = welf?.summaryItemsForApplePay(cost: cachedCost) else {
+            guard error == nil, let applePaySummary = welf?.summaryItemsForApplePay(cost: cost) else {
                 completion(.failure, [PKShippingMethod](), [PKPaymentSummaryItem]())
                 return
             }
@@ -288,7 +289,7 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
         guard
             let lineItems = cost?.lineItems, lineItems.count > 0,
             let shippingCost = cost?.totalShippingCost,
-            let totalCost = cost?.total?.value as NSDecimalNumber?
+            let totalCost = cost?.total.value as NSDecimalNumber?
         else {
             return [PKPaymentSummaryItem]()
         }

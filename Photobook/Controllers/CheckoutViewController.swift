@@ -269,7 +269,7 @@ class CheckoutViewController: UIViewController {
     }
     
     private func updateProductCell(_ cell: BasketProductTableViewCell, for index: Int) {
-        guard let lineItems = order.cachedCost?.lineItems,
+        guard let lineItems = order.validCost?.lineItems,
             index < lineItems.count
             else {
                 return
@@ -344,7 +344,7 @@ class CheckoutViewController: UIViewController {
         // Shipping
         shippingMethodLabel.text = ""
         if let validCost = order.validCost {
-            shippingMethodLabel.text = validCost.totalShippingCost?.formatted
+            shippingMethodLabel.text = validCost.totalShippingCost.formatted
         }
         
         // Address
@@ -389,9 +389,8 @@ class CheckoutViewController: UIViewController {
                                               value: "Pay",
                                               comment: "Text on pay button. This is followed by the amount to pay")
         
-        if let cost = order.validCost,
-            let total = cost.total {
-            payButtonText = payButtonText + " \(total.formatted)"
+        if let cost = order.validCost {
+            payButtonText = payButtonText + " \(cost.total.formatted)"
         }
         payButton.setTitle(payButtonText, for: .normal)
         
@@ -594,7 +593,7 @@ class CheckoutViewController: UIViewController {
             return
         }
             
-        if let total = cost.total, total.value == 0.0 {
+        if cost.total.value == 0.0 {
             // The user must have a promo code which reduces this order cost to nothing, lucky user :)
             order.paymentToken = nil
             showReceipt()

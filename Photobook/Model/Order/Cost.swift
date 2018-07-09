@@ -11,13 +11,13 @@ import UIKit
 class Cost: Codable {
     
     var orderHash: Int
-    let lineItems: [LineItem]?
-    let totalShippingCost: Price?
-    let total: Price?
+    let lineItems: [LineItem]
+    let totalShippingCost: Price
+    let total: Price
     let promoDiscount: Price?
     let promoCodeInvalidReason: String?
     
-    init(hash: Int, lineItems: [LineItem]?, totalShippingCost: Price, total: Price, promoDiscount: Price?, promoCodeInvalidReason: String?){
+    init(hash: Int, lineItems: [LineItem], totalShippingCost: Price, total: Price, promoDiscount: Price?, promoCodeInvalidReason: String?){
         self.orderHash = hash
         self.lineItems = lineItems
         self.totalShippingCost = totalShippingCost

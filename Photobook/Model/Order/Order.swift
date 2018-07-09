@@ -16,7 +16,6 @@ struct OrdersNotificationName {
 
 class Order: Codable {
     
-    let currencyCode = Locale.current.currencyCode ?? "GBP" //GBP if locale unavailable
     var deliveryDetails: DeliveryDetails?
     var paymentMethod: PaymentMethod? = PaymentAuthorizationManager.isApplePayAvailable ? .applePay : nil
     var products = [PhotobookProduct]()
@@ -25,7 +24,7 @@ class Order: Codable {
     var orderId: String?
     var paymentToken: String?
     
-    var cachedCost: Cost?
+    private var cachedCost: Cost?
     var validCost: Cost? {
         return hasValidCachedCost ? cachedCost : nil
     }
@@ -34,7 +33,7 @@ class Order: Codable {
         var orderIsFree = false
         
         if let cost = validCost {
-            orderIsFree = cost.total?.value == 0.0
+            orderIsFree = cost.total.value == 0.0
         }
         
         return orderIsFree

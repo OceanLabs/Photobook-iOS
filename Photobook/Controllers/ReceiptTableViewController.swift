@@ -34,7 +34,7 @@ class ReceiptTableViewController: UITableViewController {
     var order: Order!
     
     private var cost: Cost? {
-        return order.cachedCost
+        return order.validCost
     }
     
     private var state: State = .uploading {
@@ -260,7 +260,7 @@ class ReceiptTableViewController: UITableViewController {
             return state == .uploading ? 0 : 1
         case Section.lineItems.rawValue:
             if state == .cancelled { return 0 }
-            return cost?.lineItems?.count ?? 0
+            return cost?.lineItems.count ?? 0
         case Section.shipping.rawValue, Section.details.rawValue, Section.footer.rawValue:
             if state == .cancelled { return 0 }
             return 1
@@ -339,17 +339,17 @@ class ReceiptTableViewController: UITableViewController {
             return cell
         case Section.lineItems.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptLineItemTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptLineItemTableViewCell
-            cell.lineItemNameLabel.text = cost?.lineItems?[indexPath.row].name
-            cell.lineItemCostLabel.text = cost?.lineItems?[indexPath.row].cost.formatted
+            cell.lineItemNameLabel.text = cost?.lineItems[indexPath.row].name
+            cell.lineItemCostLabel.text = cost?.lineItems[indexPath.row].cost.formatted
             return cell
         case Section.shipping.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptLineItemTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptLineItemTableViewCell
             cell.lineItemNameLabel.text = CommonLocalizedStrings.shipping
-            cell.lineItemCostLabel.text = cost?.totalShippingCost?.formatted
+            cell.lineItemCostLabel.text = cost?.totalShippingCost.formatted
             return cell
         case Section.footer.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptFooterTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptFooterTableViewCell
-            cell.totalCostLabel.text = cost?.total?.formatted
+            cell.totalCostLabel.text = cost?.total.formatted
             return cell
         default:
             return UITableViewCell()
