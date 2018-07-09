@@ -107,7 +107,7 @@ import PayPalDynamicLoader
         photobookViewController.assets = assets
         photobookViewController.photobookDelegate = delegate
         photobookViewController.completionClosure = { (photobookProduct) in
-            OrderManager.shared.basketOrder.products.append(photobookProduct)
+            OrderManager.shared.basketOrder.products.insert(photobookProduct, at: 0)
             ProductManager.shared.reset()
             
             let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
