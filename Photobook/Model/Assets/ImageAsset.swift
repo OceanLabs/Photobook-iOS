@@ -67,7 +67,7 @@ class ImageAsset: Asset {
     }
     
     func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension, Error?) -> Void) {
-        // Edge case when the asset has been saved an a URL already exists. This method should not be needed in that situation.
+        // Edge case when the asset has been saved and a URL already exists. This method should not be needed in that situation.
         guard let image = image else {
             completionHandler(nil, .jpg, nil)
             return

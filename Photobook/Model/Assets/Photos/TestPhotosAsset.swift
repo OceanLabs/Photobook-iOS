@@ -47,12 +47,4 @@ class TestPhotosAsset: PhotosAsset {
         identifierStub = try values.decode(String.self, forKey: .identifierStub)
         stubSize = try values.decode(CGSize.self, forKey: .stubSize)
     }
-
-//    required init?(coder aDecoder: NSCoder) {
-//        super.init(PHAsset(), albumIdentifier: "")
-//    }
-//
-//    required init(from decoder: Decoder) throws {
-//        try super.init(from: decoder)
-//    }
 }
