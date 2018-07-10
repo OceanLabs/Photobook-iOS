@@ -24,13 +24,25 @@ class ImageAssetTests: XCTestCase {
         let date = Date()
         let imageAsset = ImageAsset(image: image, date: date)
         
-        if !archiveObject(imageAsset, to: "ImageAssetTests.dat") {
-            print("Could not save imageAsset")
+        guard let data = try? PropertyListEncoder().encode(imageAsset) else {
+            XCTFail("Should encode the ImageAsset to data")
+            return
         }
-        let imageAssetUnarchived = unarchiveObject(from: "ImageAssetTests.dat") as? ImageAsset
+        guard archiveObject(data, to: "ImageAssetTests.dat") else {
+            XCTFail("Should save the ImageAsset data to disk")
+            return
+        }
+        guard let unarchivedData = unarchiveObject(from: "ImageAssetTests.dat") as? Data else {
+            XCTFail("Should unarchive the ImageAsset as Data")
+            return
+        }
+        guard let unarchivedImageAsset = try? PropertyListDecoder().decode(ImageAsset.self, from: unarchivedData) else {
+            XCTFail("Should decode the ImageAsset")
+            return
+        }
         
-        XCTAssertEqualOptional(imageAssetUnarchived?.image.size, image.size)
-        XCTAssertEqualOptional(imageAssetUnarchived?.date, date)
+        XCTAssertEqualOptional(unarchivedImageAsset.image?.size, image.size)
+        XCTAssertEqualOptional(unarchivedImageAsset.date, date)
     }
 
     func testImageAssetImage_shouldNotArchiveImageWithExistingUrl() {
@@ -40,12 +52,24 @@ class ImageAssetTests: XCTestCase {
         let imageAsset = ImageAsset(image: image, date: date)
         imageAsset.uploadUrl = testUrlString
         
-        if !archiveObject(imageAsset, to: "ImageAssetTests.dat") {
-            print("Could not save imageAsset")
+        guard let data = try? PropertyListEncoder().encode(imageAsset) else {
+            XCTFail("Should encode the ImageAsset to data")
+            return
         }
-        let imageAssetUnarchived = unarchiveObject(from: "ImageAssetTests.dat") as? ImageAsset
-        
-        XCTAssertNil(imageAssetUnarchived?.image.size)
+        guard archiveObject(data, to: "ImageAssetTests.dat") else {
+            XCTFail("Should save the ImageAsset data to disk")
+            return
+        }
+        guard let unarchivedData = unarchiveObject(from: "ImageAssetTests.dat") as? Data else {
+            XCTFail("Should unarchive the ImageAsset as Data")
+            return
+        }
+        guard let unarchivedImageAsset = try? PropertyListDecoder().decode(ImageAsset.self, from: unarchivedData) else {
+            XCTFail("Should decode the ImageAsset")
+            return
+        }
+
+        XCTAssertNil(unarchivedImageAsset.image)
     }
     
     func testImage_returnsImage() {

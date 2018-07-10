@@ -26,7 +26,7 @@ class ModalAlbumsCollectionViewController: UIViewController, PhotobookAssetPicke
     private var hasAppliedMask = false
     
     var collectorMode: AssetCollectorMode = .adding
-    weak var addingDelegate: AssetCollectorAddingDelegate?
+    weak var addingDelegate: PhotobookAssetAddingDelegate?
 
     var album: Album?
     var albumManager: AlbumManager?
@@ -129,7 +129,7 @@ class ModalAlbumsCollectionViewController: UIViewController, PhotobookAssetPicke
             if  belowThreshold || velocityY > Constants.velocityToTriggerSwipe {
                 let duration = belowThreshold || velocityY > Constants.velocityForFastDismissal ? 0.2 : 0.4
                 animateContainerViewOffScreen(duration: duration) {
-                    self.didFinishAddingAssets()
+                    self.didFinishAdding(nil)
                 }
                 return
             }
@@ -154,7 +154,7 @@ class ModalAlbumsCollectionViewController: UIViewController, PhotobookAssetPicke
     
     @IBAction private func didTapOnArrowButton(_ sender: UIButton) {
         animateContainerViewOffScreen() {
-            self.didFinishAddingAssets()
+            self.didFinishAdding(nil)
         }
     }
 }
@@ -166,7 +166,7 @@ extension ModalAlbumsCollectionViewController: UINavigationControllerDelegate {
     }
 }
 
-extension ModalAlbumsCollectionViewController: AssetCollectorAddingDelegate {
+extension ModalAlbumsCollectionViewController: PhotobookAssetAddingDelegate {
     
     func didFinishAdding(_ assets: [PhotobookAsset]?) {
         animateContainerViewOffScreen() {
