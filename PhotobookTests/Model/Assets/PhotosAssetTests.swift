@@ -76,7 +76,7 @@ class PhotosAssetTests: XCTestCase {
         let expectation = XCTestExpectation(description: "returns image data and extension")
         
         photosAsset.imageData(progressHandler: nil) { (imageData, fileExtension, error) in
-            guard imageData == nil, fileExtension == .unsupported  else {
+            guard imageData == nil, case .unsupported(_) = fileExtension else {
                 XCTFail()
                 return
             }
@@ -93,7 +93,7 @@ class PhotosAssetTests: XCTestCase {
         let expectation = XCTestExpectation(description: "returns image data and extension")
         
         photosAsset.imageData(progressHandler: nil) { (imageData, fileExtension, error) in
-            guard imageData == nil, fileExtension == .unsupported  else {
+            guard imageData == nil, case .unsupported(_) = fileExtension else {
                 XCTFail()
                 return
             }
@@ -114,7 +114,7 @@ class PhotosAssetTests: XCTestCase {
         let expectation = XCTestExpectation(description: "returns image data and extension")
         
         photosAsset.imageData(progressHandler: nil) { (imageData, fileExtension, error) in
-            guard imageData == nil, fileExtension == .unsupported  else {
+            guard imageData == nil, case .unsupported(_) = fileExtension  else {
                 XCTFail()
                 return
             }
@@ -131,7 +131,7 @@ class PhotosAssetTests: XCTestCase {
         let expectation = XCTestExpectation(description: "returns image data and extension")
         
         photosAsset.imageData(progressHandler: nil) { (imageData, fileExtension, error) in
-            guard imageData != nil, fileExtension == .png  else {
+            guard imageData != nil, case .png = fileExtension  else {
                 XCTFail()
                 return
             }
@@ -148,7 +148,7 @@ class PhotosAssetTests: XCTestCase {
         let expectation = XCTestExpectation(description: "returns image data and extension")
         
         photosAsset.imageData(progressHandler: nil) { (imageData, fileExtension, error) in
-            guard imageData != nil, fileExtension == .jpg  else {
+            guard imageData != nil, case .jpg = fileExtension else {
                 XCTFail()
                 return
             }
@@ -165,7 +165,7 @@ class PhotosAssetTests: XCTestCase {
         let expectation = XCTestExpectation(description: "returns image data and extension")
         
         photosAsset.imageData(progressHandler: nil) { (imageData, fileExtension, error) in
-            guard imageData != nil, fileExtension == .gif  else {
+            guard imageData != nil, case .gif = fileExtension else {
                 XCTFail()
                 return
             }
@@ -182,7 +182,7 @@ class PhotosAssetTests: XCTestCase {
         let expectation = XCTestExpectation(description: "returns image data and extension")
         
         photosAsset.imageData(progressHandler: nil) { (imageData, fileExtension, error) in
-            guard imageData != nil, fileExtension == .jpg  else {
+            guard imageData != nil, case .jpg = fileExtension else {
                 XCTFail()
                 return
             }
@@ -199,7 +199,7 @@ class PhotosAssetTests: XCTestCase {
         let expectation = XCTestExpectation(description: "returns image data and extension")
         
         photosAsset.imageData(progressHandler: nil) { (imageData, fileExtension, error) in
-            guard imageData == nil, fileExtension == .unsupported  else {
+            guard imageData == nil, case .unsupported(_) = fileExtension else {
                 XCTFail()
                 return
             }

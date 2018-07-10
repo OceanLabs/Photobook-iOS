@@ -45,7 +45,7 @@ class TestOrderSummaryManagerDelegate: OrderSummaryManagerDelegate {
     
     var summary: OrderSummary?
     var upsellOption: UpsellOption?
-    var error: Error?
+    var error: ErrorMessage?
     
     func orderSummaryManagerWillUpdate() {
         calledWillUpdate = true
@@ -59,12 +59,12 @@ class TestOrderSummaryManagerDelegate: OrderSummaryManagerDelegate {
         calledFailedToSetPreviewImageUrl = true
     }
     
-    func orderSummaryManagerDidUpdate(_ summary: OrderSummary?, error: Error?) {
+    func orderSummaryManagerDidUpdate(_ summary: OrderSummary?, error: ErrorMessage?) {
         self.summary = summary
         self.error = error
     }
     
-    func orderSummaryManagerFailedToApply(_ upsell: UpsellOption, error: Error?) {
+    func orderSummaryManagerFailedToApply(_ upsell: UpsellOption, error: ErrorMessage) {
         self.upsellOption = upsell
         self.error = error
     }

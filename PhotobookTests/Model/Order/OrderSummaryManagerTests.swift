@@ -166,7 +166,7 @@ class OrderSummaryManagerTests: XCTestCase {
     }
     
     func testUploadCoverImage_shouldFailIfApiReturnsError() {
-        apiClient.error = NSError(domain: "ly.kite.photobook", code: 300, userInfo: nil)
+        apiClient.error = .generic
         
         orderSummaryManager.coverPageSnapshotImage = UIImage()
         
@@ -209,7 +209,7 @@ class OrderSummaryManagerTests: XCTestCase {
         apiClient.response = ["full": "http://cover.url/"] as AnyObject
         orderSummaryManager.coverPageSnapshotImage = UIImage()
 
-        apiClient.error = NSError(domain: "ly.kite.photobook", code: 300, userInfo: nil)
+        apiClient.error = .generic
         
         orderSummaryManager.fetchPreviewImage(withSize: .zero) { (image) in
             XCTAssertNil(image)

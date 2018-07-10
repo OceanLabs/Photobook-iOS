@@ -87,7 +87,7 @@ class ImageAssetTests: XCTestCase {
         
         imageAsset.imageData(progressHandler: nil) { (data, fileExtension, _) in
             XCTAssertNotNil(data)
-            XCTAssertEqual(fileExtension, .jpg)
+            XCTAssertEqual(fileExtension.string(), AssetDataFileExtension.jpg.string())
         }
     }
 }
