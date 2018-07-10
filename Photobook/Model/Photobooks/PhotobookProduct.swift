@@ -671,7 +671,7 @@ extension PhotobookProduct: Hashable, Equatable {
                 stringHash += "po:\(upsoldOptions),"
             }
             stringHash += "pc:\(itemCount),"
-            stringHash += "pg:\(assetsToUpload().count),"
+            stringHash += "pg:\(numberOfPages),"
             
             return stringHash.hashValue
         }
