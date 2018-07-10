@@ -24,6 +24,12 @@ class Order: Codable {
     var orderId: String?
     var paymentToken: String?
     
+    #if DEBUG
+    func setCachedCost(_ cost: Cost?) {
+        cachedCost = cost
+    }
+    #endif
+    
     private var cachedCost: Cost?
     var validCost: Cost? {
         return hasValidCachedCost ? cachedCost : nil

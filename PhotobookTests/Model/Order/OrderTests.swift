@@ -36,7 +36,7 @@ class OrderTests: XCTestCase {
         
         let cost = fakeCost(totalCost: 4.99)
         cost.orderHash = order.hashValue
-        order.cachedCost = cost
+        order.setCachedCost(cost)
         XCTAssertFalse(order.orderIsFree)
     }
 
@@ -45,7 +45,7 @@ class OrderTests: XCTestCase {
         
         let cost = fakeCost()
         cost.orderHash = order.hashValue
-        order.cachedCost = cost
+        order.setCachedCost(cost)
         XCTAssertTrue(order.orderIsFree)
     }
     

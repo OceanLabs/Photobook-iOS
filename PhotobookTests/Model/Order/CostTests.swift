@@ -42,9 +42,9 @@ class CostTests: XCTestCase {
         let cost = Cost(hash: hash, lineItems: lineItems, totalShippingCost: totalShippingCost!, total: total!, promoDiscount: promoDiscount, promoCodeInvalidReason: promoCodeInvalidReason)
         
         XCTAssertEqual(cost.orderHash, 233)
-        XCTAssertEqualOptional(cost.lineItems?.first?.id, "hdbook_127x127")
-        XCTAssertEqualOptional(cost.lineItems?.first?.name, "item")
-        XCTAssertEqualOptional(cost.lineItems?.first?.cost, lineItems.first?.cost)
+        XCTAssertEqualOptional(cost.lineItems.first?.id, "hdbook_127x127")
+        XCTAssertEqualOptional(cost.lineItems.first?.name, "item")
+        XCTAssertEqualOptional(cost.lineItems.first?.cost, lineItems.first?.cost)
         XCTAssertEqualOptional(cost.promoDiscount, promoDiscount)
         XCTAssertEqualOptional(cost.promoCodeInvalidReason, "reason")
     }
@@ -53,7 +53,7 @@ class CostTests: XCTestCase {
         let cost = Cost.parseDetails(dictionary: validDictionary)
         
         XCTAssertNotNil(cost)
-        XCTAssertEqualOptional(cost?.lineItems?.count, 1)
+        XCTAssertEqualOptional(cost?.lineItems.count, 1)
     }
     
     func testParseDetails_shouldFailIfLineItemsAreMissing() {
