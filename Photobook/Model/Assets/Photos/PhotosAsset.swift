@@ -91,7 +91,7 @@ class PhotosAsset: Asset {
     func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension, Error?) -> Void) {
         
         if photosAsset.mediaType != .image {
-            completionHandler(nil, .unsupported, AssetLoadingException.notFound)
+            completionHandler(nil, .unsupported(details: "Photos imageData: Not an image type"), AssetLoadingException.notFound)
             return
         }
         
@@ -100,21 +100,22 @@ class PhotosAsset: Asset {
         
         imageManager.requestImageData(for: photosAsset, options: options, resultHandler: { imageData, dataUti, _, _ in
             guard let data = imageData, let dataUti = dataUti else {
-                completionHandler(nil, .unsupported, AssetLoadingException.notFound)
+                let details = "Photos imageData: Missing " + (imageData == nil ? "imageData" : "dataUti")
+                completionHandler(nil, .unsupported(details: details), AssetLoadingException.notFound)
                 return
             }
             
             guard let fileExtensionString = NSURL(fileURLWithPath: dataUti).pathExtension else {
-                completionHandler(nil, .unsupported, AssetLoadingException.unsupported)
+                completionHandler(nil, .unsupported(details: "Photos imageData: Could not determine extension"), AssetLoadingException.unsupported)
                 return
             }
             
             let fileExtension = AssetDataFileExtension(string: fileExtensionString)
             
             // Check that the image is either jpg, png or gif otherwise convert it to jpg. So no HEICs, TIFFs or RAWs get uploaded to the back end.
-            if fileExtension == .unsupported {
+            if case .unsupported(_) = fileExtension {
                 guard let ciImage = CIImage(data: data) else {
-                    completionHandler(nil, .unsupported, AssetLoadingException.unsupported)
+                    completionHandler(nil, fileExtension, AssetLoadingException.unsupported)
                     return
                 }
                 
@@ -128,7 +129,7 @@ class PhotosAsset: Asset {
                 if let jpegData = tmpJpegData {
                     completionHandler(jpegData, .jpg, nil)
                 } else {
-                    completionHandler(nil, .unsupported, AssetLoadingException.unsupported)
+                    completionHandler(nil, .unsupported(details: "Photos imageData: Could not convert to JPG"), AssetLoadingException.unsupported)
                 }
             } else {
                 completionHandler(imageData, fileExtension, nil)

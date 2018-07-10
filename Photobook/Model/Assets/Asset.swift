@@ -13,8 +13,8 @@ enum AssetLoadingException: Error {
     case unsupported
 }
 
-@objc public enum AssetDataFileExtension: Int {
-    case unsupported
+enum AssetDataFileExtension {
+    case unsupported(details: String)
     case jpg
     case png
     case gif
@@ -27,7 +27,7 @@ extension AssetDataFileExtension {
         case "jpeg", "jpg": self = .jpg
         case "png": self = .png
         case "gif": self = .gif
-        default: self = .unsupported
+        default: self = .unsupported(details: string)
         }
     }
     
@@ -36,7 +36,7 @@ extension AssetDataFileExtension {
         case .jpg: return "jpg"
         case .png: return "png"
         case .gif: return "gif"
-        default: return ""
+        case .unsupported(let details): return details
         }
     }
 }

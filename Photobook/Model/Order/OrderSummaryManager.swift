@@ -12,8 +12,8 @@ protocol OrderSummaryManagerDelegate: class {
     func orderSummaryManagerWillUpdate()
     func orderSummaryManagerDidSetPreviewImageUrl()
     func orderSummaryManagerFailedToSetPreviewImageUrl()
-    func orderSummaryManagerDidUpdate(_ summary: OrderSummary?, error: Error?)
-    func orderSummaryManagerFailedToApply(_ upsell: UpsellOption, error:Error?)
+    func orderSummaryManagerDidUpdate(_ summary: OrderSummary?, error: ErrorMessage?)
+    func orderSummaryManagerFailedToApply(_ upsell: UpsellOption, error: ErrorMessage)
 }
 
 class OrderSummaryManager {
@@ -94,30 +94,44 @@ extension OrderSummaryManager {
         
         apiManager.getOrderSummary(product: product) { [weak self] (summary, upsellOptions, productPayload, error) in
             
-            guard let strongSelf = self else { return }
+            guard let stelf = self else { return }
             guard let summary = summary else {
-                strongSelf.delegate?.orderSummaryManagerDidUpdate(nil, error: error)
+                if let error = error as? APIClientError, case .parsing(let details) = error {
+                    Analytics.shared.trackError(.parsing, details)
+                }
+                let errorMessage = ErrorMessage(error != nil ? error! : APIClientError.generic)
+                
+                stelf.delegate?.orderSummaryManagerDidUpdate(nil, error: errorMessage)
                 return
             }
             
-            strongSelf.product.setUpsellData(template: strongSelf.product.template, payload: productPayload)
-            strongSelf.upsellOptions = upsellOptions
-            strongSelf.handleReceivingSummary(summary)
+            stelf.product.setUpsellData(template: stelf.product.template, payload: productPayload)
+            stelf.upsellOptions = upsellOptions
+            stelf.handleReceivingSummary(summary)
         }
     }
     
-    private func applyUpsells(_ failure:((_ error: Error?) -> Void)? = nil) {
+    private func applyUpsells(_ failure:((_ error: ErrorMessage) -> Void)? = nil) {
         delegate?.orderSummaryManagerWillUpdate()
         
         apiManager.applyUpsells(product: product, upsellOptions: Array<UpsellOption>(selectedUpsellOptions)) { [weak welf = self] (summary, upsoldTemplateId, productPayload, error) in
             
-            guard let summary = summary, error == nil else {
-                failure?(error)
+            // API errors
+            guard let summary = summary, let templateId = upsoldTemplateId else {
+                if let error = error as? APIClientError, case .parsing(let details) = error {
+                    Analytics.shared.trackError(.parsing, details)
+                }
+                let errorMessage = ErrorMessage(error != nil ? error! : APIClientError.generic)
+                
+                failure?(errorMessage)
                 return
             }
 
-            guard let upsoldTemplate = welf?.templates?.first(where: {$0.templateId == upsoldTemplateId}) else {
-                failure?(PhotobookAPIError.productUnavailable)
+            // Check if the template ID can be matched
+            guard let upsoldTemplate = welf?.templates?.first(where: {$0.templateId == templateId}) else {
+                Analytics.shared.trackError(.upsellError, "ApplyUpsells: Failed to find \(templateId)")
+                
+                failure?(ErrorMessage(.generic))
                 return
             }
             

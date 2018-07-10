@@ -70,7 +70,6 @@ class EmptyScreenViewController: UIViewController {
         return emptyScreenViewController
     }
     
-    
     /// Factory method to create an Empty Screen from an ErrorMessage
     ///
     /// - Parameter errorMessage: Use this ErrorMessage to create a Empty Screen

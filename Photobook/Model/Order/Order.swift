@@ -77,7 +77,7 @@ class Order: Codable {
         return cachedCost?.orderHash == hashValue
     }
     
-    func updateCost(forceUpdate: Bool = false, forceShippingMethodUpdate: Bool = false, _ completionHandler: @escaping (_ error : Error?) -> Void) {
+    func updateCost(forceUpdate: Bool = false, forceShippingMethodUpdate: Bool = false, _ completionHandler: @escaping (_ error: APIClientError?) -> Void) {
         
         if hasValidCachedCost && !forceUpdate {
             completionHandler(nil)
@@ -88,6 +88,11 @@ class Order: Codable {
             KiteAPIClient.shared.getCost(order: self) { [weak self] (cost, error) in
                 self?.cachedCost = cost
                 cost?.orderHash = self?.hashValue ?? 0
+                
+                if let error = error, case .parsing(let details) = error {
+                    Analytics.shared.trackError(.parsing, details)
+                }
+
                 completionHandler(error)
             }
         }
@@ -101,12 +106,14 @@ class Order: Codable {
         }
     }
     
-    private func updateShippingMethods(_ completionHandler: @escaping (_ error : Error?) -> Void) {
+    private func updateShippingMethods(_ completionHandler: @escaping (_ error: APIClientError?) -> Void) {
         KiteAPIClient.shared.getShippingMethods(order: OrderManager.shared.basketOrder) { [weak self] (shippingMethods, error) in
             self?.availableShippingMethods = shippingMethods
-            
-            //preset
             self?.presetShippingOptions()
+            
+            if let error = error, case .parsing(let details) = error {
+                Analytics.shared.trackError(.parsing, details)
+            }
             completionHandler(error)
         }
     }

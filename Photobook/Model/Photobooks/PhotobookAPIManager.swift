@@ -9,10 +9,8 @@
 import Foundation
 
 enum PhotobookAPIError: Error {
-    case missingPhotobookInfo
-    case couldNotBuildCreationParameters
+    case missingPhotobookInfo(details: String)
     case couldNotSaveTempImageData
-    case productUnavailable
 }
 
 class PhotobookAPIManager {
@@ -61,7 +59,7 @@ class PhotobookAPIManager {
                 let productsData = photobooksData["products"] as? [[String: AnyObject]],
                 let layoutsData = photobooksData["layouts"] as? [[String: AnyObject]]
             else {
-                completionHandler(nil, nil, APIClientError.parsing)
+                completionHandler(nil, nil, APIClientError.parsing(details: "RequestPhotobookInfo: Could not parse root objects"))
                 return
             }
             
@@ -74,8 +72,7 @@ class PhotobookAPIManager {
             }
             
             if tempLayouts.isEmpty {
-                print("PhotobookAPIManager: parsing layouts failed")
-                completionHandler(nil, nil, APIClientError.parsing)
+                completionHandler(nil, nil, APIClientError.parsing(details: "RequestPhotobookInfo: Could not parse layouts"))
                 return
             }
             
@@ -89,8 +86,7 @@ class PhotobookAPIManager {
             }
             
             if tempPhotobooks.isEmpty {
-                print("PhotobookAPIManager: parsing photobook products failed")
-                completionHandler(nil, nil, APIClientError.parsing)
+                completionHandler(nil, nil, APIClientError.parsing(details: "RequestPhotobookInfo: Could not parse photobooks"))
                 return
             }
 
@@ -117,7 +113,7 @@ class PhotobookAPIManager {
                 let upsellOptionsDict = jsonData["upsells"] as? [[String: Any]],
                 let payload = jsonData["productPayload"] as? [String: Any]
                 else {
-                    completionHandler(nil, nil, nil, APIClientError.parsing)
+                    completionHandler(nil, nil, nil, APIClientError.parsing(details: "GetOrderSummary: Could not parse root objects"))
                     return
             }
             
@@ -155,7 +151,7 @@ class PhotobookAPIManager {
                 let templateId = variantDicts.first?["templateId"] as? String,
                 let payload = jsonData["productPayload"] as? [String: Any]
                 else {
-                    completionHandler(nil, nil, nil, APIClientError.parsing)
+                    completionHandler(nil, nil, nil, APIClientError.parsing(details: "ApplyUpsells: Could not parse root objects"))
                     return
             }
         
