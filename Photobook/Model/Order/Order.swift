@@ -146,21 +146,9 @@ class Order: Codable {
         var jobs = [[String: Any]]()
         for product in products {
             
-            guard let options = product.upsoldOptions,
-                let insideUrl = product.insidePdfUrl,
-                let coverUrl = product.coverPdfUrl,
-                let shippingMethod = product.selectedShippingMethod
-                else { return nil }
-            
-            let job: [String: Any] = [
-                "template_id" : product.template.templateId,
-                "multiples" : product.itemCount,
-                "shipping_class" : shippingMethod.id,
-                "options" : options,
-                "page_count" : product.numberOfPages,
-                "inside_pdf" : insideUrl,
-                "cover_pdf" : coverUrl
-            ]
+            guard let job = product.orderParameters() else {
+                return nil // If one product is invalid, we want the whole order to be invalid
+            }
             jobs.append(job)
         }
         
