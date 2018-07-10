@@ -135,7 +135,7 @@ class KiteAPIClient {
         let uniqueTemplatesIds = Set(templateIds)
         var templateIdString = ""
         for templateId in uniqueTemplatesIds {
-            if templateId != templateIds.first { templateIdString += "," }
+            if templateId != uniqueTemplatesIds.first { templateIdString += "," }
             templateIdString += templateId
         }
         

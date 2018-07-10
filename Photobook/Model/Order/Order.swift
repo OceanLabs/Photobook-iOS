@@ -87,9 +87,9 @@ class Order: Codable {
         }
         
         // If any product in the order doesn't not have shipping options, fetch shipping options for all
-        let shouldUpdateCost = products.reduce(forceShippingMethodUpdate, { $0 || $1.availableShippingMethods == nil })
+        let shouldUpdateShippingMethods = products.reduce(forceShippingMethodUpdate, { $0 || $1.availableShippingMethods == nil })
         
-        if shouldUpdateCost {
+        if shouldUpdateShippingMethods {
             updateShippingMethods { (error) in
                 guard error == nil else {
                     completionHandler(error)
