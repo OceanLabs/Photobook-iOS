@@ -54,6 +54,9 @@ class PhotobookProduct: Codable {
     var itemCount: Int = 1
     var insidePdfUrl: String?
     var coverPdfUrl: String?
+    let identifier = UUID().uuidString
+    var availableShippingMethods: [ShippingMethod]?
+    var selectedShippingMethod: ShippingMethod?
     
     // Preview image handling
     var pigBaseUrl: String?
@@ -591,6 +594,29 @@ class PhotobookProduct: Codable {
         }
         return assets
     }
+    
+    func previewImage(size: CGSize, completionHandler: @escaping (UIImage?) -> Void) {
+        guard let baseUrl = pigBaseUrl else { return }
+        
+        let fetchClosure = { (_ coverUrl: String) in
+            guard let url = Pig.previewImageURL(withBaseURLString: baseUrl, coverURLString: coverUrl, size: size) else {
+                return
+            }
+            Pig.fetchPreviewImage(with: url, completion: { image in
+                completionHandler(image)
+            })
+        }
+        
+        if let coverUrl = pigCoverUrl { // Fetch the preview image if the cover URL is available
+            fetchClosure(coverUrl)
+        } else if let coverSnapshot = coverSnapshot { // Upload cover otherwise
+            Pig.uploadImage(coverSnapshot) { (coverUrl, error) in
+                guard let coverUrl = coverUrl else { return }
+                fetchClosure(coverUrl)
+            }
+        }
+    }
+    
 }
 
 extension PhotobookProduct: Hashable, Equatable {

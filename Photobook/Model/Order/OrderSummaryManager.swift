@@ -141,8 +141,8 @@ extension OrderSummaryManager {
             return
         }
         
-        if let summary = summary {
-            Pig.fetchPreviewImage(withBaseUrlString: summary.pigBaseUrl, coverImageUrlString: coverImageUrl, size: size, completion: completion)
+        if let summary = summary, let url = Pig.previewImageURL(withBaseURLString: summary.pigBaseUrl, coverURLString: coverImageUrl, size: size) {
+            Pig.fetchPreviewImage(with: url, completion: completion)
         } else {
             completion(nil)
         }

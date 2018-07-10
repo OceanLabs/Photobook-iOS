@@ -18,8 +18,6 @@ class Order: Codable {
     
     let currencyCode = Locale.current.currencyCode ?? "GBP" //GBP if locale unavailable
     var deliveryDetails: DeliveryDetails?
-    var availableShippingMethods: [[ShippingMethod]]?
-    var selectedShippingMethods: [ShippingMethod]?
     var paymentMethod: PaymentMethod? = PaymentAuthorizationManager.isApplePayAvailable ? .applePay : nil
     var products = [PhotobookProduct]()
     var promoCode: String?
@@ -60,14 +58,10 @@ class Order: Codable {
         }
         
         var shippingHash: Int = 0
-        for shippingMethod in selectedShippingMethods ?? [] {
-            shippingHash = shippingHash ^ shippingMethod.id
-        }
-        
         var productsHash: Int = 0
         for product in products {
             productsHash = productsHash ^ product.hashValue
-            
+            shippingHash = shippingHash ^ (product.selectedShippingMethod?.id ?? 0)
         }
         
         return stringHash.hashValue ^ shippingHash ^ productsHash
@@ -78,8 +72,9 @@ class Order: Codable {
     }
     
     func updateCost(forceUpdate: Bool = false, forceShippingMethodUpdate: Bool = false, _ completionHandler: @escaping (_ error : Error?) -> Void) {
-        
-        if hasValidCachedCost && !forceUpdate {
+        guard products.count != 0,
+        !hasValidCachedCost || forceUpdate
+        else {
             completionHandler(nil)
             return
         }
@@ -92,52 +87,44 @@ class Order: Codable {
             }
         }
         
-        if availableShippingMethods == nil || forceShippingMethodUpdate {
+        // If any product in the order doesn't not have shipping options, fetch shipping options for all
+        let shouldUpdateCost = products.reduce(forceShippingMethodUpdate, { $0 || $1.availableShippingMethods == nil })
+        
+        if shouldUpdateCost {
             updateShippingMethods { (error) in
+                guard error == nil else {
+                    completionHandler(error)
+                    return
+                }
                 getCostClosure()
             }
         } else {
             getCostClosure()
         }
-    }
-    
-    private func updateShippingMethods(_ completionHandler: @escaping (_ error : Error?) -> Void) {
-        KiteAPIClient.shared.getShippingMethods(order: OrderManager.shared.basketOrder) { [weak self] (shippingMethods, error) in
-            self?.availableShippingMethods = shippingMethods
-            
-            //preset
-            self?.presetShippingOptions()
-            completionHandler(error)
-        }
-    }
-    
-    private func presetShippingOptions() {
-        guard let availableShippingMethods = self.availableShippingMethods else {
-            return
-        }
         
-        selectedShippingMethods = [ShippingMethod]()
-        for shippingMethods in availableShippingMethods {
-            if let firstMethod = shippingMethods.first {
-                selectedShippingMethods?.append(firstMethod) //not set yet, set default (first method)
-            }
-        }
+        
+        
     }
     
-    func setShippingMethod(_ index: Int, forSection section: Int) {
-        guard let availableShippingMethods = availableShippingMethods, availableShippingMethods.count > section,
-            var selectedShippingMethods = selectedShippingMethods, selectedShippingMethods.count > section else {
+    func updateShippingMethods(_ completionHandler: @escaping (_ error : Error?) -> Void) {
+        KiteAPIClient.shared.getShippingMethods(for: OrderManager.shared.basketOrder.products.map({ $0.template.templateId })) { [weak welf = self] (shippingMethods, error) in
+            guard error == nil else {
+                completionHandler(error)
                 return
+            }
+            
+            for product in welf?.products ?? [] {
+                let availableShippingMethods = shippingMethods?[product.template.templateId]
+                product.availableShippingMethods = availableShippingMethods
+                product.selectedShippingMethod = availableShippingMethods?.first
+            }
+            completionHandler(nil)
         }
-        selectedShippingMethods[section] = availableShippingMethods[section][index]
     }
     
     func orderParameters() -> [String: Any]? {
         
-        guard let selectedShippingMethods = selectedShippingMethods,
-            selectedShippingMethods.count == products.count,
-            let finalTotalCost = validCost?.total
-            else {
+        guard let finalTotalCost = validCost?.total else {
                 return nil
         }
         
@@ -158,13 +145,13 @@ class Order: Codable {
         ]
         
         var jobs = [[String: Any]]()
-        for (index, product) in products.enumerated() {
+        for product in products {
             
             guard let options = product.upsoldOptions,
                 let insideUrl = product.insidePdfUrl,
-                let coverUrl = product.coverPdfUrl else { return nil }
-            
-            let shippingMethod = selectedShippingMethods[index]
+                let coverUrl = product.coverPdfUrl,
+                let shippingMethod = product.selectedShippingMethod
+                else { return nil }
             
             let job: [String: Any] = [
                 "template_id" : product.template.templateId,

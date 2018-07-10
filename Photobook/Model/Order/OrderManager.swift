@@ -148,6 +148,7 @@ class OrderManager {
         saveOrder(basketOrder, file: Storage.basketOrderBackupFile)
     }
     
+    // TODO: This doesn't seem like it's in the right place
     func applyUpsellsToOrder(_ order: Order) {
         for product in order.products {
             guard let upsoldTemplate = product.upsoldTemplate,
