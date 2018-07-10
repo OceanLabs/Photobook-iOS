@@ -13,7 +13,7 @@ class BasketTests: PhotobookUITest {
     func testQuantityChange() {
         automation.goToBasket()
         
-        let quantityButton = automation.app.buttons["quantityButton"]
+        let quantityButton = automation.app.buttons["quantityButton"].firstMatch
         let oldValue = quantityButton.value as? String
         XCTAssertNotNil(oldValue)
         XCTAssertEqual(oldValue!, "1")
@@ -25,6 +25,8 @@ class BasketTests: PhotobookUITest {
         pickerLocation.press(forDuration: 0, thenDragTo: picker.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.0)))
         
         automation.app.buttons["Done"].tap()
+        
+        wait(for: quantityButton)
         
         let newValue = quantityButton.value as? String
         XCTAssertNotNil(newValue)
