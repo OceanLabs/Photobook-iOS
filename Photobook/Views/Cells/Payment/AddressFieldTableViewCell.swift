@@ -12,7 +12,6 @@ class AddressFieldTableViewCell: UITableViewCell {
 
     static let reuseIdentifier = NSStringFromClass(AddressFieldTableViewCell.self).components(separatedBy: ".").last!
     
-    
     @IBOutlet weak var label: UILabel! {
         didSet {
             if #available(iOS 11.0, *) {

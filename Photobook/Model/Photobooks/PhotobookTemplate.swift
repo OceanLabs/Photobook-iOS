@@ -27,8 +27,7 @@ class PhotobookTemplate: Codable {
     var layouts: [Int] // IDs of the permitted layouts
     var minPages: Int = 20
     var maxPages: Int = 100
-    
-    // TODO: Currencies?
+    var availableShippingMethods: [ShippingMethod]?
     
     init(id: Int, name: String, templateId: String, kiteId: String, coverSize: CGSize, pageSize: CGSize, spineTextRatio: CGFloat, coverLayouts: [Int], layouts: [Int]) {
         self.id = id

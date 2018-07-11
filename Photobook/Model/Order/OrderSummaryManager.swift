@@ -36,12 +36,10 @@ class OrderSummaryManager {
             return product.productLayouts
         }
     }
-    private(set) var coverImageUrl:String?
     private var isUploadingCoverImage = false
     
     private(set) var upsellOptions: [UpsellOption]?
     private(set) var summary: OrderSummary?
-    private var previewImageUrl: String?
     
     private(set) var selectedUpsellOptions = Set<UpsellOption>()
     
@@ -90,7 +88,6 @@ extension OrderSummaryManager {
         delegate?.orderSummaryManagerWillUpdate()
         
         summary = nil
-        previewImageUrl = nil
         
         apiManager.getOrderSummary(product: product) { [weak self] (summary, upsellOptions, productPayload, error) in
             
@@ -150,13 +147,13 @@ extension OrderSummaryManager {
     
     func fetchPreviewImage(withSize size: CGSize, completion: @escaping (UIImage?) -> Void) {
         
-        guard let coverImageUrl = coverImageUrl else {
+        guard let coverImageUrl = product.pigCoverUrl else {
             completion(nil)
             return
         }
         
-        if let summary = summary {
-            Pig.fetchPreviewImage(withBaseUrlString: summary.pigBaseUrl, coverImageUrlString: coverImageUrl, size: size, completion: completion)
+        if let summary = summary, let url = Pig.previewImageUrl(withBaseUrlString: summary.pigBaseUrl, coverUrlString: coverImageUrl, size: size) {
+            Pig.fetchPreviewImage(with: url, completion: completion)
         } else {
             completion(nil)
         }
@@ -170,7 +167,7 @@ extension OrderSummaryManager {
         }
         
         isUploadingCoverImage = true
-        Pig.uploadImage(coverImage) { [weak welf = self] (url, error) in
+        Pig.uploadImage(coverImage) { [weak welf = self] url, error in
             welf?.isUploadingCoverImage = false
             
             if error != nil {
@@ -178,7 +175,7 @@ extension OrderSummaryManager {
                 return
             }
 
-            welf?.coverImageUrl = url
+            welf?.product.pigCoverUrl = url
             if welf?.isPreviewImageUrlReady() ?? false {
                 welf?.delegate?.orderSummaryManagerDidSetPreviewImageUrl()
             }
@@ -186,6 +183,6 @@ extension OrderSummaryManager {
     }
     
     private func isPreviewImageUrlReady() -> Bool {
-        return coverImageUrl != nil && summary != nil
+        return product.pigCoverUrl != nil && summary != nil
     }
 }

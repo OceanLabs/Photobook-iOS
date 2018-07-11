@@ -12,12 +12,12 @@ class LineItem: Codable {
     
     let id: String
     let name: String
-    let cost: Price
+    let price: Price
     
-    init(id: String, name: String, cost: Price) {
+    init(id: String, name: String, price: Price) {
         self.id = id
         self.name = name
-        self.cost = cost
+        self.price = price
     }
     
     static func parseDetails(dictionary: [String: Any], localeCurrencyCode: String? = Locale.current.currencyCode,  formattingLocale: Locale = Locale.current) -> LineItem? {
@@ -28,6 +28,6 @@ class LineItem: Codable {
             let cost = Price.parse(costDictionary, localeCurrencyCode: localeCurrencyCode, formattingLocale: formattingLocale)
             else { return nil }
         
-        return LineItem(id: id, name: name, cost: cost)
+        return LineItem(id: id, name: name, price: cost)
     }
 }

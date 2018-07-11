@@ -77,11 +77,11 @@ class ProductLayoutAsset: Codable {
         containerSize = try values.decodeIfPresent(CGSize.self, forKey: .containerSize)
 
         if let data = try values.decodeIfPresent(Data.self, forKey: .asset) {
-            if let loadedAsset = try? PropertyListDecoder().decode(PhotosAsset.self, from: data) {
-                asset = loadedAsset
-            } else if let loadedAsset = try? PropertyListDecoder().decode(URLAsset.self, from: data) {
+            if let loadedAsset = try? PropertyListDecoder().decode(URLAsset.self, from: data) {
                 asset = loadedAsset
             } else if let loadedAsset = try? PropertyListDecoder().decode(ImageAsset.self, from: data) {
+                asset = loadedAsset
+            } else if let loadedAsset = try? PropertyListDecoder().decode(PhotosAsset.self, from: data) { // Keep the PhotosAsset case last because otherwise it triggers NSPhotoLibraryUsageDescription crash if not present, which might not be needed
                 asset = loadedAsset
             } else if let loadedAsset = try? PropertyListDecoder().decode(TestPhotosAsset.self, from: data) {
                 asset = loadedAsset

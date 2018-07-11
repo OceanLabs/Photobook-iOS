@@ -36,7 +36,7 @@ enum ProductColor: String, Codable {
 class PhotobookProduct: Codable {
     
     private enum CodingKeys: String, CodingKey {
-        case template, productLayouts, coverColor, pageColor, spineText, spineFontType, productUpsellOptions, itemCount, upsoldTemplate, upsoldOptions
+        case template, productLayouts, coverColor, pageColor, spineText, spineFontType, productUpsellOptions, itemCount, upsoldTemplate, upsoldOptions, availableShippingMethods, selectedShippingMethod, identifier, pigBaseUrl, pigCoverUrl, coverSnapshot
     }
     
     private let bleed: CGFloat = 8.5
@@ -54,6 +54,8 @@ class PhotobookProduct: Codable {
     var itemCount: Int = 1
     var insidePdfUrl: String?
     var coverPdfUrl: String?
+    private(set) var identifier = UUID().uuidString
+    var selectedShippingMethod: ShippingMethod?
     
     // Preview image handling
     var pigBaseUrl: String?
@@ -128,6 +130,13 @@ class PhotobookProduct: Codable {
         try container.encode(productUpsellOptions, forKey: .productUpsellOptions)
         try container.encode(itemCount, forKey: .itemCount)
         try container.encode(upsoldTemplate, forKey: .upsoldTemplate)
+        try container.encode(identifier, forKey: .identifier)
+        try container.encode(selectedShippingMethod, forKey: .selectedShippingMethod)
+        try container.encode(pigBaseUrl, forKey: .pigBaseUrl)
+        try container.encode(pigCoverUrl, forKey: .pigCoverUrl)
+        if let coverSnapshot = coverSnapshot {
+            try container.encode(UIImagePNGRepresentation(coverSnapshot), forKey: .coverSnapshot)
+        }
         if let upsoldOptions = upsoldOptions,
             let upsoldOptionData = try? JSONSerialization.data(withJSONObject: upsoldOptions, options: []) {
             try container.encode(upsoldOptionData, forKey: .upsoldOptions)
@@ -145,6 +154,13 @@ class PhotobookProduct: Codable {
         productUpsellOptions = try values.decodeIfPresent([UpsellOption].self, forKey: .productUpsellOptions)
         itemCount = try values.decode(Int.self, forKey: .itemCount)
         upsoldTemplate = try values.decodeIfPresent(PhotobookTemplate.self, forKey: .upsoldTemplate)
+        identifier = try values.decode(String.self, forKey: .identifier)
+        selectedShippingMethod = try values.decodeIfPresent(ShippingMethod.self, forKey: .selectedShippingMethod)
+        pigBaseUrl = try values.decodeIfPresent(String.self, forKey: .pigBaseUrl)
+        pigCoverUrl = try values.decodeIfPresent(String.self, forKey: .pigCoverUrl)
+        if let coverSnapshotData = try values.decodeIfPresent(Data.self, forKey: .coverSnapshot) {
+            coverSnapshot = UIImage(data: coverSnapshotData)
+        }
         if let upsoldOptionsData = try values.decodeIfPresent(Data.self, forKey: .upsoldOptions) {
             upsoldOptions = (try? JSONSerialization.jsonObject(with: upsoldOptionsData, options: [])) as? [String: Any]
         }
@@ -157,6 +173,7 @@ class PhotobookProduct: Codable {
         }
         
         self.template = template
+        self.selectedShippingMethod = template.availableShippingMethods?.first
         self.coverLayouts = coverLayouts
         self.layouts = layouts
         
@@ -583,6 +600,26 @@ class PhotobookProduct: Codable {
         return photobook
     }
     
+    func orderParameters() -> [String: Any]? {
+        guard let options = upsoldOptions,
+            let insideUrl = insidePdfUrl,
+            let coverUrl = coverPdfUrl,
+            let shippingMethod = selectedShippingMethod
+            else {
+                return nil
+        }
+        
+        return [
+            "template_id" : template.templateId,
+            "multiples" : itemCount,
+            "shipping_class" : shippingMethod.id,
+            "options" : options,
+            "page_count" : numberOfPages,
+            "inside_pdf" : insideUrl,
+            "cover_pdf" : coverUrl
+        ]
+    }
+    
     func assetsToUpload() -> [Asset] {
         var assets = [Asset]()
         for layout in productLayouts {
@@ -591,6 +628,30 @@ class PhotobookProduct: Codable {
         }
         return assets
     }
+    
+    func previewImage(size: CGSize, completionHandler: @escaping (UIImage?) -> Void) {
+        guard let baseUrl = pigBaseUrl else { return }
+        
+        let fetchClosure = { (_ coverUrl: String) in
+            guard let url = Pig.previewImageUrl(withBaseUrlString: baseUrl, coverUrlString: coverUrl, size: size) else {
+                return
+            }
+            Pig.fetchPreviewImage(with: url, completion: { image in
+                completionHandler(image)
+            })
+        }
+        
+        if let coverUrl = pigCoverUrl { // Fetch the preview image if the cover URL is available
+            fetchClosure(coverUrl)
+        } else if let coverSnapshot = coverSnapshot { // Upload cover otherwise
+            Pig.uploadImage(coverSnapshot) { [weak welf = self] coverUrl, _ in
+                guard let coverUrl = coverUrl else { return }
+                welf?.pigCoverUrl = coverUrl
+                fetchClosure(coverUrl)
+            }
+        }
+    }
+    
 }
 
 extension PhotobookProduct: Hashable, Equatable {
@@ -608,6 +669,7 @@ extension PhotobookProduct: Hashable, Equatable {
                 stringHash += "po:\(upsoldOptions),"
             }
             stringHash += "pc:\(itemCount),"
+            stringHash += "pg:\(numberOfPages),"
             
             return stringHash.hashValue
         }

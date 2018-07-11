@@ -319,7 +319,7 @@ extension StoriesManager: PHPhotoLibraryChangeObserver {
                 if asset.wasRemoved(in: changeInstance) {
                     assetsRemoved.append(asset)
                     
-                    if let index = story.assets.index(where: { $0.identifier == asset.identifier}) {
+                    if let index = story.assets.index(where: { $0 == asset }) {
                         indexesRemoved.append(index)
                     }
                 }

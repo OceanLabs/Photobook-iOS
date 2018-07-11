@@ -40,25 +40,33 @@ class Pig {
             completion(url, nil)
         }
     }
+    
+    
+    /// Generates the PIG URL of the preview image
+    ///
+    /// - Parameters:
+    ///   - baseUrlString: The URL of the background image to use
+    ///   - coverUrlString: The cover image or subject
+    ///   - size: The required size for the resulting image
+    /// - Returns: The URL of the preview image
+    static func previewImageUrl(withBaseUrlString baseUrlString: String, coverUrlString: String, size: CGSize) -> URL? {
+        let width = Int(size.width)
+        let height = Int(size.height)
+        
+        let urlString = baseUrlString + "&image=" + coverUrlString + "&size=\(width)x\(height)" + "&fill_mode=match"
+        guard let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) else {
+            return nil
+        }
+        
+        return url
+    }
 
     /// Fetches a composite image from PIG
     ///
     /// - Parameters:
-    ///   - baseUrlString: The URL of the background image to use
-    ///   - coverImageUrlString: The cover image or subject
-    ///   - size: The required size for the resulting image
+    ///   - url: The URL of the preview image
     ///   - completion: Completion block returning an image
-    static func fetchPreviewImage(withBaseUrlString baseUrlString: String, coverImageUrlString: String, size: CGSize, completion: @escaping (UIImage?) -> Void) {
-
-        let width = Int(size.width)
-        let height = Int(size.height)
-        
-        let urlString = baseUrlString + "&image=" + coverImageUrlString + "&size=\(width)x\(height)" + "&fill_mode=match"
-        guard let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) else {
-            completion(nil)
-            return
-        }
-
+    static func fetchPreviewImage(with url: URL, completion: @escaping (UIImage?) -> Void) {
         apiClient.downloadImage(url) { (image, _) in
             completion(image)
         }
