@@ -409,7 +409,7 @@ class OrderManager {
         let reference = dictionary["task_reference"] as? String
         let url = dictionary["full"] as? String
         guard reference != nil, url != nil else {
-            let details = reference == nil ? "ImageUploadFinished: Image upload task reference missing" : "Upload Finished: Image upload full URL missing"
+            let details = "ImageUploadFinished: Image upload \(reference == nil ? "task reference" : "full url") missing"
             failedImageUpload(with: APIClientError.parsing(details: details))
             return
         }
