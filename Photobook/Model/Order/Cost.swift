@@ -12,15 +12,15 @@ class Cost: Codable {
     
     var orderHash: Int
     let lineItems: [LineItem]
-    let totalShippingCost: Price
+    let totalShippingPrice: Price
     let total: Price
     let promoDiscount: Price?
     let promoCodeInvalidReason: String?
     
-    init(hash: Int, lineItems: [LineItem], totalShippingCost: Price, total: Price, promoDiscount: Price?, promoCodeInvalidReason: String?){
+    init(hash: Int, lineItems: [LineItem], totalShippingPrice: Price, total: Price, promoDiscount: Price?, promoCodeInvalidReason: String?){
         self.orderHash = hash
         self.lineItems = lineItems
-        self.totalShippingCost = totalShippingCost
+        self.totalShippingPrice = totalShippingPrice
         self.total = total
         self.promoDiscount = promoDiscount
         self.promoCodeInvalidReason = promoCodeInvalidReason
@@ -50,6 +50,6 @@ class Cost: Codable {
             lineItems.append(lineItem)
         }
         
-        return Cost(hash: 0, lineItems: lineItems, totalShippingCost: totalShippingCost, total: total, promoDiscount: promoDiscount, promoCodeInvalidReason: promoInvalidMessage)
+        return Cost(hash: 0, lineItems: lineItems, totalShippingPrice: totalShippingCost, total: total, promoDiscount: promoDiscount, promoCodeInvalidReason: promoInvalidMessage)
     }
 }

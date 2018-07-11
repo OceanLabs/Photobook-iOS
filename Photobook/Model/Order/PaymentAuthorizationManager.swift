@@ -288,13 +288,13 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
     private func summaryItemsForApplePay(cost: Cost?) -> [PKPaymentSummaryItem] {
         guard
             let lineItems = cost?.lineItems, lineItems.count > 0,
-            let shippingCost = cost?.totalShippingCost,
+            let shippingCost = cost?.totalShippingPrice,
             let totalCost = cost?.total.value as NSDecimalNumber?
         else {
             return [PKPaymentSummaryItem]()
         }
         
-        var summaryItems = lineItems.map { return PKPaymentSummaryItem(label: $0.name, amount: $0.cost.value as NSDecimalNumber) }
+        var summaryItems = lineItems.map { return PKPaymentSummaryItem(label: $0.name, amount: $0.price.value as NSDecimalNumber) }
         summaryItems.append(PKPaymentSummaryItem(label: CommonLocalizedStrings.shipping, amount: shippingCost.value as NSDecimalNumber))
         summaryItems.append(PKPaymentSummaryItem(label: PaymentAuthorizationManager.applePayPayTo, amount: totalCost))
         

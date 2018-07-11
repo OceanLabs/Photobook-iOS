@@ -277,7 +277,7 @@ class CheckoutViewController: UIViewController {
         let lineItem = lineItems[index]
         let product = order.products[index]
         cell.productDescriptionLabel.text = lineItem.name
-        cell.priceLabel.text = lineItem.cost.formatted
+        cell.priceLabel.text = lineItem.price.formatted
         cell.itemAmountButton.setTitle("\(product.itemCount)", for: .normal)
         cell.itemAmountButton.accessibilityValue = cell.itemAmountButton.title(for: .normal)
         cell.productIdentifier = product.identifier
@@ -344,7 +344,7 @@ class CheckoutViewController: UIViewController {
         // Shipping
         shippingMethodLabel.text = ""
         if let cost = order.cost {
-            shippingMethodLabel.text = cost.totalShippingCost.formatted
+            shippingMethodLabel.text = cost.totalShippingPrice.formatted
         }
         
         // Address
