@@ -193,7 +193,7 @@ protocol PickerAnalytics {
     
     func trackError(_ errorName: ErrorName, _ properties: [String: Any]? = nil) {
         #if DEBUG
-            print("Analytics: Error \"\(errorName.rawValue)\" happened")
+            print("Analytics: Error \"\(errorName.rawValue)\" happened. Properties: \(properties ?? [:])")
         #endif
         
         let properties = addEnvironment(to: properties)
