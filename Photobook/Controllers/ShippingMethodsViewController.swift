@@ -53,25 +53,29 @@ class ShippingMethodsViewController: UIViewController {
 
 extension ShippingMethodsViewController: UITableViewDataSource {
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return order.products.count
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return OrderManager.shared.basketOrder.availableShippingMethods?.first?.count ?? 0 //TODO: currently only supports one section/product
+        return order.products[section].template.availableShippingMethods?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ShippingMethodTableViewCell.reuseIdentifier, for: indexPath) as! ShippingMethodTableViewCell
         
-        let shippingMethod = OrderManager.shared.basketOrder.availableShippingMethods![indexPath.section][indexPath.row]
+        let shippingMethod = order.products[indexPath.section].template.availableShippingMethods![indexPath.row]
         
         cell.method = shippingMethod.name
         cell.deliveryTime = shippingMethod.deliveryTime
         cell.cost = shippingMethod.price.formatted
         
         var selected = false
-        if let selectedMethods = OrderManager.shared.basketOrder.selectedShippingMethods, selectedMethods.count > indexPath.section {
-            selected = selectedMethods[indexPath.section].id == shippingMethod.id
+        if let selectedMethod = order.products[indexPath.section].selectedShippingMethod {
+            selected = selectedMethod.id == shippingMethod.id
         }
         cell.ticked = selected
-        cell.separatorLeadingConstraint.constant = indexPath.row == OrderManager.shared.basketOrder.availableShippingMethods!.count - 1 ? 0.0 : Constants.leadingSeparatorInset
+        cell.separatorLeadingConstraint.constant = indexPath.row == order.products[indexPath.section].template.availableShippingMethods!.count - 1 ? 0.0 : Constants.leadingSeparatorInset
         cell.topSeparator.isHidden = indexPath.row != 0
         cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + "\(shippingMethod.name). \(shippingMethod.deliveryTime). \(shippingMethod.price.formatted)"
         cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
@@ -81,7 +85,7 @@ extension ShippingMethodsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let cell = tableView.dequeueReusableCell(withIdentifier: ShippingMethodHeaderTableViewCell.reuseIdentifier) as? ShippingMethodHeaderTableViewCell
-        cell?.label.text = OrderManager.shared.basketOrder.cachedCost?.lineItems?[section].name
+        cell?.label.text = order.cost?.lineItems[section].name
         
         return cell
     }
@@ -91,7 +95,8 @@ extension ShippingMethodsViewController: UITableViewDataSource {
 extension ShippingMethodsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        order.setShippingMethod(indexPath.row, forSection: indexPath.section)
+        let product = order.products[indexPath.section]
+        product.selectedShippingMethod = product.template.availableShippingMethods?[indexPath.item]
         
         tableView.reloadData()
     }

@@ -36,9 +36,9 @@ class PaymentAuthorizationManagerTests: XCTestCase {
     }
     
     func fakeCost() -> Cost {
-        let lineItem = LineItem(id: "hdbook_127x127", name: "item", cost: Price(currencyCode: "GBP", value: 20)!)
+        let lineItem = LineItem(id: "hdbook_127x127", name: "item", price: Price(currencyCode: "GBP", value: 20)!)
         
-        return Cost(hash: 1, lineItems: [lineItem], totalShippingCost: Price(currencyCode: "GBP", value: 7)!, total: Price(currencyCode: "GBP", value: 27)!, promoDiscount: nil, promoCodeInvalidReason: nil)
+        return Cost(hash: 1, lineItems: [lineItem], totalShippingPrice: Price(currencyCode: "GBP", value: 7)!, total: Price(currencyCode: "GBP", value: 27)!, promoDiscount: nil, promoCodeInvalidReason: nil)
     }
     
     override func setUp() {

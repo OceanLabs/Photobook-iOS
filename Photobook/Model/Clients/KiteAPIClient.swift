@@ -126,19 +126,20 @@ class KiteAPIClient {
         }
     }
 
-    /// Loads shipping classes for a given order. This is different to shipping methods which contain the cost. ShippingClass is for displaying and setting shipping method id's
-    func getShippingMethods(order: Order, completionHandler: @escaping (_ shippingClasses: [[ShippingMethod]]?, _ error: Error?) -> Void) {
+    /// Loads shipping classes for a given array of template IDs. This is different to shipping methods which contain the cost. ShippingClass is for displaying and setting shipping method IDs
+    func getShippingMethods(for templateIds: [String], completionHandler: @escaping (_ shippingClasses: [String: [ShippingMethod]]?, _ error: Error?) -> Void) {
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
         }
         
+        let uniqueTemplatesIds = Set(templateIds)
         var templateIdString = ""
-        for product in order.products {
-            if product != order.products.first { templateIdString += "," }
-            templateIdString += product.template.templateId
+        for templateId in uniqueTemplatesIds {
+            if templateId != uniqueTemplatesIds.first { templateIdString += "," }
+            templateIdString += templateId
         }
         
-        let endpoint = KiteAPIClient.apiVersion + Endpoints.template + "/?template_id__in=" + templateIdString
+        let endpoint = KiteAPIClient.apiVersion + Endpoints.template + "/?template_id__in=\(templateIdString)&limit=\(uniqueTemplatesIds.count)"
         APIClient.shared.get(context: .kite, endpoint: endpoint, headers: kiteHeaders) { (response, error) in
             
             if let error = error {
@@ -148,13 +149,13 @@ class KiteAPIClient {
             
             //get objects for each product
             guard let jsonDict = response as? [String: Any],
-                let objects = jsonDict["objects"] as? [[String: Any]],
-                objects.count == order.products.count else {
+            let objects = jsonDict["objects"] as? [[String: Any]]
+            else {
                 completionHandler(nil, APIClientError.parsing)
                 return
             }
             
-            var objectShippingClasses = [[ShippingMethod]]()
+            var objectShippingClasses = [String: [ShippingMethod]]()
             
             for object in objects {
                 var shippingClasses = [ShippingMethod]()
@@ -164,7 +165,9 @@ class KiteAPIClient {
                     let region = regionMappings[country.codeAlpha3] as? String,
                     let shippingRegions = object["shipping_regions"] as? [String: Any],
                     let relevantShippingRegion = shippingRegions[region] as? [String: Any],
-                    let shippingClassDictionaries = relevantShippingRegion["shipping_classes"] as? [[String: Any]] else {
+                    let shippingClassDictionaries = relevantShippingRegion["shipping_classes"] as? [[String: Any]],
+                    let templateId = object["template_id"] as? String
+                    else {
                         completionHandler(nil, APIClientError.parsing)
                         return
                 }
@@ -177,12 +180,12 @@ class KiteAPIClient {
                     shippingClasses.append(shippingClass)
                 }
                 
-                if shippingClasses.count == 0 { //inconsistent
+                if shippingClasses.count == 0 { // Inconsistent
                     completionHandler(nil, APIClientError.parsing)
                     return
                 }
                 
-                objectShippingClasses.append(shippingClasses)
+                objectShippingClasses[templateId] = shippingClasses
             }
             
             completionHandler(objectShippingClasses, nil)
@@ -195,7 +198,7 @@ class KiteAPIClient {
         }
         
         var parameters = [String: Any]()
-        parameters["currency"] = order.currencyCode
+        parameters["currency"] = Locale.current.currencyCode ?? "GBP" // Fall back to GBP if locale unavailable
         
         let countryCode = order.deliveryDetails?.address?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
         if let promoCode = order.promoCode {
@@ -203,10 +206,10 @@ class KiteAPIClient {
         }
         
         var lineItems = [[String: Any]]()
-        for (index, product) in order.products.enumerated() {
+        for product in order.products {
             let variantId = product.upsoldTemplate?.templateId ?? product.template.templateId
             guard let options = product.upsoldOptions,
-                let shippingClass = order.selectedShippingMethods?[index].id else {
+                let shippingClass = product.selectedShippingMethod?.id else {
                     completionHandler(nil, nil)
                     return
             }

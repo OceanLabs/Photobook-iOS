@@ -55,6 +55,7 @@ class OrderSummaryViewController: UIViewController {
     @IBOutlet weak var basketDisclaimerLabel: UILabel!
     
     var completionClosure: ((_ photobook: PhotobookProduct) -> Void)?
+    var emptyScreenDismissGroup: DispatchGroup? = DispatchGroup()
     
     private var timer: Timer?
     
@@ -87,11 +88,19 @@ class OrderSummaryViewController: UIViewController {
         orderSummaryManager.product = ProductManager.shared.currentProduct
         orderSummaryManager.delegate = self
         
+        emptyScreenDismissGroup?.enter()
         orderSummaryManager.getSummary()
         
+        emptyScreenDismissGroup?.enter()
         takeCoverSnapshot { [weak welf = self] (image) in
             welf?.orderSummaryManager.coverPageSnapshotImage = image
+            welf?.emptyScreenDismissGroup?.leave()
         }
+        
+        emptyScreenDismissGroup?.notify(queue: DispatchQueue.main, execute: { [weak welf = self] in
+            welf?.emptyScreenViewController.hide(animated: true)
+            welf?.emptyScreenDismissGroup = nil
+        })
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -113,7 +122,6 @@ class OrderSummaryViewController: UIViewController {
     
     @IBAction func tappedCallToAction(_ sender: Any) {
         product.pigBaseUrl = orderSummaryManager.summary?.pigBaseUrl
-        product.pigCoverUrl = orderSummaryManager.coverImageUrl
         completionClosure?(product)
     }
     
@@ -313,7 +321,7 @@ extension OrderSummaryViewController: OrderSummaryManagerDelegate {
         
         if orderSummaryManager.summary != nil {
             progressOverlayViewController.hide(animated: true)
-            emptyScreenViewController.hide(animated: true)
+            emptyScreenDismissGroup?.leave()
             
             let numberOfOptions = orderSummaryManager.upsellOptions?.count ?? 0
             let sectionsToUpdate = tableView.numberOfRows(inSection: 2) == numberOfOptions ? 0...1 : 0...2

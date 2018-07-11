@@ -66,9 +66,15 @@ class OrderManagerTests: XCTestCase {
         XCTAssertEqual(unarchivedOrder.products.first!.template.pageAspectRatio, product.template.pageAspectRatio)
         XCTAssertEqual(unarchivedOrder.products.first!.template.layouts, product.template.layouts)
         XCTAssertEqual(unarchivedOrder.products.first!.template.coverLayouts, product.template.coverLayouts)
+        XCTAssertEqualOptional(unarchivedOrder.products.first!.template.availableShippingMethods?.map({$0.id}), product.template.availableShippingMethods?.map({$0.id}))
 
         XCTAssertEqual(unarchivedOrder.products.first!.coverColor, product.coverColor)
         XCTAssertEqual(unarchivedOrder.products.first!.pageColor, product.pageColor)
+        XCTAssertEqual(unarchivedOrder.products.first!.identifier, product.identifier)
+        XCTAssertEqual(unarchivedOrder.products.first!.pigBaseUrl, product.pigBaseUrl)
+        XCTAssertEqual(unarchivedOrder.products.first!.pigCoverUrl, product.pigCoverUrl)
+        XCTAssertEqual(unarchivedOrder.products.first!.coverSnapshot, product.coverSnapshot)
+        XCTAssertEqualOptional(unarchivedOrder.products.first!.selectedShippingMethod?.id, product.selectedShippingMethod?.id)
 
         XCTAssertEqual(unarchivedOrder.products.first!.productLayouts.first!.asset!.identifier, photosAsset.identifier)
         XCTAssertEqual(unarchivedOrder.products.first!.productLayouts.first!.asset!.size, photosAsset.size)

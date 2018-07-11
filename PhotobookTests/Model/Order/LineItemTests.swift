@@ -20,13 +20,13 @@ class LineItemTests: XCTestCase {
     func testInit() {
         let id = "item_no2"
         let name = "Item number 2"
-        let cost = Price(currencyCode: "GBP", value: 21)
+        let price = Price(currencyCode: "GBP", value: 21)
         
-        let lineItem = LineItem(id: id, name: name, cost: cost!)
+        let lineItem = LineItem(id: id, name: name, price: price!)
         
         XCTAssertEqual(lineItem.id, id)
         XCTAssertEqual(lineItem.name, name)
-        XCTAssertEqual(lineItem.cost, cost)
+        XCTAssertEqual(lineItem.price, price)
     }
     
     func testParseDetails_shoudParseAValidDictionary() {
@@ -37,7 +37,7 @@ class LineItemTests: XCTestCase {
         
         XCTAssertEqualOptional(lineItem?.id, "circus_clown1")
         XCTAssertEqualOptional(lineItem?.name, "Clown Costume")
-        XCTAssertEqualOptional(lineItem?.cost, expectedCost)
+        XCTAssertEqualOptional(lineItem?.price, expectedCost)
     }
     
     func testParseDetails_shouldFailWithoutAnId() {

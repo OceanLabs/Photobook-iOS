@@ -148,14 +148,6 @@ class OrderManager {
         saveOrder(basketOrder, file: Storage.basketOrderBackupFile)
     }
     
-    func applyUpsellsToOrder(_ order: Order) {
-        for product in order.products {
-            guard let upsoldTemplate = product.upsoldTemplate,
-                  product.template != upsoldTemplate else { continue }
-            ProductManager.shared.setProduct(product, with: upsoldTemplate)
-        }
-    }
-    
     private func saveOrder(_ order: Order, file: String) {
         guard let data = try? PropertyListEncoder().encode(order) else {
             fatalError("OrderManager: encoding of order failed")
@@ -268,36 +260,38 @@ class OrderManager {
     }
     
     func finishOrder() {
-
-        // Multiple uploads are not supported. Pick first photobook.
-        guard let photobook = processingOrder?.products.first else {
-            orderProcessingDelegate?.orderDidComplete(error: .unknown)
-            return
-        }
-
+        
         orderProcessingDelegate?.orderWillFinish()
         
-        // 1 - Create PDF
-        apiManager.createPdf(withPhotobook: photobook) { [weak welf = self] (urls, error) in
-            
-            if let swelf = welf, swelf.isCancelling {
-                swelf.processingOrder = nil
-                swelf.cancelCompletionBlock?()
-                swelf.cancelCompletionBlock = nil
-                return
+        let pdfGenerationDispatchGroup = DispatchGroup()
+        
+        for product in processingOrder?.products ?? [] {
+            // Create PDF
+            pdfGenerationDispatchGroup.enter()
+            apiManager.createPdf(withPhotobook: product) { [weak welf = self] (urls, error) in
+                
+                if let swelf = welf, swelf.isCancelling {
+                    swelf.processingOrder = nil
+                    swelf.cancelCompletionBlock?()
+                    swelf.cancelCompletionBlock = nil
+                    return
+                }
+                
+                guard let urls = urls else {
+                    // Failure - PDF
+                    Analytics.shared.trackError(.pdfCreation)
+                    welf?.orderProcessingDelegate?.orderDidComplete(error: .pdf)
+                    return
+                }
+                
+                product.setPdfUrls(urls)
+                pdfGenerationDispatchGroup.leave()
             }
-            
-            guard let urls = urls else {
-                // Failure - PDF
-                Analytics.shared.trackError(.pdfCreation)
-                welf?.orderProcessingDelegate?.orderDidComplete(error: .pdf)
-                return
-            }
-            
-            photobook.setPdfUrls(urls)
-            
-            // 2 - Submit order
-            welf?.submitOrder(completionHandler: { [weak welf = self] (errorMessage) in
+        }
+        
+        pdfGenerationDispatchGroup.notify(queue: DispatchQueue.main, execute: { [weak welf = self] in
+            // Submit order
+            welf?.submitOrder(completionHandler: { (errorMessage) in
                 
                 if let swelf = welf, swelf.isCancelling {
                     swelf.processingOrder = nil
@@ -312,7 +306,7 @@ class OrderManager {
                     return
                 }
                 
-                // 3 - Check for order success
+                // Check for order success
                 welf?.pollOrderStatus { [weak welf = self] (status, errorMessage) in
                     
                     if let swelf = welf, swelf.isCancelling {
@@ -339,7 +333,7 @@ class OrderManager {
                     welf?.orderProcessingDelegate?.orderDidComplete()
                 }
             })
-        }
+        })
     }
     
     //MARK: - Upload

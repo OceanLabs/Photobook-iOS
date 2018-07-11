@@ -10,6 +10,8 @@
 		2E02B211208F26B80083DDAB /* XCUIElementExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E02B210208F26B80083DDAB /* XCUIElementExtensions.swift */; };
 		2E02B213208F4D830083DDAB /* Automation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E02B212208F4D830083DDAB /* Automation.swift */; };
 		2E02B215208F5D2F0083DDAB /* XCTestCaseExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E02B214208F5D2F0083DDAB /* XCTestCaseExtensions.swift */; };
+		2E04592C20EE5DE60024CF96 /* BasketProductTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E04592B20EE5DE60024CF96 /* BasketProductTableViewCell.swift */; };
+		2E04592D20EE5DE60024CF96 /* BasketProductTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E04592B20EE5DE60024CF96 /* BasketProductTableViewCell.swift */; };
 		2E086D112052924E00CF8096 /* AccountClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E086D102052924E00CF8096 /* AccountClient.swift */; };
 		2E086D1520529C8A00CF8096 /* InstagramClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E086D1420529C8A00CF8096 /* InstagramClient.swift */; };
 		2E086D182052A13A00CF8096 /* FacebookClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E086D172052A13A00CF8096 /* FacebookClient.swift */; };
@@ -482,6 +484,7 @@
 		2E02B210208F26B80083DDAB /* XCUIElementExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCUIElementExtensions.swift; sourceTree = "<group>"; };
 		2E02B212208F4D830083DDAB /* Automation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Automation.swift; sourceTree = "<group>"; };
 		2E02B214208F5D2F0083DDAB /* XCTestCaseExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestCaseExtensions.swift; sourceTree = "<group>"; };
+		2E04592B20EE5DE60024CF96 /* BasketProductTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketProductTableViewCell.swift; sourceTree = "<group>"; };
 		2E086D102052924E00CF8096 /* AccountClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountClient.swift; sourceTree = "<group>"; };
 		2E086D1420529C8A00CF8096 /* InstagramClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramClient.swift; sourceTree = "<group>"; };
 		2E086D172052A13A00CF8096 /* FacebookClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookClient.swift; sourceTree = "<group>"; };
@@ -1155,6 +1158,7 @@
 				2E5F825220162855002F3607 /* DeliveryAddressTableViewCell.swift */,
 				2E2563922018C3950096DFC5 /* AddressFieldTableViewCell.swift */,
 				2E3A86EB20C0145600F1E6E2 /* CountryTableViewCell.swift */,
+				2E04592B20EE5DE60024CF96 /* BasketProductTableViewCell.swift */,
 			);
 			path = Payment;
 			sourceTree = "<group>";
@@ -2049,6 +2053,7 @@
 				2E086D112052924E00CF8096 /* AccountClient.swift in Sources */,
 				2E74458D2057D5D000766A78 /* CGSizeExtensions.swift in Sources */,
 				6FA1893B2004B9C700E6D0AB /* ModalAlbumsCollectionViewController.swift in Sources */,
+				2E04592C20EE5DE60024CF96 /* BasketProductTableViewCell.swift in Sources */,
 				6F53E094204FFAF200B73AB8 /* MessageBarViewController.swift in Sources */,
 				2E1AED562074F69E00A31B79 /* Order.swift in Sources */,
 				6F5C5D2E20B4511A008073A6 /* LineItem.swift in Sources */,
@@ -2174,6 +2179,7 @@
 				2ED14BB02063AA4000ED2E2C /* AssetPlacementViewController.swift in Sources */,
 				2E3A86EA20C0118800F1E6E2 /* AddPaymentMethodTableViewCell.swift in Sources */,
 				2E1F246B208A28F000004F76 /* PhotobookNavigationController.swift in Sources */,
+				2E04592D20EE5DE60024CF96 /* BasketProductTableViewCell.swift in Sources */,
 				2ED14C222063AA4000ED2E2C /* UIScreenExtensions.swift in Sources */,
 				2ED14BFE2063AA4000ED2E2C /* AlbumManager.swift in Sources */,
 				2ED14C1F2063AA4000ED2E2C /* UIImageExtensions.swift in Sources */,
