@@ -269,7 +269,7 @@ class CheckoutViewController: UIViewController {
     }
     
     private func updateProductCell(_ cell: BasketProductTableViewCell, for index: Int) {
-        guard let lineItems = order.validCost?.lineItems,
+        guard let lineItems = order.cost?.lineItems,
             index < lineItems.count
             else {
                 return
@@ -301,7 +301,7 @@ class CheckoutViewController: UIViewController {
         }
         
         // Promo code
-        if let promoDiscount = order.validCost?.promoDiscount, promoDiscount.value != 0 {
+        if let promoDiscount = order.cost?.promoDiscount, promoDiscount.value != 0 {
             promoCodeTextField.text = promoDiscount.formatted
             previousPromoText = promoDiscount.formatted
             promoCodeClearButton.isHidden = false
@@ -343,8 +343,8 @@ class CheckoutViewController: UIViewController {
         
         // Shipping
         shippingMethodLabel.text = ""
-        if let validCost = order.validCost {
-            shippingMethodLabel.text = validCost.totalShippingCost.formatted
+        if let cost = order.cost {
+            shippingMethodLabel.text = cost.totalShippingCost.formatted
         }
         
         // Address
@@ -389,7 +389,7 @@ class CheckoutViewController: UIViewController {
                                               value: "Pay",
                                               comment: "Text on pay button. This is followed by the amount to pay")
         
-        if let cost = order.validCost {
+        if let cost = order.cost {
             payButtonText = payButtonText + " \(cost.total.formatted)"
         }
         payButton.setTitle(payButtonText, for: .normal)
@@ -469,7 +469,7 @@ class CheckoutViewController: UIViewController {
     
     private func checkPromoCode() -> Bool {
         //promo code
-        if let invalidReason = order.validCost?.promoCodeInvalidReason {
+        if let invalidReason = order.cost?.promoCodeInvalidReason {
             promoCodeTextField.attributedPlaceholder = NSAttributedString(string: invalidReason, attributes: [NSAttributedStringKey.foregroundColor: Constants.detailsLabelColorRequired])
             promoCodeTextField.text = nil
             promoCodeTextField.placeholder = invalidReason
@@ -574,7 +574,7 @@ class CheckoutViewController: UIViewController {
     @IBAction func payButtonTapped(_ sender: UIButton) {
         guard checkRequiredInformation() else { return }
         
-        guard let cost = order.validCost else {
+        guard let cost = order.cost else {
             progressOverlayViewController.show(message: Constants.loadingPaymentText)
             order.updateCost { [weak welf = self] (error: Error?) in
                 guard error == nil else {

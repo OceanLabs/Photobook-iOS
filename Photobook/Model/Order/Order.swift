@@ -31,14 +31,14 @@ class Order: Codable {
     #endif
     
     private var cachedCost: Cost?
-    var validCost: Cost? {
+    var cost: Cost? {
         return hasValidCachedCost ? cachedCost : nil
     }
     
     var orderIsFree: Bool {
         var orderIsFree = false
         
-        if let cost = validCost {
+        if let cost = cost {
             orderIsFree = cost.total.value == 0.0
         }
         
@@ -129,7 +129,7 @@ class Order: Codable {
     
     func orderParameters() -> [String: Any]? {
         
-        guard let finalTotalCost = validCost?.total else {
+        guard let finalTotalCost = cost?.total else {
                 return nil
         }
         

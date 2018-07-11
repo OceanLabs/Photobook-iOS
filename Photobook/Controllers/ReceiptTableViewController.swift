@@ -34,7 +34,7 @@ class ReceiptTableViewController: UITableViewController {
     var order: Order!
     
     private var cost: Cost? {
-        return order.validCost
+        return order.cost
     }
     
     private var state: State = .uploading {

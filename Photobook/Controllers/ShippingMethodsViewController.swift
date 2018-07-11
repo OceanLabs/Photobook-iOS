@@ -85,7 +85,7 @@ extension ShippingMethodsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let cell = tableView.dequeueReusableCell(withIdentifier: ShippingMethodHeaderTableViewCell.reuseIdentifier) as? ShippingMethodHeaderTableViewCell
-        cell?.label.text = order.validCost?.lineItems[section].name
+        cell?.label.text = order.cost?.lineItems[section].name
         
         return cell
     }

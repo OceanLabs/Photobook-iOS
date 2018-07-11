@@ -268,7 +268,7 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
         
         basketOrder.updateCost { [weak welf = self] (error: Error?) in
             
-            guard let stelf = welf, let cost = stelf.basketOrder.validCost else {
+            guard let stelf = welf, let cost = stelf.basketOrder.cost else {
                 completion(.failure, [PKShippingMethod](), [PKPaymentSummaryItem]())
                 return
             }
