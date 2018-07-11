@@ -126,7 +126,7 @@ class KiteAPIClient {
         }
     }
 
-    /// Loads shipping classes for a given order. This is different to shipping methods which contain the cost. ShippingClass is for displaying and setting shipping method id's
+    /// Loads shipping classes for a given array of template IDs. This is different to shipping methods which contain the cost. ShippingClass is for displaying and setting shipping method IDs
     func getShippingMethods(for templateIds: [String], completionHandler: @escaping (_ shippingClasses: [String: [ShippingMethod]]?, _ error: Error?) -> Void) {
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
