@@ -69,6 +69,7 @@ class OrderManagerTests: XCTestCase {
 
         XCTAssertEqual(unarchivedOrder.products.first!.coverColor, product.coverColor)
         XCTAssertEqual(unarchivedOrder.products.first!.pageColor, product.pageColor)
+        XCTAssertEqual(unarchivedOrder.products.first!.identifier, product.identifier)
 
         XCTAssertEqual(unarchivedOrder.products.first!.productLayouts.first!.asset!.identifier, photosAsset.identifier)
         XCTAssertEqual(unarchivedOrder.products.first!.productLayouts.first!.asset!.size, photosAsset.size)
