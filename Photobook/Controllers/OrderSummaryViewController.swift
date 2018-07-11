@@ -321,12 +321,7 @@ extension OrderSummaryViewController: OrderSummaryManagerDelegate {
         
         if orderSummaryManager.summary != nil {
             progressOverlayViewController.hide(animated: true)
-            
-            if emptyScreenDismissGroup == nil {
-                emptyScreenViewController.hide(animated: true)
-            } else {
-                emptyScreenDismissGroup?.leave()
-            }
+            emptyScreenDismissGroup?.leave()
             
             let numberOfOptions = orderSummaryManager.upsellOptions?.count ?? 0
             let sectionsToUpdate = tableView.numberOfRows(inSection: 2) == numberOfOptions ? 0...1 : 0...2
