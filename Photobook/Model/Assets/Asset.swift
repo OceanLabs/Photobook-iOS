@@ -10,11 +10,11 @@ import UIKit
 
 enum AssetLoadingException: Error {
     case notFound
-    case unsupported
+    case unsupported(details: String)
 }
 
 enum AssetDataFileExtension {
-    case unsupported(details: String)
+    case unsupported
     case jpg
     case png
     case gif
@@ -27,7 +27,7 @@ extension AssetDataFileExtension {
         case "jpeg", "jpg": self = .jpg
         case "png": self = .png
         case "gif": self = .gif
-        default: self = .unsupported(details: string)
+        default: self = .unsupported
         }
     }
     
@@ -36,7 +36,7 @@ extension AssetDataFileExtension {
         case .jpg: return "jpg"
         case .png: return "png"
         case .gif: return "gif"
-        case .unsupported(let details): return details
+        case .unsupported: return "unsupported"
         }
     }
 }

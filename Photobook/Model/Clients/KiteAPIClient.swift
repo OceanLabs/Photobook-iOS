@@ -121,7 +121,7 @@ class KiteAPIClient {
             guard let statusString = pollingData["status"] as? String,
                   let status = OrderSubmitStatus.fromApiString(statusString)
                 else {
-                    completionHandler(.error, nil, nil)
+                    completionHandler(.error, .generic, nil)
                     return
             }
             

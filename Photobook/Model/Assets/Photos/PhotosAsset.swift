@@ -91,7 +91,7 @@ class PhotosAsset: Asset {
     func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension, Error?) -> Void) {
         
         if photosAsset.mediaType != .image {
-            completionHandler(nil, .unsupported(details: "Photos imageData: Not an image type"), AssetLoadingException.notFound)
+            completionHandler(nil, .unsupported, AssetLoadingException.unsupported(details: "Photos imageData: Not an image type"))
             return
         }
         
@@ -101,21 +101,21 @@ class PhotosAsset: Asset {
         imageManager.requestImageData(for: photosAsset, options: options, resultHandler: { imageData, dataUti, _, _ in
             guard let data = imageData, let dataUti = dataUti else {
                 let details = "Photos imageData: Missing " + (imageData == nil ? "imageData" : "dataUti")
-                completionHandler(nil, .unsupported(details: details), AssetLoadingException.notFound)
+                completionHandler(nil, .unsupported, AssetLoadingException.unsupported(details: details))
                 return
             }
             
             guard let fileExtensionString = NSURL(fileURLWithPath: dataUti).pathExtension else {
-                completionHandler(nil, .unsupported(details: "Photos imageData: Could not determine extension"), AssetLoadingException.unsupported)
+                completionHandler(nil, .unsupported, AssetLoadingException.unsupported(details: "Photos imageData: Could not determine extension"))
                 return
             }
             
             let fileExtension = AssetDataFileExtension(string: fileExtensionString)
             
             // Check that the image is either jpg, png or gif otherwise convert it to jpg. So no HEICs, TIFFs or RAWs get uploaded to the back end.
-            if case .unsupported(_) = fileExtension {
+            if case .unsupported = fileExtension {
                 guard let ciImage = CIImage(data: data) else {
-                    completionHandler(nil, fileExtension, AssetLoadingException.unsupported)
+                    completionHandler(nil, .unsupported, AssetLoadingException.unsupported(details: "Photos imageData: Could not create CIImage"))
                     return
                 }
                 
@@ -129,7 +129,7 @@ class PhotosAsset: Asset {
                 if let jpegData = tmpJpegData {
                     completionHandler(jpegData, .jpg, nil)
                 } else {
-                    completionHandler(nil, .unsupported(details: "Photos imageData: Could not convert to JPG"), AssetLoadingException.unsupported)
+                    completionHandler(nil, .unsupported, AssetLoadingException.unsupported(details: "Photos imageData: Could not convert to JPG"))
                 }
             } else {
                 completionHandler(imageData, fileExtension, nil)
