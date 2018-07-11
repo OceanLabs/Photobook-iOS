@@ -632,7 +632,7 @@ class PhotobookProduct: Codable {
         guard let baseUrl = pigBaseUrl else { return }
         
         let fetchClosure = { (_ coverUrl: String) in
-            guard let url = Pig.previewImageURL(withBaseURLString: baseUrl, coverURLString: coverUrl, size: size) else {
+            guard let url = Pig.previewImageUrl(withBaseUrlString: baseUrl, coverUrlString: coverUrl, size: size) else {
                 return
             }
             Pig.fetchPreviewImage(with: url, completion: { image in

@@ -45,15 +45,15 @@ class Pig {
     /// Generates the PIG URL of the preview image
     ///
     /// - Parameters:
-    ///   - baseURLString: The URL of the background image to use
-    ///   - coverURLString: The cover image or subject
+    ///   - baseUrlString: The URL of the background image to use
+    ///   - coverUrlString: The cover image or subject
     ///   - size: The required size for the resulting image
     /// - Returns: The URL of the preview image
-    static func previewImageURL(withBaseURLString baseURLString: String, coverURLString: String, size: CGSize) -> URL? {
+    static func previewImageUrl(withBaseUrlString baseUrlString: String, coverUrlString: String, size: CGSize) -> URL? {
         let width = Int(size.width)
         let height = Int(size.height)
         
-        let urlString = baseURLString + "&image=" + coverURLString + "&size=\(width)x\(height)" + "&fill_mode=match"
+        let urlString = baseUrlString + "&image=" + coverUrlString + "&size=\(width)x\(height)" + "&fill_mode=match"
         guard let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) else {
             return nil
         }
