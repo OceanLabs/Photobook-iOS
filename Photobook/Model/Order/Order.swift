@@ -169,7 +169,7 @@ class Order: Codable {
         for product in products {
             let productAssets = product.assetsToUpload()
             for asset in productAssets {
-                if !assets.contains(where: { $0.identifier == asset.identifier }) {
+                if !assets.contains(where: { $0 == asset }) {
                     assets.append(asset)
                 }
             }
