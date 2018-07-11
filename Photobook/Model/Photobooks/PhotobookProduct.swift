@@ -173,6 +173,7 @@ class PhotobookProduct: Codable {
         }
         
         self.template = template
+        self.selectedShippingMethod = template.availableShippingMethods?.first
         self.coverLayouts = coverLayouts
         self.layouts = layouts
         
