@@ -20,9 +20,7 @@ struct ErrorMessage: Error {
         self.type = .error
     }
     
-    init?(_ error: Error?, _ title: String? = nil) {
-        guard let error = error else { return nil }
-        
+    init(_ error: Error, _ title: String? = nil) {
         if let apiError = error as? APIClientError {
             self.init(apiError, title)
         } else {
@@ -30,9 +28,7 @@ struct ErrorMessage: Error {
         }
     }
     
-    init?(_ error: APIClientError?, _ title: String? = nil) {
-        guard let error = error else { return nil }
-        
+    init(_ error: APIClientError, _ title: String? = nil) {
         self.title = title
         switch error {
         case .connection:
@@ -43,7 +39,7 @@ struct ErrorMessage: Error {
             self.title = NSLocalizedString("ServerMaintenanceErrorTitle", value: "Server Maintenance", comment: "Server maintenance error title")
             text = NSLocalizedString("ServerMaintenanceErrorMessage", value: "We'll be back and running as soon as possible!", comment: "Server maintenance error message")
             type = .error
-        case .server(_, let message) where message != "":
+        case .server(_, let message) where !message.isEmpty:
             text = message
             type = .error
         default:

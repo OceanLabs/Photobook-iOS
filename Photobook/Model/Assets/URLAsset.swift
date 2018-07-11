@@ -128,22 +128,26 @@ class URLAsset: Asset {
                 }
             }
         })
-        
     }
     
     func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension, Error?) -> Void) {
         
-        webImageManager.loadImage(with: images.last!.url, completion: { image, data, error in
+        webImageManager.loadImage(with: images.last!.url, completion: { [weak welf = self] image, data, error in
+            guard error == nil else {
+                completionHandler(nil, .unsupported, error)
+                return
+            }
+            
             var imageData: Data?
             if let image = image {
                 imageData = UIImageJPEGRepresentation(image, 1)
             } else if let data = data, UIImage(data: data) != nil {
                 imageData = data
             } else {
-                completionHandler(nil, .unsupported, ErrorMessage(text: CommonLocalizedStrings.somethingWentWrong))
+                completionHandler(nil, .unsupported, AssetLoadingException.unsupported(details: welf?.images.last?.url.absoluteString ?? "URL imageData: Did not receive image or data"))
                 return
             }
-            completionHandler(imageData, .jpg, error)
+            completionHandler(imageData, .jpg, nil)
         })
     }
 }

@@ -13,13 +13,13 @@ class APIClientMock: APIClient {
     
     var response: AnyObject?
     var image: UIImage?
-    var error: Error?
+    var error: APIClientError?
     
-    override func get(context: APIContext, endpoint: String, parameters: [String : Any]?, headers: [String : String]? = nil, completion: @escaping (AnyObject?, Error?) -> ()) {
+    override func get(context: APIContext, endpoint: String, parameters: [String : Any]?, headers: [String : String]? = nil, completion: @escaping (AnyObject?, APIClientError?) -> ()) {
         completion(response, error)
     }
     
-    override func post(context: APIContext, endpoint: String, parameters: [String : Any]?, headers: [String : String]?, completion: @escaping (AnyObject?, Error?) -> ()) {
+    override func post(context: APIContext, endpoint: String, parameters: [String : Any]?, headers: [String : String]?, completion: @escaping (AnyObject?, APIClientError?) -> ()) {
         completion(response, error)
     }
     
@@ -44,10 +44,10 @@ class PhotobookAPIManagerTests: XCTestCase {
     }
     
     func testRequestPhotobookInfo_ReturnsServerError() {
-        apiClient.error = APIClientError.server(code: 500, message: "")
+        apiClient.error = .server(code: 500, message: "")
         
         photobookAPIManager.requestPhotobookInfo { (_, _, error) in
-            XCTAssertTrue(APIClientError.isError(error, ofType: self.apiClient.error as! APIClientError), "PhotobookInfo: Should return a server error")
+            XCTAssertTrue(APIClientError.isError(error, ofType: self.apiClient.error!), "PhotobookInfo: Should return a server error")
         }
     }
     
@@ -60,9 +60,8 @@ class PhotobookAPIManagerTests: XCTestCase {
     }
 
     func testRequestPhotobookInfo_ReturnsParsingError() {
-
         photobookAPIManager.requestPhotobookInfo { (_, _, error) in
-            XCTAssertTrue(APIClientError.isError(error, ofType: .parsing), "PhotobookInfo: Should return a parsing error")
+            XCTAssertTrue(APIClientError.isError(error, ofType: .parsing(details: "")), "PhotobookInfo: Should return a parsing error")
         }
     }
 
@@ -71,7 +70,7 @@ class PhotobookAPIManagerTests: XCTestCase {
         apiClient.response = [ "products": nil, "layouts": nil, "upsellOptions": nil ] as AnyObject
         
         photobookAPIManager.requestPhotobookInfo { (_, _, error) in
-            XCTAssertTrue(APIClientError.isError(error, ofType: .parsing), "PhotobookInfo: Should return a parsing error")
+            XCTAssertTrue(APIClientError.isError(error, ofType: .parsing(details: "")), "PhotobookInfo: Should return a parsing error")
         }
     }
     
@@ -79,7 +78,7 @@ class PhotobookAPIManagerTests: XCTestCase {
         apiClient.response = [ "products": [], "layouts": [], "upsellOptions": [] ] as AnyObject
         
         photobookAPIManager.requestPhotobookInfo { (_, _, error) in
-            XCTAssertTrue(APIClientError.isError(error, ofType: .parsing), "PhotobookInfo: Should return a parsing error")
+            XCTAssertTrue(APIClientError.isError(error, ofType: .parsing(details: "")), "PhotobookInfo: Should return a parsing error")
         }
     }
     
@@ -88,7 +87,7 @@ class PhotobookAPIManagerTests: XCTestCase {
         apiClient.response = [ "products": 10, "layouts": "Not a layout" ] as AnyObject
         
         photobookAPIManager.requestPhotobookInfo { (_, _, error) in
-            XCTAssertTrue(APIClientError.isError(error, ofType: .parsing), "PhotobookInfo: Should return a parsing error")
+            XCTAssertTrue(APIClientError.isError(error, ofType: .parsing(details: "")), "PhotobookInfo: Should return a parsing error")
         }
     }
     

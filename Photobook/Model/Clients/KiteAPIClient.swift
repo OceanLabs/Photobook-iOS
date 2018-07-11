@@ -40,7 +40,7 @@ class KiteAPIClient {
         ]
     }
     
-    func submitOrder(parameters: [String: Any], completionHandler: @escaping (_ orderId: String?, _ error: ErrorMessage?) -> Void) {
+    func submitOrder(parameters: [String: Any], completionHandler: @escaping (_ orderId: String?, _ error: APIClientError?) -> Void) {
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
         }
@@ -48,7 +48,7 @@ class KiteAPIClient {
         let endpoint = KiteAPIClient.apiVersion + Endpoints.orderSubmission
         APIClient.shared.post(context: .kite, endpoint: endpoint, parameters: parameters, headers: kiteHeaders) { response, error in
             guard error == nil else {
-                completionHandler(nil, ErrorMessage(error))
+                completionHandler(nil, error)
                 return
             }
             
@@ -58,7 +58,10 @@ class KiteAPIClient {
                 guard let message = responseError["message"] as? String,
                     let errorCodeString = responseError["code"] as? String,
                     let errorCode = Int(errorCodeString)
-                    else { completionHandler(nil, ErrorMessage(APIClientError.parsing)); return }
+                    else {
+                        completionHandler(nil, .parsing(details: "SubmitOrder: Missing error info"))
+                        return                        
+                }
                 
                 if errorCode == 20, let orderId = orderId {
                     // This is not actually an error, we can report success.
@@ -66,7 +69,7 @@ class KiteAPIClient {
                     return
                 }
                 
-                completionHandler(nil, ErrorMessage(APIClientError.server(code: errorCode, message: message)))
+                completionHandler(nil, .server(code: errorCode, message: message))
                 return
             }
             
@@ -75,30 +78,30 @@ class KiteAPIClient {
                 return
             }
             
-            completionHandler(nil, ErrorMessage(.generic))
+            completionHandler(nil, .generic)
         }
     }
     
-    func checkOrderStatus(receipt: String, completionHandler: @escaping (_ status: OrderSubmitStatus, _ error: ErrorMessage?, _ receipt: String?) -> Void) {
+    func checkOrderStatus(receipt: String, completionHandler: @escaping (_ status: OrderSubmitStatus, _ error: APIClientError?, _ receipt: String?) -> Void) {
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
         }
 
         let endpoint = KiteAPIClient.apiVersion + Endpoints.orderStatus + receipt
         APIClient.shared.get(context: .kite, endpoint: endpoint, parameters: nil, headers: kiteHeaders) { (response, error) in
-            if let error = error as? APIClientError {
-                completionHandler(.error, ErrorMessage(error), nil)
+            guard error == nil else {
+                completionHandler(.error, error, nil)
                 return
             }
             
             guard let pollingData = response as? [String: AnyObject] else {
-                completionHandler(.error, ErrorMessage(.parsing), nil)
+                completionHandler(.error, .parsing(details: "CheckOrderStatus: Could not parse root object"), nil)
                 return
             }
 
             if let errorDictionary = pollingData["error"] as? [String: AnyObject] {
                 guard let code = errorDictionary["code"] as? String else {
-                    completionHandler(.error, ErrorMessage(.parsing), nil)
+                    completionHandler(.error, .parsing(details: "CheckOrderStatus: Missing error code"), nil)
                     return
                 }
                 
@@ -108,9 +111,9 @@ class KiteAPIClient {
                 } else if code == "P11" { // Payment error
                     completionHandler(.paymentError, nil, nil)
                 } else if let message = errorDictionary["message"] as? String {
-                    completionHandler(.error, ErrorMessage(text: message), nil)
+                    completionHandler(.error, .server(code: 0, message: message), nil)
                 } else {
-                    completionHandler(.error, ErrorMessage(APIClientError.generic), nil)
+                    completionHandler(.error, .generic, nil)
                 }
                 return
             }
@@ -118,7 +121,7 @@ class KiteAPIClient {
             guard let statusString = pollingData["status"] as? String,
                   let status = OrderSubmitStatus.fromApiString(statusString)
                 else {
-                    completionHandler(.error, nil, nil)
+                    completionHandler(.error, .generic, nil)
                     return
             }
             
@@ -127,7 +130,8 @@ class KiteAPIClient {
     }
 
     /// Loads shipping classes for a given array of template IDs. This is different to shipping methods which contain the cost. ShippingClass is for displaying and setting shipping method IDs
-    func getShippingMethods(for templateIds: [String], completionHandler: @escaping (_ shippingClasses: [String: [ShippingMethod]]?, _ error: Error?) -> Void) {
+    func getShippingMethods(for templateIds: [String], completionHandler: @escaping (_ shippingClasses: [String: [ShippingMethod]]?, _ error: APIClientError?) -> Void) {
+
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
         }
@@ -149,9 +153,9 @@ class KiteAPIClient {
             
             //get objects for each product
             guard let jsonDict = response as? [String: Any],
-            let objects = jsonDict["objects"] as? [[String: Any]]
+                let objects = jsonDict["objects"] as? [[String: Any]]
             else {
-                completionHandler(nil, APIClientError.parsing)
+                completionHandler(nil, .parsing(details: "GetShippingMethods: Could not parse root objects"))
                 return
             }
             
@@ -168,20 +172,20 @@ class KiteAPIClient {
                     let shippingClassDictionaries = relevantShippingRegion["shipping_classes"] as? [[String: Any]],
                     let templateId = object["template_id"] as? String
                     else {
-                        completionHandler(nil, APIClientError.parsing)
+                        completionHandler(nil, .parsing(details: "GetShippingMethods: Could not parse region mapping"))
                         return
                 }
                 
                 for dictionary in shippingClassDictionaries {
                     guard let shippingClass = ShippingMethod.parse(dictionary: dictionary) else {
-                        completionHandler(nil, APIClientError.parsing)
+                        completionHandler(nil, .parsing(details: "GetShippingMethods: Could not parse shipping class"))
                         return
                     }
                     shippingClasses.append(shippingClass)
                 }
                 
                 if shippingClasses.count == 0 { // Inconsistent
-                    completionHandler(nil, APIClientError.parsing)
+                    completionHandler(nil, .parsing(details: "GetShippingMethods: Zero shipping classes parsed"))
                     return
                 }
                 
@@ -192,7 +196,7 @@ class KiteAPIClient {
         }
     }
     
-    func getCost(order: Order, completionHandler: @escaping (_ cost: Cost?, _ error: Error?) -> Void) {
+    func getCost(order: Order, completionHandler: @escaping (_ cost: Cost?, _ error: APIClientError?) -> Void) {
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
         }
@@ -234,7 +238,7 @@ class KiteAPIClient {
             }
             
             guard let response = response as? [String: Any], let cost = Cost.parseDetails(dictionary: response) else {
-                completionHandler(nil, APIClientError.parsing)
+                completionHandler(nil, .parsing(details: "GetCost: Could not parse cost"))
                 return
             }
             

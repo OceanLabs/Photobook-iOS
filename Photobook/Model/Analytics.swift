@@ -86,6 +86,8 @@ protocol PickerAnalytics {
         case pdfCreation = "PDF creation error"
         case orderSubmission = "Order submission error"
         case payment = "Payment error"
+        case parsing = "Parsing error"
+        case upsellError = "Upsell error"
     }
     
     struct PropertyNames {
@@ -185,12 +187,16 @@ protocol PickerAnalytics {
         delegate?.photobookAnalyticsEventDidFire(type: .action, name: actionName.rawValue, properties: properties)
     }
     
-    func trackError(_ errorName: ErrorName) {
+    func trackError(_ errorName: ErrorName, _ details: String) {
+        trackError(errorName, ["details": details])
+    }
+    
+    func trackError(_ errorName: ErrorName, _ properties: [String: Any]? = nil) {
         #if DEBUG
-            print("Analytics: Error \"\(errorName.rawValue)\" happened")
+            print("Analytics: Error \"\(errorName.rawValue)\" happened. Properties: \(properties ?? [:])")
         #endif
         
-        let properties = addEnvironment(to: [:])
+        let properties = addEnvironment(to: properties)
         
         SEGAnalytics.shared().track(errorName.rawValue, properties: properties)
         delegate?.photobookAnalyticsEventDidFire(type: .error, name: errorName.rawValue, properties: properties)
