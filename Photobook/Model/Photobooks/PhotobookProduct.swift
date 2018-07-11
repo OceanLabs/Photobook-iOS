@@ -55,7 +55,6 @@ class PhotobookProduct: Codable {
     var insidePdfUrl: String?
     var coverPdfUrl: String?
     private(set) var identifier = UUID().uuidString
-    var availableShippingMethods: [ShippingMethod]?
     var selectedShippingMethod: ShippingMethod?
     
     // Preview image handling
@@ -132,7 +131,6 @@ class PhotobookProduct: Codable {
         try container.encode(itemCount, forKey: .itemCount)
         try container.encode(upsoldTemplate, forKey: .upsoldTemplate)
         try container.encode(identifier, forKey: .identifier)
-        try container.encode(availableShippingMethods, forKey: .availableShippingMethods)
         try container.encode(selectedShippingMethod, forKey: .selectedShippingMethod)
         try container.encode(pigBaseUrl, forKey: .pigBaseUrl)
         try container.encode(pigCoverUrl, forKey: .pigCoverUrl)
@@ -157,7 +155,6 @@ class PhotobookProduct: Codable {
         itemCount = try values.decode(Int.self, forKey: .itemCount)
         upsoldTemplate = try values.decodeIfPresent(PhotobookTemplate.self, forKey: .upsoldTemplate)
         identifier = try values.decode(String.self, forKey: .identifier)
-        availableShippingMethods = try values.decodeIfPresent([ShippingMethod].self, forKey: .availableShippingMethods)
         selectedShippingMethod = try values.decodeIfPresent(ShippingMethod.self, forKey: .selectedShippingMethod)
         pigBaseUrl = try values.decodeIfPresent(String.self, forKey: .pigBaseUrl)
         pigCoverUrl = try values.decodeIfPresent(String.self, forKey: .pigCoverUrl)

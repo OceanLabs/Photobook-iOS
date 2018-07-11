@@ -58,13 +58,13 @@ extension ShippingMethodsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return order.products[section].availableShippingMethods?.count ?? 0
+        return order.products[section].template.availableShippingMethods?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ShippingMethodTableViewCell.reuseIdentifier, for: indexPath) as! ShippingMethodTableViewCell
         
-        let shippingMethod = order.products[indexPath.section].availableShippingMethods![indexPath.row]
+        let shippingMethod = order.products[indexPath.section].template.availableShippingMethods![indexPath.row]
         
         cell.method = shippingMethod.name
         cell.deliveryTime = shippingMethod.deliveryTime
@@ -75,7 +75,7 @@ extension ShippingMethodsViewController: UITableViewDataSource {
             selected = selectedMethod.id == shippingMethod.id
         }
         cell.ticked = selected
-        cell.separatorLeadingConstraint.constant = indexPath.row == order.products[indexPath.section].availableShippingMethods!.count - 1 ? 0.0 : Constants.leadingSeparatorInset
+        cell.separatorLeadingConstraint.constant = indexPath.row == order.products[indexPath.section].template.availableShippingMethods!.count - 1 ? 0.0 : Constants.leadingSeparatorInset
         cell.topSeparator.isHidden = indexPath.row != 0
         cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + "\(shippingMethod.name). \(shippingMethod.deliveryTime). \(shippingMethod.price.formatted)"
         cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
@@ -96,7 +96,7 @@ extension ShippingMethodsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let product = order.products[indexPath.section]
-        product.selectedShippingMethod = product.availableShippingMethods?[indexPath.item]
+        product.selectedShippingMethod = product.template.availableShippingMethods?[indexPath.item]
         
         tableView.reloadData()
     }

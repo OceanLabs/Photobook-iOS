@@ -93,7 +93,7 @@ class Order: Codable {
         }
         
         // If any product in the order doesn't not have shipping options, fetch shipping options for all
-        let shouldUpdateShippingMethods = products.reduce(forceShippingMethodUpdate, { $0 || $1.availableShippingMethods == nil })
+        let shouldUpdateShippingMethods = products.reduce(forceShippingMethodUpdate, { $0 || $1.template.availableShippingMethods == nil })
         
         if shouldUpdateShippingMethods {
             updateShippingMethods { (error) in
@@ -120,7 +120,7 @@ class Order: Codable {
             
             for product in welf?.products ?? [] {
                 let availableShippingMethods = shippingMethods?[product.template.templateId]
-                product.availableShippingMethods = availableShippingMethods
+                product.template.availableShippingMethods = availableShippingMethods
                 product.selectedShippingMethod = availableShippingMethods?.first
             }
             completionHandler(nil)
