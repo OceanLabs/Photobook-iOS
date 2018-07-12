@@ -646,7 +646,7 @@ enum ProductColor: String, Codable {
         ]
     }
     
-    func assetsToUpload() -> [PhotobookAsset] {
+    func assetsToUpload() -> [PhotobookAsset]? {
         var assets = [Asset]()
         for layout in productLayouts {
             guard let asset = layout.asset else { continue }

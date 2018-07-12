@@ -18,12 +18,14 @@ import Photos
         self.asset = asset!
     }
     
-    static func photobookAssets(with assets: [Asset]) -> [PhotobookAsset] {
+    static func photobookAssets(with assets: [Asset]?) -> [PhotobookAsset]? {
+        guard let assets = assets else { return nil }
         guard !assets.isEmpty else { return [PhotobookAsset]()}
         return assets.map { PhotobookAsset(asset: $0)! }
     }
     
-    static func assets(from photobookAssets: [PhotobookAsset]) -> [Asset] {
+    static func assets(from photobookAssets: [PhotobookAsset]?) -> [Asset]? {
+        guard let photobookAssets = photobookAssets else { return nil }
         guard !photobookAssets.isEmpty else { return [Asset]() }
         return photobookAssets.map { $0.asset }
     }

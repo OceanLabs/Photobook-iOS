@@ -210,7 +210,7 @@ class Order: Codable {
         var assets = [Asset]()
         
         for product in products {
-            let productAssets = PhotobookAsset.assets(from: product.assetsToUpload())
+            let productAssets = PhotobookAsset.assets(from: product.assetsToUpload()) ?? []
             for asset in productAssets {
                 if !assets.contains(where: { $0 == asset }) {
                     assets.append(asset)

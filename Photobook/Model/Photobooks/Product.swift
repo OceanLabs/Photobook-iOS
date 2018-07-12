@@ -17,7 +17,7 @@ import UIKit
     var upsoldOptions: [String: Any]? { get }
     var numberOfPages: Int { get }
     var hashValue: Int { get }
-    func assetsToUpload() -> [PhotobookAsset]
+    func assetsToUpload() -> [PhotobookAsset]?
     func orderParameters() -> [String: Any]?
     func previewImage(size: CGSize, completionHandler: @escaping (UIImage?) -> Void)
     func processUploadedAssets(completionHandler: @escaping (Error?) -> Void)

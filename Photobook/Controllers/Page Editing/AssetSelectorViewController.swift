@@ -168,14 +168,10 @@ extension AssetSelectorViewController: PhotobookAssetAddingDelegate {
     
     func didFinishAdding(_ photobookAssets: [PhotobookAsset]?) {
                 
-        guard let photobookAssets = photobookAssets,
-            !photobookAssets.isEmpty
-            else {
+        guard let assets = PhotobookAsset.assets(from: photobookAssets), !assets.isEmpty else {
             self.dismiss(animated: false, completion: nil)
             return
         }
-        
-        let assets = PhotobookAsset.assets(from: photobookAssets)
         
         // Add assets that are not already in the list
         let newAssets = assets.filter { asset in !self.assets.contains { $0 == asset } }
