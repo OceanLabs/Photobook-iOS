@@ -16,6 +16,7 @@ enum OrderProcessingError: Error {
     case pdf
     case submission
     case payment
+    case corruptData
 }
 
 protocol OrderProcessingDelegate: class {
@@ -269,8 +270,7 @@ class OrderManager {
         for product in processingOrder?.products ?? [] {
             // Create PDF
             pdfGenerationDispatchGroup.enter()
-            apiManager.createPdf(withPhotobook: product) { [weak welf = self] (urls, error) in
-                
+            product.processUploadedAssets(completionHandler: { [weak welf = self] error in
                 if let swelf = welf, swelf.isCancelling {
                     swelf.processingOrder = nil
                     swelf.cancelCompletionBlock?()
@@ -278,16 +278,15 @@ class OrderManager {
                     return
                 }
                 
-                guard let urls = urls else {
+                guard error == nil else {
                     // Failure - PDF
                     Analytics.shared.trackError(.pdfCreation)
                     welf?.orderProcessingDelegate?.orderDidComplete(error: .pdf)
                     return
                 }
                 
-                product.setPdfUrls(urls)
                 pdfGenerationDispatchGroup.leave()
-            }
+            })
         }
         
         pdfGenerationDispatchGroup.notify(queue: DispatchQueue.main, execute: { [weak welf = self] in

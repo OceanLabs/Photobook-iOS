@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 // Defines the characteristics of a photobook / product
-class PhotobookTemplate: Codable {
+@objc public class PhotobookTemplate: NSObject, Codable {
     
     private static let mmToPtMultiplier = 2.83464566929134
     
@@ -78,7 +78,7 @@ class PhotobookTemplate: Codable {
     }    
 }
 
-extension PhotobookTemplate: Equatable {
+extension PhotobookTemplate {
     
     static func ==(lhs: PhotobookTemplate, rhs: PhotobookTemplate) -> Bool {
         return lhs.id == rhs.id

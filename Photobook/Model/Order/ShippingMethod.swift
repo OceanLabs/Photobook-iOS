@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ShippingMethod: Codable {
+@objc public class ShippingMethod: NSObject, Codable {
     
     static var supportsSecureCoding = true
     
