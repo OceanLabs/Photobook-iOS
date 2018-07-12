@@ -122,7 +122,12 @@ class PhotosAlbumManager: NSObject, AlbumManager {
             collections.enumerateObjects({ (collection, _, _) in
                 guard collection.estimatedAssetCount != 0 else { return }
                 let album = PhotosAlbum(collection)
-                albums.append(album)
+                
+                // Load assets here so that we know the number of assets in this album
+                album.loadAssetsFromPhotoLibrary()
+                if !album.assets.isEmpty {
+                    albums.append(album)
+                }
             })
             
             self.albums = albums
