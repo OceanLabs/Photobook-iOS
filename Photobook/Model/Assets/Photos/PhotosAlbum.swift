@@ -59,6 +59,7 @@ class PhotosAlbum: Album {
         fetchOptions.wantsIncrementalChangeDetails = true
         fetchOptions.includeHiddenAssets = false
         fetchOptions.includeAllBurstAssets = false
+        fetchOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
         fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
         let fetchedAssets = assetManager.fetchAssets(in: assetCollection, options: fetchOptions)
         var assets = [Asset]()
