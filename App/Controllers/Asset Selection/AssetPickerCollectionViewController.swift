@@ -138,7 +138,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         if let error = error as? ErrorMessage {
             message = error
         } else {
-            message = ErrorMessage(error)!
+            message = ErrorMessage(error)
         }
         
         // Adding assets: the album picker will be presented modally inside a navigation controller

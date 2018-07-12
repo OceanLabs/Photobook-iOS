@@ -12,7 +12,7 @@ import SDWebImage
 
 enum APIClientError: Error {
     case generic
-    case parsing
+    case parsing(details: String)
     case connection
     case server(code: Int, message: String)
 }
@@ -207,7 +207,7 @@ class APIClient: NSObject {
     
     // MARK: Generic dataTask handling
     
-    private func dataTask(context: APIContext, endpoint: String, parameters: [String : Any]?, headers: [String : String]?, method: HTTPMethod, completion:@escaping (AnyObject?, Error?) -> ()) {
+    private func dataTask(context: APIContext, endpoint: String, parameters: [String : Any]?, headers: [String : String]?, method: HTTPMethod, completion: @escaping (AnyObject?, APIClientError?) -> ()) {
         
         var request = URLRequest(url: URL(string: baseURLString(for: context) + endpoint)!)
         
@@ -260,17 +260,17 @@ class APIClient: NSObject {
                 let error = error as NSError?
                 switch error!.code {
                 case Int(CFNetworkErrors.cfurlErrorBadServerResponse.rawValue):
-                    completion(nil, APIClientError.server(code: 500, message: ""))
+                    completion(nil, .server(code: 500, message: ""))
                 case Int(CFNetworkErrors.cfurlErrorSecureConnectionFailed.rawValue) ..< Int(CFNetworkErrors.cfurlErrorUnknown.rawValue):
-                    completion(nil, APIClientError.connection)
+                    completion(nil, .connection)
                 default:
-                    completion(nil, APIClientError.server(code: error!.code, message: error!.localizedDescription))
+                    completion(nil, .server(code: error!.code, message: error!.localizedDescription))
                 }
                 return
             }
             
             guard let data = data else {
-                completion(nil, error)
+                completion(nil, .parsing(details: "DataTask: Missing data"))
                 return
             }
             
@@ -280,32 +280,32 @@ class APIClient: NSObject {
                 if let responseDictionary = json as? [String: AnyObject],
                     let errorDict = responseDictionary["error"] as? [String : AnyObject],
                     let errorMessage = (errorDict["message"] as? [AnyObject])?.last as? String {
-                    completion(nil, APIClientError.server(code: (response as? HTTPURLResponse)?.statusCode ?? 0, message: errorMessage))
+                    completion(nil, .server(code: (response as? HTTPURLResponse)?.statusCode ?? 0, message: errorMessage))
                 } else {
                     completion(json as AnyObject, nil)
                 }
             } else if let image = UIImage(data: data) { // Attempt parsing UIImage
                 completion(image, nil)
             } else { // Parsing error
+                var details = "DataTask: Unknown data received"
                 if let stringData = String(data: data, encoding: String.Encoding.utf8) {
-                    print("API: \(stringData)")
+                    details = details + ": " + stringData
                 }
-                completion(nil, APIClientError.parsing)
+                completion(nil, .parsing(details: details))
             }
-            
             }.resume()
     }
 
     // MARK: - Public methods
-    func post(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion:@escaping (AnyObject?, Error?) -> ()) {
+    func post(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion:@escaping (AnyObject?, APIClientError?) -> ()) {
         dataTask(context: context, endpoint: endpoint, parameters: parameters, headers: headers, method: .post, completion: completion)
     }
     
-    func get(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion:@escaping (AnyObject?, Error?) -> ()) {
+    func get(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion:@escaping (AnyObject?, APIClientError?) -> ()) {
         dataTask(context: context, endpoint: endpoint, parameters: parameters, headers: headers, method: .get, completion: completion)
     }
     
-    func put(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion:@escaping (AnyObject?, Error?) -> ()) {
+    func put(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion:@escaping (AnyObject?, APIClientError?) -> ()) {
         dataTask(context: context, endpoint: endpoint, parameters: parameters, headers: headers, method: .put, completion: completion)
     }
     

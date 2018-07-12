@@ -47,6 +47,9 @@ class ProductManager {
     func initialise(completion:((Error?)->())?) {
         apiManager.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, error) in
             guard error == nil else {
+                if let error = error as? APIClientError, case .parsing(let details) = error {
+                    Analytics.shared.trackError(.parsing, details)
+                }
                 completion?(error!)
                 return
             }

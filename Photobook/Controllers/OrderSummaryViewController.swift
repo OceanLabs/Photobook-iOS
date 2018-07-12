@@ -317,7 +317,7 @@ extension OrderSummaryViewController: OrderSummaryManagerDelegate {
         }
     }
     
-    func orderSummaryManagerDidUpdate(_ summary: OrderSummary?, error: Error?) {
+    func orderSummaryManagerDidUpdate(_ summary: OrderSummary?, error: ErrorMessage?) {
         
         if orderSummaryManager.summary != nil {
             progressOverlayViewController.hide(animated: true)
@@ -329,27 +329,24 @@ extension OrderSummaryViewController: OrderSummaryManagerDelegate {
         } else {
             hideProgressIndicator()
             
-            let errorMessage = error?.localizedDescription ?? CommonLocalizedStrings.somethingWentWrong
+            let errorMessage = error ?? ErrorMessage(.generic)
             
-            emptyScreenViewController.show(message: errorMessage, title: nil, image: nil, activity: false, buttonTitle: CommonLocalizedStrings.retry, buttonAction: {
+            emptyScreenViewController.show(message: errorMessage.text, title: errorMessage.title, image: nil, activity: false, buttonTitle: CommonLocalizedStrings.retry, buttonAction: {
                 self.emptyScreenViewController.show(message: Constants.stringLoading, activity: true)
                 self.orderSummaryManager.getSummary()
             })
         }
     }
     
-    func orderSummaryManagerFailedToApply(_ upsell: UpsellOption, error: Error?) {
+    func orderSummaryManagerFailedToApply(_ upsell: UpsellOption, error: ErrorMessage) {
         hideProgressIndicator()
-        
-        //show message bar
-        let message = ErrorMessage(text: CommonLocalizedStrings.somethingWentWrong)
         
         var offsetTop: CGFloat = 0
         
         if let navigationBar = navigationController?.navigationBar as? PhotobookNavigationBar {
             offsetTop = navigationBar.barHeight
         }
-        MessageBarViewController.show(message: message, parentViewController: self, offsetTop: offsetTop, centred: true, dismissAfter: 3.0)
+        MessageBarViewController.show(message: error, parentViewController: self, offsetTop: offsetTop, centred: true, dismissAfter: 3.0)
         
         if let selectedIndices = tableView.indexPathsForSelectedRows {
             for selectedIndex in selectedIndices {
