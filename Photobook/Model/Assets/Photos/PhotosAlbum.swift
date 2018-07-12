@@ -71,7 +71,7 @@ class PhotosAlbum: Album {
         self.fetchedAssets = fetchedAssets
     }
     
-    func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
+    func coverAsset(completionHandler: @escaping (Asset?) -> Void) {
         assetCollection.coverAsset(useFirstImageInCollection: false, completionHandler: completionHandler)
     }
     

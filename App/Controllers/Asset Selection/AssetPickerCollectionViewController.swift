@@ -488,7 +488,7 @@ extension AssetPickerCollectionViewController {
                 else { return UICollectionReusableView() }
             
             let size = self.collectionView(collectionView, layout: collectionView.collectionViewLayout, referenceSizeForHeaderInSection: indexPath.section)
-            story.coverAsset(completionHandler: {(asset, _) in
+            story.coverAsset(completionHandler: {(asset) in
                 cell.setCover(cover: asset, size: size)
             })
             

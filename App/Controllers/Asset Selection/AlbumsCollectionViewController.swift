@@ -323,7 +323,7 @@ extension AlbumsCollectionViewController{
             cell.albumId = album.identifier
             
             let cellWidth = (self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize.width ?? 0
-            album.coverAsset(completionHandler: {(asset, error) in
+            album.coverAsset(completionHandler: { asset in
                 cell.albumCoverImageView.setImage(from: asset, size: CGSize(width: cellWidth, height: cellWidth), validCellCheck: {
                     return cell.albumId == album.identifier
                 })

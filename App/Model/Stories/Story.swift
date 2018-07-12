@@ -130,7 +130,7 @@ extension Story: Album {
         completionHandler?(nil)
     }
     
-    func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
+    func coverAsset(completionHandler: @escaping (Asset?) -> Void) {
         collectionForCoverPhoto.coverAsset(useFirstImageInCollection: true, completionHandler: completionHandler)
     }
     

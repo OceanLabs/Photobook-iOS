@@ -10,7 +10,7 @@ import Photos
 
 extension PHAssetCollection {
     
-    func coverAsset(useFirstImageInCollection: Bool, completionHandler: @escaping (Asset?, Error?) -> Void) {
+    func coverAsset(useFirstImageInCollection: Bool, completionHandler: @escaping (Asset?) -> Void) {
         DispatchQueue.global(qos: .default).async {
             let fetchOptions = PHFetchOptions()
             fetchOptions.wantsIncrementalChangeDetails = false
@@ -28,7 +28,7 @@ extension PHAssetCollection {
             })
             
             DispatchQueue.main.async {
-                completionHandler(coverAsset, nil)
+                completionHandler(coverAsset)
             }
         }
     }
