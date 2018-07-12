@@ -221,7 +221,7 @@ class KiteAPIClient {
                                                     "template_id": variantId,
                                                     "country_code": countryCode,
                                                     "shipping_class": shippingClass,
-                                                    "pages": product.numberOfPages,
+                                                    "page_count": product.numberOfPages,
                                                     "options": options
             ]
             lineItems.append(productDictionary)
