@@ -157,8 +157,8 @@ extension InstagramAlbum: Album {
         fetchAssets(url: url, completionHandler: completionHandler)
     }
     
-    func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
-        return completionHandler(assets.first, nil)
+    func coverAsset(completionHandler: @escaping (Asset?) -> Void) {
+        return completionHandler(assets.first)
     }
 }
 

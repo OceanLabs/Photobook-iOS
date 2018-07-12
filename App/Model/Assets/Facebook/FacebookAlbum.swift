@@ -119,8 +119,8 @@ extension FacebookAlbum: Album {
         return after != nil
     }
     
-    func coverAsset(completionHandler: @escaping (Asset?, Error?) -> Void) {
-        completionHandler(URLAsset(identifier: coverPhotoUrl.absoluteString, images: [URLAssetImage(url: coverPhotoUrl, size: .zero)], albumIdentifier: identifier), nil)
+    func coverAsset(completionHandler: @escaping (Asset?) -> Void) {
+        completionHandler(URLAsset(identifier: coverPhotoUrl.absoluteString, images: [URLAssetImage(url: coverPhotoUrl, size: .zero)], albumIdentifier: identifier))
     }
 }
 

@@ -39,7 +39,7 @@ protocol Album {
     /// Retrieves the Asset to be used as cover for the Album
     ///
     /// - Parameter completionHandler: Closure that gets called on completion
-    func coverAsset(completionHandler: @escaping (_ asset: Asset?, _ error: Error?) -> Void)
+    func coverAsset(completionHandler: @escaping (_ asset: Asset?) -> Void)
 }
 
 struct AlbumChange {
