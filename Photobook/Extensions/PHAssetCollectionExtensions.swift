@@ -13,22 +13,22 @@ extension PHAssetCollection {
     func coverAsset(useFirstImageInCollection: Bool, completionHandler: @escaping (Asset?) -> Void) {
         DispatchQueue.global(qos: .default).async {
             let fetchOptions = PHFetchOptions()
+            fetchOptions.fetchLimit = 1
             fetchOptions.wantsIncrementalChangeDetails = false
             fetchOptions.includeHiddenAssets = false
             fetchOptions.includeAllBurstAssets = false
+            fetchOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
             fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: useFirstImageInCollection) ]
             
-            var coverAsset: PhotosAsset? = nil
-            let fetchedAssets = PHAsset.fetchAssets(in: self, options: fetchOptions)
-            fetchedAssets.enumerateObjects({ asset, _, stop in
-                if asset.mediaType == .image {
-                    coverAsset = PhotosAsset(asset, albumIdentifier: self.localIdentifier)
-                    stop.initialize(to: true)
+            guard let coverAsset = PHAsset.fetchAssets(in: self, options: fetchOptions).firstObject else {
+                DispatchQueue.main.async {
+                    completionHandler(nil)
                 }
-            })
+                return
+            }
             
             DispatchQueue.main.async {
-                completionHandler(coverAsset)
+                completionHandler(PhotosAsset(coverAsset, albumIdentifier: self.localIdentifier))
             }
         }
     }
