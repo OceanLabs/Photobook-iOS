@@ -33,7 +33,7 @@ enum ProductColor: String, Codable {
     }
 }
 
-class PhotobookProduct: Codable {
+@objc class PhotobookProduct: NSObject, Codable, Product {
     
     private enum CodingKeys: String, CodingKey {
         case template, productLayouts, coverColor, pageColor, spineText, spineFontType, productUpsellOptions, itemCount, upsoldTemplate, upsoldOptions, availableShippingMethods, selectedShippingMethod, identifier, pigBaseUrl, pigCoverUrl, coverSnapshot
@@ -166,6 +166,38 @@ class PhotobookProduct: Codable {
         }
     }
     
+    func encode(with aCoder: NSCoder) {
+        if let data = try? PropertyListEncoder().encode(self) {
+            aCoder.encode(data, forKey: "productData")
+        }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        
+        guard let data = aDecoder.decodeObject(forKey: "productData") as? Data,
+            let unarchived = try? PropertyListDecoder().decode(PhotobookProduct.self, from: data)
+            else {
+                return nil
+        }
+        
+        template = unarchived.template
+        productLayouts = unarchived.productLayouts
+        coverColor = unarchived.coverColor
+        pageColor = unarchived.pageColor
+        spineText = unarchived.spineText
+        spineFontType = unarchived.spineFontType
+        productUpsellOptions = unarchived.productUpsellOptions
+        itemCount = unarchived.itemCount
+        upsoldTemplate = unarchived.upsoldTemplate
+        identifier = unarchived.identifier
+        selectedShippingMethod = unarchived.selectedShippingMethod
+        pigBaseUrl = unarchived.pigBaseUrl
+        pigCoverUrl = unarchived.pigCoverUrl
+        coverSnapshot = unarchived.coverSnapshot
+        upsoldOptions = unarchived.upsoldOptions
+        
+    }
+    
     init?(template: PhotobookTemplate, assets: [Asset], coverLayouts: [Layout], layouts: [Layout]) {
         guard !coverLayouts.isEmpty, !layouts.isEmpty else {
             print("PhotobookProduct: Missing layouts for selected photobook")
@@ -204,6 +236,7 @@ class PhotobookProduct: Codable {
         // Create layouts for the remaining assets
         // Fill minimum pages with Placeholder assets if needed
         let numberOfPlaceholderLayoutsNeeded = max(template.minPages - assets.count - 1, 0)
+        super.init()
         tempLayouts.append(contentsOf: createLayoutsForAssets(assets: assets, from: imageOnlyLayouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
         productLayouts = tempLayouts
     }
@@ -299,13 +332,6 @@ class PhotobookProduct: Codable {
         }
         
         return productLayouts
-    }
-    
-    func setPdfUrls(_ urls: [String]) {
-        if urls.count == 2 {
-            coverPdfUrl = urls[0]
-            insidePdfUrl = urls[1]
-        }
     }
     
     /// Sets one of the available layouts for a page number
@@ -620,13 +646,13 @@ class PhotobookProduct: Codable {
         ]
     }
     
-    func assetsToUpload() -> [Asset] {
+    func assetsToUpload() -> [PhotobookAsset]? {
         var assets = [Asset]()
         for layout in productLayouts {
             guard let asset = layout.asset else { continue }
             assets.append(asset)
         }
-        return assets
+        return PhotobookAsset.photobookAssets(with: assets)
     }
     
     func previewImage(size: CGSize, completionHandler: @escaping (UIImage?) -> Void) {
@@ -652,25 +678,48 @@ class PhotobookProduct: Codable {
         }
     }
     
+    func processUploadedAssets(completionHandler: @escaping (Error?) -> Void) {
+        PhotobookAPIManager().createPdf(withPhotobook: self) { [weak welf = self] (urls, error) in
+            guard error == nil else {
+                Analytics.shared.trackError(.pdfCreation)
+                completionHandler(error)
+                return
+            }
+            
+            guard let urls = urls,
+                urls.count >= 2
+                else {
+                    Analytics.shared.trackError(.pdfCreation)
+                    completionHandler(OrderProcessingError.uploadProcessing)
+                    return
+            }
+            
+            welf?.coverPdfUrl = urls[0]
+            welf?.insidePdfUrl = urls[1]
+            
+            completionHandler(nil)
+        }
+    }
+    
 }
 
-extension PhotobookProduct: Hashable, Equatable {
-    
+extension PhotobookProduct {
+
     static func ==(lhs: PhotobookProduct, rhs: PhotobookProduct) -> Bool {
         return lhs.hashValue == rhs.hashValue
     }
-    
-    var hashValue: Int {
+
+    override var hashValue: Int {
         get {
             var stringHash = ""
-            
+
             stringHash += "pt:\(template.id),"
             if let upsoldOptions = upsoldOptions {
                 stringHash += "po:\(upsoldOptions),"
             }
             stringHash += "pc:\(itemCount),"
             stringHash += "pg:\(numberOfPages),"
-            
+
             return stringHash.hashValue
         }
     }

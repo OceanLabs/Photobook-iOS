@@ -18,7 +18,7 @@ class Order: Codable {
     
     var deliveryDetails: DeliveryDetails?
     var paymentMethod: PaymentMethod? = PaymentAuthorizationManager.isApplePayAvailable ? .applePay : nil
-    var products = [PhotobookProduct]()
+    var products = [Product]()
     var promoCode: String?
     var lastSubmissionDate: Date?
     var orderId: String?
@@ -168,11 +168,49 @@ class Order: Codable {
         return parameters
     }
     
+    private enum CodingKeys: String, CodingKey {
+        case deliveryDetails, paymentMethod, products, promoCode, lastSubmissionDate, orderId, paymentToken, cachedCost
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(deliveryDetails, forKey: .deliveryDetails)
+        try container.encodeIfPresent(paymentMethod, forKey: .paymentMethod)
+        try container.encodeIfPresent(promoCode, forKey: .promoCode)
+        try container.encodeIfPresent(lastSubmissionDate, forKey: .lastSubmissionDate)
+        try container.encodeIfPresent(orderId, forKey: .orderId)
+        try container.encodeIfPresent(paymentToken, forKey: .paymentToken)
+        try container.encodeIfPresent(cachedCost, forKey: .cachedCost)
+        
+        let productData = NSKeyedArchiver.archivedData(withRootObject: products)
+        try container.encode(productData, forKey: .products)
+    }
+    
+    init() {}
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        deliveryDetails = try values.decodeIfPresent(DeliveryDetails.self, forKey: .deliveryDetails)
+        paymentMethod = try values.decodeIfPresent(PaymentMethod.self, forKey: .paymentMethod)
+        promoCode = try values.decodeIfPresent(String.self, forKey: .promoCode)
+        lastSubmissionDate = try values.decodeIfPresent(Date.self, forKey: .lastSubmissionDate)
+        orderId = try values.decodeIfPresent(String.self, forKey: .orderId)
+        paymentToken = try values.decodeIfPresent(String.self, forKey: .paymentToken)
+        cachedCost = try values.decodeIfPresent(Cost.self, forKey: .cachedCost)
+        
+        if let productData = try values.decodeIfPresent(Data.self, forKey: .products),
+            let products = NSKeyedUnarchiver.unarchiveObject(with: productData) as? [Product] {
+            self.products = products
+        } else {
+            throw OrderProcessingError.corruptData
+        }
+    }
+    
     func assetsToUpload() -> [Asset] {
         var assets = [Asset]()
         
         for product in products {
-            let productAssets = product.assetsToUpload()
+            let productAssets = PhotobookAsset.assets(from: product.assetsToUpload()) ?? []
             for asset in productAssets {
                 if !assets.contains(where: { $0 == asset }) {
                     assets.append(asset)

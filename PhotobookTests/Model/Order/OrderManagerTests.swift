@@ -59,25 +59,29 @@ class OrderManagerTests: XCTestCase {
             XCTFail("Decoding of product failed")
             return
         }
+        guard let photobookProduct = unarchivedOrder.products.first as? PhotobookProduct else {
+            XCTFail("Decoded product is not a photobook")
+            return
+        }
         
-        XCTAssertEqual(unarchivedOrder.products.first!.template.id, product.template.id)
-        XCTAssertEqual(unarchivedOrder.products.first!.template.name, product.template.name)
-        XCTAssertEqual(unarchivedOrder.products.first!.template.coverAspectRatio, product.template.coverAspectRatio)
-        XCTAssertEqual(unarchivedOrder.products.first!.template.pageAspectRatio, product.template.pageAspectRatio)
-        XCTAssertEqual(unarchivedOrder.products.first!.template.layouts, product.template.layouts)
-        XCTAssertEqual(unarchivedOrder.products.first!.template.coverLayouts, product.template.coverLayouts)
-        XCTAssertEqualOptional(unarchivedOrder.products.first!.template.availableShippingMethods?.map({$0.id}), product.template.availableShippingMethods?.map({$0.id}))
+        XCTAssertEqual(photobookProduct.template.id, product.template.id)
+        XCTAssertEqual(photobookProduct.template.name, product.template.name)
+        XCTAssertEqual(photobookProduct.template.coverAspectRatio, product.template.coverAspectRatio)
+        XCTAssertEqual(photobookProduct.template.pageAspectRatio, product.template.pageAspectRatio)
+        XCTAssertEqual(photobookProduct.template.layouts, product.template.layouts)
+        XCTAssertEqual(photobookProduct.template.coverLayouts, product.template.coverLayouts)
+        XCTAssertEqualOptional(photobookProduct.template.availableShippingMethods?.map({$0.id}), product.template.availableShippingMethods?.map({$0.id}))
 
-        XCTAssertEqual(unarchivedOrder.products.first!.coverColor, product.coverColor)
-        XCTAssertEqual(unarchivedOrder.products.first!.pageColor, product.pageColor)
-        XCTAssertEqual(unarchivedOrder.products.first!.identifier, product.identifier)
-        XCTAssertEqual(unarchivedOrder.products.first!.pigBaseUrl, product.pigBaseUrl)
-        XCTAssertEqual(unarchivedOrder.products.first!.pigCoverUrl, product.pigCoverUrl)
-        XCTAssertEqual(unarchivedOrder.products.first!.coverSnapshot, product.coverSnapshot)
-        XCTAssertEqualOptional(unarchivedOrder.products.first!.selectedShippingMethod?.id, product.selectedShippingMethod?.id)
+        XCTAssertEqual(photobookProduct.coverColor, product.coverColor)
+        XCTAssertEqual(photobookProduct.pageColor, product.pageColor)
+        XCTAssertEqual(photobookProduct.identifier, product.identifier)
+        XCTAssertEqual(photobookProduct.pigBaseUrl, product.pigBaseUrl)
+        XCTAssertEqual(photobookProduct.pigCoverUrl, product.pigCoverUrl)
+        XCTAssertEqual(photobookProduct.coverSnapshot, product.coverSnapshot)
+        XCTAssertEqualOptional(photobookProduct.selectedShippingMethod?.id, product.selectedShippingMethod?.id)
 
-        XCTAssertEqual(unarchivedOrder.products.first!.productLayouts.first!.asset!.identifier, photosAsset.identifier)
-        XCTAssertEqual(unarchivedOrder.products.first!.productLayouts.first!.asset!.size, photosAsset.size)
+        XCTAssertEqual(photobookProduct.productLayouts.first!.asset!.identifier, photosAsset.identifier)
+        XCTAssertEqual(photobookProduct.productLayouts.first!.asset!.size, photosAsset.size)
     }
 
 }

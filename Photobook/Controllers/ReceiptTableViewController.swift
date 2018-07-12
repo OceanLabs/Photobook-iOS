@@ -138,7 +138,7 @@ class ReceiptTableViewController: UITableViewController {
                 case .upload:
                     state = .uploading
                     OrderManager.shared.uploadAssets()
-                case .pdf, .submission, .api(message: _):
+                case .uploadProcessing, .submission, .api(message: _):
                     OrderManager.shared.finishOrder()
                 default: break
                 }
