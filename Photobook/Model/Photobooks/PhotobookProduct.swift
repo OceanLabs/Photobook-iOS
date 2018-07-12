@@ -681,6 +681,7 @@ enum ProductColor: String, Codable {
     func processUploadedAssets(completionHandler: @escaping (Error?) -> Void) {
         PhotobookAPIManager().createPdf(withPhotobook: self) { [weak welf = self] (urls, error) in
             guard error == nil else {
+                Analytics.shared.trackError(.pdfCreation)
                 completionHandler(error)
                 return
             }
@@ -688,7 +689,8 @@ enum ProductColor: String, Codable {
             guard let urls = urls,
                 urls.count >= 2
                 else {
-                    completionHandler(OrderProcessingError.pdf)
+                    Analytics.shared.trackError(.pdfCreation)
+                    completionHandler(OrderProcessingError.uploadProcessing)
                     return
             }
             

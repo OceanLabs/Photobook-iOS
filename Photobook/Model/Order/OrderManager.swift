@@ -13,7 +13,7 @@ enum OrderProcessingError: Error {
     case api(message: ErrorMessage)
     case cancelled
     case upload
-    case pdf
+    case uploadProcessing
     case submission
     case payment
     case corruptData
@@ -268,7 +268,7 @@ class OrderManager {
         let pdfGenerationDispatchGroup = DispatchGroup()
         
         for product in processingOrder?.products ?? [] {
-            // Create PDF
+            // Process uploaded assets
             pdfGenerationDispatchGroup.enter()
             product.processUploadedAssets(completionHandler: { [weak welf = self] error in
                 if let swelf = welf, swelf.isCancelling {
@@ -279,9 +279,7 @@ class OrderManager {
                 }
                 
                 guard error == nil else {
-                    // Failure - PDF
-                    Analytics.shared.trackError(.pdfCreation)
-                    welf?.orderProcessingDelegate?.orderDidComplete(error: .pdf)
+                    welf?.orderProcessingDelegate?.orderDidComplete(error: .uploadProcessing)
                     return
                 }
                 
