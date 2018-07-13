@@ -10,17 +10,23 @@ import Foundation
 import PassKit
 @testable import Photobook
 
-class TestOrder: Order {
+class OrderMock: Order {
+    var orderParametersStub: [String: Any]?
+    
     override var orderDescription: String {
         return "Order Description"
     }
+    
+    override func orderParameters() -> [String: Any]? {
+        return orderParametersStub
+    }
 }
 
-class TestPaymentAuthorizationManagerDelegate: UIViewController {
+class PaymentAuthorizationManagerDelegateMock: UIViewController {
     var viewControllerToPresent: UIViewController?
 }
 
-extension TestPaymentAuthorizationManagerDelegate: PaymentAuthorizationManagerDelegate {
+extension PaymentAuthorizationManagerDelegateMock: PaymentAuthorizationManagerDelegate {
     
     func costUpdated() {}
     
@@ -37,7 +43,7 @@ extension TestPaymentAuthorizationManagerDelegate: PaymentAuthorizationManagerDe
     }
 }
 
-class TestOrderSummaryManagerDelegate: OrderSummaryManagerDelegate {
+class OrderSummaryManagerDelegateMock: OrderSummaryManagerDelegate {
     
     var calledWillUpdate = false
     var calledDidSetPreviewImageUrl = false
@@ -67,5 +73,35 @@ class TestOrderSummaryManagerDelegate: OrderSummaryManagerDelegate {
     func orderSummaryManagerFailedToApply(_ upsell: UpsellOption, error: ErrorMessage) {
         self.upsellOption = upsell
         self.error = error
+    }
+}
+
+extension Notification.Name {
+    static let orderDidComplete = Notification.Name("orderDidComplete")
+}
+
+class OrderProcessingDelegateMock: OrderProcessingDelegate {
+    
+    var didComplete: Bool = false
+    var error: OrderProcessingError?
+    
+    func uploadStatusDidUpdate() {}    
+    func orderWillFinish() {}
+    
+    func orderDidComplete(error: OrderProcessingError?) {
+        NotificationCenter.default.post(name: .orderDidComplete, object: error)
+        didComplete = true
+        self.error = error
+    }
+}
+
+class AssetLoadingManagerMock: AssetLoadingManager {
+    
+    var imageData: Data?
+    var fileExtension: AssetDataFileExtension?
+    var error: Error?
+    
+    override func imageData(for asset: Asset, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension, Error?) -> Void) {
+        completionHandler(imageData, fileExtension!, error)
     }
 }

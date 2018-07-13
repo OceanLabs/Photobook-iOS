@@ -12,11 +12,11 @@ import PassKit
 
 class PaymentAuthorizationManagerTests: XCTestCase {
     
-    var delegate: TestPaymentAuthorizationManagerDelegate!
+    var delegate: PaymentAuthorizationManagerDelegateMock!
     var paymentAuthorizationManager: PaymentAuthorizationManager!
     
-    func fakeOrder() -> TestOrder {
-        let order = TestOrder()
+    func fakeOrder() -> OrderMock {
+        let order = OrderMock()
         
         let deliveryDetails = DeliveryDetails()
         deliveryDetails.firstName = "George"
@@ -44,7 +44,7 @@ class PaymentAuthorizationManagerTests: XCTestCase {
     override func setUp() {
         PaymentAuthorizationManager.applePayMerchantId = "ClownMasterId"
         
-        delegate = TestPaymentAuthorizationManagerDelegate()
+        delegate = PaymentAuthorizationManagerDelegateMock()
         
         paymentAuthorizationManager = PaymentAuthorizationManager()
         paymentAuthorizationManager.basketOrder = fakeOrder()

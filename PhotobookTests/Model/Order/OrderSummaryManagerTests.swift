@@ -14,7 +14,7 @@ class OrderSummaryManagerTests: XCTestCase {
     let apiClient = APIClientMock()
     lazy var photobookApiManager = PhotobookAPIManager(apiClient: apiClient)
     var orderSummaryManager: OrderSummaryManager!
-    var delegate: TestOrderSummaryManagerDelegate!
+    var delegate: OrderSummaryManagerDelegateMock!
     
     var validSummaryResponse = ["summary": [
         "lineItems": [["name": "item1", "price": ["amount": 2.00, "currencyCode": "GBP"]],
@@ -41,7 +41,7 @@ class OrderSummaryManagerTests: XCTestCase {
     override func setUp() {
         Pig.apiClient = apiClient
         
-        delegate = TestOrderSummaryManagerDelegate()
+        delegate = OrderSummaryManagerDelegateMock()
         
         orderSummaryManager = OrderSummaryManager()
         orderSummaryManager.apiManager = photobookApiManager

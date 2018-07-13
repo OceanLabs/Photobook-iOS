@@ -270,7 +270,7 @@ class APIClient: NSObject {
             }
             
             guard let data = data else {
-                completion(nil, .parsing(details: "DataTask: Missing data"))
+                completion(nil, .parsing(details: "DataTask: Missing data for \(request.url?.absoluteString ?? "")"))
                 return
             }
             
@@ -287,7 +287,7 @@ class APIClient: NSObject {
             } else if let image = UIImage(data: data) { // Attempt parsing UIImage
                 completion(image, nil)
             } else { // Parsing error
-                var details = "DataTask: Unknown data received"
+                var details = "DataTask: Bad data for \(request.url?.absoluteString ?? "")"
                 if let stringData = String(data: data, encoding: String.Encoding.utf8) {
                     details = details + ": " + stringData
                 }

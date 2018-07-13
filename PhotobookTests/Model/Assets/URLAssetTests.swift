@@ -81,7 +81,7 @@ class URLAssetTests: XCTestCase {
                 urlAssetImages.append(assetImage)
             }
             
-            let webImageManager = TestWebImageManager()
+            let webImageManager = WebImageManagerMock()
             
             let expectation = XCTestExpectation(description: "returns image data of right size \(index)")
             
@@ -108,7 +108,7 @@ class URLAssetTests: XCTestCase {
         let expectedImageData = UIImageJPEGRepresentation(image, 1.0)
         
         let urlAsset = URLAsset(testUrl, size: testSize)
-        let webImageManager = TestWebImageManager()
+        let webImageManager = WebImageManagerMock()
         webImageManager.imageStub = image
         
         urlAsset.webImageManager = webImageManager
@@ -130,7 +130,7 @@ class URLAssetTests: XCTestCase {
         let expectedImageData = UIImageJPEGRepresentation(image, 1.0)
 
         let urlAsset = URLAsset(testUrl, size: testSize)
-        let webImageManager = TestWebImageManager()
+        let webImageManager = WebImageManagerMock()
         webImageManager.imageDataStub = expectedImageData
         
         urlAsset.webImageManager = webImageManager
@@ -151,7 +151,7 @@ class URLAssetTests: XCTestCase {
         let data = Data(count: 32)
         
         let urlAsset = URLAsset(testUrl, size: testSize)
-        let webImageManager = TestWebImageManager()
+        let webImageManager = WebImageManagerMock()
         webImageManager.imageDataStub = data
         
         urlAsset.webImageManager = webImageManager

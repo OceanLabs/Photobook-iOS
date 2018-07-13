@@ -14,15 +14,15 @@ import MobileCoreServices
 class PhotosAssetTests: XCTestCase {
     
     let image = UIImage(color: .black, size: testSize)!
-    let imageManager = TestImageManager()
-    let assetManager = TestAssetManager()
-    var phAsset: TestPHAsset!
+    let imageManager = PHImageManagerMock()
+    let assetManager = AssetManagerMock()
+    var phAsset: PHAssetMock!
     var photosAsset: PhotosAsset!
     
     override func setUp() {
         super.setUp()
         
-        phAsset = TestPHAsset()
+        phAsset = PHAssetMock()
         phAsset.localIdentifierStub = "localID"
         assetManager.phAssetsStub = [phAsset]
         
@@ -212,7 +212,7 @@ class PhotosAssetTests: XCTestCase {
     func testPhotosAssetsFromAssets_returnsAssets() {
         var assets = [Asset]()
         for _ in 0 ..< 10 {
-            assets.append(TestPhotosAsset())
+            assets.append(PhotosAssetMock())
         }
         let resultingAssets = PhotosAsset.photosAssets(from: assets)
         XCTAssertEqual(resultingAssets.count, assets.count)
@@ -222,7 +222,7 @@ class PhotosAssetTests: XCTestCase {
         var assets = [Asset]()
         for i in 0 ..< 10 {
             if i % 2 == 0 {
-                assets.append(TestPhotosAsset())
+                assets.append(PhotosAssetMock())
             } else {
                 let urlAsset = URLAsset(URL(string: testUrlString)!, size: testSize)
                 assets.append(urlAsset)
@@ -233,9 +233,9 @@ class PhotosAssetTests: XCTestCase {
     }
     
     func testAssetsFromPhotosAssets_returnsAssets() {
-        var assets = [TestPHAsset]()
+        var assets = [PHAssetMock]()
         for _ in 0 ..< 10 {
-            assets.append(TestPHAsset())
+            assets.append(PHAssetMock())
         }
         let resultingAssets = PhotosAsset.assets(from: assets, albumId: "album")
         XCTAssertEqual(resultingAssets.count, assets.count)

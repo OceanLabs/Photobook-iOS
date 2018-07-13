@@ -9,20 +9,20 @@
 import XCTest
 @testable import Photobook
 
-class TestError: LocalizedError {
+class ErrorMock: LocalizedError {
     var errorDescription: String? { return "Test Error" }
 }
 
 class FacebookAlbumTests: XCTestCase {
     
     var facebookAlbum: FacebookAlbum!
-    var facebookApiManager: TestFacebookApiManager!
+    var facebookApiManager: FacebookApiManagerMock!
 
     override func setUp() {
         super.setUp()
         
         facebookAlbum = FacebookAlbum(identifier: "id101", localizedName: "albumName", numberOfAssets: 12, coverPhotoUrl: testUrl)
-        facebookApiManager = TestFacebookApiManager()
+        facebookApiManager = FacebookApiManagerMock()
         facebookAlbum.facebookManager = facebookApiManager
     }
 
@@ -34,7 +34,7 @@ class FacebookAlbumTests: XCTestCase {
     }
 
     func testLoadAssets_shouldReturnErrorIfApiFails() {
-        facebookApiManager.error = TestError()
+        facebookApiManager.error = ErrorMock()
         facebookAlbum.loadAssets { (error) in XCTAssertNotNil(error) }
     }
  

@@ -10,7 +10,7 @@ import UIKit
 import Photos
 
 // Photos asset subclass with stubs to be used in testing
-class TestPhotosAsset: PhotosAsset {
+class PhotosAssetMock: PhotosAsset {
     private var stubSize = CGSize(width: 3000.0, height: 2000.0)
     var height: CGFloat = 2000.0
     
@@ -46,5 +46,16 @@ class TestPhotosAsset: PhotosAsset {
         
         identifierStub = try values.decode(String.self, forKey: .identifierStub)
         stubSize = try values.decode(CGSize.self, forKey: .stubSize)
+    }
+}
+
+extension PhotosAssetMock {
+    @objc func value(forKey key: String) -> Any? {
+        switch key {
+        case "uploadUrl":
+            return uploadUrl
+        default:
+            return nil
+        }
     }
 }

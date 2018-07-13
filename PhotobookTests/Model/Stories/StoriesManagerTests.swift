@@ -12,13 +12,13 @@ import XCTest
 class StoriesManagerTests: XCTestCase {
     
     // Creates a fake story - moment - photo structure
-    private func photoLibrarySetup() -> ([TestPHCollectionList], [TestPHAssetCollection], [TestPHAsset]) {
-        var collectionLists = [TestPHCollectionList]()
-        var assetCollections = [TestPHAssetCollection]()
-        var assets = [TestPHAsset]()
+    private func photoLibrarySetup() -> ([PHCollectionListMock], [PHAssetCollectionMock], [PHAssetMock]) {
+        var collectionLists = [PHCollectionListMock]()
+        var assetCollections = [PHAssetCollectionMock]()
+        var assets = [PHAssetMock]()
         
         for i in 0 ..< 5 {
-            let collectionList = TestPHCollectionList()
+            let collectionList = PHCollectionListMock()
             collectionList.localIdentifierStub = "list_id\(i)"
             collectionList.localizedTitleStub = "list_title\(i)"
             collectionList.startDateStub = Date()
@@ -26,13 +26,13 @@ class StoriesManagerTests: XCTestCase {
             collectionLists.append(collectionList)
             
             for j in 0 ..< 5 {
-                let assetCollection = TestPHAssetCollection()
+                let assetCollection = PHAssetCollectionMock()
                 assetCollection.localIdentifierStub = "collection_id_\(i)_\(j)"
                 assetCollection.listIdentifier = collectionList.localIdentifier
                 assetCollections.append(assetCollection)
                 
                 for k in 0 ..< 4 {
-                    let asset = TestPHAsset()
+                    let asset = PHAssetMock()
                     asset.localIdentifierStub = "asset_id_\(i)_\(j)_\(k)"
                     asset.listIdentifier = assetCollection.localIdentifier
                     asset.widthStub = 3000
@@ -45,19 +45,19 @@ class StoriesManagerTests: XCTestCase {
         return (collectionLists, assetCollections, assets)
     }
     
-    private func managerWithSetup(collectionLists: [TestPHCollectionList], assetCollections: [TestPHAssetCollection], assets: [TestPHAsset]) -> StoriesManager {
+    private func managerWithSetup(collectionLists: [PHCollectionListMock], assetCollections: [PHAssetCollectionMock], assets: [PHAssetMock]) -> StoriesManager {
         
         let storiesManager = StoriesManager()
         
-        let collectionListManager = TestCollectionListManager()
+        let collectionListManager = CollectionListManagerMock()
         collectionListManager.phCollectionListStub = collectionLists
         storiesManager.collectionListManager = collectionListManager
         
-        let collectionManager = TestCollectionManager()
+        let collectionManager = CollectionManagerMock()
         collectionManager.phAssetCollectionStub = assetCollections
         storiesManager.collectionManager = collectionManager
         
-        let assetManager = TestAssetManager()
+        let assetManager = AssetManagerMock()
         assetManager.phAssetsStub = assets
         storiesManager.assetManager = assetManager
 
@@ -67,7 +67,7 @@ class StoriesManagerTests: XCTestCase {
     func testLoadTopStories_storiesShouldBeEmptyIfThereAreNoMomentsLists() {
         let (_, assetCollections, assets) = photoLibrarySetup()
         
-        let storiesManager = managerWithSetup(collectionLists: [TestPHCollectionList](), assetCollections: assetCollections, assets: assets)
+        let storiesManager = managerWithSetup(collectionLists: [PHCollectionListMock](), assetCollections: assetCollections, assets: assets)
 
         let expectation = XCTestExpectation(description: "Should be empty")
         storiesManager.loadTopStories() {
@@ -167,9 +167,9 @@ class StoriesManagerTests: XCTestCase {
             guard let story = storiesManager.stories.first else { return }
             
             // Simulate the loading of physical assets
-            var photoAssets = [TestPhotosAsset]()
+            var photoAssets = [PhotosAssetMock]()
             for i in 0 ..< story.photoCount {
-                let photoAsset = TestPhotosAsset()
+                let photoAsset = PhotosAssetMock()
                 photoAsset.identifierStub = "asset_id_0_0_\(i)"
                 photoAssets.append(photoAsset)
             }
@@ -202,9 +202,9 @@ class StoriesManagerTests: XCTestCase {
             guard let story = storiesManager.stories.last else { return }
 
             // Simulate the loading of physical assets
-            var photoAssets = [TestPhotosAsset]()
+            var photoAssets = [PhotosAssetMock]()
             for i in 0 ..< assets.count {
-                let photoAsset = TestPhotosAsset()
+                let photoAsset = PhotosAssetMock()
                 photoAsset.identifierStub = "asset_id_0_0_\(i)"
                 photoAssets.append(photoAsset)
             }
@@ -238,9 +238,9 @@ class StoriesManagerTests: XCTestCase {
             guard let story = storiesManager.stories.last else { return }
             
             // Simulate the loading of physical assets
-            var photoAssets = [TestPhotosAsset]()
+            var photoAssets = [PhotosAssetMock]()
             for i in 0 ..< numberOfAssetsInStory {
-                let photoAsset = TestPhotosAsset()
+                let photoAsset = PhotosAssetMock()
                 photoAsset.identifierStub = "asset_id_0_0_\(i)"
                 photoAssets.append(photoAsset)
             }

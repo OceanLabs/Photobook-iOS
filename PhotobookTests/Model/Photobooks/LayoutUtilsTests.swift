@@ -9,7 +9,7 @@
 import XCTest
 @testable import Photobook
 
-class TestPanGestureRecognizer: UIPanGestureRecognizer {
+class PanGestureRecognizerMock: UIPanGestureRecognizer {
     var x, y: CGFloat!
     
     override func translation(in view: UIView?) -> CGPoint {
@@ -118,7 +118,7 @@ class LayoutUtilsTests: XCTestCase {
     }
     
     func testAdjustTransformWithRecognizer_pansTransform() {
-        let panGestureRecognizer = TestPanGestureRecognizer()
+        let panGestureRecognizer = PanGestureRecognizerMock()
         panGestureRecognizer.x = 4.0
         panGestureRecognizer.y = 6.0
         

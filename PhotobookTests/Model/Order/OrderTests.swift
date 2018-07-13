@@ -74,9 +74,9 @@ class OrderTests: XCTestCase {
     }
     
     func testAssetsToUpload_shouldListAllAssetsWithoutRepeating() {
-        var assets = [TestPhotosAsset]()
+        var assets = [PhotosAssetMock]()
         for i in 1 ... 10 {
-            let asset = TestPhotosAsset()
+            let asset = PhotosAssetMock()
             asset.identifierStub = "Asset\(i)"
             assets.append(asset)
         }

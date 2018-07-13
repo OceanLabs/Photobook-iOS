@@ -12,17 +12,17 @@ import Photos
 
 class PhotosAlbumTests: XCTestCase {
     
-    let assetCollection = TestPHAssetCollection()
+    let assetCollection = PHAssetCollectionMock()
     var photosAlbum: PhotosAlbum!
     
-    var assets: [TestPHAsset]!
+    var assets: [PHAssetMock]!
     
     override func setUp() {
         super.setUp()
 
-        assets = [TestPHAsset]()
+        assets = [PHAssetMock]()
         for i in 0 ..< 10 {
-            let asset = TestPHAsset()
+            let asset = PHAssetMock()
             asset.localIdentifierStub = "local\(i)"
             asset.listIdentifier = assetCollection.localIdentifier
             assets.append(asset)
@@ -30,7 +30,7 @@ class PhotosAlbumTests: XCTestCase {
 
         photosAlbum = PhotosAlbum(assetCollection)
         
-        let assetManager = TestAssetManager()
+        let assetManager = AssetManagerMock()
         assetManager.phAssetsStub = assets
         
         photosAlbum.assetManager = assetManager
@@ -60,13 +60,13 @@ class PhotosAlbumTests: XCTestCase {
     }
     
     func testChangedAssets() {
-        let newAsset = TestPHAsset()
+        let newAsset = PHAssetMock()
         newAsset.localIdentifierStub = "local11"
         newAsset.listIdentifier = assetCollection.localIdentifier
         
         photosAlbum.loadAssetsFromPhotoLibrary()
         
-        let phChange = TestChangeManager()
+        let phChange = ChangeManagerMock()
         phChange.phInsertedAssetsStub = [ newAsset ]
         phChange.phRemovedAssetsStub = [ assets[0] ]
         
