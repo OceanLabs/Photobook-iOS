@@ -145,4 +145,30 @@ import PayPalDynamicLoader
         receiptViewController.dismissDelegate = delegate
         return receiptViewController
     }
+    
+    
+    /// Checkout View Controller
+    ///
+    /// - Parameters:
+    ///   - embedInNavigation: Whether the returned view controller should be a UINavigationController. Defaults to false. Note that a navigation controller must be provided if false.
+    ///   - delegate: Delegate that can handle the dismissal
+    /// - Returns: A checkout ViewController
+    @objc public func checkoutViewController(embedInNavigation: Bool = false, delegate: DismissDelegate? = nil) -> UIViewController? {
+        guard OrderManager.shared.basketOrder.products.count > 0 else { return nil }
+        
+        guard KiteAPIClient.shared.apiKey != nil else {
+            fatalError("Photobook SDK: Receipt View Controller not initialised because the Kite API key was not set. You can get this from the Kite Dashboard.")
+        }
+        
+        let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
+        checkoutViewController.dismissDelegate = delegate
+        if embedInNavigation {
+            let navigationController = PhotobookNavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
+            navigationController.viewControllers = [ checkoutViewController ]
+            return navigationController
+        } else {
+            return checkoutViewController
+        }
+        
+    }
 }

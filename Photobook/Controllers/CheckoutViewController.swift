@@ -147,6 +147,10 @@ class CheckoutViewController: UIViewController {
     private var editingProductIndex: Int?
     
     private var modalPresentationDismissedGroup = DispatchGroup()
+    private lazy var isPresentedModally: Bool = { return (navigationController?.isBeingPresented ?? false) || isBeingPresented }()
+    private lazy var cancelBarButtonItem: UIBarButtonItem = {
+        return UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(tappedCancel))
+    }()
     lazy private var paymentManager: PaymentAuthorizationManager = {
         let manager = PaymentAuthorizationManager()
         manager.delegate = self
@@ -165,8 +169,14 @@ class CheckoutViewController: UIViewController {
         return OrderManager.shared.basketOrder
     }
     
+    weak var dismissDelegate: DismissDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if #available(iOS 11.0, *) {
+            navigationItem.largeTitleDisplayMode = .never
+        }
         
         Analytics.shared.trackScreenViewed(.basket)
         
@@ -191,6 +201,10 @@ class CheckoutViewController: UIViewController {
         // Apple Pay
         if PaymentAuthorizationManager.isApplePayAvailable {
             setupApplePayButton()
+        }
+        
+        if isPresentedModally {
+            navigationItem.leftBarButtonItems = [ cancelBarButtonItem ]
         }
         
         emptyScreenViewController.show(message: Constants.loadingDetailsText, activity: true)
@@ -246,6 +260,15 @@ class CheckoutViewController: UIViewController {
         }
     }
     
+    @objc func tappedCancel() {
+        if dismissDelegate?.wantsToDismiss?(self) != nil {
+            return
+        }
+        
+        // No delegate provided
+        presentingViewController?.dismiss(animated: true, completion: nil)
+    }
+
     private func refresh(showProgress: Bool = true, forceCostUpdate: Bool = false, forceShippingMethodsUpdate: Bool = false) {
         if showProgress {
             progressOverlayViewController.show(message: Constants.loadingDetailsText)
@@ -748,6 +771,7 @@ extension CheckoutViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             order.products.remove(at: indexPath.row)
+            OrderManager.shared.saveBasketOrder()
             tableView.deleteRows(at: [indexPath], with: .automatic)
             
             guard !order.products.isEmpty else {

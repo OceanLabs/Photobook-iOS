@@ -17,6 +17,13 @@ let photobookDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory,
 let processingOrderBackupFile = photobookDirectory.appending("ProcessingOrder.dat")
 
 class ViewController: UIViewController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        PhotobookSDK.shared.setEnvironment(environment: .test)
+        PhotobookSDK.shared.kiteApiKey = "78b798ff366815c833dfa848654aba43b71a883a"
+    }
 
     @IBAction func createPhotobookWithWebPhotos(_ sender: Any) {
         var assets = [PhotobookAsset]()
@@ -26,9 +33,6 @@ class ViewController: UIViewController {
             assets.append(asset)
         }
         
-        PhotobookSDK.shared.setEnvironment(environment: .test)
-        PhotobookSDK.shared.kiteApiKey = "78b798ff366815c833dfa848654aba43b71a883a"
-        
         guard let photobookViewController = PhotobookSDK.shared.photobookViewController(with: assets, delegate: self) else { return }
         navigationController?.pushViewController(photobookViewController, animated: true)
     }
@@ -36,6 +40,17 @@ class ViewController: UIViewController {
     @IBAction func clearProcessingOrder(_ sender: Any) {
         try? FileManager.default.removeItem(atPath: processingOrderBackupFile)
     }
+    
+    @IBAction func showBasket(_ sender: Any) {
+        if let viewController = PhotobookSDK.shared.checkoutViewController() {
+            navigationController?.pushViewController(viewController, animated: true)
+        } else {
+            let alertController = UIAlertController(title: "Basket is empty", message: nil, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(alertController, animated: true, completion: nil)
+        }
+    }
+    
 }
 
 extension ViewController: PhotobookDelegate {
