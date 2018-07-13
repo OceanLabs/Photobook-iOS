@@ -14,6 +14,7 @@ import UIKit
     
     @objc public func addProductToBasket(_ product: Product) {
         OrderManager.shared.basketOrder.products.insert(product, at: 0)
+        OrderManager.shared.saveBasketOrder()
     }
 
 }

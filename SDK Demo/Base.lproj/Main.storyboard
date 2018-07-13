@@ -27,17 +27,26 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AmJ-lA-rDP">
-                                <rect key="frame" x="109" y="446.5" width="156" height="30"/>
+                                <rect key="frame" x="109" y="432" width="156" height="30"/>
                                 <state key="normal" title="Clear processing order"/>
                                 <connections>
                                     <action selector="clearProcessingOrder:" destination="BYZ-38-t0r" eventType="touchUpInside" id="r1z-3Q-59r"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DFp-8S-XJA">
+                                <rect key="frame" x="143" y="269" width="88" height="30"/>
+                                <state key="normal" title="Show basket"/>
+                                <connections>
+                                    <action selector="showBasket:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PyM-iy-BfE"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="AmJ-lA-rDP" firstAttribute="centerX" secondItem="uEE-tb-aOJ" secondAttribute="centerX" id="4ap-6W-PNC"/>
-                            <constraint firstItem="AmJ-lA-rDP" firstAttribute="top" secondItem="uEE-tb-aOJ" secondAttribute="bottom" constant="64.5" id="QO5-2N-Hy0"/>
+                            <constraint firstItem="DFp-8S-XJA" firstAttribute="centerX" secondItem="uEE-tb-aOJ" secondAttribute="centerX" id="D5Q-wV-9JS"/>
+                            <constraint firstItem="uEE-tb-aOJ" firstAttribute="top" secondItem="DFp-8S-XJA" secondAttribute="bottom" constant="50" id="MXO-ZY-HN4"/>
+                            <constraint firstItem="AmJ-lA-rDP" firstAttribute="top" secondItem="uEE-tb-aOJ" secondAttribute="bottom" constant="50" id="QO5-2N-Hy0"/>
                             <constraint firstItem="uEE-tb-aOJ" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="ZSk-DC-0ko"/>
                             <constraint firstItem="uEE-tb-aOJ" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="zM6-Pb-qhg"/>
                         </constraints>
@@ -47,7 +56,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1076" y="133.5832083958021"/>
+            <point key="canvasLocation" x="1094" y="793"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="GuC-9Q-5kS">

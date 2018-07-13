@@ -36,6 +36,20 @@ class ViewController: UIViewController {
     @IBAction func clearProcessingOrder(_ sender: Any) {
         try? FileManager.default.removeItem(atPath: processingOrderBackupFile)
     }
+    
+    @IBAction func showBasket(_ sender: Any) {
+        PhotobookSDK.shared.setEnvironment(environment: .test)
+        PhotobookSDK.shared.kiteApiKey = "78b798ff366815c833dfa848654aba43b71a883a"
+        
+        if let viewController = PhotobookSDK.shared.checkoutViewController() {
+            navigationController?.pushViewController(viewController, animated: true)
+        } else {
+            let alertController = UIAlertController(title: "Basket is empty", message: nil, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(alertController, animated: true, completion: nil)
+        }
+    }
+    
 }
 
 extension ViewController: PhotobookDelegate {
