@@ -163,8 +163,6 @@ import PayPalDynamicLoader
         let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
         checkoutViewController.dismissDelegate = delegate
         if embedInNavigation {
-            let dismissButton = UIBarButtonItem(barButtonSystemItem: .stop, target: checkoutViewController, action: #selector(checkoutViewController.dismissCheckout))
-            checkoutViewController.navigationItem.leftBarButtonItem = dismissButton
             let navigationController = PhotobookNavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
             navigationController.viewControllers = [ checkoutViewController ]
             return navigationController

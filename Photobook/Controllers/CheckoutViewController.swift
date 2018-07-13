@@ -147,6 +147,10 @@ class CheckoutViewController: UIViewController {
     private var editingProductIndex: Int?
     
     private var modalPresentationDismissedGroup = DispatchGroup()
+    private lazy var isPresentedModally: Bool = { return (navigationController?.isBeingPresented ?? false) || isBeingPresented }()
+    private lazy var cancelBarButtonItem: UIBarButtonItem = {
+        return UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(tappedCancel))
+    }()
     lazy private var paymentManager: PaymentAuthorizationManager = {
         let manager = PaymentAuthorizationManager()
         manager.delegate = self
@@ -197,6 +201,10 @@ class CheckoutViewController: UIViewController {
         // Apple Pay
         if PaymentAuthorizationManager.isApplePayAvailable {
             setupApplePayButton()
+        }
+        
+        if isPresentedModally {
+            navigationItem.leftBarButtonItems = [ cancelBarButtonItem ]
         }
         
         emptyScreenViewController.show(message: Constants.loadingDetailsText, activity: true)
@@ -252,8 +260,7 @@ class CheckoutViewController: UIViewController {
         }
     }
     
-    #if PHOTOBOOK_SDK
-    @objc func dismissCheckout() {
+    @objc func tappedCancel() {
         if dismissDelegate?.wantsToDismiss?(self) != nil {
             return
         }
@@ -261,7 +268,6 @@ class CheckoutViewController: UIViewController {
         // No delegate provided
         presentingViewController?.dismiss(animated: true, completion: nil)
     }
-    #endif
 
     private func refresh(showProgress: Bool = true, forceCostUpdate: Bool = false, forceShippingMethodsUpdate: Bool = false) {
         if showProgress {
