@@ -62,7 +62,7 @@ class ProductLayoutAsset: Codable {
             data = try PropertyListEncoder().encode(asset)
         } else if let asset = asset as? ImageAsset {
             data = try PropertyListEncoder().encode(asset)
-        } else if let asset = asset as? TestPhotosAsset {
+        } else if let asset = asset as? PhotosAssetMock {
             data = try PropertyListEncoder().encode(asset)
         }
         try container.encode(data, forKey: .asset)
@@ -83,7 +83,7 @@ class ProductLayoutAsset: Codable {
                 asset = loadedAsset
             } else if let loadedAsset = try? PropertyListDecoder().decode(PhotosAsset.self, from: data) { // Keep the PhotosAsset case last because otherwise it triggers NSPhotoLibraryUsageDescription crash if not present, which might not be needed
                 asset = loadedAsset
-            } else if let loadedAsset = try? PropertyListDecoder().decode(TestPhotosAsset.self, from: data) {
+            } else if let loadedAsset = try? PropertyListDecoder().decode(PhotosAssetMock.self, from: data) {
                 asset = loadedAsset
             }
         }

@@ -678,8 +678,10 @@ enum ProductColor: String, Codable {
         }
     }
     
+    var photobookApiManager = PhotobookAPIManager()
+    
     func processUploadedAssets(completionHandler: @escaping (Error?) -> Void) {
-        PhotobookAPIManager().createPdf(withPhotobook: self) { [weak welf = self] (urls, error) in
+        photobookApiManager.createPdf(withPhotobook: self) { [weak welf = self] (urls, error) in
             guard error == nil else {
                 Analytics.shared.trackError(.pdfCreation)
                 completionHandler(error)

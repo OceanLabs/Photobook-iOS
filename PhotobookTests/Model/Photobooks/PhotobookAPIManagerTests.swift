@@ -9,30 +9,6 @@
 import XCTest
 @testable import Photobook
 
-class APIClientMock: APIClient {
-    
-    var response: AnyObject?
-    var image: UIImage?
-    var error: APIClientError?
-    
-    override func get(context: APIContext, endpoint: String, parameters: [String : Any]?, headers: [String : String]? = nil, completion: @escaping (AnyObject?, APIClientError?) -> ()) {
-        completion(response, error)
-    }
-    
-    override func post(context: APIContext, endpoint: String, parameters: [String : Any]?, headers: [String : String]?, completion: @escaping (AnyObject?, APIClientError?) -> ()) {
-        completion(response, error)
-    }
-    
-    override func uploadImage(_ image: UIImage, imageName: String, context: APIContext, endpoint: String, completion: @escaping (AnyObject?, Error?) -> ()) {
-        completion(response, error)
-    }
-    
-    override func downloadImage(_ imageUrl: URL, completion: @escaping (UIImage?, Error?) -> ()) {
-        completion(image, error)
-    }
-}
-
-
 class PhotobookAPIManagerTests: XCTestCase {
     
     let apiClient = APIClientMock()

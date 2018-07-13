@@ -14,11 +14,11 @@ class PhotobookProductTests: XCTestCase {
 
     let template = PhotobookTemplate(id: 1, name: "template", templateId: "photobook", kiteId: "photobook", coverSize: CGSize(width: 200.0, height: 100.0), pageSize: CGSize(width: 200.0, height: 100.0), spineTextRatio: 0.8, coverLayouts: Array(1...5), layouts: Array(1...5))
     let assets: [Asset] = {
-        var temp = [TestPhotosAsset]()
+        var temp = [PhotosAssetMock]()
         for i in 0 ..< 10 {
             let width = i % 2 == 0 ? 2000.0 : 3000.0
             let height = i % 2 == 0 ? 3000.0 : 2000.0
-            let asset = TestPhotosAsset(size: CGSize(width: width, height: height))
+            let asset = PhotosAssetMock(size: CGSize(width: width, height: height))
             asset.identifierStub = "id\(i)"
             temp.append(asset)
         }
@@ -70,7 +70,7 @@ class PhotobookProductTests: XCTestCase {
     }
 
     func testEmptyLayoutIndices_shouldIgnoreEmptyTextIfLayoutHasAPhoto() {
-        photobookProduct.productLayouts[11].asset = TestPhotosAsset()
+        photobookProduct.productLayouts[11].asset = PhotosAssetMock()
         let emptyLayoutIndices = photobookProduct.emptyLayoutIndices
         XCTAssertFalse(emptyLayoutIndices!.contains(11))
     }
@@ -83,7 +83,7 @@ class PhotobookProductTests: XCTestCase {
 
     func testEmptyLayoutIndeces_shouldReturnNilWithoutEmptyLayouts() {
         for i in 11 ..< 20 {
-            photobookProduct.productLayouts[i].asset = TestPhotosAsset()
+            photobookProduct.productLayouts[i].asset = PhotosAssetMock()
         }
         let emptyLayoutIndices = photobookProduct.emptyLayoutIndices
         XCTAssertNil(emptyLayoutIndices)
@@ -127,7 +127,7 @@ class PhotobookProductTests: XCTestCase {
     }
 
     func testSetAsset() {
-        let asset = TestPhotosAsset()
+        let asset = PhotosAssetMock()
         photobookProduct.setAsset(asset, forPage: 1)
         XCTAssertTrue(photobookProduct.productLayouts[1].asset!.identifier == asset.identifier)
     }

@@ -13,7 +13,7 @@ import Photos
 class StoryTests: XCTestCase {
     
     var story: Story!
-    var list = TestPHCollectionList()
+    var list = PHCollectionListMock()
     var coverCollection = PHAssetCollection()
     let calendar = Calendar(identifier: Calendar.Identifier.gregorian)
     
@@ -153,7 +153,7 @@ class StoryTests: XCTestCase {
     }
     
     func testLoadAssets_shouldDoNothingIfAlreadyLoaded() {
-        story.assets = [TestPhotosAsset()]
+        story.assets = [PhotosAssetMock()]
         
         var called = false
         story.loadAssets { _ in
@@ -164,27 +164,27 @@ class StoryTests: XCTestCase {
     }
     
     func testLoadAssets_shouldAddAssetsFromEachCollectionInTheMoment() {
-        var assets = [TestPHAsset]()
-        var assetCollections = [TestPHAssetCollection]()
+        var assets = [PHAssetMock]()
+        var assetCollections = [PHAssetCollectionMock]()
         for i in 0 ..< 10 {
-            let assetCollection = TestPHAssetCollection()
+            let assetCollection = PHAssetCollectionMock()
             assetCollection.localIdentifierStub = "collection\(i)"
             assetCollection.listIdentifier = list.localIdentifier
             assetCollections.append(assetCollection)
 
             for j in 0 ..< 5 {
-                let asset = TestPHAsset()
+                let asset = PHAssetMock()
                 asset.localIdentifierStub = "asset\(j)"
                 asset.listIdentifier = assetCollection.localIdentifier
                 assets.append(asset)
             }
         }
 
-        let testCollectionManager = TestCollectionManager()
+        let testCollectionManager = CollectionManagerMock()
         testCollectionManager.phAssetCollectionStub = assetCollections
         story.collectionManager = testCollectionManager
         
-        let testAssetManager = TestAssetManager()
+        let testAssetManager = AssetManagerMock()
         testAssetManager.phAssetsStub = assets
         story.assetsManager = testAssetManager
         

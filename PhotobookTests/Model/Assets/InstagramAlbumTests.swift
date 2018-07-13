@@ -13,14 +13,14 @@ import OAuthSwift
 class InstagramAlbumTests: XCTestCase {
     
     var instagramAlbum: InstagramAlbum!
-    var instagramApiManager: TestInstagramApiManager!
-    var keychainHandler: TestKeychainHandler!
+    var instagramApiManager: InstagramApiManagerMock!
+    var keychainHandler: KeychainHandlerMock!
     
     override func setUp() {
         super.setUp()
         
-        instagramApiManager = TestInstagramApiManager()
-        keychainHandler = TestKeychainHandler()
+        instagramApiManager = InstagramApiManagerMock()
+        keychainHandler = KeychainHandlerMock()
         
         instagramAlbum = InstagramAlbum()
         instagramAlbum.instagramApiManager = instagramApiManager

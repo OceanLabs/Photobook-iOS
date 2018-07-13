@@ -29,6 +29,16 @@ extension OrderProcessingDelegate {
     func orderDidComplete() { orderDidComplete(error: nil) }
 }
 
+protocol OrderDiskManager {
+    func saveDataToCachesDirectory(data: Data, name: String) -> URL?
+}
+
+class DefaultOrderDiskManager: OrderDiskManager {
+    func saveDataToCachesDirectory(data: Data, name: String) -> URL? {
+        return DiskUtils.saveDataToCachesDirectory(data: data, name: name)
+    }
+}
+
 class OrderManager {
     
     private struct Storage {
@@ -41,6 +51,9 @@ class OrderManager {
     private lazy var apiManager = PhotobookAPIManager()
     private lazy var kiteApiClient = KiteAPIClient.shared
     private lazy var apiClient = APIClient.shared
+    private lazy var assetLoadingManager = AssetLoadingManager.shared
+    private lazy var orderDiskManager: OrderDiskManager = DefaultOrderDiskManager()
+
     weak var orderProcessingDelegate: OrderProcessingDelegate?
     
     lazy var basketOrder: Order = {
@@ -84,9 +97,12 @@ class OrderManager {
     }
     
     #if DEBUG
-    convenience init(apiClient: APIClient) {
+    convenience init(apiClient: APIClient, kiteApiClient: KiteAPIClient, assetLoadingManager: AssetLoadingManager, orderDiskManager: OrderDiskManager) {
         self.init()
         self.apiClient = apiClient
+        self.kiteApiClient = kiteApiClient
+        self.assetLoadingManager = assetLoadingManager
+        self.orderDiskManager = orderDiskManager
     }
     #endif
     
@@ -142,7 +158,7 @@ class OrderManager {
         }
         
         processingOrder = order
-        APIClient.shared.recreateBackgroundSession()
+        apiClient.recreateBackgroundSession()
         completionHandler?()
         return true
     }
@@ -189,7 +205,7 @@ class OrderManager {
         }
         
         cancelCompletionBlock = completion
-        APIClient.shared.cancelBackgroundTasks { [weak welf = self] in
+        apiClient.cancelBackgroundTasks { [weak welf = self] in
             welf?.processingOrder = nil
             welf?.cancelCompletionBlock?()
             welf?.cancelCompletionBlock = nil
@@ -214,7 +230,7 @@ class OrderManager {
         }
     }
     
-    func submitOrder(completionHandler: @escaping (_ error: APIClientError?) -> Void) {
+    private func submitOrder(completionHandler: @escaping (_ error: APIClientError?) -> Void) {
         Analytics.shared.trackAction(.orderSubmitted, [Analytics.PropertyNames.secondsSinceAppOpen: Analytics.shared.secondsSinceAppOpen(),
                                                        Analytics.PropertyNames.secondsInBackground: Int(Analytics.shared.secondsSpentInBackground)])
         
@@ -352,24 +368,22 @@ class OrderManager {
     }
     
     //MARK: - Upload
-    
-    func uploadAsset(asset: Asset) {
-        AssetLoadingManager.shared.imageData(for: asset, progressHandler: nil, completionHandler: { [weak welf = self] data, fileExtension, error in
+    private func uploadAsset(asset: Asset) {
+        assetLoadingManager.imageData(for: asset, progressHandler: nil, completionHandler: { [weak welf = self] data, fileExtension, error in
             
             guard error == nil, let imageData = data else {
-                let details: String
                 if let error = error as? AssetLoadingException, case .unsupported(let errorDetails) = error {
-                    details = errorDetails
+                    welf?.failedImageUpload(with: PhotobookAPIError.missingPhotobookInfo(details: errorDetails))
                 } else if let error = error {
-                    details = error.localizedDescription
+                    welf?.failedImageUpload(with: error)
                 } else {
-                    details = "UploadAsset: Could not retrieve image data"
+                    // Unlikely to happen
+                    welf?.failedImageUpload(with: AssetLoadingException.notFound)
                 }
-                welf?.failedImageUpload(with: PhotobookAPIError.missingPhotobookInfo(details: details))
                 return
             }
             
-            if let fileUrl = DiskUtils.saveDataToCachesDirectory(data: imageData, name: "\(asset.fileIdentifier).\(fileExtension.string())") {
+            if let fileUrl = welf?.orderDiskManager.saveDataToCachesDirectory(data: imageData, name: "\(asset.fileIdentifier).\(fileExtension.string())") {
                 welf?.apiClient.uploadImage(fileUrl, reference: PhotobookAPIManager.imageUploadIdentifierPrefix + asset.identifier, context: .pig, endpoint: PhotobookAPIManager.EndPoints.imageUpload)
             } else {
                 welf?.failedImageUpload(with: PhotobookAPIError.couldNotSaveTempImageData)
@@ -377,7 +391,7 @@ class OrderManager {
         })
     }
     
-    @objc func imageUploadFinished(_ notification: Notification) {
+    @objc private func imageUploadFinished(_ notification: Notification) {
         guard let order = processingOrder else { return }
         
         guard let dictionary = notification.userInfo as? [String: AnyObject] else {

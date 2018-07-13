@@ -79,6 +79,4 @@ class CostTests: XCTestCase {
         let cost = Cost.parseDetails(dictionary: invalidDictionary)
         XCTAssertNotNil(cost?.promoCodeInvalidReason)
     }
-
-
 }

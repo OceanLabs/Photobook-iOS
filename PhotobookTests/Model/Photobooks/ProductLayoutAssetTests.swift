@@ -14,7 +14,7 @@ class ProductLayoutAssetTests: XCTestCase {
     
     let tempFile: String = NSTemporaryDirectory() + "tempProductLayoutAsset.dat"
 
-    var photosAsset: PhotosAsset = TestPhotosAsset(PHAsset())
+    var photosAsset: PhotosAsset = PhotosAssetMock(PHAsset())
         
     func testProductLayoutAsset_canBeEncodedAndDecoded() {
         

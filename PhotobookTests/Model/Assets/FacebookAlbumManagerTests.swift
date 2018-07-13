@@ -12,13 +12,13 @@ import XCTest
 class FacebookAlbumManagerTests: XCTestCase {
     
     var facebookAlbumManager: FacebookAlbumManager!
-    var facebookApiManager: TestFacebookApiManager!
+    var facebookApiManager: FacebookApiManagerMock!
     
     override func setUp() {
         super.setUp()
         
         facebookAlbumManager = FacebookAlbumManager()
-        facebookApiManager = TestFacebookApiManager()
+        facebookApiManager = FacebookApiManagerMock()
         facebookAlbumManager.facebookManager = facebookApiManager
     }
     
@@ -30,7 +30,7 @@ class FacebookAlbumManagerTests: XCTestCase {
         facebookApiManager.accessToken = "ClownKey"
         var called = false
         
-        let album = PhotosAlbum(TestPHAssetCollection())
+        let album = PhotosAlbum(PHAssetCollectionMock())
         facebookAlbumManager.albums = [album]
         facebookAlbumManager.loadAlbums { error in
             called = true
@@ -41,7 +41,7 @@ class FacebookAlbumManagerTests: XCTestCase {
     
     func testLoadAlbums_shouldReturnErrorIfApiFails() {
         facebookApiManager.accessToken = "ClownKey"
-        facebookApiManager.error = TestError()
+        facebookApiManager.error = ErrorMock()
         facebookAlbumManager.loadAlbums { error in XCTAssertNotNil(error) }
     }
     
