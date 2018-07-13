@@ -17,6 +17,13 @@ let photobookDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory,
 let processingOrderBackupFile = photobookDirectory.appending("ProcessingOrder.dat")
 
 class ViewController: UIViewController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        PhotobookSDK.shared.setEnvironment(environment: .test)
+        PhotobookSDK.shared.kiteApiKey = "78b798ff366815c833dfa848654aba43b71a883a"
+    }
 
     @IBAction func createPhotobookWithWebPhotos(_ sender: Any) {
         var assets = [PhotobookAsset]()
@@ -25,9 +32,6 @@ class ViewController: UIViewController {
             let asset = PhotobookAsset(withUrl: URL(string: baseImageURL + "\(imageNumber).jpg")!, size: sizes[imageNumber]!)
             assets.append(asset)
         }
-        
-        PhotobookSDK.shared.setEnvironment(environment: .test)
-        PhotobookSDK.shared.kiteApiKey = "78b798ff366815c833dfa848654aba43b71a883a"
         
         guard let photobookViewController = PhotobookSDK.shared.photobookViewController(with: assets, delegate: self) else { return }
         navigationController?.pushViewController(photobookViewController, animated: true)
@@ -38,9 +42,6 @@ class ViewController: UIViewController {
     }
     
     @IBAction func showBasket(_ sender: Any) {
-        PhotobookSDK.shared.setEnvironment(environment: .test)
-        PhotobookSDK.shared.kiteApiKey = "78b798ff366815c833dfa848654aba43b71a883a"
-        
         if let viewController = PhotobookSDK.shared.checkoutViewController() {
             navigationController?.pushViewController(viewController, animated: true)
         } else {
