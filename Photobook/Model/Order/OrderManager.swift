@@ -42,6 +42,9 @@ class OrderManager {
     private lazy var kiteApiClient = KiteAPIClient.shared
     private lazy var apiClient = APIClient.shared
     weak var orderProcessingDelegate: OrderProcessingDelegate?
+    var localeCurrencyCode: String {
+        return Locale.current.currencyCode ?? "GBP" // Fall back to GBP if locale unavailable
+    }
     
     lazy var basketOrder: Order = {
         guard let order = loadOrder(from: Storage.basketOrderBackupFile) else {
