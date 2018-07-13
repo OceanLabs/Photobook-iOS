@@ -202,7 +202,7 @@ class KiteAPIClient {
         }
         
         var parameters = [String: Any]()
-        parameters["currency"] = OrderManager.shared.localeCurrencyCode
+        parameters["currency"] = OrderManager.shared.preferredCurrencyCode
         
         let countryCode = order.deliveryDetails?.address?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
         if let promoCode = order.promoCode {

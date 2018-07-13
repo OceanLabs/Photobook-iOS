@@ -42,8 +42,15 @@ class OrderManager {
     private lazy var kiteApiClient = KiteAPIClient.shared
     private lazy var apiClient = APIClient.shared
     weak var orderProcessingDelegate: OrderProcessingDelegate?
-    var localeCurrencyCode: String {
-        return Locale.current.currencyCode ?? "GBP" // Fall back to GBP if locale unavailable
+    let prioritizedCurrencyCodes: [String] = {
+        var codes = ["GBP", "USD", "EUR"]
+        if let localeCurrency = Locale.current.currencyCode {
+            codes.insert(localeCurrency, at: 0)
+        }
+        return codes
+    }()
+    var preferredCurrencyCode: String {
+       return prioritizedCurrencyCodes.first!
     }
     
     lazy var basketOrder: Order = {

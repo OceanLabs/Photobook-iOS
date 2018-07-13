@@ -29,9 +29,9 @@ class LineItemTests: XCTestCase {
         XCTAssertEqual(lineItem.price, price)
     }
     
-    func testParseDetails_shoudParseAValidDictionary() {
+    func testParseDetails_shouldParseAValidDictionary() {
         let locale = Locale(identifier: "en_US")
-        let lineItem = LineItem.parseDetails(dictionary: validDictionary, localeCurrencyCode: locale.currencyCode, formattingLocale: locale)
+        let lineItem = LineItem.parseDetails(dictionary: validDictionary, currencyCode: "GBP", formattingLocale: locale)
         
         let expectedCost = Price(currencyCode: "GBP", value: 21, formattingLocale: locale)
         
