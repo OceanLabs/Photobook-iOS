@@ -43,7 +43,7 @@ class OrderManager {
     private lazy var apiClient = APIClient.shared
     weak var orderProcessingDelegate: OrderProcessingDelegate?
     let prioritizedCurrencyCodes: [String] = {
-        var codes = ["GBP", "USD", "EUR"]
+        var codes = ["USD", "GBP", "EUR"]
         if let localeCurrency = Locale.current.currencyCode {
             codes.insert(localeCurrency, at: 0)
         }
