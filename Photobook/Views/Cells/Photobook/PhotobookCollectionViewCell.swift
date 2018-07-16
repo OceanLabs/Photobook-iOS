@@ -82,7 +82,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
         leftPageView.shouldSetImage = true
         rightPageView.shouldSetImage = true
         
-        let aspectRatio = product.template.pageAspectRatio
+        let aspectRatio = product.photobookTemplate.pageAspectRatio
         if let leftIndex = leftIndex {
             let isDoubleLayout = product.productLayouts[leftIndex].layout.isDoubleLayout
             leftPageView.aspectRatio = isDoubleLayout ? aspectRatio * 2.0 : aspectRatio

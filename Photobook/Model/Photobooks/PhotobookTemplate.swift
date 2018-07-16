@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 // Defines the characteristics of a photobook / product
-@objc public class PhotobookTemplate: NSObject, Codable {
+@objc class PhotobookTemplate: NSObject, Codable, Template {
     
     private static let mmToPtMultiplier = 2.83464566929134
     

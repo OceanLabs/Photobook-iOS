@@ -56,6 +56,9 @@ class OrderManager {
 
     weak var orderProcessingDelegate: OrderProcessingDelegate?
     let prioritizedCurrencyCodes: [String] = {
+        if ProcessInfo.processInfo.arguments.contains("UITESTINGENVIRONMENT") {
+            return ["GBP"]
+        }
         var codes = ["USD", "GBP", "EUR"]
         if let localeCurrency = Locale.current.currencyCode {
             codes.insert(localeCurrency, at: 0)

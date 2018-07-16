@@ -94,7 +94,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         photobookFrameView.leftPageView.shouldSetImage = true
         photobookFrameView.rightPageView.shouldSetImage = true
         
-        let aspectRatio = product.template.pageAspectRatio
+        let aspectRatio = product.photobookTemplate.pageAspectRatio
         if layout.isDoubleLayout {
             photobookFrameView.leftPageView.aspectRatio = pageType == .left ? aspectRatio * 2.0 : 0.0
             photobookFrameView.rightPageView.aspectRatio = pageType == .left ? 0.0 : aspectRatio * 2.0

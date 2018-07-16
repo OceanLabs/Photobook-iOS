@@ -28,11 +28,11 @@ class ProductManager {
     private(set) var layouts: [Layout]?
     
     var minimumRequiredPages: Int {
-        return currentProduct?.template.minPages ?? 20
+        return currentProduct?.photobookTemplate.minPages ?? 20
     }
 
     var maximumAllowedPages: Int {
-        return currentProduct?.template.maxPages ?? 70
+        return currentProduct?.photobookTemplate.maxPages ?? 70
     }
         
     private(set) var currentProduct: PhotobookProduct?

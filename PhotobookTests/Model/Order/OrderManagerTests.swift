@@ -94,13 +94,13 @@ class OrderManagerTests: XCTestCase {
             return
         }
         
-        XCTAssertEqual(photobookProduct.template.id, product.template.id)
-        XCTAssertEqual(photobookProduct.template.name, product.template.name)
-        XCTAssertEqual(photobookProduct.template.coverAspectRatio, product.template.coverAspectRatio)
-        XCTAssertEqual(photobookProduct.template.pageAspectRatio, product.template.pageAspectRatio)
-        XCTAssertEqual(photobookProduct.template.layouts, product.template.layouts)
-        XCTAssertEqual(photobookProduct.template.coverLayouts, product.template.coverLayouts)
-        XCTAssertEqualOptional(photobookProduct.template.availableShippingMethods?.map({$0.id}), product.template.availableShippingMethods?.map({$0.id}))
+        XCTAssertEqual(photobookProduct.photobookTemplate.id, product.photobookTemplate.id)
+        XCTAssertEqual(photobookProduct.photobookTemplate.name, product.photobookTemplate.name)
+        XCTAssertEqual(photobookProduct.photobookTemplate.coverAspectRatio, product.photobookTemplate.coverAspectRatio)
+        XCTAssertEqual(photobookProduct.photobookTemplate.pageAspectRatio, product.photobookTemplate.pageAspectRatio)
+        XCTAssertEqual(photobookProduct.photobookTemplate.layouts, product.photobookTemplate.layouts)
+        XCTAssertEqual(photobookProduct.photobookTemplate.coverLayouts, product.photobookTemplate.coverLayouts)
+        XCTAssertEqualOptional(photobookProduct.photobookTemplate.availableShippingMethods?.map({$0.id}), product.photobookTemplate.availableShippingMethods?.map({$0.id}))
 
         XCTAssertEqual(photobookProduct.coverColor, product.coverColor)
         XCTAssertEqual(photobookProduct.pageColor, product.pageColor)

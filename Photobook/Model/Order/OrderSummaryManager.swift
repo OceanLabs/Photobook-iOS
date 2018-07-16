@@ -102,7 +102,7 @@ extension OrderSummaryManager {
                 return
             }
             
-            stelf.product.setUpsellData(template: stelf.product.template, payload: productPayload)
+            stelf.product.setUpsellData(template: stelf.product.photobookTemplate, payload: productPayload)
             stelf.upsellOptions = upsellOptions
             stelf.handleReceivingSummary(summary)
         }

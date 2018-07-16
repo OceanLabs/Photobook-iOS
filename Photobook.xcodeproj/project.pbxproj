@@ -344,6 +344,8 @@
 		6F6151DE20C6D61700DBA543 /* OrderSummaryManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6151DD20C6D61700DBA543 /* OrderSummaryManagerTests.swift */; };
 		6F6151DF20C9412A00DBA543 /* LineItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5C5D2D20B4511A008073A6 /* LineItem.swift */; };
 		6F6B7A77200E137B002E2FC2 /* PhotobookCoverCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6B7A76200E137B002E2FC2 /* PhotobookCoverCollectionViewCell.swift */; };
+		6F7B63BE20FC9F19003EB922 /* Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7B63BD20FC9F19003EB922 /* Template.swift */; };
+		6F7B63BF20FCADD1003EB922 /* Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7B63BD20FC9F19003EB922 /* Template.swift */; };
 		6F87460D207CC8D6001923B7 /* PublicProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F87460C207CC8D6001923B7 /* PublicProtocols.swift */; };
 		6F87460E207CC8DB001923B7 /* PublicProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F87460C207CC8D6001923B7 /* PublicProtocols.swift */; };
 		6F92BD021FFE3B8100460466 /* AssetSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F92BD011FFE3B8100460466 /* AssetSelectorViewController.swift */; };
@@ -687,6 +689,7 @@
 		6F6151DB20C6A84600DBA543 /* OrderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderTests.swift; sourceTree = "<group>"; };
 		6F6151DD20C6D61700DBA543 /* OrderSummaryManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryManagerTests.swift; sourceTree = "<group>"; };
 		6F6B7A76200E137B002E2FC2 /* PhotobookCoverCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookCoverCollectionViewCell.swift; sourceTree = "<group>"; };
+		6F7B63BD20FC9F19003EB922 /* Template.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Template.swift; sourceTree = "<group>"; };
 		6F87460C207CC8D6001923B7 /* PublicProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicProtocols.swift; sourceTree = "<group>"; };
 		6F92BD011FFE3B8100460466 /* AssetSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetSelectorViewController.swift; sourceTree = "<group>"; };
 		6F963D7220B45421001C9688 /* LineItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineItemTests.swift; sourceTree = "<group>"; };
@@ -1446,13 +1449,14 @@
 				6FC7E8801FC332A500D2BCDA /* LayoutBox.swift */,
 				6FC7E87E1FC3329400D2BCDA /* Layout.swift */,
 				6FC7E8781FBEF4BB00D2BCDA /* PhotobookTemplate.swift */,
+				6F7B63BD20FC9F19003EB922 /* Template.swift */,
 				2E6CD1C9207E2C7C00BAE011 /* ProductManager.swift */,
 				6FC7E87A1FBEF7FC00D2BCDA /* PhotobookAPIManager.swift */,
 				6F3C4AC81FC8804300DA0196 /* ProductLayout.swift */,
 				6F3C4ACC1FC880F100DA0196 /* ProductLayoutAsset.swift */,
 				6F3C4ACE1FC8811C00DA0196 /* ProductLayoutText.swift */,
-				2E5D7C7B20F63942001F7EC2 /* Product.swift */,
 				6F34855D1FC5A9F900961B32 /* PhotobookProduct.swift */,
+				2E5D7C7B20F63942001F7EC2 /* Product.swift */,
 				6FCE08D72023139D00C55D2F /* FontType.swift */,
 			);
 			path = Photobooks;
@@ -2054,6 +2058,7 @@
 				2E21DB5220177E5400D32989 /* DeliveryDetails.swift in Sources */,
 				6F4606DC201886BD00C7583E /* BorderedRoundedView.swift in Sources */,
 				2EA24E4A2035ACB20069B12A /* InstagramLoginViewController.swift in Sources */,
+				6F7B63BF20FCADD1003EB922 /* Template.swift in Sources */,
 				B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */,
 				6FCE08D620221C7C00C55D2F /* NSAttributedStringExtensions.swift in Sources */,
 				2E17337F200F4E0B00F0D718 /* PaymentMethodsViewController.swift in Sources */,
@@ -2177,6 +2182,7 @@
 				2ED14BB22063AA4000ED2E2C /* ColorSelectionViewController.swift in Sources */,
 				2ED14C2B2063AA4000ED2E2C /* ErrorUtils.swift in Sources */,
 				2ED14C0C2063AA4000ED2E2C /* DeliveryDetails.swift in Sources */,
+				6F7B63BE20FC9F19003EB922 /* Template.swift in Sources */,
 				2ED14C182063AA4000ED2E2C /* CGSizeExtensions.swift in Sources */,
 				2ED14BE22063AA4000ED2E2C /* OutOfBoundsTouchCollectionView.swift in Sources */,
 				2ED14BB12063AA4000ED2E2C /* LayoutSelectionViewController.swift in Sources */,

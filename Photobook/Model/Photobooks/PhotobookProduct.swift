@@ -34,9 +34,9 @@ enum ProductColor: String, Codable {
 }
 
 @objc class PhotobookProduct: NSObject, Codable, Product {
-    
+
     private enum CodingKeys: String, CodingKey {
-        case template, productLayouts, coverColor, pageColor, spineText, spineFontType, productUpsellOptions, itemCount, upsoldTemplate, upsoldOptions, availableShippingMethods, selectedShippingMethod, identifier, pigBaseUrl, pigCoverUrl, coverSnapshot
+        case photobookTemplate, productLayouts, coverColor, pageColor, spineText, spineFontType, productUpsellOptions, itemCount, photobookUpsoldTemplate, upsoldOptions, availableShippingMethods, selectedShippingMethod, identifier, pigBaseUrl, pigCoverUrl, coverSnapshot
     }
     
     private let bleed: CGFloat = 8.5
@@ -44,7 +44,7 @@ enum ProductColor: String, Codable {
     private var currentPortraitLayout = 0
     private var currentLandscapeLayout = 0
     
-    var template: PhotobookTemplate
+    var photobookTemplate: PhotobookTemplate
     var productUpsellOptions: [UpsellOption]?
     var spineText: String?
     var spineFontType: FontType = .plain
@@ -62,8 +62,8 @@ enum ProductColor: String, Codable {
     var pigCoverUrl: String?
     var coverSnapshot: UIImage?
     
-    var isAddingPagesAllowed: Bool { return template.maxPages >= numberOfPages + 2 }
-    var isRemovingPagesAllowed: Bool { return numberOfPages - 2 >= template.minPages }
+    var isAddingPagesAllowed: Bool { return photobookTemplate.maxPages >= numberOfPages + 2 }
+    var isRemovingPagesAllowed: Bool { return numberOfPages - 2 >= photobookTemplate.minPages }
     
     var numberOfPages: Int {
         let doubleLayouts = productLayouts.filter { $0.layout.isDoubleLayout }.count
@@ -73,11 +73,15 @@ enum ProductColor: String, Codable {
     
     var coverLayouts: [Layout]!
     var layouts: [Layout]!
-    private(set) var upsoldTemplate: PhotobookTemplate?
+
+    private(set) var photobookUpsoldTemplate: PhotobookTemplate?
     private(set) var upsoldOptions: [String: Any]?
     
+    var template: Template { return photobookTemplate }
+    var upsoldTemplate: Template? { return photobookUpsoldTemplate }
+    
     func setUpsellData(template: PhotobookTemplate?, payload: [String: Any]?) {
-        upsoldTemplate = template
+        photobookUpsoldTemplate = template
         upsoldOptions = payload?["options"] as? [String: Any]
     }
     
@@ -103,7 +107,7 @@ enum ProductColor: String, Codable {
         for (index, productLayout) in productLayouts.enumerated() {
             guard let textBox = productLayout.layout.textLayoutBox, let text = productLayout.text, text.count > 0 else { continue }
             
-            let pageSize = index == 0 ? template.coverSize : template.pageSize
+            let pageSize = index == 0 ? photobookTemplate.coverSize : photobookTemplate.pageSize
             
             let fontType = productLayout.fontType ?? .plain
             let fontSize = fontType.sizeForScreenToPageRatio()
@@ -121,7 +125,7 @@ enum ProductColor: String, Codable {
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(template, forKey: .template)
+        try container.encode(photobookTemplate, forKey: .photobookTemplate)
         try container.encode(productLayouts, forKey: .productLayouts)
         try container.encode(coverColor, forKey: .coverColor)
         try container.encode(pageColor, forKey: .pageColor)
@@ -129,7 +133,7 @@ enum ProductColor: String, Codable {
         try container.encode(spineFontType, forKey: .spineFontType)
         try container.encode(productUpsellOptions, forKey: .productUpsellOptions)
         try container.encode(itemCount, forKey: .itemCount)
-        try container.encode(upsoldTemplate, forKey: .upsoldTemplate)
+        try container.encode(photobookUpsoldTemplate, forKey: .photobookUpsoldTemplate)
         try container.encode(identifier, forKey: .identifier)
         try container.encode(selectedShippingMethod, forKey: .selectedShippingMethod)
         try container.encode(pigBaseUrl, forKey: .pigBaseUrl)
@@ -145,7 +149,7 @@ enum ProductColor: String, Codable {
     
     required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        template = try values.decode(PhotobookTemplate.self, forKey: .template)
+        photobookTemplate = try values.decode(PhotobookTemplate.self, forKey: .photobookTemplate)
         productLayouts = try values.decode([ProductLayout].self, forKey: .productLayouts)
         coverColor = try values.decode(ProductColor.self, forKey: .coverColor)
         pageColor = try values.decode(ProductColor.self, forKey: .pageColor)
@@ -153,7 +157,7 @@ enum ProductColor: String, Codable {
         spineFontType = try values.decode(FontType.self, forKey: .spineFontType)
         productUpsellOptions = try values.decodeIfPresent([UpsellOption].self, forKey: .productUpsellOptions)
         itemCount = try values.decode(Int.self, forKey: .itemCount)
-        upsoldTemplate = try values.decodeIfPresent(PhotobookTemplate.self, forKey: .upsoldTemplate)
+        photobookUpsoldTemplate = try values.decodeIfPresent(PhotobookTemplate.self, forKey: .photobookUpsoldTemplate)
         identifier = try values.decode(String.self, forKey: .identifier)
         selectedShippingMethod = try values.decodeIfPresent(ShippingMethod.self, forKey: .selectedShippingMethod)
         pigBaseUrl = try values.decodeIfPresent(String.self, forKey: .pigBaseUrl)
@@ -180,7 +184,7 @@ enum ProductColor: String, Codable {
                 return nil
         }
         
-        template = unarchived.template
+        photobookTemplate = unarchived.photobookTemplate
         productLayouts = unarchived.productLayouts
         coverColor = unarchived.coverColor
         pageColor = unarchived.pageColor
@@ -188,7 +192,7 @@ enum ProductColor: String, Codable {
         spineFontType = unarchived.spineFontType
         productUpsellOptions = unarchived.productUpsellOptions
         itemCount = unarchived.itemCount
-        upsoldTemplate = unarchived.upsoldTemplate
+        photobookUpsoldTemplate = unarchived.photobookUpsoldTemplate
         identifier = unarchived.identifier
         selectedShippingMethod = unarchived.selectedShippingMethod
         pigBaseUrl = unarchived.pigBaseUrl
@@ -204,7 +208,7 @@ enum ProductColor: String, Codable {
             return nil
         }
         
-        self.template = template
+        self.photobookTemplate = template
         self.selectedShippingMethod = template.availableShippingMethods?.first
         self.coverLayouts = coverLayouts
         self.layouts = layouts
@@ -252,7 +256,7 @@ enum ProductColor: String, Codable {
         currentPortraitLayout = 0
         
         // Switching products
-        self.template = template
+        self.photobookTemplate = template
         self.coverLayouts = coverLayouts
         self.layouts = layouts
         
@@ -480,7 +484,7 @@ enum ProductColor: String, Codable {
     }
     
     func bleed(forPageSize size: CGSize, type: PageType? = nil) -> CGFloat {
-        let pageHeight = type != nil && type! == .cover ? template.coverSize.height : template.pageSize.height
+        let pageHeight = type != nil && type! == .cover ? photobookTemplate.coverSize.height : photobookTemplate.pageSize.height
         let scaleFactor = size.height / pageHeight
         return bleed * scaleFactor
     }
@@ -499,7 +503,7 @@ enum ProductColor: String, Codable {
             let isCover = index == 0
             let isDoubleLayout = productLayout.layout.isDoubleLayout
             
-            let templateSize = isCover ? template.coverSize : template.pageSize
+            let templateSize = isCover ? photobookTemplate.coverSize : photobookTemplate.pageSize
             let pageSize = CGSize(width: isDoubleLayout ? templateSize.width * 2 : templateSize.width, height: templateSize.height)
             
             // Image layout box
@@ -597,7 +601,7 @@ enum ProductColor: String, Codable {
         photobook["pages"] = pages
         
         // Product
-        photobook["productVariantId"] = template.kiteId
+        photobook["productVariantId"] = photobookTemplate.kiteId
         
         // Config
         var photobookConfig = [String: Any]()
@@ -715,7 +719,7 @@ extension PhotobookProduct {
         get {
             var stringHash = ""
 
-            stringHash += "pt:\(template.id),"
+            stringHash += "pt:\(photobookTemplate.id),"
             if let upsoldOptions = upsoldOptions {
                 stringHash += "po:\(upsoldOptions),"
             }
