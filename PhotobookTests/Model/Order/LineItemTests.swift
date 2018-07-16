@@ -31,7 +31,7 @@ class LineItemTests: XCTestCase {
     
     func testParseDetails_shouldParseAValidDictionary() {
         let locale = Locale(identifier: "en_US")
-        let lineItem = LineItem.parseDetails(dictionary: validDictionary, currencyCode: "GBP", formattingLocale: locale)
+        let lineItem = LineItem.parseDetails(dictionary: validDictionary, prioritizedCurrencyCodes: ["GBP"], formattingLocale: locale)
         
         let expectedCost = Price(currencyCode: "GBP", value: 21, formattingLocale: locale)
         

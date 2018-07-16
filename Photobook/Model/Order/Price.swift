@@ -30,18 +30,13 @@ struct Price: Codable {
         }
     }
     
-    static func parse(_ dictionary: [String: Any], currencyCode: String? = nil, formattingLocale: Locale = Locale.current) -> Price? {
+    static func parse(_ dictionary: [String: Any], prioritizedCurrencyCodes: [String] = OrderManager.shared.prioritizedCurrencyCodes, formattingLocale: Locale = Locale.current) -> Price? {
         
         guard let valuesDict = dictionary as? [String: Double] else {
             return nil
         }
         
-        var currencyCodes = OrderManager.shared.prioritizedCurrencyCodes
-        if let currencyCode = currencyCode {
-            currencyCodes.insert(currencyCode, at: 0)
-        }
-        
-        for currencyCode in currencyCodes {
+        for currencyCode in prioritizedCurrencyCodes {
             if let value = valuesDict[currencyCode] {
                 return Price(currencyCode: currencyCode, value: Decimal(value), formattingLocale: formattingLocale)
             }
@@ -51,14 +46,9 @@ struct Price: Codable {
         
     }
     
-    static func parse(_ dictionaries: [[String: Any]], currencyCode: String? = nil, formattingLocale: Locale = Locale.current) -> Price? {
+    static func parse(_ dictionaries: [[String: Any]], prioritizedCurrencyCodes: [String] = OrderManager.shared.prioritizedCurrencyCodes, formattingLocale: Locale = Locale.current) -> Price? {
         
-        var currencyCodes = OrderManager.shared.prioritizedCurrencyCodes
-        if let currencyCode = currencyCode {
-            currencyCodes.insert(currencyCode, at: 0)
-        }
-        
-        for currencyCode in currencyCodes {
+        for currencyCode in prioritizedCurrencyCodes {
             for dictionary in dictionaries {
                 if let currency = dictionary["currency"] as? String,
                     currency == currencyCode,
