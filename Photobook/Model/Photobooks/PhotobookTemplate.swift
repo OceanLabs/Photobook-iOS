@@ -10,13 +10,13 @@ import Foundation
 import UIKit
 
 // Defines the characteristics of a photobook / product
-@objc public class PhotobookTemplate: NSObject, Codable, Template {
+@objc class PhotobookTemplate: NSObject, Codable, Template {
     
     private static let mmToPtMultiplier = 2.83464566929134
     
     var id: Int
-    public var name: String
-    public var templateId: String
+    var name: String
+    var templateId: String
     var kiteId: String
     var coverSize: CGSize
     var pageSize: CGSize
@@ -27,7 +27,7 @@ import UIKit
     var layouts: [Int] // IDs of the permitted layouts
     var minPages: Int = 20
     var maxPages: Int = 100
-    public var availableShippingMethods: [ShippingMethod]?
+    var availableShippingMethods: [ShippingMethod]?
     
     init(id: Int, name: String, templateId: String, kiteId: String, coverSize: CGSize, pageSize: CGSize, spineTextRatio: CGFloat, coverLayouts: [Int], layouts: [Int]) {
         self.id = id
