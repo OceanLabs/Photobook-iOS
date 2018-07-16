@@ -99,8 +99,7 @@ class PhotobookAPIManager {
     
     func getOrderSummary(product: PhotobookProduct, completionHandler: @escaping (_ summary: OrderSummary?, _ upsellOptions: [UpsellOption]?, _ productPayload: [String: Any]?, _ error: Error?) -> Void) {
         
-        let currencyCode = Locale.current.currencyCode ?? "GBP" // Fall back to GBP if locale unavailable
-        let parameters: [String: Any] = ["productId": product.photobookTemplate.id, "pageCount": product.numberOfPages, "color": product.coverColor.rawValue, "currencyCode": currencyCode]
+        let parameters: [String: Any] = ["productId": product.photobookTemplate.id, "pageCount": product.numberOfPages, "color": product.coverColor.rawValue, "currencyCode": OrderManager.shared.preferredCurrencyCode]
         apiClient.post(context: .photobook, endpoint: EndPoints.summary, parameters: parameters, headers: PhotobookAPIManager.headers) { (jsonData, error) in
             
             if let error = error {
@@ -131,7 +130,7 @@ class PhotobookAPIManager {
     
     func applyUpsells(product: PhotobookProduct, upsellOptions:[UpsellOption], completionHandler: @escaping (_ summary: OrderSummary?, _ upsoldTemplateId: String?, _ productPayload: [String: Any]?, _ error: Error?) -> Void) {
         
-        var parameters: [String: Any] = ["productId": product.photobookTemplate.id, "pageCount": product.numberOfPages, "color": product.coverColor.rawValue]
+        var parameters: [String: Any] = ["productId": product.photobookTemplate.id, "pageCount": product.numberOfPages, "color": product.coverColor.rawValue, "currencyCode": OrderManager.shared.preferredCurrencyCode]
         var upsellDicts = [[String: Any]]()
         for upsellOption in upsellOptions {
             upsellDicts.append(upsellOption.dict)

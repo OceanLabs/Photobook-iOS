@@ -55,6 +55,16 @@ class OrderManager {
     private lazy var orderDiskManager: OrderDiskManager = DefaultOrderDiskManager()
 
     weak var orderProcessingDelegate: OrderProcessingDelegate?
+    let prioritizedCurrencyCodes: [String] = {
+        var codes = ["USD", "GBP", "EUR"]
+        if let localeCurrency = Locale.current.currencyCode {
+            codes.insert(localeCurrency, at: 0)
+        }
+        return codes
+    }()
+    var preferredCurrencyCode: String {
+       return prioritizedCurrencyCodes.first!
+    }
     
     lazy var basketOrder: Order = {
         guard let order = loadOrder(from: Storage.basketOrderBackupFile) else {

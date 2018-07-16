@@ -10,8 +10,6 @@ import Foundation
 
 struct Price: Codable {
     
-    private static let currencyCodeDefault = "GBP"
-    
     let currencyCode: String
     let value: Decimal
     let formatted: String
@@ -32,42 +30,35 @@ struct Price: Codable {
         }
     }
     
-    static func parse(_ dictionary: [String: Any], localeCurrencyCode: String? = Locale.current.currencyCode, formattingLocale: Locale = Locale.current) -> Price? {
+    static func parse(_ dictionary: [String: Any], prioritizedCurrencyCodes: [String] = OrderManager.shared.prioritizedCurrencyCodes, formattingLocale: Locale = Locale.current) -> Price? {
         
         guard let valuesDict = dictionary as? [String: Double] else {
             return nil
         }
         
-        var currencyCode = currencyCodeDefault
-        var value: Decimal
-        if let localeCurrency = localeCurrencyCode, let v = valuesDict[localeCurrency] { //locale currency available
-            currencyCode = localeCurrency
-            value = Decimal(v)
-        } else if let v = valuesDict[currencyCode] { //default currency
-            value = Decimal(v)
-        } else { return nil } //failed to retrieve value
+        for currencyCode in prioritizedCurrencyCodes {
+            if let value = valuesDict[currencyCode] {
+                return Price(currencyCode: currencyCode, value: Decimal(value), formattingLocale: formattingLocale)
+            }
+        }
         
-        return Price(currencyCode: currencyCode, value: value, formattingLocale: formattingLocale)
+        return nil
+        
     }
     
-    static func parse(_ dictionaries: [[String: Any]], localeCurrencyCode: String? = Locale.current.currencyCode, formattingLocale: Locale = Locale.current) -> Price? {
+    static func parse(_ dictionaries: [[String: Any]], prioritizedCurrencyCodes: [String] = OrderManager.shared.prioritizedCurrencyCodes, formattingLocale: Locale = Locale.current) -> Price? {
         
-        var relevantDictionary = dictionaries.first
-        
-        if let localCurrencyCode = localeCurrencyCode {
+        for currencyCode in prioritizedCurrencyCodes {
             for dictionary in dictionaries {
-                if let currency = dictionary["currency"] as? String, currency == localCurrencyCode {
-                    relevantDictionary = dictionary
-                    break
+                if let currency = dictionary["currency"] as? String,
+                    currency == currencyCode,
+                    let value = dictionary["amount"] as? Double {
+                    return Price(currencyCode: currencyCode, value: Decimal(value), formattingLocale: formattingLocale)
                 }
             }
         }
         
-        guard let currencyCode = relevantDictionary?["currency"] as? String, let value = relevantDictionary?["amount"] as? Double else {
-            return nil
-        }
-        
-        return Price(currencyCode: currencyCode, value: Decimal(value), formattingLocale: formattingLocale)
+        return nil
     }
     
 }
