@@ -58,13 +58,12 @@ class OrderManager {
     let prioritizedCurrencyCodes: [String] = {
         if ProcessInfo.processInfo.arguments.contains("UITESTINGENVIRONMENT") {
             return ["GBP"]
-        } else {
-            var codes = ["USD", "GBP", "EUR"]
-            if let localeCurrency = Locale.current.currencyCode {
-                codes.insert(localeCurrency, at: 0)
-            }
-            return codes
         }
+        var codes = ["USD", "GBP", "EUR"]
+        if let localeCurrency = Locale.current.currencyCode {
+            codes.insert(localeCurrency, at: 0)
+        }
+        return codes
     }()
     var preferredCurrencyCode: String {
        return prioritizedCurrencyCodes.first!
