@@ -52,7 +52,7 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        coverFrameView.aspectRatio = product.template.coverAspectRatio
+        coverFrameView.aspectRatio = product.photobookTemplate.coverAspectRatio
     }
     
     func loadCoverAndSpine() {

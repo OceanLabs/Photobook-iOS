@@ -150,7 +150,7 @@ class SpineTextEditingViewController: UIViewController {
         let initialContainerRatio = initialRect.width / initialRect.height
         
         // Figure out the size of the spine frame
-        let height = textField.bounds.width / product.template.spineTextRatio
+        let height = textField.bounds.width / product.photobookTemplate.spineTextRatio
         let width = height * initialContainerRatio
         
         spineFrameViewWidthConstraint.constant = width
@@ -193,7 +193,7 @@ class SpineTextEditingViewController: UIViewController {
     }
     
     private func setTextFieldAttributes() {
-        let fontSize = fontType.sizeForScreenToPageRatio(spineFrameViewHeightConstraint.constant / product.template.coverSize.height)
+        let fontSize = fontType.sizeForScreenToPageRatio(spineFrameViewHeightConstraint.constant / product.photobookTemplate.coverSize.height)
         let fontColor = product.coverColor.fontColor()
         textField.defaultTextAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor, isSpineText: true)
         textField.attributedText = fontType.attributedText(with: textField.text, fontSize: fontSize, fontColor: fontColor, isSpineText: true)

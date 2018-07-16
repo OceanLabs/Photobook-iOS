@@ -252,7 +252,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let alertController = UIAlertController(title: nil, message: NSLocalizedString("Photobook/ChangeSizeTitle", value: "Changing the size keeps your layout intact", comment: "Information when the user wants to change the photo book's size"), preferredStyle: .actionSheet)
         for photobook in photobooks {
             alertController.addAction(UIAlertAction(title: photobook.name, style: .default, handler: { [weak welf = self] (_) in
-                guard welf?.product.template.id != photobook.id else { return }
+                guard welf?.product.photobookTemplate.id != photobook.id else { return }
                 
                 _ = ProductManager.shared.setCurrentProduct(with: photobook)
                 
@@ -882,7 +882,7 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
         }
 
         let pageWidth = (view.bounds.width - Constants.cellSideMargin * 2.0 - PhotobookConstants.horizontalPageToCoverMargin * 2.0) / 2.0
-        let pageHeight = pageWidth / product.template.pageAspectRatio
+        let pageHeight = pageWidth / product.photobookTemplate.pageAspectRatio
 
         // PhotoboookCollectionViewCell works when the collectionView uses dynamic heights by setting up the aspect ratio of its pages.
         // This however, causes problems with the drag & drop functionality and that is why the cell height is calculated by using the measurements set on the storyboard.

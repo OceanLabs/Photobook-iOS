@@ -45,7 +45,7 @@ class PhotobookProductTests: XCTestCase {
     
     // MARK: - Init
     func testInit_setsTemplate() {
-        XCTAssertEqual(photobookProduct.template, template)
+        XCTAssertEqual(photobookProduct.photobookTemplate, template)
     }
 
     func testInit_coverIsNotTheFirstAsset() {

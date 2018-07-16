@@ -34,10 +34,10 @@ class SpineFrameView: UIView {
     
     override func layoutSubviews() {
         // Figure out the available width of the spine frame
-        textLabelWidthConstraint.constant = bounds.height * product.template.spineTextRatio
+        textLabelWidthConstraint.constant = bounds.height * product.photobookTemplate.spineTextRatio
 
         if !(text ?? "").isEmpty {
-            let fontSize = fontType.sizeForScreenToPageRatio(bounds.height / product.template.coverSize.height)
+            let fontSize = fontType.sizeForScreenToPageRatio(bounds.height / product.photobookTemplate.coverSize.height)
             textLabel.attributedText = fontType.attributedText(with: text!, fontSize: fontSize, fontColor: color.fontColor(), isSpineText: true)
         } else {
             textLabel.text = ""

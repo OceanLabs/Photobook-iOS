@@ -12,8 +12,8 @@ import UIKit
     var selectedShippingMethod: ShippingMethod? { get set }
     var identifier: String { get }
     var itemCount: Int { get set }
-    var template: PhotobookTemplate { get }
-    var upsoldTemplate: PhotobookTemplate? { get }
+    var template: Template { get }
+    var upsoldTemplate: Template? { get }
     var upsoldOptions: [String: Any]? { get }
     var numberOfPages: Int { get }
     var hashValue: Int { get }
