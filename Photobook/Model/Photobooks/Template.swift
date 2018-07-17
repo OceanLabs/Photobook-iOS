@@ -8,7 +8,7 @@
 import Foundation
 
 @objc public protocol Template {
-    var templateId: String { get set }
-    var name: String { get set }
+    var templateId: String { get }
+    var name: String { get }
     var availableShippingMethods: [ShippingMethod]? { get set }
 }
