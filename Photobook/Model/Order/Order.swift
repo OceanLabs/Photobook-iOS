@@ -72,6 +72,10 @@ class Order: Codable {
         return stringHash.hashValue ^ shippingHash ^ productsHash
     }
     
+    var hasCachedCost: Bool {
+        return cachedCost != nil
+    }
+    
     var hasValidCachedCost: Bool {
         return cachedCost?.orderHash == hashValue
     }
@@ -186,9 +190,8 @@ class Order: Codable {
         try container.encode(productData, forKey: .products)
     }
     
-    init() {}
-    
-    required init(from decoder: Decoder) throws {
+    convenience required init(from decoder: Decoder) throws {
+        self.init()
         let values = try decoder.container(keyedBy: CodingKeys.self)
         deliveryDetails = try values.decodeIfPresent(DeliveryDetails.self, forKey: .deliveryDetails)
         paymentMethod = try values.decodeIfPresent(PaymentMethod.self, forKey: .paymentMethod)

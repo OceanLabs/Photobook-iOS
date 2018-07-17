@@ -80,7 +80,7 @@ class EmptyScreenViewController: UIViewController {
     ///
     /// - Parameter errorMessage: Use this ErrorMessage to create a Empty Screen
     func show(_ errorMessage: ActionableErrorMessage) {
-        show(message: errorMessage.message, title:errorMessage.title, buttonTitle: errorMessage.buttonTitle, buttonAction: errorMessage.buttonAction)
+        show(message: errorMessage.message, title: errorMessage.title, buttonTitle: errorMessage.buttonTitle, buttonAction: errorMessage.buttonAction)
     }
     
     /// Shows the Empty Screen over the parent's UI
