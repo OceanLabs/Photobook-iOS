@@ -20,6 +20,10 @@ class OrderMock: Order {
     override func orderParameters() -> [String: Any]? {
         return orderParametersStub
     }
+    
+    override init() {
+        super.init()
+    }
 }
 
 class PaymentAuthorizationManagerDelegateMock: UIViewController {
