@@ -61,7 +61,7 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             cell.method = method
             cell.icon = UIImage(namedInPhotobookBundle:"apple-pay-method")
             
-            let selected = selectedPaymentMethod == .applePay
+            let selected = selectedPaymentMethod != nil && selectedPaymentMethod == .applePay
             cell.ticked = selected
             
             cell.separator.isHidden = true
@@ -76,7 +76,7 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             
             cell.icon = UIImage(namedInPhotobookBundle:"paypal-method")
             
-            let selected = selectedPaymentMethod == .payPal
+            let selected = selectedPaymentMethod != nil && selectedPaymentMethod == .payPal
             cell.ticked = selected
             
             cell.separator.isHidden = false
@@ -93,7 +93,7 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             
             cell.icon = card.cardIcon
             
-            let selected = selectedPaymentMethod == .creditCard
+            let selected = selectedPaymentMethod != nil && selectedPaymentMethod == .creditCard
             cell.ticked = selected
             
             cell.separator.isHidden = true
