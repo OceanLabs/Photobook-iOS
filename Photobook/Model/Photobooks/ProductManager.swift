@@ -44,13 +44,13 @@ class ProductManager {
     /// Requests the photobook details so the user can start building their photobook
     ///
     /// - Parameter completion: Completion block with an optional error
-    func initialise(completion:((Error?)->())?) {
+    func initialise(completion:((ErrorMessage?)->())?) {
         apiManager.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, error) in
             guard error == nil else {
                 if let error = error as? APIClientError, case .parsing(let details) = error {
                     Analytics.shared.trackError(.parsing, details)
                 }
-                completion?(error!)
+                completion?(ErrorMessage(error!))
                 return
             }
             

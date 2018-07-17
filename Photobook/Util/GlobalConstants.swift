@@ -26,7 +26,8 @@ struct Colors {
 }
 
 struct CommonLocalizedStrings {
-    static let somethingWentWrong = NSLocalizedString("GenericError/SomethingWentWrong", value: "Something Went Wrong", comment: "Generic error message title") 
+    static let somethingWentWrongTitle = NSLocalizedString("GenericError/SomethingWentWrong", value: "Something Went Wrong", comment: "Generic error message title")
+    static let somethingWentWrongText = NSLocalizedString("GenericError/AnErrorOcurred", value: "An error occurred while processing your request.", comment: "Generic error message body")
     static let alertOK = NSLocalizedString("Generic/OKButtonTitle", value: "OK", comment: "Acknowledgement to an alert dialog")
     static let retry = NSLocalizedString("General/RetryButtonTitle", value: "Retry", comment: "Button title to retry operation")
     static let cancel = NSLocalizedString("General/CancelButtonTitle", value: "Cancel", comment: "Cancel an action")

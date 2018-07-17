@@ -221,11 +221,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     private func loadProducts() {
         emptyScreenViewController.show(message: NSLocalizedString("Photobook/Loading", value: "Loading products", comment: "Loading products screen message"), activity: true)
-        ProductManager.shared.initialise(completion: { [weak welf = self] (error: Error?) in
-            guard let photobook = ProductManager.shared.products?.first, error == nil else {
-                welf?.emptyScreenViewController.show(message: error?.localizedDescription ?? "Error", buttonTitle: CommonLocalizedStrings.retry, buttonAction: {
-                    welf?.loadProducts()
-                })
+        ProductManager.shared.initialise(completion: { [weak welf = self] (errorMessage: ErrorMessage?) in
+            guard let photobook = ProductManager.shared.products?.first, errorMessage == nil else {
+                let actionableErrorMessage = ActionableErrorMessage.withErrorMessage(errorMessage ?? ErrorMessage(.generic)) { welf?.loadProducts() }
+                welf?.emptyScreenViewController.show(actionableErrorMessage)
                 return
             }
             

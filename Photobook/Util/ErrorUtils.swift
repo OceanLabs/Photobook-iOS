@@ -9,7 +9,7 @@
 class ErrorUtils {
     
     static func genericRetryErrorMessage(message: String, action: @escaping () -> ()) -> ActionableErrorMessage {
-        let title = CommonLocalizedStrings.somethingWentWrong
+        let title = CommonLocalizedStrings.somethingWentWrongTitle
         let buttonTitle = CommonLocalizedStrings.retry
         return ActionableErrorMessage(title: title, message: message, buttonTitle: buttonTitle, buttonAction: action, dismissErrorPromptAfterAction: true)
     }

@@ -405,7 +405,7 @@ extension ReceiptTableViewController: OrderProcessingDelegate {
                 notificationBody = NSLocalizedString("ReceiptTableViewController/NotificationBodyCancelled", value: "Something went wrong and we couldn't process your photo book", comment: "body of a notification notifying about failed photobook that had to be cancelled")
             case .api(message: let errorMessage):
                 state = .error
-                notificationTitle = errorMessage.title?.uppercased() ?? CommonLocalizedStrings.somethingWentWrong.uppercased()
+                notificationTitle = errorMessage.title?.uppercased() ?? CommonLocalizedStrings.somethingWentWrongTitle.uppercased()
                 notificationBody = errorMessage.text
             default:
                 state = .error

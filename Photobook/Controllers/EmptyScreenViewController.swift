@@ -14,6 +14,12 @@ struct ActionableErrorMessage: Error {
     var buttonTitle: String
     var buttonAction: () -> ()
     var dismissErrorPromptAfterAction: Bool
+    
+    static func withErrorMessage(_ errorMessage: ErrorMessage, buttonTitle: String = CommonLocalizedStrings.retry, dismissErrorPromptAfterAction: Bool = false, buttonAction: @escaping () -> ()) -> ActionableErrorMessage {
+        let title = errorMessage.title ?? CommonLocalizedStrings.somethingWentWrongTitle
+        let message = errorMessage.text!
+        return ActionableErrorMessage(title: title, message: message, buttonTitle: buttonTitle, buttonAction: buttonAction, dismissErrorPromptAfterAction: dismissErrorPromptAfterAction)
+    }
 }
 
 /// Controller to add as a child to present the empty state.
