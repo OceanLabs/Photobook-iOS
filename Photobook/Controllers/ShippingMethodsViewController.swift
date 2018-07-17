@@ -62,25 +62,7 @@ extension ShippingMethodsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ShippingMethodTableViewCell.reuseIdentifier, for: indexPath) as! ShippingMethodTableViewCell
-        
-        let shippingMethod = order.products[indexPath.section].template.availableShippingMethods![indexPath.row]
-        
-        cell.method = shippingMethod.name
-        cell.deliveryTime = shippingMethod.deliveryTime
-        cell.cost = shippingMethod.price.formatted
-        
-        var selected = false
-        if let selectedMethod = order.products[indexPath.section].selectedShippingMethod {
-            selected = selectedMethod.id == shippingMethod.id
-        }
-        cell.ticked = selected
-        cell.separatorLeadingConstraint.constant = indexPath.row == order.products[indexPath.section].template.availableShippingMethods!.count - 1 ? 0.0 : Constants.leadingSeparatorInset
-        cell.topSeparator.isHidden = indexPath.row != 0
-        cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + "\(shippingMethod.name). \(shippingMethod.deliveryTime). \(shippingMethod.price.formatted)"
-        cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
-        
-        return cell
+        return tableView.dequeueReusableCell(withIdentifier: ShippingMethodTableViewCell.reuseIdentifier, for: indexPath)
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -98,7 +80,29 @@ extension ShippingMethodsViewController: UITableViewDelegate {
         let product = order.products[indexPath.section]
         product.selectedShippingMethod = product.template.availableShippingMethods?[indexPath.item]
         
-        tableView.reloadData()
+        tableView.reloadRows(at: tableView.indexPathsForVisibleRows ?? [], with: .none)
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let cell = cell as? ShippingMethodTableViewCell else {
+            return
+        }
+        
+        let shippingMethod = order.products[indexPath.section].template.availableShippingMethods![indexPath.row]
+        
+        cell.method = shippingMethod.name
+        cell.deliveryTime = shippingMethod.deliveryTime
+        cell.cost = shippingMethod.price.formatted
+        
+        var selected = false
+        if let selectedMethod = order.products[indexPath.section].selectedShippingMethod {
+            selected = selectedMethod.id == shippingMethod.id
+        }
+        cell.ticked = selected
+        cell.separatorLeadingConstraint.constant = indexPath.row == order.products[indexPath.section].template.availableShippingMethods!.count - 1 ? 0.0 : Constants.leadingSeparatorInset
+        cell.topSeparator.isHidden = indexPath.row != 0
+        cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + "\(shippingMethod.name). \(shippingMethod.deliveryTime). \(shippingMethod.price.formatted)"
+        cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
     }
     
 }
