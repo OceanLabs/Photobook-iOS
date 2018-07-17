@@ -32,6 +32,8 @@ class ShippingMethodsViewController: UIViewController {
         return EmptyScreenViewController.emptyScreen(parent: self)
     }()
     
+    private lazy var sectionTitles: [String] = order.cost?.lineItems.map({ $0.name }) ?? []
+    
     var order: Order {
         get {
             return OrderManager.shared.basketOrder
@@ -62,31 +64,7 @@ extension ShippingMethodsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return tableView.dequeueReusableCell(withIdentifier: ShippingMethodTableViewCell.reuseIdentifier, for: indexPath)
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ShippingMethodHeaderTableViewCell.reuseIdentifier) as? ShippingMethodHeaderTableViewCell
-        cell?.label.text = order.cost?.lineItems[section].name
-        
-        return cell
-    }
-    
-}
-
-extension ShippingMethodsViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let product = order.products[indexPath.section]
-        product.selectedShippingMethod = product.template.availableShippingMethods?[indexPath.item]
-        
-        tableView.reloadRows(at: tableView.indexPathsForVisibleRows ?? [], with: .none)
-    }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard let cell = cell as? ShippingMethodTableViewCell else {
-            return
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: ShippingMethodTableViewCell.reuseIdentifier, for: indexPath) as! ShippingMethodTableViewCell
         
         let shippingMethod = order.products[indexPath.section].template.availableShippingMethods![indexPath.row]
         
@@ -103,6 +81,26 @@ extension ShippingMethodsViewController: UITableViewDelegate {
         cell.topSeparator.isHidden = indexPath.row != 0
         cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + "\(shippingMethod.name). \(shippingMethod.deliveryTime). \(shippingMethod.price.formatted)"
         cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let cell = tableView.dequeueReusableCell(withIdentifier: ShippingMethodHeaderTableViewCell.reuseIdentifier) as? ShippingMethodHeaderTableViewCell
+        cell?.label.text = sectionTitles[section]
+        
+        return cell
+    }
+    
+}
+
+extension ShippingMethodsViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let product = order.products[indexPath.section]
+        product.selectedShippingMethod = product.template.availableShippingMethods?[indexPath.item]
+        
+        tableView.reloadData()
     }
     
 }
