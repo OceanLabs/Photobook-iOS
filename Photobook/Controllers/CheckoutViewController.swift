@@ -282,6 +282,12 @@ class CheckoutViewController: UIViewController {
             self?.promoCodeTextField.isUserInteractionEnabled = true
             
             if let error = error {
+                if !(self?.order.hasCachedCost ?? false) {
+                    let errorMessage = ErrorMessage(error)
+                    self?.emptyScreenViewController.show(message: errorMessage.text, title: errorMessage.title)
+                    return
+                }
+                
                 let alert = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .alert)
                 let okAction = UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default)
                 alert.addAction(okAction)
