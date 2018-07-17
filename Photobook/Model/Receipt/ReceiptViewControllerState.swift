@@ -131,8 +131,8 @@ enum ReceiptViewControllerState: Int {
     }
     
     static func customErrorWith(_ message: ErrorMessage) -> (title: String, description: String) {
-        let title = message.title?.uppercased() ?? CommonLocalizedStrings.somethingWentWrong.uppercased()
-        let description = (message.text != nil ? message.text + "\n" : "") + Constants.infoNoteError
+        let title = message.title?.uppercased() ?? CommonLocalizedStrings.somethingWentWrongTitle.uppercased()
+        let description = message.text! + "\n" + Constants.infoNoteError
         return (title, description)
     }
 }
