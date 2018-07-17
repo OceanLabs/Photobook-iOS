@@ -1697,7 +1697,7 @@
                                                         <constraint firstAttribute="height" constant="1" id="Deq-fk-fbj"/>
                                                     </constraints>
                                                 </view>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TCy-2R-2h1">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TCy-2R-2h1">
                                                     <rect key="frame" x="0.0" y="0.0" width="129.5" height="129.5"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="TCy-2R-2h1" secondAttribute="height" id="h2g-Om-7ie"/>

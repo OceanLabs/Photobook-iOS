@@ -775,7 +775,11 @@ extension CheckoutViewController: UITableViewDelegate {
             tableView.deleteRows(at: [indexPath], with: .automatic)
             
             guard !order.products.isEmpty else {
-                navigationController?.popViewController(animated: true)
+                if isPresentedModally {
+                    tappedCancel()
+                } else {
+                    navigationController?.popViewController(animated: true)
+                }
                 return
             }
             refresh(forceCostUpdate: true, forceShippingMethodsUpdate: false)

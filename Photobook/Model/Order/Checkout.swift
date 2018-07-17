@@ -16,5 +16,13 @@ import UIKit
         OrderManager.shared.basketOrder.products.insert(product, at: 0)
         OrderManager.shared.saveBasketOrder()
     }
+    
+    @objc public func numberOfItemsInBasket() -> Int {
+        return OrderManager.shared.basketOrder.products.reduce(0, { $0 + $1.itemCount })
+    }
+    
+    @objc public func setPromoCode(_ code: String?) {
+        OrderManager.shared.basketOrder.promoCode = code
+    }
 
 }
