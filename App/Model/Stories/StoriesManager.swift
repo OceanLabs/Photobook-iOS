@@ -274,7 +274,7 @@ class StoriesManager: NSObject {
             var subarray = Array(subarrayIndex == subarrayCount - 1 ? story.assets[subarrayStartIndex...] : story.assets[subarrayStartIndex..<subarrayStartIndex + subarrayLength])
             
             for _ in 0..<assetsFromEachSubarray {
-                let selectedIndex = Int(arc4random()) % subarray.count
+                let selectedIndex = Int(arc4random_uniform(UInt32(subarray.count)))
                 selectedAssets.append(subarray.remove(at: selectedIndex))
             }
             unusedAssets.append(contentsOf: subarray)

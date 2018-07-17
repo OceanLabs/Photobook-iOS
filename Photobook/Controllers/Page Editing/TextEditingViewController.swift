@@ -217,7 +217,7 @@ class TextEditingViewController: UIViewController {
             fatalError("Text editing failed due to missing layout info.")
         }
         
-        let pageRatio = pageType == .cover ? product.template.coverAspectRatio : product.template.pageAspectRatio
+        let pageRatio = pageType == .cover ? product.photobookTemplate.coverAspectRatio : product.photobookTemplate.pageAspectRatio
         
         textView.inputAccessoryView = textToolBarView
         textView.text = productLayout.text
@@ -293,7 +293,7 @@ class TextEditingViewController: UIViewController {
     }
 
     private func setTextViewAttributes(with fontType: FontType, fontColor: UIColor) {
-        let pageHeight = pageType == .cover ? product.template.coverSize.height : product.template.pageSize.height
+        let pageHeight = pageType == .cover ? product.photobookTemplate.coverSize.height : product.photobookTemplate.pageSize.height
         let fontSize = fontType.sizeForScreenToPageRatio(pageView.bounds.height / pageHeight)
         textView.attributedText = fontType.attributedText(with: textView.text, fontSize: fontSize, fontColor: fontColor)
         textView.typingAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor)

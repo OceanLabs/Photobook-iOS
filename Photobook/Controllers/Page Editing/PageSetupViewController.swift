@@ -201,7 +201,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             pageView.shouldSetImage = false
             
             coverFrameView.color = product.coverColor
-            coverFrameView.pageView.aspectRatio = product.template.coverAspectRatio
+            coverFrameView.pageView.aspectRatio = product.photobookTemplate.coverAspectRatio
             coverFrameView.pageView.delegate = self
             
             photobookFrameView.pageColor = product.pageColor
@@ -392,7 +392,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func setupPhotobookPages() {
-        let aspectRatio = pageType == .cover ? product.template.coverAspectRatio : product.template.pageAspectRatio
+        let aspectRatio = pageType == .cover ? product.photobookTemplate.coverAspectRatio : product.photobookTemplate.pageAspectRatio
         
         if isDoublePage {
             photobookFrameView.leftPageView.aspectRatio = pageType == .left ? aspectRatio * 2.0 : 0.0
