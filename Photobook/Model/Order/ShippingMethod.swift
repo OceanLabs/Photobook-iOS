@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc public class ShippingMethod: NSObject, Codable {
+@objc public class ShippingMethod: NSObject, Codable, NSCoding {
     
     static var supportsSecureCoding = true
     
@@ -43,5 +43,26 @@ import Foundation
             else { return nil }
         
         return ShippingMethod(id: id, name: name, price: price, maxDeliveryTime: maxDeliveryTime, minDeliveryTime: minDeliveryTime)
+    }
+    
+    public func encode(with aCoder: NSCoder) {
+        if let data = try? PropertyListEncoder().encode(self) {
+            aCoder.encode(data, forKey: "shippingMethodData")
+        }
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        
+        guard let data = aDecoder.decodeObject(forKey: "shippingMethodData") as? Data,
+            let unarchived = try? PropertyListDecoder().decode(ShippingMethod.self, from: data)
+            else {
+                return nil
+        }
+        
+        id = unarchived.id
+        name = unarchived.name
+        price = unarchived.price
+        maxDeliveryTime = unarchived.maxDeliveryTime
+        minDeliveryTime = unarchived.minDeliveryTime
     }
 }
