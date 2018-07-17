@@ -29,7 +29,7 @@ class PhotobookAPIManager {
         static let products = "/ios/get_initial_data"
         static let summary = "/ios/get_summary"
         static let applyUpsells = "/ios/apply_upsells"
-        static let createPdf = "/ios/generate_photobook_pdf"
+        static let createPdf = "/ios/generate_pdf"
         static let imageUpload = "/upload/"
     }
     
@@ -166,7 +166,7 @@ class PhotobookAPIManager {
     ///   - photobook: Photobook product to use for creating the PDF
     ///   - completionHandler: Closure to be called with PDF URLs if successful, or an error if it fails
     func createPdf(withPhotobook photobook: PhotobookProduct, completionHandler: @escaping (_ urls: [String]?, _ error: Error?) -> Void) {
-        apiClient.post(context: .photobook, endpoint: "ios/generate_pdf", parameters: photobook.pdfParameters(), headers: PhotobookAPIManager.headers) { (response, error) in
+        apiClient.post(context: .photobook, endpoint: EndPoints.createPdf, parameters: photobook.pdfParameters(), headers: PhotobookAPIManager.headers) { (response, error) in
             guard let response = response as? [String: Any], let coverUrl = response["coverUrl"] as? String, let insideUrl = response["insideUrl"] as? String else {
                 completionHandler(nil, error)
                 return
