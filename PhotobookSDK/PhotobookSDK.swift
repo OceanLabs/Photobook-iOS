@@ -134,7 +134,7 @@ import SDWebImage
         }
         
         UIFont.loadAllFonts()
-        let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptTableViewController") as! ReceiptTableViewController
+        let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptViewController") as! ReceiptViewController
         receiptViewController.order = OrderManager.shared.processingOrder
         receiptViewController.dismissDelegate = delegate
         return receiptViewController
