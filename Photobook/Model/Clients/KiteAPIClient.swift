@@ -22,6 +22,9 @@ class KiteAPIClient {
     
     var apiKey: String?
     
+    /// The environment of the app, live vs test
+    static var environment: Environment = .live
+    
     private static let apiVersion = "v4.0"
     private struct Endpoints {
         static let orderSubmission = "/print"
@@ -164,7 +167,7 @@ class KiteAPIClient {
             
             if let payPalDict = paymentKeys["paypal"] as? [String: Any],
                 let publicKey = payPalDict["public_key"] as? String {
-                switch APIClient.environment {
+                switch KiteAPIClient.environment {
                 case .test:
                     OLPayPalWrapper.initializeWithClientIds(forEnvironments: ["sandbox" : publicKey])
                     OLPayPalWrapper.preconnect(withEnvironment: "sandbox") /*PayPalEnvironmentSandbox*/

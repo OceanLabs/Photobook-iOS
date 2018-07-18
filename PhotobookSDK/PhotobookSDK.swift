@@ -25,8 +25,10 @@ import SDWebImage
         switch environment {
         case .test:
             APIClient.environment = .test
+            KiteAPIClient.environment = .test
         case .live:
             APIClient.environment = .live
+            KiteAPIClient.environment = .live
         }
     }
     

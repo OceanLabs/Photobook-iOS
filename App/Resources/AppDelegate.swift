@@ -22,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         #if TEST_ENVIRONMENT
         APIClient.environment = .test
+        KiteAPIClient.environment = .test
         #endif
         
         PhotobookManager.setupPayments()

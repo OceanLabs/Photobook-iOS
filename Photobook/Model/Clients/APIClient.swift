@@ -24,11 +24,6 @@ enum APIContext {
     case kite
 }
 
-enum Environment {
-    case test
-    case live
-}
-
 /// Network client for all interaction with the API
 class APIClient: NSObject {
     
