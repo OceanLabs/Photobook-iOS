@@ -132,7 +132,7 @@ class KiteAPIClient {
     }
 
     /// Loads template information for a given array of template IDs.
-    func fetchTemplateInfo(for templateIds: [String], completionHandler: @escaping (_ shippingClasses: [String: [ShippingMethod]]?, _ error: APIClientError?) -> Void) {
+    func getTemplateInfo(for templateIds: [String], completionHandler: @escaping (_ shippingClasses: [String: [ShippingMethod]]?, _ error: APIClientError?) -> Void) {
 
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
@@ -158,7 +158,7 @@ class KiteAPIClient {
                 let objects = jsonDict["objects"] as? [[String: Any]],
                 let paymentKeys = jsonDict["payment_keys"] as? [String: Any]
             else {
-                completionHandler(nil, .parsing(details: "Fetching templates failed: Could not parse root objects"))
+                completionHandler(nil, .parsing(details: "GetTemplateInfo: Could not parse root objects"))
                 return
             }
             
@@ -192,20 +192,20 @@ class KiteAPIClient {
                     let shippingClassDictionaries = relevantShippingRegion["shipping_classes"] as? [[String: Any]],
                     let templateId = object["template_id"] as? String
                     else {
-                        completionHandler(nil, .parsing(details: "Fetching templates failed: Could not parse region mapping"))
+                        completionHandler(nil, .parsing(details: "GetTemplateInfo: Could not parse region mapping"))
                         return
                 }
                 
                 for dictionary in shippingClassDictionaries {
                     guard let shippingClass = ShippingMethod.parse(dictionary: dictionary) else {
-                        completionHandler(nil, .parsing(details: "Fetching templates failed: Could not parse shipping class"))
+                        completionHandler(nil, .parsing(details: "GetTemplateInfo: Could not parse shipping class"))
                         return
                     }
                     shippingClasses.append(shippingClass)
                 }
                 
                 if shippingClasses.count == 0 { // Inconsistent
-                    completionHandler(nil, .parsing(details: "Fetching templates failed: Zero shipping classes parsed"))
+                    completionHandler(nil, .parsing(details: "GetTemplateInfo: Zero shipping classes parsed"))
                     return
                 }
                 
