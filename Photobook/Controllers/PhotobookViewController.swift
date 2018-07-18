@@ -508,14 +508,14 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             fatalError("Photobook: encoding of product layout failed")
         }
         pasteBoard?.items.removeAll()
-        pasteBoard?.addItems([["ly.kite.photobook.productLayout" : leftData]])
+        pasteBoard?.addItems([["ly.kite.photobook.productLayout": leftData]])
         
         if !leftProductLayout.layout.isDoubleLayout, let rightIndex = cell.rightIndex {
             let rightProductLayout = product.productLayouts[rightIndex]
             guard let rightData = try? PropertyListEncoder().encode(rightProductLayout) else {
                 fatalError("Photobook: encoding of product layout failed")
             }
-            pasteBoard?.addItems([["ly.kite.photobook.productLayout" : rightData]])
+            pasteBoard?.addItems([["ly.kite.photobook.productLayout": rightData]])
         }
     }
     
