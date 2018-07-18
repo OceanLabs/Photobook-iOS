@@ -564,8 +564,17 @@ class CheckoutViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Constants.receiptSegueName {
-            (segue.destination as? ReceiptTableViewController)?.order = order
+        switch segue.identifier {
+        case Constants.receiptSegueName:
+            if let receiptTableViewController = segue.destination as? ReceiptTableViewController {
+                receiptTableViewController.order = order
+            }
+        case Constants.segueIdentifierPaymentMethods:
+            if let paymentMethodsViewController = segue.destination as? PaymentMethodsViewController {
+                paymentMethodsViewController.order = order
+            }
+        default:
+            break
         }
     }
     
