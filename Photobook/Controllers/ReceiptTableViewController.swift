@@ -165,7 +165,7 @@ class ReceiptTableViewController: UITableViewController {
     @IBAction private func continueTapped(_ sender: UIBarButtonItem) {
         if state != .completed {
             let title = NSLocalizedString("ReceiptTableViewController/DismissAlertTitle", value: "Cancel Order?", comment: "Alert title when the user wants to close the upload/receipt screen")
-            let message = NSLocalizedString("ReceiptTableViewController/DismissAlertMessage", value: "You have not been charged yet. Please note, if you cancel your design will be lost.", comment: "Alert message when the user wants to close the upload/receipt screen")
+            let message = NSLocalizedString("ReceiptTableViewController/DismissAlertMessage", value: "You have not been charged yet. Please note, if you cancel your order will be lost.", comment: "Alert message when the user wants to close the upload/receipt screen")
             let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.no, style: .default, handler:nil))
             alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.yes, style: .destructive, handler: { [weak welf = self] (_) in
@@ -397,20 +397,20 @@ extension ReceiptTableViewController: OrderProcessingDelegate {
             switch error! {
             case .payment:
                 state = .paymentFailed
-                notificationTitle = NSLocalizedString("ReceiptTableViewController/NotificationTitlePaymentFailed", value: "Payment Failed", comment: "title of a notification notifying about failed photobook payment")
-                notificationBody = NSLocalizedString("ReceiptTableViewController/NotificationBodyPaymentFailed", value: "Update your payment method to finish photobook checkout", comment: "body of a notification notifying about failed photobook payment")
+                notificationTitle = NSLocalizedString("ReceiptTableViewController/NotificationTitlePaymentFailed", value: "Payment Failed", comment: "title of a notification notifying about failed order payment")
+                notificationBody = NSLocalizedString("ReceiptTableViewController/NotificationBodyPaymentFailed", value: "Update your payment method to finish order checkout", comment: "body of a notification notifying about failed order payment")
             case .cancelled:
                 state = .cancelled
-                notificationTitle = NSLocalizedString("ReceiptTableViewController/NotificationTitleCancelled", value: "Photobook Cancelled", comment: "title of a notification notifying about failed photobook that had to be cancelled")
-                notificationBody = NSLocalizedString("ReceiptTableViewController/NotificationBodyCancelled", value: "Something went wrong and we couldn't process your photo book", comment: "body of a notification notifying about failed photobook that had to be cancelled")
+                notificationTitle = NSLocalizedString("ReceiptTableViewController/NotificationTitleCancelled", value: "Order Cancelled", comment: "title of a notification notifying about failed order that had to be cancelled")
+                notificationBody = NSLocalizedString("ReceiptTableViewController/NotificationBodyCancelled", value: "Something went wrong and we couldn't process your order", comment: "body of a notification notifying about failed order that had to be cancelled")
             case .api(message: let errorMessage):
                 state = .error
                 notificationTitle = errorMessage.title?.uppercased() ?? CommonLocalizedStrings.somethingWentWrongTitle.uppercased()
                 notificationBody = errorMessage.text
             default:
                 state = .error
-                notificationTitle = NSLocalizedString("ReceiptTableViewController/NotificationTitleProcessingFailed", value: "Couldn't Finish Photobook", comment: "title of a notification notifying about failed photobook processing")
-                notificationBody = NSLocalizedString("ReceiptTableViewController/NotificationBodyProcessingFailed", value: "Something went wrong and your photo book couldn't be sent to our servers", comment: "body of a notification notifying about failed photobook processing")
+                notificationTitle = NSLocalizedString("ReceiptTableViewController/NotificationTitleProcessingFailed", value: "Couldn't Finish Order", comment: "title of a notification notifying about failed order processing")
+                notificationBody = NSLocalizedString("ReceiptTableViewController/NotificationBodyProcessingFailed", value: "Something went wrong and your order couldn't be sent to our servers", comment: "body of a notification notifying about failed order processing")
             }
             
             lastProcessingError = error
