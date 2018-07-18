@@ -14,15 +14,13 @@ class PaymentMethodsViewController: UIViewController {
         static let creditCardSegueName = "CreditCardSegue"
     }
     
+    var order: Order!
+    
     @IBOutlet weak var tableView: UITableView!
 
-    fileprivate var selectedPaymentMethod: PaymentMethod? {
-        get {
-            return OrderManager.shared.basketOrder.paymentMethod
-        }
-        set {
-            OrderManager.shared.basketOrder.paymentMethod = newValue
-        }
+    private var selectedPaymentMethod: PaymentMethod? {
+        get { return order.paymentMethod }
+        set { order.paymentMethod = newValue }
     }
 
     override func viewDidLoad() {
@@ -134,7 +132,6 @@ extension PaymentMethodsViewController: UITableViewDelegate {
         }
         
         tableView.reloadData()
-        OrderManager.shared.basketOrder.paymentMethod = selectedPaymentMethod
     }
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -144,7 +141,7 @@ extension PaymentMethodsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         Card.currentCard = nil
-        if PaymentAuthorizationManager.isApplePayAvailable { OrderManager.shared.basketOrder.paymentMethod = .applePay }
+        if PaymentAuthorizationManager.isApplePayAvailable { selectedPaymentMethod = .applePay }
         tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
     }
 }

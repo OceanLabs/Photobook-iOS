@@ -212,15 +212,11 @@ class ReceiptTableViewController: UITableViewController {
     }
     
     private func pay() {
-        guard let cost = cost else {
-            return
-        }
+        guard let cost = cost, let paymentMethod = order.paymentMethod else { return }
         
-        if order.paymentMethod == .applePay {
+        if paymentMethod == .applePay {
             modalPresentationDismissedGroup.enter()
         }
-        
-        guard let paymentMethod = order.paymentMethod else { return }
         
         progressOverlayViewController.show(message: Constants.loadingPaymentText)
         paymentManager.authorizePayment(cost: cost, method: paymentMethod)
@@ -228,6 +224,7 @@ class ReceiptTableViewController: UITableViewController {
     
     private func showPaymentMethods() {
         let paymentViewController = storyboard?.instantiateViewController(withIdentifier: "PaymentMethodsViewController") as! PaymentMethodsViewController
+        paymentViewController.order = order
         navigationController?.pushViewController(paymentViewController, animated: true)
     }
     
