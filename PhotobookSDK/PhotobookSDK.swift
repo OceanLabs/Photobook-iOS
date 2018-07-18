@@ -8,8 +8,6 @@
 
 import UIKit
 import SDWebImage
-import Stripe
-import PayPalDynamicLoader
 
 /// Shared manager for the photo book UI
 @objc public class PhotobookSDK: NSObject {
@@ -27,14 +25,10 @@ import PayPalDynamicLoader
         switch environment {
         case .test:
             APIClient.environment = .test
-            Stripe.setDefaultPublishableKey("pk_test_FxzXniUJWigFysP0bowWbuy3")
-            OLPayPalWrapper.initializeWithClientIds(forEnvironments: ["sandbox" : "AcEcBRDxqcCKiikjm05FyD4Sfi4pkNP98AYN67sr3_yZdBe23xEk0qhdhZLM"])
-            OLPayPalWrapper.preconnect(withEnvironment: "sandbox") /*PayPalEnvironmentSandbox*/
+            KiteAPIClient.environment = .test
         case .live:
             APIClient.environment = .live
-            Stripe.setDefaultPublishableKey("pk_live_o1egYds0rWu43ln7FjEyOU5E")
-            OLPayPalWrapper.initializeWithClientIds(forEnvironments: ["live" : "ASYVBBCHF_KwVUstugKy4qvpQaPlUeE_5beKRJHpIP2d3SA_jZrsaUDTmLQY"])
-            OLPayPalWrapper.preconnect(withEnvironment: "live") /*PayPalEnvironmentProduction*/
+            KiteAPIClient.environment = .live
         }
     }
     

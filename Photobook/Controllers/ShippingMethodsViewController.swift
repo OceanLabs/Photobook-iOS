@@ -32,6 +32,8 @@ class ShippingMethodsViewController: UIViewController {
         return EmptyScreenViewController.emptyScreen(parent: self)
     }()
     
+    private lazy var sectionTitles: [String] = order.cost?.lineItems.map({ $0.name }) ?? []
+    
     var order: Order {
         get {
             return OrderManager.shared.basketOrder
@@ -85,7 +87,7 @@ extension ShippingMethodsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let cell = tableView.dequeueReusableCell(withIdentifier: ShippingMethodHeaderTableViewCell.reuseIdentifier) as? ShippingMethodHeaderTableViewCell
-        cell?.label.text = order.cost?.lineItems[section].name
+        cell?.label.text = sectionTitles[section]
         
         return cell
     }

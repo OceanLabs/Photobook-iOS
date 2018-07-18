@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PhotobookNavigationBar: UINavigationBar {
+public class PhotobookNavigationBar: UINavigationBar {
     
     private static let contentHeight: CGFloat = 44.0
     private static let promptHeight: CGFloat = 34.0
@@ -28,18 +28,18 @@ class PhotobookNavigationBar: UINavigationBar {
     var barHeight: CGFloat {
         return willShowPrompt ? PhotobookNavigationBar.contentHeight + PhotobookNavigationBar.promptHeight : PhotobookNavigationBar.contentHeight + UIApplication.shared.statusBarFrame.height
     }
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
     }
     
-    override func layoutSubviews() {
+    override public func layoutSubviews() {
         super.layoutSubviews()
         
         if !hasAddedBlur {
@@ -77,7 +77,7 @@ class PhotobookNavigationBar: UINavigationBar {
             barTintColor = .white
             effectView.alpha = 1.0
         }
-    }    
+    }
 }
 
 /// Navigation bar configurations
@@ -95,7 +95,7 @@ protocol PhotobookNavigationBarDelegate {
 
 extension PhotobookNavigationBar: UINavigationControllerDelegate {
     
-    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool){
+    public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool){
         
         if let viewController = viewController as? PhotobookNavigationBarDelegate {
             setBarType(viewController.photobookNavigationBarType)

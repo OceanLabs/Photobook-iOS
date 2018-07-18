@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Stripe
 
 struct OrdersNotificationName {
     static let orderWasCreated = Notification.Name("ly.kite.sdk.orderWasCreated")
@@ -118,7 +117,7 @@ class Order: Codable {
     }
     
     func updateShippingMethods(_ completionHandler: @escaping (_ error: APIClientError?) -> Void) {
-        KiteAPIClient.shared.getShippingMethods(for: OrderManager.shared.basketOrder.products.map({ $0.template.templateId })) { [weak welf = self] (shippingMethods, error) in
+        KiteAPIClient.shared.getTemplateInfo(for: OrderManager.shared.basketOrder.products.map({ $0.template.templateId })) { [weak welf = self] (shippingMethods, error) in
             guard error == nil else {
                 if let error = error, case .parsing(let details) = error {
                     Analytics.shared.trackError(.parsing, details)

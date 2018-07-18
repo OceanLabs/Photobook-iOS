@@ -25,6 +25,11 @@ struct Colors {
     static let greyTint = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1.0)
 }
 
+enum Environment {
+    case test
+    case live
+}
+
 struct CommonLocalizedStrings {
     static let somethingWentWrongTitle = NSLocalizedString("GenericError/SomethingWentWrong", value: "Something Went Wrong", comment: "Generic error message title")
     static let somethingWentWrongText = NSLocalizedString("GenericError/AnErrorOcurred", value: "An error occurred while processing your request.", comment: "Generic error message body")

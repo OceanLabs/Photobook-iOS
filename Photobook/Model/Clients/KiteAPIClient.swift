@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import PayPalDynamicLoader
+import Stripe
 
 enum OrderSubmitStatus: String {
     case cancelled, error, paymentError, unknown, received, accepted, validated, processed
@@ -19,6 +21,9 @@ enum OrderSubmitStatus: String {
 class KiteAPIClient {
     
     var apiKey: String?
+    
+    /// The environment of the app, live vs test
+    static var environment: Environment = .live
     
     private static let apiVersion = "v4.0"
     private struct Endpoints {
@@ -129,8 +134,8 @@ class KiteAPIClient {
         }
     }
 
-    /// Loads shipping classes for a given array of template IDs. This is different to shipping methods which contain the cost. ShippingClass is for displaying and setting shipping method IDs
-    func getShippingMethods(for templateIds: [String], completionHandler: @escaping (_ shippingClasses: [String: [ShippingMethod]]?, _ error: APIClientError?) -> Void) {
+    /// Loads template information for a given array of template IDs.
+    func getTemplateInfo(for templateIds: [String], completionHandler: @escaping (_ shippingClasses: [String: [ShippingMethod]]?, _ error: APIClientError?) -> Void) {
 
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
@@ -153,10 +158,28 @@ class KiteAPIClient {
             
             //get objects for each product
             guard let jsonDict = response as? [String: Any],
-                let objects = jsonDict["objects"] as? [[String: Any]]
+                let objects = jsonDict["objects"] as? [[String: Any]],
+                let paymentKeys = jsonDict["payment_keys"] as? [String: Any]
             else {
-                completionHandler(nil, .parsing(details: "GetShippingMethods: Could not parse root objects"))
+                completionHandler(nil, .parsing(details: "GetTemplateInfo: Could not parse root objects"))
                 return
+            }
+            
+            if let payPalDict = paymentKeys["paypal"] as? [String: Any],
+                let publicKey = payPalDict["public_key"] as? String {
+                switch KiteAPIClient.environment {
+                case .test:
+                    OLPayPalWrapper.initializeWithClientIds(forEnvironments: ["sandbox" : publicKey])
+                    OLPayPalWrapper.preconnect(withEnvironment: "sandbox") /*PayPalEnvironmentSandbox*/
+                case .live:
+                    OLPayPalWrapper.initializeWithClientIds(forEnvironments: ["live" : publicKey])
+                    OLPayPalWrapper.preconnect(withEnvironment: "live") /*PayPalEnvironmentProduction*/
+                }
+            }
+            
+            if let stripeDict = paymentKeys["stripe"] as? [String: Any],
+                let publicKey = stripeDict["public_key"] as? String {
+                Stripe.setDefaultPublishableKey(publicKey)
             }
             
             var objectShippingClasses = [String: [ShippingMethod]]()
@@ -172,20 +195,20 @@ class KiteAPIClient {
                     let shippingClassDictionaries = relevantShippingRegion["shipping_classes"] as? [[String: Any]],
                     let templateId = object["template_id"] as? String
                     else {
-                        completionHandler(nil, .parsing(details: "GetShippingMethods: Could not parse region mapping"))
+                        completionHandler(nil, .parsing(details: "GetTemplateInfo: Could not parse region mapping"))
                         return
                 }
                 
                 for dictionary in shippingClassDictionaries {
                     guard let shippingClass = ShippingMethod.parse(dictionary: dictionary) else {
-                        completionHandler(nil, .parsing(details: "GetShippingMethods: Could not parse shipping class"))
+                        completionHandler(nil, .parsing(details: "GetTemplateInfo: Could not parse shipping class"))
                         return
                     }
                     shippingClasses.append(shippingClass)
                 }
                 
                 if shippingClasses.count == 0 { // Inconsistent
-                    completionHandler(nil, .parsing(details: "GetShippingMethods: Zero shipping classes parsed"))
+                    completionHandler(nil, .parsing(details: "GetTemplateInfo: Zero shipping classes parsed"))
                     return
                 }
                 
