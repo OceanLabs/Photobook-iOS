@@ -274,28 +274,28 @@ class CheckoutViewController: UIViewController {
             progressOverlayViewController.show(message: Constants.loadingDetailsText)
         }
         
-        order.updateCost(forceUpdate: forceCostUpdate, forceShippingMethodUpdate: forceShippingMethodsUpdate) { [weak self] (error) in
+        order.updateCost(forceUpdate: forceCostUpdate, forceShippingMethodUpdate: forceShippingMethodsUpdate) { [weak welf = self] (error) in
             
-            self?.emptyScreenViewController.hide()
-            self?.progressOverlayViewController.hide()
-            self?.promoCodeActivityIndicator.stopAnimating()
-            self?.promoCodeTextField.isUserInteractionEnabled = true
+            welf?.emptyScreenViewController.hide()
+            welf?.progressOverlayViewController.hide()
+            welf?.promoCodeActivityIndicator.stopAnimating()
+            welf?.promoCodeTextField.isUserInteractionEnabled = true
             
             if let error = error {
-                if !(self?.order.hasCachedCost ?? false) {
+                if !(welf?.order.hasCachedCost ?? false) {
                     let errorMessage = ErrorMessage(error)
-                    self?.emptyScreenViewController.show(message: errorMessage.text, title: errorMessage.title)
+                    welf?.emptyScreenViewController.show(message: errorMessage.text, title: errorMessage.title)
                     return
                 }
                 
-                let alert = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .alert)
-                let okAction = UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default)
-                alert.addAction(okAction)
-                self?.present(alert, animated: true)
+                guard let stelf = welf else { return }
+                MessageBarViewController.show(message: ErrorMessage(error), parentViewController: stelf, offsetTop: stelf.navigationController!.navigationBar.frame.maxY, centred: true) {
+                    welf?.refresh(showProgress: showProgress, forceCostUpdate: forceCostUpdate, forceShippingMethodsUpdate: forceShippingMethodsUpdate)
+                }
                 return
             }
             
-            self?.updateViews()
+            welf?.updateViews()
         }
     }
     
@@ -610,12 +610,10 @@ class CheckoutViewController: UIViewController {
             progressOverlayViewController.show(message: Constants.loadingPaymentText)
             order.updateCost { [weak welf = self] (error: Error?) in
                 guard error == nil else {
-                    let genericError = NSLocalizedString("UpdateCostError", value: "An error occurred while updating our products.\nPlease try again later.", comment: "Generic error when retrieving the cost for the products in the basket")
-                    
-                    let alert = UIAlertController(title: nil, message: genericError, preferredStyle: .alert)
-                    let okAction = UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default)
-                    alert.addAction(okAction)
-                    self.present(alert, animated: true)
+                    guard let stelf = welf else { return }
+                    MessageBarViewController.show(message: ErrorMessage(error!), parentViewController: stelf, offsetTop: stelf.navigationController!.navigationBar.frame.maxY, centred: true) {
+                        welf?.payButtonTapped(sender)
+                    }
                     return
                 }
                 
@@ -736,18 +734,19 @@ extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
         }
         
         order.paymentToken = token
-        
         showReceipt()
     }
     
     func modalPresentationDidFinish() {
         order.updateCost { [weak welf = self] (error: Error?) in
-            guard welf != nil else { return }
+            guard let stelf = welf else { return }
             
-            welf?.modalPresentationDismissedGroup.leave()
+            stelf.modalPresentationDismissedGroup.leave()
             
             if let error = error {
-                self.present(UIAlertController(errorMessage: ErrorMessage(error)), animated: true)
+                MessageBarViewController.show(message: ErrorMessage(error), parentViewController: stelf, offsetTop: stelf.navigationController!.navigationBar.frame.maxY, centred: true) {
+                    welf?.modalPresentationDidFinish()
+                }
                 return
             }
         }

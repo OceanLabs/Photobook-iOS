@@ -33,12 +33,12 @@ class ImageAsset: Asset {
     }
     
     enum CodingKeys: String, CodingKey {
-        case identifier, albumIdentifier, image, date, uploadUrl
+        case imageIdentifier, albumIdentifier, image, date, uploadUrl
     }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(identifier, forKey: .identifier)
+        try container.encode(identifier, forKey: .imageIdentifier)
         try container.encode(albumIdentifier, forKey: .albumIdentifier)
         try container.encode(uploadUrl, forKey: .uploadUrl)
         try container.encode(date, forKey: .date)
@@ -52,7 +52,7 @@ class ImageAsset: Asset {
     required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         
-        identifier = try values.decode(String.self, forKey: .identifier)
+        identifier = try values.decode(String.self, forKey: .imageIdentifier)
         if let imageData = try values.decodeIfPresent(Data.self, forKey: .image) {
             image = NSKeyedUnarchiver.unarchiveObject(with: imageData) as! UIImage?
         }
