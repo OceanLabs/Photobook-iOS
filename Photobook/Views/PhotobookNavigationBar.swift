@@ -66,7 +66,7 @@ public class PhotobookNavigationBar: UINavigationBar {
         shadowImage = UIImage()
     }
     
-    func setBarType(_ type: PhotobookNavigationBarType) {
+    @objc public func setBarType(_ type: PhotobookNavigationBarType) {
         barType = type
         
         switch barType {
@@ -84,7 +84,7 @@ public class PhotobookNavigationBar: UINavigationBar {
 ///
 /// - clear: A transparent bar
 /// - white: A semi-transparent white tinted bar with a blur effect
-enum PhotobookNavigationBarType {
+@objc public enum PhotobookNavigationBarType: Int {
     case clear, white
 }
 
