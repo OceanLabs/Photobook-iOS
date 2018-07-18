@@ -192,7 +192,7 @@ class ReceiptTableViewController: UITableViewController {
             }
             
             // No delegate or dismiss closure provided
-            if welf?.presentingViewController != nil {
+            if welf?.presentingViewController != nil && (welf?.navigationController == nil || welf?.navigationController?.viewControllers.first == self) {
                 welf?.presentingViewController!.dismiss(animated: true, completion: nil)
                 return
             }
