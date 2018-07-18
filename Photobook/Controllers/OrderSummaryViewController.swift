@@ -77,7 +77,7 @@ class OrderSummaryViewController: UIViewController {
         
         Analytics.shared.trackScreenViewed(.summary)
         
-        #if !PHOTOBOOK_SDK
+        #if PHOTOBOOK_APP
         basketDisclaimerLabel.text = ""
         ctaButton.setTitle(NSLocalizedString("OrderSummary/cta", value: "Continue", comment: "Title for the CTA button"), for: .normal)
         #endif

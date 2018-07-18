@@ -186,7 +186,7 @@ class ReceiptTableViewController: UITableViewController {
             NotificationCenter.default.post(name: ReceiptNotificationName.receiptWillDismiss, object: nil)
             
             
-            #if PHOTOBOOK_SDK
+            #if !PHOTOBOOK_APP
             if welf?.dismissDelegate?.wantsToDismiss?(self) != nil {
                 return
             }

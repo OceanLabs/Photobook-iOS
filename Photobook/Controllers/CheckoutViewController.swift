@@ -566,6 +566,7 @@ class CheckoutViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == Constants.receiptSegueName {
             (segue.destination as? ReceiptTableViewController)?.order = order
+            (segue.destination as? ReceiptTableViewController)?.dismissDelegate = dismissDelegate
         }
     }
     
