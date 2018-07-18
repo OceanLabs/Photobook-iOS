@@ -162,7 +162,7 @@ class PhotosAsset: Asset {
         uploadUrl = try values.decodeIfPresent(String.self, forKey: .uploadUrl)        
     }
     
-    static func photosAssets(from assets:[Asset]) -> [PHAsset] {
+    static func photosAssets(from assets: [Asset]) -> [PHAsset] {
         var photosAssets = [PHAsset]()
         for asset in assets{
             guard let photosAsset = asset as? PhotosAsset else { continue }
