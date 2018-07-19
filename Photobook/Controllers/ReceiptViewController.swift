@@ -63,6 +63,8 @@ class ReceiptViewController: UIViewController {
         return ProgressOverlayViewController.progressOverlay(parent: self)
     }()
     
+    private lazy var isPresentedModally: Bool = { return (navigationController?.isBeingPresented ?? false) || isBeingPresented }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -82,6 +84,10 @@ class ReceiptViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        if navigationController == nil {
+            fatalError("PhotobookViewController: Please use a navigation controller or alternatively, set the 'embedInNavigation' parameter to true.")
+        }
+
         if OrderManager.shared.isProcessingOrder {
             // Navigated back from payment methods screen
             if state == .paymentFailed {
@@ -132,7 +138,7 @@ class ReceiptViewController: UIViewController {
     
     // MARK: - Actions
     
-    @IBAction private func primaryActionButtonTapped(_ sender: UIBarButtonItem) {
+    @IBAction private func primaryActionButtonTapped(_ sender: UIButton) {
         switch state {
         case .error:
             if let lastProcessingError = lastProcessingError {
@@ -158,7 +164,7 @@ class ReceiptViewController: UIViewController {
         }
     }
     
-    @IBAction private func secondaryActionButtonTapped(_ sender: UIBarButtonItem) {
+    @IBAction private func secondaryActionButtonTapped(_ sender: UIButton) {
         if state == .paymentRetry {
             showPaymentMethods()
         }
@@ -187,19 +193,17 @@ class ReceiptViewController: UIViewController {
             OrderManager.shared.reset()
             NotificationCenter.default.post(name: ReceiptNotificationName.receiptWillDismiss, object: nil)
             
-            
             #if !PHOTOBOOK_APP
-            if welf?.dismissDelegate?.wantsToDismiss?(self) != nil {
-                return
+            guard let stelf = welf else { return }
+            let controllerToDismiss = stelf.isPresentedModally ? stelf.navigationController! : stelf
+            if stelf.dismissDelegate?.wantsToDismiss?(controllerToDismiss) == nil {
+                if stelf.isPresentedModally {
+                    stelf.presentingViewController!.dismiss(animated: true, completion: nil)
+                    return
+                }
+                stelf.navigationController!.interactivePopGestureRecognizer!.isEnabled = true
+                stelf.navigationController!.popToRootViewController(animated: true)
             }
-            
-            // No delegate or dismiss closure provided
-            if welf?.presentingViewController != nil && welf?.navigationController?.viewControllers.first == self {
-                welf?.presentingViewController!.dismiss(animated: true, completion: nil)
-                return
-            }
-            welf?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-            welf?.navigationController?.popToRootViewController(animated: true)
             #else
             // Check if the Photobook app was launched into the ReceiptViewController
             if welf?.navigationController?.viewControllers.count == 1 {
