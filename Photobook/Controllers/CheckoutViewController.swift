@@ -50,85 +50,22 @@ class CheckoutViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet private weak var promoCodeActivityIndicator: UIActivityIndicatorView!
-    @IBOutlet private weak var promoCodeLabel: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                promoCodeLabel.font = UIFontMetrics.default.scaledFont(for: promoCodeLabel.font)
-                promoCodeLabel.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
+    @IBOutlet private weak var promoCodeLabel: UILabel! { didSet { promoCodeLabel.scaleFont() } }
     @IBOutlet private weak var promoCodeView: UIView!
-    @IBOutlet private weak var promoCodeTextField: UITextField! {
-        didSet {
-            if #available(iOS 11.0, *), let font = promoCodeTextField.font {
-                promoCodeTextField.font = UIFontMetrics.default.scaledFont(for: font)
-                promoCodeTextField.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
+    @IBOutlet private weak var promoCodeTextField: UITextField! { didSet { promoCodeTextField.scaleFont() } }
     @IBOutlet private weak var promoCodeClearButton: UIButton!
     @IBOutlet private weak var deliveryDetailsView: UIView!
-    @IBOutlet private weak var deliveryDetailsLabel: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                deliveryDetailsLabel.font = UIFontMetrics.default.scaledFont(for: deliveryDetailsLabel.font)
-                deliveryDetailsLabel.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
+    @IBOutlet private weak var deliveryDetailsLabel: UILabel! { didSet { deliveryDetailsLabel.scaleFont() } }
     @IBOutlet private weak var shippingMethodView: UIView!
-    @IBOutlet private weak var shippingMethodLabel: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                shippingMethodLabel.font = UIFontMetrics.default.scaledFont(for: shippingMethodLabel.font)
-                shippingMethodLabel.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
+    @IBOutlet private weak var shippingMethodLabel: UILabel! { didSet { shippingMethodLabel.scaleFont() } }
     @IBOutlet private weak var paymentMethodView: UIView!
-    @IBOutlet private weak var paymentMethodTitleLabel: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                paymentMethodTitleLabel.font = UIFontMetrics.default.scaledFont(for: paymentMethodTitleLabel.font)
-                paymentMethodTitleLabel.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
-    @IBOutlet private weak var paymentMethodLabel: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                paymentMethodLabel.font = UIFontMetrics.default.scaledFont(for: paymentMethodLabel.font)
-                paymentMethodLabel.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
+    @IBOutlet private weak var paymentMethodTitleLabel: UILabel! { didSet { paymentMethodTitleLabel.scaleFont() } }
+    @IBOutlet private weak var paymentMethodLabel: UILabel! { didSet { paymentMethodLabel.scaleFont() } }
     @IBOutlet private weak var paymentMethodIconImageView: UIImageView!
     @IBOutlet private weak var payButtonContainerView: UIView!
-    @IBOutlet private weak var payButton: UIButton! {
-        didSet{
-            if #available(iOS 11.0, *) {
-                payButton.titleLabel?.font = UIFontMetrics.default.scaledFont(for: payButton.titleLabel!.font)
-                payButton.titleLabel?.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
-    @IBOutlet private weak var infoLabelDeliveryDetails: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                infoLabelDeliveryDetails.font = UIFontMetrics.default.scaledFont(for: infoLabelDeliveryDetails.font)
-                infoLabelDeliveryDetails.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
-    @IBOutlet private weak var infoLabelShipping: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                infoLabelShipping.font = UIFontMetrics.default.scaledFont(for: infoLabelShipping.font)
-                infoLabelShipping.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
+    @IBOutlet private weak var payButton: UIButton! { didSet { payButton.titleLabel?.scaleFont() } }
+    @IBOutlet private weak var infoLabelDeliveryDetails: UILabel! { didSet { infoLabelDeliveryDetails.scaleFont() } }
+    @IBOutlet private weak var infoLabelShipping: UILabel! { didSet { infoLabelShipping.scaleFont() } }
     
     private var applePayButton: PKPaymentButton?
     private var payButtonOriginalColor: UIColor!
