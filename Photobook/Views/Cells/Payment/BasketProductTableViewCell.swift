@@ -29,12 +29,5 @@ class BasketProductTableViewCell: UITableViewCell {
             return
         }
         delegate?.didTapAmountButton(for: identifier)
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        
-        productImageView.image = nil
-    }
-    
+    }    
 }

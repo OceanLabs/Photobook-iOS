@@ -249,6 +249,7 @@ class CheckoutViewController: UIViewController {
         cell.itemAmountButton.setTitle("\(product.itemCount)", for: .normal)
         cell.itemAmountButton.accessibilityValue = cell.itemAmountButton.title(for: .normal)
         cell.productIdentifier = product.identifier
+        cell.productImageView.image = nil
         product.previewImage(size: cell.productImageView.frame.size * UIScreen.main.scale, completionHandler: { image in
             guard product.identifier == cell.productIdentifier else {
                 return
