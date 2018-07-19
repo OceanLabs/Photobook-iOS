@@ -71,4 +71,13 @@ import Photos
     @objc public convenience init(withImage image: UIImage, date: Date? = nil) {
         self.init(asset: ImageAsset(image: image, date: date))!
     }
+    
+    /// Creates a PhotobookAsset using an AssetDataSource
+    ///
+    /// - Parameters:
+    ///   - dataSource: The data source object to use
+    ///   - date: Date for the PhotobookAsset
+    @objc public convenience init(withDataSource dataSource: AssetDataSource, date: Date? = nil) {
+        self.init(asset: CustomAsset(dataSource: dataSource, date: date))!
+    }
 }
