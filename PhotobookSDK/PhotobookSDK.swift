@@ -154,7 +154,7 @@ import SDWebImage
         return embedInNavigation ? embedViewControllerInNavigation(checkoutViewController) : checkoutViewController
     }
     
-    func embedViewControllerInNavigation(_ viewController: UIViewController) -> PhotobookNavigationController {
+    private func embedViewControllerInNavigation(_ viewController: UIViewController) -> PhotobookNavigationController {
         let navigationController = PhotobookNavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
         navigationController.viewControllers = [ viewController ]
         return navigationController
