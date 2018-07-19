@@ -1859,7 +1859,7 @@
         <!--Receipt View Controller-->
         <scene sceneID="id3-Ae-LUx">
             <objects>
-                <viewController storyboardIdentifier="ReceiptViewController" id="dZX-CQ-zr6" customClass="ReceiptViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ReceiptViewController" id="dZX-CQ-zr6" customClass="ReceiptViewController" customModule="Photobook" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="qBr-Ta-w7Q">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="1100"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
