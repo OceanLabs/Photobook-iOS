@@ -568,6 +568,8 @@ class CheckoutViewController: UIViewController {
         case Constants.receiptSegueName:
             if let receiptViewController = segue.destination as? ReceiptViewController {
                 receiptViewController.order = order
+                receiptViewController.dismissDelegate = dismissDelegate
+
             }
         case Constants.segueIdentifierPaymentMethods:
             if let paymentMethodsViewController = segue.destination as? PaymentMethodsViewController {

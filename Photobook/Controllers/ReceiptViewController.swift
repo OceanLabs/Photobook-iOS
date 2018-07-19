@@ -188,13 +188,13 @@ class ReceiptViewController: UIViewController {
             NotificationCenter.default.post(name: ReceiptNotificationName.receiptWillDismiss, object: nil)
             
             
-            #if PHOTOBOOK_SDK
+            #if !PHOTOBOOK_APP
             if welf?.dismissDelegate?.wantsToDismiss?(self) != nil {
                 return
             }
             
             // No delegate or dismiss closure provided
-            if welf?.presentingViewController != nil {
+            if welf?.presentingViewController != nil && welf?.navigationController?.viewControllers.first == self {
                 welf?.presentingViewController!.dismiss(animated: true, completion: nil)
                 return
             }
@@ -284,20 +284,20 @@ extension ReceiptViewController: OrderProcessingDelegate {
             switch error! {
             case .payment:
                 state = .paymentFailed
-                notificationTitle = NSLocalizedString("ReceiptViewController/NotificationTitlePaymentFailed", value: "Payment Failed", comment: "title of a notification notifying about failed photobook payment")
-                notificationBody = NSLocalizedString("ReceiptViewController/NotificationBodyPaymentFailed", value: "Update your payment method to finish photobook checkout", comment: "body of a notification notifying about failed photobook payment")
+                notificationTitle = NSLocalizedString("ReceiptViewController/NotificationTitlePaymentFailed", value: "Payment Failed", comment: "title of a notification notifying about failed order payment")
+                notificationBody = NSLocalizedString("ReceiptViewController/NotificationBodyPaymentFailed", value: "Update your payment method to finish order checkout", comment: "body of a notification notifying about failed order payment")
             case .cancelled:
                 state = .cancelled
-                notificationTitle = NSLocalizedString("ReceiptViewController/NotificationTitleCancelled", value: "Photobook Cancelled", comment: "title of a notification notifying about failed photobook that had to be cancelled")
-                notificationBody = NSLocalizedString("ReceiptViewController/NotificationBodyCancelled", value: "Something went wrong and we couldn't process your photo book", comment: "body of a notification notifying about failed photobook that had to be cancelled")
+                notificationTitle = NSLocalizedString("ReceiptViewController/NotificationTitleCancelled", value: "Order Cancelled", comment: "title of a notification notifying about failed order that had to be cancelled")
+                notificationBody = NSLocalizedString("ReceiptViewController/NotificationBodyCancelled", value: "Something went wrong and we couldn't process your order", comment: "body of a notification notifying about failed order that had to be cancelled")
             case .api(message: let errorMessage):
                 state = .error
                 notificationTitle = errorMessage.title?.uppercased() ?? CommonLocalizedStrings.somethingWentWrongTitle.uppercased()
                 notificationBody = errorMessage.text
             default:
                 state = .error
-                notificationTitle = NSLocalizedString("ReceiptViewController/NotificationTitleProcessingFailed", value: "Couldn't Finish Photobook", comment: "title of a notification notifying about failed photobook processing")
-                notificationBody = NSLocalizedString("ReceiptViewController/NotificationBodyProcessingFailed", value: "Something went wrong and your photo book couldn't be sent to our servers", comment: "body of a notification notifying about failed photobook processing")
+                notificationTitle = NSLocalizedString("ReceiptViewController/NotificationTitleProcessingFailed", value: "Couldn't Finish Order", comment: "title of a notification notifying about failed order processing")
+                notificationBody = NSLocalizedString("ReceiptViewController/NotificationBodyProcessingFailed", value: "Something went wrong and your order couldn't be sent to our servers", comment: "body of a notification notifying about failed order processing")
             }
             
             lastProcessingError = error

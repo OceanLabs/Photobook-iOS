@@ -18,6 +18,10 @@ import Photos
         self.asset = asset!
     }
     
+    @objc public var uploadUrl: String? {
+        return asset.uploadUrl
+    }
+    
     static func photobookAssets(with assets: [Asset]?) -> [PhotobookAsset]? {
         guard let assets = assets else { return nil }
         guard !assets.isEmpty else { return [PhotobookAsset]()}

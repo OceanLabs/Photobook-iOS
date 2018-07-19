@@ -24,15 +24,15 @@ enum ReceiptViewControllerState: Int {
         static let titleUploading = NSLocalizedString("ReceiptViewControllerState/TitleUploading", value: "Processing Order", comment: "Receipt screen title when uploading images")
         
         static let infoTitleCompleted = NSLocalizedString("ReceiptViewControllerState/InfoTitleCompleted", value: "Ready to Print", comment: "Status title if order has been completed and product is ready to print")
-        static let infoDescriptionCompleted = NSLocalizedString("ReceiptViewControllerState/InfoDescriptionCompleted", value: "We have received your photos and we will begin processing your photo book shortly. A confirmation has been sent to you via email.", comment: "Info text when order has been completed")
+        static let infoDescriptionCompleted = NSLocalizedString("ReceiptViewControllerState/InfoDescriptionCompleted", value: "We have received your photos and we will begin processing your order shortly. A confirmation has been sent to you via email.", comment: "Info text when order has been completed")
         static let infoTitleError = NSLocalizedString("ReceiptViewControllerState/InfoTitleError", value: "Something Went Wrong!", comment: "Status title if order couldn't be completed")
-        static let infoDescriptionError = NSLocalizedString("ReceiptViewControllerState/InfoDescriptionError", value: "Something happened and we weren't able to process your book. You can retry or cancel and be refunded.", comment: "Info text when order couldn't be completed")
+        static let infoDescriptionError = NSLocalizedString("ReceiptViewControllerState/InfoDescriptionError", value: "Something happened and we weren't able to process your order. You can retry or cancel and be refunded.", comment: "Info text when order couldn't be completed")
         static let infoNoteError = NSLocalizedString("ReceiptViewControllerState/InfoDescriptionError", value: "You can retry or cancel and be refunded.", comment: "Info text when order couldn't be completed")
         
         static let infoTitleCancelled = NSLocalizedString("ReceiptViewControllerState/InfoTitleCancelled", value: "Order Cancelled", comment: "Status title if was cancelled")
-        static let infoDescriptionCancelled = NSLocalizedString("ReceiptViewControllerState/InfoDescriptionCancelled", value: "Something happened and we weren't able to process your book. You haven't been charged.", comment: "Info text when order couldn't be completed")
+        static let infoDescriptionCancelled = NSLocalizedString("ReceiptViewControllerState/InfoDescriptionCancelled", value: "Something happened and we weren't able to process your order. You haven't been charged.", comment: "Info text when order couldn't be completed")
         static let infoTitlePaymentFailed = NSLocalizedString("ReceiptViewControllerState/InfoTitlePaymentFailed", value: "Your Payment Method Failed", comment: "Payment has failed")
-        static let infoDescriptionPaymentFailed = NSLocalizedString("ReceiptViewControllerState/InfoDescriptionPaymentFailed", value: "The charge for your book was declined.\nYou can retry with another method.", comment: "Info text when payment method has failed")
+        static let infoDescriptionPaymentFailed = NSLocalizedString("ReceiptViewControllerState/InfoDescriptionPaymentFailed", value: "The charge for your order was declined.\nYou can retry with another method.", comment: "Info text when payment method has failed")
         
         static let infoButtonTitleRetry = NSLocalizedString("ReceiptViewControllerState/InfoButtonRetry", value: "Retry", comment: "Info button text when order couldn't be completed")
         static let infoButtonTitleOK = NSLocalizedString("ReceiptViewControllerState/InfoButtonCancelled", value: "OK", comment: "Info button when order was cancelled")
