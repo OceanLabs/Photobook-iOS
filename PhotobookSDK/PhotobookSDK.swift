@@ -110,23 +110,16 @@ import SDWebImage
             }
         }
 
-        let viewControllerToReturn: UIViewController
-        if embedInNavigation {
-            let navigationController = PhotobookNavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
-            navigationController.viewControllers = [ photobookViewController ]
-            viewControllerToReturn = navigationController
-        } else {
-            viewControllerToReturn = photobookViewController
-        }
-        
-        return viewControllerToReturn
+        return embedInNavigation ? embedViewControllerInNavigation(photobookViewController) : photobookViewController
     }
     
     /// Receipt View Controller
     ///
-    /// - Parameter onDismiss: Closure to execute when the receipt UI is ready to be dismissed
+    /// - Parameters:
+    ///   - embedInNavigation: Whether the returned view controller should be a UINavigationController. Defaults to false. Note that a navigation controller must be provided if false.
+    ///   - delegate: Closure to execute when the receipt UI is ready to be dismissed
     /// - Returns: A receipt UIViewController
-    @objc public func receiptViewController(delegate: DismissDelegate? = nil) -> UIViewController? {
+    @objc public func receiptViewController(embedInNavigation: Bool = false, delegate: DismissDelegate? = nil) -> UIViewController? {
         guard isProcessingOrder else { return nil }
         
         guard KiteAPIClient.shared.apiKey != nil else {
@@ -137,7 +130,8 @@ import SDWebImage
         let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptViewController") as! ReceiptViewController
         receiptViewController.order = OrderManager.shared.processingOrder
         receiptViewController.dismissDelegate = delegate
-        return receiptViewController
+
+        return embedInNavigation ? embedViewControllerInNavigation(receiptViewController) : receiptViewController
     }
     
     
@@ -156,13 +150,13 @@ import SDWebImage
         
         let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
         checkoutViewController.dismissDelegate = delegate
-        if embedInNavigation {
-            let navigationController = PhotobookNavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
-            navigationController.viewControllers = [ checkoutViewController ]
-            return navigationController
-        } else {
-            return checkoutViewController
-        }
         
+        return embedInNavigation ? embedViewControllerInNavigation(checkoutViewController) : checkoutViewController
+    }
+    
+    private func embedViewControllerInNavigation(_ viewController: UIViewController) -> PhotobookNavigationController {
+        let navigationController = PhotobookNavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
+        navigationController.viewControllers = [ viewController ]
+        return navigationController
     }
 }
