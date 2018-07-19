@@ -2074,6 +2074,9 @@
                                                                             <real key="value" value="1"/>
                                                                         </userDefinedRuntimeAttribute>
                                                                     </userDefinedRuntimeAttributes>
+                                                                    <connections>
+                                                                        <action selector="secondaryActionButtonTapped:" destination="dZX-CQ-zr6" eventType="touchUpInside" id="h3l-3Q-13T"/>
+                                                                    </connections>
                                                                 </button>
                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CbJ-Cn-SfE">
                                                                     <rect key="frame" x="143" y="0.0" width="136" height="32"/>
@@ -2092,6 +2095,9 @@
                                                                             <real key="value" value="8"/>
                                                                         </userDefinedRuntimeAttribute>
                                                                     </userDefinedRuntimeAttributes>
+                                                                    <connections>
+                                                                        <action selector="primaryActionButtonTapped:" destination="dZX-CQ-zr6" eventType="touchUpInside" id="znC-iZ-zhv"/>
+                                                                    </connections>
                                                                 </button>
                                                             </subviews>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -2415,6 +2421,9 @@ Copyright © 2018 Kite. All rights reserved.</string>
                     <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="ehf-Yf-BZK">
                         <barButtonItem key="rightBarButtonItem" title="Continue" style="done" id="SPh-4A-khr">
                             <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <connections>
+                                <action selector="continueTapped:" destination="dZX-CQ-zr6" id="Kgz-sU-RAi"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
