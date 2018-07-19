@@ -239,7 +239,7 @@ enum ProductColor: String, Codable {
         
         // Create layouts for the remaining assets
         // Fill minimum pages with Placeholder assets if needed
-        let numberOfPlaceholderLayoutsNeeded = max(template.minPages - assets.count - 1, 0)
+        let numberOfPlaceholderLayoutsNeeded = max(template.minPages - assets.count - 1, 0) + 1 // Plus cover
         super.init()
         tempLayouts.append(contentsOf: createLayoutsForAssets(assets: assets, from: imageOnlyLayouts, placeholderLayouts: numberOfPlaceholderLayoutsNeeded))
         productLayouts = tempLayouts
