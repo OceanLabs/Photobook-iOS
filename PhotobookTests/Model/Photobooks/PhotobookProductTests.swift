@@ -54,19 +54,19 @@ class PhotobookProductTests: XCTestCase {
     }
     
     func testInit_shouldHaveMinimumNumberOfLayouts() {
-        XCTAssertEqual(photobookProduct.productLayouts.count, template.minPages)
+        XCTAssertEqual(photobookProduct.productLayouts.count, template.minPages + 1)
     }
     
     // MARK: - EmptyLayoutIndices
     func testEmptyLayoutIndices_shouldReturnLastTen() {
         let emptyLayoutIndices = photobookProduct.emptyLayoutIndices
-        XCTAssertEqual(emptyLayoutIndices, Array(11...19))
+        XCTAssertEqual(emptyLayoutIndices, Array(11...20))
     }
     
     func testEmptyLayoutIndices_shouldCountDoublePageLayoutsAsTwoIndeces() {
         photobookProduct.productLayouts[12].layout.isDoubleLayout = true
         let emptyLayoutIndices = photobookProduct.emptyLayoutIndices
-        XCTAssertEqual(emptyLayoutIndices, Array(11...20))
+        XCTAssertEqual(emptyLayoutIndices, Array(11...21))
     }
 
     func testEmptyLayoutIndices_shouldIgnoreEmptyTextIfLayoutHasAPhoto() {
@@ -82,7 +82,7 @@ class PhotobookProductTests: XCTestCase {
     }
 
     func testEmptyLayoutIndeces_shouldReturnNilWithoutEmptyLayouts() {
-        for i in 11 ..< 20 {
+        for i in 11 ..< 21 {
             photobookProduct.productLayouts[i].asset = PhotosAssetMock()
         }
         let emptyLayoutIndices = photobookProduct.emptyLayoutIndices

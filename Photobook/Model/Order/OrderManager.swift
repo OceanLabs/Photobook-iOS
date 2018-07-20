@@ -126,6 +126,7 @@ class OrderManager {
     
     func reset() {
         basketOrder = Order()
+        saveBasketOrder()
     }
     
     /// Saves the basket order to disk
