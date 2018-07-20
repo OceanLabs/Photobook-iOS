@@ -9,14 +9,7 @@
 import UIKit
 
 class OrderSummaryUpsellTableViewCell: UITableViewCell {
-    @IBOutlet weak var titleLabel: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                titleLabel.font = UIFontMetrics.default.scaledFont(for: titleLabel.font)
-                titleLabel.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
+    @IBOutlet weak var titleLabel: UILabel! { didSet { titleLabel.scaleFont() } }
     @IBOutlet private weak var tickImageView: UIImageView!
     
     override func prepareForReuse() {

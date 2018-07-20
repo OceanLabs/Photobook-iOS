@@ -12,21 +12,6 @@ class AddressFieldTableViewCell: UITableViewCell {
 
     static let reuseIdentifier = NSStringFromClass(AddressFieldTableViewCell.self).components(separatedBy: ".").last!
     
-    @IBOutlet weak var label: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                label.font = UIFontMetrics.default.scaledFont(for: label.font)
-                label.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
-    @IBOutlet weak var textField: UITextField! {
-        didSet {
-            if #available(iOS 11.0, *), let font = textField.font {
-                textField.font = UIFontMetrics.default.scaledFont(for: font)
-                textField.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
-    
+    @IBOutlet weak var label: UILabel! { didSet { label.scaleFont() } }
+    @IBOutlet weak var textField: UITextField! { didSet { textField.scaleFont() } }
 }

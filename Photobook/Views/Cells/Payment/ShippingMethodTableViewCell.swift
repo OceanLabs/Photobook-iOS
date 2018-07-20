@@ -13,30 +13,9 @@ class ShippingMethodTableViewCell: UITableViewCell {
     static let reuseIdentifier = NSStringFromClass(ShippingMethodTableViewCell.self).components(separatedBy: ".").last!
     
     @IBOutlet private weak var tickImageView: UIImageView!
-    @IBOutlet private weak var methodLabel: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                methodLabel.font = UIFontMetrics.default.scaledFont(for: methodLabel.font)
-                methodLabel.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
-    @IBOutlet private weak var deliveryTimeLabel: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                deliveryTimeLabel.font = UIFontMetrics.default.scaledFont(for: deliveryTimeLabel.font)
-                deliveryTimeLabel.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
-    @IBOutlet private weak var costLabel: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                costLabel.font = UIFontMetrics.default.scaledFont(for: costLabel.font)
-                costLabel.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
+    @IBOutlet private weak var methodLabel: UILabel! { didSet { methodLabel.scaleFont() } }
+    @IBOutlet private weak var deliveryTimeLabel: UILabel! { didSet { deliveryTimeLabel.scaleFont() } }
+    @IBOutlet private weak var costLabel: UILabel! { didSet { costLabel.scaleFont() } }
     @IBOutlet weak var topSeparator: UIView!
     @IBOutlet weak var separatorLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var separator: UIView!
@@ -62,13 +41,6 @@ class ShippingMethodHeaderTableViewCell: UITableViewCell {
     
     static let reuseIdentifier = NSStringFromClass(ShippingMethodHeaderTableViewCell.self).components(separatedBy: ".").last!
     
-    @IBOutlet weak var label: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                label.font = UIFontMetrics.default.scaledFont(for: label.font)
-                label.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
+    @IBOutlet weak var label: UILabel! { didSet { label.scaleFont() } }
 }
 

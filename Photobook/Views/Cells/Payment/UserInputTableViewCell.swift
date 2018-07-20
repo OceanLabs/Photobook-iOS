@@ -20,39 +20,11 @@ class UserInputTableViewCell: UITableViewCell {
     @IBOutlet weak var separatorLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var topSeparator: UIView!
     @IBOutlet private weak var messageBottomConstraint: NSLayoutConstraint!
-    @IBOutlet weak var label: UILabel? {
-        didSet {
-            if #available(iOS 11.0, *) {
-                label?.font = UIFontMetrics.default.scaledFont(for: label!.font)
-                label?.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
-    @IBOutlet private weak var button: UIButton? {
-        didSet {
-            if #available(iOS 11.0, *) {
-                button?.titleLabel?.font = UIFontMetrics.default.scaledFont(for: button!.titleLabel!.font)
-                button?.titleLabel?.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
-    @IBOutlet weak var textField: UITextField! {
-        didSet {
-            if #available(iOS 11.0, *), let font = textField.font {
-                textField.font = UIFontMetrics.default.scaledFont(for: font)
-                textField.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
+    @IBOutlet weak var label: UILabel? { didSet { label?.scaleFont() } }
+    @IBOutlet private weak var button: UIButton? { didSet { button?.titleLabel?.scaleFont() } }
+    @IBOutlet weak var textField: UITextField! { didSet { textField.scaleFont() } }
     @IBOutlet private weak var separator: UIView!
-    @IBOutlet private weak var messageLabel: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                messageLabel.font = UIFontMetrics.default.scaledFont(for: messageLabel.font)
-                messageLabel.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
+    @IBOutlet private weak var messageLabel: UILabel! { didSet { messageLabel.scaleFont() } }
     @IBOutlet weak var textFieldLeadingConstraint: NSLayoutConstraint!
     var message: String? {
         didSet{
