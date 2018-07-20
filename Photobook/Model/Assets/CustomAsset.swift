@@ -9,7 +9,6 @@
 import UIKit
 
 @objc public protocol AssetDataSource: NSCoding {
-    var size: CGSize { get }
     func image(size: CGSize, loadThumbnailFirst: Bool, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void)
     func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension, Error?) -> Void)
 }
@@ -21,16 +20,15 @@ class CustomAsset: Asset {
     
     var albumIdentifier: String? = nil
     
-    var size: CGSize {
-        return dataSource.size
-    }
+    var size: CGSize
     
     var date: Date?
     
     var uploadUrl: String?
     
-    init(dataSource: AssetDataSource, date: Date? = nil) {
+    init(dataSource: AssetDataSource, size: CGSize, date: Date? = nil) {
         self.dataSource = dataSource
+        self.size = size
     }
     
     func image(size: CGSize, loadThumbnailFirst: Bool, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
@@ -42,7 +40,7 @@ class CustomAsset: Asset {
     }
     
     enum CodingKeys: String, CodingKey {
-        case imageIdentifier, albumIdentifier, dataSource, date, uploadUrl
+        case imageIdentifier, albumIdentifier, dataSource, size, date, uploadUrl
     }
     
     required init(from decoder: Decoder) throws {
@@ -52,6 +50,7 @@ class CustomAsset: Asset {
         albumIdentifier = try values.decodeIfPresent(String.self, forKey: .albumIdentifier)
         uploadUrl = try values.decodeIfPresent(String.self, forKey: .uploadUrl)
         date = try values.decodeIfPresent(Date.self, forKey: .date)
+        size = try values.decode(CGSize.self, forKey: .size)
         
         let dataSourceData = try values.decode(Data.self, forKey: .dataSource)
         dataSource = NSKeyedUnarchiver.unarchiveObject(with: dataSourceData) as! AssetDataSource
@@ -63,6 +62,7 @@ class CustomAsset: Asset {
         try container.encode(albumIdentifier, forKey: .albumIdentifier)
         try container.encode(uploadUrl, forKey: .uploadUrl)
         try container.encode(date, forKey: .date)
+        try container.encode(size, forKey: .size)
         try container.encode(NSKeyedArchiver.archivedData(withRootObject: dataSource), forKey: .dataSource)
     }
     

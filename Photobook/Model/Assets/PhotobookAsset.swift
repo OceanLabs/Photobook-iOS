@@ -77,7 +77,7 @@ import Photos
     /// - Parameters:
     ///   - dataSource: The data source object to use
     ///   - date: Date for the PhotobookAsset
-    @objc public convenience init(withDataSource dataSource: AssetDataSource, date: Date? = nil) {
-        self.init(asset: CustomAsset(dataSource: dataSource, date: date))!
+    @objc public convenience init(withDataSource dataSource: AssetDataSource, size: CGSize, date: Date? = nil) {
+        self.init(asset: CustomAsset(dataSource: dataSource, size: size, date: date))!
     }
 }
