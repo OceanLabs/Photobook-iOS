@@ -630,6 +630,23 @@ enum ProductColor: String, Codable {
         return photobook
     }
     
+    func costParameters() -> [String: Any]? {
+        guard let options = upsoldOptions,
+            let shippingMethod = selectedShippingMethod
+            else {
+                return nil
+        }
+        
+        return [
+            "template_id": template.templateId,
+            "multiples": itemCount,
+            "shipping_class": shippingMethod.id,
+            "options": options,
+            "page_count": numberOfPages,
+            "job_id": identifier
+        ]
+    }
+    
     func orderParameters() -> [String: Any]? {
         guard let options = upsoldOptions,
             let insideUrl = insidePdfUrl,
@@ -640,13 +657,13 @@ enum ProductColor: String, Codable {
         }
         
         return [
-            "template_id" : template.templateId,
-            "multiples" : itemCount,
-            "shipping_class" : shippingMethod.id,
-            "options" : options,
-            "page_count" : numberOfPages,
-            "inside_pdf" : insideUrl,
-            "cover_pdf" : coverUrl
+            "template_id": template.templateId,
+            "multiples": itemCount,
+            "shipping_class": shippingMethod.id,
+            "options": options,
+            "page_count": numberOfPages,
+            "inside_pdf": insideUrl,
+            "cover_pdf": coverUrl
         ]
     }
     
