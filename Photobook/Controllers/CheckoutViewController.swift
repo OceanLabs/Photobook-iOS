@@ -300,13 +300,15 @@ class CheckoutViewController: UIViewController {
     }
     
     private func updateProductCell(_ cell: BasketProductTableViewCell, for index: Int) {
+        let product = order.products[index]
+        
         guard let lineItems = order.cost?.lineItems,
             index < lineItems.count,
-            let product = order.product(for: lineItems[index])
+            let lineItem = order.cost?.lineItems.first(where: { $0.identifier == product.identifier })
             else {
                 return
         }
-        let lineItem = lineItems[index]
+        
         cell.productDescriptionLabel.text = lineItem.name
         cell.priceLabel.text = lineItem.price.formatted
         cell.itemAmountButton.setTitle("\(product.itemCount)", for: .normal)
@@ -783,12 +785,7 @@ extension CheckoutViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            guard let productIndex = order.indexOfProduct(for: order.cost?.lineItems[indexPath.row]) else {
-                // Should never happen, just refresh
-                refresh(forceCostUpdate: true, forceShippingMethodsUpdate: true)
-                return
-            }
-            order.products.remove(at: productIndex)
+            order.products.remove(at: indexPath.row)
             OrderManager.shared.saveBasketOrder()
             tableView.deleteRows(at: [indexPath], with: .automatic)
             
