@@ -301,12 +301,12 @@ class CheckoutViewController: UIViewController {
     
     private func updateProductCell(_ cell: BasketProductTableViewCell, for index: Int) {
         guard let lineItems = order.cost?.lineItems,
-            index < lineItems.count
+            index < lineItems.count,
+            let product = order.product(for: lineItems[index])
             else {
                 return
         }
         let lineItem = lineItems[index]
-        let product = order.products[index]
         cell.productDescriptionLabel.text = lineItem.name
         cell.priceLabel.text = lineItem.price.formatted
         cell.itemAmountButton.setTitle("\(product.itemCount)", for: .normal)
@@ -719,9 +719,6 @@ extension CheckoutViewController: AmountPickerDelegate {
         guard let index = editingProductIndex else { return }
         
         order.products[index].itemCount = value
-        if let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? BasketProductTableViewCell {
-            updateProductCell(cell, for: index)
-        }
         refresh()
     }
 }
@@ -786,7 +783,12 @@ extension CheckoutViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            order.products.remove(at: indexPath.row)
+            guard let productIndex = order.indexOfProduct(for: order.cost?.lineItems[indexPath.row]) else {
+                // Should never happen, just refresh
+                refresh(forceCostUpdate: true, forceShippingMethodsUpdate: true)
+                return
+            }
+            order.products.remove(at: productIndex)
             OrderManager.shared.saveBasketOrder()
             tableView.deleteRows(at: [indexPath], with: .automatic)
             

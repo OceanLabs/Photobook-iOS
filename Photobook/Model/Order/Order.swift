@@ -228,3 +228,22 @@ class Order: Codable {
     }
     
 }
+
+// Convenience methods for getting Products from LineItems
+extension Order {
+    func indexOfProduct(for lineItem: LineItem?) -> Int? {
+        guard let lineItem = lineItem else {
+            return nil
+        }
+        
+        return products.index(where: { $0.identifier == lineItem.identifier })
+    }
+    
+    func product(for lineItem: LineItem?) -> Product? {
+        guard let index = indexOfProduct(for: lineItem) else {
+            return nil
+        }
+        
+        return products[index]
+    }
+}

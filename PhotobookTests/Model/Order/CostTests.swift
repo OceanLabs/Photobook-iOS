@@ -42,7 +42,7 @@ class CostTests: XCTestCase {
         let cost = Cost(hash: hash, lineItems: lineItems, totalShippingPrice: totalShippingCost!, total: total!, promoDiscount: promoDiscount, promoCodeInvalidReason: promoCodeInvalidReason)
         
         XCTAssertEqual(cost.orderHash, 233)
-        XCTAssertEqualOptional(cost.lineItems.first?.id, "hdbook_127x127")
+        XCTAssertEqualOptional(cost.lineItems.first?.templateId, "hdbook_127x127")
         XCTAssertEqualOptional(cost.lineItems.first?.name, "item")
         XCTAssertEqualOptional(cost.lineItems.first?.price, lineItems.first?.price)
         XCTAssertEqualOptional(cost.promoDiscount, promoDiscount)

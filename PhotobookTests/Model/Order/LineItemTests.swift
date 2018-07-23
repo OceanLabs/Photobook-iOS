@@ -24,7 +24,7 @@ class LineItemTests: XCTestCase {
         
         let lineItem = LineItem(id: id, name: name, price: price!)
         
-        XCTAssertEqual(lineItem.id, id)
+        XCTAssertEqual(lineItem.templateId, id)
         XCTAssertEqual(lineItem.name, name)
         XCTAssertEqual(lineItem.price, price)
     }
@@ -35,7 +35,7 @@ class LineItemTests: XCTestCase {
         
         let expectedCost = Price(currencyCode: "GBP", value: 21, formattingLocale: locale)
         
-        XCTAssertEqualOptional(lineItem?.id, "circus_clown1")
+        XCTAssertEqualOptional(lineItem?.templateId, "circus_clown1")
         XCTAssertEqualOptional(lineItem?.name, "Clown Costume")
         XCTAssertEqualOptional(lineItem?.price, expectedCost)
     }
