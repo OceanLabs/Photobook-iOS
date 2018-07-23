@@ -12,7 +12,7 @@ import Foundation
     
     static var supportsSecureCoding = true
     
-    let id: Int
+    @objc public let id: Int
     let name: String
     let price: Price
     let maxDeliveryTime: Int
