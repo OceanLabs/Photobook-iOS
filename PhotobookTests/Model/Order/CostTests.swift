@@ -37,7 +37,7 @@ class CostTests: XCTestCase {
         let promoDiscount = Price(currencyCode: "GBP", value: 0)
         let promoCodeInvalidReason = "reason"
         let total = Price(currencyCode: "GBP", value: 28.06)
-        let lineItems = [LineItem(id: "hdbook_127x127", name: "item", price: Price(currencyCode: "GBP", value: 21)!)]
+        let lineItems = [LineItem(templateId: "hdbook_127x127", name: "item", price: Price(currencyCode: "GBP", value: 21)!, identifier: "")]
         
         let cost = Cost(hash: hash, lineItems: lineItems, totalShippingPrice: totalShippingCost!, total: total!, promoDiscount: promoDiscount, promoCodeInvalidReason: promoCodeInvalidReason)
         

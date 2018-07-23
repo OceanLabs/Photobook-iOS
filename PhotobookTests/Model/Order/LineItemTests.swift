@@ -14,7 +14,8 @@ class LineItemTests: XCTestCase {
     var validDictionary: [String: Any] = [
         "template_id": "circus_clown1",
         "description": "Clown Costume",
-        "product_cost": ["GBP": 21, "EUR": 24.99]
+        "product_cost": ["GBP": 21, "EUR": 24.99],
+        "job_id": "cL0wN-t4d4"
     ]
     
     func testInit() {
@@ -22,7 +23,7 @@ class LineItemTests: XCTestCase {
         let name = "Item number 2"
         let price = Price(currencyCode: "GBP", value: 21)
         
-        let lineItem = LineItem(id: id, name: name, price: price!)
+        let lineItem = LineItem(templateId: id, name: name, price: price!, identifier: "")
         
         XCTAssertEqual(lineItem.templateId, id)
         XCTAssertEqual(lineItem.name, name)
