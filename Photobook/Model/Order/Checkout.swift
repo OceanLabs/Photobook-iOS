@@ -24,5 +24,9 @@ import UIKit
     @objc public func setPromoCode(_ code: String?) {
         OrderManager.shared.basketOrder.promoCode = code
     }
+    
+    @objc public func clearBasketOrder() {
+        OrderManager.shared.reset()
+    }
 
 }
