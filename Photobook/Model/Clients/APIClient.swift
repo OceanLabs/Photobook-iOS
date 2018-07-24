@@ -58,6 +58,10 @@ class APIClient: NSObject {
     /// The environment of the app, live vs test
     static var environment: Environment = .live
     
+    private static let prefix = "APIClient-AssetUploader-"
+    
+    var imageUploadIdentifierPrefix: String { return APIClient.prefix }
+    
     private func baseURLString(for context: APIContext) -> String {
         switch context {
         case .none: return ""
@@ -304,11 +308,11 @@ class APIClient: NSObject {
         dataTask(context: context, endpoint: endpoint, parameters: parameters, headers: headers, method: .put, completion: completion)
     }
     
-    func uploadImage(_ data: Data, imageName: String, context: APIContext, endpoint: String, completion:@escaping (AnyObject?, Error?) -> ()) {
+    func uploadImage(_ data: Data, imageName: String, completion: @escaping (AnyObject?, Error?) -> ()) {
         let boundaryString = "Boundary-\(NSUUID().uuidString)"
         let fileUrl = createFileWith(imageData: data, imageName: imageName, boundaryString: boundaryString)
     
-        var request = URLRequest(url: URL(string: baseURLString(for: context) + endpoint)!)
+        var request = URLRequest(url: URL(string: baseURLString(for: .pig) + "upload/")!)
         
         request.httpMethod = HTTPMethod.post.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Accept")
@@ -325,7 +329,7 @@ class APIClient: NSObject {
         }.resume()
     }
     
-    func uploadImage(_ image: UIImage, imageName: String, context: APIContext, endpoint: String, completion: @escaping (AnyObject?, Error?) -> ()) {
+    func uploadImage(_ image: UIImage, imageName: String, completion: @escaping (AnyObject?, Error?) -> ()) {
         
         guard let imageData = imageData(withImage: image, imageName: imageName) else {
             print("Image Upload: cannot read image data")
@@ -333,14 +337,14 @@ class APIClient: NSObject {
             return
         }
         
-        uploadImage(imageData, imageName: imageName, context: context, endpoint: endpoint, completion: completion)
+        uploadImage(imageData, imageName: imageName, completion: completion)
     }
     
-    func uploadImage(_ data: Data, imageName: String, reference: String?, context: APIContext, endpoint: String) {
+    func uploadImage(_ data: Data, imageName: String, reference: String?) {
         let boundaryString = "Boundary-\(NSUUID().uuidString)"
         let fileUrl = createFileWith(imageData: data, imageName: imageName, boundaryString: boundaryString)
         
-        var request = URLRequest(url: URL(string: baseURLString(for: context) + endpoint)!)
+        var request = URLRequest(url: URL(string: baseURLString(for: .pig) + "upload/")!)
         
         request.httpMethod = HTTPMethod.post.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Accept")
@@ -348,24 +352,24 @@ class APIClient: NSObject {
         
         let dataTask = backgroundUrlSession.uploadTask(with: request, fromFile: fileUrl)
         if reference != nil {
-            taskReferences[dataTask.taskIdentifier] = reference
+            taskReferences[dataTask.taskIdentifier] = imageUploadIdentifierPrefix + reference!
             savePendingTasks()
         }
         
         dataTask.resume()
     }
     
-    func uploadImage(_ image: UIImage, imageName: String, reference: String?, context: APIContext, endpoint: String) {
+    func uploadImage(_ image: UIImage, imageName: String, reference: String?) {
         
         guard let imageData = imageData(withImage: image, imageName: imageName) else {
             print("Image Upload: cannot read image data")
             return
         }
         
-        uploadImage(imageData, imageName: imageName, reference: reference, context: context, endpoint: endpoint)
+        uploadImage(imageData, imageName: imageName, reference: reference)
     }
     
-    func uploadImage(_ file: URL, reference: String?, context: APIContext, endpoint: String) {
+    func uploadImage(_ file: URL, reference: String?) {
         guard let fileData = try? Data(contentsOf: file) else {
             print("File Upload: cannot read file data")
             return
@@ -373,7 +377,7 @@ class APIClient: NSObject {
 
         let imageName = file.lastPathComponent
         
-        uploadImage(fileData, imageName: imageName, reference: reference, context: context, endpoint: endpoint)
+        uploadImage(fileData, imageName: imageName, reference: reference)
     }
     
     func downloadImage(_ imageUrl: URL, completion: @escaping ((UIImage?, Error?) -> Void)) {

@@ -22,7 +22,6 @@ class PhotobookAPIManager {
         }
     }
     
-    static let imageUploadIdentifierPrefix = "PhotobookAPIManager-AssetUploader-"
     private static var headers: [String: String]?
     
     struct EndPoints {
@@ -30,7 +29,6 @@ class PhotobookAPIManager {
         static let summary = "/ios/get_summary"
         static let applyUpsells = "/ios/apply_upsells"
         static let createPdf = "/ios/generate_pdf"
-        static let imageUpload = "/upload/"
     }
     
     private var apiClient = APIClient.shared

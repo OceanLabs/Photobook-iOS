@@ -48,7 +48,6 @@ class OrderManager {
     }
     static let maxNumberOfPollingTries = 60
     
-    private lazy var apiManager = PhotobookAPIManager()
     private lazy var kiteApiClient = KiteAPIClient.shared
     private lazy var apiClient = APIClient.shared
     private lazy var assetLoadingManager = AssetLoadingManager.shared
@@ -381,7 +380,7 @@ class OrderManager {
         })
     }
     
-    //MARK: - Upload
+    // MARK: - Upload
     private func uploadAsset(asset: Asset) {
         assetLoadingManager.imageData(for: asset, progressHandler: nil, completionHandler: { [weak welf = self] data, fileExtension, error in
             
@@ -398,7 +397,7 @@ class OrderManager {
             }
             
             if let fileUrl = welf?.orderDiskManager.saveDataToCachesDirectory(data: imageData, name: "\(asset.fileIdentifier).\(fileExtension.string())") {
-                welf?.apiClient.uploadImage(fileUrl, reference: PhotobookAPIManager.imageUploadIdentifierPrefix + asset.identifier, context: .pig, endpoint: PhotobookAPIManager.EndPoints.imageUpload)
+                welf?.apiClient.uploadImage(fileUrl, reference: asset.identifier)
             } else {
                 welf?.failedImageUpload(with: PhotobookAPIError.couldNotSaveTempImageData)
             }
@@ -414,7 +413,7 @@ class OrderManager {
         }
         
         // Check if this is a photobook api manager asset upload
-        if let reference = dictionary["task_reference"] as? String, !reference.hasPrefix(PhotobookAPIManager.imageUploadIdentifierPrefix) {
+        if let reference = dictionary["task_reference"] as? String, !reference.hasPrefix(apiClient.imageUploadIdentifierPrefix) {
             return
         }
         
@@ -431,7 +430,7 @@ class OrderManager {
             return
         }
         
-        let referenceId = reference!.suffix(reference!.count - PhotobookAPIManager.imageUploadIdentifierPrefix.count)
+        let referenceId = reference!.suffix(reference!.count - apiClient.imageUploadIdentifierPrefix.count)
         
         let assets = order.assetsToUpload().filter({ $0.identifier == referenceId })
         guard assets.first != nil else {

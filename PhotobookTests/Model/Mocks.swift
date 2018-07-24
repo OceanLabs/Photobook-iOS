@@ -24,13 +24,14 @@ class APIClientMock: APIClient {
         completion(response, error)
     }
     
-    override func uploadImage(_ image: UIImage, imageName: String, context: APIContext, endpoint: String, completion: @escaping (AnyObject?, Error?) -> ()) {
+    override func uploadImage(_ image: UIImage, imageName: String, completion: @escaping (AnyObject?, Error?) -> ()) {
         completion(response, error)
     }
     
-    override func uploadImage(_ file: URL, reference: String?, context: APIContext, endpoint: String) {
+    override func uploadImage(_ file: URL, reference: String?) {
         NotificationCenter.default.post(name: APIClient.backgroundSessionTaskFinished, object: nil, userInfo: uploadImageUserInfo)
     }
+    
     override func downloadImage(_ imageUrl: URL, completion: @escaping (UIImage?, Error?) -> ()) {
         completion(image, error)
     }

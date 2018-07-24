@@ -24,7 +24,7 @@ class Pig {
     ///   - completion: Completion block returning a URL or an error
     static func uploadImage(_ image: UIImage, completion: @escaping (_ url: String?, _ error: Error?) -> Void) {
         
-        apiClient.uploadImage(image, imageName: "OrderSummaryPreviewImage.png", context: .pig, endpoint: "upload/") { (json, error) in
+        apiClient.uploadImage(image, imageName: "OrderSummaryPreviewImage.png") { (json, error) in
 
             if let error = error {
                 completion(nil, error)
