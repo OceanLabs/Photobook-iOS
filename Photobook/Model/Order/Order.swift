@@ -228,3 +228,12 @@ class Order: Codable {
     }
     
 }
+
+// MARK: Convenience methods
+extension Order {
+    
+    func lineItem(for product: Product) -> LineItem? {
+        return cost?.lineItems.first(where: { $0.identifier == product.identifier })
+    }
+    
+}

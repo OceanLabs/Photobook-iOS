@@ -227,29 +227,19 @@ class KiteAPIClient {
         var parameters = [String: Any]()
         parameters["currency"] = OrderManager.shared.preferredCurrencyCode
         
-        let countryCode = order.deliveryDetails?.address?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
         if let promoCode = order.promoCode {
             parameters["promo_code"] = promoCode
         }
         
         var lineItems = [[String: Any]]()
         for product in order.products {
-            let variantId = product.upsoldTemplate?.templateId ?? product.template.templateId
-            guard let options = product.upsoldOptions,
-                let shippingClass = product.selectedShippingMethod?.id else {
-                    completionHandler(nil, nil)
-                    return
+            guard let parameters = product.costParameters() else {
+                continue
             }
-            let productDictionary: [String: Any] = ["quantity": product.itemCount,
-                                                    "template_id": variantId,
-                                                    "country_code": countryCode,
-                                                    "shipping_class": shippingClass,
-                                                    "page_count": product.numberOfPages,
-                                                    "options": options
-            ]
-            lineItems.append(productDictionary)
+            lineItems.append(parameters)
         }
         
+        parameters["shipping_country_code"] = order.deliveryDetails?.address?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
         parameters["basket"] = lineItems
         
         let endpoint = KiteAPIClient.apiVersion + Endpoints.cost

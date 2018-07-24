@@ -105,6 +105,7 @@ import SDWebImage
             ProductManager.shared.reset()
             
             let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
+            checkoutViewController.dismissDelegate = delegate
             if let firstViewController = photobookViewController.navigationController?.viewControllers.first {
                 photobookViewController.navigationController?.setViewControllers([firstViewController, checkoutViewController], animated: true)
             }
