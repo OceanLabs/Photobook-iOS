@@ -304,7 +304,7 @@ class CheckoutViewController: UIViewController {
         
         guard let lineItems = order.cost?.lineItems,
             index < lineItems.count,
-            let lineItem = order.cost?.lineItems.first(where: { $0.identifier == product.identifier })
+            let lineItem = order.lineItem(for: product)
             else {
                 return
         }
