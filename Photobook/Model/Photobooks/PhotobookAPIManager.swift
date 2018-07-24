@@ -8,11 +8,6 @@
 
 import Foundation
 
-enum PhotobookAPIError: Error {
-    case missingPhotobookInfo(details: String)
-    case couldNotSaveTempImageData
-}
-
 class PhotobookAPIManager {
     
     static var apiKey: String? {
