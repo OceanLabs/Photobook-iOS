@@ -229,6 +229,7 @@ class Order: Codable {
     
 }
 
+// MARK: Convenience methods
 extension Order {
     
     func lineItem(for product: Product) -> LineItem? {
