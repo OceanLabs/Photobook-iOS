@@ -66,10 +66,6 @@ class EmptyScreenViewController: UIViewController {
         }
     }
     
-    var isShowing: Bool {
-        return view.superview != nil
-    }
-    
     /// Factory method to create an Empty Screen
     ///
     /// - Parameter parent: The parent view controller to add it to

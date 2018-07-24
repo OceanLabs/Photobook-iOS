@@ -254,7 +254,7 @@ class CheckoutViewController: UIViewController {
         
         updateViews()
         if !order.hasValidCachedCost {
-            refresh(showProgress: !emptyScreenViewController.isShowing)
+            refresh(showProgress: emptyScreenViewController.view.superview == nil)
         } else {
             emptyScreenViewController.hide()
         }
