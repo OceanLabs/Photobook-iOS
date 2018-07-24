@@ -223,14 +223,11 @@ class Order: Codable {
         return assets
     }
     
+    // MARK: Convenience methods
+    
     func remainingAssetsToUpload() -> [Asset] {
         return assetsToUpload().filter({ $0.uploadUrl == nil })
     }
-    
-}
-
-// MARK: Convenience methods
-extension Order {
     
     func lineItem(for product: Product) -> LineItem? {
         return cost?.lineItems.first(where: { $0.identifier == product.identifier })
