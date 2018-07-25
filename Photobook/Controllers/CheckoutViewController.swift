@@ -150,6 +150,14 @@ class CheckoutViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        let topInset: CGFloat
+        if #available(iOS 11, *) {
+            topInset = 0
+        } else {
+            topInset = navigationController?.navigationBar.frame.maxY ?? 0
+        }
+        tableView.contentInset = UIEdgeInsets(top: topInset, left: tableView.contentInset.left, bottom: tableView.contentInset.bottom, right: tableView.contentInset.right)
+
         payButton.titleLabel?.sizeToFit()
     }
     
