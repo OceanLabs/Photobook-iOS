@@ -8,6 +8,8 @@
 
 import UIKit
 
+public typealias PhotobookAssetPickerController = PhotobookAssetPicker & UIViewController
+
 /// Dismiss delegate
 @objc public protocol DismissDelegate {
     /// Called when a view controller is ready to be dismissed
@@ -20,7 +22,7 @@ import UIKit
 @objc public protocol PhotobookDelegate: DismissDelegate {
     
     /// Custom photo picker
-    @objc optional var assetPickerViewController: PhotobookAssetPicker & UIViewController { get }
+    @objc optional func assetPickerViewController() -> PhotobookAssetPickerController
 }
 
 /// Conforming classes can be notified when PhotobookAssets are added by a custom photo picker

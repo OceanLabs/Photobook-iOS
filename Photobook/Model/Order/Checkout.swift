@@ -24,5 +24,29 @@ import UIKit
     @objc public func setPromoCode(_ code: String?) {
         OrderManager.shared.basketOrder.promoCode = code
     }
+    
+    @objc public func clearBasketOrder() {
+        OrderManager.shared.reset()
+    }
+    
+    @objc public func setUserEmail(_ userEmail: String) {
+        guard userEmail.isValidEmailAddress() else {
+            return
+        }
+        
+        let deliveryDetails = DeliveryDetails.loadLatestDetails() ?? DeliveryDetails()
+        deliveryDetails.email = userEmail
+        deliveryDetails.saveDetailsAsLatest()
+    }
+    
+    @objc public func setUserPhone(_ userPhone: String) {
+        guard userPhone.count >= FormConstants.minPhoneNumberLength else {
+            return
+        }
+        
+        let deliveryDetails = DeliveryDetails.loadLatestDetails() ?? DeliveryDetails()
+        deliveryDetails.email = userPhone
+        deliveryDetails.saveDetailsAsLatest()
+    }
 
 }

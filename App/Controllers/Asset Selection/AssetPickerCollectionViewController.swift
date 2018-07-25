@@ -429,7 +429,7 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
 
 extension AssetPickerCollectionViewController: PhotobookDelegate {
     
-    var assetPickerViewController: PhotobookAssetPicker & UIViewController {
+    func assetPickerViewController() -> PhotobookAssetPickerController {
         let modalAlbumsCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
         modalAlbumsCollectionViewController.album = album
         modalAlbumsCollectionViewController.albumManager = albumManager
