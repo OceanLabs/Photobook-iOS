@@ -734,9 +734,10 @@ extension PhotobookProduct {
 
     override var hashValue: Int {
         get {
-            var stringHash = ""
-
-            stringHash += upsoldTemplate != nil ? "pt:\(upsoldTemplate!.templateId)," : "pt:\(photobookTemplate.templateId),"
+            var stringHash = upsoldTemplate != nil ? "pt:\(upsoldTemplate!.templateId)," : "pt:\(photobookTemplate.templateId),"
+            if let upsoldOptions = upsoldOptions {
+                stringHash += "po:\(upsoldOptions),"
+            }
             stringHash += "pc:\(itemCount),"
             stringHash += "pg:\(numberOfPages),"
 
