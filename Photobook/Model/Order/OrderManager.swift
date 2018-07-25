@@ -29,6 +29,10 @@ extension OrderProcessingDelegate {
     func orderDidComplete() { orderDidComplete(error: nil) }
 }
 
+enum OrderDiskManagerError: Error {
+    case couldNotSaveTempImageData
+}
+
 protocol OrderDiskManager {
     func saveDataToCachesDirectory(data: Data, name: String) -> URL?
 }
@@ -48,7 +52,6 @@ class OrderManager {
     }
     static let maxNumberOfPollingTries = 60
     
-    private lazy var apiManager = PhotobookAPIManager()
     private lazy var kiteApiClient = KiteAPIClient.shared
     private lazy var apiClient = APIClient.shared
     private lazy var assetLoadingManager = AssetLoadingManager.shared
@@ -381,14 +384,12 @@ class OrderManager {
         })
     }
     
-    //MARK: - Upload
+    // MARK: - Upload
     private func uploadAsset(asset: Asset) {
         assetLoadingManager.imageData(for: asset, progressHandler: nil, completionHandler: { [weak welf = self] data, fileExtension, error in
             
             guard error == nil, let imageData = data else {
-                if let error = error as? AssetLoadingException, case .unsupported(let errorDetails) = error {
-                    welf?.failedImageUpload(with: PhotobookAPIError.missingPhotobookInfo(details: errorDetails))
-                } else if let error = error {
+                if let error = error {
                     welf?.failedImageUpload(with: error)
                 } else {
                     // Unlikely to happen
@@ -398,9 +399,9 @@ class OrderManager {
             }
             
             if let fileUrl = welf?.orderDiskManager.saveDataToCachesDirectory(data: imageData, name: "\(asset.fileIdentifier).\(fileExtension.string())") {
-                welf?.apiClient.uploadImage(fileUrl, reference: PhotobookAPIManager.imageUploadIdentifierPrefix + asset.identifier, context: .pig, endpoint: PhotobookAPIManager.EndPoints.imageUpload)
+                welf?.apiClient.uploadImage(fileUrl, reference: asset.identifier)
             } else {
-                welf?.failedImageUpload(with: PhotobookAPIError.couldNotSaveTempImageData)
+                welf?.failedImageUpload(with: OrderDiskManagerError.couldNotSaveTempImageData)
             }
         })
     }
@@ -414,7 +415,7 @@ class OrderManager {
         }
         
         // Check if this is a photobook api manager asset upload
-        if let reference = dictionary["task_reference"] as? String, !reference.hasPrefix(PhotobookAPIManager.imageUploadIdentifierPrefix) {
+        if let reference = dictionary["task_reference"] as? String, !reference.hasPrefix(apiClient.imageUploadIdentifierPrefix) {
             return
         }
         
@@ -431,11 +432,11 @@ class OrderManager {
             return
         }
         
-        let referenceId = reference!.suffix(reference!.count - PhotobookAPIManager.imageUploadIdentifierPrefix.count)
+        let referenceId = reference!.suffix(reference!.count - apiClient.imageUploadIdentifierPrefix.count)
         
         let assets = order.assetsToUpload().filter({ $0.identifier == referenceId })
         guard assets.first != nil else {
-            failedImageUpload(with: PhotobookAPIError.missingPhotobookInfo(details: "ImageUploadFinished: Could not match asset reference \(referenceId)"))
+            failedImageUpload(with: AssetLoadingException.unsupported(details: "ImageUploadFinished: Could not match asset reference \(referenceId)"))
             return
         }
         
@@ -456,18 +457,21 @@ class OrderManager {
     private func failedImageUpload(with error: Error) {
         guard processingOrder != nil else { return }
         
-        if let error = error as? PhotobookAPIError {
+        if let error = error as? OrderDiskManagerError {
             switch error {
             case .couldNotSaveTempImageData:
                 Analytics.shared.trackError(.diskError)
-
+                
                 orderProcessingDelegate?.uploadStatusDidUpdate()
                 orderProcessingDelegate?.orderDidComplete(error: .upload)
-            case .missingPhotobookInfo(let details):
-                Analytics.shared.trackError(.photobookInfo, details)
-                cancelProcessing() {
-                    self.orderProcessingDelegate?.orderDidComplete(error: .cancelled)
-                }
+            }
+            return
+        }
+        
+        if let error = error as? AssetLoadingException, case .unsupported(let details) = error {
+            Analytics.shared.trackError(.productInfo, details)
+            cancelProcessing() {
+                self.orderProcessingDelegate?.orderDidComplete(error: .cancelled)
             }
             return
         }

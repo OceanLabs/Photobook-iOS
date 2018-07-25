@@ -638,7 +638,7 @@ enum ProductColor: String, Codable {
         }
         
         return [
-            "template_id": template.templateId,
+            "template_id": upsoldTemplate != nil ? upsoldTemplate!.templateId : template.templateId,
             "multiples": itemCount,
             "shipping_class": shippingMethod.id,
             "options": options,

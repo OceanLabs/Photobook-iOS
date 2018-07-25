@@ -80,7 +80,7 @@ protocol PickerAnalytics {
     }
     
     enum ErrorName: String {
-        case photobookInfo = "Photobook information error"
+        case productInfo = "Product information error"
         case diskError = "Image saving error"
         case imageUpload = "Image upload error"
         case pdfCreation = "PDF creation error"

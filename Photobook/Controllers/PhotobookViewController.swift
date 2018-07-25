@@ -54,15 +54,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private weak var collectionViewBottomConstraint: NSLayoutConstraint!
     
     @IBOutlet private var ctaContainerBottomConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var ctaButton: UIButton! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                ctaButton.titleLabel?.font = UIFontMetrics.default.scaledFont(for: ctaButton.titleLabel!.font)
-                ctaButton.titleLabel?.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
-    
+    @IBOutlet private weak var ctaButton: UIButton! { didSet { ctaButton.titleLabel?.scaleFont() } }
     @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var ctaButtonContainer: UIView!
     @IBOutlet private var backButton: UIButton?
@@ -73,12 +65,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     private var titleButton: UIButton = {
         let button = UIButton(type: .custom)
-        var font = UIFont.systemFont(ofSize: 17.0, weight: .semibold)
-        if #available(iOS 11.0, *) {
-            font = UIFontMetrics.default.scaledFont(for: font)
-            button.titleLabel?.adjustsFontForContentSizeCategory = true
-        }
-        button.titleLabel?.font = font
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17.0, weight: .semibold)
+        button.titleLabel?.scaleFont()
         button.titleLabel?.lineBreakMode = .byTruncatingTail
         button.setTitleColor(.black, for: .normal)
         button.setImage(UIImage(namedInPhotobookBundle:"chevron-down"), for: .normal)

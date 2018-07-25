@@ -17,30 +17,9 @@ class BasketProductTableViewCell: UITableViewCell {
     static let reuseIdentifier = NSStringFromClass(BasketProductTableViewCell.self).components(separatedBy: ".").last!
 
     @IBOutlet weak var productImageView: UIImageView!
-    @IBOutlet weak var productDescriptionLabel: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                productDescriptionLabel.font = UIFontMetrics.default.scaledFont(for: productDescriptionLabel.font)
-                productDescriptionLabel.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
-    @IBOutlet weak var priceLabel: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                priceLabel.font = UIFontMetrics.default.scaledFont(for: priceLabel.font)
-                priceLabel.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
-    @IBOutlet weak var itemAmountButton: UIButton! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                itemAmountButton.titleLabel?.font = UIFontMetrics.default.scaledFont(for: itemAmountButton.titleLabel!.font)
-                itemAmountButton.titleLabel?.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
+    @IBOutlet weak var productDescriptionLabel: UILabel! { didSet { productDescriptionLabel.scaleFont() } }
+    @IBOutlet weak var priceLabel: UILabel! { didSet { priceLabel.scaleFont() } }
+    @IBOutlet weak var itemAmountButton: UIButton! { didSet { itemAmountButton.titleLabel?.scaleFont() } }
     
     var productIdentifier: String?
     weak var delegate: BasketProductTableViewCellDelegate?
@@ -50,12 +29,5 @@ class BasketProductTableViewCell: UITableViewCell {
             return
         }
         delegate?.didTapAmountButton(for: identifier)
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        
-        productImageView.image = nil
-    }
-    
+    }    
 }

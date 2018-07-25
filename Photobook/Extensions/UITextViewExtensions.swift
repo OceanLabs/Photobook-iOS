@@ -8,7 +8,7 @@
 
 import UIKit
 
-public extension UITextView {
+extension UITextView {
     
     /// Returns the substring that fits in the UITextView's current bounds
     var visibleText: String? {
@@ -34,5 +34,5 @@ public extension UITextView {
             if index < numberOfGlyphs { indexes.append(index) }
         }
         return indexes.count > 0 ? indexes : nil
-    }
+    }    
 }

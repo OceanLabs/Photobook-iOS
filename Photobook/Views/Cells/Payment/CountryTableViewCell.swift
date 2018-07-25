@@ -10,14 +10,5 @@ import UIKit
 
 class CountryTableViewCell: UITableViewCell {
 
-    @IBOutlet private weak var label: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                label.font = UIFontMetrics.default.scaledFont(for: label.font)
-                label.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
-    
-
+    @IBOutlet private weak var label: UILabel! { didSet { label.scaleFont() } }
 }

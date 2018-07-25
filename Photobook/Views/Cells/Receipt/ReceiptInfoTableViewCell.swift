@@ -14,39 +14,11 @@ class ReceiptInfoTableViewCell: UITableViewCell {
     
     
     @IBOutlet weak var iconImageView: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                titleLabel.font = UIFontMetrics.default.scaledFont(for: titleLabel.font)
-                titleLabel.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
-    @IBOutlet weak var descriptionLabel: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                descriptionLabel.font = UIFontMetrics.default.scaledFont(for: descriptionLabel.font)
-                descriptionLabel.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
+    @IBOutlet weak var titleLabel: UILabel! { didSet { titleLabel.scaleFont() } }
+    @IBOutlet weak var descriptionLabel: UILabel! { didSet { descriptionLabel.scaleFont() } }
     @IBOutlet private weak var actionButtonContainerView: UIView!
-    @IBOutlet weak var primaryActionButton: UIButton! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                primaryActionButton.titleLabel?.font = UIFontMetrics.default.scaledFont(for: primaryActionButton.titleLabel!.font)
-                primaryActionButton.titleLabel?.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
-    @IBOutlet weak var secondaryActionButton: UIButton! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                secondaryActionButton.titleLabel?.font = UIFontMetrics.default.scaledFont(for: secondaryActionButton.titleLabel!.font)
-                secondaryActionButton.titleLabel?.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
+    @IBOutlet weak var primaryActionButton: UIButton! { didSet { primaryActionButton.titleLabel?.scaleFont() } }
+    @IBOutlet weak var secondaryActionButton: UIButton! { didSet { secondaryActionButton.titleLabel?.scaleFont() } }
     
     @IBOutlet private weak var showActionButtonsConstraint: NSLayoutConstraint!
     @IBOutlet private weak var hideActionButtonsConstraint: NSLayoutConstraint!

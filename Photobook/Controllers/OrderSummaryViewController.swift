@@ -26,32 +26,9 @@ class OrderSummaryViewController: UIViewController {
     @IBOutlet weak var previewImageActivityIndicatorView: UIActivityIndicatorView!
     @IBOutlet weak var previewImageProgressView: UIView!
     @IBOutlet weak var coverSnapshotPageView: PhotobookPageView!
-    @IBOutlet weak var orderDetailsLabel: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                orderDetailsLabel.font = UIFontMetrics.default.scaledFont(for: orderDetailsLabel.font)
-                orderDetailsLabel.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
-    @IBOutlet weak var ctaButton: UIButton! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                ctaButton.titleLabel?.font = UIFontMetrics.default.scaledFont(for: ctaButton.titleLabel!.font)
-                ctaButton.titleLabel?.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
-    
-    @IBOutlet weak var loadingPreviewLabel: UILabel! {
-        didSet {
-            if #available(iOS 11.0, *) {
-                loadingPreviewLabel.font = UIFontMetrics.default.scaledFont(for: loadingPreviewLabel.font)
-                loadingPreviewLabel.adjustsFontForContentSizeCategory = true
-            }
-        }
-    }
-    
+    @IBOutlet weak var orderDetailsLabel: UILabel! { didSet { orderDetailsLabel.scaleFont() } }
+    @IBOutlet weak var ctaButton: UIButton! { didSet { ctaButton.titleLabel?.scaleFont() } }
+    @IBOutlet weak var loadingPreviewLabel: UILabel! { didSet { loadingPreviewLabel.scaleFont() } }
     @IBOutlet weak var basketDisclaimerLabel: UILabel!
     
     var completionClosure: ((_ photobook: PhotobookProduct) -> Void)?

@@ -389,7 +389,7 @@ class OrderManagerTests: XCTestCase {
         assetLoadingManager.imageData = Data()
         
         orderDiskManager.fileUrl = URL(string: "http://clownrepo.co.uk/fiestaking.jpg")
-        apiClient.uploadImageUserInfo = ["task_reference": "\(PhotobookAPIManager.imageUploadIdentifierPrefix)\(photosAsset.identifier!)"]
+        apiClient.uploadImageUserInfo = ["task_reference": "\(apiClient.imageUploadIdentifierPrefix)\(photosAsset.identifier!)"]
         
         let expect = expectation(forNotification: .orderDidComplete, object: nil) { (notification) -> Bool in
             if let error = notification.object as? OrderProcessingError, case .upload = error {
@@ -409,7 +409,7 @@ class OrderManagerTests: XCTestCase {
         assetLoadingManager.imageData = Data()
         
         orderDiskManager.fileUrl = URL(string: "http://clownrepo.co.uk/fiestaking.jpg")
-        apiClient.uploadImageUserInfo = ["full": "http://pig/223434.jpg", "task_reference": "\(PhotobookAPIManager.imageUploadIdentifierPrefix)wrongID"]
+        apiClient.uploadImageUserInfo = ["full": "http://pig/223434.jpg", "task_reference": "\(apiClient.imageUploadIdentifierPrefix)wrongID"]
         
         let expect = expectation(forNotification: .orderDidComplete, object: nil) { (notification) -> Bool in
             if let error = notification.object as? OrderProcessingError, case .cancelled = error {
@@ -429,7 +429,7 @@ class OrderManagerTests: XCTestCase {
         assetLoadingManager.imageData = Data()
         
         orderDiskManager.fileUrl = URL(string: "http://clownrepo.co.uk/fiestaking.jpg")
-        apiClient.uploadImageUserInfo = ["full": "http://pig/223434.jpg", "task_reference": "\(PhotobookAPIManager.imageUploadIdentifierPrefix)\(photosAsset.identifier!)"]
+        apiClient.uploadImageUserInfo = ["full": "http://pig/223434.jpg", "task_reference": "\(apiClient.imageUploadIdentifierPrefix)\(photosAsset.identifier!)"]
         
         let predicate = NSPredicate(format: "uploadUrl == %@", "http://pig/223434.jpg")
         let expect = expectation(for: predicate, evaluatedWith: photosAsset)
