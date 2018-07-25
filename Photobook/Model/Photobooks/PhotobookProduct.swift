@@ -736,10 +736,7 @@ extension PhotobookProduct {
         get {
             var stringHash = ""
 
-            stringHash += "pt:\(photobookTemplate.id),"
-            if let upsoldOptions = upsoldOptions {
-                stringHash += "po:\(upsoldOptions),"
-            }
+            stringHash += upsoldTemplate != nil ? "pt:\(upsoldTemplate!.templateId)," : "pt:\(photobookTemplate.templateId),"
             stringHash += "pc:\(itemCount),"
             stringHash += "pg:\(numberOfPages),"
 
