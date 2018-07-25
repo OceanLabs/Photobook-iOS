@@ -20,7 +20,7 @@ import UIKit
 @objc public protocol PhotobookDelegate: DismissDelegate {
     
     /// Custom photo picker
-    @objc optional var assetPickerViewController: PhotobookAssetPicker & UIViewController { get }
+    @objc optional func assetPickerViewController() -> PhotobookAssetPicker & UIViewController
 }
 
 /// Conforming classes can be notified when PhotobookAssets are added by a custom photo picker

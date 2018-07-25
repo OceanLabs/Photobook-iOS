@@ -33,7 +33,6 @@ class AssetSelectorViewController: UIViewController {
         return temp
     }()
     private var selectedAssetIndex = -1
-    private var assetPickerViewController: (PhotobookAssetPicker & UIViewController)?
     
     var album: Album? {
         didSet {
@@ -47,10 +46,7 @@ class AssetSelectorViewController: UIViewController {
     }
     weak var photobookDelegate: PhotobookDelegate? {
         didSet {
-            if photobookDelegate != nil {
-                assetPickerViewController = photobookDelegate!.assetPickerViewController
-                collectionView.reloadData()
-            }
+            collectionView.reloadData()
         }
     }
     
@@ -95,7 +91,7 @@ extension AssetSelectorViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // Add one for the "add more" thumbnail if an Asset picker was configured
         var count = assets.count
-        if album != nil || albumManager != nil || assetPickerViewController != nil { count += 1 }
+        if album != nil || albumManager != nil || photobookDelegate?.assetPickerViewController != nil { count += 1 }
         return count
     }
     
@@ -135,7 +131,7 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == assets.count {
-            if let assetPickerViewController = assetPickerViewController {
+            if let assetPickerViewController = photobookDelegate!.assetPickerViewController?() {
                 assetPickerViewController.addingDelegate = self
                 present(assetPickerViewController, animated: true, completion: nil)
                 return
@@ -169,7 +165,7 @@ extension AssetSelectorViewController: PhotobookAssetAddingDelegate {
     func didFinishAdding(_ photobookAssets: [PhotobookAsset]?) {
                 
         guard let assets = PhotobookAsset.assets(from: photobookAssets), !assets.isEmpty else {
-            self.dismiss(animated: false, completion: nil)
+            self.dismiss(animated: true, completion: nil)
             return
         }
         
@@ -179,6 +175,6 @@ extension AssetSelectorViewController: PhotobookAssetAddingDelegate {
 
         collectionView.reloadData()
         collectionView.scrollToItem(at: IndexPath(row: self.assets.count, section: 0), at: .centeredHorizontally, animated: true)
-        self.dismiss(animated: false, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
 }
