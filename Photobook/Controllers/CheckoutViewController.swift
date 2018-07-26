@@ -21,6 +21,10 @@ class CheckoutViewController: UIViewController {
         static let detailsLabelColor = UIColor.black
         static let detailsLabelColorRequired = UIColor.red.withAlphaComponent(0.6)
         
+        static let smallDeviceScreenWidth: CGFloat = 320.0
+        static let smallDeviceTableViewCellHeight: CGFloat = 100.0
+        static let largeDeviceTableViewCellHeight: CGFloat = 130.0
+        
         static let loadingDetailsText = NSLocalizedString("Controllers/CheckoutViewController/EmptyScreenLoadingText",
                                                     value: "Loading price details",
                                                     comment: "Info text displayed next to a loading indicator while loading price details")
@@ -156,8 +160,13 @@ class CheckoutViewController: UIViewController {
         } else {
             topInset = navigationController?.navigationBar.frame.maxY ?? 0
         }
+        
         tableView.contentInset = UIEdgeInsets(top: topInset, left: tableView.contentInset.left, bottom: tableView.contentInset.bottom, right: tableView.contentInset.right)
-
+        
+        let rowHeight: CGFloat = UIScreen.main.bounds.width > Constants.smallDeviceScreenWidth ? Constants.largeDeviceTableViewCellHeight : Constants.smallDeviceTableViewCellHeight
+        tableView.rowHeight = rowHeight
+        tableView.estimatedRowHeight = rowHeight
+        
         payButton.titleLabel?.sizeToFit()
     }
     
