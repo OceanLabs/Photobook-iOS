@@ -29,8 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window?.rootViewController = PhotobookManager.rootViewControllerForCurrentState()
         
-        // Force the static var to initialize so it doesn't miss any notifications
-        _ = Analytics.shared
+        Analytics.shared.optInToRemoteAnalytics = true
         
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }
