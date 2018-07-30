@@ -106,6 +106,7 @@ protocol PickerAnalytics {
     
     @objc public static let shared = Analytics()
     @objc public weak var delegate: AnalyticsDelegate?
+    @objc public var optInToRemoteAnalytics = false
     
     private var appLaunchDate = Date()
     private var appBackgroundedDate: Date?
@@ -172,7 +173,9 @@ protocol PickerAnalytics {
         
         let properties = addEnvironment(to: properties)
         
-        SEGAnalytics.shared().screen(screenName.rawValue, properties: properties)
+        if optInToRemoteAnalytics {
+            SEGAnalytics.shared().screen(screenName.rawValue, properties: properties)
+        }
         delegate?.photobookAnalyticsEventDidFire(type: .screenViewed, name: screenName.rawValue, properties: properties)
     }
     
@@ -183,7 +186,9 @@ protocol PickerAnalytics {
         
         let properties = addEnvironment(to: properties)
         
-        SEGAnalytics.shared().track(actionName.rawValue, properties: properties)
+        if optInToRemoteAnalytics {
+            SEGAnalytics.shared().track(actionName.rawValue, properties: properties)
+        }
         delegate?.photobookAnalyticsEventDidFire(type: .action, name: actionName.rawValue, properties: properties)
     }
     
@@ -198,7 +203,10 @@ protocol PickerAnalytics {
         
         let properties = addEnvironment(to: properties)
         
-        SEGAnalytics.shared().track(errorName.rawValue, properties: properties)
+        // TODO: Remove once it's ok from a legal point to track errors (TOS update etc)
+        if optInToRemoteAnalytics {
+            SEGAnalytics.shared().track(errorName.rawValue, properties: properties)
+        }
         delegate?.photobookAnalyticsEventDidFire(type: .error, name: errorName.rawValue, properties: properties)
     }
     
