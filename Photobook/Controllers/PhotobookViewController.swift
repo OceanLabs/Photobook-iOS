@@ -223,6 +223,11 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     private func setupTitleView() {
         if !isRearranging {
             titleButton.setTitle(product.template.name, for: .normal)
+
+            if let numberOfProducts = ProductManager.shared.products?.count, numberOfProducts == 1 {
+                titleButton.setImage(nil, for: .normal)
+            }
+            
             titleButton.sizeToFit()
             navigationItem.rightBarButtonItem?.tintColor = Colors.blueTint
             navigationItem.titleView = titleButton
@@ -234,7 +239,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     @objc private func didTapOnTitle() {
-        guard let photobooks = ProductManager.shared.products else { return }
+        guard let photobooks = ProductManager.shared.products, photobooks.count > 1 else { return }
         
         let alertController = UIAlertController(title: nil, message: NSLocalizedString("Photobook/ChangeSizeTitle", value: "Changing the size keeps your layout intact", comment: "Information when the user wants to change the photo book's size"), preferredStyle: .actionSheet)
         for photobook in photobooks {
