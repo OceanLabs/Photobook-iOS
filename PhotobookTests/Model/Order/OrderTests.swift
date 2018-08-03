@@ -12,7 +12,7 @@ import XCTest
 class OrderTests: XCTestCase {
 
     func fakeProduct(name: String, assets: [Asset]? = nil) -> PhotobookProduct {
-        let photobookTemplate = PhotobookTemplate(id: 1, name: name, templateId: "HDBOOK-270x210", kiteId: "HDBOOK-270x210", coverSize: .zero, pageSize: .zero, spineTextRatio: 0.0, coverLayouts: [], layouts: [])
+        let photobookTemplate = PhotobookTemplate(id: 1, name: name, templateId: "HDBOOK-270x210", kiteId: "HDBOOK-270x210", coverSize: .zero, pageSize: .zero, spineTextRatio: 0.0, coverLayouts: [], layouts: [], pageBleed: 8.5)
         let portraitLayoutBox = LayoutBox(id: 1, rect: CGRect(x: 0.2, y: 0.05, width: 0.6, height: 0.9))
         let landscapeLayoutBox = LayoutBox(id: 1, rect: CGRect(x: 0.05, y: 0.2, width: 0.9, height: 0.6))
         let portraitLayout = Layout(id: 1, category: "layout", imageLayoutBox: portraitLayoutBox, textLayoutBox: nil, isDoubleLayout: false)
