@@ -39,8 +39,6 @@ enum ProductColor: String, Codable {
         case photobookTemplate, productLayouts, coverColor, pageColor, spineText, spineFontType, productUpsellOptions, itemCount, photobookUpsoldTemplate, upsoldOptions, availableShippingMethods, selectedShippingMethod, identifier, pigBaseUrl, pigCoverUrl, coverSnapshot
     }
     
-    private let bleed: CGFloat = 8.5
-
     private var currentPortraitLayout = 0
     private var currentLandscapeLayout = 0
     
@@ -486,7 +484,7 @@ enum ProductColor: String, Codable {
     func bleed(forPageSize size: CGSize, type: PageType? = nil) -> CGFloat {
         let pageHeight = type != nil && type! == .cover ? photobookTemplate.coverSize.height : photobookTemplate.pageSize.height
         let scaleFactor = size.height / pageHeight
-        return bleed * scaleFactor
+        return photobookTemplate.pageBleed * scaleFactor
     }
     
     func pdfParameters() -> [String: Any]? {

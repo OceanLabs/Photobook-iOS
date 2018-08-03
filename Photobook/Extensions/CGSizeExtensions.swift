@@ -24,10 +24,12 @@ extension CGSize {
 
     static func * (size: CGSize, scalar: CGFloat) -> CGSize {
         return CGSize(width: size.width * scalar, height: size.height * scalar)
-    }
-    
+    }    
     static func * (scalar: CGFloat, size: CGSize) -> CGSize { return size * scalar }
-    
+
+    static func * (size: CGSize, scalar: Double) -> CGSize { return size * CGFloat(scalar) }
+    static func * (scalar: Double, size: CGSize) -> CGSize { return size * scalar }
+
     static func ==~(lhs: CGSize, rhs: CGSize) -> Bool {
         return (fabs(lhs.width - rhs.width) <= CGFloat.minPrecision) &&
                 (fabs(lhs.height - rhs.height) <= CGFloat.minPrecision)
