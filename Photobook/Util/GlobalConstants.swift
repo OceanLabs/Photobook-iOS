@@ -30,6 +30,10 @@ enum Environment {
     case live
 }
 
+struct Measurements {
+    static let mmToPtMultiplier = 2.83464566929134
+}
+
 struct CommonLocalizedStrings {
     static let somethingWentWrongTitle = NSLocalizedString("GenericError/SomethingWentWrong", value: "Something Went Wrong", comment: "Generic error message title")
     static let somethingWentWrongText = NSLocalizedString("GenericError/AnErrorOcurred", value: "An error occurred while processing your request.", comment: "Generic error message body")

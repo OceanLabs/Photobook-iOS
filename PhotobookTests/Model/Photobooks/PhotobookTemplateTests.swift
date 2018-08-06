@@ -24,7 +24,8 @@ class PhotobookTests: XCTestCase {
                 "minPages": 20,
                 "maxPages": 100,
                 "coverSize": ["mm": ["height": 127, "width": 129]],
-                "size": ["mm": ["height": 121, "width": 216]]
+                "size": ["mm": ["height": 121, "width": 216]],
+                "pageBleed": ["mm": 3]
             ]
         ]
     ]) as [String: AnyObject]
@@ -51,7 +52,8 @@ class PhotobookTests: XCTestCase {
                 "minPages": 20,
                 "maxPages": 100,
                 "coverSize": ["mm": ["height": 127, "width": 129]],
-                "size": ["mm": ["height": 121, "width": 216]]
+                "size": ["mm": ["height": 121, "width": 216]],
+                "pageBleed": ["mm": 3]
             ]]
         
         photobookDictionary["variants"] = invalidVariants as AnyObject
@@ -88,7 +90,7 @@ class PhotobookTests: XCTestCase {
             XCTAssertTrue(width ==~ 365.66)
             XCTAssertTrue(height ==~ 360.0)
         } else {
-            XCTFail("Parse: Should parse valid dictionary")
+            XCTFail("Parse: Should conver cover size to points")
         }
     }
 
@@ -107,9 +109,14 @@ class PhotobookTests: XCTestCase {
         var photobookDictionary = validDictionary
 
         let invalidVariants = [
-            [   "minPages": 20,
+            [
+                "kiteId": "HDBOOK-127x127",
+                "templateId": "hdbook_127x127",
+                "minPages": 20,
                 "maxPages": 100,
-                "coverSize": ["mm": ["height": 127, "width": 129 ]] ]]
+                "coverSize": ["mm": ["height": 127, "width": 129]],
+                "pageBleed": ["mm": 3]
+        ]]
         
         photobookDictionary["variants"] = invalidVariants as AnyObject
         
@@ -161,4 +168,31 @@ class PhotobookTests: XCTestCase {
         XCTAssertNil(photobookBox, "Parse: Should return nil if the layout count is zero")
     }
 
+    func testParse_shouldReturnNilIfPageBleedIsMissing() {
+        var photobookDictionary = validDictionary
+        
+        let invalidVariants = [
+            [
+                "kiteId": "HDBOOK-127x127",
+                "templateId": "hdbook_127x127",
+                "minPages": 20,
+                "maxPages": 100,
+                "coverSize": ["mm": ["height": 127, "width": 129]],
+                "size": ["mm": ["height": 121, "width": 216]],
+            ]]
+        
+        photobookDictionary["variants"] = invalidVariants as AnyObject
+        
+        let photobookBox = PhotobookTemplate.parse(photobookDictionary)
+        XCTAssertNil(photobookBox, "Parse: Should return nil if page bleed is missing")
+    }
+    
+    func testParse_shouldConvertPageBleedToPoints() {
+        let photobook = PhotobookTemplate.parse(validDictionary)
+        if let pageBleed = photobook?.pageBleed {
+            XCTAssertTrue(pageBleed ==~ 8.5)
+        } else {
+            XCTFail("Parse: Should convert page bleed to points")
+        }
+    }
 }

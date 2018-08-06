@@ -12,7 +12,7 @@ import Photos
 
 class PhotobookProductTests: XCTestCase {
 
-    let template = PhotobookTemplate(id: 1, name: "template", templateId: "photobook", kiteId: "photobook", coverSize: CGSize(width: 200.0, height: 100.0), pageSize: CGSize(width: 200.0, height: 100.0), spineTextRatio: 0.8, coverLayouts: Array(1...5), layouts: Array(1...5))
+    let template = PhotobookTemplate(id: 1, name: "template", templateId: "photobook", kiteId: "photobook", coverSize: CGSize(width: 200.0, height: 100.0), pageSize: CGSize(width: 200.0, height: 100.0), spineTextRatio: 0.8, coverLayouts: Array(1...5), layouts: Array(1...5), pageBleed: 8.5)
     let assets: [Asset] = {
         var temp = [PhotosAssetMock]()
         for i in 0 ..< 10 {
@@ -95,7 +95,7 @@ class PhotobookProductTests: XCTestCase {
         var layouts2 = [Layout]()
         
         let size = CGSize(width: 200.0, height: 100.0)
-        let template2 = PhotobookTemplate(id: 2, name: "template2", templateId: "photobook2", kiteId: "photobook2", coverSize: size, pageSize: size, spineTextRatio: 0.8, coverLayouts: Array(6...10), layouts: Array(6...10))
+        let template2 = PhotobookTemplate(id: 2, name: "template2", templateId: "photobook2", kiteId: "photobook2", coverSize: size, pageSize: size, spineTextRatio: 0.8, coverLayouts: Array(6...10), layouts: Array(6...10), pageBleed: 8.5)
 
         // Create new fake layouts with different IDs but same categories
         for i in 1 ... 5 {

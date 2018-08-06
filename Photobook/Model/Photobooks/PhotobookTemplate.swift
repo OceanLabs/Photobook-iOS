@@ -12,8 +12,6 @@ import UIKit
 // Defines the characteristics of a photobook / product
 @objc class PhotobookTemplate: NSObject, Codable, Template {
     
-    private static let mmToPtMultiplier = 2.83464566929134
-    
     var id: Int
     var name: String
     var templateId: String
@@ -27,9 +25,10 @@ import UIKit
     var layouts: [Int] // IDs of the permitted layouts
     var minPages: Int = 20
     var maxPages: Int = 100
+    var pageBleed: CGFloat
     var availableShippingMethods: [ShippingMethod]?
     
-    init(id: Int, name: String, templateId: String, kiteId: String, coverSize: CGSize, pageSize: CGSize, spineTextRatio: CGFloat, coverLayouts: [Int], layouts: [Int]) {
+    init(id: Int, name: String, templateId: String, kiteId: String, coverSize: CGSize, pageSize: CGSize, spineTextRatio: CGFloat, coverLayouts: [Int], layouts: [Int], pageBleed: CGFloat) {
         self.id = id
         self.name = name
         self.templateId = templateId
@@ -39,6 +38,7 @@ import UIKit
         self.spineTextRatio = spineTextRatio
         self.coverLayouts = coverLayouts
         self.layouts = layouts
+        self.pageBleed = pageBleed
     }
 
     // Parses a photobook dictionary.
@@ -63,13 +63,17 @@ import UIKit
             let pageSizeDictionary = variantDictionary["size"] as? [String: Any],
             let pageSizeMm = pageSizeDictionary["mm"] as? [String: Any],
             let pageWidth = pageSizeMm["width"] as? Double,
-            let pageHeight = pageSizeMm["height"] as? Double
+            let pageHeight = pageSizeMm["height"] as? Double,
+        
+            let pageBleedDictionary = variantDictionary["pageBleed"] as? [String: Any],
+            let pageBleedMm = pageBleedDictionary["mm"] as? Double
         else { return nil }
         
-        let coverSize = CGSize(width: coverWidth * PhotobookTemplate.mmToPtMultiplier, height: coverHeight * PhotobookTemplate.mmToPtMultiplier)
-        let pageSize = CGSize(width: pageWidth * PhotobookTemplate.mmToPtMultiplier * 0.5, height: pageHeight * PhotobookTemplate.mmToPtMultiplier) // The width is that of a full spread
+        let coverSize = CGSize(width: coverWidth, height: coverHeight) * Measurements.mmToPtMultiplier
+        let pageSize = CGSize(width: pageWidth * 0.5, height: pageHeight) * Measurements.mmToPtMultiplier // The width is that of a full spread
+        let pageBleed = CGFloat(pageBleedMm * Measurements.mmToPtMultiplier)
         
-        let photobookTemplate = PhotobookTemplate(id: id, name: name, templateId: templateId, kiteId: kiteId, coverSize: coverSize, pageSize: pageSize, spineTextRatio: CGFloat(spineTextRatio), coverLayouts: coverLayouts, layouts: layouts)
+        let photobookTemplate = PhotobookTemplate(id: id, name: name, templateId: templateId, kiteId: kiteId, coverSize: coverSize, pageSize: pageSize, spineTextRatio: CGFloat(spineTextRatio), coverLayouts: coverLayouts, layouts: layouts, pageBleed: pageBleed)
 
         if let minPages = variantDictionary["minPages"] as? Int { photobookTemplate.minPages = minPages }
         if let maxPages = variantDictionary["maxPages"] as? Int { photobookTemplate.maxPages = maxPages }
