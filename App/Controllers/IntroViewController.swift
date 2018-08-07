@@ -27,12 +27,19 @@ class IntroViewController: UIViewController {
     
     @IBOutlet weak var ctaVisibleConstraint: NSLayoutConstraint!
     @IBOutlet weak var ctaInvisibleConstraint: NSLayoutConstraint!
+    @IBOutlet weak var ctaContainerToBackgroundImageConstraint: NSLayoutConstraint!
+    @IBOutlet weak var bgImageToBottomMarginConstraint: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         ctaVisibleConstraint.priority = .defaultLow
         ctaInvisibleConstraint.priority = .init(751)
+        
+        #if !INTRO_SCROLLS_UP
+        bgImageToBottomMarginConstraint.priority = .init(751)
+        ctaContainerToBackgroundImageConstraint.priority = .defaultLow
+        #endif
         
         view.layoutIfNeeded()
         
