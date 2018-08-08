@@ -36,10 +36,10 @@ class IntroViewController: UIViewController {
         ctaVisibleConstraint.priority = .defaultLow
         ctaInvisibleConstraint.priority = .init(751)
         
-        #if !INTRO_SCROLLS_UP
-        bgImageToBottomMarginConstraint.priority = .init(751)
-        ctaContainerToBackgroundImageConstraint.priority = .defaultLow
-        #endif
+        if !Configuration.shouldIntroBackgroundImageScroll {
+            bgImageToBottomMarginConstraint.priority = .init(751)
+            ctaContainerToBackgroundImageConstraint.priority = .defaultLow
+        }
         
         view.layoutIfNeeded()
         
