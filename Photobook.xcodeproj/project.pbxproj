@@ -715,6 +715,8 @@
 		2E25272D2015EDB1004C12AF /* CountryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryTests.swift; sourceTree = "<group>"; };
 		2E2563902018BBCF0096DFC5 /* AddressTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressTableViewController.swift; sourceTree = "<group>"; };
 		2E2563922018C3950096DFC5 /* AddressFieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressFieldTableViewCell.swift; sourceTree = "<group>"; };
+		2E399525211ADA30005B9626 /* PicoBook.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PicoBook.entitlements; sourceTree = "<group>"; };
+		2E399526211ADB26005B9626 /* Pico-Book-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Pico-Book-Info.plist"; sourceTree = "<group>"; };
 		2E3A86E620C00A4200F1E6E2 /* CheckoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutTests.swift; sourceTree = "<group>"; };
 		2E3A86E820C0118800F1E6E2 /* AddPaymentMethodTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodTableViewCell.swift; sourceTree = "<group>"; };
 		2E3A86EB20C0145600F1E6E2 /* CountryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryTableViewCell.swift; sourceTree = "<group>"; };
@@ -834,7 +836,6 @@
 		6F1815492009042E00D7082D /* CoverFrameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverFrameView.swift; sourceTree = "<group>"; };
 		6F1DB8DA201617B7001BECC8 /* CoverLayoutSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverLayoutSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
 		6F202CCF211998E9000A6C02 /* PicoBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PicoBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6F202CD0211998EA000A6C02 /* Pico-Book-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Pico-Book-Info.plist"; path = "/Users/jaime/Documents/PhotoBook-iOS/Pico-Book-Info.plist"; sourceTree = "<absolute>"; };
 		6F202CD421199B29000A6C02 /* Main.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Main.xcassets; sourceTree = "<group>"; };
 		6F202CDA211ACEBB000A6C02 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		6F202CDC211ACFCC000A6C02 /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
@@ -1481,8 +1482,9 @@
 		6F202CD12119996C000A6C02 /* Pico Book App */ = {
 			isa = PBXGroup;
 			children = (
+				2E399525211ADA30005B9626 /* PicoBook.entitlements */,
 				6F202CDA211ACEBB000A6C02 /* Configuration.swift */,
-				6F202CD0211998EA000A6C02 /* Pico-Book-Info.plist */,
+				2E399526211ADB26005B9626 /* Pico-Book-Info.plist */,
 				6F202CD421199B29000A6C02 /* Main.xcassets */,
 			);
 			path = "Pico Book App";
@@ -1959,6 +1961,11 @@
 					};
 					6F202C0E211998E9000A6C02 = {
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.ApplePay = {
+								enabled = 1;
+							};
+						};
 					};
 					6FB670661FB5BAD40062D630 = {
 						CreatedOnToolsVersion = 9.1;
@@ -3609,14 +3616,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = App/Resources/Photobook.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/Pico Book App/PicoBook.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = L78L4U72YJ;
-				INFOPLIST_FILE = "Pico-Book-Info.plist";
+				DEVELOPMENT_TEAM = F6J8B455GU;
+				INFOPLIST_FILE = "$(SRCROOT)/Pico Book App/Pico-Book-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cardinalblue.Picobook;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PHOTOBOOK_APP";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -3631,14 +3638,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = App/Resources/Photobook.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/Pico Book App/PicoBook.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = L78L4U72YJ;
-				INFOPLIST_FILE = "Pico-Book-Info.plist";
+				DEVELOPMENT_TEAM = F6J8B455GU;
+				INFOPLIST_FILE = "$(SRCROOT)/Pico Book App/Pico-Book-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cardinalblue.Picobook;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "TEST_ENVIRONMENT DEBUG PHOTOBOOK_APP";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -3653,13 +3660,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = App/Resources/Photobook.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/Pico Book App/PicoBook.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = L78L4U72YJ;
-				INFOPLIST_FILE = "Pico-Book-Info.plist";
+				DEVELOPMENT_TEAM = F6J8B455GU;
+				INFOPLIST_FILE = "$(SRCROOT)/Pico Book App/Pico-Book-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cardinalblue.Picobook;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PHOTOBOOK_APP;
 				SWIFT_VERSION = 4.0;
@@ -3673,13 +3680,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = App/Resources/Photobook.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/Pico Book App/PicoBook.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = L78L4U72YJ;
-				INFOPLIST_FILE = "Pico-Book-Info.plist";
+				DEVELOPMENT_TEAM = F6J8B455GU;
+				INFOPLIST_FILE = "$(SRCROOT)/Pico Book App/Pico-Book-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cardinalblue.Picobook;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "TEST_ENVIRONMENT PHOTOBOOK_APP";
 				SWIFT_VERSION = 4.0;

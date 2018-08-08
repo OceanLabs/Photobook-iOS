@@ -21,8 +21,8 @@ class PhotobookManager: NSObject {
     }
     
     static func setupPayments() {
-        PaymentAuthorizationManager.applePayPayTo = "Kite.ly (via HD Photobooks)"
-        PaymentAuthorizationManager.applePayMerchantId = "merchant.ly.kite.sdk"
+        PaymentAuthorizationManager.applePayPayTo = Configuration.applePayPayToString
+        PaymentAuthorizationManager.applePayMerchantId = Configuration.applePayMerchantId
         PhotobookAPIManager.apiKey = Configuration.kiteApiClientKey
         KiteAPIClient.shared.apiKey = Configuration.kiteApiClientKey
     }

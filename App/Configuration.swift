@@ -11,4 +11,6 @@ import Foundation
 struct Configuration {
     static let shouldIntroBackgroundImageScroll = true
     static let kiteApiClientKey = "57c832e42dfdda93d072c6a42c41fbcddf100805" //Live: ad6635a2c5f284956df20e78ae89a4e5efa46806
+    static let applePayPayToString = "Kite.ly (via HD Photobooks)"
+    static let applePayMerchantId = "merchant.ly.kite.sdk"
 }
