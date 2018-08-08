@@ -1,6 +1,6 @@
 //
 //  Configuration.swift
-//  PicoBook
+//  Photobook
 //
 //  Created by Jaime Landazuri on 08/08/2018.
 //  Copyright © 2018 Kite.ly. All rights reserved.
