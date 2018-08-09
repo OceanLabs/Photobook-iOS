@@ -46,13 +46,13 @@ import UIKit
         
         guard
             let id = dictionary["id"] as? Int,
-            let name = dictionary["displayName"] as? String,
             let spineTextRatio = dictionary["spineTextRatio"] as? Double, spineTextRatio > 0.0,
             let coverLayouts = dictionary["coverLayouts"] as? [Int], !coverLayouts.isEmpty,
             let layouts = dictionary["layouts"] as? [Int], !layouts.isEmpty,
 
             let variantDictionary = (dictionary["variants"] as? [[String: AnyObject]])?.first,
         
+            let name = variantDictionary["name"] as? String,
             let kiteId = variantDictionary["kiteId"] as? String,
             let templateId = variantDictionary["templateId"] as? String,
             let coverSizeDictionary = variantDictionary["coverSize"] as? [String: Any],
