@@ -1842,6 +1842,7 @@
                         <constraints>
                             <constraint firstItem="wFH-aZ-OE8" firstAttribute="leading" secondItem="ZFI-Ae-tE6" secondAttribute="leading" id="3kZ-iv-Q4K"/>
                             <constraint firstItem="wFH-aZ-OE8" firstAttribute="height" relation="greaterThanOrEqual" secondItem="ZFI-Ae-tE6" secondAttribute="height" multiplier="0.5" id="82O-6U-qcJ"/>
+                            <constraint firstItem="ZkH-HQ-Cv6" firstAttribute="height" secondItem="ZFI-Ae-tE6" secondAttribute="height" priority="750" id="B5Y-0p-bsE"/>
                             <constraint firstItem="ZkH-HQ-Cv6" firstAttribute="centerX" secondItem="ZFI-Ae-tE6" secondAttribute="centerX" id="CdM-W2-ZGq"/>
                             <constraint firstAttribute="bottom" secondItem="wFH-aZ-OE8" secondAttribute="bottom" priority="751" id="O4c-I3-BvW"/>
                             <constraint firstItem="ZkH-HQ-Cv6" firstAttribute="trailing" secondItem="ZFI-Ae-tE6" secondAttribute="trailing" id="OJw-1a-BgD"/>
@@ -1851,7 +1852,6 @@
                             <constraint firstItem="wFH-aZ-OE8" firstAttribute="top" secondItem="ZkH-HQ-Cv6" secondAttribute="bottom" id="mIy-mC-Zkk"/>
                             <constraint firstItem="ZkH-HQ-Cv6" firstAttribute="leading" secondItem="ZFI-Ae-tE6" secondAttribute="leading" id="oN5-df-ZPV"/>
                             <constraint firstAttribute="trailing" secondItem="wFH-aZ-OE8" secondAttribute="trailing" id="sEV-NS-9gc"/>
-                            <constraint firstItem="R1q-NW-Xkc" firstAttribute="bottom" secondItem="ZkH-HQ-Cv6" secondAttribute="bottom" priority="750" id="tUD-nV-Oh2"/>
                             <constraint firstItem="Jw1-k8-BLs" firstAttribute="centerX" secondItem="ZFI-Ae-tE6" secondAttribute="centerX" id="zgb-FQ-mYn"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="R1q-NW-Xkc"/>
@@ -1859,7 +1859,7 @@
                     <tabBarItem key="tabBarItem" title="Item" id="Aqp-Rw-Api"/>
                     <navigationItem key="navigationItem" id="LJ9-70-0Nz"/>
                     <connections>
-                        <outlet property="bgImageToBottomMarginConstraint" destination="tUD-nV-Oh2" id="nsC-Gf-n95"/>
+                        <outlet property="bgImageHeightConstraint" destination="B5Y-0p-bsE" id="zFe-AX-JIZ"/>
                         <outlet property="bgImageView" destination="ZkH-HQ-Cv6" id="nzg-Yg-uP9"/>
                         <outlet property="ctaButton" destination="zQs-sL-P80" id="h64-V1-QQh"/>
                         <outlet property="ctaContainerToBackgroundImageConstraint" destination="mIy-mC-Zkk" id="041-qx-91m"/>
