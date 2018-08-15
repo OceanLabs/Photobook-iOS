@@ -20,13 +20,19 @@ class OrderSummary {
         }
         
         init?(_ dict: [String: Any]) {
-            guard let name = dict["name"] as? String,
+            guard var name = dict["name"] as? String,
                 let priceDict = dict["price"] as? [String:Any],
                 let amountDouble = priceDict["amount"] as? Double,
                 let currencyCode = priceDict["currencyCode"] as? String else {
                 //invalid
                 print("OrderSummary.Detail: couldn't initialise")
                 return nil
+            }
+            
+            // Ugly Hack for PicCollage in Kostas & Jaime's absence. To be removed on their return
+            // when we can get a more correct solution in place.
+            if name == "Square 210x210" {
+                name = "8x8\" Book"
             }
             
             self.init(name: name, price: Decimal(amountDouble).formattedCost(currencyCode: currencyCode))
