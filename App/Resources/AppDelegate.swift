@@ -25,6 +25,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         KiteAPIClient.environment = .test
         #endif
         
+        UIFont.loadAllFonts()
+        
         PhotobookManager.setupPayments()
         
         window?.rootViewController = PhotobookManager.rootViewControllerForCurrentState()
