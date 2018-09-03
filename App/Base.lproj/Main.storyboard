@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -1767,7 +1766,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchImage" translatesAutoresizingMaskIntoConstraints="NO" id="ZkH-HQ-Cv6">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="299"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="314"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Canon" translatesAutoresizingMaskIntoConstraints="NO" id="Jw1-k8-BLs">
                                 <rect key="frame" x="99" y="570" width="177" height="37"/>
@@ -1777,10 +1776,10 @@
                                 </constraints>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wFH-aZ-OE8">
-                                <rect key="frame" x="0.0" y="299" width="375" height="368"/>
+                                <rect key="frame" x="0.0" y="314" width="375" height="353"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ky6-OC-HXy">
-                                        <rect key="frame" x="50" y="50" width="275" height="268"/>
+                                        <rect key="frame" x="50" y="35" width="275" height="268"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="IntroTitle" translatesAutoresizingMaskIntoConstraints="NO" id="HVS-7A-XGW">
                                                 <rect key="frame" x="0.0" y="0.0" width="275" height="96.5"/>
@@ -1788,7 +1787,7 @@
                                                     <constraint firstAttribute="width" secondItem="HVS-7A-XGW" secondAttribute="height" multiplier="57:20" id="7EM-Zv-dq5"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Your device is about to ask if the app can access your photos. Just tap &quot;OK&quot; and you'll be on your way to print heaven" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Azy-ll-rQf">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Your device is about to ask if the app can access your photos. Just tap &quot;OK&quot; and you'll be on your way to print heaven." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Azy-ll-rQf">
                                                 <rect key="frame" x="0.0" y="106.5" width="275" height="81.5"/>
                                                 <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
                                                 <nil key="textColor"/>
@@ -1801,7 +1800,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="6zU-9w-b7S"/>
                                                 </constraints>
-                                                <state key="normal" title="Access photos">
+                                                <state key="normal" title="Access Photos">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
                                                 <userDefinedRuntimeAttributes>
@@ -1835,7 +1834,7 @@
                                     <constraint firstItem="ky6-OC-HXy" firstAttribute="leading" secondItem="wFH-aZ-OE8" secondAttribute="leading" constant="50" id="Mpl-ao-kbz"/>
                                     <constraint firstAttribute="bottom" secondItem="ky6-OC-HXy" secondAttribute="bottom" constant="50" id="keH-Wp-K38"/>
                                     <constraint firstAttribute="trailing" secondItem="ky6-OC-HXy" secondAttribute="trailing" constant="50" id="vOj-Dt-Ib2"/>
-                                    <constraint firstItem="ky6-OC-HXy" firstAttribute="top" secondItem="wFH-aZ-OE8" secondAttribute="top" constant="50" id="xG8-TU-sga"/>
+                                    <constraint firstItem="ky6-OC-HXy" firstAttribute="top" secondItem="wFH-aZ-OE8" secondAttribute="top" constant="35" id="xG8-TU-sga"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -1843,6 +1842,7 @@
                         <constraints>
                             <constraint firstItem="wFH-aZ-OE8" firstAttribute="leading" secondItem="ZFI-Ae-tE6" secondAttribute="leading" id="3kZ-iv-Q4K"/>
                             <constraint firstItem="wFH-aZ-OE8" firstAttribute="height" relation="greaterThanOrEqual" secondItem="ZFI-Ae-tE6" secondAttribute="height" multiplier="0.5" id="82O-6U-qcJ"/>
+                            <constraint firstItem="ZkH-HQ-Cv6" firstAttribute="height" secondItem="ZFI-Ae-tE6" secondAttribute="height" priority="750" id="B5Y-0p-bsE"/>
                             <constraint firstItem="ZkH-HQ-Cv6" firstAttribute="centerX" secondItem="ZFI-Ae-tE6" secondAttribute="centerX" id="CdM-W2-ZGq"/>
                             <constraint firstAttribute="bottom" secondItem="wFH-aZ-OE8" secondAttribute="bottom" priority="751" id="O4c-I3-BvW"/>
                             <constraint firstItem="ZkH-HQ-Cv6" firstAttribute="trailing" secondItem="ZFI-Ae-tE6" secondAttribute="trailing" id="OJw-1a-BgD"/>
@@ -1859,8 +1859,10 @@
                     <tabBarItem key="tabBarItem" title="Item" id="Aqp-Rw-Api"/>
                     <navigationItem key="navigationItem" id="LJ9-70-0Nz"/>
                     <connections>
+                        <outlet property="bgImageHeightConstraint" destination="B5Y-0p-bsE" id="zFe-AX-JIZ"/>
                         <outlet property="bgImageView" destination="ZkH-HQ-Cv6" id="nzg-Yg-uP9"/>
                         <outlet property="ctaButton" destination="zQs-sL-P80" id="h64-V1-QQh"/>
+                        <outlet property="ctaContainerToBackgroundImageConstraint" destination="mIy-mC-Zkk" id="041-qx-91m"/>
                         <outlet property="ctaContainerView" destination="wFH-aZ-OE8" id="fpR-MM-nHl"/>
                         <outlet property="ctaInvisibleConstraint" destination="kk3-s4-C9V" id="Uol-GR-5wD"/>
                         <outlet property="ctaVisibleConstraint" destination="O4c-I3-BvW" id="VDT-gZ-nGo"/>

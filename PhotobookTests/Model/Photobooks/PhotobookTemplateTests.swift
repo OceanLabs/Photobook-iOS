@@ -13,7 +13,6 @@ class PhotobookTests: XCTestCase {
     
     var validDictionary = ([
         "id": 1,
-        "displayName": "Square 127x127",
         "spineTextRatio": 0.87,
         "coverLayouts": [ 9, 10 ],
         "layouts": [ 10, 11, 12, 13 ],
@@ -21,6 +20,7 @@ class PhotobookTests: XCTestCase {
             [
                 "kiteId": "HDBOOK-127x127",
                 "templateId": "hdbook_127x127",
+                "name": "Square 127x127",
                 "minPages": 20,
                 "maxPages": 100,
                 "coverSize": ["mm": ["height": 127, "width": 129]],
@@ -64,7 +64,20 @@ class PhotobookTests: XCTestCase {
 
     func testParse_shouldReturnNilIfNameIsMissing() {
         var photobookDictionary = validDictionary
-        photobookDictionary["displayName"] = nil
+        
+        let invalidVariants = [
+            [
+                "kiteId": "HDBOOK-127x127",
+                "templateId": "hdbook_127x127",
+                "minPages": 20,
+                "maxPages": 100,
+                "coverSize": ["mm": ["height": 127, "width": 129]],
+                "size": ["mm": ["height": 121, "width": 216]],
+                "pageBleed": ["mm": 3]
+            ]]
+
+        photobookDictionary["variants"] = invalidVariants as AnyObject
+        
         let photobookBox = PhotobookTemplate.parse(photobookDictionary)
         XCTAssertNil(photobookBox, "Parse: Should return nil if name is missing")
     }
