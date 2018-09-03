@@ -21,10 +21,11 @@ class PhotobookManager: NSObject {
     }
     
     static func setupPayments() {
+        let apiKey = KiteAPIClient.environment == .live ? Configuration.kiteApiClientLiveKey : Configuration.kiteApiClientTestKey
         PaymentAuthorizationManager.applePayPayTo = Configuration.applePayPayToString
         PaymentAuthorizationManager.applePayMerchantId = Configuration.applePayMerchantId
-        PhotobookAPIManager.apiKey = Configuration.kiteApiClientKey
-        KiteAPIClient.shared.apiKey = Configuration.kiteApiClientKey
+        PhotobookAPIManager.apiKey = apiKey
+        KiteAPIClient.shared.apiKey = apiKey
     }
     
     static func rootViewControllerForCurrentState() -> UIViewController {

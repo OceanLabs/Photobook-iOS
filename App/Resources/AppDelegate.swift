@@ -27,6 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         UIFont.loadAllFonts()
         
+        // Must happen after setting up the environment
         PhotobookManager.setupPayments()
         
         window?.rootViewController = PhotobookManager.rootViewControllerForCurrentState()
