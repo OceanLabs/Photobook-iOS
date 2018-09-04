@@ -32,7 +32,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window?.rootViewController = PhotobookManager.rootViewControllerForCurrentState()
         
-        Analytics.shared.optInToRemoteAnalytics = true
+        if NSClassFromString("XCTest") == nil {
+            Analytics.shared.optInToRemoteAnalytics = true
+        }
         
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }
