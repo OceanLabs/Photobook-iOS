@@ -25,8 +25,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         KiteAPIClient.environment = .test
         #endif
         
-        UIFont.loadAllFonts()
-        
         // Must happen after setting up the environment
         PhotobookManager.setupPayments()
         
