@@ -379,6 +379,7 @@ class OrderManager {
                     }
                     
                     // Success
+                    Analytics.shared.trackAction(.orderCompleted, ["orderId": welf?.processingOrder?.orderId ?? ""])
                     welf?.processingOrder = nil
                     welf?.orderProcessingDelegate?.orderDidComplete()
                 }

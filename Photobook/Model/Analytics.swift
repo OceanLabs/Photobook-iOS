@@ -72,6 +72,7 @@ protocol PickerAnalytics {
         case deselectedUpsellOption = "Deselected upsell option"
         case coverLayoutChanged = "Cover layout changed"
         case orderSubmitted = "Order submitted"
+        case orderCompleted = "Order completed"
         case editingCancelled = "Editing cancelled"
         case editingConfirmed = "Editing confirmed"
         case uploadCancelled = "Upload cancelled"
