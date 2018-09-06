@@ -242,7 +242,6 @@ class OrderManager {
         
         // Upload images
         for asset in assetsToUpload {
-            guard asset.uploadUrl == nil else { continue }
             uploadAsset(asset: asset)
         }
     }
@@ -295,12 +294,13 @@ class OrderManager {
 
     
     func finishOrder() {
+        guard let products = processingOrder?.products else { return }
         
         orderProcessingDelegate?.orderWillFinish()
         
         let pdfGenerationDispatchGroup = DispatchGroup()
         
-        for product in processingOrder?.products ?? [] {
+        for product in products {
             // Process uploaded assets
             pdfGenerationDispatchGroup.enter()
             product.processUploadedAssets(completionHandler: { [weak welf = self] error in
@@ -321,6 +321,8 @@ class OrderManager {
         }
         
         pdfGenerationDispatchGroup.notify(queue: DispatchQueue.main, execute: { [weak welf = self] in
+            guard welf?.processingOrder != nil else { return }
+            
             // Submit order
             welf?.submitOrder(completionHandler: { (error) in
                 
@@ -377,6 +379,7 @@ class OrderManager {
                     }
                     
                     // Success
+                    Analytics.shared.trackAction(.orderCompleted, ["orderId": welf?.processingOrder?.orderId ?? ""])
                     welf?.processingOrder = nil
                     welf?.orderProcessingDelegate?.orderDidComplete()
                 }
