@@ -61,7 +61,7 @@ class AddressTests: XCTestCase {
     func testAddToSaveAddresses_shouldNotSaveTheAddressIfAlreadySaved() {
         validAddress.addToSavedAddresses()
         validAddress.addToSavedAddresses()
-        XCTAssertTrue(Address.savedAddresses.count == 1)
+        XCTAssertEqual(Address.savedAddresses.count, 1)
     }
 
     func testRemoveFromSavedAddresses_shouldRemoveTheAddress() {

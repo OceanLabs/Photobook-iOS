@@ -65,4 +65,8 @@ import Foundation
         maxDeliveryTime = unarchived.maxDeliveryTime
         minDeliveryTime = unarchived.minDeliveryTime
     }
+    
+    static func ==(lhs: ShippingMethod, rhs: ShippingMethod) -> Bool{
+        return lhs.id == rhs.id
+    }
 }
