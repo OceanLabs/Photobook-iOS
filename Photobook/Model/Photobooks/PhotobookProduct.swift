@@ -207,7 +207,9 @@ enum ProductColor: String, Codable {
         }
         
         self.photobookTemplate = template
-        self.selectedShippingMethod = template.availableShippingMethods?.first
+        
+        let countryCode = Country.countryForCurrentLocale().codeAlpha3
+        self.selectedShippingMethod = template.availableShippingMethods?[countryCode]?.first
         self.coverLayouts = coverLayouts
         self.layouts = layouts
         

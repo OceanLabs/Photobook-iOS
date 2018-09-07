@@ -10,5 +10,6 @@ import Foundation
 @objc public protocol Template {
     var templateId: String { get }
     var name: String { get }
-    var availableShippingMethods: [ShippingMethod]? { get set }
+    var availableShippingMethods: [String: [ShippingMethod]]? { get set }
+    var countryToRegionMapping: [String: String]? { get set }
 }

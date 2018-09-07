@@ -135,7 +135,7 @@ class KiteAPIClient {
     }
 
     /// Loads template information for a given array of template IDs.
-    func getTemplateInfo(for templateIds: [String], completionHandler: @escaping (_ shippingClasses: [String: [ShippingMethod]]?, _ error: APIClientError?) -> Void) {
+    func getTemplateInfo(for templateIds: [String], completionHandler: @escaping (_ shippingClasses: [String: [String: [ShippingMethod]]]?, _ countryToRegionMapping: [String: [String: String]]?, _ error: APIClientError?) -> Void) {
 
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
@@ -152,7 +152,7 @@ class KiteAPIClient {
         APIClient.shared.get(context: .kite, endpoint: endpoint, headers: kiteHeaders) { (response, error) in
             
             if let error = error {
-                completionHandler(nil, error)
+                completionHandler(nil, nil, error)
                 return
             }
             
@@ -161,7 +161,7 @@ class KiteAPIClient {
                 let objects = jsonDict["objects"] as? [[String: Any]],
                 let paymentKeys = jsonDict["payment_keys"] as? [String: Any]
             else {
-                completionHandler(nil, .parsing(details: "GetTemplateInfo: Could not parse root objects"))
+                completionHandler(nil, nil, .parsing(details: "GetTemplateInfo: Could not parse root objects"))
                 return
             }
             
@@ -182,40 +182,43 @@ class KiteAPIClient {
                 Stripe.setDefaultPublishableKey(publicKey)
             }
             
-            var objectShippingClasses = [String: [ShippingMethod]]()
+            var objectShippingClasses = [String: [String: [ShippingMethod]]]()
+            var objectRegionMapping = [String: [String: String]]()
             
             for object in objects {
-                var shippingClasses = [ShippingMethod]()
-                let country = Country.countryForCurrentLocale()
+                var regionShippingClasses = [String: [ShippingMethod]]()
                 
-                guard let regionMappings = object["country_to_region_mapping"] as? [String: Any],
-                    let region = regionMappings[country.codeAlpha3] as? String,
+                guard let regionMappings = object["country_to_region_mapping"] as? [String: String],
                     let shippingRegions = object["shipping_regions"] as? [String: Any],
-                    let relevantShippingRegion = shippingRegions[region] as? [String: Any],
-                    let shippingClassDictionaries = relevantShippingRegion["shipping_classes"] as? [[String: Any]],
                     let templateId = object["template_id"] as? String
                     else {
-                        completionHandler(nil, .parsing(details: "GetTemplateInfo: Could not parse region mapping"))
+                        completionHandler(nil, nil, .parsing(details: "GetTemplateInfo: Could not parse region mapping"))
                         return
                 }
                 
-                for dictionary in shippingClassDictionaries {
-                    guard let shippingClass = ShippingMethod.parse(dictionary: dictionary) else {
-                        completionHandler(nil, .parsing(details: "GetTemplateInfo: Could not parse shipping class"))
-                        return
+                for region in shippingRegions.keys {
+                    var shippingClasses = [ShippingMethod]()
+                    for dictionary in ((shippingRegions[region] as? [String: Any])?["shipping_classes"]) as? [[String: Any]] ?? [] {
+                        guard let shippingClass = ShippingMethod.parse(dictionary: dictionary) else {
+                            completionHandler(nil, nil, .parsing(details: "GetTemplateInfo: Could not parse shipping class"))
+                            return
+                        }
+                        shippingClasses.append(shippingClass)
                     }
-                    shippingClasses.append(shippingClass)
+                    
+                    regionShippingClasses[region] = shippingClasses
                 }
                 
-                if shippingClasses.count == 0 { // Inconsistent
-                    completionHandler(nil, .parsing(details: "GetTemplateInfo: Zero shipping classes parsed"))
+                if regionShippingClasses.keys.count == 0 { // Inconsistent
+                    completionHandler(nil, nil, .parsing(details: "GetTemplateInfo: Zero shipping classes parsed"))
                     return
                 }
                 
-                objectShippingClasses[templateId] = shippingClasses
+                objectShippingClasses[templateId] = regionShippingClasses
+                objectRegionMapping[templateId] = regionMappings
             }
             
-            completionHandler(objectShippingClasses, nil)
+            completionHandler(objectShippingClasses, objectRegionMapping, nil)
         }
     }
     
@@ -245,7 +248,7 @@ class KiteAPIClient {
         let endpoint = KiteAPIClient.apiVersion + Endpoints.cost
         APIClient.shared.post(context: .kite, endpoint: endpoint, parameters: parameters, headers: self.kiteHeaders) { response, error in
             
-            if let error = error {
+            guard error == nil else {
                 completionHandler(nil, error)
                 return
             }

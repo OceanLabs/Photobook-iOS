@@ -117,7 +117,7 @@ class Order: Codable {
     }
     
     func updateShippingMethods(_ completionHandler: @escaping (_ error: APIClientError?) -> Void) {
-        KiteAPIClient.shared.getTemplateInfo(for: OrderManager.shared.basketOrder.products.map({ $0.template.templateId })) { [weak welf = self] (shippingMethods, error) in
+        KiteAPIClient.shared.getTemplateInfo(for: OrderManager.shared.basketOrder.products.map({ $0.template.templateId })) { [weak welf = self] (shippingMethods, regionMapping, error) in
             guard error == nil else {
                 if let error = error, case .parsing(let details) = error {
                     Analytics.shared.trackError(.parsing, details)
@@ -128,8 +128,13 @@ class Order: Codable {
             
             for product in welf?.products ?? [] {
                 let availableShippingMethods = shippingMethods?[product.template.templateId]
+                product.template.countryToRegionMapping = regionMapping?[product.template.templateId]
                 product.template.availableShippingMethods = availableShippingMethods
-                product.selectedShippingMethod = availableShippingMethods?.first
+                
+                let countryCode = welf?.deliveryDetails?.address?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
+                if let regionCode = product.template.countryToRegionMapping?[countryCode] {
+                    product.selectedShippingMethod = availableShippingMethods?[regionCode]?.first
+                }
             }
             completionHandler(nil)
         }

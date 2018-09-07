@@ -529,7 +529,11 @@ extension AssetPickerCollectionViewController {
     //MARK: UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let selectedAssetsManager = selectedAssetsManager else { return }
+        guard let selectedAssetsManager = selectedAssetsManager,
+            !album.assets.isEmpty
+            else {
+                return
+        }
         let asset = album.assets[indexPath.item]
         
         guard selectedAssetsManager.toggleSelected(asset) else {
