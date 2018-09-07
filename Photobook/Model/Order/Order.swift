@@ -112,6 +112,21 @@ class Order: Codable {
                 getCostClosure()
             }
         } else {
+            // Since we will update the cost, it means that we may have changed destination country, so check if the selected method is still valid.
+            let countryCode = deliveryDetails?.address?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
+            for product in products {
+                guard let regionCode = product.template.countryToRegionMapping?[countryCode],
+                let availableShippingMethods = product.template.availableShippingMethods?[regionCode] else {
+                    product.selectedShippingMethod = nil
+                    continue
+                }
+                
+                if let selectedMethodId = product.selectedShippingMethod?.id,
+                    !availableShippingMethods.contains(where: { $0.id == selectedMethodId }) {
+                    product.selectedShippingMethod = availableShippingMethods.first
+                }
+            }
+            
             getCostClosure()
         }
     }
