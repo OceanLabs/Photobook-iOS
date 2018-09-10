@@ -268,6 +268,7 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
             photobookViewController.assets = selectedAssetsManager.selectedAssets
             photobookViewController.photobookDelegate = self
             photobookViewController.completionClosure = { (photobookProduct) in
+                OrderManager.shared.reset()
                 OrderManager.shared.basketOrder.products = [photobookProduct]
                 
                 let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
