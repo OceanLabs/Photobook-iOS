@@ -33,6 +33,7 @@ class ShippingMethodsViewController: UIViewController {
     }()
     
     private lazy var sectionTitles: [String] = order.cost?.lineItems.map({ $0.name }) ?? []
+    private lazy var countryCode = order.deliveryDetails?.address?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
     
     var order: Order {
         get {
@@ -60,7 +61,6 @@ extension ShippingMethodsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let countryCode = order.deliveryDetails?.address?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
         guard let regionCode = order.products[section].template.countryToRegionMapping?[countryCode],
             let shippingMethods = order.products[section].template.availableShippingMethods?[regionCode]
             else {
@@ -71,8 +71,6 @@ extension ShippingMethodsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ShippingMethodTableViewCell.reuseIdentifier, for: indexPath) as! ShippingMethodTableViewCell
-        
-        let countryCode = order.deliveryDetails?.address?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
         
         guard let regionCode = order.products[indexPath.section].template.countryToRegionMapping?[countryCode],
             let shippingMethod = order.products[indexPath.section].template.availableShippingMethods?[regionCode]?[indexPath.row] else {
@@ -109,7 +107,6 @@ extension ShippingMethodsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let product = order.products[indexPath.section]
-        let countryCode = order.deliveryDetails?.address?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
         if let regionCode = product.template.countryToRegionMapping?[countryCode] {
             product.selectedShippingMethod = product.template.availableShippingMethods?[regionCode]?[indexPath.item]
         }
