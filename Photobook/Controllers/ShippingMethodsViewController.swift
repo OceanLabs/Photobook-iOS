@@ -33,6 +33,7 @@ class ShippingMethodsViewController: UIViewController {
     }()
     
     private lazy var sectionTitles: [String] = order.cost?.lineItems.map({ $0.name }) ?? []
+    private lazy var countryCode = order.deliveryDetails?.address?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
     
     var order: Order {
         get {
@@ -60,13 +61,21 @@ extension ShippingMethodsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return order.products[section].template.availableShippingMethods?.count ?? 0
+        guard let regionCode = order.products[section].template.countryToRegionMapping?[countryCode],
+            let shippingMethods = order.products[section].template.availableShippingMethods?[regionCode]
+            else {
+                return 0
+        }
+        return shippingMethods.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ShippingMethodTableViewCell.reuseIdentifier, for: indexPath) as! ShippingMethodTableViewCell
         
-        let shippingMethod = order.products[indexPath.section].template.availableShippingMethods![indexPath.row]
+        guard let regionCode = order.products[indexPath.section].template.countryToRegionMapping?[countryCode],
+            let shippingMethod = order.products[indexPath.section].template.availableShippingMethods?[regionCode]?[indexPath.row] else {
+            return cell
+        }
         
         cell.method = shippingMethod.name
         cell.deliveryTime = shippingMethod.deliveryTime
@@ -98,7 +107,9 @@ extension ShippingMethodsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let product = order.products[indexPath.section]
-        product.selectedShippingMethod = product.template.availableShippingMethods?[indexPath.item]
+        if let regionCode = product.template.countryToRegionMapping?[countryCode] {
+            product.selectedShippingMethod = product.template.availableShippingMethods?[regionCode]?[indexPath.item]
+        }
         
         tableView.reloadData()
     }

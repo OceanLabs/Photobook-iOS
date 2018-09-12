@@ -100,7 +100,7 @@ class OrderManagerTests: XCTestCase {
         XCTAssertEqual(photobookProduct.photobookTemplate.pageAspectRatio, product.photobookTemplate.pageAspectRatio)
         XCTAssertEqual(photobookProduct.photobookTemplate.layouts, product.photobookTemplate.layouts)
         XCTAssertEqual(photobookProduct.photobookTemplate.coverLayouts, product.photobookTemplate.coverLayouts)
-        XCTAssertEqualOptional(photobookProduct.photobookTemplate.availableShippingMethods?.map({$0.id}), product.photobookTemplate.availableShippingMethods?.map({$0.id}))
+        XCTAssertEqualOptional(photobookProduct.photobookTemplate.availableShippingMethods, product.photobookTemplate.availableShippingMethods)
 
         XCTAssertEqual(photobookProduct.coverColor, product.coverColor)
         XCTAssertEqual(photobookProduct.pageColor, product.pageColor)

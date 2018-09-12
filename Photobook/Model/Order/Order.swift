@@ -112,12 +112,27 @@ class Order: Codable {
                 getCostClosure()
             }
         } else {
+            // Since we will update the cost, it means that we may have changed destination country, so check if the selected method is still valid.
+            let countryCode = deliveryDetails?.address?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
+            for product in products {
+                guard let regionCode = product.template.countryToRegionMapping?[countryCode],
+                let availableShippingMethods = product.template.availableShippingMethods?[regionCode] else {
+                    product.selectedShippingMethod = nil
+                    continue
+                }
+                
+                let selectedMethodId = product.selectedShippingMethod?.id
+                if selectedMethodId == nil || !availableShippingMethods.contains(where: { $0.id == selectedMethodId }) {
+                    product.selectedShippingMethod = availableShippingMethods.first
+                }
+            }
+            
             getCostClosure()
         }
     }
     
     func updateShippingMethods(_ completionHandler: @escaping (_ error: APIClientError?) -> Void) {
-        KiteAPIClient.shared.getTemplateInfo(for: OrderManager.shared.basketOrder.products.map({ $0.template.templateId })) { [weak welf = self] (shippingMethods, error) in
+        KiteAPIClient.shared.getTemplateInfo(for: OrderManager.shared.basketOrder.products.map({ $0.template.templateId })) { [weak welf = self] (shippingMethods, regionMapping, error) in
             guard error == nil else {
                 if let error = error, case .parsing(let details) = error {
                     Analytics.shared.trackError(.parsing, details)
@@ -128,8 +143,13 @@ class Order: Codable {
             
             for product in welf?.products ?? [] {
                 let availableShippingMethods = shippingMethods?[product.template.templateId]
+                product.template.countryToRegionMapping = regionMapping?[product.template.templateId]
                 product.template.availableShippingMethods = availableShippingMethods
-                product.selectedShippingMethod = availableShippingMethods?.first
+                
+                let countryCode = welf?.deliveryDetails?.address?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
+                if let regionCode = product.template.countryToRegionMapping?[countryCode] {
+                    product.selectedShippingMethod = availableShippingMethods?[regionCode]?.first
+                }
             }
             completionHandler(nil)
         }
