@@ -121,8 +121,8 @@ class Order: Codable {
                     continue
                 }
                 
-                if let selectedMethodId = product.selectedShippingMethod?.id,
-                    !availableShippingMethods.contains(where: { $0.id == selectedMethodId }) {
+                let selectedMethodId = product.selectedShippingMethod?.id
+                if selectedMethodId == nil || !availableShippingMethods.contains(where: { $0.id == selectedMethodId }) {
                     product.selectedShippingMethod = availableShippingMethods.first
                 }
             }
