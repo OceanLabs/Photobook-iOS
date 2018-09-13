@@ -20,6 +20,7 @@ class DeliveryDetailsTests: XCTestCase {
         address.line1 = "9 Fiesta Place"
         address.city = "London"
         address.zipOrPostcode = "CL0 WN4"
+        address.stateOrCounty = "Clownborough"
         
         deliveryDetails.address = address
         deliveryDetails.email = "g.clowney@clownmail.com"
