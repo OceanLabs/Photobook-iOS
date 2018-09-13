@@ -38,8 +38,9 @@ class Address: NSCopying, Codable, Hashable {
     var isValid: Bool {
         get{            
             guard let line1 = line1, !line1.isEmpty,
-                  let city = city, !city.isEmpty,
-                  let zipOrPostcode = zipOrPostcode, !zipOrPostcode.isEmpty
+                let city = city, !city.isEmpty,
+                let zipOrPostcode = zipOrPostcode, !zipOrPostcode.isEmpty,
+                let stateOrCounty = stateOrCounty, !stateOrCounty.isEmpty
                 else { return false }
             
             return true

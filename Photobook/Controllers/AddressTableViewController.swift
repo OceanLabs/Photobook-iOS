@@ -60,8 +60,9 @@ class AddressTableViewController: UITableViewController {
         let line1IsValid = check(line1TextField)
         let cityIsValid = check(cityTextField)
         let postCodeIsValid = check(zipOrPostcodeTextField)
+        let stateOrCountyIsValid = check(stateOrCountyTextField)
         
-        if line1IsValid && cityIsValid && postCodeIsValid {
+        if line1IsValid && cityIsValid && postCodeIsValid && stateOrCountyIsValid {
             address.line1 = line1TextField.text
             address.line2 = line2TextField.text
             address.city = cityTextField.text
@@ -80,6 +81,9 @@ class AddressTableViewController: UITableViewController {
             }
             if !postCodeIsValid {
                 errorMessage += AddressFieldLabels.postcode + ", "
+            }
+            if !stateOrCountyIsValid {
+                errorMessage += AddressFieldLabels.county + ", "
             }
             UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, errorMessage.trimmingCharacters(in: CharacterSet(charactersIn: ", ")))
         }
@@ -159,6 +163,7 @@ class AddressTableViewController: UITableViewController {
                 cell.textField.textContentType = .addressState
             }
             cell.textField.returnKeyType = .next
+            cell.textField.placeholder = FormConstants.requiredText
             cell.textField.text = address.stateOrCounty
             stateOrCountyTextField = cell.textField
             stateOrCountyTextField.accessibilityIdentifier = "stateOrCountyTextField"
