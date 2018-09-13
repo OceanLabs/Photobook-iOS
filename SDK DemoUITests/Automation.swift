@@ -17,6 +17,7 @@ class Automation {
     let testAddressLine1 = "Fiesta Blvd 2"
     let testCity = "Clown City"
     let testPostalCode = "11111"
+    let testCounty = "Clownborough"
     let testCreditCardNumber = "4242424242424242"
     let testCreditCardCVV = "111"
     
@@ -104,11 +105,18 @@ class Automation {
         line1TextField.clearTextField()
         line1TextField.typeText(testAddressLine1)
         
-        
         let cityTextField = tablesQuery.cells.containing(.staticText, identifier:"City").textFields["cityTextField"]
         cityTextField.tap()
         cityTextField.clearTextField()
         cityTextField.typeText(testCity)
+        
+        var stateOrCountyTextField = tablesQuery.cells.containing(.staticText, identifier:"State").textFields["stateOrCountyTextField"]
+        if !stateOrCountyTextField.exists {
+            stateOrCountyTextField = tablesQuery.cells.containing(.staticText, identifier:"County").textFields["stateOrCountyTextField"]
+        }
+        stateOrCountyTextField.tap()
+        stateOrCountyTextField.clearTextField()
+        stateOrCountyTextField.typeText(testCounty)
         
         var zipOrPostalTextField = tablesQuery.cells.containing(.staticText, identifier:"Zip Code").textFields["zipOrPostcodeTextField"]
         if !zipOrPostalTextField.exists {

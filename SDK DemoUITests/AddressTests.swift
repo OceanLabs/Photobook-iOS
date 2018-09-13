@@ -18,6 +18,7 @@ class AddressTests: PhotobookUITest {
         let line1TextField = automation.app.textFields["line1TextField"]
         let cityTextField = automation.app.textFields["cityTextField"]
         let zipOrPostalCodeTextField = automation.app.textFields["zipOrPostcodeTextField"]
+        let stateOrCountyTextField = automation.app.textFields["stateOrCountyTextField"]
         
         XCTAssertNotNil(line1TextField.value as? String)
         XCTAssertEqual(line1TextField.value as! String, "Required")
@@ -43,6 +44,11 @@ class AddressTests: PhotobookUITest {
         
         zipOrPostalCodeTextField.tap()
         zipOrPostalCodeTextField.typeText(automation.testPostalCode)
+        automation.app.navigationBars["Address"].buttons["Save"].tap()
+        XCTAssertTrue(line1TextField.isHittable, "Should not have navigated away since the required information is not entered")
+        
+        stateOrCountyTextField.tap()
+        stateOrCountyTextField.typeText(automation.testCounty)
         automation.app.navigationBars["Address"].buttons["Save"].tap()
         XCTAssertFalse(line1TextField.exists, "We should have all the required information at this point so we should have navigated away")
     }
