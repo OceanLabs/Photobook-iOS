@@ -98,7 +98,13 @@ class PhotosAsset: Asset {
         let options = PHImageRequestOptions()
         options.isNetworkAccessAllowed = true
         
-        imageManager.requestImageData(for: photosAsset, options: options, resultHandler: { imageData, dataUti, _, _ in
+        imageManager.requestImageData(for: photosAsset, options: options, resultHandler: { imageData, dataUti, _, info in
+            let error = info?[PHImageErrorKey] as? Error
+            guard error == nil else {
+                completionHandler(nil, .unsupported, error)
+                return
+            }
+            
             guard let data = imageData, let dataUti = dataUti else {
                 let details = "Photos imageData: Missing " + (imageData == nil ? "imageData" : "dataUti")
                 completionHandler(nil, .unsupported, AssetLoadingException.unsupported(details: details))
