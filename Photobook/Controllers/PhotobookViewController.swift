@@ -89,6 +89,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     private weak var currentlyPanningGesture: UIPanGestureRecognizer?
     private var scrollingTimer: Timer?
     private var timerBlock: (() -> Void)?
+    private lazy var pasteBoard = UIPasteboard(name: UIPasteboardName("ly.kite.photobook.rearrange"), create: true)
     
     // Scrolling at 60Hz when we are dragging looks good enough and avoids having to normalize the scroll offset
     private lazy var screenRefreshRate: Double = 1.0 / 60.0
@@ -484,7 +485,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     @objc private func cutPages() {
         copyPages()
-        deletePages()
+        deletePages(isCutting: true)
     }
     
     @objc private func copyPages() {
@@ -494,8 +495,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             else { return }
         
         let leftProductLayout = product.productLayouts[leftIndex]
-        
-        let pasteBoard = UIPasteboard(name: UIPasteboardName("ly.kite.photobook.rearrange"), create: true)
         
         guard let leftData = try? PropertyListEncoder().encode(leftProductLayout) else {
             fatalError("Photobook: encoding of product layout failed")
@@ -519,7 +518,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         
         guard let indexPath = interactingItemIndexPath,
-            let pasteBoard = UIPasteboard(name: UIPasteboardName("ly.kite.photobook.rearrange"), create: true),
+            let pasteBoard = pasteBoard,
             let leftData = pasteBoard.items.first?["ly.kite.photobook.productLayout"] as? Data,
             let leftProductLayout = try? PropertyListDecoder().decode(ProductLayout.self, from: leftData)
             else { return }
@@ -549,7 +548,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
     }
     
-    @objc private func deletePages() {
+    @objc private func deletePages(isCutting: Bool = false) {
         guard let indexPath = interactingItemIndexPath,
             let index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex
             else { return }
@@ -558,6 +557,9 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             let alertController = UIAlertController(title: NSLocalizedString("Photobook/CannotDeleteAlertTitle", value: "Cannot Delete Page", comment: "Alert title letting the user know they can't delete a page from the book"), message: NSLocalizedString("Photobook/CannotDeleteAlertMessage", value: "Your photo book currently contains the minimum number of pages allowed", comment: "Alert message letting the user know they can't delete a page from the book"), preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
             present(alertController, animated: true, completion: nil)
+            if let pasteBoard = pasteBoard, isCutting {
+                pasteBoard.items.removeAll()
+            }
             return
         }
         
@@ -588,8 +590,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             else { return }
         UIMenuController.shared.setTargetRect(cell.frame, in: collectionView)
         interactingItemIndexPath = indexPath
-        
-        let pasteBoard = UIPasteboard(name: UIPasteboardName("ly.kite.photobook.rearrange"), create: true)
         
         var menuItems = [UIMenuItem]()
         menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemCutTitle", value: "Cut", comment: "Cut/Paste interaction"), action: #selector(cutPages)))
