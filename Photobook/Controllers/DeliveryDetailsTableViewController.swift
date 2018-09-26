@@ -101,7 +101,7 @@ class DeliveryDetailsTableViewController: UITableViewController {
             }
             
             if !errorMessage.isEmpty {
-                errorMessage = NSLocalizedString("Accessibility/AddressRequiredInformationMissing", value: "Required information missing:", comment: "Accessibility message informing the user that some of the required information is missing") + errorMessage.trimmingCharacters(in: CharacterSet(charactersIn: ", ")) + ". "
+                errorMessage = NSLocalizedString("Accessibility/AddressRequiredInformationMissing", value: "Required information missing: ", comment: "Accessibility message informing the user that some of the required information is missing") + errorMessage.trimmingCharacters(in: CharacterSet(charactersIn: ", ")) + ". "
             }
             
             let phoneIsInvalid = phoneInvalidReason != nil && phoneInvalidReason != FormConstants.requiredText
@@ -135,7 +135,7 @@ class DeliveryDetailsTableViewController: UITableViewController {
             let cell = (tableView.cellForRow(at: IndexPath(row: DetailsRow.email.rawValue, section: 0)) as? UserInputTableViewCell)
             if let text = cell?.textField.text,
                 !text.isValidEmailAddress() {
-                let invalidReason = NSLocalizedString("DeliveryDetails/Email is invalid", value: "Email is invalid.", comment: "Error message saying that the email address is invalid")
+                let invalidReason = NSLocalizedString("DeliveryDetails/Email is invalid", value: "Email is invalid", comment: "Error message saying that the email address is invalid")
                 cell?.errorMessage = invalidReason
                 cell?.textField.textColor = FormConstants.errorColor
                 return invalidReason
@@ -144,7 +144,7 @@ class DeliveryDetailsTableViewController: UITableViewController {
             let cell = (tableView.cellForRow(at: IndexPath(row: DetailsRow.phone.rawValue, section: 0)) as? UserInputTableViewCell)
             if let text = cell?.textField.text,
                 text.count < FormConstants.minPhoneNumberLength || text == FormConstants.requiredText {
-                let invalidReason = NSLocalizedString("DeliveryDetails/Phone is invalid", value: "Phone is invalid.", comment: "Error message saying that the phone number is invalid")
+                let invalidReason = NSLocalizedString("DeliveryDetails/Phone is invalid", value: "Phone is invalid", comment: "Error message saying that the phone number is invalid")
                 cell?.errorMessage = invalidReason
                 cell?.textField.textColor = FormConstants.errorColor
                 return invalidReason
@@ -158,8 +158,19 @@ class DeliveryDetailsTableViewController: UITableViewController {
     
     private func checkAddress() -> Bool {
         if !(details.address?.isValid ?? false) {
-            let cell = tableView.cellForRow(at: IndexPath(row: 0, section: Section.deliveryAddress.rawValue)) as? UserInputTableViewCell
-            cell?.errorMessage = FormConstants.requiredText
+            let lastCellRow: Int!
+            let errorMessage: String!
+            
+            if details.address != nil {
+                lastCellRow = tableView.numberOfRows(inSection: Section.deliveryAddress.rawValue) - 1
+                errorMessage = NSLocalizedString("DeliveryDetails/Address is invalid", value: "Address is invalid", comment: "Error message saying that the address is invalid")
+            } else {
+                lastCellRow = 0
+                errorMessage = FormConstants.requiredText
+            }
+
+            let cell = tableView.cellForRow(at: IndexPath(row: lastCellRow, section: Section.deliveryAddress.rawValue)) as? UserInputTableViewCell
+            cell?.errorMessage = errorMessage
             return false
         }
         
