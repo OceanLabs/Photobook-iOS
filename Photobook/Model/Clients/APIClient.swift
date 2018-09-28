@@ -172,7 +172,7 @@ class APIClient: NSObject {
     ///
     /// - Parameter completionHandler: The completion handler provided by the system and that should be called when the event handling is done.
     func recreateBackgroundSession(_ completionHandler: (()->Void)? = nil) {
-        self.backgroundSessionCompletionHandler = completionHandler
+        backgroundSessionCompletionHandler = completionHandler
         
         // Trigger lazy initialisation
         _ = backgroundUrlSession
@@ -350,12 +350,19 @@ class APIClient: NSObject {
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("multipart/form-data; boundary=\(boundaryString)", forHTTPHeaderField:"content-type")
         
+        if reference != nil {
+            // Check if the reference exists and avoid creating a new task
+            guard !taskReferences.values.contains(imageUploadIdentifierPrefix + reference!) else {
+                return
+            }
+        }
+        
         let dataTask = backgroundUrlSession.uploadTask(with: request, fromFile: fileUrl)
         if reference != nil {
             taskReferences[dataTask.taskIdentifier] = imageUploadIdentifierPrefix + reference!
             savePendingTasks()
         }
-        
+    
         dataTask.resume()
     }
     
@@ -400,6 +407,17 @@ class APIClient: NSObject {
             completion()
         }
     }
+    
+    func updateTaskReferences(completion: @escaping ()->()) {
+        backgroundUrlSession.getAllTasks { [weak welf = self] (tasks) in
+            guard let stelf = welf else { return }
+            stelf.taskReferences = stelf.taskReferences.filter({ (key, _) -> Bool in
+                return tasks.contains { $0.taskIdentifier == key }
+            })
+            stelf.savePendingTasks()
+            completion()
+        }
+    }
 }
 
 extension APIClient: URLSessionDelegate, URLSessionDataDelegate {
@@ -412,40 +430,40 @@ extension APIClient: URLSessionDelegate, URLSessionDataDelegate {
     }
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+
+        let postNotification = { (userInfo: [String: Any]) in
+            NotificationCenter.default.post(name: APIClient.backgroundSessionTaskFinished, object: nil, userInfo: userInfo)
+            
+            self.taskReferences[dataTask.taskIdentifier] = nil
+            self.savePendingTasks()
+        }
+        
+        let reference = taskReferences[dataTask.taskIdentifier]
+        
         guard var json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: AnyObject] else {
-            if let stringData = String(data: data, encoding: String.Encoding.utf8) {
-                print("API Error: \(stringData)")
-            }
-            NotificationCenter.default.post(name: APIClient.backgroundSessionTaskFinished, object: nil, userInfo: nil)
+            var userInfo = ["error": String(data: data, encoding: String.Encoding.utf8) ?? ""]
+            if reference != nil { userInfo["task_reference"] = reference }
+            postNotification(userInfo)
             return
         }
         
         // Add reference to response dictionary if there is one
-        if let reference = taskReferences[dataTask.taskIdentifier] {
-            taskReferences[dataTask.taskIdentifier] = nil
-            
-            json["task_reference"] = reference as AnyObject
-        }
-        
-        NotificationCenter.default.post(name: APIClient.backgroundSessionTaskFinished, object: nil, userInfo: json)
+        if reference != nil { json["task_reference"] = reference as AnyObject }
+
+        postNotification(json)
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        guard session.configuration.identifier != nil else { return }
+        guard session.configuration.identifier != nil, error != nil else { return }
         
-        if error != nil {
-            let error = error as NSError?
-            
-            var userInfo = [ "error": APIClientError.server(code: error!.code, message: error!.localizedDescription) ] as [String: AnyObject]
-            
-            // Add reference to response dictionary if there is one
-            if let reference = taskReferences[task.taskIdentifier] {
-                taskReferences[task.taskIdentifier] = nil
-
-                userInfo["task_reference"] = reference as AnyObject
-            }
-            
-            NotificationCenter.default.post(name: APIClient.backgroundSessionTaskFinished, object: nil, userInfo: userInfo)
+        let error = error as NSError?
+        var userInfo = ["error": APIClientError.server(code: error!.code, message: error!.localizedDescription)] as [String: AnyObject]
+    
+        // Add reference to response dictionary if there is one
+        if let reference = taskReferences[task.taskIdentifier] {
+            userInfo["task_reference"] = reference as AnyObject
         }
+
+        NotificationCenter.default.post(name: APIClient.backgroundSessionTaskFinished, object: nil, userInfo: userInfo)
     }
 }

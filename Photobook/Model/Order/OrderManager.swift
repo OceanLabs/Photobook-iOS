@@ -25,10 +25,6 @@ protocol OrderProcessingDelegate: class {
     func orderWillFinish()
 }
 
-extension OrderProcessingDelegate {
-    func orderDidComplete() { orderDidComplete(error: nil) }
-}
-
 enum OrderDiskManagerError: Error {
     case couldNotSaveTempImageData
 }
@@ -49,13 +45,29 @@ class OrderManager {
         static let photobookDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!.appending("/Photobook/")
         static let basketOrderBackupFile = photobookDirectory.appending("BasketOrder.dat")
         static let processingOrderBackupFile = photobookDirectory.appending("ProcessingOrder.dat")
+        static let automaticRetryCountKey = "AutomaticRetryCount"
     }
+    static let maxNumberOfAutomaticRetries = 20
     static let maxNumberOfPollingTries = 60
     
     private lazy var kiteApiClient = KiteAPIClient.shared
     private lazy var apiClient = APIClient.shared
     private lazy var assetLoadingManager = AssetLoadingManager.shared
     private lazy var orderDiskManager: OrderDiskManager = DefaultOrderDiskManager()
+
+    private var internalAutomaticRetryCount: Int!
+    private var automaticRetryCount: Int {
+        get {
+            if internalAutomaticRetryCount == nil {
+                internalAutomaticRetryCount = UserDefaults.standard.integer(forKey: Storage.automaticRetryCountKey)
+            }
+            return internalAutomaticRetryCount
+        }
+        set {
+            internalAutomaticRetryCount = newValue
+            UserDefaults.standard.set(internalAutomaticRetryCount, forKey: Storage.automaticRetryCountKey)
+        }
+    }
 
     weak var orderProcessingDelegate: OrderProcessingDelegate?
     let prioritizedCurrencyCodes: [String] = {
@@ -223,26 +235,33 @@ class OrderManager {
         
         cancelCompletionBlock = completion
         apiClient.cancelBackgroundTasks { [weak welf = self] in
-            welf?.processingOrder = nil
-            welf?.cancelCompletionBlock?()
-            welf?.cancelCompletionBlock = nil
+            guard let stelf = welf else { return }
+            
+            stelf.processingOrder = nil
+            stelf.automaticRetryCount = 0
+            stelf.cancelCompletionBlock?()
+            stelf.cancelCompletionBlock = nil
         }
     }
     
     /// Uploads the assets
     func uploadAssets() {
-        
         // If all assets have already been uploaded, jump to finishing the order
         let assetsToUpload = processingOrder!.remainingAssetsToUpload()
         guard !assetsToUpload.isEmpty else {
             Analytics.shared.trackAction(.uploadSuccessful)
+            automaticRetryCount = 0
             finishOrder()
             return
         }
         
+        orderProcessingDelegate?.uploadStatusDidUpdate()
+        
         // Upload images
-        for asset in assetsToUpload {
-            uploadAsset(asset: asset)
+        apiClient.updateTaskReferences { [weak welf = self] in
+            for asset in assetsToUpload {
+                welf?.uploadAsset(asset: asset)
+            }
         }
     }
     
@@ -292,7 +311,7 @@ class OrderManager {
         }
     }
 
-    
+    private var isSubmittingOrder = false
     func finishOrder() {
         guard let products = processingOrder?.products else { return }
         
@@ -321,15 +340,17 @@ class OrderManager {
         }
         
         pdfGenerationDispatchGroup.notify(queue: DispatchQueue.main, execute: { [weak welf = self] in
-            guard welf?.processingOrder != nil else { return }
+            guard welf?.processingOrder != nil, !(welf?.isSubmittingOrder ?? true) else { return }
             
             // Submit order
+            welf?.isSubmittingOrder = true
             welf?.submitOrder(completionHandler: { (error) in
                 
                 if let swelf = welf, swelf.isCancelling {
                     swelf.processingOrder = nil
                     swelf.cancelCompletionBlock?()
                     swelf.cancelCompletionBlock = nil
+                    swelf.isSubmittingOrder = false
                     return
                 }
                 
@@ -337,13 +358,13 @@ class OrderManager {
                     // Something went wrong while parsing the order parameters or response. Order should be cancelled.
                     if case APIClientError.parsing(let details) = error {
                         Analytics.shared.trackError(.parsing, details)
-                        welf?.orderProcessingDelegate?.orderDidComplete(error: .cancelled)
+                        welf?.orderDidComplete(error: .cancelled)
                     } else {
                         // Non-critical error. Tell the user and allow retrying.
                         if case APIClientError.server(let code, let message) = error {
                             Analytics.shared.trackError(.orderSubmission, "Server error: \(message) (\(code))")
                         }
-                        welf?.orderProcessingDelegate?.orderDidComplete(error: OrderProcessingError.api(message: ErrorMessage(error)))
+                        welf?.orderDidComplete(error: OrderProcessingError.api(message: ErrorMessage(error)))
                     }
                     return
                 }
@@ -355,12 +376,13 @@ class OrderManager {
                         swelf.processingOrder = nil
                         swelf.cancelCompletionBlock?()
                         swelf.cancelCompletionBlock = nil
+                        swelf.isSubmittingOrder = false
                         return
                     }    
                     
                     if status == .paymentError {
                         Analytics.shared.trackError(.payment)
-                        welf?.orderProcessingDelegate?.orderDidComplete(error: .payment)
+                        welf?.orderDidComplete(error: .payment)
                         return
                     }
                     
@@ -374,17 +396,22 @@ class OrderManager {
                             break
                         }
                         
-                        welf?.orderProcessingDelegate?.orderDidComplete(error: .api(message: ErrorMessage(error)))
+                        welf?.orderDidComplete(error: .api(message: ErrorMessage(error)))
                         return
                     }
                     
                     // Success
                     Analytics.shared.trackAction(.orderCompleted, ["orderId": welf?.processingOrder?.orderId ?? ""])
                     welf?.processingOrder = nil
-                    welf?.orderProcessingDelegate?.orderDidComplete()
+                    welf?.orderDidComplete()
                 }
             })
         })
+    }
+    
+    private func orderDidComplete(error: OrderProcessingError? = nil) {
+        orderProcessingDelegate?.orderDidComplete(error: error)
+        isSubmittingOrder = false
     }
     
     // MARK: - Upload
@@ -430,7 +457,13 @@ class OrderManager {
         let reference = dictionary["task_reference"] as? String
         let url = dictionary["full"] as? String
         guard reference != nil, url != nil else {
-            let details = "ImageUploadFinished: Image upload \(reference == nil ? "task reference" : "full url") missing"
+            let details: String
+            if let error = dictionary["error"] as? String {
+                let referenceString = reference != nil ? "(\(reference!))" : ""
+                details = "ImageUploadFinished\(referenceString): \(error)"
+            } else {
+                details = "ImageUploadFinished: Image upload \(reference == nil ? "task reference" : "full url") missing"
+            }
             failedImageUpload(with: APIClientError.parsing(details: details))
             return
         }
@@ -454,7 +487,10 @@ class OrderManager {
         if order.remainingAssetsToUpload().isEmpty {
             Analytics.shared.trackAction(.uploadSuccessful)
             finishOrder()
+            return
         }
+
+        relaunchUploadsIfNeeded()
     }
     
     private func failedImageUpload(with error: Error) {
@@ -464,13 +500,10 @@ class OrderManager {
             switch error {
             case .couldNotSaveTempImageData:
                 Analytics.shared.trackError(.diskError)
-                
-                orderProcessingDelegate?.uploadStatusDidUpdate()
-                orderProcessingDelegate?.orderDidComplete(error: .upload)
             }
             return
         }
-        
+
         if let error = error as? AssetLoadingException, case .unsupported(let details) = error {
             Analytics.shared.trackError(.productInfo, details)
             cancelProcessing() {
@@ -478,12 +511,40 @@ class OrderManager {
             }
             return
         }
-        
+
+        // Connection / server / other errors
         if let error = error as? APIClientError, case .parsing(let details) = error {
             Analytics.shared.trackError(.parsing, details)
         }
-        
-        // Connection / server / other errors
-        orderProcessingDelegate?.orderDidComplete(error: .upload)
+
+        relaunchUploadsIfNeeded(error: error)
+    }
+    
+    private func relaunchUploadsIfNeeded(error: Error? = nil) {
+        apiClient.pendingBackgroundTaskCount { [weak welf = self] (count) in
+            // Check if all tasks have finished and retry if needed. Used 1 instead of 0 because of cancellation delays on tasks.
+            if count <= 1 {
+                welf?.automaticRetryCount += 1
+                if (welf?.automaticRetryCount ?? 0) > OrderManager.maxNumberOfAutomaticRetries {
+                    welf?.apiClient.cancelBackgroundTasks({
+                        
+                        if let error = error as? OrderDiskManagerError {
+                            switch error {
+                            case .couldNotSaveTempImageData:
+                                Analytics.shared.trackError(.diskError)
+                                
+                                welf?.orderProcessingDelegate?.uploadStatusDidUpdate()
+                                welf?.orderProcessingDelegate?.orderDidComplete(error: .upload)
+                            }
+                            return
+                        }
+
+                        welf?.orderProcessingDelegate?.orderDidComplete(error: .upload)
+                    })
+                    return
+                }
+                welf?.uploadAssets()
+            }
+        }
     }
 }
