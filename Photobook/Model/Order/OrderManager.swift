@@ -501,7 +501,6 @@ class OrderManager {
             case .couldNotSaveTempImageData:
                 Analytics.shared.trackError(.diskError)
             }
-            return
         }
 
         if let error = error as? AssetLoadingException, case .unsupported(let details) = error {
@@ -517,29 +516,18 @@ class OrderManager {
             Analytics.shared.trackError(.parsing, details)
         }
 
-        relaunchUploadsIfNeeded(error: error)
+        relaunchUploadsIfNeeded()
     }
     
-    private func relaunchUploadsIfNeeded(error: Error? = nil) {
+    private func relaunchUploadsIfNeeded() {
         apiClient.pendingBackgroundTaskCount { [weak welf = self] (count) in
             // Check if all tasks have finished and retry if needed. Used 1 instead of 0 because of cancellation delays on tasks.
             if count <= 1 {
                 welf?.automaticRetryCount += 1
                 if (welf?.automaticRetryCount ?? 0) > OrderManager.maxNumberOfAutomaticRetries {
                     welf?.apiClient.cancelBackgroundTasks({
-                        
-                        if let error = error as? OrderDiskManagerError {
-                            switch error {
-                            case .couldNotSaveTempImageData:
-                                Analytics.shared.trackError(.diskError)
-                                
-                                welf?.orderProcessingDelegate?.uploadStatusDidUpdate()
-                                welf?.orderProcessingDelegate?.orderDidComplete(error: .upload)
-                            }
-                            return
-                        }
-
                         welf?.orderProcessingDelegate?.orderDidComplete(error: .upload)
+                        welf?.orderProcessingDelegate?.uploadStatusDidUpdate()
                     })
                     return
                 }
