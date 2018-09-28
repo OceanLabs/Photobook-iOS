@@ -157,9 +157,7 @@ class Order: Codable {
     
     func orderParameters() -> [String: Any]? {
         
-        guard let finalTotalCost = cost?.total else {
-                return nil
-        }
+        guard let finalTotalCost = cost?.total else { return nil }
         
         var shippingAddress = deliveryDetails?.address?.jsonRepresentation()
         shippingAddress?["recipient_first_name"] = deliveryDetails?.firstName
@@ -225,6 +223,11 @@ class Order: Codable {
             self.products = products
         } else {
             throw OrderProcessingError.corruptData
+        }
+        
+        // Update hashValue as it is not guaranteed to be equal (refer to hashValue docs)
+        if cachedCost != nil {
+            cachedCost?.orderHash = hashValue
         }
     }
     
