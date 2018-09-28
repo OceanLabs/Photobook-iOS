@@ -75,6 +75,7 @@ protocol PickerAnalytics {
         case orderCompleted = "Order completed"
         case editingCancelled = "Editing cancelled"
         case editingConfirmed = "Editing confirmed"
+        case paymentRetried = "Payment retried"
         case uploadCancelled = "Upload cancelled"
         case uploadRetried = "Upload retried"
         case uploadSuccessful = "Upload successful"
