@@ -482,12 +482,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     // MARK: - UIMenuController actions
     
-    @objc private func cutPages() {
-        copyPages()
-        deletePages()
-    }
-    
-    @objc private func copyPages() {
+    @objc private func duplicatePages() {
+        guard product.isAddingPagesAllowed else {
+            showNotAllowedToAddMorePagesAlert()
+            return
+        }
+        
         guard let indexPath = interactingItemIndexPath,
             let cell = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell),
             let leftIndex = cell.leftIndex
@@ -495,41 +495,30 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         let leftProductLayout = product.productLayouts[leftIndex]
         
-        let pasteBoard = UIPasteboard(name: UIPasteboardName("ly.kite.photobook.rearrange"), create: true)
+        var productLayouts = [ProductLayout]()
         
-        guard let leftData = try? PropertyListEncoder().encode(leftProductLayout) else {
-            fatalError("Photobook: encoding of product layout failed")
+        do {
+            let leftData = try PropertyListEncoder().encode(leftProductLayout)
+            let leftProductLayoutCopy = try PropertyListDecoder().decode(ProductLayout.self, from: leftData)
+            productLayouts.append(leftProductLayoutCopy)
+        } catch {
+            fatalError("Photobook: encoding or decoding of product layout failed")
         }
-        pasteBoard?.items.removeAll()
-        pasteBoard?.addItems([["ly.kite.photobook.productLayout": leftData]])
         
         if !leftProductLayout.layout.isDoubleLayout, let rightIndex = cell.rightIndex {
             let rightProductLayout = product.productLayouts[rightIndex]
-            guard let rightData = try? PropertyListEncoder().encode(rightProductLayout) else {
-                fatalError("Photobook: encoding of product layout failed")
+            do {
+                let rightData = try PropertyListEncoder().encode(rightProductLayout)
+                let rightProductLayoutCopy = try PropertyListDecoder().decode(ProductLayout.self, from: rightData)
+                productLayouts.append(rightProductLayoutCopy)
+                
+            } catch {
+                fatalError("Photobook: encoding or decoding of product layout failed")
             }
-            pasteBoard?.addItems([["ly.kite.photobook.productLayout": rightData]])
         }
-    }
-    
-    @objc private func pastePages() {
-        guard product.isAddingPagesAllowed else {
-            showNotAllowedToAddMorePagesAlert()
+        else {
             return
-        }
-        
-        guard let indexPath = interactingItemIndexPath,
-            let pasteBoard = UIPasteboard(name: UIPasteboardName("ly.kite.photobook.rearrange"), create: true),
-            let leftData = pasteBoard.items.first?["ly.kite.photobook.productLayout"] as? Data,
-            let leftProductLayout = try? PropertyListDecoder().decode(ProductLayout.self, from: leftData)
-            else { return }
-        
-        var productLayouts = [leftProductLayout]
-        
-        if pasteBoard.items.count > 1,
-            let rightData = pasteBoard.items.last?["ly.kite.photobook.productLayout"] as? Data,
-            let rightProductLayout = try? PropertyListDecoder().decode(ProductLayout.self, from: rightData) {
-            productLayouts.append(rightProductLayout)
+            
         }
         
         guard let index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex else { return }
@@ -589,14 +578,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         UIMenuController.shared.setTargetRect(cell.frame, in: collectionView)
         interactingItemIndexPath = indexPath
         
-        let pasteBoard = UIPasteboard(name: UIPasteboardName("ly.kite.photobook.rearrange"), create: true)
-        
         var menuItems = [UIMenuItem]()
-        menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemCutTitle", value: "Cut", comment: "Cut/Paste interaction"), action: #selector(cutPages)))
-        menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemCopyTitle", value: "Copy", comment: "Copy/Paste interaction"), action: #selector(copyPages)))
-        if (pasteBoard?.items.count ?? 0) > 0 {
-            menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemPasteTitle", value: "Paste", comment: "Copy/Paste interaction"), action: #selector(pastePages)))
-        }
+        menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemCutTitle", value: "Duplicate", comment: "Duplicate pages action"), action: #selector(duplicatePages)))
         menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemDeleteTitle", value: "Delete", comment: "Delete a page from the photobook"), action: #selector(deletePages)))
         
         UIMenuController.shared.menuItems = menuItems
