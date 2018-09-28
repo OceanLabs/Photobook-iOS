@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="l0p-H6-Aqd">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="l0p-H6-Aqd">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
-        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -1288,6 +1283,7 @@
                                 <color key="backgroundColor" red="0.89019607840000003" green="0.8980392157" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="MlZ-hI-WeW" firstAttribute="top" secondItem="9PF-H7-3d7" secondAttribute="top" constant="15" id="3AF-Zw-WmM"/>
+                                    <constraint firstAttribute="height" constant="80" id="SrE-3K-Y0N"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -1302,7 +1298,6 @@
                             <constraint firstItem="9PF-H7-3d7" firstAttribute="leading" secondItem="hYx-pR-ckZ" secondAttribute="leading" id="gwG-Fj-LLZ"/>
                             <constraint firstItem="MlZ-hI-WeW" firstAttribute="leading" secondItem="5ur-7F-Rc5" secondAttribute="leading" constant="20" id="r8u-34-xaQ"/>
                             <constraint firstAttribute="trailing" secondItem="9PF-H7-3d7" secondAttribute="trailing" id="rV6-a5-aoM"/>
-                            <constraint firstItem="5ur-7F-Rc5" firstAttribute="bottom" secondItem="MlZ-hI-WeW" secondAttribute="bottom" constant="15" id="rfz-gH-PGi"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="5ur-7F-Rc5"/>
                     </view>
@@ -1335,8 +1330,9 @@
                         <outlet property="collectionViewTrailingConstraint" destination="Hji-0y-uul" id="JI1-Tf-r5q"/>
                         <outlet property="ctaButton" destination="MlZ-hI-WeW" id="kgG-iN-1sX"/>
                         <outlet property="ctaButtonContainer" destination="9PF-H7-3d7" id="hMk-Zi-KJ0"/>
+                        <outlet property="ctaButtonContainerBottomConstraint" destination="0IP-6f-2xi" id="zaF-I3-R8z"/>
+                        <outlet property="ctaButtonContainerHeightConstraint" destination="SrE-3K-Y0N" id="QpO-qb-0f0"/>
                         <outlet property="ctaButtonHeightConstraint" destination="hjF-VC-ege" id="0zx-Ps-D9v"/>
-                        <outlet property="ctaContainerBottomConstraint" destination="rfz-gH-PGi" id="lFe-AT-iaM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="suS-9V-cjP" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -4692,7 +4688,7 @@ Copyright © 2018 Kite. All rights reserved.</string>
         <image name="Rotate" width="29" height="29"/>
         <image name="Tick" width="26" height="26"/>
         <image name="Tick-empty-dark" width="26" height="26"/>
-        <image name="Tick-plain" width="19" height="14"/>
+        <image name="Tick-plain" width="19" height="14.5"/>
         <image name="addMore" width="26" height="26"/>
         <image name="apple-pay-method" width="44" height="44"/>
         <image name="assetPlaceholder" width="18" height="18"/>

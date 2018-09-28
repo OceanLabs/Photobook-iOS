@@ -43,6 +43,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         static let dragLiftAnimationDuration: TimeInterval = 0.15
         static let dropAnimationDuration: TimeInterval = 0.3
         static let proposalCellHeight: CGFloat = 30.0
+        static let ctaButtonVerticalMargin: CGFloat = 15.0
     }
     private var reverseRearrangeScale: CGFloat {
         return 1 + (1 - Constants.rearrangeScale) / Constants.rearrangeScale
@@ -52,13 +53,14 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private weak var collectionViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var collectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet private weak var collectionViewBottomConstraint: NSLayoutConstraint!
-    
-    @IBOutlet private var ctaContainerBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var ctaButton: UIButton! { didSet { ctaButton.titleLabel?.scaleFont() } }
     @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var ctaButtonContainer: UIView!
     @IBOutlet private var backButton: UIButton?
     @IBOutlet private weak var ctaButtonHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var ctaButtonContainerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var ctaButtonContainerBottomConstraint: NSLayoutConstraint!
+    
     private lazy var cancelBarButtonItem: UIBarButtonItem = {
         return UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(tappedCancel(_:)))
     }()
@@ -146,6 +148,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         if #available(iOS 11, *) {
             normalTopInset = 0
             multiplier = 1 - Constants.rearrangeScale
+            
+            navigationItem.largeTitleDisplayMode = .never
+            ctaButtonHeightConstraint.constant = UIFontMetrics.default.scaledValue(for: 50)
+            ctaButtonContainerHeightConstraint.constant = ctaButtonHeightConstraint.constant + Constants.ctaButtonVerticalMargin * 2.0 + view.safeAreaInsets.bottom
         } else {
             normalTopInset = navigationController?.navigationBar.frame.maxY ?? 0
             multiplier = 1 + Constants.rearrangeScale
@@ -153,21 +159,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         let rearrangingTopInset = (navigationController?.navigationBar.frame.maxY ?? 0) * multiplier
         
-        collectionView.contentInset = UIEdgeInsets(top: isRearranging ? rearrangingTopInset : normalTopInset, left: collectionView.contentInset.left, bottom: bottomInset, right: collectionView.contentInset.right)
+        collectionView.contentInset = UIEdgeInsets(top: isRearranging ? rearrangingTopInset : normalTopInset, left: collectionView.contentInset.left, bottom: isRearranging ? 0.0 : bottomInset, right: collectionView.contentInset.right)
         collectionView.scrollIndicatorInsets = collectionView.contentInset
     }
     
     private func setup() {
         collectionViewBottomConstraint.constant = -view.frame.height * (reverseRearrangeScale - 1)
-        
-        if #available(iOS 11.0, *) {
-            navigationItem.largeTitleDisplayMode = .never
-            ctaButtonHeightConstraint.constant = UIFontMetrics.default.scaledValue(for: 50)
-        } else {
-            ctaContainerBottomConstraint.isActive = false
-            ctaContainerBottomConstraint = NSLayoutConstraint(item: view, attribute: .bottom, relatedBy: .equal, toItem: ctaButton, attribute: .bottom, multiplier: 1, constant: ctaContainerBottomConstraint.constant)
-            ctaContainerBottomConstraint.isActive = true
-        }
         
         navigationItem.hidesBackButton = true
     
@@ -277,6 +274,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         // Update drag interaction enabled status
         let interactiveCellClosure: ((Bool) -> Void) = { (isRearranging) in
+            self.ctaButtonContainerBottomConstraint.constant = isRearranging ? -self.ctaButtonContainerHeightConstraint.constant : 0.0
             UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
                 for cell in self.collectionView.visibleCells {
                     guard var photobookCell = cell as? InteractivePagesCell else { continue }
