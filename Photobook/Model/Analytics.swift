@@ -55,7 +55,6 @@ protocol PickerAnalytics {
     }
     
     enum ActionName: String {
-        case appOpened = "App opened"
         case photoSourceSelected = "Photo source selected"
         case pickerSelectAllTapped = "Picker select all tapped"
         case pickerDeselectAllTapped = "Picker deselect all tapped"
@@ -75,6 +74,7 @@ protocol PickerAnalytics {
         case orderCompleted = "Order completed"
         case editingCancelled = "Editing cancelled"
         case editingConfirmed = "Editing confirmed"
+        case paymentRetried = "Payment retried"
         case uploadCancelled = "Upload cancelled"
         case uploadRetried = "Upload retried"
         case uploadSuccessful = "Upload successful"
@@ -137,13 +137,10 @@ protocol PickerAnalytics {
         // Track application state change
         // By tracking .didFinishLaunching and .willEnterForeground, instead of .didBecomeActive we avoid notifications when the user doesn't exit the app, for example when they invoke control center
         NotificationCenter.default.addObserver(forName: .UIApplicationDidFinishLaunching, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
-            welf?.trackAction(.appOpened)
             welf?.appLaunchDate = Date()
         })
         
         NotificationCenter.default.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
-            welf?.trackAction(.appOpened)
-            
             guard let appBackgroundedDate = welf?.appBackgroundedDate else { return }
             welf?.secondsSpentInBackground += Date().timeIntervalSince(appBackgroundedDate)
         })

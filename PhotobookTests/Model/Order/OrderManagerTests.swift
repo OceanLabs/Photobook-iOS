@@ -74,6 +74,10 @@ class OrderManagerTests: XCTestCase {
         orderManager.processingOrder = order
         orderManager.orderProcessingDelegate = testOrderProcessingDelegate
     }
+    
+    override func tearDown() {
+        orderManager.processingOrder = nil
+    }
 
     func testSaveBasketOrder() {
         let product = productManager.currentProduct!

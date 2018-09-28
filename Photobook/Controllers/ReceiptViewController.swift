@@ -144,6 +144,7 @@ class ReceiptViewController: UIViewController {
             if let lastProcessingError = lastProcessingError {
                 switch lastProcessingError {
                 case .upload:
+                    Analytics.shared.trackAction(.uploadRetried)
                     state = .uploading
                     OrderManager.shared.uploadAssets()
                 case .uploadProcessing, .submission, .api(message: _):
@@ -154,13 +155,13 @@ class ReceiptViewController: UIViewController {
         case .paymentFailed:
             showPaymentMethods()
         case .paymentRetry:
-            //re authorize payment and submit order again
-            Analytics.shared.trackAction(.uploadRetried)
+            // Re-authorise payment and submit order again
+            Analytics.shared.trackAction(.paymentRetried)
             pay()
-            break
         case .cancelled:
             dismiss()
-        default: break
+        default:
+            break
         }
     }
     
