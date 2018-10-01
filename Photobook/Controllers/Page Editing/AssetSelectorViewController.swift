@@ -79,9 +79,7 @@ class AssetSelectorViewController: UIViewController {
         return ProductManager.shared.currentProduct
     }
     
-    private var shouldShowAddMoreButton: Bool {
-        return album != nil || albumManager != nil || photobookDelegate?.assetPickerViewController != nil
-    }
+    private lazy var shouldShowAddMoreButton = album != nil || albumManager != nil || photobookDelegate?.assetPickerViewController != nil
     
     func reselectAsset(_ asset: Asset) {
         selectedAsset = asset
