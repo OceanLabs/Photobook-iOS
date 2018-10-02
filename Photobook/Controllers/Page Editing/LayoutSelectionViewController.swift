@@ -85,10 +85,7 @@ class LayoutSelectionViewController: UIViewController {
     
     var selectedLayoutIndex = 0
     var selectedLayout: Layout! {
-        didSet {
-            selectedLayoutIndex = layouts.index(of: selectedLayout) ?? 0
-            collectionView.scrollToItem(at: IndexPath(row: selectedLayoutIndex, section: 0), at: .centeredHorizontally, animated: true)
-        }
+        didSet { selectedLayoutIndex = layouts.index(of: selectedLayout) ?? 0 }
     }
     var isEditingDoubleLayout = false
     weak var delegate: LayoutSelectionDelegate?
@@ -100,6 +97,7 @@ class LayoutSelectionViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         collectionView.reloadData()
+        collectionView.scrollToItem(at: IndexPath(row: selectedLayoutIndex, section: 0), at: .centeredHorizontally, animated: true)
     }
     
     func accessibilityLayoutName(for layout: Layout, at indexPath: IndexPath) -> String {
