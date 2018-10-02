@@ -285,12 +285,22 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         pageView.setupTextBox(mode: .placeHolder)
         
+        let shouldShowAssetSelection = self.productLayout.layout.imageLayoutBox != nil && self.productLayout.productLayoutAsset?.asset == nil        
+        if shouldShowAssetSelection {
+            toolbarButtons[Tool.selectLayout.rawValue].isSelected = false
+            toolbarButtons[Tool.selectAsset.rawValue].isSelected = true
+        }
+        
         UIView.animate(withDuration: 0.1) {
             self.view.backgroundColor = self.storyboardBackgroundColor
         }
         
         UIView.animate(withDuration: 0.3, delay: 0.1, options: [], animations: {
-            self.layoutSelectionContainerView.alpha = 1.0
+            if shouldShowAssetSelection {
+                self.assetSelectionContainerView.alpha = 1.0
+            } else {
+                self.layoutSelectionContainerView.alpha = 1.0
+            }
             self.toolbar.alpha = 1.0
             
             (self.navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(.clear)
@@ -489,18 +499,18 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         guard let identifier = segue.identifier else { return }
         switch identifier {
         case "AssetSelectionSegue":
-            assetSelectorViewController = segue.destination as! AssetSelectorViewController
+            assetSelectorViewController = segue.destination as? AssetSelectorViewController
             assetSelectorViewController.delegate = self
         case "LayoutSelectionSegue":
-            layoutSelectionViewController = segue.destination as! LayoutSelectionViewController
+            layoutSelectionViewController = segue.destination as? LayoutSelectionViewController
             layoutSelectionViewController.delegate = self
         case "PlacementSegue":
-            assetPlacementViewController = segue.destination as! AssetPlacementViewController
+            assetPlacementViewController = segue.destination as? AssetPlacementViewController
         case "ColorSelectionSegue":
-            colorSelectionViewController = segue.destination as! ColorSelectionViewController
+            colorSelectionViewController = segue.destination as? ColorSelectionViewController
             colorSelectionViewController.delegate = self
         case "TextEditingSegue":
-            textEditingViewController = segue.destination as! TextEditingViewController
+            textEditingViewController = segue.destination as? TextEditingViewController
             textEditingViewController.delegate = self
         default:
             break
