@@ -64,12 +64,12 @@ class AssetSelectorViewController: UIViewController {
                 }
                 selectedAssetIndex = -1
                 collectionView.reloadData()
-                collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .centeredHorizontally, animated: false)
+                collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .centeredHorizontally, animated: false)
                 return
             }
             selectedAssetIndex = assets.index { $0.identifier == selectedAsset!.identifier } ?? -1
             if collectionView.numberOfItems(inSection: 0) > selectedAssetIndex && selectedAssetIndex >= 0 {
-                collectionView.scrollToItem(at: IndexPath(row: selectedAssetIndex, section: 0), at: .centeredHorizontally, animated: true)
+                collectionView.scrollToItem(at: IndexPath(item: selectedAssetIndex, section: 0), at: .centeredHorizontally, animated: true)
             }
         }
     }
@@ -78,6 +78,8 @@ class AssetSelectorViewController: UIViewController {
     private var product: PhotobookProduct! {
         return ProductManager.shared.currentProduct
     }
+    
+    private lazy var shouldShowAddMoreButton = album != nil || albumManager != nil || photobookDelegate?.assetPickerViewController != nil
     
     func reselectAsset(_ asset: Asset) {
         selectedAsset = asset
@@ -91,21 +93,23 @@ extension AssetSelectorViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // Add one for the "add more" thumbnail if an Asset picker was configured
         var count = assets.count
-        if album != nil || albumManager != nil || photobookDelegate?.assetPickerViewController != nil { count += 1 }
+        if shouldShowAddMoreButton { count += 1 }
         return count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         // "Add more" thumbnail
-        if indexPath.row == assets.count {
+        if indexPath.item == 0 && shouldShowAddMoreButton {
             return collectionView.dequeueReusableCell(withReuseIdentifier: AssetSelectorAddMoreCollectionViewCell.reuseIdentifier, for: indexPath) as! AssetSelectorAddMoreCollectionViewCell
         }
+        
+        let assetIndex = indexPath.item - (shouldShowAddMoreButton ? 1 : 0)
 
-        let asset = assets[indexPath.row]
+        let asset = assets[assetIndex]
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AssetSelectorAssetCollectionViewCell.reuseIdentifier, for: indexPath) as! AssetSelectorAssetCollectionViewCell
-        let selected = selectedAssetIndex == indexPath.row
+        let selected = selectedAssetIndex == assetIndex
         cell.isBorderVisible = selected
         
         let timesUsed = (self.timesUsed[asset.identifier] ?? 0)
@@ -130,7 +134,7 @@ extension AssetSelectorViewController: UICollectionViewDataSource {
 extension AssetSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.row == assets.count {
+        if indexPath.item == 0 && shouldShowAddMoreButton {
             if let assetPickerViewController = photobookDelegate!.assetPickerViewController?() {
                 assetPickerViewController.addingDelegate = self
                 present(assetPickerViewController, animated: true, completion: nil)
@@ -138,25 +142,26 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
             }
         }
         
-        guard selectedAssetIndex != indexPath.row else { return }
+        let assetIndex = indexPath.item - (shouldShowAddMoreButton ? 1 : 0)
+        guard selectedAssetIndex != assetIndex else { return }
 
         if let selectedAsset = selectedAsset {
             timesUsed[selectedAsset.identifier] = timesUsed[selectedAsset.identifier]! - 1
             
-            if let currentSelectedCell = collectionView.cellForItem(at: IndexPath(row: selectedAssetIndex, section: 0)) as? AssetSelectorAssetCollectionViewCell {
+            if let currentSelectedCell = collectionView.cellForItem(at: IndexPath(item: selectedAssetIndex + (shouldShowAddMoreButton ? 1 : 0), section: 0)) as? AssetSelectorAssetCollectionViewCell {
                 currentSelectedCell.timesUsed = timesUsed[selectedAsset.identifier]!
                 currentSelectedCell.isBorderVisible = false
             }
         }
         
-        selectedAsset = assets[indexPath.row]
+        selectedAsset = assets[assetIndex]
         timesUsed[selectedAsset!.identifier] = (timesUsed[selectedAsset!.identifier] ?? 0) + 1
         if let newSelectedCell = collectionView.cellForItem(at: indexPath) as? AssetSelectorAssetCollectionViewCell {
             newSelectedCell.timesUsed = timesUsed[selectedAsset!.identifier]!
             newSelectedCell.isBorderVisible = true
         }
 
-        delegate?.didSelect(asset: assets[indexPath.row])
+        delegate?.didSelect(asset: assets[assetIndex])
     }
 }
 
@@ -171,10 +176,12 @@ extension AssetSelectorViewController: PhotobookAssetAddingDelegate {
         
         // Add assets that are not already in the list
         let newAssets = assets.filter { asset in !self.assets.contains { $0 == asset } }
-        self.assets.append(contentsOf: newAssets)
+        for asset in newAssets {
+            self.assets.insert(asset, at: 0)
+        }
 
+        selectedAssetIndex = self.assets.index { $0.identifier == selectedAsset!.identifier } ?? -1
         collectionView.reloadData()
-        collectionView.scrollToItem(at: IndexPath(row: self.assets.count, section: 0), at: .centeredHorizontally, animated: true)
         self.dismiss(animated: true, completion: nil)
     }
 }
