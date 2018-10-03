@@ -19,7 +19,7 @@ extension PHChange: ChangeManager {
     }
 }
 
-class PhotosAlbum: Album {
+class PhotosAlbum: Album, Codable {
     
     let assetCollection: PHAssetCollection
     var assets = [Asset]()
@@ -32,6 +32,28 @@ class PhotosAlbum: Album {
         self.assetCollection = assetCollection
     }
     
+    private enum CodingKeys: String, CodingKey {
+        case identifier
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(identifier, forKey: .identifier)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        
+        let collectionId = try values.decode(String.self, forKey: .identifier)
+        let fetchResult = PHAssetCollection.fetchAssetCollections(withLocalIdentifiers: [collectionId], options: nil)
+        if let assetCollection = fetchResult.firstObject {
+            self.assetCollection = assetCollection
+            loadAssetsFromPhotoLibrary()
+            return
+        }
+        throw AssetLoadingException.notFound
+    }
+
     /// Returns the estimated number of assets for this album, which might not be available without calling loadAssets. It might differ from the actual number of assets. NSNotFound if not available.
     var numberOfAssets: Int {
         return !assets.isEmpty ? assets.count : assetCollection.estimatedAssetCount

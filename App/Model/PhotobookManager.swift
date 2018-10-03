@@ -72,9 +72,11 @@ class PhotobookManager: NSObject {
         albumViewController?.albumManager = PhotosAlbumManager()
         
         // Attempt to restore photobook backup
-        if let assets = ProductManager.shared.restoreCurrentProduct() {
+        if let (assets, album, albumManager) = ProductManager.shared.restoreCurrentProduct() {
             let photobookViewController = mainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
             photobookViewController.assets = assets
+            photobookViewController.album = album
+            photobookViewController.albumManager = albumManager
             
             guard let browseNavigationViewController = tabBarController.viewControllers?[Tab.browse.rawValue] as? UINavigationController else { return }
             browseNavigationViewController.pushViewController(photobookViewController, animated: false)

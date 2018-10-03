@@ -26,18 +26,11 @@ class DefaultFacebookApiManager: FacebookApiManager {
     }
 }
 
-class FacebookAlbum {
+class FacebookAlbum: Codable {
     
     private struct Constants {
         static let pageSize = 100
         static let serviceName = "Facebook"
-    }
-    
-    init(identifier: String, localizedName: String, numberOfAssets: Int, coverPhotoUrl: URL) {
-        self.identifier = identifier
-        self.localizedName = localizedName
-        self.numberOfAssets = numberOfAssets
-        self.coverPhotoUrl = coverPhotoUrl
     }
     
     var numberOfAssets: Int
@@ -52,6 +45,36 @@ class FacebookAlbum {
     }
     
     lazy var facebookManager: FacebookApiManager = DefaultFacebookApiManager()
+
+    init(identifier: String, localizedName: String, numberOfAssets: Int, coverPhotoUrl: URL) {
+        self.identifier = identifier
+        self.localizedName = localizedName
+        self.numberOfAssets = numberOfAssets
+        self.coverPhotoUrl = coverPhotoUrl
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case identifier, localizedName, numberOfAssets, coverPhotoUrl
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(identifier, forKey: .identifier)
+        try container.encode(localizedName, forKey: .localizedName)
+        try container.encode(numberOfAssets, forKey: .numberOfAssets)
+        try container.encode(coverPhotoUrl, forKey: .coverPhotoUrl)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        
+        identifier = try values.decode(String.self, forKey: .identifier)
+        localizedName = try values.decode(String.self, forKey: .localizedName)
+        numberOfAssets = try values.decode(Int.self, forKey: .numberOfAssets)
+        coverPhotoUrl = try values.decode(URL.self, forKey: .coverPhotoUrl)
+        
+        loadAssets(completionHandler: nil)
+    }
     
     private func fetchAssets(graphPath: String, completionHandler: ((Error?) -> Void)?) {
         facebookManager.request(withGraphPath: graphPath, parameters: nil) { [weak welf = self] (result, error) in
