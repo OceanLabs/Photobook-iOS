@@ -13,6 +13,8 @@ let mainStoryboard =  UIStoryboard(name: "Main", bundle: nil)
 /// Shared manager for the photo book UI
 class PhotobookManager: NSObject {
     
+    static let shared = PhotobookManager()
+    
     enum Tab: Int {
         case stories
         case browse
@@ -20,7 +22,7 @@ class PhotobookManager: NSObject {
         case facebook
     }
     
-    static func setupPayments() {
+    func setupPayments() {
         let apiKey = KiteAPIClient.environment == .live ? Configuration.kiteApiClientLiveKey : Configuration.kiteApiClientTestKey
         PaymentAuthorizationManager.applePayPayTo = Configuration.applePayPayToString
         PaymentAuthorizationManager.applePayMerchantId = Configuration.applePayMerchantId
@@ -28,10 +30,12 @@ class PhotobookManager: NSObject {
         KiteAPIClient.shared.apiKey = apiKey
     }
     
-    static func rootViewControllerForCurrentState() -> UIViewController {
+    func rootViewControllerForCurrentState() -> UIViewController {
         let isProcessingOrder = OrderManager.shared.isProcessingOrder
         
         if IntroViewController.userHasDismissed && !isProcessingOrder {
+            ProductManager.shared.delegate = self
+            
             let tabBarController = mainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
             configureTabBarController(tabBarController)
             return tabBarController
@@ -52,9 +56,10 @@ class PhotobookManager: NSObject {
             // Show receipt screen to prevent user from ordering another photobook
             let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptViewController") as! ReceiptViewController
             receiptViewController.order = OrderManager.shared.processingOrder
-            receiptViewController.dismissClosure = { viewController in
+            receiptViewController.dismissClosure = { [weak welf = self] viewController in
+                guard let stelf = welf else { return }
                 let tabBarController = mainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
-                configureTabBarController(tabBarController)
+                stelf.configureTabBarController(tabBarController)
                 let dismissSegue = IntroDismissSegue(identifier: "ReceiptDismiss", source: viewController, destination: tabBarController)
                 dismissSegue.perform()
             }
@@ -64,7 +69,7 @@ class PhotobookManager: NSObject {
         return rootNavigationController
     }
     
-    static func configureTabBarController(_ tabBarController: UITabBarController) {
+    func configureTabBarController(_ tabBarController: UITabBarController) {
         
         // Browse
         // Set the albumManager to the AlbumsCollectionViewController
@@ -72,11 +77,20 @@ class PhotobookManager: NSObject {
         albumViewController?.albumManager = PhotosAlbumManager()
         
         // Attempt to restore photobook backup
-        if let (assets, album, albumManager) = ProductManager.shared.restoreCurrentProduct() {
+        if let backup = ProductBackupManager.shared.restoreCurrentProduct() {
+            ProductManager.shared.currentProduct = backup.product
+            
             let photobookViewController = mainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
-            photobookViewController.assets = assets
-            photobookViewController.album = album
-            photobookViewController.albumManager = albumManager
+            photobookViewController.assets = backup.assets
+            photobookViewController.album = backup.album
+            photobookViewController.albumManager = backup.albumManager
+            photobookViewController.completionClosure = { (photobookProduct) in
+                OrderManager.shared.reset()
+                OrderManager.shared.basketOrder.products = [photobookProduct]
+                
+                let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
+                photobookViewController.navigationController?.pushViewController(checkoutViewController, animated: true)
+            }
             
             guard let browseNavigationViewController = tabBarController.viewControllers?[Tab.browse.rawValue] as? UINavigationController else { return }
             browseNavigationViewController.pushViewController(photobookViewController, animated: false)
@@ -101,5 +115,21 @@ class PhotobookManager: NSObject {
             ProductManager.shared.initialise(completion: nil)
         }
     }
+}
+
+extension PhotobookManager: PhotobookProductChangeDelegate {
     
+    func didChangePhotobookProduct(_ photobookProduct: PhotobookProduct, assets: [Asset], album: Album?, albumManager: AlbumManager?) {
+        let productBackup = PhotobookProductBackup()
+        productBackup.product = photobookProduct
+        productBackup.assets = assets
+        productBackup.album = album
+        productBackup.albumManager = albumManager
+
+        ProductBackupManager.shared.saveCurrentProduct(productBackup)
+    }
+    
+    func didDeletePhotobookProduct() {
+        ProductBackupManager.shared.deleteProductBackup()
+    }
 }
