@@ -530,6 +530,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         // Insert new page above the tapped one
         product.addPages(at: index, pages: productLayouts)
+        ProductManager.shared.saveCurrentProduct(with: assets)
+        
         collectionView.performBatchUpdates({
             collectionView.insertItems(at: [indexPath])
         }, completion: { _ in
@@ -555,6 +557,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let productLayout = product.productLayouts[index]
         
         product.deletePages(for: productLayout)
+        ProductManager.shared.saveCurrentProduct(with: assets)
+        
         collectionView.performBatchUpdates({
             collectionView.deleteItems(at: [indexPath])
         }, completion: { _ in
@@ -662,6 +666,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             guard let destinationProductLayoutIndex = previousCell?.leftIndex ?? previousCell?.rightIndex else { return }
             
             product.moveLayout(from: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
+            ProductManager.shared.saveCurrentProduct(with: assets)
             
             interactingItemIndexPath = nil
             
@@ -1102,6 +1107,7 @@ extension PhotobookViewController: SpineTextEditingDelegate {
     func didSaveSpineTextEditing(_ spineTextEditingViewController: SpineTextEditingViewController, spineText: String?, fontType: FontType) {
         product.spineText = spineText
         product.spineFontType = fontType
+        ProductManager.shared.saveCurrentProduct(with: assets)
         
         collectionView.reloadItems(at: [IndexPath(row: 0, section: 0)])
         
