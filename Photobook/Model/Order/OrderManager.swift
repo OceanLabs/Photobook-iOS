@@ -200,15 +200,11 @@ class OrderManager {
     
     private func loadOrder(from file: String) -> Order? {
         guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: file) as? Data else {
-            #if DEBUG
             print("OrderManager: failed to unarchive order")
-            #endif
             return nil
         }
         guard let unarchivedOrder = try? PropertyListDecoder().decode(Order.self, from: unarchivedData) else {
-            #if DEBUG
             print("OrderManager: decoding of order failed")
-            #endif
             return nil
         }
         

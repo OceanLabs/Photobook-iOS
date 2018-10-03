@@ -10,6 +10,12 @@ import UIKit
 
 class ProductManager {
     
+    private struct Storage {
+        // TEMP: Move to globals
+        static let photobookDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!.appending("/Photobook/")
+        static let productBackupFile = photobookDirectory.appending("Product.dat")
+    }
+
     static let shared = ProductManager()
     
     private lazy var apiManager = PhotobookAPIManager()
@@ -75,6 +81,42 @@ class ProductManager {
         return layouts.filter { photobook.layouts.contains($0.id) }
     }
     
+    func restoreCurrentProduct() -> [Asset]? {
+        guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: Storage.productBackupFile) as? Data else {
+            print("ProductManager: could not unarchive backup file")
+            return nil
+        }
+        guard let unarchivedBackup = try? PropertyListDecoder().decode(ProductBackup.self, from: unarchivedData) else {
+            print("ProductManager: could not decode backup file")
+            return nil
+        }
+        currentProduct = unarchivedBackup.product
+        return unarchivedBackup.assets
+    }
+    
+    func saveCurrentProduct(with assets: [Asset]) {
+        if !FileManager.default.fileExists(atPath: Storage.photobookDirectory) {
+            do {
+                try FileManager.default.createDirectory(atPath: Storage.photobookDirectory, withIntermediateDirectories: false, attributes: nil)
+            } catch {
+                print("ProductManager: could not create photobook directory")
+            }
+        }
+
+        let productBackup = ProductBackup()
+        productBackup.product = currentProduct
+        productBackup.assets = assets
+        
+        guard let productBackupData = try? PropertyListEncoder().encode(productBackup) else {
+            print("ProductManager: failed to encode product backup")
+            return
+        }
+        
+        if !NSKeyedArchiver.archiveRootObject(productBackupData, toFile: Storage.productBackupFile) {
+            print("ProductManager: failed to archive product backup")
+        }
+    }
+    
     func setProduct(_ product: PhotobookProduct, with template: PhotobookTemplate) {
         guard let availableCoverLayouts = coverLayouts(for: template),
             let availableLayouts = layouts(for: template)
@@ -94,6 +136,54 @@ class ProductManager {
 
             currentProduct = PhotobookProduct(template: template, assets: assets, coverLayouts: availableCoverLayouts, layouts: availableLayouts)
         }
+        
         return currentProduct
     }
 }
+
+class ProductBackup: Codable {
+    var product: PhotobookProduct!
+    var assets: [Asset]!
+    
+    private enum CodingKeys: String, CodingKey {
+        case product, assets
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(product, forKey: .product)
+        
+        var data: Data? = nil
+        if let assets = assets as? [PhotosAsset] {
+            data = try PropertyListEncoder().encode(assets)
+        } else if let assets = assets as? [URLAsset] {
+            data = try PropertyListEncoder().encode(assets)
+        } else if let assets = assets as? [ImageAsset] {
+            data = try PropertyListEncoder().encode(assets)
+        } else if let assets = assets as? [PhotosAssetMock] {
+            data = try PropertyListEncoder().encode(assets)
+        }
+        try container.encode(data, forKey: .assets)
+    }
+    
+    required convenience init(from decoder: Decoder) throws {
+        self.init()
+        
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        
+        product = try? values.decode(PhotobookProduct.self, forKey: .product)
+        
+        if let data = try values.decodeIfPresent(Data.self, forKey: .assets) {
+            if let loadedAsset = try? PropertyListDecoder().decode([URLAsset].self, from: data) {
+                assets = loadedAsset
+            } else if let loadedAsset = try? PropertyListDecoder().decode([ImageAsset].self, from: data) {
+                assets = loadedAsset
+            } else if let loadedAsset = try? PropertyListDecoder().decode([PhotosAsset].self, from: data) { // Keep the PhotosAsset case last because otherwise it triggers NSPhotoLibraryUsageDescription crash if not present, which might not be needed
+                assets = loadedAsset
+            } else if let loadedAsset = try? PropertyListDecoder().decode([PhotosAssetMock].self, from: data) {
+                assets = loadedAsset
+            }
+        }
+    }
+}
+

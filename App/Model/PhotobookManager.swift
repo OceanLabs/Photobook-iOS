@@ -71,6 +71,17 @@ class PhotobookManager: NSObject {
         let albumViewController = (tabBarController.viewControllers?[Tab.browse.rawValue] as? UINavigationController)?.topViewController as? AlbumsCollectionViewController
         albumViewController?.albumManager = PhotosAlbumManager()
         
+        // Attempt to restore photobook backup
+        if let assets = ProductManager.shared.restoreCurrentProduct() {
+            let photobookViewController = mainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
+            photobookViewController.assets = assets
+            
+            guard let browseNavigationViewController = tabBarController.viewControllers?[Tab.browse.rawValue] as? UINavigationController else { return }
+            browseNavigationViewController.pushViewController(photobookViewController, animated: false)
+            
+            tabBarController.selectedIndex = Tab.browse.rawValue
+        }
+
         // Stories
         // If there are no stories, remove the stories tab
         StoriesManager.shared.loadTopStories(completionHandler: {

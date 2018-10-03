@@ -167,6 +167,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         collectionViewBottomConstraint.constant = -view.frame.height * (reverseRearrangeScale - 1)
         
         navigationItem.hidesBackButton = true
+        
+        if let tabBar = tabBarController?.tabBar { tabBar.isHidden = true }
     
         if isPresentedModally {
             navigationItem.leftBarButtonItems = [ cancelBarButtonItem ]
@@ -195,6 +197,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         
         guard let _ = ProductManager.shared.setCurrentProduct(with: photobook, assets: assets) else { return }
+        ProductManager.shared.saveCurrentProduct(with: assets)
         
         setupTitleView()
         
@@ -241,12 +244,13 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let alertController = UIAlertController(title: nil, message: NSLocalizedString("Photobook/ChangeSizeTitle", value: "Changing the size keeps your layout intact", comment: "Information when the user wants to change the photo book's size"), preferredStyle: .actionSheet)
         for photobook in photobooks {
             alertController.addAction(UIAlertAction(title: photobook.name, style: .default, handler: { [weak welf = self] (_) in
-                guard welf?.product.photobookTemplate.id != photobook.id else { return }
+                guard let stelf = welf, stelf.product.photobookTemplate.id != photobook.id else { return }
                 
                 _ = ProductManager.shared.setCurrentProduct(with: photobook)
+                ProductManager.shared.saveCurrentProduct(with: stelf.assets)
                 
-                welf?.setupTitleView()
-                welf?.collectionView.reloadData()
+                stelf.setupTitleView()
+                stelf.collectionView.reloadData()
             }))
         }
         
