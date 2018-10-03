@@ -79,6 +79,10 @@ class PhotobookManager: NSObject {
             guard let browseNavigationViewController = tabBarController.viewControllers?[Tab.browse.rawValue] as? UINavigationController else { return }
             browseNavigationViewController.pushViewController(photobookViewController, animated: false)
             
+            if let assetPickerViewController = browseNavigationViewController.viewControllers.first as? AlbumsCollectionViewController {
+                photobookViewController.photobookDelegate = assetPickerViewController
+            }
+            
             tabBarController.selectedIndex = Tab.browse.rawValue
         }
 
