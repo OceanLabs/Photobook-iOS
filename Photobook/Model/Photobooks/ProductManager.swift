@@ -49,6 +49,7 @@ class ProductManager {
     
     func reset() {
         currentProduct = nil
+        deleteProductBackup()
     }
     
     /// Requests the photobook details so the user can start building their photobook
@@ -115,6 +116,10 @@ class ProductManager {
         if !NSKeyedArchiver.archiveRootObject(productBackupData, toFile: Storage.productBackupFile) {
             print("ProductManager: failed to archive product backup")
         }
+    }
+    
+    func deleteProductBackup() {
+        _ = try? FileManager.default.removeItem(atPath: Storage.productBackupFile)
     }
     
     func setProduct(_ product: PhotobookProduct, with template: PhotobookTemplate) {

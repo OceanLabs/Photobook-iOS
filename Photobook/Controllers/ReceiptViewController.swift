@@ -119,6 +119,7 @@ class ReceiptViewController: UIViewController {
 
         // Start processing
         OrderManager.shared.startProcessing(order: order)
+        ProductManager.shared.deleteProductBackup()
         
         // Ask for notification permission
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: { [weak welf = self] in
