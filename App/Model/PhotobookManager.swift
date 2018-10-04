@@ -80,7 +80,7 @@ class PhotobookManager: NSObject {
         })
         
         // Load the products here, so that the user avoids a loading screen on PhotobookViewController
-        if NSClassFromString("XCTest") == nil {
+        if !PhotobookApp.isRunningUnitTests() {
             ProductManager.shared.initialise(completion: nil)
         }
     }

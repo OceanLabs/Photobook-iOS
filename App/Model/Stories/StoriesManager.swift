@@ -67,7 +67,7 @@ class StoriesManager: NSObject {
         
         var serviceQuality = DispatchQoS.QoSClass.default
         #if DEBUG
-        if let _ = NSClassFromString("XCTest") {
+        if !PhotobookApp.isRunningUnitTests() {
             serviceQuality = DispatchQoS.QoSClass.userInteractive
         }
         #endif
