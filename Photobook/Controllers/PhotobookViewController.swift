@@ -151,7 +151,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             navigationItem.largeTitleDisplayMode = .never
             ctaButtonHeightConstraint.constant = UIFontMetrics.default.scaledValue(for: 50)
-            ctaButtonContainerHeightConstraint.constant = ctaButtonHeightConstraint.constant + Constants.ctaButtonVerticalMargin * 2.0 + view.safeAreaInsets.bottom
+            // Avoids crash when photo book vc is presented from the app delegate
+            if ctaButtonContainerHeightConstraint != nil {
+                ctaButtonContainerHeightConstraint.constant = ctaButtonHeightConstraint.constant + Constants.ctaButtonVerticalMargin * 2.0 + view.safeAreaInsets.bottom
+            }
         } else {
             normalTopInset = navigationController?.navigationBar.frame.maxY ?? 0
             multiplier = 1 + Constants.rearrangeScale
