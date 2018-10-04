@@ -77,7 +77,7 @@ class PhotobookManager: NSObject {
         albumViewController?.albumManager = PhotosAlbumManager()
         
         // Attempt to restore photobook backup
-        if let backup = ProductBackupManager.shared.restoreCurrentProduct() {
+        if let backup = PhotobookProductBackupManager.shared.restoreBackup() {
             ProductManager.shared.currentProduct = backup.product
             
             let photobookViewController = mainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
@@ -126,10 +126,10 @@ extension PhotobookManager: PhotobookProductChangeDelegate {
         productBackup.album = album
         productBackup.albumManager = albumManager
 
-        ProductBackupManager.shared.saveCurrentProduct(productBackup)
+        PhotobookProductBackupManager.shared.saveBackup(productBackup)
     }
     
     func didDeletePhotobookProduct() {
-        ProductBackupManager.shared.deleteProductBackup()
+        PhotobookProductBackupManager.shared.deleteBackup()
     }
 }

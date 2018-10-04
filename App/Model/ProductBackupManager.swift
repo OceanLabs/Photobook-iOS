@@ -1,5 +1,5 @@
 //
-//  ProductBackupManager.swift
+//  PhotobookProductBackupManager.swift
 //  Photobook
 //
 //  Created by Jaime Landazuri on 03/10/2018.
@@ -8,17 +8,16 @@
 
 import Foundation
 
-class ProductBackupManager {
+class PhotobookProductBackupManager {
     
     private struct Storage {
-        // TEMP: Move to globals
-        static let photobookDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!.appending("/Photobook/")
-        static let productBackupFile = photobookDirectory.appending("Product.dat")
+        static let photobookDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!.appending("/" + (Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String ?? "Photobook") + "/")
+        static let productBackupFile = photobookDirectory.appending("PhotobookProduct.dat")
     }
 
-    static let shared = ProductBackupManager()
+    static let shared = PhotobookProductBackupManager()
     
-    func restoreCurrentProduct() -> PhotobookProductBackup? {
+    func restoreBackup() -> PhotobookProductBackup? {
         guard let unarchivedData = NSKeyedUnarchiver.unarchiveObject(withFile: Storage.productBackupFile) as? Data else {
             print("ProductManager: could not unarchive backup file")
             return nil
@@ -30,7 +29,7 @@ class ProductBackupManager {
         return unarchivedBackup
     }
     
-    func saveCurrentProduct(_ productBackup: PhotobookProductBackup) {
+    func saveBackup(_ productBackup: PhotobookProductBackup) {
         if !FileManager.default.fileExists(atPath: Storage.photobookDirectory) {
             do {
                 try FileManager.default.createDirectory(atPath: Storage.photobookDirectory, withIntermediateDirectories: false, attributes: nil)
@@ -49,7 +48,7 @@ class ProductBackupManager {
         }
     }
     
-    func deleteProductBackup() {
+    func deleteBackup() {
         _ = try? FileManager.default.removeItem(atPath: Storage.productBackupFile)
     }
 }
