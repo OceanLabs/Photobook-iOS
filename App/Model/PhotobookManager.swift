@@ -32,10 +32,9 @@ class PhotobookManager: NSObject {
     
     func rootViewControllerForCurrentState() -> UIViewController {
         let isProcessingOrder = OrderManager.shared.isProcessingOrder
+        ProductManager.shared.delegate = self
         
         if IntroViewController.userHasDismissed && !isProcessingOrder {
-            ProductManager.shared.delegate = self
-            
             let tabBarController = mainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
             configureTabBarController(tabBarController)
             return tabBarController
