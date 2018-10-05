@@ -80,7 +80,7 @@ class PhotobookManager: NSObject {
         if let backup = PhotobookProductBackupManager.shared.restoreBackup() {
             ProductManager.shared.currentProduct = backup.product
             
-            let photobookViewController = mainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
+            let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
             photobookViewController.assets = backup.assets
             photobookViewController.album = backup.album
             photobookViewController.albumManager = backup.albumManager

@@ -141,8 +141,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             insets = .zero
         }
         
-        let bottomInset = isRearranging ? ctaButtonContainer.frame.size.height * reverseRearrangeScale - insets.bottom : ctaButtonContainer.frame.size.height - insets.bottom - collectionViewBottomConstraint.constant
-        
         let normalTopInset: CGFloat
         let multiplier: CGFloat
         if #available(iOS 11, *) {
@@ -151,14 +149,13 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             navigationItem.largeTitleDisplayMode = .never
             ctaButtonHeightConstraint.constant = UIFontMetrics.default.scaledValue(for: 50)
-            // Avoids crash when photo book vc is presented from the app delegate
-            if ctaButtonContainerHeightConstraint != nil {
-                ctaButtonContainerHeightConstraint.constant = ctaButtonHeightConstraint.constant + Constants.ctaButtonVerticalMargin * 2.0 + view.safeAreaInsets.bottom
-            }
+            ctaButtonContainerHeightConstraint.constant = ctaButtonHeightConstraint.constant + Constants.ctaButtonVerticalMargin * 2.0 + view.safeAreaInsets.bottom
         } else {
             normalTopInset = navigationController?.navigationBar.frame.maxY ?? 0
             multiplier = 1 + Constants.rearrangeScale
         }
+        
+        let bottomInset = ctaButtonContainerHeightConstraint.constant - insets.bottom - collectionViewBottomConstraint.constant
         
         let rearrangingTopInset = (navigationController?.navigationBar.frame.maxY ?? 0) * multiplier
         
