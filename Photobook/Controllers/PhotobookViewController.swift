@@ -200,8 +200,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         
         guard let _ = ProductManager.shared.setCurrentProduct(with: photobook, assets: assets) else { return }
-        ProductManager.shared.changedCurrentProduct(with: assets, album: album, albumManager: albumManager)
-        
+        changedPhotobook()
         setupTitleView()
         
         if emptyScreenViewController.parent != nil {
@@ -250,7 +249,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 guard let stelf = welf, stelf.product.photobookTemplate.id != photobook.id else { return }
                 
                 _ = ProductManager.shared.setCurrentProduct(with: photobook)
-                ProductManager.shared.changedCurrentProduct(with: stelf.assets, album: stelf.album, albumManager: stelf.albumManager)
+                stelf.changedPhotobook()
                 
                 stelf.setupTitleView()
                 stelf.collectionView.reloadData()
@@ -533,7 +532,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         // Insert new page above the tapped one
         product.addPages(at: index, pages: productLayouts)
-        ProductManager.shared.changedCurrentProduct(with: assets, album: album, albumManager: albumManager)
+        changedPhotobook()
         
         collectionView.performBatchUpdates({
             collectionView.insertItems(at: [indexPath])
@@ -560,7 +559,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let productLayout = product.productLayouts[index]
         
         product.deletePages(for: productLayout)
-        ProductManager.shared.changedCurrentProduct(with: assets, album: album, albumManager: albumManager)
+        changedPhotobook()
         
         collectionView.performBatchUpdates({
             collectionView.deleteItems(at: [indexPath])
@@ -669,7 +668,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             guard let destinationProductLayoutIndex = previousCell?.leftIndex ?? previousCell?.rightIndex else { return }
             
             product.moveLayout(from: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
-            ProductManager.shared.changedCurrentProduct(with: assets, album: album, albumManager: albumManager)
+            changedPhotobook()
             
             interactingItemIndexPath = nil
             
@@ -761,6 +760,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 self.navigationController!.navigationBar.alpha = 0.0
             }
         }
+    }
+    
+    private func changedPhotobook() {
+        ProductManager.shared.changedCurrentProduct(with: assets, album: album, albumManager: albumManager)
     }
 }
 
@@ -919,6 +922,7 @@ extension PhotobookViewController: PageSetupDelegate {
             }
             collectionView.reloadData()
         }
+        changedPhotobook()
         
         let barType = (navigationController?.navigationBar as? PhotobookNavigationBar)?.barType
 
@@ -1077,6 +1081,8 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
         
         // Insert new page above the tapped one
         product.addDoubleSpread(at: index)
+        changedPhotobook()
+        
         collectionView.performBatchUpdates({
             collectionView.insertItems(at: [indexPath])
         }, completion: { _ in
@@ -1110,7 +1116,7 @@ extension PhotobookViewController: SpineTextEditingDelegate {
     func didSaveSpineTextEditing(_ spineTextEditingViewController: SpineTextEditingViewController, spineText: String?, fontType: FontType) {
         product.spineText = spineText
         product.spineFontType = fontType
-        ProductManager.shared.changedCurrentProduct(with: assets, album: album, albumManager: albumManager)
+        changedPhotobook()
         
         collectionView.reloadItems(at: [IndexPath(row: 0, section: 0)])
         
