@@ -28,9 +28,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Must happen after setting up the environment
         PhotobookManager.setupPayments()
         
-        window?.rootViewController = PhotobookManager.rootViewControllerForCurrentState()
-        
-        if NSClassFromString("XCTest") == nil {
+        if !PhotobookApp.isRunningUnitTests() {
+            window?.rootViewController = PhotobookManager.rootViewControllerForCurrentState()
             Analytics.shared.optInToRemoteAnalytics = true
         }
         
