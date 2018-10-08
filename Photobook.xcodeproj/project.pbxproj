@@ -282,6 +282,8 @@
 		2EF312B720591EEE001BE3CF /* IntroDismissSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF312B620591EEE001BE3CF /* IntroDismissSegue.swift */; };
 		3D046AAB9F5CFA5F5150C0DF /* Pods_PhotobookTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1561A4A2B130A5F1A92351A0 /* Pods_PhotobookTests.framework */; };
 		688A35F15D418F152AA3CEC9 /* Pods_Photobook_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1CA12481EFB37C226C37AD8 /* Pods_Photobook_App.framework */; };
+		6F08F90F216506C400EF9529 /* ProductBackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F08F90D2165051500EF9529 /* ProductBackupManager.swift */; };
+		6F08F910216506C600EF9529 /* ProductBackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F08F90D2165051500EF9529 /* ProductBackupManager.swift */; };
 		6F0A682E1FE0243400B7E56C /* EmptyScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0A682D1FE0243400B7E56C /* EmptyScreenViewController.swift */; };
 		6F0A68321FE1291200B7E56C /* PageSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0A68311FE1291200B7E56C /* PageSetupViewController.swift */; };
 		6F0A68361FE16D1200B7E56C /* LayoutSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0A68351FE16D1200B7E56C /* LayoutSelectionViewController.swift */; };
@@ -827,6 +829,7 @@
 		547A4E0B82B81A32EC456DDF /* Pods-Photobook.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.release.xcconfig"; sourceTree = "<group>"; };
 		69B62B8C076001BAA40216F0 /* Pods-Photobook App.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.debug test.xcconfig"; sourceTree = "<group>"; };
 		6A1DA8E9A38D7AFD0E6ADA5C /* Pods-Photobook App.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.release test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.release test.xcconfig"; sourceTree = "<group>"; };
+		6F08F90D2165051500EF9529 /* ProductBackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductBackupManager.swift; sourceTree = "<group>"; };
 		6F0A682D1FE0243400B7E56C /* EmptyScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyScreenViewController.swift; sourceTree = "<group>"; };
 		6F0A68311FE1291200B7E56C /* PageSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSetupViewController.swift; sourceTree = "<group>"; };
 		6F0A68351FE16D1200B7E56C /* LayoutSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutSelectionViewController.swift; sourceTree = "<group>"; };
@@ -1230,6 +1233,7 @@
 			isa = PBXGroup;
 			children = (
 				B9FA5301205FC3DC00669758 /* PhotobookManager.swift */,
+				6F08F90D2165051500EF9529 /* ProductBackupManager.swift */,
 				2E50703120E1113E002889C5 /* Assets */,
 				2E50703020E10E09002889C5 /* Segues */,
 				2E50702F20E10DCD002889C5 /* Clients */,
@@ -2340,6 +2344,7 @@
 				B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */,
 				6FCE08D620221C7C00C55D2F /* NSAttributedStringExtensions.swift in Sources */,
 				2E17337F200F4E0B00F0D718 /* PaymentMethodsViewController.swift in Sources */,
+				6F08F90F216506C400EF9529 /* ProductBackupManager.swift in Sources */,
 				6FE05DA820345C3E003C9655 /* SwiftLuhn.swift in Sources */,
 				2EA00E4520443ACB00371B88 /* KiteAPIClient.swift in Sources */,
 				6FD8DEA720EE6B0C00353AE0 /* PhotobookAsset.swift in Sources */,
@@ -2698,6 +2703,7 @@
 				6F202C88211998E9000A6C02 /* IntroViewController.swift in Sources */,
 				6F202C89211998E9000A6C02 /* NSAttributedStringExtensions.swift in Sources */,
 				6F202C8A211998E9000A6C02 /* PaymentMethodsViewController.swift in Sources */,
+				6F08F910216506C600EF9529 /* ProductBackupManager.swift in Sources */,
 				6F202C8B211998E9000A6C02 /* SwiftLuhn.swift in Sources */,
 				6F202C8C211998E9000A6C02 /* KiteAPIClient.swift in Sources */,
 				6F202C8D211998E9000A6C02 /* PhotobookAsset.swift in Sources */,

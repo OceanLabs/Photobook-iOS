@@ -288,6 +288,13 @@ extension AlbumsCollectionViewController: PhotobookDelegate {
 
         return modalAlbumsCollectionViewController
     }
+    
+    func wantsToDismiss(_ viewController: UIViewController) {
+        if let tabBar = tabBarController?.tabBar {
+            tabBar.isHidden = false
+        }
+        navigationController?.popViewController(animated: true)
+    }
 }
 
 extension AlbumsCollectionViewController{

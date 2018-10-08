@@ -8,6 +8,11 @@
 
 import UIKit
 
+protocol PhotobookProductChangeDelegate: class {
+    func didChangePhotobookProduct(_ photobookProduct: PhotobookProduct, assets: [Asset], album: Album?, albumManager: AlbumManager?)
+    func didDeletePhotobookProduct()
+}
+
 class ProductManager {
     
     static let shared = ProductManager()
@@ -39,10 +44,13 @@ class ProductManager {
         return 100
     }
         
-    private(set) var currentProduct: PhotobookProduct?
+    var currentProduct: PhotobookProduct?
+    
+    weak var delegate: PhotobookProductChangeDelegate?
     
     func reset() {
         currentProduct = nil
+        delegate?.didDeletePhotobookProduct()
     }
     
     /// Requests the photobook details so the user can start building their photobook
@@ -94,6 +102,11 @@ class ProductManager {
 
             currentProduct = PhotobookProduct(template: template, assets: assets, coverLayouts: availableCoverLayouts, layouts: availableLayouts)
         }
+        
         return currentProduct
+    }
+    
+    func changedCurrentProduct(with assets: [Asset], album: Album?, albumManager: AlbumManager?) {
+        delegate?.didChangePhotobookProduct(currentProduct!, assets: assets, album: album, albumManager: albumManager)
     }
 }

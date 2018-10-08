@@ -26,10 +26,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #endif
         
         // Must happen after setting up the environment
-        PhotobookManager.setupPayments()
+        PhotobookManager.shared.setupPayments()
         
         if !PhotobookApp.isRunningUnitTests() {
-            window?.rootViewController = PhotobookManager.rootViewControllerForCurrentState()
+            window?.rootViewController = PhotobookManager.shared.rootViewControllerForCurrentState()
             Analytics.shared.optInToRemoteAnalytics = true
         }
         

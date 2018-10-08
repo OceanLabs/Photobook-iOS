@@ -141,8 +141,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             insets = .zero
         }
         
-        let bottomInset = isRearranging ? ctaButtonContainer.frame.size.height * reverseRearrangeScale - insets.bottom : ctaButtonContainer.frame.size.height - insets.bottom - collectionViewBottomConstraint.constant
-        
         let normalTopInset: CGFloat
         let multiplier: CGFloat
         if #available(iOS 11, *) {
@@ -157,6 +155,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             multiplier = 1 + Constants.rearrangeScale
         }
         
+        let bottomInset = ctaButtonContainerHeightConstraint.constant - insets.bottom - collectionViewBottomConstraint.constant
+        
         let rearrangingTopInset = (navigationController?.navigationBar.frame.maxY ?? 0) * multiplier
         
         collectionView.contentInset = UIEdgeInsets(top: isRearranging ? rearrangingTopInset : normalTopInset, left: collectionView.contentInset.left, bottom: isRearranging ? 0.0 : bottomInset, right: collectionView.contentInset.right)
@@ -167,6 +167,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         collectionViewBottomConstraint.constant = -view.frame.height * (reverseRearrangeScale - 1)
         
         navigationItem.hidesBackButton = true
+        
+        if let tabBar = tabBarController?.tabBar { tabBar.isHidden = true }
     
         if isPresentedModally {
             navigationItem.leftBarButtonItems = [ cancelBarButtonItem ]
@@ -195,7 +197,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         
         guard let _ = ProductManager.shared.setCurrentProduct(with: photobook, assets: assets) else { return }
-        
+        changedPhotobook()
         setupTitleView()
         
         if emptyScreenViewController.parent != nil {
@@ -241,12 +243,13 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let alertController = UIAlertController(title: nil, message: NSLocalizedString("Photobook/ChangeSizeTitle", value: "Changing the size keeps your layout intact", comment: "Information when the user wants to change the photo book's size"), preferredStyle: .actionSheet)
         for photobook in photobooks {
             alertController.addAction(UIAlertAction(title: photobook.name, style: .default, handler: { [weak welf = self] (_) in
-                guard welf?.product.photobookTemplate.id != photobook.id else { return }
+                guard let stelf = welf, stelf.product.photobookTemplate.id != photobook.id else { return }
                 
                 _ = ProductManager.shared.setCurrentProduct(with: photobook)
+                stelf.changedPhotobook()
                 
-                welf?.setupTitleView()
-                welf?.collectionView.reloadData()
+                stelf.setupTitleView()
+                stelf.collectionView.reloadData()
             }))
         }
         
@@ -526,6 +529,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         // Insert new page above the tapped one
         product.addPages(at: index, pages: productLayouts)
+        changedPhotobook()
+        
         collectionView.performBatchUpdates({
             collectionView.insertItems(at: [indexPath])
         }, completion: { _ in
@@ -551,6 +556,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let productLayout = product.productLayouts[index]
         
         product.deletePages(for: productLayout)
+        changedPhotobook()
+        
         collectionView.performBatchUpdates({
             collectionView.deleteItems(at: [indexPath])
         }, completion: { _ in
@@ -658,6 +665,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             guard let destinationProductLayoutIndex = previousCell?.leftIndex ?? previousCell?.rightIndex else { return }
             
             product.moveLayout(from: sourceProductLayoutIndex, to: destinationProductLayoutIndex)
+            changedPhotobook()
             
             interactingItemIndexPath = nil
             
@@ -749,6 +757,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 self.navigationController!.navigationBar.alpha = 0.0
             }
         }
+    }
+    
+    private func changedPhotobook() {
+        ProductManager.shared.changedCurrentProduct(with: assets, album: album, albumManager: albumManager)
     }
 }
 
@@ -907,6 +919,7 @@ extension PhotobookViewController: PageSetupDelegate {
             }
             collectionView.reloadData()
         }
+        changedPhotobook()
         
         let barType = (navigationController?.navigationBar as? PhotobookNavigationBar)?.barType
 
@@ -1065,6 +1078,8 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
         
         // Insert new page above the tapped one
         product.addDoubleSpread(at: index)
+        changedPhotobook()
+        
         collectionView.performBatchUpdates({
             collectionView.insertItems(at: [indexPath])
         }, completion: { _ in
@@ -1098,6 +1113,7 @@ extension PhotobookViewController: SpineTextEditingDelegate {
     func didSaveSpineTextEditing(_ spineTextEditingViewController: SpineTextEditingViewController, spineText: String?, fontType: FontType) {
         product.spineText = spineText
         product.spineFontType = fontType
+        changedPhotobook()
         
         collectionView.reloadItems(at: [IndexPath(row: 0, section: 0)])
         

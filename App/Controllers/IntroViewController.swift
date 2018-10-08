@@ -94,7 +94,7 @@ class IntroViewController: UIViewController {
         guard segue.identifier == "IntroDismiss" else { return }
         
         if let tabBarController = segue.destination as? UITabBarController {
-            PhotobookManager.configureTabBarController(tabBarController)
+            PhotobookManager.shared.configureTabBarController(tabBarController)
         }
     }
 }
