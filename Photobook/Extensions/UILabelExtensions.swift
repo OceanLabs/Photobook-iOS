@@ -18,7 +18,7 @@ extension UILabel {
         paragraphStyle.lineBreakMode = .byTruncatingTail
         
         let attrString = NSMutableAttributedString(string: title)
-        attrString.addAttribute(NSAttributedStringKey.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attrString.length))
+        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attrString.length))
         self.attributedText = attrString
     }
     

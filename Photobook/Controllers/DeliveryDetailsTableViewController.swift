@@ -117,7 +117,7 @@ class DeliveryDetailsTableViewController: UITableViewController {
                 }
             }
             
-            UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, errorMessage)
+            UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: errorMessage)
         }
     }
     
@@ -341,7 +341,7 @@ extension DeliveryDetailsTableViewController {
         return true
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { return }
         
         let address = Address.savedAddresses[indexPath.item]

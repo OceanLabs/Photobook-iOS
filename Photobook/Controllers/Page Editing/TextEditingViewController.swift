@@ -62,7 +62,7 @@ class TextEditingViewController: UIViewController {
         textView.textContainer.lineFragmentPadding = 0.0
         textView.textContainerInset = .zero
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
     
     private var hasPlacedPageView = false
@@ -70,7 +70,7 @@ class TextEditingViewController: UIViewController {
         guard !hasPlacedPageView, delegate?.shouldReactToKeyboardAppearance() ?? false else { return }
         hasPlacedPageView = true
         
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             // Code placed here animate along with the keyboard, hence the closure
             UIView.performWithoutAnimation {
                 textViewBottomConstraint.constant = keyboardSize.height
@@ -296,7 +296,7 @@ class TextEditingViewController: UIViewController {
         let pageHeight = pageType == .cover ? product.photobookTemplate.coverSize.height : product.photobookTemplate.pageSize.height
         let fontSize = fontType.sizeForScreenToPageRatio(pageView.bounds.height / pageHeight)
         textView.attributedText = fontType.attributedText(with: textView.text, fontSize: fontSize, fontColor: fontColor)
-        textView.typingAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor)
+        textView.typingAttributes = convertToNSAttributedStringKeyDictionary(fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor))
     }
     
     private func textGoesOverBounds(for textView: UITextView, string: String, range: NSRange) -> Bool {
@@ -340,4 +340,9 @@ extension TextEditingViewController: TextToolBarViewDelegate {
         productLayout.fontType = fontType
         delegate?.didChangeFontType()
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToNSAttributedStringKeyDictionary(_ input: [String: Any]) -> [NSAttributedString.Key: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }

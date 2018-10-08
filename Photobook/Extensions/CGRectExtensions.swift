@@ -11,9 +11,9 @@ import UIKit
 extension CGRect {
     
     static func ==~(lhs: CGRect, rhs: CGRect) -> Bool {
-        return (fabs(lhs.minX - rhs.minX) <= CGFloat.minPrecision) &&
-            (fabs(lhs.minY - rhs.minY) <= CGFloat.minPrecision) &&
-            (fabs(lhs.width - rhs.width) <= CGFloat.minPrecision) &&
-            (fabs(lhs.height - rhs.height) <= CGFloat.minPrecision)
+        return (abs(lhs.minX - rhs.minX) <= CGFloat.minPrecision) &&
+            (abs(lhs.minY - rhs.minY) <= CGFloat.minPrecision) &&
+            (abs(lhs.width - rhs.width) <= CGFloat.minPrecision) &&
+            (abs(lhs.height - rhs.height) <= CGFloat.minPrecision)
     }
 }

@@ -139,7 +139,7 @@ extension PaymentMethodsViewController: UITableViewDelegate {
         return indexPath.row == cardIndex && Card.currentCard != nil
     }
 
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         Card.currentCard = nil
         if PaymentAuthorizationManager.isApplePayAvailable { selectedPaymentMethod = .applePay }
         tableView.reloadSections(IndexSet(integer: 0), with: .automatic)

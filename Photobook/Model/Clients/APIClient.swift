@@ -75,8 +75,8 @@ class APIClient: NSObject {
     /// Shared client
     static let shared: APIClient = {
         let apiClient = APIClient()
-        NotificationCenter.default.addObserver(apiClient, selector: #selector(savePendingTasks), name: .UIApplicationWillTerminate, object: nil)
-        NotificationCenter.default.addObserver(apiClient, selector: #selector(savePendingTasks), name: .UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.addObserver(apiClient, selector: #selector(savePendingTasks), name: UIApplication.willTerminateNotification, object: nil)
+        NotificationCenter.default.addObserver(apiClient, selector: #selector(savePendingTasks), name: UIApplication.didEnterBackgroundNotification, object: nil)
         
         return apiClient
     }()
@@ -145,12 +145,12 @@ class APIClient: NSObject {
         
         switch imageType {
         case .jpeg:
-            guard let data = UIImageJPEGRepresentation(image, 0.8) else {
+            guard let data = image.jpegData(compressionQuality: 0.8) else {
                 return nil
             }
             imageData = data
         case .png:
-            guard let data = UIImagePNGRepresentation(image) else {
+            guard let data = image.pngData() else {
                 return nil
             }
             imageData = data

@@ -112,7 +112,7 @@ extension InstagramLoginViewController: WKNavigationDelegate {
             let alertController = UIAlertController(title: NSLocalizedString("Social/Instagram/ResetPasswordTitle", value: "Reset Instagram Password?", comment: "Alert title asking to reset the user's Instagram password"), message: NSLocalizedString("Social/Instagram/ResetPasswordMessage", value: "This will open Safari so you can reset your password. Please return here when you are done.", comment: "Instructions for resetting the user's Instagram password"), preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: { _ in
                 if #available(iOS 10.0, *) {
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    UIApplication.shared.open(url, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
                 } else {
                     UIApplication.shared.openURL(url)
                 }
@@ -136,7 +136,7 @@ extension InstagramLoginViewController: WKNavigationDelegate {
             let alertController = UIAlertController(title: NSLocalizedString("Social/Instagram/OpenInSafariTitle", value: "This link will open in Safari", comment: "Alert title asking to the user to open the link in Safari"), message: NSLocalizedString("Social/Instagram/ProceedConfirmation", value: "Do you want to proceed?", comment: "Alert message asking the user if they want to proceed"), preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: { _ in
                 if #available(iOS 10.0, *) {
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    UIApplication.shared.open(url, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
                 } else {
                     UIApplication.shared.openURL(url)
                 }
@@ -213,4 +213,9 @@ extension InstagramLoginViewController: OAuthSwiftURLHandlerType {
     }
     
     
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
 }

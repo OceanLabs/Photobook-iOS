@@ -58,7 +58,7 @@ class SpineTextEditingViewController: UIViewController {
         
         Analytics.shared.trackScreenViewed(.spineTextEditing)
 
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         
         let navigationBar = navigationController?.navigationBar as? PhotobookNavigationBar
         navigationBar?.setBarType(.clear)
@@ -80,7 +80,7 @@ class SpineTextEditingViewController: UIViewController {
     }
 
     @objc private func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             // Code placed here animate along with the keyboard, hence the closure
             UIView.performWithoutAnimation {
                 spineFrameViewBottomConstraint.constant = keyboardSize.height // Give the cover some more room so it does not touch the keyboard top
@@ -195,7 +195,7 @@ class SpineTextEditingViewController: UIViewController {
     private func setTextFieldAttributes() {
         let fontSize = fontType.sizeForScreenToPageRatio(spineFrameViewHeightConstraint.constant / product.photobookTemplate.coverSize.height)
         let fontColor = product.coverColor.fontColor()
-        textField.defaultTextAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor, isSpineText: true)
+        textField.defaultTextAttributes = convertToNSAttributedStringKeyDictionary(fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor, isSpineText: true))
         textField.attributedText = fontType.attributedText(with: textField.text, fontSize: fontSize, fontColor: fontColor, isSpineText: true)
     }
     
@@ -254,4 +254,9 @@ extension SpineTextEditingViewController: TextToolBarViewDelegate {
         self.fontType = fontType
         setTextFieldAttributes()
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToNSAttributedStringKeyDictionary(_ input: [String: Any]) -> [NSAttributedString.Key: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }

@@ -140,7 +140,7 @@ class URLAsset: Asset {
             
             var imageData: Data?
             if let image = image {
-                imageData = UIImageJPEGRepresentation(image, 1)
+                imageData = image.jpegData(compressionQuality: 1)
             } else if let data = data, UIImage(data: data) != nil {
                 imageData = data
             } else {

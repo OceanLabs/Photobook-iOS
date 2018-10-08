@@ -21,12 +21,12 @@ extension CGAffineTransform {
     }
     
     static func ==~(lhs: CGAffineTransform, rhs: CGAffineTransform) -> Bool {
-        return (fabs(lhs.a - rhs.a) <= CGFloat.minPrecision) &&
-            (fabs(lhs.b - rhs.b) <= CGFloat.minPrecision) &&
-            (fabs(lhs.c - rhs.c) <= CGFloat.minPrecision) &&
-            (fabs(lhs.d - rhs.d) <= CGFloat.minPrecision) &&
-            (fabs(lhs.tx - rhs.tx) <= CGFloat.minPrecision) &&
-            (fabs(lhs.ty - rhs.ty) <= CGFloat.minPrecision)
+        return (abs(lhs.a - rhs.a) <= CGFloat.minPrecision) &&
+            (abs(lhs.b - rhs.b) <= CGFloat.minPrecision) &&
+            (abs(lhs.c - rhs.c) <= CGFloat.minPrecision) &&
+            (abs(lhs.d - rhs.d) <= CGFloat.minPrecision) &&
+            (abs(lhs.tx - rhs.tx) <= CGFloat.minPrecision) &&
+            (abs(lhs.ty - rhs.ty) <= CGFloat.minPrecision)
     }
 }
 

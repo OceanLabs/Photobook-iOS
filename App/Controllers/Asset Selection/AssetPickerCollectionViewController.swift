@@ -263,7 +263,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     }
     
     func coverImageLabelsContainerView() -> UIView? {
-        guard let cell = collectionView?.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? AssetPickerCoverCollectionViewCell else { return nil }
+        guard let cell = collectionView?.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: IndexPath(item: 0, section: 0)) as? AssetPickerCoverCollectionViewCell else { return nil }
         
         return cell.labelsContainerView
     }
@@ -482,7 +482,7 @@ extension AssetPickerCollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         switch kind {
-        case UICollectionElementKindSectionHeader:
+        case UICollectionView.elementKindSectionHeader:
             // We only show covers for Stories
             guard let story = album as? Story,
                 let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "coverCell", for: indexPath) as? AssetPickerCoverCollectionViewCell

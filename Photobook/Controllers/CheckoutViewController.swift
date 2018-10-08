@@ -195,8 +195,8 @@ class CheckoutViewController: UIViewController {
     }
     
     private func registerForKeyboardNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(notification:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     deinit {
@@ -362,7 +362,7 @@ class CheckoutViewController: UIViewController {
         paymentMethodView.accessibilityLabel = paymentMethodTitleLabel.text
         
         if promoCodeIsInvalid {
-            UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, promoCodeTextField)
+            UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: promoCodeTextField)
         }
     }
     
@@ -458,7 +458,7 @@ class CheckoutViewController: UIViewController {
     private func checkPromoCode() -> Bool {
         //promo code
         if let invalidReason = order.cost?.promoCodeInvalidReason {
-            promoCodeTextField.attributedPlaceholder = NSAttributedString(string: invalidReason, attributes: [NSAttributedStringKey.foregroundColor: Constants.detailsLabelColorRequired])
+            promoCodeTextField.attributedPlaceholder = NSAttributedString(string: invalidReason, attributes: [NSAttributedString.Key.foregroundColor: Constants.detailsLabelColorRequired])
             promoCodeTextField.text = nil
             promoCodeTextField.placeholder = invalidReason
             
@@ -611,8 +611,8 @@ class CheckoutViewController: UIViewController {
     
     @objc func keyboardWillChangeFrame(notification: Notification) {
         let userInfo = notification.userInfo
-        guard let size = (userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.size else { return }
-        let time = (userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0.5
+        guard let size = (userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.size else { return }
+        let time = (userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0.5
         
         guard promoCodeTextField.isFirstResponder else { return }
         
@@ -628,7 +628,7 @@ class CheckoutViewController: UIViewController {
     @objc func keyboardWillHide(notification: Notification){
         guard promoCodeTextField.isFirstResponder else { return }
         let userInfo = notification.userInfo
-        let time = (userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0.5
+        let time = (userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0.5
         
         self.optionsViewBottomContraint.priority = .defaultHigh
         self.optionsViewTopConstraint.priority = .defaultLow
@@ -738,7 +738,7 @@ extension CheckoutViewController: UITableViewDelegate {
         return true
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             order.products.remove(at: indexPath.row)
             OrderManager.shared.saveBasketOrder()

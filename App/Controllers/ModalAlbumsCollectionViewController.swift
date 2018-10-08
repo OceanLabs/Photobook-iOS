@@ -71,8 +71,8 @@ class ModalAlbumsCollectionViewController: UIViewController, PhotobookAssetPicke
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "EmbeddedNavigationController"{
-            rootNavigationController = segue.destination as! UINavigationController
+        if segue.identifier == "EmbeddedNavigationController" {
+            rootNavigationController = (segue.destination as! UINavigationController)
             rootNavigationController.delegate = self
             
             let navigationBar = rootNavigationController.navigationBar as! PhotobookNavigationBar

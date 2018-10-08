@@ -52,7 +52,7 @@ public class PhotobookNavigationBar: UINavigationBar {
             effectView.isUserInteractionEnabled = false
             insertSubview(effectView, at: 0)
         }
-        sendSubview(toBack: effectView)
+        sendSubviewToBack(effectView)
     }
     
     private func setup() {
