@@ -137,7 +137,7 @@ enum ProductColor: String, Codable {
         try container.encode(pigBaseUrl, forKey: .pigBaseUrl)
         try container.encode(pigCoverUrl, forKey: .pigCoverUrl)
         if let coverSnapshot = coverSnapshot {
-            try container.encode(UIImagePNGRepresentation(coverSnapshot), forKey: .coverSnapshot)
+            try container.encode(coverSnapshot.pngData(), forKey: .coverSnapshot)
         }
         if let upsoldOptions = upsoldOptions,
             let upsoldOptionData = try? JSONSerialization.data(withJSONObject: upsoldOptions, options: []) {
@@ -732,7 +732,7 @@ extension PhotobookProduct {
         return lhs.hashValue == rhs.hashValue
     }
 
-    override var hashValue: Int {
+    override var hash: Int {
         get {
             var stringHash = upsoldTemplate != nil ? "pt:\(upsoldTemplate!.templateId)," : "pt:\(photobookTemplate.templateId),"
             if let upsoldOptions = upsoldOptions {

@@ -38,7 +38,7 @@ class PhotosAlbumManager: NSObject, AlbumManager {
         
         guard PHPhotoLibrary.authorizationStatus() == .authorized else {
             let errorMessage = ActionableErrorMessage(title: Constants.permissionsTitle, message: Constants.permissionsMessage, buttonTitle: Constants.permissionsButtonTitle, buttonAction: {
-                if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
+                if let appSettings = URL(string: UIApplication.openSettingsURLString) {
                     if #available(iOS 10.0, *) {
                         UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
                     } else {

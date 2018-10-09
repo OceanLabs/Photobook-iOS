@@ -52,8 +52,8 @@ class StoriesManager: NSObject {
         super.init()
         PHPhotoLibrary.shared().register(self)
         NotificationCenter.default.addObserver(self, selector: #selector(resetStoriesSelections), name: ReceiptNotificationName.receiptWillDismiss, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(appRestoredFromBackground), name: .UIApplicationDidBecomeActive, object: nil)
-        NotificationCenter.default.addObserver(forName: .UIApplicationDidEnterBackground, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
+        NotificationCenter.default.addObserver(self, selector: #selector(appRestoredFromBackground), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
             welf?.fromBackground = true
         })
     }

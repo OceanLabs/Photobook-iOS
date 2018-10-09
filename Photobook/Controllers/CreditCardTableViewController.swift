@@ -172,7 +172,7 @@ class CreditCardTableViewController: UITableViewController {
                 var errorMessage = NSLocalizedString("Accessibility/CreditCardDetailsAreInvalid", value: "Card details are invalid.", comment: "Accessibility error message letting the user know that the credit card details they have entered are invalid/incomplete.")
                 errorMessage += (creditCardInvalidReason ?? "") + (expiryDateInvalidReason ?? "") + (cvvInvalidReason ?? "")
                 
-                UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, errorMessage)
+                UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: errorMessage)
                 return
         }
         

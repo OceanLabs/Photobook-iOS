@@ -136,16 +136,16 @@ protocol PickerAnalytics {
         
         // Track application state change
         // By tracking .didFinishLaunching and .willEnterForeground, instead of .didBecomeActive we avoid notifications when the user doesn't exit the app, for example when they invoke control center
-        NotificationCenter.default.addObserver(forName: .UIApplicationDidFinishLaunching, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
+        NotificationCenter.default.addObserver(forName: UIApplication.didFinishLaunchingNotification, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
             welf?.appLaunchDate = Date()
         })
         
-        NotificationCenter.default.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
+        NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
             guard let appBackgroundedDate = welf?.appBackgroundedDate else { return }
             welf?.secondsSpentInBackground += Date().timeIntervalSince(appBackgroundedDate)
         })
         
-        NotificationCenter.default.addObserver(forName: .UIApplicationDidEnterBackground, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
+        NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
             welf?.appBackgroundedDate = Date()
         })
     }

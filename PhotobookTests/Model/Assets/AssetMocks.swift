@@ -166,7 +166,7 @@ class PHImageManagerMock: PHImageManager {
         return 0
     }
     
-    override func requestImageData(for asset: PHAsset, options: PHImageRequestOptions?, resultHandler: @escaping (Data?, String?, UIImageOrientation, [AnyHashable : Any]?) -> Void) -> PHImageRequestID {
+    override func requestImageData(for asset: PHAsset, options: PHImageRequestOptions?, resultHandler: @escaping (Data?, String?, UIImage.Orientation, [AnyHashable : Any]?) -> Void) -> PHImageRequestID {
         
         resultHandler(imageData, dataUti, .up, nil)
         

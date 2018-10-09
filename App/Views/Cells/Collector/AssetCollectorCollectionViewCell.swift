@@ -45,7 +45,7 @@ class AssetCollectorCollectionViewCell: BorderedCollectionViewCell {
         animation.autoreverses = true
         animation.duration = 0.125
         animation.repeatCount = Float.infinity
-        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
         
         containerView.layer.removeAllAnimations()
         DispatchQueue.main.asyncAfter(deadline: .now() + Random.double(min: 0, max: 0.1)) {

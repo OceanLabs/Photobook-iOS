@@ -79,8 +79,8 @@ class EmptyScreenViewController: UIViewController {
         
         if parent == nil {
             parentController.view.addSubview(view)
-            parentController.addChildViewController(self)
-            self.didMove(toParentViewController: parentController)
+            parentController.addChild(self)
+            self.didMove(toParent: parentController)
         }
         
         imageView.image = image
@@ -98,7 +98,7 @@ class EmptyScreenViewController: UIViewController {
             
             // Don't show a loading view if the request takes less than 0.3 seconds
             timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(timerTriggered(_:)), userInfo: nil, repeats: false)
-            RunLoop.current.add(timer!, forMode: .defaultRunLoopMode)
+            RunLoop.current.add(timer!, forMode: RunLoop.Mode.default)
         }
         else {
             timer?.invalidate()
@@ -123,14 +123,14 @@ class EmptyScreenViewController: UIViewController {
             }, completion: { _ in
                 self.view.alpha = 1
                 self.view.removeFromSuperview()
-                self.removeFromParentViewController()
+                self.removeFromParent()
             })
             
             return
         }
         
         view.removeFromSuperview()
-        removeFromParentViewController()
+        removeFromParent()
     }
     
     private func showSubviews(_ show: Bool) {

@@ -177,9 +177,9 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
         
         // Remove pasteboard so that we avoid edge-cases with stale or inconsistent data
-        UIPasteboard.remove(withName: UIPasteboardName("ly.kite.photobook.rearrange"))
+        UIPasteboard.remove(withName: UIPasteboard.Name("ly.kite.photobook.rearrange"))
         
-        NotificationCenter.default.addObserver(self, selector: #selector(menuDidHide), name: NSNotification.Name.UIMenuControllerDidHideMenu, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(menuDidHide), name: UIMenuController.didHideMenuNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
         
         if let photobook = ProductManager.shared.products?.first {
@@ -877,7 +877,7 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         // Reduces the space between cover and first page to match the one between pages
         if section == 0 {
-            return UIEdgeInsetsMake(0.0, 0.0, -18.0, 0.0)
+            return UIEdgeInsets.init(top: 0.0, left: 0.0, bottom: -18.0, right: 0.0)
         }
         return .zero
     }
@@ -1052,7 +1052,7 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
         }
         
         if let timer = scrollingTimer {
-            RunLoop.current.add(timer, forMode: .defaultRunLoopMode)
+            RunLoop.current.add(timer, forMode: RunLoop.Mode.default)
         }
     }
     

@@ -72,7 +72,7 @@ class ImageAsset: Asset {
             completionHandler(nil, .jpg, nil)
             return
         }
-        let data = UIImageJPEGRepresentation(image, 0.8)
+        let data = image.jpegData(compressionQuality: 0.8)
         completionHandler(data, .jpg, nil)
     }
 }

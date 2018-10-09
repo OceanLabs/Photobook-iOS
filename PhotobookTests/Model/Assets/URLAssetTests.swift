@@ -105,7 +105,7 @@ class URLAssetTests: XCTestCase {
     
     func testImageData_shouldUseAConvertedImage() {
         let image = UIImage(color: .red)!
-        let expectedImageData = UIImageJPEGRepresentation(image, 1.0)
+        let expectedImageData = image.jpegData(compressionQuality: 1.0)
         
         let urlAsset = URLAsset(testUrl, size: testSize)
         let webImageManager = WebImageManagerMock()
@@ -127,7 +127,7 @@ class URLAssetTests: XCTestCase {
     
     func testImageData_shouldUseData() {
         let image = UIImage(color: .red)!
-        let expectedImageData = UIImageJPEGRepresentation(image, 1.0)
+        let expectedImageData = image.jpegData(compressionQuality: 1.0)
 
         let urlAsset = URLAsset(testUrl, size: testSize)
         let webImageManager = WebImageManagerMock()

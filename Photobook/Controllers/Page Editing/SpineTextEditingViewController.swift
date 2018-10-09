@@ -58,7 +58,7 @@ class SpineTextEditingViewController: UIViewController {
         
         Analytics.shared.trackScreenViewed(.spineTextEditing)
 
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         
         let navigationBar = navigationController?.navigationBar as? PhotobookNavigationBar
         navigationBar?.setBarType(.clear)
@@ -80,7 +80,7 @@ class SpineTextEditingViewController: UIViewController {
     }
 
     @objc private func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             // Code placed here animate along with the keyboard, hence the closure
             UIView.performWithoutAnimation {
                 spineFrameViewBottomConstraint.constant = keyboardSize.height // Give the cover some more room so it does not touch the keyboard top

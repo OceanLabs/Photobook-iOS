@@ -56,10 +56,10 @@ import UIKit
     ///   - fontColor: Font colour for the input text
     ///   - isSpineText: Whether the text will show on the spine of the book
     /// - Returns: Typing attributes using the provided parameters
-    func typingAttributes(fontSize: CGFloat, fontColor: UIColor, isSpineText: Bool = false) -> [String: Any] {
+    func typingAttributes(fontSize: CGFloat, fontColor: UIColor, isSpineText: Bool = false) -> [NSAttributedString.Key: Any] {
         let paragraphStyle = self.paragraphStyle(isSpineText: isSpineText)
         let font = fontWithSize(fontSize)
-        return [ NSAttributedStringKey.font.rawValue: font, NSAttributedStringKey.foregroundColor.rawValue: fontColor, NSAttributedStringKey.paragraphStyle.rawValue: paragraphStyle ]
+        return [ NSAttributedString.Key.font: font, NSAttributedString.Key.foregroundColor: fontColor, NSAttributedString.Key.paragraphStyle: paragraphStyle ]
     }
     
     /// Attributed text to show on a photobook page or spine
@@ -74,7 +74,7 @@ import UIKit
         let paragraphStyle = self.paragraphStyle(isSpineText: isSpineText)
         let font = fontWithSize(fontSize)
         
-        let attributes: [NSAttributedStringKey: Any] = [ NSAttributedStringKey.font: font, NSAttributedStringKey.foregroundColor: fontColor, NSAttributedStringKey.paragraphStyle: paragraphStyle]
+        let attributes: [NSAttributedString.Key: Any] = [ NSAttributedString.Key.font: font, NSAttributedString.Key.foregroundColor: fontColor, NSAttributedString.Key.paragraphStyle: paragraphStyle]
         return NSAttributedString(string: text, attributes: attributes)
     }
     

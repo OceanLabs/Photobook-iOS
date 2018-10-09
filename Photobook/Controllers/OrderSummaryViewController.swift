@@ -278,7 +278,7 @@ extension OrderSummaryViewController: OrderSummaryManagerDelegate {
         // Don't show a loading view if the request takes less than 0.3 seconds
         timer?.invalidate()
         timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(timerTriggered(_:)), userInfo: nil, repeats: false)
-        RunLoop.current.add(timer!, forMode: .defaultRunLoopMode)
+        RunLoop.current.add(timer!, forMode: RunLoop.Mode.default)
     }
     
     func orderSummaryManagerFailedToSetPreviewImageUrl() {

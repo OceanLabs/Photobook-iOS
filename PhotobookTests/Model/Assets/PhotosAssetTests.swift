@@ -108,7 +108,7 @@ class PhotosAssetTests: XCTestCase {
         
         // Doesn't matter what we define as long as it is non-nil
         
-        imageManager.imageData = UIImagePNGRepresentation(image)
+        imageManager.imageData = image.pngData()
         imageManager.dataUti = kUTTypePNG as String?
         
         let expectation = XCTestExpectation(description: "returns image data and extension")
@@ -176,7 +176,7 @@ class PhotosAssetTests: XCTestCase {
     }
     
     func testImageData_shouldWorkWithSomethingConversibleToImage() {
-        imageManager.imageData = UIImagePNGRepresentation(image)
+        imageManager.imageData = image.pngData()
         imageManager.dataUti = kUTTypeBMP as String?
         
         let expectation = XCTestExpectation(description: "returns image data and extension")

@@ -62,7 +62,7 @@ class TextEditingViewController: UIViewController {
         textView.textContainer.lineFragmentPadding = 0.0
         textView.textContainerInset = .zero
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
     
     private var hasPlacedPageView = false
@@ -70,7 +70,7 @@ class TextEditingViewController: UIViewController {
         guard !hasPlacedPageView, delegate?.shouldReactToKeyboardAppearance() ?? false else { return }
         hasPlacedPageView = true
         
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             // Code placed here animate along with the keyboard, hence the closure
             UIView.performWithoutAnimation {
                 textViewBottomConstraint.constant = keyboardSize.height

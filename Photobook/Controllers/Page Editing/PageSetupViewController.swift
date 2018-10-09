@@ -184,12 +184,12 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
         
-        NotificationCenter.default.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in            
+        NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in            
             guard let appBackgroundedDate = welf?.appBackgroundedDate else { return }
             welf?.secondsSpentInBackground += Date().timeIntervalSince(appBackgroundedDate)
         })
         
-        NotificationCenter.default.addObserver(forName: .UIApplicationDidEnterBackground, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
+        NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
             welf?.appBackgroundedDate = Date()
         })
     }
@@ -594,12 +594,12 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
                 assetPlacementViewController.animateBackToPhotobook { image in
                     self.assetImageView.image = image
                     self.assetImageView.transform = self.productLayout!.productLayoutAsset!.transform
-                    self.view.sendSubview(toBack: self.placementContainerView)
+                    self.view.sendSubviewToBack(self.placementContainerView)
                     self.isAnimatingTool = false
                 }
             } else if textEditingWasSelected {
                 textEditingViewController.animateOff {
-                    self.view.sendSubview(toBack: self.textEditingContainerView)
+                    self.view.sendSubviewToBack(self.textEditingContainerView)
                     self.isAnimatingTool = false
                 }
             } else {
@@ -629,18 +629,18 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
 
             if textEditingWasSelected {
                 textEditingViewController.animateOff {
-                    self.view.sendSubview(toBack: self.textEditingContainerView)
+                    self.view.sendSubviewToBack(self.textEditingContainerView)
                     self.isAnimatingTool = false
                 }
             } else {
-                view.bringSubview(toFront: placementContainerView)
+                view.bringSubviewToFront(placementContainerView)
                 assetPlacementViewController.animateFromPhotobook() {
                     self.isAnimatingTool = false
                 }
             }
             setCancelButton(hidden: true)
         case .editText:
-            view.bringSubview(toFront: textEditingContainerView)
+            view.bringSubviewToFront(textEditingContainerView)
             self.textEditingContainerView.alpha = 1.0
             
             textEditingViewController.accessibilityElementsHidden = false

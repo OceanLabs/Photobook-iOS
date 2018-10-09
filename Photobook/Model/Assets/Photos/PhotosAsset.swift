@@ -127,9 +127,9 @@ class PhotosAsset: Asset {
                 
                 var tmpJpegData: Data?
                 if #available(iOS 10.0, *) {
-                    tmpJpegData = CIContext().jpegRepresentation(of: ciImage, colorSpace: CGColorSpaceCreateDeviceRGB(), options: [kCGImageDestinationLossyCompressionQuality : 0.8])
+                    tmpJpegData = CIContext().jpegRepresentation(of: ciImage, colorSpace: CGColorSpaceCreateDeviceRGB(), options: [kCGImageDestinationLossyCompressionQuality as CIImageRepresentationOption : 0.8])
                 } else {
-                    tmpJpegData = UIImageJPEGRepresentation(UIImage(ciImage: ciImage), 0.8)
+                    tmpJpegData = UIImage(ciImage: ciImage).jpegData(compressionQuality: 0.8)
                 }
                 
                 if let jpegData = tmpJpegData {

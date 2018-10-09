@@ -90,7 +90,7 @@ class AssetCollectorViewController: UIViewController {
             if oldValue != isHidden {
                 viewHeight = isHidden ? 0 : viewHeightDefault
                 let duration: TimeInterval = isHideShowAnimated ? 0.2 : 0
-                let options = isHidden ? UIViewAnimationOptions.curveEaseIn : UIViewAnimationOptions.curveEaseOut
+                let options = isHidden ? UIView.AnimationOptions.curveEaseIn : UIView.AnimationOptions.curveEaseOut
                 UIView.animate(withDuration: duration, delay: 0, options: options, animations: {
                     self.topContainerView.alpha = self.isHidden ? 0 : 1
                     self.imageCollectionView.alpha = self.isHidden ? 0 : 1
@@ -222,8 +222,8 @@ class AssetCollectorViewController: UIViewController {
         
         if parent == nil {
             parentController.view.addSubview(view)
-            parentController.addChildViewController(self)
-            didMove(toParentViewController: parentController)
+            parentController.addChild(self)
+            didMove(toParent: parentController)
         }
         
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -323,7 +323,7 @@ class AssetCollectorViewController: UIViewController {
     private func moveToCollectionViewEnd(animated: Bool) {
         if !assets.isEmpty {
             let indexPath = IndexPath(item: assets.count-1, section: 0)
-            imageCollectionView.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.right, animated: animated)
+            imageCollectionView.scrollToItem(at: indexPath, at: UICollectionView.ScrollPosition.right, animated: animated)
         }
     }
     

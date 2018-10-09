@@ -59,7 +59,7 @@ class MessageBarViewController: UIViewController {
     private static var sharedController: MessageBarViewController!
     
     deinit {
-        NotificationCenter.default.removeObserver(self, name: .UIApplicationDidBecomeActive, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     override func viewDidLoad() {
@@ -69,7 +69,7 @@ class MessageBarViewController: UIViewController {
         label.textColor = UIColor.white
         
         // Subscribe to notifications
-        NotificationCenter.default.addObserver(self, selector: #selector(triggerActionIfNeeded), name: .UIApplicationDidBecomeActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(triggerActionIfNeeded), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     override func viewDidLayoutSubviews() {
@@ -117,7 +117,7 @@ class MessageBarViewController: UIViewController {
             self.containerView.alpha = 0.0
         }) { _ in
             self.view.removeFromSuperview()
-            self.removeFromParentViewController()
+            self.removeFromParent()
 
             // Run the action
             if let action = self.action {
@@ -147,10 +147,10 @@ class MessageBarViewController: UIViewController {
         // Check if a message is already present
         if sharedController != nil {
             sharedController.view.removeFromSuperview()
-            sharedController.removeFromParentViewController()
+            sharedController.removeFromParent()
         }
         
-        sharedController = photobookMainStoryboard.instantiateViewController(withIdentifier: MessageBarViewController.identifier) as! MessageBarViewController
+        sharedController = (photobookMainStoryboard.instantiateViewController(withIdentifier: MessageBarViewController.identifier) as! MessageBarViewController)
         sharedController.action = action
         sharedController.message = message
         sharedController.dismissAfter = dismissAfter
@@ -159,8 +159,8 @@ class MessageBarViewController: UIViewController {
         
         parentViewController.view.addSubview(sharedController.view)
         
-        parentViewController.addChildViewController(sharedController)
-        sharedController.didMove(toParentViewController: parentViewController)
+        parentViewController.addChild(sharedController)
+        sharedController.didMove(toParent: parentViewController)
     }
     
     /// Animates the currently presented message off screen

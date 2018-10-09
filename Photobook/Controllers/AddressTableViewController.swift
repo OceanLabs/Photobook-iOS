@@ -85,7 +85,7 @@ class AddressTableViewController: UITableViewController {
             if !stateOrCountyIsValid {
                 errorMessage += AddressFieldLabels.county + ", "
             }
-            UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, errorMessage.trimmingCharacters(in: CharacterSet(charactersIn: ", ")))
+            UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: errorMessage.trimmingCharacters(in: CharacterSet(charactersIn: ", ")))
         }
     }
     
@@ -190,7 +190,7 @@ class AddressTableViewController: UITableViewController {
             cell.textField.text = address.country.name
             cell.textField.accessibilityIdentifier = "countryTextField"
             cell.textField.accessibilityLabel = cell.label.text
-            cell.textField.accessibilityTraits = UIAccessibilityTraitStaticText
+            cell.textField.accessibilityTraits = UIAccessibilityTraits.staticText
             cell.textField.accessibilityHint = NSLocalizedString("Accessibility/DoubleTapToChangeHint", value: "Double tap to change", comment: "Accessibility hint letting the user know that they can double tap to change the selected value")
         }
     }

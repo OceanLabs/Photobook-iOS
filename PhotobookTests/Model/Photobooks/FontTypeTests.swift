@@ -16,8 +16,8 @@ class FontTypeTests: XCTestCase {
         let fontType: FontType = .plain
         let attributes = fontType.typingAttributes(fontSize: 9.0, fontColor: .red)
         
-        let font = attributes[NSAttributedStringKey.font.rawValue] as? UIFont
-        let color = attributes[NSAttributedStringKey.foregroundColor.rawValue] as? UIColor
+        let font = attributes[NSAttributedString.Key.font.rawValue] as? UIFont
+        let color = attributes[NSAttributedString.Key.foregroundColor.rawValue] as? UIColor
         XCTAssertTrue(font != nil && font!.pointSize == 9.0)
         XCTAssertTrue(color == UIColor.red)
     }
@@ -26,7 +26,7 @@ class FontTypeTests: XCTestCase {
         let fontType: FontType = .plain
         let attributes = fontType.typingAttributes(fontSize: 10.0, fontColor: .black, isSpineText: true)
         
-        let paragraphStyle = attributes[NSAttributedStringKey.paragraphStyle.rawValue] as? NSParagraphStyle
+        let paragraphStyle = attributes[NSAttributedString.Key.paragraphStyle.rawValue] as? NSParagraphStyle
         XCTAssertTrue(paragraphStyle != nil && paragraphStyle?.alignment == .center)
     }
     
@@ -37,8 +37,8 @@ class FontTypeTests: XCTestCase {
         let attributedText = fontType.attributedText(with: text, fontSize: fontSize, fontColor: .blue)
         
         var range = NSRange(location: 0, length: attributedText.length)
-        let font = attributedText.attribute(NSAttributedStringKey.font, at: 0, effectiveRange: &range) as? UIFont
-        let color = attributedText.attribute(NSAttributedStringKey.foregroundColor, at: 0, effectiveRange: &range) as? UIColor
+        let font = attributedText.attribute(NSAttributedString.Key.font, at: 0, effectiveRange: &range) as? UIFont
+        let color = attributedText.attribute(NSAttributedString.Key.foregroundColor, at: 0, effectiveRange: &range) as? UIColor
         XCTAssertEqual(attributedText.string, text)
         XCTAssertEqualOptional(font?.pointSize, 10.0)
         XCTAssertEqualOptional(color, .blue)
