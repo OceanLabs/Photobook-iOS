@@ -16,8 +16,8 @@ class FontTypeTests: XCTestCase {
         let fontType: FontType = .plain
         let attributes = fontType.typingAttributes(fontSize: 9.0, fontColor: .red)
         
-        let font = attributes[NSAttributedString.Key.font.rawValue] as? UIFont
-        let color = attributes[NSAttributedString.Key.foregroundColor.rawValue] as? UIColor
+        let font = attributes[NSAttributedString.Key.font] as? UIFont
+        let color = attributes[NSAttributedString.Key.foregroundColor] as? UIColor
         XCTAssertTrue(font != nil && font!.pointSize == 9.0)
         XCTAssertTrue(color == UIColor.red)
     }
@@ -26,7 +26,7 @@ class FontTypeTests: XCTestCase {
         let fontType: FontType = .plain
         let attributes = fontType.typingAttributes(fontSize: 10.0, fontColor: .black, isSpineText: true)
         
-        let paragraphStyle = attributes[NSAttributedString.Key.paragraphStyle.rawValue] as? NSParagraphStyle
+        let paragraphStyle = attributes[NSAttributedString.Key.paragraphStyle] as? NSParagraphStyle
         XCTAssertTrue(paragraphStyle != nil && paragraphStyle?.alignment == .center)
     }
     
