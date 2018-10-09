@@ -21,7 +21,7 @@ import UIKit
         }
     }
     
-    private func fontWithSize(_ size: CGFloat) -> UIFont {
+    func fontWithSize(_ size: CGFloat) -> UIFont {
         return UIFont(name: fontFamily, size: size)!
     }
     
@@ -56,10 +56,10 @@ import UIKit
     ///   - fontColor: Font colour for the input text
     ///   - isSpineText: Whether the text will show on the spine of the book
     /// - Returns: Typing attributes using the provided parameters
-    func typingAttributes(fontSize: CGFloat, fontColor: UIColor, isSpineText: Bool = false) -> [String: Any] {
+    func typingAttributes(fontSize: CGFloat, fontColor: UIColor, isSpineText: Bool = false) -> [NSAttributedString.Key: Any] {
         let paragraphStyle = self.paragraphStyle(isSpineText: isSpineText)
         let font = fontWithSize(fontSize)
-        return [ NSAttributedString.Key.font.rawValue: font, NSAttributedString.Key.foregroundColor.rawValue: fontColor, NSAttributedString.Key.paragraphStyle.rawValue: paragraphStyle ]
+        return [ NSAttributedString.Key.font: font, NSAttributedString.Key.foregroundColor: fontColor, NSAttributedString.Key.paragraphStyle: paragraphStyle ]
     }
     
     /// Attributed text to show on a photobook page or spine

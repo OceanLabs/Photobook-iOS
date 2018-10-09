@@ -296,7 +296,7 @@ class TextEditingViewController: UIViewController {
         let pageHeight = pageType == .cover ? product.photobookTemplate.coverSize.height : product.photobookTemplate.pageSize.height
         let fontSize = fontType.sizeForScreenToPageRatio(pageView.bounds.height / pageHeight)
         textView.attributedText = fontType.attributedText(with: textView.text, fontSize: fontSize, fontColor: fontColor)
-        textView.typingAttributes = convertToNSAttributedStringKeyDictionary(fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor))
+        textView.typingAttributes = fontType.typingAttributes(fontSize: fontSize, fontColor: fontColor)
     }
     
     private func textGoesOverBounds(for textView: UITextView, string: String, range: NSRange) -> Bool {
@@ -340,9 +340,4 @@ extension TextEditingViewController: TextToolBarViewDelegate {
         productLayout.fontType = fontType
         delegate?.didChangeFontType()
     }
-}
-
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertToNSAttributedStringKeyDictionary(_ input: [String: Any]) -> [NSAttributedString.Key: Any] {
-	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }

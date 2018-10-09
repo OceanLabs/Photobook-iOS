@@ -40,7 +40,7 @@ class PhotosAlbumManager: NSObject, AlbumManager {
             let errorMessage = ActionableErrorMessage(title: Constants.permissionsTitle, message: Constants.permissionsMessage, buttonTitle: Constants.permissionsButtonTitle, buttonAction: {
                 if let appSettings = URL(string: UIApplication.openSettingsURLString) {
                     if #available(iOS 10.0, *) {
-                        UIApplication.shared.open(appSettings, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
+                        UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
                     } else {
                         UIApplication.shared.openURL(appSettings)
                     }
@@ -201,9 +201,4 @@ extension PhotosAlbumManager: PHPhotoLibraryChangeObserver {
 extension PhotosAlbumManager: PickerAnalytics {
     var selectingPhotosScreenName: Analytics.ScreenName { return .albums }
     var addingMorePhotosScreenName: Analytics.ScreenName { return .albumsAddingMorePhotos }
-}
-
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
-	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
 }
