@@ -13,7 +13,7 @@ Description here
   s.homepage     = 'https://www.kite.ly'
   s.source       = { :git => "https://github.com/OceanLabs/Photobook-iOS.git", :tag => "v" + s.version.to_s }
   s.source_files  = ["Photobook/**/*.swift", "PhotobookSDK/**/*.swift"]
-  s.swift_version = "4.1"
+  s.swift_version = "4.2"
   s.resource_bundles  = { 'PhotobookResources' => ['Photobook/Base.lproj/Photobook.storyboard', 'Photobook/Resources/Assets.xcassets', 'Photobook/Resources/Lora-Regular.ttf', 'Photobook/Resources/Montserrat-Bold.ttf', 'Photobook/Resources/OpenSans-Regular.ttf'] }
   s.module_name         = 'Photobook'
   s.dependency "KeychainSwift", "~> 11.0.0"
