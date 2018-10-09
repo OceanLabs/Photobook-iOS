@@ -21,7 +21,7 @@ import UIKit
         }
     }
     
-    func fontWithSize(_ size: CGFloat) -> UIFont {
+    private func fontWithSize(_ size: CGFloat) -> UIFont {
         return UIFont(name: fontFamily, size: size)!
     }
     
