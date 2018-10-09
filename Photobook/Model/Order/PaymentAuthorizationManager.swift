@@ -1,0 +1,304 @@
+//
+//  PaymentAuthorizationManager.swift
+//  Shopify
+//
+//  Created by Konstadinos Karayannis on 25/07/2017.
+//  Copyright © 2017 Kite.ly. All rights reserved.
+//
+
+import UIKit
+import Stripe
+import PassKit
+import PayPalDynamicLoader
+
+enum PaymentMethod: Int, Codable {
+    case creditCard, applePay, payPal
+    
+    var description: String {
+        switch self {
+        case .creditCard: return "Credit Card"
+        case .applePay: return "ApplePay"
+        case .payPal: return "PayPal"
+        }
+    }
+}
+
+protocol PaymentAuthorizationManagerDelegate: class {
+    func costUpdated()
+    func paymentAuthorizationDidFinish(token: String?, error: Error?, completionHandler: ((PKPaymentAuthorizationStatus) -> Void)?)
+    func modalPresentationDidFinish()
+    func modalPresentationWillBegin()
+}
+
+protocol PaymentAPI {
+    var supportsApplePay: Bool { get }
+    func createToken(withCard card: Card, completion: @escaping (String?, Error?) -> ())
+    func createToken(withPayment payment: PKPayment, completion: @escaping (String?, Error?) -> ())
+    func applePayPaymentRequest(withMerchantId merchantId: String, country: String, currency: String) -> PKPaymentRequest
+}
+
+class PhotobookStripeAPI: PaymentAPI {
+    
+    var supportsApplePay: Bool {
+        return Stripe.deviceSupportsApplePay()
+    }
+    
+    func createToken(withCard card: Card, completion: @escaping (String?, Error?) -> ()) {
+        
+        let cardParams = STPCardParams()
+        cardParams.number = card.number
+        cardParams.expMonth = UInt(card.expireMonth)
+        cardParams.expYear = UInt(card.expireYear)
+        cardParams.cvc = card.cvv2
+
+        STPAPIClient.shared().createToken(withCard: cardParams) { (token, error) in
+            completion(token?.tokenId, error)
+        }
+    }
+    
+    func createToken(withPayment payment: PKPayment, completion: @escaping (String?, Error?) -> ()) {
+        STPAPIClient.shared().createToken(with: payment) { (token, error) in
+            completion(token?.tokenId, error)
+        }
+    }
+    
+    func applePayPaymentRequest(withMerchantId merchantId: String, country: String, currency: String) -> PKPaymentRequest {
+        return Stripe.paymentRequest(withMerchantIdentifier: merchantId, country: country, currency: currency)
+    }
+}
+
+
+class PaymentAuthorizationManager: NSObject {
+    
+    static var applePayPayTo: String = {
+        if let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ??
+            Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String {
+            return "Kite.ly (via \(appName))"
+        }
+        return "Kite.ly"
+    }()
+    static var applePayMerchantId: String!
+    
+    lazy var paymentApi: PaymentAPI = PhotobookStripeAPI()
+    lazy var basketOrder: Order = OrderManager.shared.basketOrder
+    
+    weak var delegate: (PaymentAuthorizationManagerDelegate & UIViewController)?
+    
+    static var availablePaymentMethods: [PaymentMethod] {
+        var methods = [PaymentMethod]()
+        
+        // Apple Pay
+        if isApplePayAvailable {
+            methods.append(.applePay)
+        }
+        
+        // PayPal
+        if isPayPalAvailable {
+            methods.append(.payPal)
+        }
+        
+        // Existing card
+        if Card.currentCard != nil {
+            methods.append(.creditCard)
+        }
+        
+        methods.append(.creditCard) // Adding a new card is always available
+        
+        return methods
+    }
+    
+    static var isApplePayAvailable: Bool {
+        return Stripe.deviceSupportsApplePay() && applePayMerchantId != nil
+    }
+    
+    static var isPayPalAvailable: Bool {
+        return NSClassFromString("PayPalMobile") != nil
+    }
+    
+    func authorizePayment(cost: Cost, method: PaymentMethod) {
+        switch method {
+        case .applePay:
+            authorizeApplePay(cost: cost)
+        case .payPal:
+            authorizePayPal(cost: cost)
+        case .creditCard:
+            authorizeCreditCard(cost: cost)
+        }
+    }
+    
+    /// Ask Stripe for a charge authorization token
+    ///
+    /// - Parameter cost: The total cost of the order
+    private func authorizeCreditCard(cost: Cost) {
+        guard let currentCard = Card.currentCard else { return }
+        
+        paymentApi.createToken(withCard: currentCard) { [weak welf = self] (tokenId, error) in
+            welf?.delegate?.paymentAuthorizationDidFinish(token: tokenId, error: error, completionHandler: nil)
+        }
+    }
+    
+    /// Present the Apple Pay authorization sheet
+    ///
+    /// - Parameter cost: The total cost of the order
+    private func authorizeApplePay(cost: Cost) {
+        guard let applePayMerchantId = PaymentAuthorizationManager.applePayMerchantId else {
+            fatalError("Missing merchant ID for ApplePay: PhotobookSDK.shared.applePayMerchantID")
+        }
+
+        let paymentRequest = paymentApi.applePayPaymentRequest(withMerchantId: applePayMerchantId, country: "US", currency: cost.total.currencyCode)
+        
+        paymentRequest.paymentSummaryItems = summaryItemsForApplePay(cost: cost)
+        paymentRequest.requiredShippingAddressFields = [.postalAddress, .name, .email, .phone]
+        
+        guard let paymentController = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) else { return }
+        paymentController.delegate = self
+        
+        delegate?.modalPresentationWillBegin()
+        delegate?.present(paymentController, animated: true, completion: nil)
+    }
+    
+    
+    /// Present the PayPal login view controller
+    ///
+    /// - Parameter cost: The total cost of the order
+    private func authorizePayPal(cost: Cost) {
+        let totalCost = cost.total.value
+        guard let details = basketOrder.deliveryDetails, details.isValid,
+            let orderDescription = basketOrder.orderDescription
+            else {
+                return
+        }
+        
+        let address = details.address!
+
+        let paypalAddress = OLPayPalWrapper.payPalShippingAddress(withRecipientName: details.fullName, withLine1: address.line1, withLine2: address.line2, withCity: address.city, withState: address.stateOrCounty, withPostalCode: address.zipOrPostcode, withCountryCode: address.country.codeAlpha2)
+
+        let payment = OLPayPalWrapper.payPalPayment(withAmount: totalCost as NSDecimalNumber, currencyCode: cost.total.currencyCode, shortDescription: orderDescription, intent: 1/*PayPalPaymentIntentAuthorize*/, shippingAddress: paypalAddress)
+
+        let config = OLPayPalWrapper.payPalConfiguration(withShippingAddressOption: 1/*PayPalShippingAddressOptionProvided*/, acceptCreditCards: false)
+
+        guard let paymentController = OLPayPalWrapper.payPalPaymentViewController(withPayment: payment, configuration: config, delegate: self) as? UIViewController else { return }
+        delegate?.modalPresentationWillBegin()
+        delegate?.present(paymentController, animated: true, completion: nil)
+    }
+}
+
+// MARK: - PayPalPaymentDelegate
+
+extension PaymentAuthorizationManager {
+
+    @objc func payPalPaymentDidCancel(_ paymentViewController: UIViewController) {
+        paymentViewController.dismiss(animated: true, completion: nil)
+    }
+
+    @objc func payPalPaymentViewController(_ paymentViewController: UIViewController, didCompletePayment completedPayment: Any) {
+        paymentViewController.dismiss(animated: true, completion: {
+            guard let confirmation = OLPayPalWrapper.confirmation(withPayment: completedPayment) as? [String: Any] else { return }
+            guard let response = confirmation["response"] as? [String: Any] else { return }
+            guard let token = response["id"] as? String else { return }
+
+            let index = token.index(token.startIndex, offsetBy: 3)
+            self.delegate?.paymentAuthorizationDidFinish(token: "PAUTH\(token[index...])", error: nil, completionHandler: nil)
+        })
+    }
+}
+
+extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDelegate {
+    
+    func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: @escaping (PKPaymentAuthorizationStatus) -> Void) {
+        let shippingAddress = Address()
+        shippingAddress.line1 = payment.shippingContact?.postalAddress?.street
+        shippingAddress.city = payment.shippingContact?.postalAddress?.city
+        shippingAddress.stateOrCounty = payment.shippingContact?.postalAddress?.state
+        shippingAddress.zipOrPostcode = payment.shippingContact?.postalAddress?.postalCode
+
+        let deliveryDetails = DeliveryDetails()
+        deliveryDetails.address = shippingAddress
+        deliveryDetails.firstName = payment.shippingContact?.name?.givenName
+        deliveryDetails.lastName = payment.shippingContact?.name?.familyName
+        deliveryDetails.email = payment.shippingContact?.emailAddress
+        deliveryDetails.phone = payment.shippingContact?.phoneNumber?.stringValue
+
+        if let code = payment.shippingContact?.postalAddress?.isoCountryCode, let country = Country.countryFor(code: code) {
+            shippingAddress.country = country
+        } else if let name = payment.shippingContact?.postalAddress?.country, let country = Country.countryFor(name: name) {
+            shippingAddress.country = country
+        }
+        
+        guard shippingAddress.isValid else {
+            completion(.invalidShippingPostalAddress)
+            return
+        }
+        
+        guard let emailAddress = payment.shippingContact?.emailAddress, emailAddress.isValidEmailAddress() else {
+            completion(.invalidShippingContact)
+            return
+        }
+        
+        basketOrder.deliveryDetails = deliveryDetails
+        
+        paymentApi.createToken(withPayment: payment) { [weak welf = self] (tokenId, error) in
+            guard error == nil else {
+                completion(.failure)
+                return
+            }
+            
+            welf?.delegate?.paymentAuthorizationDidFinish(token: tokenId, error: nil, completionHandler: completion)
+            completion(.success)
+        }
+    }
+    
+    func paymentAuthorizationViewControllerDidFinish(_ controller: PKPaymentAuthorizationViewController) {
+        controller.dismiss(animated: true, completion: {
+            self.delegate?.modalPresentationDidFinish()
+        })
+    }
+    
+    func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didSelectShippingContact contact: PKContact, completion: @escaping (PKPaymentAuthorizationStatus, [PKShippingMethod], [PKPaymentSummaryItem]) -> Void) {
+        
+        let shippingAddress = Address()
+        
+        if let code = contact.postalAddress?.isoCountryCode, let country = Country.countryFor(code: code){
+            shippingAddress.country = country
+        }
+        
+        let deliveryDetails = DeliveryDetails()
+        deliveryDetails.address = shippingAddress
+        basketOrder.deliveryDetails = deliveryDetails
+        
+        basketOrder.updateCost { [weak welf = self] (error: Error?) in
+            
+            guard let stelf = welf, let cost = stelf.basketOrder.cost else {
+                completion(.failure, [PKShippingMethod](), [PKPaymentSummaryItem]())
+                return
+            }
+
+            guard error == nil, let applePaySummary = welf?.summaryItemsForApplePay(cost: cost) else {
+                completion(.failure, [PKShippingMethod](), [PKPaymentSummaryItem]())
+                return
+            }
+
+            //Cost is expected to change here so update views
+            stelf.delegate?.costUpdated()
+            
+            completion(.success, [PKShippingMethod](), applePaySummary)
+        }
+    }
+    
+    private func summaryItemsForApplePay(cost: Cost?) -> [PKPaymentSummaryItem] {
+        guard
+            let lineItems = cost?.lineItems, lineItems.count > 0,
+            let shippingCost = cost?.totalShippingPrice,
+            let totalCost = cost?.total.value as NSDecimalNumber?
+        else {
+            return [PKPaymentSummaryItem]()
+        }
+        
+        var summaryItems = lineItems.map { return PKPaymentSummaryItem(label: $0.name, amount: $0.price.value as NSDecimalNumber) }
+        summaryItems.append(PKPaymentSummaryItem(label: CommonLocalizedStrings.shipping, amount: shippingCost.value as NSDecimalNumber))
+        summaryItems.append(PKPaymentSummaryItem(label: PaymentAuthorizationManager.applePayPayTo, amount: totalCost))
+        
+        return summaryItems
+    }
+
+}
