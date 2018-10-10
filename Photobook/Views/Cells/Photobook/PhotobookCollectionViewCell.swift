@@ -26,7 +26,7 @@ extension InteractivePagesCell {
     @objc func didPan(_ sender: UIPanGestureRecognizer)
 }
 
-class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
+class PhotobookCollectionViewCell: ActionsCollectionViewCell, InteractivePagesCell {
     
     @IBOutlet private weak var photobookFrameView: PhotobookFrameView! {
         didSet {
@@ -34,7 +34,7 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
             photobookFrameView.pageColor = product.pageColor
         }
     }
-    @IBOutlet private weak var plusButton: UIButton!
+    var plusButton = UIButton() // TEMP
 
     static let reuseIdentifier = NSStringFromClass(PhotobookCollectionViewCell.self).components(separatedBy: ".").last!
     
@@ -189,10 +189,10 @@ class PhotobookCollectionViewCell: UICollectionViewCell, InteractivePagesCell {
         longPressGesture.delegate = delegate
         photobookFrameView.addGestureRecognizer(longPressGesture)
 
-        let panGesture = UIPanGestureRecognizer(target: delegate, action: #selector(PhotobookCollectionViewCellDelegate.didPan(_:)))
-        panGesture.delegate = delegate
-        panGesture.maximumNumberOfTouches = 1
-        photobookFrameView.addGestureRecognizer(panGesture)
+//        let panGesture = UIPanGestureRecognizer(target: delegate, action: #selector(PhotobookCollectionViewCellDelegate.didPan(_:)))
+//        panGesture.delegate = delegate
+//        panGesture.maximumNumberOfTouches = 1
+//        photobookFrameView.addGestureRecognizer(panGesture)
     }
 }
 

@@ -598,7 +598,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         proposedDropIndexPath = nil
         collectionView.deleteItems(at: [indexPath])
         
-        if enableFeedback, #available(iOS 10.0, *) {
+        if enableFeedback {
             let generator = UIImpactFeedbackGenerator(style: .medium)
             generator.impactOccurred()
         }
@@ -803,6 +803,8 @@ extension PhotobookViewController: UICollectionViewDataSource {
             cell.isVisible = indexPath != interactingItemIndexPath && indexPath != insertingIndexPath
             cell.width = view.bounds.size.width - Constants.cellSideMargin * 2.0
             cell.clipsToBounds = false
+            cell.indexPath = indexPath
+            cell.actionsDelegate = self
             cell.delegate = self
             
             // First and last pages of the book are courtesy pages, no photos on them
@@ -1123,3 +1125,33 @@ extension PhotobookViewController: SpineTextEditingDelegate {
     }
 }
 
+extension PhotobookViewController: ActionsCollectionViewCellDelegate {
+    
+    func actionButtonConfigurationForButton(at index: Int, indexPath: IndexPath) -> ActionsCollectionViewCellButtonConfiguration? {
+        switch index {
+        case 0 where indexPath.section == 1:
+            let title = NSLocalizedString("Photobook/Cell/DeleteButton", value: "Delete", comment: "Text for the delete button in a spread")
+            return ActionsCollectionViewCellButtonConfiguration(title: title, image: nil, color: .red)
+        case 0 where indexPath.section == 0, 1 where indexPath.section == 1:
+            let title = NSLocalizedString("Photobook/Cell/AddButton", value: "Add", comment: "Text for the add button in a spread")
+            return ActionsCollectionViewCellButtonConfiguration(title: title, image: nil, color: .blue)
+        case 2 where indexPath.section == 1:
+            let title = NSLocalizedString("Photobook/Cell/DuplicateButton", value: "Duplicate", comment: "Text for the duplicate button in a spread")
+            return ActionsCollectionViewCellButtonConfiguration(title: title, image: nil, color: .orange)
+        default:
+            return nil
+        }
+    }
+    
+    func didCloseCell(at indexPath: IndexPath) {
+        print("Did close cell")
+    }
+    
+    func didOpenCell(at indexPath: IndexPath) {
+        print("Did open cell")
+    }
+    
+    func didTapActionButton(at index: Int, for indexPath: IndexPath) {
+        print("Did tap action button \(index)")
+    }
+}
