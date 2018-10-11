@@ -1131,13 +1131,13 @@ extension PhotobookViewController: ActionsCollectionViewCellDelegate {
         switch index {
         case 0 where indexPath.section == 1:
             let title = NSLocalizedString("Photobook/Cell/DeleteButton", value: "Delete", comment: "Text for the delete button in a spread")
-            return ActionButtonViewConfiguration(title: title, image: nil)
+            return ActionButtonViewConfiguration(title: title, image: UIImage(namedInPhotobookBundle: "delete"))
         case 0 where indexPath.section == 0, 1 where indexPath.section == 1:
             let title = NSLocalizedString("Photobook/Cell/AddButton", value: "Add", comment: "Text for the add button in a spread")
-            return ActionButtonViewConfiguration(title: title, image: nil)
+            return ActionButtonViewConfiguration(title: title, image: UIImage(namedInPhotobookBundle: "add"))
         case 2 where indexPath.section == 1:
             let title = NSLocalizedString("Photobook/Cell/DuplicateButton", value: "Duplicate", comment: "Text for the duplicate button in a spread")
-            return ActionButtonViewConfiguration(title: title, image: nil)
+            return ActionButtonViewConfiguration(title: title, image: UIImage(namedInPhotobookBundle: "duplicate"))
         default:
             return nil
         }
