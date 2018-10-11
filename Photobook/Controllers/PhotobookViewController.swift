@@ -1127,17 +1127,17 @@ extension PhotobookViewController: SpineTextEditingDelegate {
 
 extension PhotobookViewController: ActionsCollectionViewCellDelegate {
     
-    func actionButtonConfigurationForButton(at index: Int, indexPath: IndexPath) -> ActionsCollectionViewCellButtonConfiguration? {
+    func actionButtonConfigurationForButton(at index: Int, indexPath: IndexPath) -> ActionButtonViewConfiguration? {
         switch index {
         case 0 where indexPath.section == 1:
             let title = NSLocalizedString("Photobook/Cell/DeleteButton", value: "Delete", comment: "Text for the delete button in a spread")
-            return ActionsCollectionViewCellButtonConfiguration(title: title, image: nil, color: .red)
+            return ActionButtonViewConfiguration(title: title, image: nil)
         case 0 where indexPath.section == 0, 1 where indexPath.section == 1:
             let title = NSLocalizedString("Photobook/Cell/AddButton", value: "Add", comment: "Text for the add button in a spread")
-            return ActionsCollectionViewCellButtonConfiguration(title: title, image: nil, color: .blue)
+            return ActionButtonViewConfiguration(title: title, image: nil)
         case 2 where indexPath.section == 1:
             let title = NSLocalizedString("Photobook/Cell/DuplicateButton", value: "Duplicate", comment: "Text for the duplicate button in a spread")
-            return ActionsCollectionViewCellButtonConfiguration(title: title, image: nil, color: .orange)
+            return ActionButtonViewConfiguration(title: title, image: nil)
         default:
             return nil
         }

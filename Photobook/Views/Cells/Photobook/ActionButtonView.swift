@@ -14,9 +14,7 @@ class ActionButtonView: UIView {
     @IBOutlet private var label: UILabel!
     
     var title: String? { didSet { label.text = title } }
-    var image: UIImage? { didSet { imageView.image = image } }
-    var titleColor: UIColor? { didSet { label.textColor = titleColor } }
-    
+    var image: UIImage? { didSet { imageView.image = image } }    
     var action: ((ActionButtonView) -> ())!
     
     @IBAction func tappedOnActionButton(_ sender: UIButton) {

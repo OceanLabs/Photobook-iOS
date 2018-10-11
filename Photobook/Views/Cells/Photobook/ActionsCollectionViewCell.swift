@@ -8,14 +8,13 @@
 
 import UIKit
 
-struct ActionsCollectionViewCellButtonConfiguration {
+struct ActionButtonViewConfiguration {
     var title: String?
     var image: UIImage?
-    var color: UIColor
 }
 
 protocol ActionsCollectionViewCellDelegate: class {
-    func actionButtonConfigurationForButton(at index: Int, indexPath: IndexPath) -> ActionsCollectionViewCellButtonConfiguration?
+    func actionButtonConfigurationForButton(at index: Int, indexPath: IndexPath) -> ActionButtonViewConfiguration?
     func didCloseCell(at indexPath: IndexPath)
     func didOpenCell(at indexPath: IndexPath)
     func didTapActionButton(at index: Int, for indexPath: IndexPath)
@@ -26,7 +25,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
     private struct Constants {
         static let actionButtonsLeftMargin: CGFloat = 20.0
         static let preferredActionTriggerOffset: CGFloat = 20.0
-        static let actionsViewBackgroundColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0) // TBC
+        static let actionsViewBackgroundColor = UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0)
     }
     
     // Superview for the cell content. Different from UICollectionViewCell's contentView.
@@ -113,7 +112,6 @@ class ActionsCollectionViewCell: UICollectionViewCell {
             
             actionButton.title = buttonConfiguration.title
             actionButton.image = buttonConfiguration.image
-            actionButton.titleColor = buttonConfiguration.color
             actionButton.action = action
         }
         removableTrailingConstraints = trailingConstraints
@@ -326,7 +324,9 @@ class ActionsCollectionViewCell: UICollectionViewCell {
         }
         
         UIView.animate(withDuration: duration) {
-            self.actionButtons.forEach { actionButton in actionButton.alpha = alpha }
+            for index in 1 ..< self.actionButtons.count {
+                self.actionButtons[index].alpha = alpha
+            }
             self.layoutIfNeeded()
         }
     }
