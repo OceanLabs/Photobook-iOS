@@ -25,7 +25,8 @@ class ActionsCollectionViewCell: UICollectionViewCell {
     private struct Constants {
         static let actionButtonsLeftMargin: CGFloat = 20.0
         static let preferredActionTriggerOffset: CGFloat = 20.0
-        static let actionsViewBackgroundColor = UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0)
+        static let swipeDetectionVelocity: CGFloat = 20.0
+        static let actionsViewBackgroundColor = UIColor(red: 0.86, green: 0.86, blue: 0.86, alpha: 1.0)
     }
     
     // Superview for the cell content. Different from UICollectionViewCell's contentView.
@@ -71,13 +72,6 @@ class ActionsCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
-        contentView.backgroundColor = Constants.actionsViewBackgroundColor
-        actionsView.alpha = 0.0
-    }
- 
     private func setup() {
         setupActionButtons()
         setupGestures()
@@ -148,8 +142,6 @@ class ActionsCollectionViewCell: UICollectionViewCell {
     @IBAction private func panActionsCollectionViewCell(_ gestureRecognizer: UIPanGestureRecognizer) {
         switch gestureRecognizer.state {
         case .began:
-            actionsView.alpha = 1.0
-            
             panStartPoint = gestureRecognizer.translation(in: cellContentView)
             previousPoint = panStartPoint
             
@@ -158,7 +150,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
             currentPoint = gestureRecognizer.translation(in: cellContentView)
             
             velocity = previousPoint.x - currentPoint.x
-            didSwipe = !didSwipe && abs(velocity) > 20.0 // TODO: move to constants
+            didSwipe = !didSwipe && abs(velocity) > Constants.swipeDetectionVelocity
             
             isPanning =  abs(previousPoint.x - currentPoint.x) >= abs(previousPoint.y - currentPoint.y)
             guard isPanning else {
@@ -204,6 +196,8 @@ class ActionsCollectionViewCell: UICollectionViewCell {
             cellContentViewTrailingConstraint.constant = constant
             previousPoint = currentPoint
             
+            updateActionViewBackgroundColor(to: constant / actionsViewWidth)
+            
             if shouldShowPreferredAction {
                 let generator = UISelectionFeedbackGenerator()
                 generator.selectionChanged()
@@ -212,8 +206,6 @@ class ActionsCollectionViewCell: UICollectionViewCell {
             } else if shouldHidePreferredAction {
                 animatePreferredAction(duration: 0.2)
             } else {
-                updateActionViewBackgroundColor(to: constant / actionsViewWidth)
-                
                 if showingPreferredAction {
                     actionButtonTrailingConstraints.first!.constant = constant - actionButtons.first!.bounds.width - Constants.actionButtonsLeftMargin
                 } else {
@@ -269,7 +261,6 @@ class ActionsCollectionViewCell: UICollectionViewCell {
             self.layoutIfNeeded()
         }) { _ in
             if !open {
-                self.actionsView.alpha = 0.0
                 self.actionsDelegate?.didCloseCell(at: self.indexPath)
             } else {
                 self.actionsDelegate?.didOpenCell(at: self.indexPath)
@@ -299,9 +290,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
         UIView.animate(withDuration: duration, delay: duration > 0.0 ? 0.0 : 0.3, options: [.curveEaseOut, .beginFromCurrentState], animations: {
             self.updateActionViewBackgroundColor(to: 0.0)
             self.layoutIfNeeded()
-        }) { _ in
-            self.actionsView.alpha = 0.0
-        }
+        }, completion: nil)
     }
     
     private func allButtonsAreInPlace() -> Bool {
