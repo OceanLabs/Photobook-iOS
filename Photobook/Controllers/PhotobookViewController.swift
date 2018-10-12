@@ -772,7 +772,6 @@ extension PhotobookViewController: UICollectionViewDataSource {
                 }
                 cell.setupGestures()
                 cell.isPageInteractionEnabled = !isRearranging
-                cell.shouldRevealActions = !isDragging
                 cell.isFaded = false
             }
             

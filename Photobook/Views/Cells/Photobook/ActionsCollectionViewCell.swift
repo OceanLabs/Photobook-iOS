@@ -160,7 +160,6 @@ class ActionsCollectionViewCell: UICollectionViewCell {
             currentPoint = gestureRecognizer.translation(in: cellContentView)
             
             velocity = previousPoint.x - currentPoint.x
-            didSwipe = !didSwipe && abs(velocity) > Constants.swipeDetectionVelocity
             
             isPanning =  abs(previousPoint.x - currentPoint.x) >= abs(previousPoint.y - currentPoint.y)
             guard isPanning else {
@@ -172,6 +171,8 @@ class ActionsCollectionViewCell: UICollectionViewCell {
             let delta = currentPoint.x - panStartPoint.x
             let isPanningLeft = currentPoint.x < previousPoint.x
             
+            didSwipe = !didSwipe && isPanningLeft && abs(velocity) > Constants.swipeDetectionVelocity
+
             var constant: CGFloat!
             var shouldShowPreferredAction = false
             var shouldHidePreferredAction = false

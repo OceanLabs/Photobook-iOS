@@ -53,6 +53,7 @@ class PhotobookCollectionViewCell: ActionsCollectionViewCell, InteractivePagesCe
         didSet {
             leftPageView.isUserInteractionEnabled = isPageInteractionEnabled
             rightPageView.isUserInteractionEnabled = isPageInteractionEnabled
+            shouldRevealActions = isPageInteractionEnabled
         }
     }
     
@@ -129,7 +130,7 @@ class PhotobookCollectionViewCell: ActionsCollectionViewCell, InteractivePagesCe
             photobookFrameView.coverColor = product.coverColor
             photobookFrameView.pageColor = product.pageColor
             photobookFrameView.resetPageColor()
-        }        
+        }
     }
     
     func updateVoiceOver(isRearranging: Bool) {
