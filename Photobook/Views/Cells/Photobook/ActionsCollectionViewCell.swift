@@ -52,8 +52,8 @@ class ActionsCollectionViewCell: UICollectionViewCell {
     
     private lazy var actionsViewWidth: CGFloat = {
         var width = actionButtonsStartingTrailingConstraintsConstants.first! * 2.0 // left and right paddings
-        for actionButton in actionButtons {
-            width += actionButton.bounds.width
+        for i in 0 ..< activeButtons {
+            width += actionButtons[i].bounds.width
         }
         return width
     }()
@@ -68,7 +68,6 @@ class ActionsCollectionViewCell: UICollectionViewCell {
     var shouldRevealActions = true
     weak var actionsDelegate: ActionsCollectionViewCellDelegate? {
         didSet {
-            guard oldValue == nil else { return }
             setup()
         }
     }
@@ -78,10 +77,15 @@ class ActionsCollectionViewCell: UICollectionViewCell {
         actionsView.alpha = 0.0
     }
  
+    private var hasDoneSetup = false
     private func setup() {
         setupActionButtons()
-        setupGestures()
-        setupConstraintProperties()
+        
+        if !hasDoneSetup {
+            hasDoneSetup = true
+            setupGestures()
+            setupConstraintProperties()
+        }
         
         // Set buttons in starting place
         actionButtons.forEach {
@@ -291,7 +295,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    private func animateCellClosed(duration: Double = 0.2) {
+    private func animateCellClosed(duration: Double = 0.2, completion: (()->())? = nil) {
         cellContentViewTrailingConstraint.constant = 0.0
         
         actionButtons.forEach {
@@ -304,6 +308,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
             self.layoutIfNeeded()
         }) { _ in
             self.actionsView.alpha = 0.0
+            completion?()
         }
     }
     
@@ -357,10 +362,9 @@ class ActionsCollectionViewCell: UICollectionViewCell {
     
     private func tappedActionButton(_ actionButton: ActionButtonView) {
         let index = self.actionButtons.firstIndex(of: actionButton)!
-        self.actionsDelegate?.didTapActionButton(at: index, for: self.indexPath)
-        
-        let duration = index == self.activeButtons - 1 ? 0.3 : 0.0
-        self.animateCellClosed(duration: duration)
+        animateCellClosed(duration: 0.3) {
+            self.actionsDelegate?.didTapActionButton(at: index, for: self.indexPath)
+        }
     }
  }
 

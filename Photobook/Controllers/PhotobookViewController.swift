@@ -642,17 +642,16 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             return
         }
         
-        guard let index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex else { return }
+        guard var index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex else { return }
+        index = product.productLayouts[index].layout.isDoubleLayout ? index + 1 : index + 2
+        let targetIndexPath = IndexPath(item: indexPath.item + 1, section: indexPath.section)
         
-        // Need to clear the interacting index path before reloading or the pages will apear blank
-        interactingItemIndexPath = nil
-        
-        // Insert new page above the tapped one
+        // Insert new page below the tapped one
         product.addPages(at: index, pages: productLayouts)
         changedPhotobook()
         
         collectionView.performBatchUpdates({
-            collectionView.insertItems(at: [indexPath])
+            collectionView.insertItems(at: [targetIndexPath])
         }, completion: { _ in
             self.updateVisibleCells()
         })
@@ -660,20 +659,27 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         Analytics.shared.trackAction(.pastedPages)
     }
     
-    func addPages(at indexPath: IndexPath) {
+    func addPages(after indexPath: IndexPath) {
         guard product.isAddingPagesAllowed else {
             showNotAllowedToAddMorePagesAlert()
             return
         }
         
-        guard let index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex else { return }
+        var index: Int!
+        if indexPath.item == 0 {
+            index = 2 // Adding a pages after the first spread
+        } else {
+            index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex
+            index = product.productLayouts[index].layout.isDoubleLayout ? index + 1 : index + 2
+        }
+        let targetIndexPath = IndexPath(item: indexPath.item + 1, section: indexPath.section)
         
-        // Insert new page above the tapped one
+        // Insert new page below the selected indexPath
         product.addDoubleSpread(at: index)
         changedPhotobook()
         
         collectionView.performBatchUpdates({
-            collectionView.insertItems(at: [indexPath])
+            collectionView.insertItems(at: [targetIndexPath])
         }, completion: { _ in
             self.updateVisibleCells()
         })
@@ -760,7 +766,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             switch indexPath.item {
             case 0:
                 rightIndex = 1
-                cell.shouldRevealActions = false
+                cell.shouldRevealActions = !isRearranging
                 cell.isFaded = isRearranging
             case collectionView.numberOfItems(inSection: 1) - 1: // Last page
                 leftIndex = product.productLayouts.count - 1
@@ -1053,29 +1059,35 @@ extension PhotobookViewController: SpineTextEditingDelegate {
 extension PhotobookViewController: ActionsCollectionViewCellDelegate {
     
     func actionButtonConfigurationForButton(at index: Int, indexPath: IndexPath) -> ActionButtonViewConfiguration? {
+        guard indexPath.section == 1 else { return nil }
+        var title: String!
+        var image: UIImage!
+        
         switch index {
-        case 0 where indexPath.section == 1:
-            let title = NSLocalizedString("Photobook/Cell/DeleteButton", value: "Delete", comment: "Text for the delete button in a spread")
-            return ActionButtonViewConfiguration(title: title, image: UIImage(namedInPhotobookBundle: "delete"))
-        case 0 where indexPath.section == 0, 1 where indexPath.section == 1:
-            let title = NSLocalizedString("Photobook/Cell/AddButton", value: "Add", comment: "Text for the add button in a spread")
-            return ActionButtonViewConfiguration(title: title, image: UIImage(namedInPhotobookBundle: "add"))
-        case 2 where indexPath.section == 1:
-            let title = NSLocalizedString("Photobook/Cell/DuplicateButton", value: "Duplicate", comment: "Text for the duplicate button in a spread")
-            return ActionButtonViewConfiguration(title: title, image: UIImage(namedInPhotobookBundle: "duplicate"))
+        case 0 where indexPath.item > 0:
+            title = NSLocalizedString("Photobook/Cell/DeleteButton", value: "Delete", comment: "Text for the delete button in a spread")
+            image = UIImage(namedInPhotobookBundle: "delete")
+        case 1 where indexPath.item > 0, 0 where indexPath.item == 0:
+            title = NSLocalizedString("Photobook/Cell/AddButton", value: "Add", comment: "Text for the add button in a spread")
+            image = UIImage(namedInPhotobookBundle: "add")
+        case 2 where indexPath.item > 0:
+            title = NSLocalizedString("Photobook/Cell/DuplicateButton", value: "Duplicate", comment: "Text for the duplicate button in a spread")
+            image = UIImage(namedInPhotobookBundle: "duplicate")
         default:
             return nil
         }
+        return ActionButtonViewConfiguration(title: title, image: image)
     }
     
     func didTapActionButton(at index: Int, for indexPath: IndexPath) {
-        print("Action \(indexPath)")
+        guard indexPath.section == 1 else { return }
+        
         switch index {
-        case 0 where indexPath.section == 1:
+        case 0 where indexPath.item > 0:
             deletePages(at: indexPath)
-        case 0 where indexPath.section == 0, 1 where indexPath.section == 1:
-            addPages(at: indexPath)
-        case 2 where indexPath.section == 1:
+        case 1 where indexPath.item > 0, 0 where indexPath.item == 0:
+            addPages(after: indexPath)
+        case 2 where indexPath.item > 0:
             duplicatePages(at: indexPath)
         default:
             return
@@ -1083,7 +1095,5 @@ extension PhotobookViewController: ActionsCollectionViewCellDelegate {
     }
     
     func didCloseCell(at indexPath: IndexPath) {}
-    func didOpenCell(at indexPath: IndexPath) {
-        print("Open \(indexPath)")
-    }
+    func didOpenCell(at indexPath: IndexPath) {}
 }
