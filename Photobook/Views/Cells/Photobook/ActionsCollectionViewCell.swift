@@ -65,6 +65,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
     }
     
     var indexPath: IndexPath!
+    var shouldRevealActions = true
     weak var actionsDelegate: ActionsCollectionViewCellDelegate? {
         didSet {
             guard oldValue == nil else { return }
@@ -72,6 +73,11 @@ class ActionsCollectionViewCell: UICollectionViewCell {
         }
     }
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        actionsView.alpha = 0.0
+    }
+ 
     private func setup() {
         setupActionButtons()
         setupGestures()
@@ -140,8 +146,12 @@ class ActionsCollectionViewCell: UICollectionViewCell {
     private var isPanning = false
     
     @IBAction private func panActionsCollectionViewCell(_ gestureRecognizer: UIPanGestureRecognizer) {
+        guard shouldRevealActions else { return }
+        
         switch gestureRecognizer.state {
         case .began:
+            actionsView.alpha = 1.0
+            
             panStartPoint = gestureRecognizer.translation(in: cellContentView)
             previousPoint = panStartPoint
             
@@ -261,6 +271,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
             self.layoutIfNeeded()
         }) { _ in
             if !open {
+                self.actionsView.alpha = 0.0
                 self.actionsDelegate?.didCloseCell(at: self.indexPath)
             } else {
                 self.actionsDelegate?.didOpenCell(at: self.indexPath)
@@ -290,7 +301,9 @@ class ActionsCollectionViewCell: UICollectionViewCell {
         UIView.animate(withDuration: duration, delay: duration > 0.0 ? 0.0 : 0.3, options: [.curveEaseOut, .beginFromCurrentState], animations: {
             self.updateActionViewBackgroundColor(to: 0.0)
             self.layoutIfNeeded()
-        }, completion: nil)
+        }) { _ in
+            self.actionsView.alpha = 0.0
+        }
     }
     
     private func allButtonsAreInPlace() -> Bool {
@@ -319,7 +332,6 @@ class ActionsCollectionViewCell: UICollectionViewCell {
         }, completion: nil)
     }
     
-    // FIXME: Should animate to designated color from the overall background color
     private func updateActionViewBackgroundColor(to alpha: CGFloat) {
         actionsView.backgroundColor = Constants.actionsViewBackgroundColor.withAlphaComponent(alpha)
     }

@@ -1451,11 +1451,6 @@
                                 </connections>
                             </button>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Rearrange" id="1Vp-C0-Rdb">
-                            <connections>
-                                <action selector="didTapRearrange:" destination="l0p-H6-Aqd" id="G8L-QL-TgA"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>

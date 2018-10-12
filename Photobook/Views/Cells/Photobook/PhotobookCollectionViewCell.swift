@@ -22,7 +22,7 @@ extension InteractivePagesCell {
 @objc protocol PhotobookCollectionViewCellDelegate: class, UIGestureRecognizerDelegate {
     func didTapOnPlusButton(at foldIndex: Int)
     func didTapOnPage(_ page: PhotobookPageView, at: Int, frame: CGRect, in containerView: UIView)
-    @objc func didLongPress(_ sender: UILongPressGestureRecognizer)
+    @objc func didLongPress(_ sender: UILongPressGestureRecognizer, on cell: PhotobookCollectionViewCell)
     @objc func didPan(_ sender: UIPanGestureRecognizer)
 }
 
@@ -34,7 +34,6 @@ class PhotobookCollectionViewCell: ActionsCollectionViewCell, InteractivePagesCe
             photobookFrameView.pageColor = product.pageColor
         }
     }
-    var plusButton = UIButton() // TEMP
 
     static let reuseIdentifier = NSStringFromClass(PhotobookCollectionViewCell.self).components(separatedBy: ".").last!
     
@@ -49,11 +48,6 @@ class PhotobookCollectionViewCell: ActionsCollectionViewCell, InteractivePagesCe
     }
     
     weak var delegate: PhotobookCollectionViewCellDelegate?
-    
-    var isPlusButtonVisible: Bool {
-        get { return !plusButton.isHidden }
-        set { plusButton.isHidden = !newValue }
-    }
     
     var isPageInteractionEnabled: Bool = false {
         didSet {
@@ -135,11 +129,7 @@ class PhotobookCollectionViewCell: ActionsCollectionViewCell, InteractivePagesCe
             photobookFrameView.coverColor = product.coverColor
             photobookFrameView.pageColor = product.pageColor
             photobookFrameView.resetPageColor()
-        }
-        
-        if let index = leftIndex {
-            plusButton.accessibilityLabel = NSLocalizedString("", value: "Add pages after page \(index - 1)", comment: "")
-        }
+        }        
     }
     
     func updateVoiceOver(isRearranging: Bool) {
@@ -185,14 +175,18 @@ class PhotobookCollectionViewCell: ActionsCollectionViewCell, InteractivePagesCe
         guard let delegate = delegate, !hasSetUpGestures else { return }
         hasSetUpGestures = true
 
-        let longPressGesture = UILongPressGestureRecognizer(target: delegate, action: #selector(PhotobookCollectionViewCellDelegate.didLongPress(_:)))
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(didLongPress(_:)))
         longPressGesture.delegate = delegate
         photobookFrameView.addGestureRecognizer(longPressGesture)
-
-//        let panGesture = UIPanGestureRecognizer(target: delegate, action: #selector(PhotobookCollectionViewCellDelegate.didPan(_:)))
-//        panGesture.delegate = delegate
-//        panGesture.maximumNumberOfTouches = 1
-//        photobookFrameView.addGestureRecognizer(panGesture)
+        
+        let panGesture = UIPanGestureRecognizer(target: delegate, action: #selector(PhotobookCollectionViewCellDelegate.didPan(_:)))
+        panGesture.delegate = delegate
+        panGesture.maximumNumberOfTouches = 1
+        photobookFrameView.addGestureRecognizer(panGesture)
+    }
+    
+    @IBAction private func didLongPress(_ sender: UILongPressGestureRecognizer) {
+        delegate?.didLongPress(sender, on: self)
     }
 }
 
@@ -201,6 +195,5 @@ extension PhotobookCollectionViewCell: PhotobookPageViewDelegate {
     func didTapOnPage(_ page: PhotobookPageView, at index: Int) {
         delegate?.didTapOnPage(page, at: index, frame: photobookFrameView.frame, in: self)
     }
-    
 }
 
