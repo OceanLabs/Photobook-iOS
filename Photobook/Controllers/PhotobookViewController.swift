@@ -797,7 +797,6 @@ extension PhotobookViewController: UICollectionViewDataSource {
 }
 
 extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    // MARK: UICollectionViewDelegate
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         updateNavBar()
@@ -806,6 +805,7 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? PhotobookCollectionViewCell {
             cell.loadPages()
+            cell.setup()
             cell.updateVoiceOver(isRearranging: isRearranging)
         } else if let cell = cell as? PhotobookCoverCollectionViewCell {
             cell.loadCoverAndSpine()
@@ -1094,6 +1094,16 @@ extension PhotobookViewController: ActionsCollectionViewCellDelegate {
         }
     }
     
-    func didCloseCell(at indexPath: IndexPath) {}
-    func didOpenCell(at indexPath: IndexPath) {}
+    func didCloseCell(at indexPath: IndexPath) {
+        interactingItemIndexPath = nil
+    }
+    
+    func didOpenCell(at indexPath: IndexPath) {
+        if interactingItemIndexPath != nil,
+            interactingItemIndexPath != indexPath,
+            let cell = collectionView.cellForItem(at: interactingItemIndexPath!) as? PhotobookCollectionViewCell {
+            cell.animateCellClosed()
+        }
+        interactingItemIndexPath = indexPath
+    }
 }

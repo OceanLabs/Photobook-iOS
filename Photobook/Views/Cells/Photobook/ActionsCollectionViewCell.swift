@@ -24,7 +24,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
     
     private struct Constants {
         static let actionButtonsLeftMargin: CGFloat = 20.0
-        static let preferredActionTriggerOffset: CGFloat = 20.0
+        static let preferredActionTriggerOffset: CGFloat = 40.0
         static let swipeDetectionVelocity: CGFloat = 20.0
         static let actionsViewBackgroundColor = UIColor(red: 0.86, green: 0.86, blue: 0.86, alpha: 1.0)
     }
@@ -40,7 +40,11 @@ class ActionsCollectionViewCell: UICollectionViewCell {
             actionButtonIsInPlace = [Bool](repeating: false, count: actionButtons.count)
         }
     }
-    @IBOutlet private var actionButtonTrailingConstraints: [NSLayoutConstraint]!
+    @IBOutlet private var actionButtonTrailingConstraints: [NSLayoutConstraint]! {
+        didSet {
+            actionButtonsStartingTrailingConstraintsConstants = actionButtonTrailingConstraints.map { $0.constant }
+        }
+    }
     @IBOutlet private var cellContentViewTrailingConstraint: NSLayoutConstraint!
     private var removableTrailingConstraints: [NSLayoutConstraint]!
     private var actionButtonsStartingTrailingConstraintsConstants: [CGFloat]!
@@ -50,13 +54,13 @@ class ActionsCollectionViewCell: UICollectionViewCell {
     private var startingRightEdgeContentPosition: CGFloat!
     private var showingPreferredAction = false
     
-    private lazy var actionsViewWidth: CGFloat = {
+    private var actionsViewWidth: CGFloat {
         var width = actionButtonsStartingTrailingConstraintsConstants.first! * 2.0 // left and right paddings
         for i in 0 ..< activeButtons {
             width += actionButtons[i].bounds.width
         }
         return width
-    }()
+    }
     
     private func rubberBandDistance(offset: CGFloat, dimension: CGFloat) -> CGFloat {
         let constant: CGFloat = 0.5
@@ -66,25 +70,20 @@ class ActionsCollectionViewCell: UICollectionViewCell {
     
     var indexPath: IndexPath!
     var shouldRevealActions = true
-    weak var actionsDelegate: ActionsCollectionViewCellDelegate? {
-        didSet {
-            setup()
-        }
-    }
+    weak var actionsDelegate: ActionsCollectionViewCellDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
         actionsView.alpha = 0.0
     }
- 
+    
     private var hasDoneSetup = false
-    private func setup() {
+    func setup() {
         setupActionButtons()
         
         if !hasDoneSetup {
             hasDoneSetup = true
             setupGestures()
-            setupConstraintProperties()
         }
         
         // Set buttons in starting place
@@ -97,18 +96,19 @@ class ActionsCollectionViewCell: UICollectionViewCell {
     private func setupActionButtons() {
         var trailingConstraints = [NSLayoutConstraint]()
         
-        showingPreferredAction = (activeButtons == 1)
-        
         let action = { (actionButton: ActionButtonView) in
             self.tappedActionButton(actionButton)
         }
         
+        activeButtons = actionButtons.count
         for (index, actionButton) in actionButtons.enumerated() {
             guard let buttonConfiguration = actionsDelegate?.actionButtonConfigurationForButton(at: index, indexPath: indexPath) else {
                 activeButtons -= 1
-                actionButton.removeFromSuperview()
+                actionButton.isHidden = true
                 continue
             }
+            
+            actionButton.isHidden = false
             
             if index > 0 {
                 trailingConstraints.append(actionButtonTrailingConstraints[index])
@@ -118,6 +118,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
             actionButton.image = buttonConfiguration.image
             actionButton.action = action
         }
+
         removableTrailingConstraints = trailingConstraints
     }
     
@@ -125,17 +126,6 @@ class ActionsCollectionViewCell: UICollectionViewCell {
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panActionsCollectionViewCell(_:)))
         panGestureRecognizer.delegate = self
         cellContentView.addGestureRecognizer(panGestureRecognizer)
-    }
-    
-    private func setupConstraintProperties() {
-        var startingTrailingConstraints = [CGFloat]()
-        
-        for (index, actionButton) in actionButtons.enumerated() {
-            guard isActionButtonAvailable(actionButton) else { break }
-            
-            startingTrailingConstraints.append(actionButtonTrailingConstraints[index].constant)
-        }
-        actionButtonsStartingTrailingConstraintsConstants = startingTrailingConstraints
     }
     
     private func isActionButtonAvailable(_ actionButton: ActionButtonView) -> Bool {
@@ -241,6 +231,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
             }
             
         case .ended, .cancelled:
+            guard isPanning else { return }
             isPanning = false
 
             // Check if there was a swipe
@@ -295,7 +286,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    private func animateCellClosed(duration: Double = 0.2, completion: (()->())? = nil) {
+    func animateCellClosed(duration: Double = 0.2, completion: (()->())? = nil) {
         cellContentViewTrailingConstraint.constant = 0.0
         
         actionButtons.forEach {
