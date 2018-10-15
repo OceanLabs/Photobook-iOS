@@ -366,6 +366,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let alertController = UIAlertController(title: NSLocalizedString("Photobook/BackAlertTitle", value: "Are you sure?", comment: "Title for alert asking the user to go back"), message: NSLocalizedString("Photobook/BackAlertMessage", value: "This will discard any changes made to your photo book", comment: "Message for alert asking the user to go back"), preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Yes", value: "Yes", comment: "Affirmative button title for alert asking the user confirmation for an action"), style: .destructive, handler: { _ in
             
+            self.closeCurrentCell()
+            
             // Clear photobook
             ProductManager.shared.reset()
             
@@ -715,6 +717,15 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     private func changedPhotobook() {
         ProductManager.shared.changedCurrentProduct(with: assets, album: album, albumManager: albumManager)
     }
+    
+    private func closeCurrentCell(completion:(()->())? = nil) {
+        guard interactingItemIndexPath != nil,
+            let cell = collectionView.cellForItem(at: interactingItemIndexPath!) as? PhotobookCollectionViewCell else {
+            return
+        }
+        cell.isPageInteractionEnabled = true
+        cell.animateCellClosed(completion: completion)
+    }
 }
 
 extension PhotobookViewController: UICollectionViewDataSource {
@@ -785,6 +796,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
                 }
                 cell.setupGestures()
                 cell.isPageInteractionEnabled = !isRearranging
+                cell.shouldRevealActions = !isRearranging
                 cell.isFaded = false
             }
             
@@ -800,12 +812,16 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         updateNavBar()
+        if interactingItemIndexPath != nil, let cell = collectionView.cellForItem(at: interactingItemIndexPath!) as? PhotobookCollectionViewCell {
+            cell.animateCellClosed()
+            interactingItemIndexPath = nil
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? PhotobookCollectionViewCell {
             cell.loadPages()
-            cell.setup()
+            cell.setUpActions()
             cell.updateVoiceOver(isRearranging: isRearranging)
         } else if let cell = cell as? PhotobookCoverCollectionViewCell {
             cell.loadCoverAndSpine()
@@ -902,6 +918,7 @@ extension PhotobookViewController: PageSetupDelegate {
 extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
 
     func didTapOnPage(_ page: PhotobookPageView, at index: Int, frame: CGRect, in containerView: UIView) {
+        closeCurrentCell()
         editPage(page, at: index, frame: frame, containerView: containerView)
     }
 
@@ -1095,15 +1112,21 @@ extension PhotobookViewController: ActionsCollectionViewCellDelegate {
     }
     
     func didCloseCell(at indexPath: IndexPath) {
+        guard interactingItemIndexPath != nil, let cell = collectionView.cellForItem(at: interactingItemIndexPath!) as? PhotobookCollectionViewCell else { return }
+        cell.isPageInteractionEnabled = true
         interactingItemIndexPath = nil
     }
     
     func didOpenCell(at indexPath: IndexPath) {
-        if interactingItemIndexPath != nil,
-            interactingItemIndexPath != indexPath,
-            let cell = collectionView.cellForItem(at: interactingItemIndexPath!) as? PhotobookCollectionViewCell {
-            cell.animateCellClosed()
+        if interactingItemIndexPath != nil && interactingItemIndexPath != indexPath {
+            closeCurrentCell() {
+                self.interactingItemIndexPath = indexPath
+            }
+        } else {
+            interactingItemIndexPath = indexPath
         }
-        interactingItemIndexPath = indexPath
+        
+        guard let cell = collectionView.cellForItem(at: interactingItemIndexPath!) as? PhotobookCollectionViewCell else { return }
+        cell.isPageInteractionEnabled = false
     }
 }

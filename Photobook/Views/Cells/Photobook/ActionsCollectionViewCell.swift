@@ -74,23 +74,19 @@ class ActionsCollectionViewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        actionsView.alpha = 0.0
+        setUpActions()
     }
     
     private var hasDoneSetup = false
-    func setup() {
+    func setUpActions() {
         setupActionButtons()
         
         if !hasDoneSetup {
             hasDoneSetup = true
             setupGestures()
         }
-        
-        // Set buttons in starting place
-        actionButtons.forEach {
-            guard isActionButtonAvailable($0) else { return }
-            setInPlace(false, actionButton: $0)
-        }
+
+        animateCellClosed(duration: 0.0)
     }
     
     private func setupActionButtons() {
@@ -286,7 +282,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func animateCellClosed(duration: Double = 0.2, completion: (()->())? = nil) {
+    func animateCellClosed(duration: Double = 0.2, delay: Double = 0.0, completion: (()->())? = nil) {
         cellContentViewTrailingConstraint.constant = 0.0
         
         actionButtons.forEach {
@@ -294,7 +290,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
             setInPlace(false, actionButton: $0)
         }
         
-        UIView.animate(withDuration: duration, delay: duration > 0.0 ? 0.0 : 0.3, options: [.curveEaseOut, .beginFromCurrentState], animations: {
+        UIView.animate(withDuration: duration, delay: delay, options: [.curveEaseOut, .beginFromCurrentState], animations: {
             self.updateActionViewBackgroundColor(to: 0.0)
             self.layoutIfNeeded()
         }) { _ in

@@ -52,7 +52,6 @@ class PhotobookCollectionViewCell: ActionsCollectionViewCell, InteractivePagesCe
         didSet {
             leftPageView.isUserInteractionEnabled = isPageInteractionEnabled
             rightPageView.isUserInteractionEnabled = isPageInteractionEnabled
-            shouldRevealActions = isPageInteractionEnabled
         }
     }
     
@@ -65,6 +64,8 @@ class PhotobookCollectionViewCell: ActionsCollectionViewCell, InteractivePagesCe
     }
     
     override func prepareForReuse() {
+        super.prepareForReuse()
+        
         leftPageView.clearImage()
         leftPageView.shouldSetImage = false
         

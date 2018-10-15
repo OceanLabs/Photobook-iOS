@@ -1344,7 +1344,6 @@
                                         </view>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstItem="2I1-af-on9" firstAttribute="leading" secondItem="0j2-2Y-biD" secondAttribute="leading" priority="250" id="1d2-DU-xQN"/>
                                             <constraint firstItem="1Tb-aL-bMg" firstAttribute="leading" secondItem="0j2-2Y-biD" secondAttribute="leading" constant="20" id="1oj-QU-waA"/>
                                             <constraint firstAttribute="bottom" secondItem="1Tb-aL-bMg" secondAttribute="bottom" id="3JD-P9-LfI"/>
                                             <constraint firstAttribute="bottom" secondItem="2I1-af-on9" secondAttribute="bottom" id="5wB-Az-cP0"/>
