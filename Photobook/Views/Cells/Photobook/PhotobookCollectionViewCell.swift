@@ -180,6 +180,7 @@ class PhotobookCollectionViewCell: ActionsCollectionViewCell, InteractivePagesCe
     }
     
     @IBAction private func didLongPress(_ sender: UILongPressGestureRecognizer) {
+        guard !isOpen else { return }
         delegate?.didLongPress(sender, on: self)
     }
 }

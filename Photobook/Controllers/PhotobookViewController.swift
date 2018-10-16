@@ -232,6 +232,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     @objc private func didTapOnTitle() {
         guard let photobooks = ProductManager.shared.products, photobooks.count > 1 else { return }
         
+        closeCurrentCell()
+        
         let alertController = UIAlertController(title: nil, message: NSLocalizedString("Photobook/ChangeSizeTitle", value: "Changing the size keeps your layout intact", comment: "Information when the user wants to change the photo book's size"), preferredStyle: .actionSheet)
         for photobook in photobooks {
             alertController.addAction(UIAlertAction(title: photobook.name, style: .default, handler: { [weak welf = self] (_) in
@@ -286,6 +288,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     @IBAction private func didTapCheckout(_ sender: Any) {
         guard draggingView == nil else { return }
+        
+        closeCurrentCell()
         
         let goToCheckout = {
             let orderSummaryViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
@@ -585,6 +589,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func editPage(_ page: PhotobookPageView, at index: Int, frame: CGRect, containerView: UIView) {
+        closeCurrentCell()
+        
         let modalNavigationController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PageSetupNavigationController") as! UINavigationController
         if #available(iOS 11.0, *) {
             modalNavigationController.navigationBar.prefersLargeTitles = false
@@ -720,10 +726,13 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     private func closeCurrentCell(completion:(()->())? = nil) {
         guard interactingItemIndexPath != nil,
-            let cell = collectionView.cellForItem(at: interactingItemIndexPath!) as? PhotobookCollectionViewCell else {
+            let cell = collectionView.cellForItem(at: interactingItemIndexPath!) as? PhotobookCollectionViewCell,
+            cell.isOpen else {
+            completion?()
             return
         }
         cell.isPageInteractionEnabled = true
+        cell.shouldRevealActions = true
         cell.animateCellClosed(completion: completion)
     }
 }
@@ -812,9 +821,11 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         updateNavBar()
-        if interactingItemIndexPath != nil, let cell = collectionView.cellForItem(at: interactingItemIndexPath!) as? PhotobookCollectionViewCell {
-            cell.animateCellClosed()
-            interactingItemIndexPath = nil
+        if interactingItemIndexPath != nil,
+            let cell = collectionView.cellForItem(at: interactingItemIndexPath!) as? PhotobookCollectionViewCell,
+            cell.isOpen {
+                cell.animateCellClosed()
+                interactingItemIndexPath = nil
         }
     }
     
@@ -854,6 +865,8 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
 extension PhotobookViewController: PhotobookCoverCollectionViewCellDelegate {
     
     func didTapOnSpine(with rect: CGRect, in containerView: UIView) {
+        closeCurrentCell()
+        
         let initialRect = containerView.convert(rect, to: view)
         
         let spineTextEditingNavigationController = photobookMainStoryboard.instantiateViewController(withIdentifier: "SpineTextEditingNavigationController") as! UINavigationController
@@ -918,7 +931,6 @@ extension PhotobookViewController: PageSetupDelegate {
 extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
 
     func didTapOnPage(_ page: PhotobookPageView, at index: Int, frame: CGRect, in containerView: UIView) {
-        closeCurrentCell()
         editPage(page, at: index, frame: frame, containerView: containerView)
     }
 
@@ -929,19 +941,21 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
               indexPath.row > 0 && indexPath.row < collectionView.numberOfItems(inSection: 1) - 1
             else { return }
         
-        if sender.state == .began {
-            guard let photobookFrameView = sender.view as? PhotobookFrameView else {
-                fatalError("Long press failed to recognise the target view")
+        closeCurrentCell() {
+            if sender.state == .began {
+                guard let photobookFrameView = sender.view as? PhotobookFrameView else {
+                    fatalError("Long press failed to recognise the target view")
+                }
+                cell.shouldRevealActions = false
+                self.liftView(photobookFrameView)
+                self.switchRearrangeMode(.on)
+            } else if sender.state == .ended {
+                self.dropView()
+                self.switchRearrangeMode(.off) {
+                    cell.shouldRevealActions = true
+                }
+                self.stopTimer()
             }
-            cell.shouldRevealActions = false
-            liftView(photobookFrameView)
-            switchRearrangeMode(.on)
-        } else if sender.state == .ended {
-            dropView()
-            switchRearrangeMode(.off) {
-                cell.shouldRevealActions = true
-            }
-            stopTimer()
         }
     }
     

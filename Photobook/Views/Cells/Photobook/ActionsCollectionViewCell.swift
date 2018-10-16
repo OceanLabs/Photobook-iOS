@@ -71,6 +71,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
     var indexPath: IndexPath!
     var shouldRevealActions = true
     var canUsePreferredAction = false
+    var isOpen: Bool { return cellContentViewTrailingConstraint.constant > 0.0 }
     weak var actionsDelegate: ActionsCollectionViewCellDelegate?
     
     override func awakeFromNib() {
