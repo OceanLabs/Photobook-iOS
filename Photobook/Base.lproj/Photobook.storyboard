@@ -834,11 +834,11 @@
         <scene sceneID="suS-5G-9Zz">
             <objects>
                 <viewController storyboardIdentifier="PhotobookViewController" hidesBottomBarWhenPushed="YES" id="l0p-H6-Aqd" customClass="PhotobookViewController" customModule="Photobook" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="hYx-pR-ckZ" customClass="OutOfBoundsTouchView" customModule="Photobook">
+                    <view key="view" contentMode="scaleToFill" id="hYx-pR-ckZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TBG-9p-ivA" customClass="OutOfBoundsTouchCollectionView" customModule="Photobook">
+                            <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TBG-9p-ivA">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" red="0.89019607840000003" green="0.8980392157" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="12" minimumInteritemSpacing="0.0" id="MEd-aD-PzO">
