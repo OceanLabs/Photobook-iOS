@@ -70,6 +70,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
     
     var indexPath: IndexPath!
     var shouldRevealActions = true
+    var canUsePreferredAction = false
     weak var actionsDelegate: ActionsCollectionViewCellDelegate?
     
     override func awakeFromNib() {
@@ -155,6 +156,14 @@ class ActionsCollectionViewCell: UICollectionViewCell {
             guard isPanning else {
                 previousPoint = .zero
                 currentPoint = .zero
+                
+                if !showingPreferredAction {
+                    gestureRecognizer.isEnabled = false
+                    gestureRecognizer.isEnabled = true
+
+                    let open = cellContentViewTrailingConstraint.constant > actionsViewWidth * 0.5
+                    animateCell(open: open, duration: 0.1)
+                }
                 return
             }
 
@@ -172,7 +181,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
                 if isPanningLeft {
                     if -delta > actionsViewWidth {
                         constant = actionsViewWidth + rubberBandDistance(offset: -delta - actionsViewWidth, dimension: bounds.width)
-                        shouldShowPreferredAction = hasMoreThanOneButton && !showingPreferredAction && (-delta - actionsViewWidth) > Constants.preferredActionTriggerOffset
+                        shouldShowPreferredAction = canUsePreferredAction && hasMoreThanOneButton && !showingPreferredAction && (-delta - actionsViewWidth) > Constants.preferredActionTriggerOffset
                     } else {
                         constant = min(-delta, actionsViewWidth)
                     }
@@ -187,7 +196,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
             } else {
                 if isPanningLeft {
                     constant = actionsViewWidth + rubberBandDistance(offset: -delta, dimension: bounds.width)
-                    shouldShowPreferredAction = hasMoreThanOneButton && !showingPreferredAction && -delta > Constants.preferredActionTriggerOffset
+                    shouldShowPreferredAction = canUsePreferredAction && hasMoreThanOneButton && !showingPreferredAction && -delta > Constants.preferredActionTriggerOffset
                 } else {
                     constant = max(startingRightEdgeContentPosition - delta, 0.0)
                     shouldHidePreferredAction = hasMoreThanOneButton && showingPreferredAction && constant < actionsViewWidth + Constants.preferredActionTriggerOffset
@@ -245,7 +254,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    private func animateCell(open: Bool, duration: Double, completion: (()->())?) {
+    private func animateCell(open: Bool, duration: Double, completion: (()->())? = nil) {
         actionButtons.forEach {
             guard isActionButtonAvailable($0) else { return }
             setInPlace(open, actionButton: $0)
