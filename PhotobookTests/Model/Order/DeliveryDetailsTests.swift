@@ -15,16 +15,15 @@ class DeliveryDetailsTests: XCTestCase {
         let deliveryDetails = DeliveryDetails()
         deliveryDetails.firstName = "George"
         deliveryDetails.lastName = "Clowney"
-        
-        let address = Address()
-        address.line1 = "9 Fiesta Place"
-        address.city = "London"
-        address.zipOrPostcode = "CL0 WN4"
-        address.stateOrCounty = "Clownborough"
-        
-        deliveryDetails.address = address
         deliveryDetails.email = "g.clowney@clownmail.com"
         deliveryDetails.phone = "399945528234"
+        deliveryDetails.line1 = "9 Fiesta Place"
+        deliveryDetails.line2 = "Old Street"
+        deliveryDetails.city = "London"
+        deliveryDetails.zipOrPostcode = "CL0 WN4"
+        deliveryDetails.stateOrCounty = "Clownborough"
+        deliveryDetails.country = Country(name: "United Kingdom", codeAlpha2: "UK", codeAlpha3: "GBA", currencyCode: "GBP")
+        
         return deliveryDetails
     }
     
@@ -57,12 +56,6 @@ class DeliveryDetailsTests: XCTestCase {
         XCTAssertFalse(deliveryDetails.isValid)
     }
     
-    func testIsValid_shouldBeFalseIfAddressIsMissing() {
-        let deliveryDetails = validDetails()
-        deliveryDetails.address = nil
-        XCTAssertFalse(deliveryDetails.isValid)
-    }
-
     func testIsValid_shouldBeFalseIfEmailIsMissing() {
         let deliveryDetails = validDetails()
         deliveryDetails.email = nil
@@ -87,12 +80,27 @@ class DeliveryDetailsTests: XCTestCase {
         XCTAssertFalse(deliveryDetails.isValid)
     }
     
-    func testDetails_canBePersisted() {
+    func testIsValid_shouldBeFalseIfLine1IsMissing() {
         let deliveryDetails = validDetails()
-        deliveryDetails.saveDetailsAsLatest()
-        
-        let retrievedDetails = DeliveryDetails.loadLatestDetails()
-        XCTAssertEqualOptional(deliveryDetails, retrievedDetails)
+        deliveryDetails.line1 = nil
+        XCTAssertFalse(deliveryDetails.isValid)
+    }
+    
+    func testIsValid_shouldBeFalseIfTheCityIsMissing() {
+        let deliveryDetails = validDetails()
+        deliveryDetails.city = nil
+        XCTAssertFalse(deliveryDetails.isValid)
+    }
+    
+    func testIsValid_shouldBeFalseIfThePostCodeIsMissing() {
+        let deliveryDetails = validDetails()
+        deliveryDetails.zipOrPostcode = nil
+        XCTAssertFalse(deliveryDetails.isValid)
+    }
+    
+    func testDescriptionWithoutLine1_shouldReturnTheRightAddress() {
+        let addressDescription = validDetails().descriptionWithoutLine1()
+        XCTAssertEqual(addressDescription, "Old Street, London, Clownborough, CL0 WN4, United Kingdom")
     }
     
     func testFullName_shouldBeNilIfFirstNameAndLastNameAreMissing() {
@@ -119,7 +127,43 @@ class DeliveryDetailsTests: XCTestCase {
         XCTAssertEqualOptional(deliveryDetails.fullName, "George")
     }
 
-    override func tearDown() {
+    func testDetails_canBePersisted() {
+        let deliveryDetails = validDetails()
+        DeliveryDetails.add(deliveryDetails)
+        DeliveryDetails.loadSavedDetails()
+        XCTAssertEqual([deliveryDetails], DeliveryDetails.savedDeliveryDetails)
+    }
+    
+    
+    func testDetails_shouldBeEmpty() {
+        XCTAssertTrue(DeliveryDetails.savedDeliveryDetails.count == 0)
+    }
+    
+    func testDetails_shouldSaveTheDetails() {
+        let deliveryDetails = validDetails()
+        DeliveryDetails.add(deliveryDetails)
+        DeliveryDetails.loadSavedDetails()
+        XCTAssertEqual([deliveryDetails], DeliveryDetails.savedDeliveryDetails)
+    }
+    
+    func testDetails_shouldEditTheDetails() {
+        let deliveryDetails = validDetails()
+        DeliveryDetails.add(deliveryDetails)
+        deliveryDetails.city = "Clowntown"
+        DeliveryDetails.edit(deliveryDetails, at: 0)
+        DeliveryDetails.loadSavedDetails()
+        XCTAssertEqual([deliveryDetails], DeliveryDetails.savedDeliveryDetails)
+    }
+    
+    func testDetails_shouldRemoveTheDetails() {
+        let deliveryDetails = validDetails()
+        DeliveryDetails.add(deliveryDetails)
+        DeliveryDetails.remove(deliveryDetails)
+        XCTAssertFalse(DeliveryDetails.savedDeliveryDetails.contains(deliveryDetails))
+    }
+    
+    override func setUp() {
         UserDefaults.standard.removeObject(forKey: DeliveryDetails.savedDetailsKey)
+        DeliveryDetails.loadSavedDetails()
     }
 }

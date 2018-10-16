@@ -21,16 +21,12 @@ class PaymentAuthorizationManagerTests: XCTestCase {
         let deliveryDetails = DeliveryDetails()
         deliveryDetails.firstName = "George"
         deliveryDetails.lastName = "Clowney"
-        
-        let address = Address()
-        address.line1 = "9 Fiesta Place"
-        address.city = "London"
-        address.zipOrPostcode = "CL0 WN4"
-        address.stateOrCounty = "Clownborough"
-        
-        deliveryDetails.address = address
         deliveryDetails.email = "g.clowney@clownmail.com"
         deliveryDetails.phone = "399945528234"
+        deliveryDetails.line1 = "9 Fiesta Place"
+        deliveryDetails.city = "London"
+        deliveryDetails.zipOrPostcode = "CL0 WN4"
+        deliveryDetails.stateOrCounty = "Clownborough"
 
         order.deliveryDetails = deliveryDetails
         return order

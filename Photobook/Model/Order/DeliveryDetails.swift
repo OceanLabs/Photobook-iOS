@@ -12,7 +12,7 @@ class DeliveryDetails: NSCopying, Codable {
     
     static let savedDetailsKey = "ly.kite.sdk.savedDetailsKey"
     
-    static private(set) var savedDeliveryDetails = DeliveryDetails.loadSavedDetails()
+    static private(set) var savedDeliveryDetails = [DeliveryDetails]()
     
     var firstName: String?
     var lastName: String?
@@ -59,13 +59,14 @@ class DeliveryDetails: NSCopying, Codable {
         return copy
     }
     
-    static func loadSavedDetails() -> [DeliveryDetails] {
+    static func loadSavedDetails() {
         guard let deliveryDetailsData = UserDefaults.standard.object(forKey: savedDetailsKey) as? Data,
             let deliveryDetails = try? PropertyListDecoder().decode([DeliveryDetails].self, from: deliveryDetailsData)
         else {
-                return [DeliveryDetails]()
+            savedDeliveryDetails = [DeliveryDetails]()
+            return
         }
-        return deliveryDetails
+        savedDeliveryDetails = deliveryDetails
     }
     
     static func saveDeliveryDetails() {
@@ -98,6 +99,7 @@ class DeliveryDetails: NSCopying, Codable {
     }
     
     static func selectedDetails() -> DeliveryDetails? {
+        loadSavedDetails()
         return savedDeliveryDetails.first { $0.selected }
     }
     
