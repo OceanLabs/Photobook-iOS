@@ -20,7 +20,7 @@ class DeliveryDetailsTableViewController: UITableViewController {
         guard let identifier = segue.identifier else { return }
         
         if identifier == "addressSegue", let addressViewController = segue.destination as? AddressTableViewController {
-            guard let dictionary = sender as? [String: Any] else { return }
+            let dictionary = sender as? [String: Any] ?? [String: Any]()
             addressViewController.deliveryDetails = dictionary["details"] as? DeliveryDetails ?? DeliveryDetails()
             addressViewController.index = dictionary["index"] as? Int
             addressViewController.delegate = self

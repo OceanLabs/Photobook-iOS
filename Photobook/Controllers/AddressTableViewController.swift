@@ -60,6 +60,16 @@ class AddressTableViewController: UITableViewController {
         static let phoneExplanation = NSLocalizedString("DeliveryDetails/PhoneExplanation", value: "Required by the postal service in case there are any issues with the delivery", comment: "Explanation of why the phone number is needed")
     }
 
+    private lazy var phoneToolbar: UIToolbar = {
+        let nextTitle = NSLocalizedString("DeliveryDetailsEdit/Next", value: "Next", comment: "Button title to move the focus to the next field")
+        let nextBarButtonItem = UIBarButtonItem(title: nextTitle, style: .plain, target: self, action: #selector(moveToNextFieldAfterPhone(_:)))
+        let toolbar = UIToolbar()
+        toolbar.barStyle = .default
+        toolbar.backgroundColor = .white
+        toolbar.items = [ UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil), nextBarButtonItem]
+        toolbar.sizeToFit()
+        return toolbar
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -187,6 +197,8 @@ class AddressTableViewController: UITableViewController {
             return emailTextField
         } else if textField === emailTextField {
             return phoneTextField
+        } else if textField == phoneTextField {
+            return line1TextField
         } else if textField === line1TextField {
             return line2TextField
         } else if textField === line2TextField {
@@ -259,6 +271,7 @@ class AddressTableViewController: UITableViewController {
             cell.textField.keyboardType = .phonePad
             cell.textField.returnKeyType = .next
             cell.textField.text = deliveryDetails.phone
+            cell.textField.inputAccessoryView = phoneToolbar
             cell.accessibilityIdentifier = "phoneCell"
             cell.textField.accessibilityLabel = cell.label?.text
             cell.textField.accessibilityHint = Constants.phoneExplanation
@@ -433,6 +446,11 @@ extension AddressTableViewController: UITextFieldDelegate {
         }
         
         return false
+    }
+    
+    @IBAction func moveToNextFieldAfterPhone(_ sender: UIBarButtonItem) {
+        guard let nextTextField = self.textField(after: phoneTextField) else { return }
+        nextTextField.becomeFirstResponder()
     }
 }
 
