@@ -34,9 +34,9 @@ import UIKit
             return
         }
         
-        let deliveryDetails = DeliveryDetails.loadLatestDetails() ?? DeliveryDetails()
+        let deliveryDetails = DeliveryDetails.selectedDetails() ?? DeliveryDetails()
         deliveryDetails.email = userEmail
-        deliveryDetails.saveDetailsAsLatest()
+        DeliveryDetails.saveDeliveryDetails()
     }
     
     @objc public func setUserPhone(_ userPhone: String) {
@@ -44,9 +44,9 @@ import UIKit
             return
         }
         
-        let deliveryDetails = DeliveryDetails.loadLatestDetails() ?? DeliveryDetails()
+        let deliveryDetails = DeliveryDetails.selectedDetails() ?? DeliveryDetails()
         deliveryDetails.email = userPhone
-        deliveryDetails.saveDetailsAsLatest()
+        DeliveryDetails.saveDeliveryDetails()
     }
 
 }

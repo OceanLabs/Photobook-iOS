@@ -55,7 +55,7 @@ class Order: Codable {
     }
     
     var hashValue: Int {
-        let country = deliveryDetails?.address?.country ?? Country.countryForCurrentLocale()
+        let country = deliveryDetails?.country ?? Country.countryForCurrentLocale()
         var stringHash = "ad:\(country.codeAlpha3.hashValue),"
         if let promoCode = promoCode {
             stringHash += "pc:\(promoCode),"
@@ -113,7 +113,7 @@ class Order: Codable {
             }
         } else {
             // Since we will update the cost, it means that we may have changed destination country, so check if the selected method is still valid.
-            let countryCode = deliveryDetails?.address?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
+            let countryCode = deliveryDetails?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
             for product in products {
                 guard let regionCode = product.template.countryToRegionMapping?[countryCode],
                 let availableShippingMethods = product.template.availableShippingMethods?[regionCode] else {
@@ -146,7 +146,7 @@ class Order: Codable {
                 product.template.countryToRegionMapping = regionMapping?[product.template.templateId]
                 product.template.availableShippingMethods = availableShippingMethods
                 
-                let countryCode = welf?.deliveryDetails?.address?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
+                let countryCode = welf?.deliveryDetails?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
                 if let regionCode = product.template.countryToRegionMapping?[countryCode] {
                     product.selectedShippingMethod = availableShippingMethods?[regionCode]?.first
                 }
@@ -159,10 +159,7 @@ class Order: Codable {
         
         guard let finalTotalCost = cost?.total else { return nil }
         
-        var shippingAddress = deliveryDetails?.address?.jsonRepresentation()
-        shippingAddress?["recipient_first_name"] = deliveryDetails?.firstName
-        shippingAddress?["recipient_last_name"] = deliveryDetails?.lastName
-        shippingAddress?["recipient_name"] = deliveryDetails?.fullName
+        let shippingAddress = deliveryDetails?.jsonRepresentation()
         
         var parameters = [String: Any]()
         parameters["proof_of_payment"] = paymentToken

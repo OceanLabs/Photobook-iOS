@@ -242,7 +242,7 @@ class KiteAPIClient {
             lineItems.append(parameters)
         }
         
-        parameters["shipping_country_code"] = order.deliveryDetails?.address?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
+        parameters["shipping_country_code"] = order.deliveryDetails?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
         parameters["basket"] = lineItems
         
         let endpoint = KiteAPIClient.apiVersion + Endpoints.cost
