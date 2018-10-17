@@ -30,6 +30,10 @@ enum Environment {
     case live
 }
 
+enum ActiveState {
+    case on, off
+}
+
 struct Measurements {
     static let mmToPtMultiplier = 2.83464566929134
 }
