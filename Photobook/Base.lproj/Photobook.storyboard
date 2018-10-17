@@ -1006,7 +1006,7 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Tb-aL-bMg">
                                                     <rect key="frame" x="20" y="0.0" width="339" height="207"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fle-Cn-mLC" userLabel="Delete Button View" customClass="ActionButtonView" customModule="Photobook" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fle-Cn-mLC" userLabel="Delete Button View" customClass="ActionButtonView" customModule="Photobook">
                                                             <rect key="frame" x="263" y="68.5" width="66" height="70"/>
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MFB-9w-miq">
@@ -1049,7 +1049,7 @@
                                                                 <outlet property="label" destination="gu4-kj-2FU" id="zvk-Ac-Vim"/>
                                                             </connections>
                                                         </view>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pqf-bE-juX" userLabel="Add Button View" customClass="ActionButtonView" customModule="Photobook" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pqf-bE-juX" userLabel="Add Button View" customClass="ActionButtonView" customModule="Photobook">
                                                             <rect key="frame" x="197" y="68.5" width="66" height="70"/>
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UBy-vG-Adz">
@@ -1092,7 +1092,7 @@
                                                                 <outlet property="label" destination="65y-iD-Rja" id="MvM-g2-vY9"/>
                                                             </connections>
                                                         </view>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="chI-fN-teh" userLabel="Duplicate Button View" customClass="ActionButtonView" customModule="Photobook" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="chI-fN-teh" userLabel="Duplicate Button View" customClass="ActionButtonView" customModule="Photobook">
                                                             <rect key="frame" x="131" y="68.5" width="66" height="70"/>
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QUP-wK-RJG">
