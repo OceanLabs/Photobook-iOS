@@ -210,8 +210,10 @@ class ActionsCollectionViewCell: UICollectionViewCell {
             updateActionViewBackgroundColor(to: constant / actionsViewWidth)
             
             if shouldShowPreferredAction {
-                let generator = UISelectionFeedbackGenerator()
-                generator.selectionChanged()
+                if #available(iOS 10.0, *) {
+                    let generator = UISelectionFeedbackGenerator()
+                    generator.selectionChanged()
+                }
                 
                 animatePreferredAction(duration: 0.2)
             } else if shouldHidePreferredAction {

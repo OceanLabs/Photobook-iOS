@@ -461,8 +461,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         collectionView.deleteItems(at: [indexPath])
         
         if enableFeedback {
-            let generator = UIImpactFeedbackGenerator(style: .medium)
-            generator.impactOccurred()
+            if #available(iOS 10.0, *) {
+                let generator = UIImpactFeedbackGenerator(style: .medium)
+                generator.impactOccurred()
+            } 
         }
     }
     
