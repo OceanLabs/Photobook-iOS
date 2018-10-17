@@ -112,6 +112,7 @@ class LayoutSelectionCollectionViewCell: BorderedCollectionViewCell {
         
         let productLayoutAsset = ProductLayoutAsset()
         productLayoutAsset.asset = asset
+        productLayoutAsset.currentImage = image
 
         let productLayout = ProductLayout(layout: layout, productLayoutAsset: productLayoutAsset)
         
