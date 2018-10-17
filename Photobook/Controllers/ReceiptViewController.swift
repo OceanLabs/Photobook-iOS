@@ -435,11 +435,11 @@ extension ReceiptViewController: UITableViewDataSource {
             let deliveryDetails = order.deliveryDetails
             var addressString = ""
             if let name = deliveryDetails?.fullName, !name.isEmpty { addressString += "\(name)\n"}
-            if let line1 = deliveryDetails?.address?.line1, !line1.isEmpty { addressString += "\(line1)\n"}
-            if let line2 = deliveryDetails?.address?.line2, !line2.isEmpty { addressString += "\(line2)\n"}
-            if let city = deliveryDetails?.address?.city, !city.isEmpty { addressString += "\(city) "}
-            if let postCode = deliveryDetails?.address?.zipOrPostcode, !postCode.isEmpty { addressString += "\(postCode)\n"}
-            if let countryName = deliveryDetails?.address?.country.name, !countryName.isEmpty { addressString += "\(countryName)"}
+            if let line1 = deliveryDetails?.line1, !line1.isEmpty { addressString += "\(line1)\n"}
+            if let line2 = deliveryDetails?.line2, !line2.isEmpty { addressString += "\(line2)\n"}
+            if let city = deliveryDetails?.city, !city.isEmpty { addressString += "\(city) "}
+            if let postCode = deliveryDetails?.zipOrPostcode, !postCode.isEmpty { addressString += "\(postCode)\n"}
+            if let countryName = deliveryDetails?.country.name, !countryName.isEmpty { addressString += "\(countryName)"}
             cell.shippingAddressLabel.text = addressString
             
             return cell

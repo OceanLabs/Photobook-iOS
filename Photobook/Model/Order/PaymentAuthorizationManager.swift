@@ -169,9 +169,7 @@ class PaymentAuthorizationManager: NSObject {
                 return
         }
         
-        let address = details.address!
-
-        let paypalAddress = OLPayPalWrapper.payPalShippingAddress(withRecipientName: details.fullName, withLine1: address.line1, withLine2: address.line2, withCity: address.city, withState: address.stateOrCounty, withPostalCode: address.zipOrPostcode, withCountryCode: address.country.codeAlpha2)
+        let paypalAddress = OLPayPalWrapper.payPalShippingAddress(withRecipientName: details.fullName, withLine1: details.line1, withLine2: details.line2, withCity: details.city, withState: details.stateOrCounty, withPostalCode: details.zipOrPostcode, withCountryCode: details.country.codeAlpha2)
 
         let payment = OLPayPalWrapper.payPalPayment(withAmount: totalCost as NSDecimalNumber, currencyCode: cost.total.currencyCode, shortDescription: orderDescription, intent: 1/*PayPalPaymentIntentAuthorize*/, shippingAddress: paypalAddress)
 
@@ -206,32 +204,31 @@ extension PaymentAuthorizationManager {
 extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDelegate {
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: @escaping (PKPaymentAuthorizationStatus) -> Void) {
-        let shippingAddress = Address()
-        shippingAddress.line1 = payment.shippingContact?.postalAddress?.street
-        shippingAddress.city = payment.shippingContact?.postalAddress?.city
-        shippingAddress.stateOrCounty = payment.shippingContact?.postalAddress?.state
-        shippingAddress.zipOrPostcode = payment.shippingContact?.postalAddress?.postalCode
 
         let deliveryDetails = DeliveryDetails()
-        deliveryDetails.address = shippingAddress
         deliveryDetails.firstName = payment.shippingContact?.name?.givenName
         deliveryDetails.lastName = payment.shippingContact?.name?.familyName
         deliveryDetails.email = payment.shippingContact?.emailAddress
         deliveryDetails.phone = payment.shippingContact?.phoneNumber?.stringValue
+        deliveryDetails.line1 = payment.shippingContact?.postalAddress?.street
+        deliveryDetails.city = payment.shippingContact?.postalAddress?.city
+        deliveryDetails.stateOrCounty = payment.shippingContact?.postalAddress?.state
+        deliveryDetails.zipOrPostcode = payment.shippingContact?.postalAddress?.postalCode
+
 
         if let code = payment.shippingContact?.postalAddress?.isoCountryCode, let country = Country.countryFor(code: code) {
-            shippingAddress.country = country
+            deliveryDetails.country = country
         } else if let name = payment.shippingContact?.postalAddress?.country, let country = Country.countryFor(name: name) {
-            shippingAddress.country = country
-        }
-        
-        guard shippingAddress.isValid else {
-            completion(.invalidShippingPostalAddress)
-            return
+            deliveryDetails.country = country
         }
         
         guard let emailAddress = payment.shippingContact?.emailAddress, emailAddress.isValidEmailAddress() else {
             completion(.invalidShippingContact)
+            return
+        }
+        
+        guard deliveryDetails.isValid else {
+            completion(.invalidShippingPostalAddress)
             return
         }
         
@@ -256,14 +253,10 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didSelectShippingContact contact: PKContact, completion: @escaping (PKPaymentAuthorizationStatus, [PKShippingMethod], [PKPaymentSummaryItem]) -> Void) {
         
-        let shippingAddress = Address()
-        
-        if let code = contact.postalAddress?.isoCountryCode, let country = Country.countryFor(code: code){
-            shippingAddress.country = country
-        }
-        
         let deliveryDetails = DeliveryDetails()
-        deliveryDetails.address = shippingAddress
+        if let code = contact.postalAddress?.isoCountryCode, let country = Country.countryFor(code: code){
+            deliveryDetails.country = country
+        }
         basketOrder.deliveryDetails = deliveryDetails
         
         basketOrder.updateCost { [weak welf = self] (error: Error?) in

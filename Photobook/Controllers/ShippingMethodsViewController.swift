@@ -33,7 +33,7 @@ class ShippingMethodsViewController: UIViewController {
     }()
     
     private lazy var sectionTitles: [String] = order.cost?.lineItems.map({ $0.name }) ?? []
-    private lazy var countryCode = order.deliveryDetails?.address?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
+    private lazy var countryCode = order.deliveryDetails?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
     
     var order: Order {
         get {
