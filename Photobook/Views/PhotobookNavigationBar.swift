@@ -10,9 +10,6 @@ import UIKit
 
 public class PhotobookNavigationBar: UINavigationBar {
     
-    private static let contentHeight: CGFloat = 44.0
-    private static let promptHeight: CGFloat = 34.0
-    
     private var hasAddedBlur = false
     private var effectView: UIVisualEffectView!
     private(set) var barType: PhotobookNavigationBarType = .white
@@ -26,7 +23,7 @@ public class PhotobookNavigationBar: UINavigationBar {
     }
     
     var barHeight: CGFloat {
-        return willShowPrompt ? PhotobookNavigationBar.contentHeight + PhotobookNavigationBar.promptHeight : PhotobookNavigationBar.contentHeight + UIApplication.shared.statusBarFrame.height
+        return willShowPrompt ? frame.height : frame.height + UIApplication.shared.statusBarFrame.height
     }
     
     override init(frame: CGRect) {
@@ -45,13 +42,14 @@ public class PhotobookNavigationBar: UINavigationBar {
         if !hasAddedBlur {
             hasAddedBlur = true
             
-            let effectViewY = willShowPrompt ? 0.0 : -UIApplication.shared.statusBarFrame.height
             effectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
-            effectView.frame = CGRect(x: 0.0, y: effectViewY, width: bounds.width, height: barHeight)
             effectView.backgroundColor = UIColor(white: 1.0, alpha: 0.75)
             effectView.isUserInteractionEnabled = false
             insertSubview(effectView, at: 0)
         }
+
+        let effectViewY = willShowPrompt ? 0.0 : -UIApplication.shared.statusBarFrame.height
+        effectView.frame = CGRect(x: 0.0, y: effectViewY, width: bounds.width, height: barHeight)
         sendSubviewToBack(effectView)
     }
     
