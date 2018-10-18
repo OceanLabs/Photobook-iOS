@@ -97,6 +97,14 @@ class OrderSummaryViewController: UIViewController {
         tableView.contentInset = UIEdgeInsets(top: topInset, left: tableView.contentInset.left, bottom: tableView.contentInset.bottom, right: tableView.contentInset.right)
     }
     
+    override var shouldAutorotate: Bool {
+        return false
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
+    
     @IBAction func tappedCallToAction(_ sender: Any) {
         product.pigBaseUrl = orderSummaryManager.summary?.pigBaseUrl
         completionClosure?(product)
