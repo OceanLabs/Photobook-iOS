@@ -58,6 +58,8 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     var collectorMode: AssetCollectorMode = .selecting
     weak var addingDelegate: PhotobookAssetAddingDelegate?
     
+    var shouldAnimateAssetPicker = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -581,7 +583,7 @@ extension AssetPickerCollectionViewController {
     }
 }
 
-extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegate{
+extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegate {
     // MARK: UIViewControllerPreviewingDelegate
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {

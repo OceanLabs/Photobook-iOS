@@ -137,7 +137,7 @@ extension AssetSelectorViewController: UICollectionViewDelegate {
         if indexPath.item == 0 && shouldShowAddMoreButton {
             if let assetPickerViewController = photobookDelegate!.assetPickerViewController?() {
                 assetPickerViewController.addingDelegate = self
-                present(assetPickerViewController, animated: true, completion: nil)
+                present(assetPickerViewController, animated: photobookDelegate!.shouldAnimateAssetPicker ?? true, completion: nil)
                 return
             }
         }
@@ -182,6 +182,6 @@ extension AssetSelectorViewController: PhotobookAssetAddingDelegate {
 
         selectedAssetIndex = self.assets.index { $0.identifier == selectedAsset?.identifier } ?? -1
         collectionView.reloadData()
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: photobookDelegate?.shouldAnimateAssetPicker ?? true, completion: nil)
     }
 }

@@ -36,18 +36,17 @@ class ModalAlbumsCollectionViewController: UIViewController, PhotobookAssetPicke
         view.backgroundColor = .clear
         
         containerViewBottomConstraint.constant = view.bounds.height
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
         if #available(iOS 11.0, *) {
             containerViewHeightConstraint.constant = view.bounds.height - Constants.topMargin - view.safeAreaInsets.top
         } else {
             containerViewHeightConstraint.constant = view.bounds.height - Constants.topMargin - UIApplication.shared.statusBarFrame.height
         }
 
-        view.layoutIfNeeded()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
         containerViewBottomConstraint.constant = 0
         UIView.animate(withDuration: 0.3) {
             self.view.backgroundColor = UIColor(white: 0.0, alpha: 0.6)
