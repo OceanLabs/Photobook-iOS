@@ -217,6 +217,14 @@ class CheckoutViewController: UIViewController {
         }
     }
     
+    override var shouldAutorotate: Bool {
+        return false
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
+    
     @objc func tappedCancel() {
         if dismissDelegate?.wantsToDismiss?(self) != nil {
             return

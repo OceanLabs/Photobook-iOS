@@ -10,12 +10,11 @@ import UIKit
 
 class PhotobookNavigationController: UINavigationController {
     
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return [.portrait]
+    override var shouldAutorotate: Bool {
+        return false
     }
     
-    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
     }
-
 }

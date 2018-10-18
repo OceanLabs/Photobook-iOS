@@ -127,6 +127,14 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         adjustButtonLabels()
     }
     
+    override var shouldAutorotate: Bool {
+        return false
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
+    
     private func adjustButtonLabels() {
         titleButton.titleLabel?.sizeToFit()
         titleButton.sizeToFit()
