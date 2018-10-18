@@ -180,7 +180,7 @@ extension AssetSelectorViewController: PhotobookAssetAddingDelegate {
             self.assets.insert(asset, at: 0)
         }
 
-        selectedAssetIndex = self.assets.index { $0.identifier == selectedAsset!.identifier } ?? -1
+        selectedAssetIndex = self.assets.index { $0.identifier == selectedAsset?.identifier } ?? -1
         collectionView.reloadData()
         self.dismiss(animated: true, completion: nil)
     }
