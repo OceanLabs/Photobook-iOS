@@ -44,6 +44,8 @@ class AlbumsCollectionViewController: UICollectionViewController {
         return CGSize(width: cellWidth, height: cellWidth + albumCellLabelsHeight)
     }()
     
+    var shouldAnimateAssetPicker = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

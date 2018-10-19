@@ -34,17 +34,19 @@ class ModalAlbumsCollectionViewController: UIViewController, PhotobookAssetPicke
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
+        
         containerViewBottomConstraint.constant = view.bounds.height
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+
         if #available(iOS 11.0, *) {
             containerViewHeightConstraint.constant = view.bounds.height - Constants.topMargin - view.safeAreaInsets.top
         } else {
             containerViewHeightConstraint.constant = view.bounds.height - Constants.topMargin - UIApplication.shared.statusBarFrame.height
         }
+
         containerViewBottomConstraint.constant = 0
         UIView.animate(withDuration: 0.3) {
             self.view.backgroundColor = UIColor(white: 0.0, alpha: 0.6)
@@ -142,7 +144,7 @@ class ModalAlbumsCollectionViewController: UIViewController, PhotobookAssetPicke
         }
     }
     
-    private func animateContainerViewOffScreen(duration: TimeInterval = 0.4, completionHandler: (() -> Void)? = nil) {
+    private func animateContainerViewOffScreen(duration: TimeInterval = 0.3, completionHandler: (() -> Void)? = nil) {
         containerViewBottomConstraint.constant = view.bounds.height
         UIView.animate(withDuration: duration, delay: 0.0, options: [.beginFromCurrentState, .curveEaseOut], animations: {
             self.view.backgroundColor = .clear
