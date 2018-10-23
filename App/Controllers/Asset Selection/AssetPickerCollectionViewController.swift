@@ -413,18 +413,24 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
             let photobookAssets = PhotobookAsset.photobookAssets(with: selectedAssetsManager?.selectedAssets ?? [])
             addingDelegate?.didFinishAdding(photobookAssets)
         default:
-            let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
-            photobookViewController.assets = selectedAssetsManager?.selectedAssets
-            photobookViewController.photobookDelegate = self
-            photobookViewController.completionClosure = { (photobookProduct) in
-                OrderManager.shared.reset()
-                OrderManager.shared.basketOrder.products = [photobookProduct]
-                
-                let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
-                photobookViewController.navigationController?.pushViewController(checkoutViewController, animated: true)
-            }
-
-            navigationController?.pushViewController(photobookViewController, animated: true)
+            let tutorialViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
+            navigationController?.pushViewController(tutorialViewController, animated: true)
+//
+//
+//
+//
+//            let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
+//            photobookViewController.assets = selectedAssetsManager?.selectedAssets
+//            photobookViewController.photobookDelegate = self
+//            photobookViewController.completionClosure = { (photobookProduct) in
+//                OrderManager.shared.reset()
+//                OrderManager.shared.basketOrder.products = [photobookProduct]
+//
+//                let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
+//                photobookViewController.navigationController?.pushViewController(checkoutViewController, animated: true)
+//            }
+//
+//            navigationController?.pushViewController(photobookViewController, animated: true)
         }
         selectedAssetsManager?.orderAssetsByDate()
     }

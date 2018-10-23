@@ -33,6 +33,7 @@ class ProductManager {
     private(set) var layouts: [Layout]?
     
     var minimumRequiredPages: Int {
+        return 5
         if let minPages = currentProduct?.photobookTemplate.minPages { return minPages }
         if let minPages = products?.first?.minPages { return minPages }
         return 20
