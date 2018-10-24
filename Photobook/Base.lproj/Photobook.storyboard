@@ -29,7 +29,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eLK-H7-FCF">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                                 <connections>
                                     <segue destination="pnu-qP-sRp" kind="embed" identifier="pageViewControllerEmbedSegue" id="4wR-7V-B0g"/>
                                 </connections>
@@ -63,11 +63,11 @@
                                 <color key="currentPageIndicatorTintColor" red="0.090196078431372548" green="0.090196078431372548" blue="0.090196078431372548" alpha="1" colorSpace="calibratedRGB"/>
                             </pageControl>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" red="0.86274509803921573" green="0.8666666666666667" blue="0.87058823529411766" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="eLK-H7-FCF" firstAttribute="top" secondItem="Pp7-Dg-uc8" secondAttribute="top" id="16e-uo-HBr"/>
+                            <constraint firstItem="eLK-H7-FCF" firstAttribute="top" secondItem="GCp-3C-crk" secondAttribute="top" id="16e-uo-HBr"/>
                             <constraint firstItem="GCp-3C-crk" firstAttribute="bottom" secondItem="OUB-tZ-wlE" secondAttribute="bottom" constant="20" id="7h8-2A-a9G"/>
-                            <constraint firstItem="eLK-H7-FCF" firstAttribute="bottom" secondItem="GCp-3C-crk" secondAttribute="bottom" id="HXu-TP-PRt"/>
+                            <constraint firstItem="eLK-H7-FCF" firstAttribute="bottom" secondItem="Pp7-Dg-uc8" secondAttribute="bottom" id="HXu-TP-PRt"/>
                             <constraint firstItem="OUB-tZ-wlE" firstAttribute="leading" secondItem="GCp-3C-crk" secondAttribute="leading" constant="30" id="Q8Y-is-YcJ"/>
                             <constraint firstItem="GCp-3C-crk" firstAttribute="bottom" secondItem="Qqu-Yh-49q" secondAttribute="bottom" constant="20" id="Tgr-lj-YUD"/>
                             <constraint firstItem="GCp-3C-crk" firstAttribute="trailing" secondItem="Qqu-Yh-49q" secondAttribute="trailing" constant="30" id="VTD-TU-hvV"/>

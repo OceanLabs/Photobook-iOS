@@ -266,11 +266,11 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
             let photobookAssets = PhotobookAsset.photobookAssets(with: selectedAssetsManager.selectedAssets)
             addingDelegate?.didFinishAdding(photobookAssets)
         default:
-            UserDefaults.standard.set(true, forKey: hasShownTutorialKey)
-            
             if UserDefaults.standard.bool(forKey: hasShownTutorialKey) {
-                navigationController?.pushViewController(photobookViewController(), animated: false)
+                navigationController?.pushViewController(photobookViewController(), animated: true)
             } else {
+                UserDefaults.standard.set(true, forKey: hasShownTutorialKey)
+
                 let tutorialViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
                 tutorialViewController.delegate = self
                 present(tutorialViewController, animated: true, completion: nil)

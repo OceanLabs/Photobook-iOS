@@ -414,10 +414,10 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
             addingDelegate?.didFinishAdding(photobookAssets)
         default:
             if UserDefaults.standard.bool(forKey: hasShownTutorialKey) {
-                navigationController?.pushViewController(photobookViewController(), animated: false)
+                navigationController?.pushViewController(photobookViewController(), animated: true)
             } else {
                 UserDefaults.standard.set(true, forKey: hasShownTutorialKey)
-                
+
                 let tutorialViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
                 tutorialViewController.delegate = self
                 present(tutorialViewController, animated: true, completion: nil)
@@ -441,16 +441,16 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
     }
 }
 
-extension AssetPickerCollectionViewController: DismissDelegate {
-    
-    func wantsToDismiss(_ viewController: UIViewController) {
-        guard let _ = viewController as? TutorialViewController else { return }
-        navigationController?.pushViewController(photobookViewController(), animated: false)
-        dismiss(animated: true, completion: nil)
-    }
-}
-
 extension AssetPickerCollectionViewController: PhotobookDelegate {
+
+    func wantsToDismiss(_ viewController: UIViewController) {
+        if let _ = viewController as? TutorialViewController {
+            navigationController?.pushViewController(photobookViewController(), animated: false)
+            dismiss(animated: true, completion: nil)
+            return
+        }
+        navigationController?.popViewController(animated: true)
+    }
     
     func assetPickerViewController() -> PhotobookAssetPickerController {
         let modalAlbumsCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
