@@ -266,19 +266,24 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
             let photobookAssets = PhotobookAsset.photobookAssets(with: selectedAssetsManager.selectedAssets)
             addingDelegate?.didFinishAdding(photobookAssets)
         default:
-            let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
-            photobookViewController.assets = selectedAssetsManager.selectedAssets
-            photobookViewController.photobookDelegate = self
-            photobookViewController.completionClosure = { (photobookProduct) in
-                OrderManager.shared.reset()
-                OrderManager.shared.basketOrder.products = [photobookProduct]
-                
-                let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
-                photobookViewController.navigationController?.pushViewController(checkoutViewController, animated: true)
-            }
-
-            navigationController?.pushViewController(photobookViewController, animated: true)
+            let tutorialViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
+            tutorialViewController.delegate = self
+            present(tutorialViewController, animated: true, completion: nil)
         }
+    }
+    
+    private func photobookViewController() -> PhotobookViewController {
+        let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
+        photobookViewController.assets = selectedAssetsManager.selectedAssets
+        photobookViewController.photobookDelegate = self
+        photobookViewController.completionClosure = { (photobookProduct) in
+            OrderManager.shared.reset()
+            OrderManager.shared.basketOrder.products = [photobookProduct]
+            
+            let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
+            photobookViewController.navigationController?.pushViewController(checkoutViewController, animated: true)
+        }
+        return photobookViewController
     }
 }
 
@@ -292,6 +297,12 @@ extension AlbumsCollectionViewController: PhotobookDelegate {
     }
     
     func wantsToDismiss(_ viewController: UIViewController) {
+        if let _ = viewController as? TutorialViewController {
+            navigationController?.pushViewController(photobookViewController(), animated: false)
+            dismiss(animated: true, completion: nil)
+            return
+        }
+        
         if let tabBar = tabBarController?.tabBar {
             tabBar.isHidden = false
         }

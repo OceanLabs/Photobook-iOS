@@ -34,7 +34,13 @@ class TutorialViewController: UIViewController {
     }()
     
     private weak var pageViewController: UIPageViewController!
+    
+    @IBOutlet private weak var skipButton: UIButton!
+    @IBOutlet private weak var previousButton: UIButton!
+    @IBOutlet private weak var nextButton: UIButton!
     @IBOutlet private weak var pageControl: UIPageControl!
+    
+    weak var delegate: DismissDelegate?
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard segue.identifier == Constants.pageViewControllerEmbedSegueIdentifier else { return }
@@ -44,37 +50,58 @@ class TutorialViewController: UIViewController {
         pageViewController.delegate = self
         let firstPageViewController = tutorialPageControllers.first!
         pageViewController.setViewControllers([firstPageViewController], direction: .forward, animated: false, completion: nil)
+        
+        previousButton.alpha = 0.0
     }
     
     // MARK: - Button Actions
     
     @IBAction func tappedSkipButton(_ sender: UIButton) {
+        delegate?.wantsToDismiss?(self)
     }
     
     @IBAction func tappedPreviousButton(_ sender: UIButton) {
         guard pageControl.currentPage > 0 else { return }
         let previousPageViewController = tutorialPageControllers[pageControl.currentPage - 1]
-        pageViewController.setViewControllers([previousPageViewController], direction: .forward, animated: true, completion: nil)
+        pageViewController.setViewControllers([previousPageViewController], direction: .reverse, animated: true, completion: nil)
+        pageViewControllerDidFinishAnimating()
     }
     
     @IBAction func tappedNextButton(_ sender: UIButton) {
-        guard pageControl.currentPage < tutorialPages.count - 1 else { return }
+        guard pageControl.currentPage < tutorialPages.count - 1 else {
+            delegate?.wantsToDismiss?(self)
+            return
+        }
         let nextPageViewController = tutorialPageControllers[pageControl.currentPage + 1]
         pageViewController.setViewControllers([nextPageViewController], direction: .forward, animated: true, completion: nil)
+        pageViewControllerDidFinishAnimating()
     }
-}
-
-extension TutorialViewController: UIPageViewControllerDelegate {
     
-    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-        guard completed,
-            let pageViewController = pageViewController.viewControllers?.first as? TutorialPageViewController,
+    private func pageViewControllerDidFinishAnimating() {
+        guard let pageViewController = pageViewController.viewControllers?.first as? TutorialPageViewController,
             let index = tutorialPageControllers.index(of: pageViewController)
             else {
                 pageControl.currentPage = 0
                 return
         }
         pageControl.currentPage = index
+        
+        // Update buttons
+        let nextButtonTitle = index == tutorialPages.count - 1 ?
+            NSLocalizedString("Tutorial/Done", value: "Done", comment: "Done button to end the tutorial") :
+            NSLocalizedString("Tutorial/Next", value: "Next", comment: "Next button to continue the tutorial")
+        nextButton.setTitle(nextButtonTitle, for: .normal)
+        
+        previousButton.alpha = index == 0 ? 0.0 : 1.0
+        skipButton.alpha = index < tutorialPages.count - 1 ? 1.0 : 0.0
+    }
+}
+
+extension TutorialViewController: UIPageViewControllerDelegate {
+    
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        guard completed else { return }
+        pageViewControllerDidFinishAnimating()
     }
 }
 
@@ -85,8 +112,8 @@ extension TutorialViewController: UIPageViewControllerDataSource {
             let index = tutorialPageControllers.index(of: pageViewController)
         else { return nil}
         
-        let previousIndex = index > 0 ? index - 1 : 0
-        return tutorialPageControllers[previousIndex]
+        if index == 0 { return nil }
+        return tutorialPageControllers[index - 1]
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
@@ -94,7 +121,7 @@ extension TutorialViewController: UIPageViewControllerDataSource {
             let index = tutorialPageControllers.index(of: pageViewController)
             else { return nil}
 
-        let nextIndex = index < tutorialPages.count - 1 ? index + 1 : index
-        return tutorialPageControllers[nextIndex]
+        if index == tutorialPages.count - 1 { return nil }
+        return tutorialPageControllers[index + 1]
     }
 }
