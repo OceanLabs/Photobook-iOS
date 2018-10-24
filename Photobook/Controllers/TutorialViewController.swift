@@ -17,9 +17,12 @@ class TutorialViewController: UIViewController {
     
     // TEMP: - Localize
     private var tutorialPages = [
-        ["image": "onboarding1", "text": "<b>Add a title</b> to your book by tapping on the spine"],
-        ["image": "onboarding2", "text": "Swipe to <b>duplicate, add or delete</b> pages"],
-        ["image": "onboarding3", "text": "<b>Press and hold</b> to move pages"]
+        ["image": "onboarding1",
+         "text": NSLocalizedString("Tutorial/Screen1", value: "<b>Add a title</b> to your book by tapping on the spine", comment: "Explains how to edit the spine text")],
+        ["image": "onboarding2",
+         "text": NSLocalizedString("Tutorial/Screen1", value: "Swipe to <b>duplicate, add or delete</b> pages", comment: "Explains how to edit pages")],
+        ["image": "onboarding3",
+         "text": NSLocalizedString("Tutorial/Screen1", value: "<b>Press and hold</b> to move pages", comment: "Explains how to move pages")]
     ]
     
     private lazy var tutorialPageControllers: [TutorialPageViewController] = {
@@ -87,13 +90,12 @@ class TutorialViewController: UIViewController {
         pageControl.currentPage = index
         
         // Update buttons
-        let nextButtonTitle = index == tutorialPages.count - 1 ?
-            NSLocalizedString("Tutorial/Done", value: "Done", comment: "Done button to end the tutorial") :
-            NSLocalizedString("Tutorial/Next", value: "Next", comment: "Next button to continue the tutorial")
-        nextButton.setTitle(nextButtonTitle, for: .normal)
-        
-        previousButton.alpha = index == 0 ? 0.0 : 1.0
-        skipButton.alpha = index < tutorialPages.count - 1 ? 1.0 : 0.0
+        UIView.animate(withDuration: 0.2) {
+            let nextButtonTitle = index == self.tutorialPages.count - 1 ? CommonLocalizedStrings.done : CommonLocalizedStrings.next
+            self.nextButton.setTitle(nextButtonTitle, for: .normal)
+            self.previousButton.alpha = index == 0 ? 0.0 : 1.0
+            self.skipButton.alpha = index < self.tutorialPages.count - 1 ? 1.0 : 0.0
+        }
     }
 }
 
