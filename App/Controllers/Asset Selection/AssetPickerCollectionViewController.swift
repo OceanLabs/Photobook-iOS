@@ -413,10 +413,15 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
             let photobookAssets = PhotobookAsset.photobookAssets(with: selectedAssetsManager?.selectedAssets ?? [])
             addingDelegate?.didFinishAdding(photobookAssets)
         default:
-            // TODO: Check if already shown
-            let tutorialViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
-            tutorialViewController.delegate = self
-            present(tutorialViewController, animated: true, completion: nil)
+            if UserDefaults.standard.bool(forKey: hasShownTutorialKey) {
+                navigationController?.pushViewController(photobookViewController(), animated: false)
+            } else {
+                UserDefaults.standard.set(true, forKey: hasShownTutorialKey)
+                
+                let tutorialViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
+                tutorialViewController.delegate = self
+                present(tutorialViewController, animated: true, completion: nil)
+            }
         }
         selectedAssetsManager?.orderAssetsByDate()
     }
