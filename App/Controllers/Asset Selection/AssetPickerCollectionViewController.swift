@@ -413,24 +413,44 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
             let photobookAssets = PhotobookAsset.photobookAssets(with: selectedAssetsManager?.selectedAssets ?? [])
             addingDelegate?.didFinishAdding(photobookAssets)
         default:
-            let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
-            photobookViewController.assets = selectedAssetsManager?.selectedAssets
-            photobookViewController.photobookDelegate = self
-            photobookViewController.completionClosure = { (photobookProduct) in
-                OrderManager.shared.reset()
-                OrderManager.shared.basketOrder.products = [photobookProduct]
-                
-                let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
-                photobookViewController.navigationController?.pushViewController(checkoutViewController, animated: true)
-            }
+            if UserDefaults.standard.bool(forKey: hasShownTutorialKey) {
+                navigationController?.pushViewController(photobookViewController(), animated: true)
+            } else {
+                UserDefaults.standard.set(true, forKey: hasShownTutorialKey)
 
-            navigationController?.pushViewController(photobookViewController, animated: true)
+                let tutorialViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
+                tutorialViewController.delegate = self
+                present(tutorialViewController, animated: true, completion: nil)
+            }
         }
         selectedAssetsManager?.orderAssetsByDate()
+    }
+    
+    private func photobookViewController() -> PhotobookViewController {
+        let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
+        photobookViewController.assets = selectedAssetsManager?.selectedAssets
+        photobookViewController.photobookDelegate = self
+        photobookViewController.completionClosure = { (photobookProduct) in
+            OrderManager.shared.reset()
+            OrderManager.shared.basketOrder.products = [photobookProduct]
+
+            let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
+            photobookViewController.navigationController?.pushViewController(checkoutViewController, animated: true)
+        }
+        return photobookViewController
     }
 }
 
 extension AssetPickerCollectionViewController: PhotobookDelegate {
+
+    func wantsToDismiss(_ viewController: UIViewController) {
+        if let _ = viewController as? TutorialViewController {
+            navigationController?.pushViewController(photobookViewController(), animated: false)
+            dismiss(animated: true, completion: nil)
+            return
+        }
+        navigationController?.popViewController(animated: true)
+    }
     
     func assetPickerViewController() -> PhotobookAssetPickerController {
         let modalAlbumsCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController

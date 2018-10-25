@@ -20,6 +20,8 @@ let photobookResourceBundle: Bundle = {
 }()
 let photobookMainStoryboard =  UIStoryboard(name: "Photobook", bundle: photobookResourceBundle)
 
+let hasShownTutorialKey = "PhotobookTutorialShown"
+
 struct Colors {
     static let blueTint = UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0)
     static let greyTint = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1.0)
@@ -46,6 +48,9 @@ struct CommonLocalizedStrings {
     static let cancel = NSLocalizedString("General/CancelButtonTitle", value: "Cancel", comment: "Cancel an action")
     static let yes = NSLocalizedString("General/YesButtonTitle", value: "Yes", comment: "Agree to an action")
     static let no = NSLocalizedString("General/NoButtonTitle", value: "No", comment: "Don't agree to an action")
+    static let done = NSLocalizedString("General/Done", value: "Done", comment: "Agree with changes and finalise")
+    static let next = NSLocalizedString("General/Next", value: "Next", comment: "Proceed to the next step")
+
     static let checkConnectionAndRetry = NSLocalizedString("Generic/CheckConnectionAndRetry", value: "Please check your internet connectivity and try again.", comment: "Message instructing the user to check their Internet connection.")
     static let accessibilityListItemSelected = NSLocalizedString("Accessibility/ListItemSelected", value: "Selected", comment: "Accessibility message to let the user know that an item in a list is selected.") + ". "
     static let accessibilityDoubleTapToSelectListItem = NSLocalizedString("Accessibility/DoubleTapToSelectListItem", value: "Double tap to select.", comment: "Accessibility hint letting the user know that they can double tap to select a list item")
