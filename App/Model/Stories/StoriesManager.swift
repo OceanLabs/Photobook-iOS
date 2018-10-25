@@ -274,7 +274,7 @@ class StoriesManager: NSObject {
             var subarray = Array(subarrayIndex == subarrayCount - 1 ? story.assets[subarrayStartIndex...] : story.assets[subarrayStartIndex..<subarrayStartIndex + subarrayLength])
             
             for _ in 0..<assetsFromEachSubarray {
-                let selectedIndex = Int(arc4random_uniform(UInt32(subarray.count)))
+                let selectedIndex = Int.random(in: 0 ..< subarray.count)
                 selectedAssets.append(subarray.remove(at: selectedIndex))
             }
             unusedAssets.append(contentsOf: subarray)
@@ -282,7 +282,7 @@ class StoriesManager: NSObject {
         
         // In case we have come up short because of all the integer divisions we have done above, select some more assets from the unused ones if needed.
         while selectedAssets.count < minimumAssets {
-            let selectedIndex = Int(arc4random()) % unusedAssets.count
+            let selectedIndex = Int.random(in: 0 ..< unusedAssets.count)
             selectedAssets.append(unusedAssets.remove(at: selectedIndex))
         }
         

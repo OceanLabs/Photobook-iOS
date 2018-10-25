@@ -242,7 +242,6 @@
 		2ED14C232063AA4000ED2E2C /* UITextViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3A731D202AFB6800EEF04C /* UITextViewExtensions.swift */; };
 		2ED14C242063AA4000ED2E2C /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9ED91FBDEEF400F28C00 /* UIViewExtensions.swift */; };
 		2ED14C252063AA4000ED2E2C /* UIAlertControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8B27F82045A6C000A0B403 /* UIAlertControllerExtensions.swift */; };
-		2ED14C292063AA4000ED2E2C /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A1433A1FDAD278000EFE0D /* Random.swift */; };
 		2ED14C2B2063AA4000ED2E2C /* ErrorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA88C63203C321E00CADCAD /* ErrorUtils.swift */; };
 		2ED14C2C2063AA4000ED2E2C /* ErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8B27F62045A44800A0B403 /* ErrorMessage.swift */; };
 		2ED14C2D2063AA4B00ED2E2C /* Lora-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08D12021E4B300C55D2F /* Lora-Regular.ttf */; };
@@ -454,7 +453,6 @@
 		6F202CB6211998E9000A6C02 /* PhotobookPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB39DD41FC5AE0F009EC5B2 /* PhotobookPageView.swift */; };
 		6F202CB7211998E9000A6C02 /* InstagramAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA24E4E2035E05C0069B12A /* InstagramAlbum.swift */; };
 		6F202CB8211998E9000A6C02 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58961FB3287900F31A9E /* Album.swift */; };
-		6F202CB9211998E9000A6C02 /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A1433A1FDAD278000EFE0D /* Random.swift */; };
 		6F202CBA211998E9000A6C02 /* ColorSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3920F620177FC900D6C30B /* ColorSelectionViewController.swift */; };
 		6F202CBF211998E9000A6C02 /* Photobook.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E533AD520E3840D004F8481 /* Photobook.storyboard */; };
 		6F202CC0211998E9000A6C02 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E0B58881FB30F2100F31A9E /* LaunchScreen.storyboard */; };
@@ -593,7 +591,6 @@
 		B97ABBD0204D52E400238C8A /* ReceiptInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97ABBCF204D52E400238C8A /* ReceiptInfoTableViewCell.swift */; };
 		B986DF2F201B445E005461A0 /* UpsellOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = B986DF2E201B445E005461A0 /* UpsellOption.swift */; };
 		B99536E02035D8E10019B1AF /* TextEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99536DF2035D8E00019B1AF /* TextEditingViewController.swift */; };
-		B9A1433B1FDAD278000EFE0D /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A1433A1FDAD278000EFE0D /* Random.swift */; };
 		B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */; };
 		B9ACCF6020DBF79A004EA2F5 /* Price.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9216FFB20C6C34F003671B0 /* Price.swift */; };
 		B9ACCF6120DBF7A3004EA2F5 /* ShippingMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = B937E94E20CFD4B300BC21FD /* ShippingMethod.swift */; };
@@ -946,7 +943,6 @@
 		B97ABBCF204D52E400238C8A /* ReceiptInfoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReceiptInfoTableViewCell.swift; sourceTree = "<group>"; };
 		B986DF2E201B445E005461A0 /* UpsellOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpsellOption.swift; sourceTree = "<group>"; };
 		B99536DF2035D8E00019B1AF /* TextEditingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextEditingViewController.swift; sourceTree = "<group>"; };
-		B9A1433A1FDAD278000EFE0D /* Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Random.swift; sourceTree = "<group>"; };
 		B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
 		B9ACCF6220DD486A004EA2F5 /* PriceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceTests.swift; sourceTree = "<group>"; };
 		B9BC2E261FBF195200F4AA56 /* AssetCollectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCollectorViewController.swift; sourceTree = "<group>"; };
@@ -1741,7 +1737,6 @@
 		B9A143391FDAD25D000EFE0D /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				B9A1433A1FDAD278000EFE0D /* Random.swift */,
 				2EA88C63203C321E00CADCAD /* ErrorUtils.swift */,
 				2E8B27F62045A44800A0B403 /* ErrorMessage.swift */,
 				2E5CCC29207B76870003000F /* GlobalConstants.swift */,
@@ -2383,7 +2378,6 @@
 				2EB39DD51FC5AE0F009EC5B2 /* PhotobookPageView.swift in Sources */,
 				2EA24E4F2035E05C0069B12A /* InstagramAlbum.swift in Sources */,
 				2E0B58971FB3287900F31A9E /* Album.swift in Sources */,
-				B9A1433B1FDAD278000EFE0D /* Random.swift in Sources */,
 				6F3920F720177FCA00D6C30B /* ColorSelectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2563,7 +2557,6 @@
 				2ED14BBC2063AA4000ED2E2C /* ShippingMethodsViewController.swift in Sources */,
 				2ED14BD02063AA4000ED2E2C /* CoverLayoutSelectionCollectionViewCell.swift in Sources */,
 				2ED14C202063AA4000ED2E2C /* UIImageViewExtensions.swift in Sources */,
-				2ED14C292063AA4000ED2E2C /* Random.swift in Sources */,
 				2ED14C232063AA4000ED2E2C /* UITextViewExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2740,7 +2733,6 @@
 				6F202CB6211998E9000A6C02 /* PhotobookPageView.swift in Sources */,
 				6F202CB7211998E9000A6C02 /* InstagramAlbum.swift in Sources */,
 				6F202CB8211998E9000A6C02 /* Album.swift in Sources */,
-				6F202CB9211998E9000A6C02 /* Random.swift in Sources */,
 				6F202CBA211998E9000A6C02 /* ColorSelectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

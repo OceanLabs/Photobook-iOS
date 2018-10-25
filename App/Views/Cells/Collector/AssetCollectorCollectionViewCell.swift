@@ -48,7 +48,7 @@ class AssetCollectorCollectionViewCell: BorderedCollectionViewCell {
         animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
         
         containerView.layer.removeAllAnimations()
-        DispatchQueue.main.asyncAfter(deadline: .now() + Random.double(min: 0, max: 0.1)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + Double.random(in: 0.0 ... 0.1)) {
             self.containerView.layer.add(animation, forKey: "transform")
         }
         
