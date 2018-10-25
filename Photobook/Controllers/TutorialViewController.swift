@@ -15,7 +15,6 @@ class TutorialViewController: UIViewController {
         static let pageViewControllerEmbedSegueIdentifier = "pageViewControllerEmbedSegue"
     }
     
-    // TEMP: - Localize
     private var tutorialPages = [
         ["image": "onboarding1",
          "text": NSLocalizedString("Tutorial/Screen1", value: "<b>Add a title</b> to your book by tapping on the spine", comment: "Explains how to edit the spine text")],
