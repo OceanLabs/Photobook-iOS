@@ -29,6 +29,7 @@ class CustomAsset: Asset {
     init(dataSource: AssetDataSource, size: CGSize, date: Date? = nil) {
         self.dataSource = dataSource
         self.size = size
+        self.date = date
     }
     
     func image(size: CGSize, loadThumbnailFirst: Bool, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
@@ -65,6 +66,4 @@ class CustomAsset: Asset {
         try container.encode(size, forKey: .size)
         try container.encode(NSKeyedArchiver.archivedData(withRootObject: dataSource), forKey: .dataSource)
     }
-    
-
 }
