@@ -18,8 +18,5 @@ class CurrencyRoundingBehavior: NSDecimalNumberBehaviors {
         return 2
     }
     
-    func exceptionDuringOperation(_ operation: Selector, error: NSDecimalNumber.CalculationError, leftOperand: NSDecimalNumber, rightOperand: NSDecimalNumber?) -> NSDecimalNumber? {
-        
-        return nil
-    }
+    func exceptionDuringOperation(_ operation: Selector, error: NSDecimalNumber.CalculationError, leftOperand: NSDecimalNumber, rightOperand: NSDecimalNumber?) -> NSDecimalNumber? { return nil }
 }
