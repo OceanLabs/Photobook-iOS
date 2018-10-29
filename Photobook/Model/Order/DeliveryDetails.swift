@@ -164,14 +164,10 @@ func ==(lhs: DeliveryDetails, rhs: DeliveryDetails) -> Bool{
 extension DeliveryDetails: Hashable {
     
     /// Only the address matters
-    var hashValue: Int {
-        var stringHash = ""
-        if let city = city { stringHash += "ct:\(city.hashValue)," }
-        if let zipOrPostcode = zipOrPostcode { stringHash += "zp:\(zipOrPostcode.hashValue)," }
-        if let stateOrCounty = stateOrCounty { stringHash += "st:\(stateOrCounty.hashValue)," }
-        stringHash += "cy:\(country.name.hashValue),"
-        
-        return stringHash.hashValue
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(city)
+        hasher.combine(zipOrPostcode)
+        hasher.combine(stateOrCounty)
+        hasher.combine(country.name)
     }
 }
-

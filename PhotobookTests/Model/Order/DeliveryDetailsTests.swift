@@ -27,6 +27,22 @@ class DeliveryDetailsTests: XCTestCase {
         return deliveryDetails
     }
     
+    func testCopy() {
+        let validDetails = self.validDetails()
+        let validDetailsCopy = validDetails.copy() as! DeliveryDetails
+        
+        XCTAssertEqual(validDetails.firstName, validDetailsCopy.firstName)
+        XCTAssertEqual(validDetails.lastName, validDetailsCopy.lastName)
+        XCTAssertEqual(validDetails.email, validDetailsCopy.email)
+        XCTAssertEqual(validDetails.phone, validDetailsCopy.phone)
+        XCTAssertEqual(validDetails.line1, validDetailsCopy.line1)
+        XCTAssertEqual(validDetails.line2, validDetailsCopy.line2)
+        XCTAssertEqual(validDetails.city, validDetailsCopy.city)
+        XCTAssertEqual(validDetails.zipOrPostcode, validDetailsCopy.zipOrPostcode)
+        XCTAssertEqual(validDetails.stateOrCounty, validDetailsCopy.stateOrCounty)
+        XCTAssertEqual(validDetails.country.codeAlpha2, validDetailsCopy.country.codeAlpha2)
+    }
+    
     func testIsValid_shouldBeTrueWithAValidAddress() {
         let deliveryDetails = validDetails()
         XCTAssertTrue(deliveryDetails.isValid)
@@ -134,6 +150,33 @@ class DeliveryDetailsTests: XCTestCase {
         XCTAssertEqual([deliveryDetails], DeliveryDetails.savedDeliveryDetails)
     }
     
+    func testSelectedDetails() {
+        let deliveryDetails = validDetails()
+        let deliveryDetails2 = validDetails()
+        let deliveryDetails3 = validDetails()
+
+        DeliveryDetails.add(deliveryDetails)
+        DeliveryDetails.add(deliveryDetails3)
+        DeliveryDetails.add(deliveryDetails2)
+        
+        let selected = DeliveryDetails.selectedDetails()
+        XCTAssertEqualOptional(selected, deliveryDetails2)
+    }
+    
+    func testJsonRepresentation() {
+        let deliveryDetails = validDetails()
+        
+        let dictionary = deliveryDetails.jsonRepresentation()
+        XCTAssertEqualOptional(dictionary["recipient_first_name"], deliveryDetails.firstName)
+        XCTAssertEqualOptional(dictionary["recipient_last_name"], deliveryDetails.lastName)
+        XCTAssertEqualOptional(dictionary["recipient_name"], deliveryDetails.fullName)
+        XCTAssertEqualOptional(dictionary["address_line_1"], deliveryDetails.line1)
+        XCTAssertEqualOptional(dictionary["address_line_2"], deliveryDetails.line2)
+        XCTAssertEqualOptional(dictionary["city"], deliveryDetails.city)
+        XCTAssertEqualOptional(dictionary["county_state"], deliveryDetails.stateOrCounty)
+        XCTAssertEqualOptional(dictionary["postcode"], deliveryDetails.zipOrPostcode)
+        XCTAssertEqualOptional(dictionary["country_code"], deliveryDetails.country.codeAlpha3)
+    }
     
     func testDetails_shouldBeEmpty() {
         XCTAssertTrue(DeliveryDetails.savedDeliveryDetails.count == 0)
