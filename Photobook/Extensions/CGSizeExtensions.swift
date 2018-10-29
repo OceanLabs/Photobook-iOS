@@ -17,9 +17,7 @@ extension CGSize {
         if sourceAspectRatio >= targetAspectRatio {
             return CGSize(width: targetSize.height * sourceAspectRatio, height: targetSize.height)
         }
-        else{
-            return CGSize(width: targetSize.width, height: targetSize.width / sourceAspectRatio)
-        }
+        return CGSize(width: targetSize.width, height: targetSize.width / sourceAspectRatio)
     }
 
     static func * (size: CGSize, scalar: CGFloat) -> CGSize {
