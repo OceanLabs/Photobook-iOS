@@ -71,7 +71,16 @@ class CostTests: XCTestCase {
         let cost = Cost.parseDetails(dictionary: invalidDictionary)
         XCTAssertNil(cost)
     }
-    
+
+    func testParseDetails_shouldParsePromoDiscount() {
+        var validDictionaryCopy = validDictionary
+        validDictionaryCopy["promo_code"] = ["discount": ["GBP": 2.0, "EUR": 2.3]]
+        
+        let cost = Cost.parseDetails(dictionary: validDictionaryCopy)
+        XCTAssertEqualOptional(cost?.promoDiscount?.value, 2.0)
+        XCTAssertEqualOptional(cost?.promoDiscount?.currencyCode, "GBP")
+    }
+
     func testParseDetails_shouldPopulatePromoDiscountError() {
         var invalidDictionary = validDictionary
         invalidDictionary["promo_code"] = ["invalid_message": "Promo code not recognised"]
