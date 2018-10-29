@@ -28,17 +28,7 @@ extension CGFloat {
     }
     
     static func ==~(lhs: CGFloat, rhs: CGFloat) -> Bool {
-        let difference = abs(lhs - rhs)
-        
-        if lhs == rhs {
-            return true
-        } else if lhs == 0.0 || rhs == 0.0 || difference < CGFloat.leastNormalMagnitude {
-            return difference < (minPrecision * CGFloat.leastNormalMagnitude)
-        } else {
-            let absA = abs(lhs)
-            let absB = abs(rhs)
-
-            return difference / (absA + absB) < minPrecision
-        }
+        if lhs == rhs { return true }
+        return abs(lhs - rhs) < minPrecision
     }
 }

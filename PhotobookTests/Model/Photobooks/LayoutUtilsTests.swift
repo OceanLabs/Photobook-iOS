@@ -54,7 +54,7 @@ class LayoutUtilsTests: XCTestCase {
             (-pi / 6.0, -pi / 2.0),
             (-pi / 3.0, -pi / 2.0),
             (-pi * 2.0 / 3.0, -pi),
-            (-pi * 0.99, -3.0 * pi / 2.0), // If close to a cuadrant, should return next one
+            (-pi + 4.98 * .pi / 180.0, -3.0 * pi / 2.0), // If close to a cuadrant (less than 5 degrees), should return next one
             (pi / 6.0, 0.0),
             (pi / 3.0, 0.0)
         ]
