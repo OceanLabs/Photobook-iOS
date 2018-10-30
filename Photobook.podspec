@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
 Description here
                    DESC
 
-  s.license      = "MIT"
+  s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.platform     = :ios, "9.0"
   s.authors      = { 'Konstantinos Karagiannis' => 'kkarayannis@gmail.com', 'Jaime Landazuri' => '', 'Julian Gruber' => '' }
   s.homepage     = 'https://www.kite.ly'
