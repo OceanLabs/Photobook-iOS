@@ -1,9 +1,30 @@
 //
-//  AssetPickerCollectionViewController.swift
-//  Photobook
+//  Modified MIT License
 //
-//  Created by Konstadinos Karayannis on 10/11/2017.
-//  Copyright © 2017 Kite.ly. All rights reserved.
+//  Copyright (c) 2010-2018 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 import UIKit
@@ -57,6 +78,8 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     
     var collectorMode: AssetCollectorMode = .selecting
     weak var addingDelegate: PhotobookAssetAddingDelegate?
+    
+    var shouldAnimateAssetPicker = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -411,24 +434,44 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
             let photobookAssets = PhotobookAsset.photobookAssets(with: selectedAssetsManager?.selectedAssets ?? [])
             addingDelegate?.didFinishAdding(photobookAssets)
         default:
-            let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
-            photobookViewController.assets = selectedAssetsManager?.selectedAssets
-            photobookViewController.photobookDelegate = self
-            photobookViewController.completionClosure = { (photobookProduct) in
-                OrderManager.shared.reset()
-                OrderManager.shared.basketOrder.products = [photobookProduct]
-                
-                let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
-                photobookViewController.navigationController?.pushViewController(checkoutViewController, animated: true)
-            }
+            if UserDefaults.standard.bool(forKey: hasShownTutorialKey) {
+                navigationController?.pushViewController(photobookViewController(), animated: true)
+            } else {
+                UserDefaults.standard.set(true, forKey: hasShownTutorialKey)
 
-            navigationController?.pushViewController(photobookViewController, animated: true)
+                let tutorialViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
+                tutorialViewController.delegate = self
+                present(tutorialViewController, animated: true, completion: nil)
+            }
         }
         selectedAssetsManager?.orderAssetsByDate()
+    }
+    
+    private func photobookViewController() -> PhotobookViewController {
+        let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
+        photobookViewController.assets = selectedAssetsManager?.selectedAssets
+        photobookViewController.photobookDelegate = self
+        photobookViewController.completionClosure = { (photobookProduct) in
+            OrderManager.shared.reset()
+            OrderManager.shared.basketOrder.products = [photobookProduct]
+
+            let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
+            photobookViewController.navigationController?.pushViewController(checkoutViewController, animated: true)
+        }
+        return photobookViewController
     }
 }
 
 extension AssetPickerCollectionViewController: PhotobookDelegate {
+
+    func wantsToDismiss(_ viewController: UIViewController) {
+        if let _ = viewController as? TutorialViewController {
+            navigationController?.pushViewController(photobookViewController(), animated: false)
+            dismiss(animated: true, completion: nil)
+            return
+        }
+        navigationController?.popViewController(animated: true)
+    }
     
     func assetPickerViewController() -> PhotobookAssetPickerController {
         let modalAlbumsCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
@@ -581,7 +624,7 @@ extension AssetPickerCollectionViewController {
     }
 }
 
-extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegate{
+extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegate {
     // MARK: UIViewControllerPreviewingDelegate
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {

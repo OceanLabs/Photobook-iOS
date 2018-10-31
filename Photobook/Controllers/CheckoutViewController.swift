@@ -1,9 +1,30 @@
 //
-//  CheckoutViewController.swift
-//  Photobook
+//  Modified MIT License
 //
-//  Created by Julian Gruber on 16/01/2018.
-//  Copyright © 2018 Kite.ly. All rights reserved.
+//  Copyright (c) 2010-2018 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 import UIKit
@@ -17,6 +38,7 @@ class CheckoutViewController: UIViewController {
         static let segueIdentifierDeliveryDetails = "segueDeliveryDetails"
         static let segueIdentifierShippingMethods = "segueShippingMethods"
         static let segueIdentifierPaymentMethods = "seguePaymentMethods"
+        static let segueIdentifierAddressInput = "segueAddressInput"
         
         static let detailsLabelColor = UIColor.black
         static let detailsLabelColorRequired = UIColor.red.withAlphaComponent(0.6)
@@ -148,6 +170,8 @@ class CheckoutViewController: UIViewController {
             navigationItem.leftBarButtonItems = [ cancelBarButtonItem ]
         }
         
+        order.deliveryDetails = DeliveryDetails.selectedDetails()
+
         emptyScreenViewController.show(message: Constants.loadingDetailsText, activity: true)
     }
     
@@ -212,6 +236,14 @@ class CheckoutViewController: UIViewController {
         } else {
             emptyScreenViewController.hide()
         }
+    }
+    
+    override var shouldAutorotate: Bool {
+        return false
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
     }
     
     @objc func tappedCancel() {
@@ -337,12 +369,12 @@ class CheckoutViewController: UIViewController {
         
         // Address
         var addressString = ""
-        if let address = order.deliveryDetails?.address, let line1 = address.line1 {
+        if let details = order.deliveryDetails, let line1 = details.line1 {
             
             addressString = line1
-            if let line2 = address.line2, !line2.isEmpty { addressString = addressString + ", " + line2 }
-            if let postcode = address.zipOrPostcode, !postcode.isEmpty { addressString = addressString + ", " + postcode }
-            if !address.country.name.isEmpty { addressString = addressString + ", " + address.country.name }
+            if let line2 = details.line2, !line2.isEmpty { addressString = addressString + ", " + line2 }
+            if let postcode = details.zipOrPostcode, !postcode.isEmpty { addressString = addressString + ", " + postcode }
+            if !details.country.name.isEmpty { addressString = addressString + ", " + details.country.name }
             
             //reset view
             deliveryDetailsLabel.textColor = Constants.detailsLabelColor
@@ -427,7 +459,7 @@ class CheckoutViewController: UIViewController {
     }
     
     private func deliveryDetailsAreValid() -> Bool {
-        return (!order.orderIsFree && order.paymentMethod == .applePay) || (order.deliveryDetails?.address?.isValid ?? false)
+        return (!order.orderIsFree && order.paymentMethod == .applePay) || (order.deliveryDetails?.isValid ?? false)
     }
     
     private func paymentMethodIsValid() -> Bool {
@@ -532,6 +564,10 @@ class CheckoutViewController: UIViewController {
             if let paymentMethodsViewController = segue.destination as? PaymentMethodsViewController {
                 paymentMethodsViewController.order = order
             }
+        case Constants.segueIdentifierAddressInput:
+            if let addressTableViewController = segue.destination as? AddressTableViewController {
+                addressTableViewController.delegate = self
+            }
         default:
             break
         }
@@ -568,6 +604,14 @@ class CheckoutViewController: UIViewController {
         amountPickerViewController.delegate = self
         amountPickerViewController.modalPresentationStyle = .overCurrentContext
         self.present(amountPickerViewController, animated: false, completion: nil)
+    }
+    
+    @IBAction func deliveryDetailsTapped(_ sender: UITapGestureRecognizer) {
+        if DeliveryDetails.savedDeliveryDetails.count == 0 {
+            performSegue(withIdentifier: Constants.segueIdentifierAddressInput, sender: nil)
+            return
+        }
+        performSegue(withIdentifier: Constants.segueIdentifierDeliveryDetails, sender: nil)
     }
     
     @IBAction func payButtonTapped(_ sender: UIButton) {
@@ -763,6 +807,11 @@ extension CheckoutViewController: BasketProductTableViewCellDelegate {
         let selectedAmount = editingProductIndex != nil ? order.products[editingProductIndex!].itemCount : 1
         presentAmountPicker(selectedAmount: selectedAmount)
     }
+}
+
+extension CheckoutViewController: AddressTableViewControllerDelegate {
     
-    
+    func addressTableViewControllerDidEdit() {
+        navigationController?.popViewController(animated: true)
+    }
 }

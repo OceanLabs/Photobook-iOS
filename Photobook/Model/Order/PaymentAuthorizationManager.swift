@@ -1,9 +1,30 @@
 //
-//  PaymentAuthorizationManager.swift
-//  Shopify
+//  Modified MIT License
 //
-//  Created by Konstadinos Karayannis on 25/07/2017.
-//  Copyright © 2017 Kite.ly. All rights reserved.
+//  Copyright (c) 2010-2018 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 import UIKit
@@ -169,9 +190,7 @@ class PaymentAuthorizationManager: NSObject {
                 return
         }
         
-        let address = details.address!
-
-        let paypalAddress = OLPayPalWrapper.payPalShippingAddress(withRecipientName: details.fullName, withLine1: address.line1, withLine2: address.line2, withCity: address.city, withState: address.stateOrCounty, withPostalCode: address.zipOrPostcode, withCountryCode: address.country.codeAlpha2)
+        let paypalAddress = OLPayPalWrapper.payPalShippingAddress(withRecipientName: details.fullName, withLine1: details.line1, withLine2: details.line2, withCity: details.city, withState: details.stateOrCounty, withPostalCode: details.zipOrPostcode, withCountryCode: details.country.codeAlpha2)
 
         let payment = OLPayPalWrapper.payPalPayment(withAmount: totalCost as NSDecimalNumber, currencyCode: cost.total.currencyCode, shortDescription: orderDescription, intent: 1/*PayPalPaymentIntentAuthorize*/, shippingAddress: paypalAddress)
 
@@ -206,32 +225,31 @@ extension PaymentAuthorizationManager {
 extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDelegate {
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: @escaping (PKPaymentAuthorizationStatus) -> Void) {
-        let shippingAddress = Address()
-        shippingAddress.line1 = payment.shippingContact?.postalAddress?.street
-        shippingAddress.city = payment.shippingContact?.postalAddress?.city
-        shippingAddress.stateOrCounty = payment.shippingContact?.postalAddress?.state
-        shippingAddress.zipOrPostcode = payment.shippingContact?.postalAddress?.postalCode
 
         let deliveryDetails = DeliveryDetails()
-        deliveryDetails.address = shippingAddress
         deliveryDetails.firstName = payment.shippingContact?.name?.givenName
         deliveryDetails.lastName = payment.shippingContact?.name?.familyName
         deliveryDetails.email = payment.shippingContact?.emailAddress
         deliveryDetails.phone = payment.shippingContact?.phoneNumber?.stringValue
+        deliveryDetails.line1 = payment.shippingContact?.postalAddress?.street
+        deliveryDetails.city = payment.shippingContact?.postalAddress?.city
+        deliveryDetails.stateOrCounty = payment.shippingContact?.postalAddress?.state
+        deliveryDetails.zipOrPostcode = payment.shippingContact?.postalAddress?.postalCode
+
 
         if let code = payment.shippingContact?.postalAddress?.isoCountryCode, let country = Country.countryFor(code: code) {
-            shippingAddress.country = country
+            deliveryDetails.country = country
         } else if let name = payment.shippingContact?.postalAddress?.country, let country = Country.countryFor(name: name) {
-            shippingAddress.country = country
-        }
-        
-        guard shippingAddress.isValid else {
-            completion(.invalidShippingPostalAddress)
-            return
+            deliveryDetails.country = country
         }
         
         guard let emailAddress = payment.shippingContact?.emailAddress, emailAddress.isValidEmailAddress() else {
             completion(.invalidShippingContact)
+            return
+        }
+        
+        guard deliveryDetails.isValid else {
+            completion(.invalidShippingPostalAddress)
             return
         }
         
@@ -256,14 +274,10 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didSelectShippingContact contact: PKContact, completion: @escaping (PKPaymentAuthorizationStatus, [PKShippingMethod], [PKPaymentSummaryItem]) -> Void) {
         
-        let shippingAddress = Address()
-        
-        if let code = contact.postalAddress?.isoCountryCode, let country = Country.countryFor(code: code){
-            shippingAddress.country = country
-        }
-        
         let deliveryDetails = DeliveryDetails()
-        deliveryDetails.address = shippingAddress
+        if let code = contact.postalAddress?.isoCountryCode, let country = Country.countryFor(code: code){
+            deliveryDetails.country = country
+        }
         basketOrder.deliveryDetails = deliveryDetails
         
         basketOrder.updateCost { [weak welf = self] (error: Error?) in

@@ -1,9 +1,30 @@
 //
-//  PhotobookViewController.swift
-//  Photobook
+//  Modified MIT License
 //
-//  Created by Konstadinos Karayannis on 21/11/2017.
-//  Copyright © 2017 Kite.ly. All rights reserved.
+//  Copyright (c) 2010-2018 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 import UIKit
@@ -46,7 +67,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         static let ctaButtonVerticalMargin: CGFloat = 15.0
     }
     private var reverseRearrangeScale: CGFloat {
-        return 1 + (1 - Constants.rearrangeScale) / Constants.rearrangeScale
+        return 1.0 / Constants.rearrangeScale
     }
 
     @IBOutlet private weak var collectionViewTrailingConstraint: NSLayoutConstraint!
@@ -127,6 +148,14 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         adjustButtonLabels()
     }
     
+    override var shouldAutorotate: Bool {
+        return false
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
+    
     private func adjustButtonLabels() {
         titleButton.titleLabel?.sizeToFit()
         titleButton.sizeToFit()
@@ -179,7 +208,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         // Remove pasteboard so that we avoid edge-cases with stale or inconsistent data
         UIPasteboard.remove(withName: UIPasteboard.Name("ly.kite.photobook.rearrange"))
         
-        NotificationCenter.default.addObserver(self, selector: #selector(menuDidHide), name: UIMenuController.didHideMenuNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
         
         if let photobook = ProductManager.shared.products?.first {
@@ -220,25 +248,20 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func setupTitleView() {
-        if !isRearranging {
-            titleButton.setTitle(product.template.name, for: .normal)
+        titleButton.setTitle(product.template.name, for: .normal)
 
-            if let numberOfProducts = ProductManager.shared.products?.count, numberOfProducts == 1 {
-                titleButton.setImage(nil, for: .normal)
-            }
-            
-            titleButton.sizeToFit()
-            navigationItem.rightBarButtonItem?.tintColor = Colors.blueTint
-            navigationItem.titleView = titleButton
-            return
+        if let numberOfProducts = ProductManager.shared.products?.count, numberOfProducts == 1 {
+            titleButton.setImage(nil, for: .normal)
         }
         
-        navigationItem.titleView = nil
-        navigationItem.title = NSLocalizedString("Photobook/RearrangeTitle", value: "Rearranging Pages", comment: "Title of the photobook preview screen in rearrange mode")
+        titleButton.sizeToFit()
+        navigationItem.titleView = titleButton
     }
     
     @objc private func didTapOnTitle() {
         guard let photobooks = ProductManager.shared.products, photobooks.count > 1 else { return }
+        
+        closeCurrentCell()
         
         let alertController = UIAlertController(title: nil, message: NSLocalizedString("Photobook/ChangeSizeTitle", value: "Changing the size keeps your layout intact", comment: "Information when the user wants to change the photo book's size"), preferredStyle: .actionSheet)
         for photobook in photobooks {
@@ -262,54 +285,28 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         cancelPhotobook()
     }
 
-    @IBAction private func didTapRearrange(_ sender: UIBarButtonItem) {
-        isRearranging = !isRearranging
+    private func switchRearrangeMode(_ status: ActiveState, completion: (()->())? = nil) {
+        isRearranging = (status == .on)
         
         for cell in collectionView.visibleCells {
             (cell as? PhotobookCollectionViewCell)?.updateVoiceOver(isRearranging: isRearranging)
             (cell as? PhotobookCoverCollectionViewCell)?.updateVoiceOver(isRearranging: isRearranging)
-            
-            if isRearranging {
-                guard let indexPath = collectionView.indexPath(for: cell) else { continue }
-                (cell as? PhotobookCollectionViewCell)?.isPlusButtonVisible = indexPath.item != 0
+        }
+        
+        UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
+            for cell in self.collectionView.visibleCells {
+                guard var photobookCell = cell as? InteractivePagesCell else { continue }
+                photobookCell.isFaded = self.isRearranging && self.shouldFadeWhenRearranging(cell)
+                photobookCell.isPageInteractionEnabled = !self.isRearranging
             }
-        }
-        
-        // Update drag interaction enabled status
-        let interactiveCellClosure: ((Bool) -> Void) = { (isRearranging) in
-            self.ctaButtonContainerBottomConstraint.constant = isRearranging ? -self.ctaButtonContainerHeightConstraint.constant : 0.0
-            UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
-                for cell in self.collectionView.visibleCells {
-                    guard var photobookCell = cell as? InteractivePagesCell else { continue }
-                    photobookCell.isFaded = isRearranging && self.shouldFadeWhenRearranging(cell)
-                    photobookCell.isPageInteractionEnabled = !isRearranging
-                }
-                
-                self.collectionView.transform = isRearranging ? CGAffineTransform(translationX: 0.0, y: -self.collectionView.frame.height * (1.0 - Constants.rearrangeScale) / 2.0).scaledBy(x: Constants.rearrangeScale, y: Constants.rearrangeScale) : .identity
-                self.view.setNeedsLayout()
+            
+            self.collectionView.transform = self.isRearranging ? CGAffineTransform(translationX: 0.0, y: -self.collectionView.frame.height * (1.0 - Constants.rearrangeScale) / 2.0).scaledBy(x: Constants.rearrangeScale, y: Constants.rearrangeScale) : .identity
+            
+            if self.isRearranging {
+                self.ctaButtonContainerBottomConstraint.constant = -self.ctaButtonContainerHeightConstraint.constant
                 self.view.layoutIfNeeded()
-            }, completion: { _ in
-                if !isRearranging {
-                    for cell in self.collectionView.visibleCells {
-                        (cell as? PhotobookCollectionViewCell)?.isPlusButtonVisible = false
-                    }
-                }
-            })
-        }
-
-        interactiveCellClosure(isRearranging)
-        if isRearranging {
-            navigationItem.setLeftBarButtonItems(nil, animated: true)
-            sender.title = NSLocalizedString("Photobook/DoneButtonTitle", value: "Done", comment: "Done button title")
-            sender.tintColor = Colors.blueTint
-        } else {
-            let barButtonItem = isPresentedModally ? cancelBarButtonItem : UIBarButtonItem(customView: backButton!)
-            navigationItem.setLeftBarButtonItems([barButtonItem], animated: true)
-            sender.title = NSLocalizedString("Photobook/RearrangeButtonTitle", value: "Rearrange", comment: "Rearrange button title")
-            sender.tintColor = Colors.greyTint
-        }
-        
-        setupTitleView()
+            }
+        }, completion: { _ in completion?() })
     }
     
     private func shouldFadeWhenRearranging(_ cell: UICollectionViewCell) -> Bool {
@@ -320,6 +317,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     @IBAction private func didTapCheckout(_ sender: Any) {
         guard draggingView == nil else { return }
+        
+        closeCurrentCell()
         
         let goToCheckout = {
             let orderSummaryViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "OrderSummaryViewController") as! OrderSummaryViewController
@@ -399,6 +398,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     private func cancelPhotobook() {
         let alertController = UIAlertController(title: NSLocalizedString("Photobook/BackAlertTitle", value: "Are you sure?", comment: "Title for alert asking the user to go back"), message: NSLocalizedString("Photobook/BackAlertMessage", value: "This will discard any changes made to your photo book", comment: "Message for alert asking the user to go back"), preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Yes", value: "Yes", comment: "Affirmative button title for alert asking the user confirmation for an action"), style: .destructive, handler: { _ in
+            
+            self.closeCurrentCell()
             
             // Clear photobook
             ProductManager.shared.reset()
@@ -481,116 +482,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         NotificationCenter.default.removeObserver(self)
     }
     
-    // MARK: - UIMenuController actions
-    
-    @objc private func duplicatePages() {
-        guard product.isAddingPagesAllowed else {
-            showNotAllowedToAddMorePagesAlert()
-            return
-        }
-        
-        guard let indexPath = interactingItemIndexPath,
-            let cell = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell),
-            let leftIndex = cell.leftIndex
-            else { return }
-        
-        let leftProductLayout = product.productLayouts[leftIndex]
-        
-        var productLayouts = [ProductLayout]()
-        
-        do {
-            let leftData = try PropertyListEncoder().encode(leftProductLayout)
-            let leftProductLayoutCopy = try PropertyListDecoder().decode(ProductLayout.self, from: leftData)
-            productLayouts.append(leftProductLayoutCopy)
-        } catch {
-            fatalError("Photobook: encoding or decoding of product layout failed")
-        }
-        
-        if !leftProductLayout.layout.isDoubleLayout, let rightIndex = cell.rightIndex {
-            let rightProductLayout = product.productLayouts[rightIndex]
-            do {
-                let rightData = try PropertyListEncoder().encode(rightProductLayout)
-                let rightProductLayoutCopy = try PropertyListDecoder().decode(ProductLayout.self, from: rightData)
-                productLayouts.append(rightProductLayoutCopy)
-                
-            } catch {
-                fatalError("Photobook: encoding or decoding of product layout failed")
-            }
-        }
-        else {
-            return
-            
-        }
-        
-        guard let index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex else { return }
-                
-        // Need to clear the interacting index path before reloading or the pages will apear blank
-        interactingItemIndexPath = nil
-        
-        // Insert new page above the tapped one
-        product.addPages(at: index, pages: productLayouts)
-        changedPhotobook()
-        
-        collectionView.performBatchUpdates({
-            collectionView.insertItems(at: [indexPath])
-        }, completion: { _ in
-            self.updateVisibleCells()
-        })
-        
-        Analytics.shared.trackAction(.pastedPages)
-        
-    }
-    
-    @objc private func deletePages() {
-        guard let indexPath = interactingItemIndexPath,
-            let index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex
-            else { return }
-        
-        guard product.isRemovingPagesAllowed else {
-            let alertController = UIAlertController(title: NSLocalizedString("Photobook/CannotDeleteAlertTitle", value: "Cannot Delete Page", comment: "Alert title letting the user know they can't delete a page from the book"), message: NSLocalizedString("Photobook/CannotDeleteAlertMessage", value: "Your photo book currently contains the minimum number of pages allowed", comment: "Alert message letting the user know they can't delete a page from the book"), preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
-            present(alertController, animated: true, completion: nil)
-            return
-        }
-        
-        let productLayout = product.productLayouts[index]
-        
-        product.deletePages(for: productLayout)
-        changedPhotobook()
-        
-        collectionView.performBatchUpdates({
-            collectionView.deleteItems(at: [indexPath])
-        }, completion: { _ in
-            self.updateVisibleCells()
-        })
-        
-        Analytics.shared.trackAction(.deletedPages)
-        
-    }
-    
-    @objc private func menuDidHide() {
-        interactingItemIndexPath = nil
-    }
-    
-    private func showMenu(at indexPath: IndexPath) {
-        // Don't show the menu for the cover, fist and last page, when not rearranging and when we are already showing it
-        guard isRearranging,
-            interactingItemIndexPath == nil,
-            let cell = collectionView.cellForItem(at: indexPath),
-            indexPath.item != 0,
-            indexPath.item != collectionView.numberOfItems(inSection: 1) - 1 // Last Page
-            else { return }
-        UIMenuController.shared.setTargetRect(cell.frame, in: collectionView)
-        interactingItemIndexPath = indexPath
-        
-        var menuItems = [UIMenuItem]()
-        menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemCutTitle", value: "Duplicate", comment: "Duplicate pages action"), action: #selector(duplicatePages)))
-        menuItems.append(UIMenuItem(title: NSLocalizedString("PhotoBook/MenuItemDeleteTitle", value: "Delete", comment: "Delete a page from the photobook"), action: #selector(deletePages)))
-        
-        UIMenuController.shared.menuItems = menuItems
-        UIMenuController.shared.setMenuVisible(true, animated: true)
-    }
-    
     // MARK: - Drag and Drop
     
     private func deleteProposalCell(enableFeedback: Bool) {
@@ -598,9 +489,11 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         proposedDropIndexPath = nil
         collectionView.deleteItems(at: [indexPath])
         
-        if enableFeedback, #available(iOS 10.0, *) {
-            let generator = UIImpactFeedbackGenerator(style: .medium)
-            generator.impactOccurred()
+        if enableFeedback {
+            if #available(iOS 10.0, *) {
+                let generator = UIImpactFeedbackGenerator(style: .medium)
+                generator.impactOccurred()
+            } 
         }
     }
     
@@ -631,9 +524,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             destinationY = view.frame.height + draggingView.frame.height
         }
         
-        UIView.animate(withDuration: Constants.dropAnimationDuration, delay: 0, options: .curveEaseInOut, animations: {
-            draggingView.transform = CGAffineTransform(translationX: draggingView.transform.tx, y: draggingView.transform.ty)
-            draggingView.frame.origin = CGPoint(x: self.collectionView.frame.origin.x + Constants.cellSideMargin * Constants.rearrangeScale, y: destinationY)
+        UIView.animate(withDuration: Constants.dropAnimationDuration, delay: 0.0, options: .curveEaseInOut, animations: {
+            draggingView.frame.origin = CGPoint(x: Constants.cellSideMargin, y: destinationY * self.reverseRearrangeScale)
             draggingView.layer.shadowRadius = 0
             draggingView.layer.shadowOpacity = 0
         }, completion: { _ in
@@ -646,12 +538,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             if let insertingIndexPath = self.insertingIndexPath, let cell = self.collectionView.cellForItem(at: insertingIndexPath) as? PhotobookCollectionViewCell {
                 cell.isVisible = true
-                cell.backgroundColor = UIColor(red:0.85, green:0.86, blue:0.86, alpha:1)
+                cell.backgroundColor = UIColor(red: 0.86, green: 0.86, blue: 0.86, alpha: 1.0)
                 self.insertingIndexPath = nil
-            }
-            
-            if destinationIndexPath == sourceIndexPath {
-                self.showMenu(at: sourceIndexPath)
             }
         })
         
@@ -677,6 +565,11 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 deleteProposalCell(enableFeedback: false)
                 collectionView.deleteItems(at: [IndexPath(item: sourceIndexPath.item + (movingDown ? 0 : 1), section: sourceIndexPath.section)])
             }, completion: { _ in
+                UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0.0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
+                    self.ctaButtonContainerBottomConstraint.constant = 0.0
+                    self.view.layoutIfNeeded()
+                })
+
                 self.updateVisibleCells()
             })
             
@@ -699,7 +592,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         snapshot.frame = bookSuperview.convert(photobookFrameView.frame, to: view)
         
         UIView.animate(withDuration: Constants.dragLiftAnimationDuration, delay: 0, options: .curveEaseInOut, animations: {
-            snapshot.transform = CGAffineTransform(scaleX: Constants.dragLiftScale, y: Constants.dragLiftScale)
             snapshot.layer.shadowRadius = 10
             snapshot.layer.shadowOpacity = 0.5
         }, completion: { _ in
@@ -721,12 +613,15 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 let rightIndex = productLayoutIndex < product.productLayouts.count - 1 ? productLayoutIndex + 1 : nil
                 cell.rightIndex = rightIndex
             }
+            cell.indexPath = indexPath
             cell.loadPages()
             cell.updateVoiceOver(isRearranging: isRearranging)
         }
     }
     
     private func editPage(_ page: PhotobookPageView, at index: Int, frame: CGRect, containerView: UIView) {
+        closeCurrentCell()
+        
         let modalNavigationController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PageSetupNavigationController") as! UINavigationController
         if #available(iOS 11.0, *) {
             modalNavigationController.navigationBar.prefersLargeTitles = false
@@ -759,8 +654,117 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         }
     }
     
+    private func showNotAllowedToAddMorePagesAlert() {
+        let alertController = UIAlertController(title: NSLocalizedString("Photobook/TooManyPagesAlertTitle", value: "Too many pages", comment: "Alert title informing the user that they have reached the maximum number of pages"), message: NSLocalizedString("Photobook/TooManyPagesAlertMessage", value: "You cannot add any more pages to your photo book", comment: "Alert message informing the user that they have reached the maximum number of pages"), preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    // Cell actions
+    private func duplicatePages(at indexPath: IndexPath) {
+        guard product.isAddingPagesAllowed else {
+            showNotAllowedToAddMorePagesAlert()
+            return
+        }
+        
+        guard let cell = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell),
+            let leftIndex = cell.leftIndex
+            else { return }
+        
+        let leftProductLayout = product.productLayouts[leftIndex]
+        var productLayouts = [leftProductLayout.shallowCopy()]
+        
+        if !leftProductLayout.layout.isDoubleLayout, let rightIndex = cell.rightIndex {
+            let rightProductLayout = product.productLayouts[rightIndex]
+            productLayouts.append(rightProductLayout.shallowCopy())
+        } else {
+            return
+        }
+        
+        guard var index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex else { return }
+        index = product.productLayouts[index].layout.isDoubleLayout ? index + 1 : index + 2
+        let targetIndexPath = IndexPath(item: indexPath.item + 1, section: indexPath.section)
+        
+        // Insert new page below the tapped one
+        product.addPages(at: index, pages: productLayouts)
+        changedPhotobook()
+        
+        collectionView.performBatchUpdates({
+            collectionView.insertItems(at: [targetIndexPath])
+        }, completion: { _ in
+            self.updateVisibleCells()
+        })
+        
+        Analytics.shared.trackAction(.pastedPages)
+    }
+    
+    func addPages(after indexPath: IndexPath) {
+        guard product.isAddingPagesAllowed else {
+            showNotAllowedToAddMorePagesAlert()
+            return
+        }
+        
+        var index: Int!
+        if indexPath.item == 0 {
+            index = 2 // Adding a pages after the first spread
+        } else {
+            index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex
+            index = product.productLayouts[index].layout.isDoubleLayout ? index + 1 : index + 2
+        }
+        let targetIndexPath = IndexPath(item: indexPath.item + 1, section: indexPath.section)
+        
+        // Insert new page below the selected indexPath
+        product.addDoubleSpread(at: index)
+        changedPhotobook()
+        
+        collectionView.performBatchUpdates({
+            collectionView.insertItems(at: [targetIndexPath])
+        }, completion: { _ in
+            self.updateVisibleCells()
+        })
+        
+        Analytics.shared.trackAction(.addedPages)
+    }
+
+    private func deletePages(at indexPath: IndexPath) {
+        guard let index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex
+            else { return }
+        
+        guard product.isRemovingPagesAllowed else {
+            let alertController = UIAlertController(title: NSLocalizedString("Photobook/CannotDeleteAlertTitle", value: "Cannot Delete Page", comment: "Alert title letting the user know they can't delete a page from the book"), message: NSLocalizedString("Photobook/CannotDeleteAlertMessage", value: "Your photo book currently contains the minimum number of pages allowed", comment: "Alert message letting the user know they can't delete a page from the book"), preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
+            present(alertController, animated: true, completion: nil)
+            return
+        }
+        
+        let productLayout = product.productLayouts[index]
+        
+        product.deletePages(for: productLayout)
+        changedPhotobook()
+        
+        collectionView.performBatchUpdates({
+            collectionView.deleteItems(at: [indexPath])
+        }, completion: { _ in
+            self.updateVisibleCells()
+        })
+        
+        Analytics.shared.trackAction(.deletedPages)
+    }
+
     private func changedPhotobook() {
         ProductManager.shared.changedCurrentProduct(with: assets, album: album, albumManager: albumManager)
+    }
+    
+    private func closeCurrentCell(completion:(()->())? = nil) {
+        guard interactingItemIndexPath != nil,
+            let cell = collectionView.cellForItem(at: interactingItemIndexPath!) as? PhotobookCollectionViewCell,
+            cell.isOpen else {
+            completion?()
+            return
+        }
+        cell.isPageInteractionEnabled = true
+        cell.shouldRevealActions = true
+        cell.animateCellClosed(completion: completion)
     }
 }
 
@@ -803,6 +807,8 @@ extension PhotobookViewController: UICollectionViewDataSource {
             cell.isVisible = indexPath != interactingItemIndexPath && indexPath != insertingIndexPath
             cell.width = view.bounds.size.width - Constants.cellSideMargin * 2.0
             cell.clipsToBounds = false
+            cell.indexPath = indexPath
+            cell.actionsDelegate = self
             cell.delegate = self
             
             // First and last pages of the book are courtesy pages, no photos on them
@@ -811,9 +817,11 @@ extension PhotobookViewController: UICollectionViewDataSource {
             switch indexPath.item {
             case 0:
                 rightIndex = 1
+                cell.shouldRevealActions = !isRearranging
                 cell.isFaded = isRearranging
             case collectionView.numberOfItems(inSection: 1) - 1: // Last page
                 leftIndex = product.productLayouts.count - 1
+                cell.shouldRevealActions = false
                 cell.isFaded = isRearranging
             default:
                 let indexPathItem = indexPath.item - ((proposedDropIndexPath?.item ?? Int.max) < indexPath.item ? 1 : 0)
@@ -828,12 +836,12 @@ extension PhotobookViewController: UICollectionViewDataSource {
                 }
                 cell.setupGestures()
                 cell.isPageInteractionEnabled = !isRearranging
+                cell.shouldRevealActions = !isRearranging
                 cell.isFaded = false
             }
             
             cell.leftIndex = leftIndex
             cell.rightIndex = rightIndex
-            cell.isPlusButtonVisible = indexPath.item != 0 && isRearranging
             
             return cell
         }
@@ -841,19 +849,21 @@ extension PhotobookViewController: UICollectionViewDataSource {
 }
 
 extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    // MARK: UICollectionViewDelegate
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         updateNavBar()
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        showMenu(at: indexPath)
+        if interactingItemIndexPath != nil,
+            let cell = collectionView.cellForItem(at: interactingItemIndexPath!) as? PhotobookCollectionViewCell,
+            cell.isOpen {
+                cell.animateCellClosed()
+                interactingItemIndexPath = nil
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? PhotobookCollectionViewCell {
             cell.loadPages()
+            cell.setUpActions()
             cell.updateVoiceOver(isRearranging: isRearranging)
         } else if let cell = cell as? PhotobookCoverCollectionViewCell {
             cell.loadCoverAndSpine()
@@ -886,6 +896,8 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
 extension PhotobookViewController: PhotobookCoverCollectionViewCellDelegate {
     
     func didTapOnSpine(with rect: CGRect, in containerView: UIView) {
+        closeCurrentCell()
+        
         let initialRect = containerView.convert(rect, to: view)
         
         let spineTextEditingNavigationController = photobookMainStoryboard.instantiateViewController(withIdentifier: "SpineTextEditingNavigationController") as! UINavigationController
@@ -948,21 +960,33 @@ extension PhotobookViewController: PageSetupDelegate {
 }
 
 extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
-    // MARK: PhotobookCollectionViewCellDelegate
-    
+
     func didTapOnPage(_ page: PhotobookPageView, at index: Int, frame: CGRect, in containerView: UIView) {
         editPage(page, at: index, frame: frame, containerView: containerView)
     }
 
-    func didLongPress(_ sender: UILongPressGestureRecognizer) {
-        if sender.state == .began {
-            guard let photobookFrameView = sender.view as? PhotobookFrameView else {
-                fatalError("Long press failed to recognise the target view")
+    func didLongPress(_ sender: UILongPressGestureRecognizer, on cell: PhotobookCollectionViewCell) {
+        
+        // Disallow dragging first and last pages
+        guard let indexPath = collectionView.indexPath(for: cell),
+              indexPath.row > 0 && indexPath.row < collectionView.numberOfItems(inSection: 1) - 1
+            else { return }
+        
+        closeCurrentCell() {
+            if sender.state == .began {
+                guard let photobookFrameView = sender.view as? PhotobookFrameView else {
+                    fatalError("Long press failed to recognise the target view")
+                }
+                cell.shouldRevealActions = false
+                self.liftView(photobookFrameView)
+                self.switchRearrangeMode(.on)
+            } else if sender.state == .ended {
+                self.dropView()
+                self.switchRearrangeMode(.off) {
+                    cell.shouldRevealActions = true
+                }
+                self.stopTimer()
             }
-            liftView(photobookFrameView)
-        } else if sender.state == .ended {
-            dropView()
-            stopTimer()
         }
     }
     
@@ -977,7 +1001,7 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
         currentlyPanningGesture = sender
         
         let translation = sender.translation(in: view)
-        draggingView.transform = CGAffineTransform(translationX: translation.x, y: translation.y).scaledBy(x: Constants.dragLiftScale, y: Constants.dragLiftScale)
+        draggingView.transform = CGAffineTransform(translationX: translation.x, y: translation.y) //.scaledBy(x: Constants.dragLiftScale, y: Constants.dragLiftScale)
         autoScrollIfNeeded()
         updateNavBar()
         
@@ -1059,41 +1083,12 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
     @objc private func invokeTimerBlock() {
         timerBlock?()
     }
-    
-    private func showNotAllowedToAddMorePagesAlert() {
-        let alertController = UIAlertController(title: NSLocalizedString("Photobook/TooManyPagesAlertTitle", value: "Too many pages", comment: "Alert title informing the user that they have reached the maximum number of pages"), message: NSLocalizedString("Photobook/TooManyPagesAlertMessage", value: "You cannot add any more pages to your photo book", comment: "Alert message informing the user that they have reached the maximum number of pages"), preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
-        present(alertController, animated: true, completion: nil)
-    }
-    
-    func didTapOnPlusButton(at spreadIndex: Int) {
-        guard product.isAddingPagesAllowed else {
-            showNotAllowedToAddMorePagesAlert()
-            return
-        }
-        
-        let indexPath = IndexPath(item: spreadIndex, section: 1)
-        
-        guard let index = (collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell)?.leftIndex else { return }
-        
-        // Insert new page above the tapped one
-        product.addDoubleSpread(at: index)
-        changedPhotobook()
-        
-        collectionView.performBatchUpdates({
-            collectionView.insertItems(at: [indexPath])
-        }, completion: { _ in
-            self.updateVisibleCells()
-        })
-        
-        Analytics.shared.trackAction(.addedPages)
-        
-    }
-    
-    // MARK: UIGestureRecognizerDelegate
+}
+
+extension PhotobookViewController: UIGestureRecognizerDelegate {
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return isRearranging && !isDragging
+        return !isDragging
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -1123,3 +1118,60 @@ extension PhotobookViewController: SpineTextEditingDelegate {
     }
 }
 
+extension PhotobookViewController: ActionsCollectionViewCellDelegate {
+    
+    func actionButtonConfigurationForButton(at index: Int, indexPath: IndexPath) -> ActionButtonViewConfiguration? {
+        guard indexPath.section == 1 else { return nil }
+        var title: String!
+        var image: UIImage!
+        
+        switch index {
+        case 0 where indexPath.item > 0:
+            title = NSLocalizedString("Photobook/Cell/DeleteButton", value: "Delete", comment: "Text for the delete button in a spread")
+            image = UIImage(namedInPhotobookBundle: "delete")
+        case 1 where indexPath.item > 0, 0 where indexPath.item == 0:
+            title = NSLocalizedString("Photobook/Cell/AddButton", value: "Add", comment: "Text for the add button in a spread")
+            image = UIImage(namedInPhotobookBundle: "add")
+        case 2 where indexPath.item > 0:
+            title = NSLocalizedString("Photobook/Cell/DuplicateButton", value: "Duplicate", comment: "Text for the duplicate button in a spread")
+            image = UIImage(namedInPhotobookBundle: "duplicate")
+        default:
+            return nil
+        }
+        return ActionButtonViewConfiguration(title: title, image: image)
+    }
+    
+    func didTapActionButton(at index: Int, for indexPath: IndexPath) {
+        guard indexPath.section == 1 else { return }
+        
+        switch index {
+        case 0 where indexPath.item > 0:
+            deletePages(at: indexPath)
+        case 1 where indexPath.item > 0, 0 where indexPath.item == 0:
+            addPages(after: indexPath)
+        case 2 where indexPath.item > 0:
+            duplicatePages(at: indexPath)
+        default:
+            return
+        }
+    }
+    
+    func didCloseCell(at indexPath: IndexPath) {
+        guard interactingItemIndexPath != nil, let cell = collectionView.cellForItem(at: interactingItemIndexPath!) as? PhotobookCollectionViewCell else { return }
+        cell.isPageInteractionEnabled = true
+        interactingItemIndexPath = nil
+    }
+    
+    func didOpenCell(at indexPath: IndexPath) {
+        if interactingItemIndexPath != nil && interactingItemIndexPath != indexPath {
+            closeCurrentCell() {
+                self.interactingItemIndexPath = indexPath
+            }
+        } else {
+            interactingItemIndexPath = indexPath
+        }
+        
+        guard let cell = collectionView.cellForItem(at: interactingItemIndexPath!) as? PhotobookCollectionViewCell else { return }
+        cell.isPageInteractionEnabled = false
+    }
+}
