@@ -1,10 +1,11 @@
 //
 //  SwiftLuhn.swift
-//  Photobook
+//  Example Project
 //
 //  Created by Max Kramer on 29/03/2016.
 //  Copyright © 2016 Max Kramer. All rights reserved.
 //
+
 import Foundation
 
 class SwiftLuhn {
