@@ -453,6 +453,17 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
         
         let photobookViewController = PhotobookSDK.shared.photobookViewController(with: selectedAssetsManager!.selectedAssets, embedInNavigation: false, delegate: self) {
             [weak welf = self] in
+            
+            let items = Checkout.shared.numberOfItemsInBasket()
+            if items == 0 {
+                Checkout.shared.addCurrentProductToBasket()
+            } else {
+                // Only allow one item in the basket
+                Checkout.shared.clearBasketOrder()
+                Checkout.shared.addCurrentProductToBasket(items: items)
+            }
+            
+            // Photobook completion
             if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, delegate: self) {
                 welf?.navigationController?.pushViewController(checkoutViewController, animated: true)
             }
@@ -464,11 +475,14 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
 extension AssetPickerCollectionViewController: PhotobookDelegate {
 
     func wantsToDismiss(_ viewController: UIViewController) {
+        // Tutorial VC
         if let _ = viewController as? TutorialViewController, let photobookViewController = photobookViewController() {
             navigationController?.pushViewController(photobookViewController, animated: false)
             dismiss(animated: true, completion: nil)
             return
         }
+        
+        // Photobook or Receipt VC
         navigationController?.popViewController(animated: true)
     }
     

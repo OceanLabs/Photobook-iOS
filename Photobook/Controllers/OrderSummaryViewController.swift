@@ -74,12 +74,7 @@ class OrderSummaryViewController: UIViewController {
         super.viewDidLoad()
         
         Analytics.shared.trackScreenViewed(.summary)
-        
-        #if PHOTOBOOK_APP
-        basketDisclaimerLabel.text = ""
-        ctaButton.setTitle(NSLocalizedString("OrderSummary/cta", value: "Continue", comment: "Title for the CTA button"), for: .normal)
-        #endif
-                
+                        
         emptyScreenViewController.show(message: Constants.stringLoading, activity: true)
         
         orderSummaryManager.templates = ProductManager.shared.products
@@ -129,9 +124,7 @@ class OrderSummaryViewController: UIViewController {
     @IBAction func tappedCallToAction(_ sender: Any) {
         product.pigBaseUrl = orderSummaryManager.summary?.pigBaseUrl
         
-        Checkout.shared.addProductToBasket(product)
-        ProductManager.shared.reset()
-
+        // Call the completion closure passed on to the photobook flow
         completionClosure?()
     }
     

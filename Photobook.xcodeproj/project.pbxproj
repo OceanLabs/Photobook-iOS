@@ -583,7 +583,6 @@
 
 /* Begin PBXFileReference section */
 		0DF76BF596B359D6FC0DC474 /* Pods-Photobook App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.debug.xcconfig"; sourceTree = "<group>"; };
-		11DC81CB632AAC7078697EBD /* Pods-Photobook.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.release test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.release test.xcconfig"; sourceTree = "<group>"; };
 		1561A4A2B130A5F1A92351A0 /* Pods_PhotobookTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PhotobookTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E02B210208F26B80083DDAB /* XCUIElementExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCUIElementExtensions.swift; sourceTree = "<group>"; };
 		2E02B212208F4D830083DDAB /* Automation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Automation.swift; sourceTree = "<group>"; };
@@ -728,10 +727,8 @@
 		2EEC03D2209212B3008725B7 /* OrderSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryTests.swift; sourceTree = "<group>"; };
 		2EF312B620591EEE001BE3CF /* IntroDismissSegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroDismissSegue.swift; sourceTree = "<group>"; };
 		35185092CEAA07251E4FD67C /* Pods_Photobook.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Photobook.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		405456FD88C003A4C2B2B699 /* Pods-Photobook.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.debug.xcconfig"; sourceTree = "<group>"; };
 		4B2CC0AAF7A3088876060E07 /* Pods-Photobook App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.release.xcconfig"; sourceTree = "<group>"; };
 		509D34875259D1916ED674CB /* Pods-PhotobookTests.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.debug test.xcconfig"; sourceTree = "<group>"; };
-		547A4E0B82B81A32EC456DDF /* Pods-Photobook.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.release.xcconfig"; sourceTree = "<group>"; };
 		69B62B8C076001BAA40216F0 /* Pods-Photobook App.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.debug test.xcconfig"; sourceTree = "<group>"; };
 		6A1DA8E9A38D7AFD0E6ADA5C /* Pods-Photobook App.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.release test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.release test.xcconfig"; sourceTree = "<group>"; };
 		6F08F90D2165051500EF9529 /* ProductBackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductBackupManager.swift; sourceTree = "<group>"; };
@@ -857,7 +854,6 @@
 		6FED4FCD216CC12400EC40C2 /* ActionsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionsCollectionViewCell.swift; sourceTree = "<group>"; };
 		6FEF3EAA208F48EB00595A5B /* PhotobookProductTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookProductTests.swift; sourceTree = "<group>"; };
 		6FFE21CA202CA7F9004EC0EA /* SpineTextEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpineTextEditingViewController.swift; sourceTree = "<group>"; };
-		8FBCA2FB941818489E78FF98 /* Pods-Photobook.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.debug test.xcconfig"; sourceTree = "<group>"; };
 		A9A9A5996008D1B40B2E10F9 /* Pods-PhotobookTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.release.xcconfig"; sourceTree = "<group>"; };
 		B90EB85D203701CD0005D91C /* AmountPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AmountPickerViewController.swift; sourceTree = "<group>"; };
 		B90F287E1FFF8D1A00FF3D15 /* OrderSummaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryViewController.swift; sourceTree = "<group>"; };
@@ -1368,12 +1364,8 @@
 		41442346D0981CD5E8F4B2CA /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				405456FD88C003A4C2B2B699 /* Pods-Photobook.debug.xcconfig */,
-				547A4E0B82B81A32EC456DDF /* Pods-Photobook.release.xcconfig */,
 				FF99346143FA805B3676D912 /* Pods-PhotobookTests.debug.xcconfig */,
 				A9A9A5996008D1B40B2E10F9 /* Pods-PhotobookTests.release.xcconfig */,
-				8FBCA2FB941818489E78FF98 /* Pods-Photobook.debug test.xcconfig */,
-				11DC81CB632AAC7078697EBD /* Pods-Photobook.release test.xcconfig */,
 				509D34875259D1916ED674CB /* Pods-PhotobookTests.debug test.xcconfig */,
 				EE165E68796AB33E673EA271 /* Pods-PhotobookTests.release test.xcconfig */,
 				0DF76BF596B359D6FC0DC474 /* Pods-Photobook App.debug.xcconfig */,
@@ -2819,7 +2811,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0DF76BF596B359D6FC0DC474 /* Pods-Photobook App.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = App/Resources/Photobook.entitlements;
@@ -2834,7 +2826,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = "Photobook App";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PHOTOBOOK_APP";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2845,7 +2837,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4B2CC0AAF7A3088876060E07 /* Pods-Photobook App.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = App/Resources/Photobook.entitlements;
@@ -2859,7 +2851,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = "Photobook App";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PHOTOBOOK_APP;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -3000,7 +2992,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 69B62B8C076001BAA40216F0 /* Pods-Photobook App.debug test.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = App/Resources/Photobook.entitlements;
@@ -3015,7 +3007,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = "Photobook App";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "TEST_ENVIRONMENT DEBUG PHOTOBOOK_APP";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "TEST_ENVIRONMENT DEBUG";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -3096,7 +3088,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6A1DA8E9A38D7AFD0E6ADA5C /* Pods-Photobook App.release test.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = App/Resources/Photobook.entitlements;
@@ -3110,7 +3102,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Photobook;
 				PRODUCT_NAME = "Photobook App";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "TEST_ENVIRONMENT PHOTOBOOK_APP";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = TEST_ENVIRONMENT;
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

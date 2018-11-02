@@ -100,12 +100,20 @@ class PhotobookManager: NSObject {
         let browseNavigationViewController = tabBarController.viewControllers?[Tab.browse.rawValue] as? UINavigationController
         let assetPickerViewController = browseNavigationViewController?.viewControllers.first as? AlbumsCollectionViewController
         if let photobookViewController = PhotobookSDK.shared.photobookViewControllerFromBackup(embedInNavigation: false, delegate: assetPickerViewController, completion: {
-                if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, delegate: assetPickerViewController),
-                   let firstViewController = browseNavigationViewController?.navigationController?.viewControllers.first {
-                    browseNavigationViewController?.navigationController?.setViewControllers([firstViewController, checkoutViewController], animated: true)
-                }
-            })
-        {
+            let items = Checkout.shared.numberOfItemsInBasket()
+            if items == 0 {
+                Checkout.shared.addCurrentProductToBasket()
+            } else {
+                // Only allow one item in the basket
+                Checkout.shared.clearBasketOrder()
+                Checkout.shared.addCurrentProductToBasket(items: items)
+            }
+            
+            // Push the checkout on completion
+            if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, delegate: assetPickerViewController) {
+                browseNavigationViewController?.pushViewController(checkoutViewController, animated: true)
+            }
+        }) {
             browseNavigationViewController?.pushViewController(photobookViewController, animated: false)
             tabBarController.selectedIndex = Tab.browse.rawValue
         }

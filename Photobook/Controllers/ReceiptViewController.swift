@@ -222,6 +222,11 @@ class ReceiptViewController: UIViewController {
             ProductManager.shared.reset()
             OrderManager.shared.reset()            
             
+            guard let stelf = welf else { return }
+            stelf.navigationController!.interactivePopGestureRecognizer!.isEnabled = true
+            let controllerToDismiss = stelf.isPresentedModally ? stelf.navigationController! : stelf
+            stelf.dismissDelegate?.wantsToDismiss?(controllerToDismiss)
+
 //            #if !PHOTOBOOK_APP
 //            guard let stelf = welf else { return }
 //            let controllerToDismiss = stelf.isPresentedModally ? stelf.navigationController! : stelf
@@ -235,13 +240,13 @@ class ReceiptViewController: UIViewController {
 //            }
 //            #else
             // Check if the Photobook app was launched into the ReceiptViewController
-            if welf?.navigationController?.viewControllers.count == 1 {
-                welf?.navigationController?.isNavigationBarHidden = true
-                welf?.dismissClosure?(self)
-            } else {
-                welf?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-                welf?.navigationController?.popToRootViewController(animated: true)
-            }
+//            if welf?.navigationController?.viewControllers.count == 1 {
+//                welf?.navigationController?.isNavigationBarHidden = true
+//                welf?.dismissClosure?(self)
+//            } else {
+//                welf?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+//                welf?.navigationController?.popToRootViewController(animated: true)
+//            }
 //            #endif
         }
     }
