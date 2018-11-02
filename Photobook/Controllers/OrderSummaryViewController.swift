@@ -52,7 +52,7 @@ class OrderSummaryViewController: UIViewController {
     @IBOutlet weak var loadingPreviewLabel: UILabel! { didSet { loadingPreviewLabel.scaleFont() } }
     @IBOutlet weak var basketDisclaimerLabel: UILabel!
     
-    var completionClosure: ((_ photobook: PhotobookProduct) -> Void)?
+    var completionClosure: (() -> Void)?
     var emptyScreenDismissGroup: DispatchGroup? = DispatchGroup()
     
     private var timer: Timer?
@@ -128,7 +128,11 @@ class OrderSummaryViewController: UIViewController {
     
     @IBAction func tappedCallToAction(_ sender: Any) {
         product.pigBaseUrl = orderSummaryManager.summary?.pigBaseUrl
-        completionClosure?(product)
+        
+        Checkout.shared.addProductToBasket(product)
+        ProductManager.shared.reset()
+
+        completionClosure?()
     }
     
     deinit {

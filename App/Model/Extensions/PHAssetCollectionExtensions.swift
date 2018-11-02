@@ -27,26 +27,33 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
+import Photos
 import Photobook
 
-class AssetPickerCoverCollectionViewCell: UICollectionViewCell {
+extension PHAssetCollection {
     
-    @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var datesLabel: UILabel!
-    @IBOutlet private weak var coverImageView: UIImageView!
-    @IBOutlet weak var labelsContainerView: UIView!
-    
-    var title: String? {
-        didSet {
-            titleLabel.text = title
-            titleLabel.setLineHeight(titleLabel.font.pointSize)
+    func coverAsset(useFirstImageInCollection: Bool, completionHandler: @escaping (PhotobookAsset?) -> Void) {
+        DispatchQueue.global(qos: .default).async {
+            let fetchOptions = PHFetchOptions()
+            fetchOptions.fetchLimit = 1
+            fetchOptions.wantsIncrementalChangeDetails = false
+            fetchOptions.includeHiddenAssets = false
+            fetchOptions.includeAllBurstAssets = false
+            fetchOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
+            fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: useFirstImageInCollection) ]
+            
+            guard let coverAsset = PHAsset.fetchAssets(in: self, options: fetchOptions).firstObject else {
+                DispatchQueue.main.async {
+                    completionHandler(nil)
+                }
+                return
+            }
+            
+            DispatchQueue.main.async {
+                let asset = PhotobookAsset(withPHAsset: coverAsset, albumIdentifier: self.localIdentifier)
+                completionHandler(asset)
+            }
         }
-    }
-    var dates: String? { didSet { datesLabel.text = dates } }
-    
-    func setCover (cover: PhotobookAsset?, size: CGSize) {
-        coverImageView.setImage(from: cover, size: size)
     }
     
 }

@@ -28,6 +28,7 @@
 //
 
 import Photos
+import Photobook
 
 protocol CollectionListManager {
     func fetchMomentLists(options: PHFetchOptions?) -> PHFetchResult<PHCollectionList>
@@ -67,12 +68,11 @@ class StoriesManager: NSObject {
     lazy var collectionListManager: CollectionListManager = DefaultCollectionListManager()
     lazy var collectionManager: CollectionManager = DefaultCollectionManager()
     lazy var assetManager: AssetManager = DefaultAssetManager()
-    lazy var productManager: ProductManager = ProductManager.shared
     
     override init() {
         super.init()
         PHPhotoLibrary.shared().register(self)
-        NotificationCenter.default.addObserver(self, selector: #selector(resetStoriesSelections), name: ReceiptNotificationName.receiptWillDismiss, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(resetStoriesSelections), name: SelectedAssetsManager.notificationNamePhotobookComplete, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appRestoredFromBackground), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
             welf?.fromBackground = true
@@ -176,7 +176,7 @@ class StoriesManager: NSObject {
             }
             
             // Minimum asset count
-            guard totalAssetCount >= (welf?.productManager.minimumRequiredPages ?? Int.max) else { return }
+            guard totalAssetCount >= PhotobookSDK.shared.minimumRequiredPages else { return }
             
             let story = Story(list: list, coverCollection: moments.firstObject!)
             story.components = locationComponents
@@ -280,21 +280,20 @@ class StoriesManager: NSObject {
     }
     
     private func performAutoSelection(on story: Story) {
-        var selectedAssets = [Asset]()
-        var unusedAssets = [Asset]()
+        var selectedAssets = [PhotobookAsset]()
+        var unusedAssets = [PhotobookAsset]()
         
-        let minimumAssets = productManager.minimumRequiredPages
+        let minimumAssets = PhotobookSDK.shared.minimumRequiredPages
         let subarrayLength = minimumAssets // For readability
         let subarrayCount: Int = story.photoCount / subarrayLength
         let assetsFromEachSubarray: Int = minimumAssets / subarrayCount
         
-        for subarrayIndex in 0..<subarrayCount {
-            
+        for subarrayIndex in 0 ..< subarrayCount {
             let subarrayStartIndex = subarrayIndex * subarrayLength
             // The last subarray will take on any leftovers resulting from integer division
             var subarray = Array(subarrayIndex == subarrayCount - 1 ? story.assets[subarrayStartIndex...] : story.assets[subarrayStartIndex..<subarrayStartIndex + subarrayLength])
             
-            for _ in 0..<assetsFromEachSubarray {
+            for _ in 0 ..< assetsFromEachSubarray {
                 let selectedIndex = Int.random(in: 0 ..< subarray.count)
                 selectedAssets.append(subarray.remove(at: selectedIndex))
             }
@@ -333,11 +332,11 @@ extension StoriesManager: PHPhotoLibraryChangeObserver {
         var albumChanges = [AlbumChange]()
         
         DispatchQueue.main.sync {
-            var assetsRemoved = [Asset]()
+            var assetsRemoved = [PhotobookAsset]()
             var indexesRemoved = [Int]()
             for asset in story.assets {
-                guard let asset = asset as? PhotosAsset else { continue }
-                if asset.wasRemoved(in: changeInstance) {
+                guard let phAsset = asset.phAsset else { continue }
+                if let changeDetails = changeInstance.changeDetails(for: phAsset), changeDetails.objectWasDeleted {
                     assetsRemoved.append(asset)
                     
                     if let index = story.assets.index(where: { $0 == asset }) {
@@ -345,7 +344,7 @@ extension StoriesManager: PHPhotoLibraryChangeObserver {
                     }
                 }
             }
-            albumChanges.append(AlbumChange(album: story, assetsRemoved: assetsRemoved, indexesRemoved: indexesRemoved, assetsInserted: []))
+            albumChanges.append(AlbumChange(albumIdentifier: story.identifier, assetsRemoved: assetsRemoved, assetsInserted: [], indexesRemoved: indexesRemoved))
             
             // Remove assets from this story from the end as to not mess up the indexes
             for assetIndex in indexesRemoved.reversed() {
@@ -353,7 +352,8 @@ extension StoriesManager: PHPhotoLibraryChangeObserver {
             }
             
             if !albumChanges.isEmpty {
-                NotificationCenter.default.post(name: AssetsNotificationName.albumsWereUpdated, object: albumChanges)
+                NotificationCenter.default.post(name: AlbumManagerNotificationName.albumsWereUpdated, object: albumChanges)
+                PhotobookSDK.shared.albumsWereUpdated(albumChanges)
             }
         }
     }

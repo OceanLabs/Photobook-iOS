@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2E0B587B1FB30F2100F31A9E"
-               BuildableName = "Photobook.app"
+               BuildableName = "Photobook App.app"
                BlueprintName = "Photobook App"
                ReferencedContainer = "container:Photobook.xcodeproj">
             </BuildableReference>
@@ -53,7 +53,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2E0B587B1FB30F2100F31A9E"
-            BuildableName = "Photobook.app"
+            BuildableName = "Photobook App.app"
             BlueprintName = "Photobook App"
             ReferencedContainer = "container:Photobook.xcodeproj">
          </BuildableReference>
@@ -83,7 +83,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2E0B587B1FB30F2100F31A9E"
-            BuildableName = "Photobook.app"
+            BuildableName = "Photobook App.app"
             BlueprintName = "Photobook App"
             ReferencedContainer = "container:Photobook.xcodeproj">
          </BuildableReference>
@@ -102,7 +102,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2E0B587B1FB30F2100F31A9E"
-            BuildableName = "Photobook.app"
+            BuildableName = "Photobook App.app"
             BlueprintName = "Photobook App"
             ReferencedContainer = "container:Photobook.xcodeproj">
          </BuildableReference>

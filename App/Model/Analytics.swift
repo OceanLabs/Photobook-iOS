@@ -30,6 +30,7 @@
 import UIKit
 import KeychainSwift
 import Analytics
+import Photobook
 
 @objc public protocol AnalyticsDelegate {
     @objc func photobookAnalyticsEventDidFire(type: AnalyticsEventType, name: String, properties: [String: Any])
@@ -41,57 +42,40 @@ import Analytics
     case error
 }
 
+protocol PickerAnalytics {
+    var selectingPhotosScreenName: Analytics.ScreenName { get }
+    var addingMorePhotosScreenName: Analytics.ScreenName { get }
+}
+
 @objc public class Analytics: NSObject {
     
     enum ScreenName: String {
-        case photobook = "Photobook"
-        case pageEditingPhotoSelection = "Page editing / Photo selection"
-        case colorSelection = "Color selection"
-        case layoutSelection = "Layout selection"
-        case photoPlacement = "Photo placement"
-        case textEditing = "Text editing"
-        case spineTextEditing = "Spine text editing"
-        case summary = "Summary"
-        case basket = "Basket"
-        case paymentMethods = "Payment methods"
-        case receipt = "Receipt"
+        case stories = "Stories"
+        case albums = "Albums"
+        case facebookAlbums = "Facebook Albums"
+        case albumsAddingMorePhotos = "Albums adding more photos"
+        case facebookAlbumsAddingMorePhotos = "Facebook albums adding more photos"
+        case picker = "Picker"
+        case storiesPicker = "Stories Picker"
+        case facebookPicker = "Facebook Picker"
+        case instagramPicker = "Instagram Picker"
+        case pickerAddingMorePhotos = "Picker adding more photos"
+        case storiesPickerAddingMorePhotos = "Stories picker adding more photos"
+        case instagramPickerAddingMorePhotos = "Instagram picker adding more photos"
+        case facebookPickerAddingMorePhotos = "Facebook picker adding more photos"
     }
     
     enum ActionName: String {
-        case wentBackFromPhotobookPreview = "Went back from photobook preview"
-        case addedPages = "Added pages"
-        case pastedPages = "Pages pages"
-        case deletedPages = "Deleted pages"
-        case rearrangedPages = "Rearranged pages"
-        case addedTextToPage = "Added text to page"
-        case usingDoublePageLayout = "Using a double page layout"
-        case selectedUpsellOption = "Selected upsell option"
-        case deselectedUpsellOption = "Deselected upsell option"
-        case coverLayoutChanged = "Cover layout changed"
-        case orderSubmitted = "Order submitted"
-        case orderCompleted = "Order completed"
-        case editingCancelled = "Editing cancelled"
-        case editingConfirmed = "Editing confirmed"
-        case paymentRetried = "Payment retried"
-        case uploadCancelled = "Upload cancelled"
-        case uploadRetried = "Upload retried"
-        case uploadSuccessful = "Upload successful"
-    }
-    
-    enum ErrorName: String {
-        case productInfo = "Product information error"
-        case diskError = "Image saving error"
-        case imageUpload = "Image upload error"
-        case pdfCreation = "PDF creation error"
-        case orderSubmission = "Order submission error"
-        case payment = "Payment error"
-        case parsing = "Parsing error"
-        case upsellError = "Upsell error"
+        case photoSourceSelected = "Photo source selected"
+        case pickerSelectAllTapped = "Picker select all tapped"
+        case pickerDeselectAllTapped = "Picker deselect all tapped"
+        case collectorSelectionCleared = "Collector selection cleared"
+        case collectorUseTheseTapped = "Collector use these tapped"
     }
     
     struct PropertyNames {
-        static let upsellOptionName = "Upsell option name"
-        static let secondsInEditing = "Seconds in editing"
+        static let photoSourceName = "Photo source name"
+        static let numberOfPhotosSelected = "Number of photos selected"
         static let secondsSinceAppOpen = "Seconds since app open"
         static let secondsInBackground = "Seconds in background"
         static let environment = "Environment"
@@ -151,7 +135,7 @@ import Analytics
     }
     
     func addEnvironment(to properties:[String: Any]?) -> [String: Any] {
-        let environment = APIClient.environment == .test ? "Test" : "Live"
+        let environment = PhotobookSDK.shared.environment == .test ? "Test" : "Live"
         
         var properties = properties ?? [:]
         properties[PropertyNames.environment] = environment
@@ -185,25 +169,7 @@ import Analytics
         }
         delegate?.photobookAnalyticsEventDidFire(type: .action, name: actionName.rawValue, properties: properties)
     }
-    
-    func trackError(_ errorName: ErrorName, _ details: String) {
-        trackError(errorName, ["details": details])
-    }
-    
-    func trackError(_ errorName: ErrorName, _ properties: [String: Any]? = nil) {
-        #if DEBUG
-            print("Analytics: Error \"\(errorName.rawValue)\" happened. Properties: \(properties ?? [:])")
-        #endif
         
-        let properties = addEnvironment(to: properties)
-        
-        // TODO: Remove once it's ok from a legal point to track errors (TOS update etc)
-        if optInToRemoteAnalytics {
-            SEGAnalytics.shared().track(errorName.rawValue, properties: properties)
-        }
-        delegate?.photobookAnalyticsEventDidFire(type: .error, name: errorName.rawValue, properties: properties)
-    }
-    
     func secondsSinceAppOpen() -> Int {
         return Int(Date().timeIntervalSince(appLaunchDate))
     }

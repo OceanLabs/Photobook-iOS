@@ -62,7 +62,7 @@ class FacebookLandingViewController: UIViewController {
     @IBAction func facebookSignInTapped(_ sender: UIButton) {
         FBSDKLoginManager().logIn(withReadPermissions: ["public_profile", "user_photos"], from: self, handler: { [weak welf = self] result, error in
             if let error = error {
-                welf?.present(UIAlertController(errorMessage: ErrorMessage(error)), animated: true, completion: nil)
+                //welf?.present(UIAlertController(errorMessage: ErrorMessage(error)), animated: true, completion: nil)
                 return
             } else if let result = result, !result.isCancelled {
                 let facebookAlbumsCollectionViewController = AlbumsCollectionViewController.facebookAlbumsCollectionViewController()

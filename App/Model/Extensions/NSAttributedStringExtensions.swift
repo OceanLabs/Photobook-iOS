@@ -28,25 +28,39 @@
 //
 
 import UIKit
-import Photobook
 
-class AssetPickerCoverCollectionViewCell: UICollectionViewCell {
+extension NSAttributedString {
     
-    @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var datesLabel: UILabel!
-    @IBOutlet private weak var coverImageView: UIImageView!
-    @IBOutlet weak var labelsContainerView: UIView!
-    
-    var title: String? {
-        didSet {
-            titleLabel.text = title
-            titleLabel.setLineHeight(titleLabel.font.pointSize)
+    /// Initialises an attributed string from HTML text
+    ///
+    /// - Parameters:
+    ///   - html: Text in html format. Suited for simple tags
+    ///   - style: Style to apply to the whole text body
+    convenience init?(html: String, style: String? = nil) {
+        var html = html
+        if let style = style {
+            html = "<html><body style=\"\(style)\">\(html)</body></html>"
         }
+        
+        guard let data = html.data(using: .utf8, allowLossyConversion: false) else { return nil }
+        guard let attributedString = try? NSAttributedString(data: data,
+                                                             options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue],
+                                                             documentAttributes: nil) else {
+                                                                return nil
+        }
+        
+        self.init(attributedString: attributedString)
     }
-    var dates: String? { didSet { datesLabel.text = dates } }
-    
-    func setCover (cover: PhotobookAsset?, size: CGSize) {
-        coverImageView.setImage(from: cover, size: size)
-    }
-    
+
+    func height(for width: CGFloat) -> CGFloat {
+        let storage = NSTextStorage(attributedString: self)
+        let container = NSTextContainer(size: CGSize(width: width, height: CGFloat.greatestFiniteMagnitude))
+        container.lineFragmentPadding = 0.0
+        let layoutManager = NSLayoutManager()
+        
+        layoutManager.addTextContainer(container)
+        storage.addLayoutManager(layoutManager)
+        
+        return layoutManager.usedRect(for: container).height
+    }    
 }

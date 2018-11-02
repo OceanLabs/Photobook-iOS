@@ -30,7 +30,7 @@
 import UIKit
 
 protocol PhotobookProductChangeDelegate: class {
-    func didChangePhotobookProduct(_ photobookProduct: PhotobookProduct, assets: [Asset], album: Album?, albumManager: AlbumManager?)
+    func didChangePhotobookProduct(_ photobookProduct: PhotobookProduct, assets: [Asset])
     func didDeletePhotobookProduct()
 }
 
@@ -127,7 +127,7 @@ class ProductManager {
         return currentProduct
     }
     
-    func changedCurrentProduct(with assets: [Asset], album: Album?, albumManager: AlbumManager?) {
-        delegate?.didChangePhotobookProduct(currentProduct!, assets: assets, album: album, albumManager: albumManager)
+    func changedCurrentProduct(with assets: [Asset]) {
+        delegate?.didChangePhotobookProduct(currentProduct!, assets: assets)
     }
 }

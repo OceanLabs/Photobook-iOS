@@ -220,21 +220,20 @@ class ReceiptViewController: UIViewController {
     private func dismiss() {
         OrderManager.shared.cancelProcessing { [weak welf = self] in
             ProductManager.shared.reset()
-            OrderManager.shared.reset()
-            NotificationCenter.default.post(name: ReceiptNotificationName.receiptWillDismiss, object: nil)
+            OrderManager.shared.reset()            
             
-            #if !PHOTOBOOK_APP
-            guard let stelf = welf else { return }
-            let controllerToDismiss = stelf.isPresentedModally ? stelf.navigationController! : stelf
-            if stelf.dismissDelegate?.wantsToDismiss?(controllerToDismiss) == nil {
-                if stelf.isPresentedModally {
-                    stelf.presentingViewController!.dismiss(animated: true, completion: nil)
-                    return
-                }
-                stelf.navigationController!.interactivePopGestureRecognizer!.isEnabled = true
-                stelf.navigationController!.popToRootViewController(animated: true)
-            }
-            #else
+//            #if !PHOTOBOOK_APP
+//            guard let stelf = welf else { return }
+//            let controllerToDismiss = stelf.isPresentedModally ? stelf.navigationController! : stelf
+//            if stelf.dismissDelegate?.wantsToDismiss?(controllerToDismiss) == nil {
+//                if stelf.isPresentedModally {
+//                    stelf.presentingViewController!.dismiss(animated: true, completion: nil)
+//                    return
+//                }
+//                stelf.navigationController!.interactivePopGestureRecognizer!.isEnabled = true
+//                stelf.navigationController!.popToRootViewController(animated: true)
+//            }
+//            #else
             // Check if the Photobook app was launched into the ReceiptViewController
             if welf?.navigationController?.viewControllers.count == 1 {
                 welf?.navigationController?.isNavigationBarHidden = true
@@ -243,7 +242,7 @@ class ReceiptViewController: UIViewController {
                 welf?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
                 welf?.navigationController?.popToRootViewController(animated: true)
             }
-            #endif
+//            #endif
         }
     }
     

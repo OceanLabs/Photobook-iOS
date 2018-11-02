@@ -1,8 +1,6 @@
 github "stripe/stripe-ios"
 github "paypal/PayPal-iOS-SDK"
-github "OAuthSwift/OAuthSwift"
 github "evgenyneu/keychain-swift"
 github "rs/SDWebImage"
 github "segmentio/analytics-ios"
-github "facebook/Facebook-SDK-Swift"
 github "OceanLabs/PayPal-iOS-Dynamic-Loader"

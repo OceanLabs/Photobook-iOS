@@ -28,6 +28,7 @@
 //
 
 import UIKit
+import Photobook
 
 class TutorialViewController: UIViewController {
 
@@ -48,8 +49,8 @@ class TutorialViewController: UIViewController {
     private lazy var tutorialPageControllers: [TutorialPageViewController] = {
         var pageControllers = [TutorialPageViewController]()
         for page in tutorialPages {
-            let pageController = photobookMainStoryboard.instantiateViewController(withIdentifier: Constants.tutorialPageViewControllerIdentifier) as! TutorialPageViewController
-            pageController.image = UIImage(namedInPhotobookBundle: page["image"]!)
+            let pageController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: Constants.tutorialPageViewControllerIdentifier) as! TutorialPageViewController
+            pageController.image = UIImage(named: page["image"]!)
             pageController.text = page["text"]
             pageControllers.append(pageController)
         }

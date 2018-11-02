@@ -28,6 +28,7 @@
 //
 
 import UIKit
+import Photobook
 
 protocol AssetPickerCollectionViewControllerDelegate: class {
     func viewControllerForPresentingOn() -> UIViewController?
@@ -102,7 +103,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
         
         // Listen for album changes
-        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AlbumManagerNotificationName.albumsWereUpdated, object: nil)
     }
     
     private func loadAssets() {
@@ -213,7 +214,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
             else { return }
         
         for albumChange in albumsChanges {
-            if albumChange.album.identifier == self.album.identifier {
+            if albumChange.albumIdentifier == self.album.identifier {
                 var indexPathsInserted = [IndexPath]()
                 for assetInserted in albumChange.assetsInserted {
                     if let index = self.album.assets.index(where: { $0.identifier == assetInserted.identifier }) {
@@ -277,12 +278,12 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         }
     }
     
-    private func updateSelectedStatus(cell: AssetPickerCollectionViewCell? = nil, indexPath: IndexPath, asset: Asset? = nil) {
+    private func updateSelectedStatus(cell: AssetPickerCollectionViewCell? = nil, indexPath: IndexPath, asset: PhotobookAsset? = nil) {
         guard let cell = cell ?? collectionView?.cellForItem(at: indexPath) as? AssetPickerCollectionViewCell else { return }
         let asset = asset ?? album.assets[indexPath.item]
         
         let selected = selectedAssetsManager?.isSelected(asset) ?? false
-        cell.selectedStatusImageView.image = selected ? UIImage(namedInPhotobookBundle: "Tick") : UIImage(namedInPhotobookBundle: "Tick-empty")
+        cell.selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
     }
     
     func coverImageLabelsContainerView() -> UIView? {
@@ -366,7 +367,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     }
     
     @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
-        guard let assets = notification.userInfo?[SelectedAssetsManager.notificationUserObjectKeyAssets] as? [Asset] else {
+        guard let assets = notification.userInfo?[SelectedAssetsManager.notificationUserObjectKeyAssets] as? [PhotobookAsset] else {
             return
         }
         for asset in assets {
@@ -431,15 +432,16 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
     func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
         switch collectorMode {
         case .adding:
-            let photobookAssets = PhotobookAsset.photobookAssets(with: selectedAssetsManager?.selectedAssets ?? [])
-            addingDelegate?.didFinishAdding(photobookAssets)
+            addingDelegate?.didFinishAdding(selectedAssetsManager?.selectedAssets)
         default:
             if UserDefaults.standard.bool(forKey: hasShownTutorialKey) {
-                navigationController?.pushViewController(photobookViewController(), animated: true)
+                if let viewController = photobookViewController() {
+                    navigationController?.pushViewController(viewController, animated: true)
+                }
             } else {
                 UserDefaults.standard.set(true, forKey: hasShownTutorialKey)
 
-                let tutorialViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
+                let tutorialViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
                 tutorialViewController.delegate = self
                 present(tutorialViewController, animated: true, completion: nil)
             }
@@ -447,16 +449,13 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
         selectedAssetsManager?.orderAssetsByDate()
     }
     
-    private func photobookViewController() -> PhotobookViewController {
-        let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
-        photobookViewController.assets = selectedAssetsManager?.selectedAssets
-        photobookViewController.photobookDelegate = self
-        photobookViewController.completionClosure = { (photobookProduct) in
-            OrderManager.shared.reset()
-            OrderManager.shared.basketOrder.products = [photobookProduct]
-
-            let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
-            photobookViewController.navigationController?.pushViewController(checkoutViewController, animated: true)
+    private func photobookViewController() -> UIViewController? {
+        
+        let photobookViewController = PhotobookSDK.shared.photobookViewController(with: selectedAssetsManager!.selectedAssets, embedInNavigation: false, delegate: self) {
+            [weak welf = self] in
+            if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, delegate: self) {
+                welf?.navigationController?.pushViewController(checkoutViewController, animated: true)
+            }
         }
         return photobookViewController
     }
@@ -465,8 +464,8 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
 extension AssetPickerCollectionViewController: PhotobookDelegate {
 
     func wantsToDismiss(_ viewController: UIViewController) {
-        if let _ = viewController as? TutorialViewController {
-            navigationController?.pushViewController(photobookViewController(), animated: false)
+        if let _ = viewController as? TutorialViewController, let photobookViewController = photobookViewController() {
+            navigationController?.pushViewController(photobookViewController, animated: false)
             dismiss(animated: true, completion: nil)
             return
         }
@@ -581,7 +580,7 @@ extension AssetPickerCollectionViewController {
         let asset = album.assets[indexPath.item]
         
         guard selectedAssetsManager.toggleSelected(asset) else {
-            let alertController = UIAlertController(title: NSLocalizedString("ImagePicker/TooManyPicturesAlertTitle", value: "Too many pictures", comment: "Alert title informing the user that they have reached the maximum number of images"), message: NSLocalizedString("ImagePicker/TooManyPicturesAlertMessage", value: "Your photo book cannot contain more than \(ProductManager.shared.maximumAllowedPages) pictures", comment: "Alert message informing the user that they have reached the maximum number of images"), preferredStyle: .alert)
+            let alertController = UIAlertController(title: NSLocalizedString("ImagePicker/TooManyPicturesAlertTitle", value: "Too many pictures", comment: "Alert title informing the user that they have reached the maximum number of images"), message: NSLocalizedString("ImagePicker/TooManyPicturesAlertMessage", value: "Your photo book cannot contain more than \(PhotobookSDK.shared.maximumAllowedPages) pictures", comment: "Alert message informing the user that they have reached the maximum number of images"), preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
             present(alertController, animated: true, completion: nil)
             return
@@ -638,7 +637,6 @@ extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegat
         previewingContext.sourceRect = cell.convert(cell.contentView.frame, to: collectionView)
         
         fullScreenImageViewController.asset = album.assets[indexPath.item]
-        fullScreenImageViewController.album = album
         fullScreenImageViewController.selectedAssetsManager = selectedAssetsManager
         fullScreenImageViewController.delegate = self
         fullScreenImageViewController.providesPresentationContextTransitionStyle = true
@@ -661,10 +659,10 @@ extension AssetPickerCollectionViewController: UIViewControllerPreviewingDelegat
     
 }
 
-extension AssetPickerCollectionViewController: FullScreenImageViewControllerDelegate{
+extension AssetPickerCollectionViewController: FullScreenImageViewControllerDelegate {
     // MARK: FullScreenImageViewControllerDelegate
     
-    func previewDidUpdate(asset: Asset) {
+    func previewDidUpdate(asset: PhotobookAsset) {
         guard let index = album.assets.index(where: { (selectedAsset) in
             return selectedAsset.identifier == asset.identifier
         }),
@@ -674,7 +672,7 @@ extension AssetPickerCollectionViewController: FullScreenImageViewControllerDele
         collectionView?.reloadItems(at: [IndexPath(item: index, section: 0)])
     }
     
-    func sourceView(for asset:Asset) -> UIView?{
+    func sourceView(for asset: PhotobookAsset) -> UIView?{
         guard let index = album.assets.index(where: { (selectedAsset) in
             return selectedAsset.identifier == asset.identifier
         }),

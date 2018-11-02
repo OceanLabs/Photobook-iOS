@@ -28,49 +28,36 @@
 //
 
 import UIKit
+import Photobook
 
-/// Collection of Assets
-protocol Album {
+extension UIImageView {
     
-    // Identifier
-    var identifier: String { get }
-
-    /// Number of Assets in the album
-    var numberOfAssets: Int { get }
+    private struct Constants {
+        static let fadeDuration = 0.2
+    }
     
-    /// Localized name
-    var localizedName: String? { get }
-    
-    /// Collection of already loaded Assets
-    var assets: [Asset] { get }
-    
-    /// True if the album has more Assets to load, False otherwise
-    var hasMoreAssetsToLoad: Bool { get }
-    
-    /// Performs the loading of a first batch of Assets
+    ///  Set the image from an Asset to the imageView and fade in while doing so
     ///
-    /// - Parameter completionHandler: Closure that gets called on completion
-    func loadAssets(completionHandler: ((_ error: Error?) -> Void)?)
-    
-    /// Performs the loading of the next batch of Assets
-    ///
-    /// - Parameter completionHandler: Closure that gets called on completion
-    func loadNextBatchOfAssets(completionHandler: ((_ error: Error?) -> Void)?)
-    
-    /// Retrieves the Asset to be used as cover for the Album
-    ///
-    /// - Parameter completionHandler: Closure that gets called on completion
-    func coverAsset(completionHandler: @escaping (_ asset: Asset?) -> Void)
-}
-
-struct AlbumChange {
-    var album: Album
-    var assetsRemoved: [Asset]
-    var indexesRemoved: [Int]
-    var assetsInserted: [Asset]
-}
-
-struct AlbumAddition {
-    var album: Album
-    var index: Int
+    /// - Parameters:
+    ///   - asset: The asset to use to get the image from
+    ///   - size: Request a specific size from the asset. If nil the imageView's frame size will be used
+    ///   - validCellCheck: Called after the image has been fetched, but doesn't wait for the fade animation to complete. The completion handler returns a Bool indicating if we're allowed to continue. A typical example where it will be false is if we are in a reusable view (cell) which has been recycled.
+    func setImage(from asset: PhotobookAsset?, fadeIn: Bool = true, size: CGSize? = nil, validCellCheck:(()->(Bool))? = nil) {
+        guard let asset = asset else {
+            image = nil
+            return
+        }
+        
+        self.alpha = 0
+        let size = size ?? self.frame.size
+        
+        PhotobookSDK.shared.cachedImage(for: asset, size: size) { image, error in
+            guard validCellCheck?() ?? true else { return }
+            
+            self.image = image
+            UIView.animate(withDuration: fadeIn ? Constants.fadeDuration : 0, animations: {
+                self.alpha = 1
+            })
+        }
+    }
 }

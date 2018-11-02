@@ -39,8 +39,13 @@ import Photos
         self.asset = asset!
     }
     
-    @objc public var uploadUrl: String? {
-        return asset.uploadUrl
+    @objc public var identifier: String { return asset.identifier }
+    @objc public var albumIdentifier: String? { return asset.albumIdentifier }
+    @objc public var date: Date? { return asset.date }
+    @objc public var uploadUrl: String? { return asset.uploadUrl }
+    @objc public var phAsset: PHAsset? {
+        guard let photoAsset = asset as? PhotosAsset else { return nil }
+        return photoAsset.photosAsset
     }
     
     static func photobookAssets(with assets: [Asset]?) -> [PhotobookAsset]? {

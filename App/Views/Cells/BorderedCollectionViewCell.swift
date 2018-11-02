@@ -28,25 +28,28 @@
 //
 
 import UIKit
-import Photobook
 
-class AssetPickerCoverCollectionViewCell: UICollectionViewCell {
+/// A collectionView cell that can have rounded border around it
+class BorderedCollectionViewCell: UICollectionViewCell, BorderedViewProtocol {
+    static let cornerRadius: CGFloat = 11.0
     
-    @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var datesLabel: UILabel!
-    @IBOutlet private weak var coverImageView: UIImageView!
-    @IBOutlet weak var labelsContainerView: UIView!
+    @IBOutlet weak var roundedBackgroundView: UIView! { didSet { setupRoundedBackgroundView() } }
     
-    var title: String? {
-        didSet {
-            titleLabel.text = title
-            titleLabel.setLineHeight(titleLabel.font.pointSize)
-        }
+    var borderLayer: CAShapeLayer!
+    var isBorderVisible = false { willSet { setBorderVisible(newValue) } }
+
+    var roundedBorderColor: UIColor? { didSet { setup(reset: true) } }
+    var roundedBorderWidth: CGFloat? = 4.0 { didSet { setup(reset: true) } }
+    var roundedCornerRadius: CGFloat? = BorderedCollectionViewCell.cornerRadius { didSet { setup(reset: true) } }
+    var color: UIColor! = UIColor(red: 0.79, green: 0.8, blue: 0.8, alpha: 1.0)
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
     }
-    var dates: String? { didSet { datesLabel.text = dates } }
     
-    func setCover (cover: PhotobookAsset?, size: CGSize) {
-        coverImageView.setImage(from: cover, size: size)
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
     }
-    
 }

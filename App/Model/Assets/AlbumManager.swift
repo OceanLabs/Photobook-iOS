@@ -27,12 +27,13 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
-
-struct AssetsNotificationName {
-    static let albumsWereUpdated = Notification.Name("ly.kite.sdk.albumsWereUpdatedNotificationName")
-    static let albumsWereAdded = Notification.Name("ly.kite.sdk.albumsWereAddedNotificationName")
+struct AlbumManagerNotificationName {
+    static let albumsWereUpdated = Notification.Name("ly.kite.photobook.albumsWereUpdatedNotificationName")
+    static let albumsWereAdded = Notification.Name("ly.kite.photobook.albumsWereAddedNotificationName")
 }
+
+import UIKit
+import Photobook
 
 /// Manager for a source with multiple albums
 protocol AlbumManager {
@@ -61,14 +62,14 @@ protocol AlbumManager {
     /// - Parameters:
     ///   - assets: Assets for which to cache images
     ///   - targetSize: The desired size for the images
-    func startCachingImages(for assets: [Asset], targetSize: CGSize)
+    func startCachingImages(for assets: [PhotobookAsset], targetSize: CGSize)
 
     /// Stops the process of caching images for the provided assets and size
     ///
     /// - Parameters:
     ///   - assets: Assets for which to cache images
     ///   - targetSize: The desired size for the images
-    func stopCachingImages(for assets: [Asset], targetSize: CGSize)
+    func stopCachingImages(for assets: [PhotobookAsset], targetSize: CGSize)
     
     /// Stops the process of caching images for all assets in 'assets'
     func stopCachingImagesForAllAssets()
@@ -76,7 +77,7 @@ protocol AlbumManager {
 
 // MARK: - Default implementation for optional methods
 extension AlbumManager {
-    func startCachingImages(for assets: [Asset], targetSize: CGSize) {}
-    func stopCachingImages(for assets: [Asset], targetSize: CGSize) {}
+    func startCachingImages(for assets: [PhotobookAsset], targetSize: CGSize) {}
+    func stopCachingImages(for assets: [PhotobookAsset], targetSize: CGSize) {}
     func stopCachingImagesForAllAssets() {}
 }

@@ -28,25 +28,14 @@
 //
 
 import UIKit
-import Photobook
 
-class AssetPickerCoverCollectionViewCell: UICollectionViewCell {
+class PhotobookNavigationController: UINavigationController {
     
-    @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var datesLabel: UILabel!
-    @IBOutlet private weak var coverImageView: UIImageView!
-    @IBOutlet weak var labelsContainerView: UIView!
-    
-    var title: String? {
-        didSet {
-            titleLabel.text = title
-            titleLabel.setLineHeight(titleLabel.font.pointSize)
-        }
-    }
-    var dates: String? { didSet { datesLabel.text = dates } }
-    
-    func setCover (cover: PhotobookAsset?, size: CGSize) {
-        coverImageView.setImage(from: cover, size: size)
+    override var shouldAutorotate: Bool {
+        return false
     }
     
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
 }

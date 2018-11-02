@@ -29,35 +29,7 @@
 
 import UIKit
 
-let photobookBundle = Bundle(for: PhotobookTemplate.self)
-let photobookResourceBundle: Bundle = {
-    guard let resourcePath = photobookBundle.path(forResource: "PhotobookResources", ofType:"bundle"),
-    let resourceBundle = Bundle(path: resourcePath)
-        else {
-            return photobookBundle
-    }
-    
-    return resourceBundle
-}()
-let photobookMainStoryboard =  UIStoryboard(name: "Photobook", bundle: photobookResourceBundle)
-
-struct Colors {
-    static let blueTint = UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0)
-    static let greyTint = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1.0)
-}
-
-enum Environment {
-    case test
-    case live
-}
-
-enum ActiveState {
-    case on, off
-}
-
-struct Measurements {
-    static let mmToPtMultiplier = 2.83464566929134
-}
+let hasShownTutorialKey = "PhotobookTutorialShown"
 
 struct CommonLocalizedStrings {
     static let somethingWentWrongTitle = NSLocalizedString("GenericError/SomethingWentWrong", value: "Something Went Wrong", comment: "Generic error message title")
@@ -74,8 +46,6 @@ struct CommonLocalizedStrings {
     static let accessibilityListItemSelected = NSLocalizedString("Accessibility/ListItemSelected", value: "Selected", comment: "Accessibility message to let the user know that an item in a list is selected.") + ". "
     static let accessibilityDoubleTapToSelectListItem = NSLocalizedString("Accessibility/DoubleTapToSelectListItem", value: "Double tap to select.", comment: "Accessibility hint letting the user know that they can double tap to select a list item")
     static let accessibilityDoubleTapToEdit = NSLocalizedString("Accessibility/DoubleTapToEdit", value: "Double tap to edit.", comment: "Accessibility hint letting the user know that they can double tap to edit an item")
-
-    static let shipping = NSLocalizedString("ReceiptViewController/Shipping", value: "Shipping", comment: "Title for the total shipping cost of an order")
 
     static func serviceAccessError(serviceName: String) -> String {
         return NSLocalizedString("Generic/AccessError", value: "There was an error when trying to access \(serviceName)", comment: "Generic error when trying to access a social service eg Instagram/Facebook")

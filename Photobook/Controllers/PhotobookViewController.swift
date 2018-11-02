@@ -36,17 +36,11 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     /// Array of Assets to populate the pages of the photobook.
     var assets: [Asset]!
     
-    /// Album to use in order to have access to additional Assets when editing a page. 'album', 'albumManager' & 'assetPickerViewController' are exclusive.
-    var album: Album?
-    
-    /// Manager for multiple albums to use in order to have access to additional Assets when editing a page. 'album', 'albumManager' & 'assetPickerViewController' are exclusive.
-    var albumManager: AlbumManager?
-
     /// Delegate that can handle the dismissal of the photo book and also provide a custom asset picker
     weak var photobookDelegate: PhotobookDelegate?
     
-    /// Closure to call with a completed photobook product
-    var completionClosure: ((_ photobook: PhotobookProduct) -> Void)?
+    /// Closure to call when a photobook has been created
+    var completionClosure: (() -> ())?
     
     private var product: PhotobookProduct! {
         return ProductManager.shared.currentProduct
@@ -128,7 +122,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        (tabBarController?.tabBar as? PhotobookTabBar)?.isBackgroundHidden = true
+        // FIXME
+        //(tabBarController?.tabBar as? PhotobookTabBar)?.isBackgroundHidden = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -449,7 +444,9 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         var removedAssets = [Asset]()
         for albumChange in albumsChanges {
-            removedAssets.append(contentsOf: albumChange.assetsRemoved)
+            if let assetsRemoved = PhotobookAsset.assets(from: albumChange.assetsRemoved) {
+                removedAssets.append(contentsOf: assetsRemoved)
+            }
         }
         
         for removedAsset in removedAssets {
@@ -632,8 +629,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let pageSetupViewController = modalNavigationController.viewControllers.first as! PageSetupViewController
         pageSetupViewController.assets = assets
         pageSetupViewController.pageIndex = index
-        pageSetupViewController.album = album
-        pageSetupViewController.albumManager = albumManager
         pageSetupViewController.photobookDelegate = photobookDelegate
         
         if barType != nil {
@@ -752,7 +747,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
 
     private func changedPhotobook() {
-        ProductManager.shared.changedCurrentProduct(with: assets, album: album, albumManager: albumManager)
+        ProductManager.shared.changedCurrentProduct(with: assets)
     }
     
     private func closeCurrentCell(completion:(()->())? = nil) {

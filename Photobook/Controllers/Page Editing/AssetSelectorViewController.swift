@@ -41,7 +41,6 @@ class AssetSelectorViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     
-    private var addMoreSelectedAssetsManager = SelectedAssetsManager()
     var assets = [Asset]()
 
     private lazy var timesUsed: [String: Int] = {
@@ -55,16 +54,6 @@ class AssetSelectorViewController: UIViewController {
     }()
     private var selectedAssetIndex = -1
     
-    var album: Album? {
-        didSet {
-            if album != nil { collectionView.reloadData() }
-        }
-    }
-    var albumManager: AlbumManager? {
-        didSet {
-            if albumManager != nil { collectionView.reloadData() }
-        }
-    }
     weak var photobookDelegate: PhotobookDelegate? {
         didSet {
             collectionView.reloadData()
@@ -100,7 +89,7 @@ class AssetSelectorViewController: UIViewController {
         return ProductManager.shared.currentProduct
     }
     
-    private lazy var shouldShowAddMoreButton = album != nil || albumManager != nil || photobookDelegate?.assetPickerViewController != nil
+    private lazy var shouldShowAddMoreButton = photobookDelegate?.assetPickerViewController != nil
     
     func reselectAsset(_ asset: Asset) {
         selectedAsset = asset

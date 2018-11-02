@@ -28,6 +28,7 @@
 //
 
 import UIKit
+import Photobook
 
 /// View Controller to show albums. It doesn't care about the source of those albums as long as they conform to the Album protocol.
 class AlbumsCollectionViewController: UICollectionViewController {
@@ -44,9 +45,9 @@ class AlbumsCollectionViewController: UICollectionViewController {
     private let albumCellLabelsHeight: CGFloat = 50
     private let marginBetweenAlbums: CGFloat = 20
     
-    var albumManager: AlbumManager!
+    lazy var albumManager: AlbumManager = PhotosAlbumManager()
     private let selectedAssetsManager = SelectedAssetsManager()
-    var assets: [Asset]!
+    var assets: [PhotobookAsset]!
     
     private var accountManager: AccountClient?
     var collectorMode: AssetCollectorMode = .selecting
@@ -87,8 +88,8 @@ class AlbumsCollectionViewController: UICollectionViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
         
         // Listen for album changes
-        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereAdded(_:)), name: AssetsNotificationName.albumsWereAdded, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AlbumManagerNotificationName.albumsWereUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereAdded(_:)), name: AlbumManagerNotificationName.albumsWereAdded, object: nil)
     }
     
     func loadAlbums() {
@@ -190,7 +191,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     }
     
     @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
-        guard let assets = notification.userInfo?[SelectedAssetsManager.notificationUserObjectKeyAssets] as? [Asset], let collectionView = collectionView else {
+        guard let assets = notification.userInfo?[SelectedAssetsManager.notificationUserObjectKeyAssets] as? [PhotobookAsset], let collectionView = collectionView else {
             return
         }
         var indexPathsToReload = [IndexPath]()
@@ -216,7 +217,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
         var indexPathsChanged = [IndexPath]()
         
         for albumChange in albumsChanges {
-            guard let index = albumManager.albums.index(where: { $0.identifier == albumChange.album.identifier }) else { continue }
+            guard let index = albumManager.albums.index(where: { $0.identifier == albumChange.albumIdentifier }) else { continue }
             indexPathsChanged.append(IndexPath(item: index, section: 0))
         }
         
@@ -284,31 +285,27 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
     func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
         switch collectorMode {
         case .adding:
-            let photobookAssets = PhotobookAsset.photobookAssets(with: selectedAssetsManager.selectedAssets)
-            addingDelegate?.didFinishAdding(photobookAssets)
+            addingDelegate?.didFinishAdding(selectedAssetsManager.selectedAssets)
         default:
             if UserDefaults.standard.bool(forKey: hasShownTutorialKey) {
-                navigationController?.pushViewController(photobookViewController(), animated: true)
+                if let viewController = photobookViewController() {
+                    navigationController?.pushViewController(viewController, animated: true)
+                }
             } else {
                 UserDefaults.standard.set(true, forKey: hasShownTutorialKey)
 
-                let tutorialViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
+                let tutorialViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
                 tutorialViewController.delegate = self
                 present(tutorialViewController, animated: true, completion: nil)
             }
         }
     }
     
-    private func photobookViewController() -> PhotobookViewController {
-        let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
-        photobookViewController.assets = selectedAssetsManager.selectedAssets
-        photobookViewController.photobookDelegate = self
-        photobookViewController.completionClosure = { (photobookProduct) in
-            OrderManager.shared.reset()
-            OrderManager.shared.basketOrder.products = [photobookProduct]
-            
-            let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
-            photobookViewController.navigationController?.pushViewController(checkoutViewController, animated: true)
+    private func photobookViewController() -> UIViewController? {
+        let photobookViewController = PhotobookSDK.shared.photobookViewController(with: selectedAssetsManager.selectedAssets, embedInNavigation: false, delegate: self) { [weak welf = self] in
+            if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, delegate: self) {
+                welf?.navigationController?.pushViewController(checkoutViewController, animated: true)
+            }
         }
         return photobookViewController
     }
@@ -324,8 +321,8 @@ extension AlbumsCollectionViewController: PhotobookDelegate {
     }
     
     func wantsToDismiss(_ viewController: UIViewController) {
-        if let _ = viewController as? TutorialViewController {
-            navigationController?.pushViewController(photobookViewController(), animated: false)
+        if let _ = viewController as? TutorialViewController, let photobookViewController = photobookViewController() {
+            navigationController?.pushViewController(photobookViewController, animated: false)
             dismiss(animated: true, completion: nil)
             return
         }

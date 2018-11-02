@@ -28,25 +28,43 @@
 //
 
 import UIKit
-import Photobook
 
-class AssetPickerCoverCollectionViewCell: UICollectionViewCell {
+/// Type of message
+///
+/// - info: General info for the user
+/// - error: Severe error in response to a user action or server request.
+/// - warning: Inform the user of critical information in the current context
+enum MessageType {
+    case info
+    case error
+    case warning
     
-    @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var datesLabel: UILabel!
-    @IBOutlet private weak var coverImageView: UIImageView!
-    @IBOutlet weak var labelsContainerView: UIView!
-    
-    var title: String? {
-        didSet {
-            titleLabel.text = title
-            titleLabel.setLineHeight(titleLabel.font.pointSize)
+    func backgroundColor() -> UIColor {
+        switch self {
+        case .error:
+            return UIColor(red: 0.8, green: 0.0, blue: 0.0, alpha: 1.0)
+        case .warning:
+            return UIColor(red: 1.0, green: 0.65, blue: 0.0, alpha: 1.0)
+        case .info:
+            return UIColor(red: 0.64, green: 0.64, blue: 0.64, alpha: 1.0)
         }
     }
-    var dates: String? { didSet { datesLabel.text = dates } }
+}
+
+/// Simplifies error handling at VC level keeping messages independent from the API client.
+struct ErrorMessage: Error {
+    private(set) var title: String?
+    private(set) var text: String!
+    private(set) var type: MessageType!
     
-    func setCover (cover: PhotobookAsset?, size: CGSize) {
-        coverImageView.setImage(from: cover, size: size)
+    init(title: String? = nil, text: String) {
+        self.title = title
+        self.text = text
+        self.type = .error
     }
     
+    init(_ error: Error, _ title: String? = nil) {
+        self.init(title: title, text: (error as NSError).localizedDescription)
+    }    
 }
+

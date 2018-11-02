@@ -28,25 +28,18 @@
 //
 
 import UIKit
-import Photobook
 
-class AssetPickerCoverCollectionViewCell: UICollectionViewCell {
+extension UIImage {
     
-    @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var datesLabel: UILabel!
-    @IBOutlet private weak var coverImageView: UIImageView!
-    @IBOutlet weak var labelsContainerView: UIView!
-    
-    var title: String? {
-        didSet {
-            titleLabel.text = title
-            titleLabel.setLineHeight(titleLabel.font.pointSize)
-        }
+    convenience init?(color: UIColor, size: CGSize = CGSize(width: 1.0, height: 1.0)) {
+        let rect = CGRect(origin: .zero, size: size)
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 1.0)
+        color.setFill()
+        UIRectFill(rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        guard let cgImage = image?.cgImage else { return nil }
+        self.init(cgImage: cgImage)
     }
-    var dates: String? { didSet { datesLabel.text = dates } }
-    
-    func setCover (cover: PhotobookAsset?, size: CGSize) {
-        coverImageView.setImage(from: cover, size: size)
-    }
-    
 }

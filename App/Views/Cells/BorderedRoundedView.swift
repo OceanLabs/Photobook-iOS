@@ -28,25 +28,31 @@
 //
 
 import UIKit
-import Photobook
 
-class AssetPickerCoverCollectionViewCell: UICollectionViewCell {
+/// A rounded view with a border
+class BorderedRoundedView: UIView, BorderedViewProtocol {
+    var borderLayer: CAShapeLayer!
+    @IBOutlet weak var roundedBackgroundView: UIView!
     
-    @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var datesLabel: UILabel!
-    @IBOutlet private weak var coverImageView: UIImageView!
-    @IBOutlet weak var labelsContainerView: UIView!
+    var isBorderVisible = false { willSet { setBorderVisible(newValue) } }
     
-    var title: String? {
-        didSet {
-            titleLabel.text = title
-            titleLabel.setLineHeight(titleLabel.font.pointSize)
-        }
-    }
-    var dates: String? { didSet { datesLabel.text = dates } }
+    var roundedBorderColor: UIColor? { didSet { setup(reset: true) } }
+    var roundedBorderWidth: CGFloat? { didSet { setup(reset: true) } }
+    var roundedCornerRadius: CGFloat? { didSet { setup(reset: true) } }
+    var color: UIColor! = .white
     
-    func setCover (cover: PhotobookAsset?, size: CGSize) {
-        coverImageView.setImage(from: cover, size: size)
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setupRoundedBackgroundView()
     }
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
 }
