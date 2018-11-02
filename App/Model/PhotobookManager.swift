@@ -45,11 +45,12 @@ class PhotobookManager: NSObject {
     }
     
     func setup() {
-        let environment = PhotobookSDK.Environment.live
+        var environment = PhotobookSDK.Environment.live
         #if TEST_ENVIRONMENT
-        PhotobookSDK.shared.environment = environment
+        environment = .test
         #endif
 
+        PhotobookSDK.shared.environment = environment
         PhotobookSDK.shared.applePayMerchantId = Configuration.applePayPayToString
         PhotobookSDK.shared.applePayPayTo = Configuration.applePayPayToString
         PhotobookSDK.shared.kiteApiKey = environment == .live ? Configuration.kiteApiClientLiveKey : Configuration.kiteApiClientTestKey
