@@ -1,6 +1,0 @@
-github "OceanLabs/PayPal-iOS-Dynamic-Loader" "v1.0.2"
-github "evgenyneu/keychain-swift" "13.0.0"
-github "paypal/PayPal-iOS-SDK" "2.18.1"
-github "rs/SDWebImage" "4.4.2"
-github "segmentio/analytics-ios" "3.6.9"
-github "stripe/stripe-ios" "v13.2.0"

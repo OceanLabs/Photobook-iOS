@@ -37,7 +37,6 @@
 		2E4C9E882049492400F5AD48 /* FacebookAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E872049492400F5AD48 /* FacebookAlbum.swift */; };
 		2E4C9E8A20494D6B00F5AD48 /* AlbumsCollectionViewController+Facebook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8920494D6B00F5AD48 /* AlbumsCollectionViewController+Facebook.swift */; };
 		2E4C9E8C2049527900F5AD48 /* FacebookAlbumManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8B2049527900F5AD48 /* FacebookAlbumManager.swift */; };
-		2E51FEBB20E237AE00E62102 /* PayPalDynamicLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E51FEBA20E237AE00E62102 /* PayPalDynamicLoader.framework */; };
 		2E51FEBC20E2420F00E62102 /* PayPalDynamicLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E51FEBA20E237AE00E62102 /* PayPalDynamicLoader.framework */; };
 		2E51FEBD20E2420F00E62102 /* PayPalDynamicLoader.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E51FEBA20E237AE00E62102 /* PayPalDynamicLoader.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2E52B4A420909EEF00D5C20B /* BasketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E52B4A320909EEF00D5C20B /* BasketTests.swift */; };
@@ -183,13 +182,6 @@
 		2ED14C2F2063AA4B00ED2E2C /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08D02021E4AD00C55D2F /* OpenSans-Regular.ttf */; };
 		2ED14C312063AA4B00ED2E2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E0B58861FB30F2100F31A9E /* Assets.xcassets */; };
 		2ED14C322063AB7200ED2E2C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E0B58831FB30F2100F31A9E /* Main.storyboard */; };
-		2ED14C3E2063ABB700ED2E2C /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C332063ABB700ED2E2C /* SDWebImage.framework */; };
-		2ED14C3F2063ABB700ED2E2C /* Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C342063ABB700ED2E2C /* Analytics.framework */; };
-		2ED14C412063ABB700ED2E2C /* OAuthSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C362063ABB700ED2E2C /* OAuthSwift.framework */; };
-		2ED14C432063ABB700ED2E2C /* KeychainSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C382063ABB700ED2E2C /* KeychainSwift.framework */; };
-		2ED14C442063ABB700ED2E2C /* PayPalMobileSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C392063ABB700ED2E2C /* PayPalMobileSDK.framework */; };
-		2ED14C452063ABB700ED2E2C /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3A2063ABB700ED2E2C /* Bolts.framework */; };
-		2ED14C462063ABB700ED2E2C /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3B2063ABB700ED2E2C /* Stripe.framework */; };
 		2ED5B3811FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */; };
 		2ED5B3831FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3821FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift */; };
 		2ED79FE91FBAEDE90046B96C /* AssetPickerCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */; };
@@ -467,7 +459,6 @@
 		6FC23C11218B567800F5D1EC /* NSAttributedStringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC23C10218B567700F5D1EC /* NSAttributedStringExtensions.swift */; };
 		6FC23C2C218C51EA00F5D1EC /* Photobook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14B992063A9CD00ED2E2C /* Photobook.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		6FC23C2D218C51EA00F5D1EC /* Photobook.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14B992063A9CD00ED2E2C /* Photobook.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6FC23C3F218C5E5700F5D1EC /* PayPalMobileSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2ED14C392063ABB700ED2E2C /* PayPalMobileSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FC7E8831FC4458100D2BCDA /* PhotobookAPIManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E8821FC4458100D2BCDA /* PhotobookAPIManagerTests.swift */; };
 		6FC7E8851FC469E600D2BCDA /* LayoutBoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E8841FC469E600D2BCDA /* LayoutBoxTests.swift */; };
 		6FC7E8871FC4719300D2BCDA /* LayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E8861FC4719300D2BCDA /* LayoutTests.swift */; };
@@ -493,6 +484,7 @@
 		B9BE9F941FBF33320002C459 /* AssetCollectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BE9F931FBF33320002C459 /* AssetCollectorCollectionViewCell.swift */; };
 		B9D33410202C7B13003D4338 /* OrderSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D3340F202C7B13003D4338 /* OrderSummaryTests.swift */; };
 		B9FA5302205FC3DC00669758 /* PhotobookManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FA5301205FC3DC00669758 /* PhotobookManager.swift */; };
+		EF93C3090B05063E9100B778 /* Pods_Photobook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EEC03CA2091C8BF008725B7 /* Pods_Photobook.framework */; };
 		F4A9F475CA7E55A564B39C0A /* Pods_PhotobookTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EEC03CC2091C8BF008725B7 /* Pods_PhotobookTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -567,16 +559,6 @@
 				6FC23C2D218C51EA00F5D1EC /* Photobook.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6FC23C3E218C5E4A00F5D1EC /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				6FC23C3F218C5E5700F5D1EC /* PayPalMobileSDK.framework in CopyFiles */,
-			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -726,9 +708,11 @@
 		2EEC03D02091C8BF008725B7 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EEC03D2209212B3008725B7 /* OrderSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryTests.swift; sourceTree = "<group>"; };
 		2EF312B620591EEE001BE3CF /* IntroDismissSegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroDismissSegue.swift; sourceTree = "<group>"; };
+		3489AC8167727C8C9D74746D /* Pods-Photobook.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.debug.xcconfig"; sourceTree = "<group>"; };
 		35185092CEAA07251E4FD67C /* Pods_Photobook.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Photobook.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B2CC0AAF7A3088876060E07 /* Pods-Photobook App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.release.xcconfig"; sourceTree = "<group>"; };
 		509D34875259D1916ED674CB /* Pods-PhotobookTests.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.debug test.xcconfig"; sourceTree = "<group>"; };
+		671A688CCC48FE74472C1470 /* Pods-Photobook.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.release.xcconfig"; sourceTree = "<group>"; };
 		69B62B8C076001BAA40216F0 /* Pods-Photobook App.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.debug test.xcconfig"; sourceTree = "<group>"; };
 		6A1DA8E9A38D7AFD0E6ADA5C /* Pods-Photobook App.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.release test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.release test.xcconfig"; sourceTree = "<group>"; };
 		6F08F90D2165051500EF9529 /* ProductBackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductBackupManager.swift; sourceTree = "<group>"; };
@@ -854,6 +838,7 @@
 		6FED4FCD216CC12400EC40C2 /* ActionsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionsCollectionViewCell.swift; sourceTree = "<group>"; };
 		6FEF3EAA208F48EB00595A5B /* PhotobookProductTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookProductTests.swift; sourceTree = "<group>"; };
 		6FFE21CA202CA7F9004EC0EA /* SpineTextEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpineTextEditingViewController.swift; sourceTree = "<group>"; };
+		791A084B7DBFE4A0EF1E381B /* Pods-Photobook.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.debug test.xcconfig"; sourceTree = "<group>"; };
 		A9A9A5996008D1B40B2E10F9 /* Pods-PhotobookTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.release.xcconfig"; sourceTree = "<group>"; };
 		B90EB85D203701CD0005D91C /* AmountPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AmountPickerViewController.swift; sourceTree = "<group>"; };
 		B90F287E1FFF8D1A00FF3D15 /* OrderSummaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryViewController.swift; sourceTree = "<group>"; };
@@ -882,6 +867,7 @@
 		B9FA530B2063F3B200669758 /* ReceiptViewControllerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptViewControllerState.swift; sourceTree = "<group>"; };
 		B9FD10B02077C9ED000A45E4 /* UIColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtensions.swift; sourceTree = "<group>"; };
 		C1CA12481EFB37C226C37AD8 /* Pods_Photobook_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Photobook_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DBF41AB42E99CFC7EDCC5743 /* Pods-Photobook.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.release test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.release test.xcconfig"; sourceTree = "<group>"; };
 		EE165E68796AB33E673EA271 /* Pods-PhotobookTests.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.release test.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.release test.xcconfig"; sourceTree = "<group>"; };
 		FF99346143FA805B3676D912 /* Pods-PhotobookTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -934,14 +920,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2ED14C3E2063ABB700ED2E2C /* SDWebImage.framework in Frameworks */,
-				2ED14C3F2063ABB700ED2E2C /* Analytics.framework in Frameworks */,
-				2ED14C412063ABB700ED2E2C /* OAuthSwift.framework in Frameworks */,
-				2E51FEBB20E237AE00E62102 /* PayPalDynamicLoader.framework in Frameworks */,
-				2ED14C432063ABB700ED2E2C /* KeychainSwift.framework in Frameworks */,
-				2ED14C442063ABB700ED2E2C /* PayPalMobileSDK.framework in Frameworks */,
-				2ED14C452063ABB700ED2E2C /* Bolts.framework in Frameworks */,
-				2ED14C462063ABB700ED2E2C /* Stripe.framework in Frameworks */,
+				EF93C3090B05063E9100B778 /* Pods_Photobook.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1372,6 +1351,10 @@
 				69B62B8C076001BAA40216F0 /* Pods-Photobook App.debug test.xcconfig */,
 				4B2CC0AAF7A3088876060E07 /* Pods-Photobook App.release.xcconfig */,
 				6A1DA8E9A38D7AFD0E6ADA5C /* Pods-Photobook App.release test.xcconfig */,
+				3489AC8167727C8C9D74746D /* Pods-Photobook.debug.xcconfig */,
+				791A084B7DBFE4A0EF1E381B /* Pods-Photobook.debug test.xcconfig */,
+				671A688CCC48FE74472C1470 /* Pods-Photobook.release.xcconfig */,
+				DBF41AB42E99CFC7EDCC5743 /* Pods-Photobook.release test.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1807,11 +1790,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2ED14BA22063A9CD00ED2E2C /* Build configuration list for PBXNativeTarget "Photobook" */;
 			buildPhases = (
+				ED7B108DA94B4CDDA8E05F00 /* [CP] Check Pods Manifest.lock */,
 				2ED14B942063A9CD00ED2E2C /* Sources */,
 				2ED14B952063A9CD00ED2E2C /* Frameworks */,
 				2ED14B962063A9CD00ED2E2C /* Headers */,
 				2ED14B972063A9CD00ED2E2C /* Resources */,
-				6FC23C3E218C5E4A00F5D1EC /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -1848,7 +1831,6 @@
 				6FB670631FB5BAD40062D630 /* Sources */,
 				6FB670641FB5BAD40062D630 /* Frameworks */,
 				6FB670651FB5BAD40062D630 /* Resources */,
-				A50D0095660DE177EBF2A510 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2084,38 +2066,22 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A50D0095660DE177EBF2A510 /* [CP] Embed Pods Frameworks */ = {
+		ED7B108DA94B4CDDA8E05F00 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Analytics/Analytics.framework",
-				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
-				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
-				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
-				"${BUILT_PRODUCTS_DIR}/KeychainSwift/KeychainSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/OAuthSwift/OAuthSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/PayPal-iOS-Dynamic-Loader/PayPalDynamicLoader.framework",
-				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
-				"${BUILT_PRODUCTS_DIR}/Stripe/Stripe.framework",
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Analytics.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OAuthSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PayPalDynamicLoader.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework",
+				"$(DERIVED_FILE_DIR)/Pods-Photobook-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-frameworks.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F8D52F1350FCC9B4F21842B0 /* [CP] Embed Pods Frameworks */ = {
@@ -2131,8 +2097,8 @@
 				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
 				"${BUILT_PRODUCTS_DIR}/KeychainSwift/KeychainSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/OAuthSwift/OAuthSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/PayPal-iOS-Dynamic-Loader/PayPalDynamicLoader.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
+				"${BUILT_PRODUCTS_DIR}/PayPal-iOS-Dynamic-Loader/PayPalDynamicLoader.framework",
 				"${BUILT_PRODUCTS_DIR}/Stripe/Stripe.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -2143,8 +2109,8 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OAuthSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PayPalDynamicLoader.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PayPalDynamicLoader.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3290,6 +3256,7 @@
 		};
 		2ED14B9E2063A9CD00ED2E2C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3489AC8167727C8C9D74746D /* Pods-Photobook.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -3321,6 +3288,7 @@
 		};
 		2ED14B9F2063A9CD00ED2E2C /* Debug Test */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 791A084B7DBFE4A0EF1E381B /* Pods-Photobook.debug test.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -3352,6 +3320,7 @@
 		};
 		2ED14BA02063A9CD00ED2E2C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 671A688CCC48FE74472C1470 /* Pods-Photobook.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -3382,6 +3351,7 @@
 		};
 		2ED14BA12063A9CD00ED2E2C /* Release Test */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DBF41AB42E99CFC7EDCC5743 /* Pods-Photobook.release test.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
