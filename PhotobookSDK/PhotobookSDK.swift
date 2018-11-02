@@ -104,6 +104,8 @@ struct AssetsNotificationName {
         }
     }
     
+    @objc public var ctaButtonTitle = NSLocalizedString("photobook/cta", value: "Add to Basket", comment: "Title for the CTA button")
+    
     /// Shared client
     @objc public static let shared: PhotobookSDK = {
         let sdk = PhotobookSDK()

@@ -50,7 +50,6 @@ class OrderSummaryViewController: UIViewController {
     @IBOutlet weak var orderDetailsLabel: UILabel! { didSet { orderDetailsLabel.scaleFont() } }
     @IBOutlet weak var ctaButton: UIButton! { didSet { ctaButton.titleLabel?.scaleFont() } }
     @IBOutlet weak var loadingPreviewLabel: UILabel! { didSet { loadingPreviewLabel.scaleFont() } }
-    @IBOutlet weak var basketDisclaimerLabel: UILabel!
     
     var completionClosure: (() -> Void)?
     var emptyScreenDismissGroup: DispatchGroup? = DispatchGroup()
@@ -74,7 +73,9 @@ class OrderSummaryViewController: UIViewController {
         super.viewDidLoad()
         
         Analytics.shared.trackScreenViewed(.summary)
-                        
+        
+        ctaButton.setTitle(PhotobookSDK.shared.ctaButtonTitle, for: .normal)
+        
         emptyScreenViewController.show(message: Constants.stringLoading, activity: true)
         
         orderSummaryManager.templates = ProductManager.shared.products

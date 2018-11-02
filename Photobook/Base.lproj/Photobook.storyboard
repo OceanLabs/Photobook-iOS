@@ -2885,7 +2885,7 @@ Copyright © 2018 Kite. All rights reserved.</string>
                                 </connections>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ukX-eg-wn4">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="558"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="587"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="g0z-sj-ddc">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="260"/>
@@ -3094,10 +3094,10 @@ Copyright © 2018 Kite. All rights reserved.</string>
                                 </connections>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TNh-ZD-JQz">
-                                <rect key="frame" x="0.0" y="558" width="375" height="109"/>
+                                <rect key="frame" x="0.0" y="587" width="375" height="80"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2YI-pQ-v5X">
-                                        <rect key="frame" x="15" y="44" width="345" height="50"/>
+                                        <rect key="frame" x="15" y="15" width="345" height="50"/>
                                         <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <accessibility key="accessibilityConfiguration" identifier="ctaButton"/>
                                         <constraints>
@@ -3116,21 +3116,12 @@ Copyright © 2018 Kite. All rights reserved.</string>
                                             <action selector="tappedCallToAction:" destination="ays-et-QoH" eventType="touchUpInside" id="bHH-f2-FZ6"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Are you finished? You won't be able to edit your book after adding it to the basket." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IDx-gL-l3B">
-                                        <rect key="frame" x="15" y="5" width="345" height="29"/>
-                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
-                                        <color key="textColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="IDx-gL-l3B" firstAttribute="top" secondItem="TNh-ZD-JQz" secondAttribute="top" constant="5" id="3Fi-eN-c0F"/>
                                     <constraint firstAttribute="trailing" secondItem="2YI-pQ-v5X" secondAttribute="trailing" constant="15" id="4ka-eu-vZV"/>
-                                    <constraint firstItem="IDx-gL-l3B" firstAttribute="leading" secondItem="TNh-ZD-JQz" secondAttribute="leading" constant="15" id="Cde-f0-uaL"/>
-                                    <constraint firstAttribute="trailing" secondItem="IDx-gL-l3B" secondAttribute="trailing" constant="15" id="EjY-54-vnZ"/>
-                                    <constraint firstItem="2YI-pQ-v5X" firstAttribute="top" secondItem="IDx-gL-l3B" secondAttribute="bottom" constant="10" id="Oer-y2-dLf"/>
                                     <constraint firstItem="2YI-pQ-v5X" firstAttribute="leading" secondItem="TNh-ZD-JQz" secondAttribute="leading" constant="15" id="TOf-vx-t9E"/>
+                                    <constraint firstItem="2YI-pQ-v5X" firstAttribute="top" secondItem="TNh-ZD-JQz" secondAttribute="top" constant="15" id="dew-by-8zQ"/>
                                     <constraint firstAttribute="bottom" secondItem="2YI-pQ-v5X" secondAttribute="bottom" constant="15" id="zY7-uE-ptH"/>
                                 </constraints>
                             </view>
@@ -3152,7 +3143,6 @@ Copyright © 2018 Kite. All rights reserved.</string>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
-                        <outlet property="basketDisclaimerLabel" destination="IDx-gL-l3B" id="3Vs-rb-59Q"/>
                         <outlet property="coverSnapshotPageView" destination="8EI-2U-Avm" id="z4R-KX-vwj"/>
                         <outlet property="ctaButton" destination="2YI-pQ-v5X" id="Xua-aP-cay"/>
                         <outlet property="loadingPreviewLabel" destination="Aeb-t6-4vD" id="dtU-h1-dEd"/>
