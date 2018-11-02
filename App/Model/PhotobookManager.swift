@@ -95,13 +95,6 @@ class PhotobookManager: NSObject {
     
     func configureTabBarController(_ tabBarController: UITabBarController) {
         
-        // FIXME: Assign as default in albumsCollectionVC
-        
-        // Browse
-        // Set the albumManager to the AlbumsCollectionViewController
-//        let albumViewController = (tabBarController.viewControllers?[Tab.browse.rawValue] as? UINavigationController)?.topViewController as? AlbumsCollectionViewController
-//        albumViewController?.albumManager = PhotosAlbumManager()
-        
         // Attempt to restore photobook backup
         let browseNavigationViewController = tabBarController.viewControllers?[Tab.browse.rawValue] as? UINavigationController
         let assetPickerViewController = browseNavigationViewController?.viewControllers.first as? AlbumsCollectionViewController
