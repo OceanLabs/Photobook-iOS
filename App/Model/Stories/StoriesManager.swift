@@ -176,7 +176,7 @@ class StoriesManager: NSObject {
             }
             
             // Minimum asset count
-            guard totalAssetCount >= PhotobookSDK.shared.minimumRequiredPages else { return }
+            guard totalAssetCount >= PhotobookSDK.shared.minimumRequiredPhotos else { return }
             
             let story = Story(list: list, coverCollection: moments.firstObject!)
             story.components = locationComponents
@@ -283,7 +283,7 @@ class StoriesManager: NSObject {
         var selectedAssets = [PhotobookAsset]()
         var unusedAssets = [PhotobookAsset]()
         
-        let minimumAssets = PhotobookSDK.shared.minimumRequiredPages
+        let minimumAssets = PhotobookSDK.shared.minimumRequiredPhotos
         let subarrayLength = minimumAssets // For readability
         let subarrayCount: Int = story.photoCount / subarrayLength
         let assetsFromEachSubarray: Int = minimumAssets / subarrayCount

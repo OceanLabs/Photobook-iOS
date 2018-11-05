@@ -101,6 +101,7 @@ struct AssetsNotificationName {
         }
     }
     
+    /// Title of the button that finalises the photo book creation process. Displays "Add to Basket" by default.
     @objc public var ctaButtonTitle = NSLocalizedString("photobook/cta", value: "Add to Basket", comment: "Title for the CTA button")
     
     /// Shared client
@@ -115,23 +116,30 @@ struct AssetsNotificationName {
         return OrderManager.shared.isProcessingOrder
     }
     
-    @objc public var minimumRequiredPages: Int {
+    //// The minimum required number of photos to create a photo book
+    @objc public var minimumRequiredPhotos: Int {
         return ProductManager.shared.minimumRequiredPages
     }
 
-    @objc public var maximumAllowedPages: Int {
+    /// The maximum allowed number of photos to create a photo book
+    @objc public var maximumAllowedPhotos: Int {
         return ProductManager.shared.maximumAllowedPages
     }
-
+    
+    /// To be called from application(_: handleEventsForBackgroundURLSession: completionHandler:) when the app wakes up due to a background session update
+    ///
+    /// - Parameter completion: The completion closure forwarded by the application delegate
     @objc public func loadProcessingOrderAfterBackgroundRequest(_ completion: @escaping () -> Void) {
         _ = OrderManager.shared.loadProcessingOrder(completion)
     }
     
     /// Photo book view controller initialised with the provided images
     ///
-    /// - Parameter photobookAssets: Images to use to initialise the photo book. Cannot be empty.
-    /// - Parameter embedInNavigation: Whether the returned view controller should be a UINavigationController. Defaults to false. Note that a navigation controller must be provided if false.
-    /// - Parameter delegate: Delegate that can handle the dismissal of the photo book and also provide a custom photo picker
+    /// - Parameters:
+    ///   - photobookAssets: Images to use to initialise the photo book. Cannot be empty.
+    ///   - embedInNavigation: Whether the returned view controller should be a UINavigationController. Defaults to false. Note that a navigation controller must be provided if false.
+    ///   - delegate: Delegate that can provide a custom photo picker
+    ///   - completion: Completion closure. Returns the view controller to be dismissed and whether the process was successful or not.
     /// - Returns: A photobook UIViewController
     @objc public func photobookViewController(with photobookAssets: [PhotobookAsset], embedInNavigation: Bool = false, delegate: PhotobookDelegate? = nil, completion: ((_ source: UIViewController, _ success: Bool) -> ())? = nil) -> UIViewController? {
         // Load the products here, so that the user avoids a loading screen on PhotobookViewController
@@ -139,6 +147,13 @@ struct AssetsNotificationName {
         return photobookViewController(with: photobookAssets, embedInNavigation: embedInNavigation, delegate: delegate, useBackup: false, completion: completion)
     }
     
+    /// Photo book view controller restored from a backup
+    ///
+    /// - Parameters:
+    ///   - embedInNavigation: Whether the returned view controller should be a UINavigationController. Defaults to false. Note that a navigation controller must be provided if false.
+    ///   - delegate: Delegate that can provide a custom photo picker
+    ///   - completion: Completion closure. Returns the view controller to be dismissed and whether the process was successful or not.
+    /// - Returns: A photobook UIViewController
     @objc public func photobookViewControllerFromBackup(embedInNavigation: Bool = false, delegate: PhotobookDelegate? = nil, completion: ((_ source: UIViewController, _ success: Bool) -> ())? = nil) -> UIViewController? {
         return photobookViewController(with: nil, embedInNavigation: embedInNavigation, delegate: delegate, useBackup: true, completion: completion)
     }
@@ -189,7 +204,7 @@ struct AssetsNotificationName {
     ///
     /// - Parameters:
     ///   - embedInNavigation: Whether the returned view controller should be a UINavigationController. Defaults to false. Note that a navigation controller must be provided if false.
-    ///   - delegate: Closure to execute when the receipt UI is ready to be dismissed
+    ///   - dismissClosure: Closure called when the user wants to dismiss the receipt. Returns the view controller to be dismissed and whether the process was successful or not.
     /// - Returns: A receipt UIViewController
     @objc public func receiptViewController(embedInNavigation: Bool = false, dismissClosure: ((_ source: UIViewController, _ success: Bool) -> ())? = nil) -> UIViewController? {
         guard isProcessingOrder else { return nil }
@@ -210,7 +225,7 @@ struct AssetsNotificationName {
     ///
     /// - Parameters:
     ///   - embedInNavigation: Whether the returned view controller should be a UINavigationController. Defaults to false. Note that a navigation controller must be provided if false.
-    ///   - delegate: Delegate that can handle the dismissal
+    ///   - dismissClosure: Closure called when the user wants to dismiss the receipt. Returns the view controller to be dismissed and whether the process was successful or not.
     /// - Returns: A checkout ViewController
     @objc public func checkoutViewController(embedInNavigation: Bool = false, dismissClosure: ((_ source: UIViewController, _ success: Bool) -> ())? = nil) -> UIViewController? {
         guard OrderManager.shared.basketOrder.products.count > 0 else { return nil }
@@ -225,14 +240,26 @@ struct AssetsNotificationName {
         return embedInNavigation ? embedViewControllerInNavigation(checkoutViewController) : checkoutViewController
     }
 
+    /// Informs the SDK of assets being added to an album
+    ///
+    /// - Parameter additions: Data structure containing details of the assets added
     @objc public func albumsWereAdded(_ additions: [AlbumAddition]) {
         NotificationCenter.default.post(name: AssetsNotificationName.albumsWereAdded, object: additions)
     }
 
+    /// Informs the SDK of assets being modified / deleted from an album
+    ///
+    /// - Parameter changes: Data structure containing details of the assets changed
     @objc public func albumsWereUpdated(_ changes: [AlbumChange]) {
         NotificationCenter.default.post(name: AssetsNotificationName.albumsWereUpdated, object: changes)
     }
     
+    /// Requests the image for a photo library asset via the SDK's caching system
+    ///
+    /// - Parameters:
+    ///   - asset: Asset
+    ///   - size: Size
+    ///   - completion: Completion closure
     @objc public func cachedImage(for asset: PhotobookAsset, size: CGSize, completion: @escaping (UIImage?, Error?) -> ()) {
         guard let asset = PhotobookAsset.assets(from: [asset])?.first else {
             completion(nil, AssetLoadingException.notFound)

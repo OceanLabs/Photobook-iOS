@@ -303,7 +303,7 @@ class AssetCollectorViewController: UIViewController {
         isHidden = false
         
         if !isDeletingEnabled {
-            let requiredPhotosCount = PhotobookSDK.shared.minimumRequiredPages
+            let requiredPhotosCount = PhotobookSDK.shared.minimumRequiredPhotos
             let fadeDuration: TimeInterval = 0.25
             if mode == .adding || (mode == .selecting && assets.count >= requiredPhotosCount) {
                 //use these

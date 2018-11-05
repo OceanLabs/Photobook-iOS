@@ -137,7 +137,7 @@ class SelectedAssetsManager: NSObject {
         if isSelected(asset) {
             deselect(asset)
             return true
-        } else if count < PhotobookSDK.shared.maximumAllowedPages {
+        } else if count < PhotobookSDK.shared.maximumAllowedPhotos {
             select(asset)
             return true
         } else {
@@ -154,7 +154,7 @@ class SelectedAssetsManager: NSObject {
     }
     
     func willSelectingAllExceedTotalAllowed(_ album: Album) -> Bool {
-        return selectedAssets.count - selectedAssets(for: album).count + album.assets.count > PhotobookSDK.shared.maximumAllowedPages
+        return selectedAssets.count - selectedAssets(for: album).count + album.assets.count > PhotobookSDK.shared.maximumAllowedPhotos
     }
     
     func selectAllAssets(for album: Album) {
