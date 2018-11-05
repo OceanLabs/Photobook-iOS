@@ -97,13 +97,18 @@ class PhotobookManager: NSObject {
     
     func configureTabBarController(_ tabBarController: UITabBarController) {
         
-        // Attempt to restore photobook backup
-        let browseNavigationViewController = tabBarController.viewControllers?[Tab.browse.rawValue] as? UINavigationController
-        let assetPickerViewController = browseNavigationViewController?.viewControllers.first as? AlbumsCollectionViewController
-        if let photobookViewController = PhotobookSDK.shared.photobookViewControllerFromBackup(embedInNavigation: false, delegate: assetPickerViewController, completion: {
+        // Attempt to restore picker data source and photobook backups
+        if let (selectedNavigationController, photobookDelegate) = restoreAssetDataSourceBackup(tabBarController),
+           let photobookViewController = PhotobookSDK.shared.photobookViewControllerFromBackup(embedInNavigation: false, delegate: photobookDelegate, completion: {
             (viewController, success) in
             
             guard success else {
+                AssetDataSourceBackupManager.shared.deleteBackup()
+                
+                if let tabBar = viewController.tabBarController?.tabBar {
+                    tabBar.isHidden = false
+                }
+
                 if let navigationController = viewController.navigationController {
                     navigationController.popToRootViewController(animated: true)
                 }
@@ -121,17 +126,18 @@ class PhotobookManager: NSObject {
             
             // Push the checkout on completion
             if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, dismissClosure: { [weak welf = self] viewController, success in
+                AssetDataSourceBackupManager.shared.deleteBackup()
+                
                 guard let stelf = welf else { return }
                 let tabBarController = mainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
                 stelf.configureTabBarController(tabBarController)
                 let dismissSegue = IntroDismissSegue(identifier: "ReceiptDismiss", source: viewController, destination: tabBarController)
                 dismissSegue.perform()
             }) {
-                browseNavigationViewController?.pushViewController(checkoutViewController, animated: true)
+                selectedNavigationController.pushViewController(checkoutViewController, animated: true)
             }
         }) {
-            browseNavigationViewController?.pushViewController(photobookViewController, animated: false)
-            tabBarController.selectedIndex = Tab.browse.rawValue
+            selectedNavigationController.pushViewController(photobookViewController, animated: false)
         }
 
         // Stories
@@ -141,5 +147,52 @@ class PhotobookManager: NSObject {
                 tabBarController.viewControllers?.remove(at: Tab.stories.rawValue)
             }
         })
+    }
+    
+    private func restoreAssetDataSourceBackup(_ tabBarController: UITabBarController) -> (UINavigationController, PhotobookDelegate)? {
+        var selectedNavigationController: UINavigationController
+        var photobookDelegate: PhotobookDelegate
+        
+        guard let dataSourceBackup = AssetDataSourceBackupManager.shared.restoreBackup() else { return nil }
+        
+        if let _ = dataSourceBackup.albumManager as? FacebookAlbumManager {
+            selectedNavigationController = tabBarController.viewControllers?[Tab.facebook.rawValue] as! UINavigationController
+            tabBarController.selectedIndex = Tab.facebook.rawValue
+            
+            let facebookAlbumsCollectionViewController = AlbumsCollectionViewController.facebookAlbumsCollectionViewController()
+            facebookAlbumsCollectionViewController.assetPickerDelegate = facebookAlbumsCollectionViewController
+            selectedNavigationController.setViewControllers([facebookAlbumsCollectionViewController], animated: false)
+            
+            photobookDelegate = facebookAlbumsCollectionViewController
+        } else if let _ = dataSourceBackup.albumManager as? PhotosAlbumManager {
+            selectedNavigationController = tabBarController.viewControllers?[Tab.browse.rawValue] as! UINavigationController
+            tabBarController.selectedIndex = Tab.browse.rawValue
+            
+            let albumsViewController = selectedNavigationController.viewControllers.first as! AlbumsCollectionViewController
+            albumsViewController.albumManager = dataSourceBackup.albumManager!
+            photobookDelegate = albumsViewController
+        } else if let _ = dataSourceBackup.album as? InstagramAlbum {
+            selectedNavigationController = tabBarController.viewControllers?[Tab.instagram.rawValue] as! UINavigationController
+            tabBarController.selectedIndex = Tab.instagram.rawValue
+            
+            let assetPickerViewController = selectedNavigationController.viewControllers.first as! AssetPickerCollectionViewController
+            assetPickerViewController.album = dataSourceBackup.album!
+            photobookDelegate = assetPickerViewController
+        } else {
+            selectedNavigationController = tabBarController.viewControllers?[Tab.stories.rawValue] as! UINavigationController
+            tabBarController.selectedIndex = Tab.stories.rawValue
+            
+            let storiesViewController = selectedNavigationController.viewControllers.first as! StoriesViewController
+            
+            let assetPickerController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
+            assetPickerController.album = dataSourceBackup.album!
+            assetPickerController.selectedAssetsManager = StoriesManager.shared.selectedAssetsManager(for: dataSourceBackup.album as! Story)
+            assetPickerController.delegate = storiesViewController
+            
+            selectedNavigationController.pushViewController(assetPickerController, animated: false)
+            photobookDelegate = assetPickerController
+        }
+        
+        return (selectedNavigationController, photobookDelegate)
     }
 }

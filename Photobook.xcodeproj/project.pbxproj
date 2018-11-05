@@ -196,6 +196,10 @@
 		688A35F15D418F152AA3CEC9 /* Pods_Photobook_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1CA12481EFB37C226C37AD8 /* Pods_Photobook_App.framework */; };
 		6F048DA721786F9B0093E920 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D3340B2029BF80003D4338 /* JSON.swift */; };
 		6F08F910216506C600EF9529 /* ProductBackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F08F90D2165051500EF9529 /* ProductBackupManager.swift */; };
+		6F096B1D219067E4004DA16F /* AssetDataSourceBackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F096B1C219067E4004DA16F /* AssetDataSourceBackupManager.swift */; };
+		6F096B1E219067E4004DA16F /* AssetDataSourceBackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F096B1C219067E4004DA16F /* AssetDataSourceBackupManager.swift */; };
+		6F096B202190873B004DA16F /* UIAlertControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F096B1F2190873B004DA16F /* UIAlertControllerExtensions.swift */; };
+		6F096B212190873B004DA16F /* UIAlertControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F096B1F2190873B004DA16F /* UIAlertControllerExtensions.swift */; };
 		6F0FC86F20C04D6D00158F7C /* UIColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FD10B02077C9ED000A45E4 /* UIColorExtensions.swift */; };
 		6F139E0C1FB45DD8005B937E /* StoriesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F139E0B1FB45DD8005B937E /* StoriesManager.swift */; };
 		6F139E0F1FB45EFC005B937E /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F139E0E1FB45EFC005B937E /* Story.swift */; };
@@ -717,6 +721,8 @@
 		69B62B8C076001BAA40216F0 /* Pods-Photobook App.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.debug test.xcconfig"; sourceTree = "<group>"; };
 		6A1DA8E9A38D7AFD0E6ADA5C /* Pods-Photobook App.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.release test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.release test.xcconfig"; sourceTree = "<group>"; };
 		6F08F90D2165051500EF9529 /* ProductBackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductBackupManager.swift; sourceTree = "<group>"; };
+		6F096B1C219067E4004DA16F /* AssetDataSourceBackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDataSourceBackupManager.swift; sourceTree = "<group>"; };
+		6F096B1F2190873B004DA16F /* UIAlertControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExtensions.swift; sourceTree = "<group>"; };
 		6F0A682D1FE0243400B7E56C /* EmptyScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyScreenViewController.swift; sourceTree = "<group>"; };
 		6F0A68311FE1291200B7E56C /* PageSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSetupViewController.swift; sourceTree = "<group>"; };
 		6F0A68351FE16D1200B7E56C /* LayoutSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutSelectionViewController.swift; sourceTree = "<group>"; };
@@ -1128,6 +1134,7 @@
 			isa = PBXGroup;
 			children = (
 				6FC23BE2218AF9CE00F5D1EC /* Analytics.swift */,
+				6F096B1C219067E4004DA16F /* AssetDataSourceBackupManager.swift */,
 				B9FA5301205FC3DC00669758 /* PhotobookManager.swift */,
 				6FC23C00218B16FC00F5D1EC /* ErrorMessage.swift */,
 				2E50703120E1113E002889C5 /* Assets */,
@@ -1572,9 +1579,10 @@
 			children = (
 				6FCE08D520221C7C00C55D2F /* NSAttributedStringExtensions.swift */,
 				2E6B9EDB1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift */,
-				6FB670611FB49FF90062D630 /* UILabelExtensions.swift */,
-				6FC23BDF218AF0EC00F5D1EC /* UIImageViewExtensions.swift */,
+				6F096B1F2190873B004DA16F /* UIAlertControllerExtensions.swift */,
 				6FC23BEE218B05C700F5D1EC /* UIImageExtensions.swift */,
+				6FC23BDF218AF0EC00F5D1EC /* UIImageViewExtensions.swift */,
+				6FB670611FB49FF90062D630 /* UILabelExtensions.swift */,
 				6FC23BFA218B14B600F5D1EC /* UIViewExtensions.swift */,
 			);
 			path = Extensions;
@@ -2150,6 +2158,7 @@
 				6F4DE6551FB4522A0099A97E /* StoryTableViewCell.swift in Sources */,
 				2E4C9E8A20494D6B00F5AD48 /* AlbumsCollectionViewController+Facebook.swift in Sources */,
 				6FC23BF4218B132300F5D1EC /* BorderedCollectionViewCell.swift in Sources */,
+				6F096B202190873B004DA16F /* UIAlertControllerExtensions.swift in Sources */,
 				2E086D182052A13A00CF8096 /* FacebookClient.swift in Sources */,
 				6FC23C01218B16FF00F5D1EC /* ErrorMessage.swift in Sources */,
 				6FC23C0B218B49E900F5D1EC /* TutorialPageViewController.swift in Sources */,
@@ -2184,6 +2193,7 @@
 				2ED5B3811FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift in Sources */,
 				6FC23BD22189E87800F5D1EC /* PhotosAlbum.swift in Sources */,
 				2E0B58921FB325FF00F31A9E /* AlbumsCollectionViewController.swift in Sources */,
+				6F096B1D219067E4004DA16F /* AssetDataSourceBackupManager.swift in Sources */,
 				2EA24E4F2035E05C0069B12A /* InstagramAlbum.swift in Sources */,
 				6FC23BE0218AF0F000F5D1EC /* UIImageViewExtensions.swift in Sources */,
 			);
@@ -2387,6 +2397,7 @@
 				6F202C24211998E9000A6C02 /* AssetSelectorAddMoreCollectionViewCell.swift in Sources */,
 				6F202C25211998E9000A6C02 /* AssetPickerCoverCollectionViewCell.swift in Sources */,
 				6F202C26211998E9000A6C02 /* InstagramLandingViewController.swift in Sources */,
+				6F096B1E219067E4004DA16F /* AssetDataSourceBackupManager.swift in Sources */,
 				6F202C27211998E9000A6C02 /* DoubleStoryTableViewCell.swift in Sources */,
 				6F202C28211998E9000A6C02 /* Checkout.swift in Sources */,
 				6F202C29211998E9000A6C02 /* ProductLayoutAsset.swift in Sources */,
@@ -2403,6 +2414,7 @@
 				6F202C35211998E9000A6C02 /* CountryPickerTableViewController.swift in Sources */,
 				6F202C36211998E9000A6C02 /* CoverLayoutSelectionCollectionViewCell.swift in Sources */,
 				6F202C37211998E9000A6C02 /* PhotobookFrameView.swift in Sources */,
+				6F096B212190873B004DA16F /* UIAlertControllerExtensions.swift in Sources */,
 				6F202C38211998E9000A6C02 /* CGRectExtensions.swift in Sources */,
 				6F202C39211998E9000A6C02 /* Product.swift in Sources */,
 				6F202C3A211998E9000A6C02 /* CGFloatExtensions.swift in Sources */,

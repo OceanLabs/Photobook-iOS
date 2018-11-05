@@ -61,7 +61,7 @@ struct AssetsNotificationName {
 
 /// Shared manager for the photo book UI
 @objc public class PhotobookSDK: NSObject {
-        
+    
     @objc public enum Environment: Int {
         case test
         case live
@@ -144,7 +144,6 @@ struct AssetsNotificationName {
     }
     
     private func photobookViewController(with photobookAssets: [PhotobookAsset]? = nil, embedInNavigation: Bool = false, delegate: PhotobookDelegate? = nil, useBackup: Bool = false, completion: ((_ source: UIViewController, _ success: Bool) -> ())? = nil) -> UIViewController? {
-        ProductManager.shared.delegate = self
         
         // Return the upload / receipt screen if there is an order in progress
         guard !isProcessingOrder else {
@@ -248,19 +247,3 @@ struct AssetsNotificationName {
         return navigationController
     }
 }
-
-extension PhotobookSDK: PhotobookProductChangeDelegate {
-    
-    func didChangePhotobookProduct(_ photobookProduct: PhotobookProduct, assets: [Asset]) {
-        let productBackup = PhotobookProductBackup()
-        productBackup.product = photobookProduct
-        productBackup.assets = assets
-        
-        PhotobookProductBackupManager.shared.saveBackup(productBackup)
-    }
-    
-    func didDeletePhotobookProduct() {
-        PhotobookProductBackupManager.shared.deleteBackup()
-    }
-}
-
