@@ -64,7 +64,7 @@ class TutorialViewController: UIViewController {
     @IBOutlet private weak var nextButton: UIButton!
     @IBOutlet private weak var pageControl: UIPageControl!
     
-    weak var delegate: DismissDelegate?
+    var completionClosure: ((UIViewController) -> ())?
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard segue.identifier == Constants.pageViewControllerEmbedSegueIdentifier else { return }
@@ -81,7 +81,7 @@ class TutorialViewController: UIViewController {
     // MARK: - Button Actions
     
     @IBAction func tappedSkipButton(_ sender: UIButton) {
-        delegate?.wantsToDismiss?(self)
+        completionClosure?(self)
     }
     
     @IBAction func tappedPreviousButton(_ sender: UIButton) {
@@ -93,7 +93,7 @@ class TutorialViewController: UIViewController {
     
     @IBAction func tappedNextButton(_ sender: UIButton) {
         guard pageControl.currentPage < tutorialPages.count - 1 else {
-            delegate?.wantsToDismiss?(self)
+            completionClosure?(self)
             return
         }
         let nextPageViewController = tutorialPageControllers[pageControl.currentPage + 1]

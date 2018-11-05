@@ -51,7 +51,7 @@ class OrderSummaryViewController: UIViewController {
     @IBOutlet weak var ctaButton: UIButton! { didSet { ctaButton.titleLabel?.scaleFont() } }
     @IBOutlet weak var loadingPreviewLabel: UILabel! { didSet { loadingPreviewLabel.scaleFont() } }
     
-    var completionClosure: (() -> Void)?
+    var completionClosure: ((_ source: UIViewController, _ success: Bool) -> ())?
     var emptyScreenDismissGroup: DispatchGroup? = DispatchGroup()
     
     private var timer: Timer?
@@ -125,8 +125,13 @@ class OrderSummaryViewController: UIViewController {
     @IBAction func tappedCallToAction(_ sender: Any) {
         product.pigBaseUrl = orderSummaryManager.summary?.pigBaseUrl
         
-        // Call the completion closure passed on to the photobook flow
-        completionClosure?()
+        guard completionClosure != nil else {
+            autoDismiss(true)
+            return
+        }
+        
+        let controllerToDismiss = isPresentedModally() ? navigationController! : self
+        completionClosure?(controllerToDismiss, false)
     }
     
     deinit {

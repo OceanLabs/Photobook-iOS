@@ -396,6 +396,7 @@
 		6F4DE6551FB4522A0099A97E /* StoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DE6541FB4522A0099A97E /* StoryTableViewCell.swift */; };
 		6F4DE6571FB452390099A97E /* DoubleStoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DE6561FB452390099A97E /* DoubleStoryTableViewCell.swift */; };
 		6F4F02EB1FDEDC4C009D562A /* OrderManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4F02EA1FDEDC4C009D562A /* OrderManagerTests.swift */; };
+		6F517A342190420400B0B91F /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F517A332190420400B0B91F /* UIViewControllerExtensions.swift */; };
 		6F591A9120E3D83F002A0667 /* Pig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F591A8F20E3D83F002A0667 /* Pig.swift */; };
 		6F5C5D2C20B429CA008073A6 /* CostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5C5D2B20B429CA008073A6 /* CostTests.swift */; };
 		6F6151D220C5469400DBA543 /* PaymentAuthorizationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6151D120C5469400DBA543 /* PaymentAuthorizationManagerTests.swift */; };
@@ -763,6 +764,7 @@
 		6F4DE6561FB452390099A97E /* DoubleStoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleStoryTableViewCell.swift; sourceTree = "<group>"; };
 		6F4DE6581FB453090099A97E /* PhotobookNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookNavigationBar.swift; sourceTree = "<group>"; };
 		6F4F02EA1FDEDC4C009D562A /* OrderManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderManagerTests.swift; sourceTree = "<group>"; };
+		6F517A332190420400B0B91F /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		6F53E093204FFAF200B73AB8 /* MessageBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBarViewController.swift; sourceTree = "<group>"; };
 		6F591A8F20E3D83F002A0667 /* Pig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pig.swift; sourceTree = "<group>"; };
 		6F5A59F1200CBDD80006BFCA /* SpineFrameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpineFrameView.swift; sourceTree = "<group>"; };
@@ -1534,6 +1536,7 @@
 				6FCF6B8D2100D51E000E218C /* UITextFieldExtensions.swift */,
 				6F3A731D202AFB6800EEF04C /* UITextViewExtensions.swift */,
 				2E6B9ED91FBDEEF400F28C00 /* UIViewExtensions.swift */,
+				6F517A332190420400B0B91F /* UIViewControllerExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2242,6 +2245,7 @@
 				2ED14C0B2063AA4000ED2E2C /* PaymentAuthorizationManager.swift in Sources */,
 				2E7C822F2088B472002FF9D0 /* DiskUtils.swift in Sources */,
 				2ED14BF92063AA4000ED2E2C /* PhotobookProduct.swift in Sources */,
+				6F517A342190420400B0B91F /* UIViewControllerExtensions.swift in Sources */,
 				2ED14BEE2063AA4000ED2E2C /* OrderSummary.swift in Sources */,
 				2ED14BBE2063AA4000ED2E2C /* AmountPickerViewController.swift in Sources */,
 				2ED14BD42063AA4000ED2E2C /* BorderedRoundedView.swift in Sources */,

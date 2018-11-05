@@ -132,7 +132,7 @@ class CheckoutViewController: UIViewController {
         return OrderManager.shared.basketOrder
     }
     
-    weak var dismissDelegate: DismissDelegate?
+    var dismissClosure: ((_ source: UIViewController, _ success: Bool) -> ())?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -247,12 +247,13 @@ class CheckoutViewController: UIViewController {
     }
     
     @objc func tappedCancel() {
-        if dismissDelegate?.wantsToDismiss?(self) != nil {
+        guard dismissClosure != nil else {
+            autoDismiss(true)
             return
         }
         
-        // No delegate provided
-        presentingViewController?.dismiss(animated: true, completion: nil)
+        let controllerToDismiss = isPresentedModally() ? navigationController! : self
+        dismissClosure?(controllerToDismiss, false)
     }
 
     private func refresh(showProgress: Bool = true, forceCostUpdate: Bool = false, forceShippingMethodsUpdate: Bool = false) {
@@ -557,8 +558,7 @@ class CheckoutViewController: UIViewController {
         case Constants.receiptSegueName:
             if let receiptViewController = segue.destination as? ReceiptViewController {
                 receiptViewController.order = order
-                receiptViewController.dismissDelegate = dismissDelegate
-
+                receiptViewController.dismissClosure = dismissClosure
             }
         case Constants.segueIdentifierPaymentMethods:
             if let paymentMethodsViewController = segue.destination as? PaymentMethodsViewController {

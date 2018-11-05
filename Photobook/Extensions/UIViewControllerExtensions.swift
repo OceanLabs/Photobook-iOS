@@ -29,24 +29,25 @@
 
 import UIKit
 
-public typealias PhotobookAssetPickerController = PhotobookAssetPicker & UIViewController
-
-/// PhotobookViewController delegate
-@objc public protocol PhotobookDelegate {
-    
-    /// Custom photo picker
-    @objc optional func assetPickerViewController() -> PhotobookAssetPickerController
-    
-    /// Whether the picker should animate its presentation and dismissal
-    @objc optional var shouldAnimateAssetPicker: Bool { get }
+/// Dismiss delegate
+protocol DismissDelegate {
+    /// Called when a view controller is ready to be dismissed
+    ///
+    /// - Parameter viewController: The view controller that wants to be dismissed. If the photo book was presented modally, this will be a UINavigationController.
+    func wantsToDismiss(_ viewController: UIViewController)
 }
 
-/// Conforming classes can be notified when PhotobookAssets are added by a custom photo picker
-@objc public protocol PhotobookAssetAddingDelegate: class {
-    @objc func didFinishAdding(_ photobookAssets: [PhotobookAsset]?)
-}
-
-/// Protocol custom photo pickers must conform to to be used with photo books
-@objc public protocol PhotobookAssetPicker where Self: UIViewController {
-    weak var addingDelegate: PhotobookAssetAddingDelegate? { get set }
+extension UIViewController {
+    
+    func isPresentedModally() -> Bool {
+        return (navigationController?.isBeingPresented ?? false) || isBeingPresented
+    }
+    
+    func autoDismiss(_ animated: Bool) {
+        if isPresentedModally() {
+            presentingViewController!.dismiss(animated: animated, completion: nil)
+            return
+        }
+        navigationController!.popToRootViewController(animated: animated)
+    }
 }

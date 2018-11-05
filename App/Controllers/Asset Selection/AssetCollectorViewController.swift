@@ -371,7 +371,6 @@ class AssetCollectorViewController: UIViewController {
             
             self.imageCollectionView.deleteItems(at: indexPaths)
             self.adaptToNewAssetCount()
-            
         }
     }
     

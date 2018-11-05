@@ -36,11 +36,11 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     /// Array of Assets to populate the pages of the photobook.
     var assets: [Asset]!
     
-    /// Delegate that can handle the dismissal of the photo book and also provide a custom asset picker
+    /// Delegate that can provide a custom asset picker
     weak var photobookDelegate: PhotobookDelegate?
     
-    /// Closure to call when a photobook has been created
-    var completionClosure: (() -> ())?
+    /// Closure to call when a photobook has been created or needs to be dismissed
+    var completionClosure: ((_ source: UIViewController, _ success: Bool) -> ())?
     
     private var product: PhotobookProduct! {
         return ProductManager.shared.currentProduct
@@ -109,8 +109,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     // Scrolling at 60Hz when we are dragging looks good enough and avoids having to normalize the scroll offset
     private lazy var screenRefreshRate: Double = 1.0 / 60.0
-    
-    private lazy var isPresentedModally: Bool = { return (navigationController?.isBeingPresented ?? false) || isBeingPresented }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -194,7 +192,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         if let tabBar = tabBarController?.tabBar { tabBar.isHidden = true }
     
-        if isPresentedModally {
+        if isPresentedModally() {
             navigationItem.leftBarButtonItems = [ cancelBarButtonItem ]
         } else {
             backButton?.setTitleColor(navigationController?.navigationBar.tintColor, for: .normal)
@@ -401,14 +399,16 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             Analytics.shared.trackAction(.wentBackFromPhotobookPreview)
             
-            let controllerToDismiss = self.isPresentedModally ? self.navigationController! : self
-            if self.photobookDelegate?.wantsToDismiss?(controllerToDismiss) == nil {
-                if self.isPresentedModally {
+            let controllerToDismiss: UIViewController = self.isPresentedModally() ? self.navigationController! : self
+            guard self.completionClosure != nil else {
+                if self.isPresentedModally() {
                     self.presentingViewController?.dismiss(animated: true, completion: nil)
                     return
                 }
                 self.navigationController?.popViewController(animated: true)
+                return
             }
+            self.completionClosure?(controllerToDismiss, false)
         }))
         alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
         

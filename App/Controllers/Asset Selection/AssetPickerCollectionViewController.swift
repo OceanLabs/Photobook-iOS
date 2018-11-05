@@ -442,7 +442,11 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
                 UserDefaults.standard.set(true, forKey: hasShownTutorialKey)
 
                 let tutorialViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
-                tutorialViewController.delegate = self
+                tutorialViewController.completionClosure = { [weak welf = self] (viewController) in
+                    guard let photobookViewController = welf?.photobookViewController() else { return }
+                    welf?.navigationController?.pushViewController(photobookViewController, animated: false)
+                    welf?.dismiss(animated: true, completion: nil)
+                }
                 present(tutorialViewController, animated: true, completion: nil)
             }
         }
@@ -452,7 +456,7 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
     private func photobookViewController() -> UIViewController? {
         
         let photobookViewController = PhotobookSDK.shared.photobookViewController(with: selectedAssetsManager!.selectedAssets, embedInNavigation: false, delegate: self) {
-            [weak welf = self] in
+            [weak welf = self] (viewController, sucess) in
             
             let items = Checkout.shared.numberOfItemsInBasket()
             if items == 0 {
@@ -464,7 +468,13 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
             }
             
             // Photobook completion
-            if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, delegate: self) {
+            if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, dismissClosure: {
+                [weak welf = self] (viewController, success) in
+                welf?.navigationController?.popToRootViewController(animated: true)
+                if success {
+                    NotificationCenter.default.post(name: SelectedAssetsManager.notificationNamePhotobookComplete, object: nil)
+                }
+            }) {
                 welf?.navigationController?.pushViewController(checkoutViewController, animated: true)
             }
         }
@@ -473,18 +483,6 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
 }
 
 extension AssetPickerCollectionViewController: PhotobookDelegate {
-
-    func wantsToDismiss(_ viewController: UIViewController) {
-        // Tutorial VC
-        if let _ = viewController as? TutorialViewController, let photobookViewController = photobookViewController() {
-            navigationController?.pushViewController(photobookViewController, animated: false)
-            dismiss(animated: true, completion: nil)
-            return
-        }
-        
-        // Photobook or Receipt VC
-        navigationController?.popViewController(animated: true)
-    }
     
     func assetPickerViewController() -> PhotobookAssetPickerController {
         let modalAlbumsCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController

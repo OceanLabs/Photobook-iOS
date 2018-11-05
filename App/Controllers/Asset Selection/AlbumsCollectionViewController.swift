@@ -273,7 +273,7 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
     func actionsForAssetCollectorViewControllerHiddenStateChange(_ assetCollectorViewController: AssetCollectorViewController, willChangeTo hidden: Bool) -> () -> () {
         return { [weak welf = self] in
             let bottomInset: CGFloat
-            if #available(iOS 11, *){
+            if #available(iOS 11, *) {
                 bottomInset = hidden ? 0 : assetCollectorViewController.viewHeight
             } else {
                 bottomInset = hidden ? assetCollectorViewController.viewHeight - assetCollectorViewController.view.transform.ty : assetCollectorViewController.viewHeight
@@ -295,14 +295,18 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
                 UserDefaults.standard.set(true, forKey: hasShownTutorialKey)
 
                 let tutorialViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
-                tutorialViewController.delegate = self
+                tutorialViewController.completionClosure = { [weak welf = self] (viewController) in
+                    guard let photobookViewController = welf?.photobookViewController() else { return }
+                    welf?.navigationController?.pushViewController(photobookViewController, animated: false)
+                    welf?.dismiss(animated: true, completion: nil)
+                }
                 present(tutorialViewController, animated: true, completion: nil)
             }
         }
     }
     
     private func photobookViewController() -> UIViewController? {
-        let photobookViewController = PhotobookSDK.shared.photobookViewController(with: selectedAssetsManager.selectedAssets, embedInNavigation: false, delegate: self) { [weak welf = self] in
+        let photobookViewController = PhotobookSDK.shared.photobookViewController(with: selectedAssetsManager.selectedAssets, embedInNavigation: false, delegate: self) { [weak welf = self] (viewController, success) in
             
             let items = Checkout.shared.numberOfItemsInBasket()
             if items == 0 {
@@ -313,7 +317,14 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
                 Checkout.shared.addCurrentProductToBasket(items: items)
             }
 
-            if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, delegate: self) {
+            // Photobook completion
+            if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, dismissClosure: {
+                [weak welf = self] (viewController, success) in
+                welf?.navigationController?.popToRootViewController(animated: true)
+                if success {
+                    NotificationCenter.default.post(name: SelectedAssetsManager.notificationNamePhotobookComplete, object: nil)
+                }
+            }) {
                 welf?.navigationController?.pushViewController(checkoutViewController, animated: true)
             }
         }
@@ -329,25 +340,9 @@ extension AlbumsCollectionViewController: PhotobookDelegate {
 
         return modalAlbumsCollectionViewController
     }
-    
-    func wantsToDismiss(_ viewController: UIViewController) {
-        // Tutorial
-        if let _ = viewController as? TutorialViewController, let photobookViewController = photobookViewController() {
-            navigationController?.pushViewController(photobookViewController, animated: false)
-            dismiss(animated: true, completion: nil)
-            return
-        }
-        
-        if let tabBar = tabBarController?.tabBar {
-            tabBar.isHidden = false
-        }
-        
-        // Photobook or Receipt VC
-        navigationController?.popViewController(animated: true)
-    }
 }
 
-extension AlbumsCollectionViewController{
+extension AlbumsCollectionViewController {
     // MARK: UICollectionViewDataSource
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {

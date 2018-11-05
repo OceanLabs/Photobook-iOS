@@ -79,7 +79,7 @@ class PhotobookManager: NSObject {
             
         } else if isProcessingOrder {
             // Show receipt screen to prevent user from ordering another photobook
-            let receiptViewController = PhotobookSDK.shared.receiptViewController(embedInNavigation: true) { [weak welf = self] viewController in
+            let receiptViewController = PhotobookSDK.shared.receiptViewController(embedInNavigation: true) { [weak welf = self] viewController, success in
                 guard let stelf = welf else { return }
                 let tabBarController = mainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
                 stelf.configureTabBarController(tabBarController)
@@ -101,6 +101,15 @@ class PhotobookManager: NSObject {
         let browseNavigationViewController = tabBarController.viewControllers?[Tab.browse.rawValue] as? UINavigationController
         let assetPickerViewController = browseNavigationViewController?.viewControllers.first as? AlbumsCollectionViewController
         if let photobookViewController = PhotobookSDK.shared.photobookViewControllerFromBackup(embedInNavigation: false, delegate: assetPickerViewController, completion: {
+            (viewController, success) in
+            
+            guard success else {
+                if let navigationController = viewController.navigationController {
+                    navigationController.popToRootViewController(animated: true)
+                }
+                return
+            }
+            
             let items = Checkout.shared.numberOfItemsInBasket()
             if items == 0 {
                 Checkout.shared.addCurrentProductToBasket()
@@ -111,7 +120,13 @@ class PhotobookManager: NSObject {
             }
             
             // Push the checkout on completion
-            if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, delegate: assetPickerViewController) {
+            if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, dismissClosure: { [weak welf = self] viewController, success in
+                guard let stelf = welf else { return }
+                let tabBarController = mainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
+                stelf.configureTabBarController(tabBarController)
+                let dismissSegue = IntroDismissSegue(identifier: "ReceiptDismiss", source: viewController, destination: tabBarController)
+                dismissSegue.perform()
+            }) {
                 browseNavigationViewController?.pushViewController(checkoutViewController, animated: true)
             }
         }) {
