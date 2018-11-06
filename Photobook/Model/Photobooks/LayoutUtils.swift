@@ -192,7 +192,9 @@ class LayoutUtils {
     static func nextCCWCuadrantAngle(to angle: CGFloat) -> CGFloat {
         var rotateTo = floor(angle / (.pi * 0.5)) * .pi * 0.5
         
-        if angle ==~ rotateTo {
+        let angleThreshold: CGFloat = 5.0 * .pi / 180 // 5 degrees
+        
+        if abs(angle - rotateTo) < angleThreshold {
             rotateTo = rotateTo - .pi * 0.5
         }
         if abs(rotateTo) < CGFloat.minPrecision {

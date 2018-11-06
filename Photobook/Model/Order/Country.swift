@@ -54,8 +54,8 @@ class Country: NSCopying, Codable {
     }
     
     class func countryFor(name: String) -> Country? {
-        for country in self.countries{
-            if country.name == name{
+        for country in self.countries {
+            if country.name == name {
                 return country
             }
         }
@@ -74,7 +74,7 @@ class Country: NSCopying, Codable {
     }
     
     func copy(with zone: NSZone? = nil) -> Any {
-        return Country(name: self.name, codeAlpha2: self.codeAlpha2, codeAlpha3: self.codeAlpha3, currencyCode:self.currencyCode)
+        return Country(name: self.name, codeAlpha2: self.codeAlpha2, codeAlpha3: self.codeAlpha3, currencyCode: self.currencyCode)
     }
     
     class var countries: [Country] {
