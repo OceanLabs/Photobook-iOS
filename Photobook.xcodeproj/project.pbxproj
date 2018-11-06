@@ -37,8 +37,6 @@
 		2E4C9E882049492400F5AD48 /* FacebookAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E872049492400F5AD48 /* FacebookAlbum.swift */; };
 		2E4C9E8A20494D6B00F5AD48 /* AlbumsCollectionViewController+Facebook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8920494D6B00F5AD48 /* AlbumsCollectionViewController+Facebook.swift */; };
 		2E4C9E8C2049527900F5AD48 /* FacebookAlbumManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8B2049527900F5AD48 /* FacebookAlbumManager.swift */; };
-		2E51FEBC20E2420F00E62102 /* PayPalDynamicLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E51FEBA20E237AE00E62102 /* PayPalDynamicLoader.framework */; };
-		2E51FEBD20E2420F00E62102 /* PayPalDynamicLoader.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E51FEBA20E237AE00E62102 /* PayPalDynamicLoader.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2E52B4A420909EEF00D5C20B /* BasketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E52B4A320909EEF00D5C20B /* BasketTests.swift */; };
 		2E533AD720E3840D004F8481 /* Photobook.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E533AD520E3840D004F8481 /* Photobook.storyboard */; };
 		2E533AD820E3840D004F8481 /* Photobook.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E533AD520E3840D004F8481 /* Photobook.storyboard */; };
@@ -57,30 +55,6 @@
 		2E87058F208E0183004B4B36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E87058E208E0183004B4B36 /* Assets.xcassets */; };
 		2E870592208E0183004B4B36 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E870590208E0183004B4B36 /* LaunchScreen.storyboard */; };
 		2E87059D208E0183004B4B36 /* PhotobookUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E87059C208E0183004B4B36 /* PhotobookUITest.swift */; };
-		2E8705A9208E042C004B4B36 /* Photobook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14B992063A9CD00ED2E2C /* Photobook.framework */; };
-		2E8705AA208E042C004B4B36 /* Photobook.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14B992063A9CD00ED2E2C /* Photobook.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2E8705AE208E0520004B4B36 /* Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C342063ABB700ED2E2C /* Analytics.framework */; };
-		2E8705AF208E0520004B4B36 /* Analytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C342063ABB700ED2E2C /* Analytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2E8705B0208E0520004B4B36 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3A2063ABB700ED2E2C /* Bolts.framework */; };
-		2E8705B1208E0520004B4B36 /* Bolts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3A2063ABB700ED2E2C /* Bolts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2E8705B2208E0520004B4B36 /* FacebookCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C352063ABB700ED2E2C /* FacebookCore.framework */; };
-		2E8705B3208E0520004B4B36 /* FacebookCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C352063ABB700ED2E2C /* FacebookCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2E8705B4208E0520004B4B36 /* FacebookLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3C2063ABB700ED2E2C /* FacebookLogin.framework */; };
-		2E8705B5208E0520004B4B36 /* FacebookLogin.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3C2063ABB700ED2E2C /* FacebookLogin.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2E8705B6208E0520004B4B36 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3D2063ABB700ED2E2C /* FBSDKCoreKit.framework */; };
-		2E8705B7208E0520004B4B36 /* FBSDKCoreKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3D2063ABB700ED2E2C /* FBSDKCoreKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2E8705B8208E0520004B4B36 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C372063ABB700ED2E2C /* FBSDKLoginKit.framework */; };
-		2E8705B9208E0520004B4B36 /* FBSDKLoginKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C372063ABB700ED2E2C /* FBSDKLoginKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2E8705BA208E0520004B4B36 /* KeychainSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C382063ABB700ED2E2C /* KeychainSwift.framework */; };
-		2E8705BB208E0520004B4B36 /* KeychainSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C382063ABB700ED2E2C /* KeychainSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2E8705BC208E0520004B4B36 /* OAuthSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C362063ABB700ED2E2C /* OAuthSwift.framework */; };
-		2E8705BD208E0520004B4B36 /* OAuthSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C362063ABB700ED2E2C /* OAuthSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2E8705BE208E0520004B4B36 /* PayPalMobileSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C392063ABB700ED2E2C /* PayPalMobileSDK.framework */; };
-		2E8705BF208E0520004B4B36 /* PayPalMobileSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C392063ABB700ED2E2C /* PayPalMobileSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2E8705C0208E0520004B4B36 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C332063ABB700ED2E2C /* SDWebImage.framework */; };
-		2E8705C1208E0520004B4B36 /* SDWebImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C332063ABB700ED2E2C /* SDWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2E8705C2208E0520004B4B36 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3B2063ABB700ED2E2C /* Stripe.framework */; };
-		2E8705C3208E0520004B4B36 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14C3B2063ABB700ED2E2C /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2E876E091FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E876E081FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift */; };
 		2E876E0B1FC2FA15007CCFA2 /* ViewStorySegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E876E0A1FC2FA15007CCFA2 /* ViewStorySegue.swift */; };
 		2E971E1720481FF300A49F21 /* FacebookLandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E971E1620481FF300A49F21 /* FacebookLandingViewController.swift */; };
@@ -192,181 +166,60 @@
 		2EE4BE7420B81F8100A54A77 /* PhotobookPreviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE4BE7320B81F8100A54A77 /* PhotobookPreviewTests.swift */; };
 		2EEC03D3209212B3008725B7 /* OrderSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEC03D2209212B3008725B7 /* OrderSummaryTests.swift */; };
 		2EF312B720591EEE001BE3CF /* IntroDismissSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF312B620591EEE001BE3CF /* IntroDismissSegue.swift */; };
-		3D046AAB9F5CFA5F5150C0DF /* Pods_PhotobookTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1561A4A2B130A5F1A92351A0 /* Pods_PhotobookTests.framework */; };
-		688A35F15D418F152AA3CEC9 /* Pods_Photobook_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1CA12481EFB37C226C37AD8 /* Pods_Photobook_App.framework */; };
+		2F1A22546614AD04E702488C /* Pods_Photobook_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 726B03FFDEC4F9D91C810402 /* Pods_Photobook_App.framework */; };
 		6F048DA721786F9B0093E920 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D3340B2029BF80003D4338 /* JSON.swift */; };
-		6F08F910216506C600EF9529 /* ProductBackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F08F90D2165051500EF9529 /* ProductBackupManager.swift */; };
 		6F096B1D219067E4004DA16F /* AssetDataSourceBackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F096B1C219067E4004DA16F /* AssetDataSourceBackupManager.swift */; };
 		6F096B1E219067E4004DA16F /* AssetDataSourceBackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F096B1C219067E4004DA16F /* AssetDataSourceBackupManager.swift */; };
 		6F096B202190873B004DA16F /* UIAlertControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F096B1F2190873B004DA16F /* UIAlertControllerExtensions.swift */; };
-		6F096B212190873B004DA16F /* UIAlertControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F096B1F2190873B004DA16F /* UIAlertControllerExtensions.swift */; };
 		6F0FC86F20C04D6D00158F7C /* UIColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FD10B02077C9ED000A45E4 /* UIColorExtensions.swift */; };
 		6F139E0C1FB45DD8005B937E /* StoriesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F139E0B1FB45DD8005B937E /* StoriesManager.swift */; };
 		6F139E0F1FB45EFC005B937E /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F139E0E1FB45EFC005B937E /* Story.swift */; };
 		6F16327920F74E060067BB4E /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F16327820F74E060067BB4E /* Mocks.swift */; };
 		6F17F326207657FD00001888 /* UIFontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F17F324207657FD00001888 /* UIFontExtensions.swift */; };
 		6F17F3372077A70E00001888 /* PhotobookSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F17F3362077A70E00001888 /* PhotobookSDK.swift */; };
-		6F202C11211998E9000A6C02 /* LayoutSelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC0DE781FE930B0009BB799 /* LayoutSelectionCollectionViewCell.swift */; };
-		6F202C12211998E9000A6C02 /* ProductManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6CD1C9207E2C7C00BAE011 /* ProductManager.swift */; };
 		6F202C13211998E9000A6C02 /* UILabelExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB670611FB49FF90062D630 /* UILabelExtensions.swift */; };
-		6F202C14211998E9000A6C02 /* FontType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE08D72023139D00C55D2F /* FontType.swift */; };
-		6F202C15211998E9000A6C02 /* OrderSummaryTotalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90F288A20066D3100FF3D15 /* OrderSummaryTotalTableViewCell.swift */; };
-		6F202C16211998E9000A6C02 /* PhotobookNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1F2469208A28F000004F76 /* PhotobookNavigationController.swift */; };
-		6F202C17211998E9000A6C02 /* LayoutUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2FF37E1FD05686007DB545 /* LayoutUtils.swift */; };
-		6F202C18211998E9000A6C02 /* OrderSummaryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B939FE8B200CD18200B1084B /* OrderSummaryManager.swift */; };
-		6F202C19211998E9000A6C02 /* PhotobookProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F34855D1FC5A9F900961B32 /* PhotobookProduct.swift */; };
 		6F202C1B211998E9000A6C02 /* FacebookLandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E971E1620481FF300A49F21 /* FacebookLandingViewController.swift */; };
-		6F202C1C211998E9000A6C02 /* ShippingMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC81603201B33230046643B /* ShippingMethodsViewController.swift */; };
-		6F202C1D211998E9000A6C02 /* AmountPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90EB85D203701CD0005D91C /* AmountPickerViewController.swift */; };
 		6F202C1E211998E9000A6C02 /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F139E0E1FB45EFC005B937E /* Story.swift */; };
 		6F202C1F211998E9000A6C02 /* FullScreenImageUnwindSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9EE41FBF1CFB00F28C00 /* FullScreenImageUnwindSegue.swift */; };
 		6F202C20211998E9000A6C02 /* PHAssetCollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9EDB1FBEE84600F28C00 /* PHAssetCollectionExtensions.swift */; };
-		6F202C21211998E9000A6C02 /* OrderSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D3340120220FE7003D4338 /* OrderSummary.swift */; };
-		6F202C22211998E9000A6C02 /* AddressFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2563922018C3950096DFC5 /* AddressFieldTableViewCell.swift */; };
-		6F202C23211998E9000A6C02 /* PaymentAuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733802010B50400F0D718 /* PaymentAuthorizationManager.swift */; };
-		6F202C24211998E9000A6C02 /* AssetSelectorAddMoreCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA189321FFF976200E6D0AB /* AssetSelectorAddMoreCollectionViewCell.swift */; };
 		6F202C25211998E9000A6C02 /* AssetPickerCoverCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E876E081FC2CC93007CCFA2 /* AssetPickerCoverCollectionViewCell.swift */; };
 		6F202C26211998E9000A6C02 /* InstagramLandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA88C61203C269C00CADCAD /* InstagramLandingViewController.swift */; };
 		6F202C27211998E9000A6C02 /* DoubleStoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DE6561FB452390099A97E /* DoubleStoryTableViewCell.swift */; };
-		6F202C28211998E9000A6C02 /* Checkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5D7C7E20F74F1C001F7EC2 /* Checkout.swift */; };
-		6F202C29211998E9000A6C02 /* ProductLayoutAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3C4ACC1FC880F100DA0196 /* ProductLayoutAsset.swift */; };
 		6F202C2A211998E9000A6C02 /* PhotobookManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FA5301205FC3DC00669758 /* PhotobookManager.swift */; };
 		6F202C2B211998E9000A6C02 /* StoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DE64D1FB323540099A97E /* StoriesViewController.swift */; };
-		6F202C2D211998E9000A6C02 /* LuhnStringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733952010CDC400F0D718 /* LuhnStringExtensions.swift */; };
-		6F202C2E211998E9000A6C02 /* UIColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FD10B02077C9ED000A45E4 /* UIColorExtensions.swift */; };
-		6F202C2F211998E9000A6C02 /* EmptyScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0A682D1FE0243400B7E56C /* EmptyScreenViewController.swift */; };
-		6F202C30211998E9000A6C02 /* ProgressOverlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D3340D2029FB14003D4338 /* ProgressOverlayViewController.swift */; };
-		6F202C31211998E9000A6C02 /* BorderedViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3920F8201881AE00D6C30B /* BorderedViewProtocol.swift */; };
 		6F202C32211998E9000A6C02 /* FacebookAlbumManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8B2049527900F5AD48 /* FacebookAlbumManager.swift */; };
-		6F202C33211998E9000A6C02 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E87E1FC3329400D2BCDA /* Layout.swift */; };
-		6F202C34211998E9000A6C02 /* PhotobookCoverCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6B7A76200E137B002E2FC2 /* PhotobookCoverCollectionViewCell.swift */; };
-		6F202C35211998E9000A6C02 /* CountryPickerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DB552017943500D32989 /* CountryPickerTableViewController.swift */; };
-		6F202C36211998E9000A6C02 /* CoverLayoutSelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1DB8DA201617B7001BECC8 /* CoverLayoutSelectionCollectionViewCell.swift */; };
-		6F202C37211998E9000A6C02 /* PhotobookFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F181545200781BB00D7082D /* PhotobookFrameView.swift */; };
-		6F202C38211998E9000A6C02 /* CGRectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE3CEBC208DC84000BB1BAB /* CGRectExtensions.swift */; };
-		6F202C39211998E9000A6C02 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5D7C7B20F63942001F7EC2 /* Product.swift */; };
-		6F202C3A211998E9000A6C02 /* CGFloatExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F34855B1FC5A52900961B32 /* CGFloatExtensions.swift */; };
-		6F202C3B211998E9000A6C02 /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBBC0CC1FEBB72D00A4EF45 /* ArrayExtensions.swift */; };
-		6F202C3C211998E9000A6C02 /* AddressTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2563902018BBCF0096DFC5 /* AddressTableViewController.swift */; };
-		6F202C3D211998E9000A6C02 /* UITextViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3A731D202AFB6800EEF04C /* UITextViewExtensions.swift */; };
-		6F202C3E211998E9000A6C02 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E8751FBD985900D2BCDA /* APIClient.swift */; };
-		6F202C3F211998E9000A6C02 /* PhotobookTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E8781FBEF4BB00D2BCDA /* PhotobookTemplate.swift */; };
 		6F202C40211998E9000A6C02 /* IntroDismissSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF312B620591EEE001BE3CF /* IntroDismissSegue.swift */; };
-		6F202C41211998E9000A6C02 /* OrderSummaryUpsellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90F28812003B7A300FF3D15 /* OrderSummaryUpsellTableViewCell.swift */; };
 		6F202C42211998E9000A6C02 /* AssetPickerCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */; };
-		6F202C43211998E9000A6C02 /* FatalErrorUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6151D320C54CAF00DBA543 /* FatalErrorUtil.swift */; };
-		6F202C44211998E9000A6C02 /* TextLabelPlaceholderBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3920F220175D7300D6C30B /* TextLabelPlaceholderBoxView.swift */; };
-		6F202C45211998E9000A6C02 /* SpineTextEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFE21CA202CA7F9004EC0EA /* SpineTextEditingViewController.swift */; };
 		6F202C47211998E9000A6C02 /* StoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DE6541FB4522A0099A97E /* StoryTableViewCell.swift */; };
-		6F202C48211998E9000A6C02 /* ReceiptViewControllerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FA530B2063F3B200669758 /* ReceiptViewControllerState.swift */; };
 		6F202C49211998E9000A6C02 /* AlbumsCollectionViewController+Facebook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8920494D6B00F5AD48 /* AlbumsCollectionViewController+Facebook.swift */; };
-		6F202C4A211998E9000A6C02 /* DeliveryAddressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F825220162855002F3607 /* DeliveryAddressTableViewCell.swift */; };
-		6F202C4B211998E9000A6C02 /* ReceiptDetailsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97ABBCD204D44A900238C8A /* ReceiptDetailsTableViewCell.swift */; };
-		6F202C4C211998E9000A6C02 /* AssetPlacementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE959C1FF555EE0023FC14 /* AssetPlacementViewController.swift */; };
-		6F202C4D211998E9000A6C02 /* PhotobookAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E87A1FBEF7FC00D2BCDA /* PhotobookAPIManager.swift */; };
-		6F202C4E211998E9000A6C02 /* UserInputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECF57C420120DF60047094C /* UserInputTableViewCell.swift */; };
-		6F202C4F211998E9000A6C02 /* ReceiptInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97ABBCF204D52E400238C8A /* ReceiptInfoTableViewCell.swift */; };
-		6F202C50211998E9000A6C02 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA00E462044464E00371B88 /* Analytics.swift */; };
-		6F202C51211998E9000A6C02 /* LayoutSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0A68351FE16D1200B7E56C /* LayoutSelectionViewController.swift */; };
-		6F202C52211998E9000A6C02 /* PublicProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F87460C207CC8D6001923B7 /* PublicProtocols.swift */; };
-		6F202C53211998E9000A6C02 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733912010CD0A00F0D718 /* Country.swift */; };
-		6F202C54211998E9000A6C02 /* GlobalConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5CCC29207B76870003000F /* GlobalConstants.swift */; };
-		6F202C55211998E9000A6C02 /* PhotobookTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F963FC22031E7B600DE3B3C /* PhotobookTextView.swift */; };
-		6F202C56211998E9000A6C02 /* CreditCardTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECF57C220120D2A0047094C /* CreditCardTableViewController.swift */; };
-		6F202C58211998E9000A6C02 /* BorderedCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA189361FFFA07500E6D0AB /* BorderedCollectionViewCell.swift */; };
-		6F202C59211998E9000A6C02 /* ProductLayoutText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3C4ACE1FC8811C00DA0196 /* ProductLayoutText.swift */; };
-		6F202C5A211998E9000A6C02 /* CGAffineTransformExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE3CEBA208DC6E300BB1BAB /* CGAffineTransformExtensions.swift */; };
-		6F202C5B211998E9000A6C02 /* UIAlertControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8B27F82045A6C000A0B403 /* UIAlertControllerExtensions.swift */; };
-		6F202C5C211998E9000A6C02 /* ProductLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3C4AC81FC8804300DA0196 /* ProductLayout.swift */; };
-		6F202C5D211998E9000A6C02 /* PhotobookNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DE6581FB453090099A97E /* PhotobookNavigationBar.swift */; };
 		6F202C5E211998E9000A6C02 /* FacebookClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E086D172052A13A00CF8096 /* FacebookClient.swift */; };
-		6F202C5F211998E9000A6C02 /* PhotobookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8B3E431FD191AC00FB8878 /* PhotobookViewController.swift */; };
-		6F202C60211998E9000A6C02 /* OrderSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90F287E1FFF8D1A00FF3D15 /* OrderSummaryViewController.swift */; };
 		6F202C61211998E9000A6C02 /* StoriesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F139E0B1FB45DD8005B937E /* StoriesManager.swift */; };
-		6F202C62211998E9000A6C02 /* DecimalExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733892010B85F00F0D718 /* DecimalExtensions.swift */; };
-		6F202C63211998E9000A6C02 /* AssetSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F92BD011FFE3B8100460466 /* AssetSelectorViewController.swift */; };
-		6F202C64211998E9000A6C02 /* DiskUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C822D2088B472002FF9D0 /* DiskUtils.swift */; };
-		6F202C65211998E9000A6C02 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E17338B2010B9EE00F0D718 /* Card.swift */; };
-		6F202C66211998E9000A6C02 /* TextEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99536DF2035D8E00019B1AF /* TextEditingViewController.swift */; };
 		6F202C67211998E9000A6C02 /* AssetPickerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED79FED1FBAEE630046B96C /* AssetPickerCollectionViewCell.swift */; };
-		6F202C68211998E9000A6C02 /* Price.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9216FFB20C6C34F003671B0 /* Price.swift */; };
 		6F202C69211998E9000A6C02 /* PhotosAlbumManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58A31FB32ADD00F31A9E /* PhotosAlbumManager.swift */; };
-		6F202C6A211998E9000A6C02 /* ReceiptLineItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C3696202095FB008033E7 /* ReceiptLineItemTableViewCell.swift */; };
-		6F202C6B211998E9000A6C02 /* PaymentMethodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECF57BB2010D0830047094C /* PaymentMethodTableViewCell.swift */; };
-		6F202C6D211998E9000A6C02 /* OrderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D334092029A925003D4338 /* OrderManager.swift */; };
-		6F202C6E211998E9000A6C02 /* DoubleExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F24E17C20CE929100C0CB7C /* DoubleExtensions.swift */; };
-		6F202C6F211998E9000A6C02 /* DeliveryDetailsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F8250201617CE002F3607 /* DeliveryDetailsTableViewController.swift */; };
 		6F202C70211998E9000A6C02 /* ViewStorySegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E876E0A1FC2FA15007CCFA2 /* ViewStorySegue.swift */; };
-		6F202C72211998E9000A6C02 /* URLAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E8D204979EA00F5AD48 /* URLAsset.swift */; };
-		6F202C73211998E9000A6C02 /* UIScreenExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED79FEA1FBAEDFA0046B96C /* UIScreenExtensions.swift */; };
 		6F202C74211998E9000A6C02 /* InstagramClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E086D1420529C8A00CF8096 /* InstagramClient.swift */; };
 		6F202C75211998E9000A6C02 /* ErrorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA88C63203C321E00CADCAD /* ErrorUtils.swift */; };
-		6F202C76211998E9000A6C02 /* ImageAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB8868520691B7700DADB04 /* ImageAsset.swift */; };
-		6F202C77211998E9000A6C02 /* CurrencyRoundingBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6151D620C6900E00DBA543 /* CurrencyRoundingBehavior.swift */; };
 		6F202C78211998E9000A6C02 /* FacebookAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C9E872049492400F5AD48 /* FacebookAlbum.swift */; };
-		6F202C79211998E9000A6C02 /* CountryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3A86EB20C0145600F1E6E2 /* CountryTableViewCell.swift */; };
 		6F202C7A211998E9000A6C02 /* AssetCollectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BE9F931FBF33320002C459 /* AssetCollectorCollectionViewCell.swift */; };
 		6F202C7B211998E9000A6C02 /* AlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B589F1FB3297300F31A9E /* AlbumCollectionViewCell.swift */; };
-		6F202C7C211998E9000A6C02 /* ShippingMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = B937E94E20CFD4B300BC21FD /* ShippingMethod.swift */; };
-		6F202C7D211998E9000A6C02 /* Asset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58981FB328B800F31A9E /* Asset.swift */; };
-		6F202C7E211998E9000A6C02 /* ErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8B27F62045A44800A0B403 /* ErrorMessage.swift */; };
-		6F202C7F211998E9000A6C02 /* AddPaymentMethodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3A86E820C0118800F1E6E2 /* AddPaymentMethodTableViewCell.swift */; };
-		6F202C80211998E9000A6C02 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E17338D2010BA3600F0D718 /* StringExtensions.swift */; };
 		6F202C81211998E9000A6C02 /* FullScreenImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9EDE1FBF1B0D00F28C00 /* FullScreenImageViewController.swift */; };
-		6F202C82211998E9000A6C02 /* CustomAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DC8CF21007A1600C6B979 /* CustomAsset.swift */; };
 		6F202C83211998E9000A6C02 /* AlbumManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58941FB3280000F31A9E /* AlbumManager.swift */; };
-		6F202C84211998E9000A6C02 /* DeliveryDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E21DB5120177E5400D32989 /* DeliveryDetails.swift */; };
-		6F202C85211998E9000A6C02 /* BorderedRoundedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4606DB201886BD00C7583E /* BorderedRoundedView.swift */; };
 		6F202C86211998E9000A6C02 /* InstagramLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA24E492035ACB20069B12A /* InstagramLoginViewController.swift */; };
-		6F202C87211998E9000A6C02 /* Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7B63BD20FC9F19003EB922 /* Template.swift */; };
 		6F202C88211998E9000A6C02 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */; };
 		6F202C89211998E9000A6C02 /* NSAttributedStringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCE08D520221C7C00C55D2F /* NSAttributedStringExtensions.swift */; };
-		6F202C8A211998E9000A6C02 /* PaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E17337E200F4E0B00F0D718 /* PaymentMethodsViewController.swift */; };
-		6F202C8B211998E9000A6C02 /* SwiftLuhn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE05DA720345C3E003C9655 /* SwiftLuhn.swift */; };
-		6F202C8C211998E9000A6C02 /* KiteAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA00E4420443ACB00371B88 /* KiteAPIClient.swift */; };
-		6F202C8D211998E9000A6C02 /* PhotobookAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD8DEA520EE6B0100353AE0 /* PhotobookAsset.swift */; };
-		6F202C8E211998E9000A6C02 /* ReceiptHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C3694202095ED008033E7 /* ReceiptHeaderTableViewCell.swift */; };
-		6F202C8F211998E9000A6C02 /* ReceiptProgressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97ABBC9204D445900238C8A /* ReceiptProgressTableViewCell.swift */; };
 		6F202C90211998E9000A6C02 /* PhotosAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58A11FB32AC100F31A9E /* PhotosAlbum.swift */; };
 		6F202C91211998E9000A6C02 /* AccountClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E086D102052924E00CF8096 /* AccountClient.swift */; };
-		6F202C92211998E9000A6C02 /* CGSizeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E74458C2057D5D000766A78 /* CGSizeExtensions.swift */; };
 		6F202C93211998E9000A6C02 /* ModalAlbumsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA1893A2004B9C700E6D0AB /* ModalAlbumsCollectionViewController.swift */; };
-		6F202C94211998E9000A6C02 /* BasketProductTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E04592B20EE5DE60024CF96 /* BasketProductTableViewCell.swift */; };
-		6F202C95211998E9000A6C02 /* MessageBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F53E093204FFAF200B73AB8 /* MessageBarViewController.swift */; };
-		6F202C96211998E9000A6C02 /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1AED552074F69E00A31B79 /* Order.swift */; };
-		6F202C97211998E9000A6C02 /* LineItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5C5D2D20B4511A008073A6 /* LineItem.swift */; };
 		6F202C98211998E9000A6C02 /* SelectedAssetsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58A81FB3508B00F31A9E /* SelectedAssetsManager.swift */; };
-		6F202C99211998E9000A6C02 /* TextToolBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F34E661209867BE001A7D59 /* TextToolBarView.swift */; };
-		6F202C9A211998E9000A6C02 /* PhotosAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B589C1FB3293100F31A9E /* PhotosAsset.swift */; };
-		6F202C9B211998E9000A6C02 /* ReceiptViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C6F05201F4E670071E6B8 /* ReceiptViewController.swift */; };
-		6F202C9D211998E9000A6C02 /* SpineFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5A59F1200CBDD80006BFCA /* SpineFrameView.swift */; };
-		6F202C9E211998E9000A6C02 /* AssetSelectorAssetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA189301FFF96E500E6D0AB /* AssetSelectorAssetCollectionViewCell.swift */; };
-		6F202C9F211998E9000A6C02 /* UITextFieldExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCF6B8D2100D51E000E218C /* UITextFieldExtensions.swift */; };
-		6F202CA0211998E9000A6C02 /* Cost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1733852010B6BA00F0D718 /* Cost.swift */; };
-		6F202CA1211998E9000A6C02 /* PageSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0A68311FE1291200B7E56C /* PageSetupViewController.swift */; };
 		6F202CA2211998E9000A6C02 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EAA782C20DBD4BF00046EBD /* AppDelegate.swift */; };
-		6F202CA3211998E9000A6C02 /* Pig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F591A8F20E3D83F002A0667 /* Pig.swift */; };
-		6F202CA4211998E9000A6C02 /* CheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B939FE8D200E381C00B1084B /* CheckoutViewController.swift */; };
-		6F202CA5211998E9000A6C02 /* CoverFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1815492009042E00D7082D /* CoverFrameView.swift */; };
 		6F202CA6211998E9000A6C02 /* AssetCollectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BC2E261FBF195200F4AA56 /* AssetCollectorViewController.swift */; };
-		6F202CA7211998E9000A6C02 /* ReceiptFooterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7C3692202095DC008033E7 /* ReceiptFooterTableViewCell.swift */; };
 		6F202CA8211998E9000A6C02 /* AssetPickerCollectionViewController+Instagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB9BFAE2036E01F00EED9FA /* AssetPickerCollectionViewController+Instagram.swift */; };
 		6F202CA9211998E9000A6C02 /* EmptyStoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2493FB2065420000F9EE68 /* EmptyStoryTableViewCell.swift */; };
-		6F202CAA211998E9000A6C02 /* ShippingMethodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC81601201B33180046643B /* ShippingMethodTableViewCell.swift */; };
 		6F202CAC211998E9000A6C02 /* AlbumSearchResultsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3821FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift */; };
-		6F202CAD211998E9000A6C02 /* OrderSummaryDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90F288820066D1500FF3D15 /* OrderSummaryDetailTableViewCell.swift */; };
-		6F202CAE211998E9000A6C02 /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B9ED91FBDEEF400F28C00 /* UIViewExtensions.swift */; };
-		6F202CAF211998E9000A6C02 /* UpsellOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = B986DF2E201B445E005461A0 /* UpsellOption.swift */; };
-		6F202CB0211998E9000A6C02 /* UIFontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F17F324207657FD00001888 /* UIFontExtensions.swift */; };
-		6F202CB1211998E9000A6C02 /* PhotobookCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3E6A5220036FB60044EDFC /* PhotobookCollectionViewCell.swift */; };
-		6F202CB2211998E9000A6C02 /* AssetLoadingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3C4DF920E65911007A5788 /* AssetLoadingManager.swift */; };
 		6F202CB3211998E9000A6C02 /* AlbumSearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */; };
-		6F202CB4211998E9000A6C02 /* LayoutBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC7E8801FC332A500D2BCDA /* LayoutBox.swift */; };
 		6F202CB5211998E9000A6C02 /* AlbumsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58911FB325FF00F31A9E /* AlbumsCollectionViewController.swift */; };
-		6F202CB6211998E9000A6C02 /* PhotobookPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB39DD41FC5AE0F009EC5B2 /* PhotobookPageView.swift */; };
 		6F202CB7211998E9000A6C02 /* InstagramAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA24E4E2035E05C0069B12A /* InstagramAlbum.swift */; };
 		6F202CB8211998E9000A6C02 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B58961FB3287900F31A9E /* Album.swift */; };
-		6F202CBA211998E9000A6C02 /* ColorSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3920F620177FC900D6C30B /* ColorSelectionViewController.swift */; };
 		6F202CBF211998E9000A6C02 /* Photobook.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E533AD520E3840D004F8481 /* Photobook.storyboard */; };
 		6F202CC0211998E9000A6C02 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E0B58881FB30F2100F31A9E /* LaunchScreen.storyboard */; };
 		6F202CC1211998E9000A6C02 /* Lora-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08D12021E4B300C55D2F /* Lora-Regular.ttf */; };
@@ -414,7 +267,10 @@
 		6F6151DE20C6D61700DBA543 /* OrderSummaryManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6151DD20C6D61700DBA543 /* OrderSummaryManagerTests.swift */; };
 		6F6151DF20C9412A00DBA543 /* LineItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5C5D2D20B4511A008073A6 /* LineItem.swift */; };
 		6F6D130F219192520026B849 /* PhotobookAssetMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6D130E219192520026B849 /* PhotobookAssetMocks.swift */; };
+		6F6D131B2191B8250026B849 /* UIAlertControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F096B1F2190873B004DA16F /* UIAlertControllerExtensions.swift */; };
 		6F7B63BE20FC9F19003EB922 /* Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7B63BD20FC9F19003EB922 /* Template.swift */; };
+		6F84BE5B2191BC230082DA5B /* Photobook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14B992063A9CD00ED2E2C /* Photobook.framework */; };
+		6F84BE5C2191BC230082DA5B /* Photobook.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14B992063A9CD00ED2E2C /* Photobook.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F87460E207CC8DB001923B7 /* PublicProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F87460C207CC8D6001923B7 /* PublicProtocols.swift */; };
 		6F963D7320B45421001C9688 /* LineItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F963D7220B45421001C9688 /* LineItemTests.swift */; };
 		6F963D7520B462AA001C9688 /* ShippingMethodTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F963D7420B462AA001C9688 /* ShippingMethodTest.swift */; };
@@ -423,7 +279,6 @@
 		6FA4761720A9A72700DCD9EC /* CardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA4761620A9A72700DCD9EC /* CardTests.swift */; };
 		6FB1AEE21FD1A7BB0008522F /* photobooks.json in Resources */ = {isa = PBXBuildFile; fileRef = 6FC7E88A1FC574DA00D2BCDA /* photobooks.json */; };
 		6FB4B36F216E264100C4223D /* ActionButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB4B36D216E264100C4223D /* ActionButtonView.swift */; };
-		6FB4B370216E264100C4223D /* ActionButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB4B36D216E264100C4223D /* ActionButtonView.swift */; };
 		6FB670731FB5BB1A0062D630 /* StoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB670721FB5BB1A0062D630 /* StoryTests.swift */; };
 		6FB88687206A66CE00DADB04 /* ImageAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB8868520691B7700DADB04 /* ImageAsset.swift */; };
 		6FC23BCE2189D5C200F5D1EC /* ProductBackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F08F90D2165051500EF9529 /* ProductBackupManager.swift */; };
@@ -485,8 +340,9 @@
 		6FEAC2912183447800ECE61F /* AnalyticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEAC2902183447700ECE61F /* AnalyticsTests.swift */; };
 		6FEAC29421834B9700ECE61F /* CGFloatExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEAC29321834B9700ECE61F /* CGFloatExtensionsTests.swift */; };
 		6FED4FCF216CC12400EC40C2 /* ActionsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FED4FCD216CC12400EC40C2 /* ActionsCollectionViewCell.swift */; };
-		6FED4FD0216CC12E00EC40C2 /* ActionsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FED4FCD216CC12400EC40C2 /* ActionsCollectionViewCell.swift */; };
 		6FEF3EAB208F48EB00595A5B /* PhotobookProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEF3EAA208F48EB00595A5B /* PhotobookProductTests.swift */; };
+		7DDA05D55D207C6B8A36C9EA /* Pods_PhotobookTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A400D759999F769E642D7D3 /* Pods_PhotobookTests.framework */; };
+		9202A4056F77B59C18D76A85 /* Pods_SDK_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47FDE187CBEAB779888C887E /* Pods_SDK_Demo.framework */; };
 		B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */; };
 		B9ACCF6020DBF79A004EA2F5 /* Price.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9216FFB20C6C34F003671B0 /* Price.swift */; };
 		B9ACCF6120DBF7A3004EA2F5 /* ShippingMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = B937E94E20CFD4B300BC21FD /* ShippingMethod.swift */; };
@@ -495,8 +351,7 @@
 		B9BE9F941FBF33320002C459 /* AssetCollectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BE9F931FBF33320002C459 /* AssetCollectorCollectionViewCell.swift */; };
 		B9D33410202C7B13003D4338 /* OrderSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D3340F202C7B13003D4338 /* OrderSummaryTests.swift */; };
 		B9FA5302205FC3DC00669758 /* PhotobookManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FA5301205FC3DC00669758 /* PhotobookManager.swift */; };
-		EF93C3090B05063E9100B778 /* Pods_Photobook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EEC03CA2091C8BF008725B7 /* Pods_Photobook.framework */; };
-		F4A9F475CA7E55A564B39C0A /* Pods_PhotobookTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EEC03CC2091C8BF008725B7 /* Pods_PhotobookTests.framework */; };
+		F01858EEB2C1E4B48922DF58 /* Pods_Photobook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2100CC3E2B4F21157280947 /* Pods_Photobook.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -514,12 +369,12 @@
 			remoteGlobalIDString = 2E870584208E0181004B4B36;
 			remoteInfo = "SDK Demo";
 		};
-		2E8705AB208E042C004B4B36 /* PBXContainerItemProxy */ = {
+		6F84BE5D2191BC230082DA5B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2E0B58741FB30F2100F31A9E /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 2ED14B982063A9CD00ED2E2C;
-			remoteInfo = PhotobookSDK;
+			remoteInfo = Photobook;
 		};
 		6FB6706C1FB5BAD40062D630 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -538,25 +393,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		2E8705AD208E042C004B4B36 /* Embed Frameworks */ = {
+		6F84BE5F2191BC230082DA5B /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				2E8705B1208E0520004B4B36 /* Bolts.framework in Embed Frameworks */,
-				2E8705B7208E0520004B4B36 /* FBSDKCoreKit.framework in Embed Frameworks */,
-				2E8705BD208E0520004B4B36 /* OAuthSwift.framework in Embed Frameworks */,
-				2E8705B3208E0520004B4B36 /* FacebookCore.framework in Embed Frameworks */,
-				2E8705AA208E042C004B4B36 /* Photobook.framework in Embed Frameworks */,
-				2E51FEBD20E2420F00E62102 /* PayPalDynamicLoader.framework in Embed Frameworks */,
-				2E8705BB208E0520004B4B36 /* KeychainSwift.framework in Embed Frameworks */,
-				2E8705BF208E0520004B4B36 /* PayPalMobileSDK.framework in Embed Frameworks */,
-				2E8705B9208E0520004B4B36 /* FBSDKLoginKit.framework in Embed Frameworks */,
-				2E8705C1208E0520004B4B36 /* SDWebImage.framework in Embed Frameworks */,
-				2E8705B5208E0520004B4B36 /* FacebookLogin.framework in Embed Frameworks */,
-				2E8705AF208E0520004B4B36 /* Analytics.framework in Embed Frameworks */,
-				2E8705C3208E0520004B4B36 /* Stripe.framework in Embed Frameworks */,
+				6F84BE5C2191BC230082DA5B /* Photobook.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -575,8 +418,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0DF76BF596B359D6FC0DC474 /* Pods-Photobook App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.debug.xcconfig"; sourceTree = "<group>"; };
-		1561A4A2B130A5F1A92351A0 /* Pods_PhotobookTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PhotobookTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		12BCED1095333A8659AC02E8 /* Pods-PhotobookTests.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.debug test.xcconfig"; sourceTree = "<group>"; };
 		2E02B210208F26B80083DDAB /* XCUIElementExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCUIElementExtensions.swift; sourceTree = "<group>"; };
 		2E02B212208F4D830083DDAB /* Automation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Automation.swift; sourceTree = "<group>"; };
 		2E02B214208F5D2F0083DDAB /* XCTestCaseExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestCaseExtensions.swift; sourceTree = "<group>"; };
@@ -713,19 +555,16 @@
 		2EEC03C42091C8BF008725B7 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EEC03C62091C8BF008725B7 /* KeychainSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = KeychainSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EEC03C82091C8BF008725B7 /* OAuthSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OAuthSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2EEC03CA2091C8BF008725B7 /* Pods_Photobook.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_Photobook.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2EEC03CC2091C8BF008725B7 /* Pods_PhotobookTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_PhotobookTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EEC03CE2091C8BF008725B7 /* SDWebImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDWebImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EEC03D02091C8BF008725B7 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EEC03D2209212B3008725B7 /* OrderSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryTests.swift; sourceTree = "<group>"; };
 		2EF312B620591EEE001BE3CF /* IntroDismissSegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroDismissSegue.swift; sourceTree = "<group>"; };
-		3489AC8167727C8C9D74746D /* Pods-Photobook.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.debug.xcconfig"; sourceTree = "<group>"; };
-		35185092CEAA07251E4FD67C /* Pods_Photobook.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Photobook.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B2CC0AAF7A3088876060E07 /* Pods-Photobook App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.release.xcconfig"; sourceTree = "<group>"; };
-		509D34875259D1916ED674CB /* Pods-PhotobookTests.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.debug test.xcconfig"; sourceTree = "<group>"; };
-		671A688CCC48FE74472C1470 /* Pods-Photobook.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.release.xcconfig"; sourceTree = "<group>"; };
-		69B62B8C076001BAA40216F0 /* Pods-Photobook App.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.debug test.xcconfig"; sourceTree = "<group>"; };
-		6A1DA8E9A38D7AFD0E6ADA5C /* Pods-Photobook App.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.release test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.release test.xcconfig"; sourceTree = "<group>"; };
+		2EF730E3030AD2017B88037C /* Pods-SDK Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SDK Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-SDK Demo/Pods-SDK Demo.release.xcconfig"; sourceTree = "<group>"; };
+		47FDE187CBEAB779888C887E /* Pods_SDK_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SDK_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		49A764DC03F89F378FE02807 /* Pods-PhotobookTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.debug.xcconfig"; sourceTree = "<group>"; };
+		49AA8A242F2B70C77CDDD6B3 /* Pods-SDK Demo.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SDK Demo.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-SDK Demo/Pods-SDK Demo.debug test.xcconfig"; sourceTree = "<group>"; };
+		54070B6AAADCB00D4B30983B /* Pods-Photobook App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.release.xcconfig"; sourceTree = "<group>"; };
+		5A114C1E7786AD45BDB5F5F8 /* Pods-Photobook App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.debug.xcconfig"; sourceTree = "<group>"; };
 		6F08F90D2165051500EF9529 /* ProductBackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductBackupManager.swift; sourceTree = "<group>"; };
 		6F096B1C219067E4004DA16F /* AssetDataSourceBackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDataSourceBackupManager.swift; sourceTree = "<group>"; };
 		6F096B1F2190873B004DA16F /* UIAlertControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExtensions.swift; sourceTree = "<group>"; };
@@ -860,8 +699,14 @@
 		6FED4FCD216CC12400EC40C2 /* ActionsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionsCollectionViewCell.swift; sourceTree = "<group>"; };
 		6FEF3EAA208F48EB00595A5B /* PhotobookProductTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookProductTests.swift; sourceTree = "<group>"; };
 		6FFE21CA202CA7F9004EC0EA /* SpineTextEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpineTextEditingViewController.swift; sourceTree = "<group>"; };
-		791A084B7DBFE4A0EF1E381B /* Pods-Photobook.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.debug test.xcconfig"; sourceTree = "<group>"; };
-		A9A9A5996008D1B40B2E10F9 /* Pods-PhotobookTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.release.xcconfig"; sourceTree = "<group>"; };
+		726B03FFDEC4F9D91C810402 /* Pods_Photobook_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Photobook_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A400D759999F769E642D7D3 /* Pods_PhotobookTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PhotobookTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9F9996059845E3FC7B69605D /* Pods-Photobook.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.release test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.release test.xcconfig"; sourceTree = "<group>"; };
+		A555CD7CB5DCC2ACE6BA08B8 /* Pods-Photobook.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.release.xcconfig"; sourceTree = "<group>"; };
+		A84A063C267BD3EE1AA2CFC7 /* Pods-SDK Demo.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SDK Demo.release test.xcconfig"; path = "Pods/Target Support Files/Pods-SDK Demo/Pods-SDK Demo.release test.xcconfig"; sourceTree = "<group>"; };
+		AB100DE7580090AAF5E0D33E /* Pods-Photobook App.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.release test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.release test.xcconfig"; sourceTree = "<group>"; };
+		B2100CC3E2B4F21157280947 /* Pods_Photobook.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Photobook.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B80F3D7B4C71EDF00E4974BF /* Pods-Photobook.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.debug test.xcconfig"; sourceTree = "<group>"; };
 		B90EB85D203701CD0005D91C /* AmountPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AmountPickerViewController.swift; sourceTree = "<group>"; };
 		B90F287E1FFF8D1A00FF3D15 /* OrderSummaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryViewController.swift; sourceTree = "<group>"; };
 		B90F28812003B7A300FF3D15 /* OrderSummaryUpsellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryUpsellTableViewCell.swift; sourceTree = "<group>"; };
@@ -888,10 +733,11 @@
 		B9FA5301205FC3DC00669758 /* PhotobookManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookManager.swift; sourceTree = "<group>"; };
 		B9FA530B2063F3B200669758 /* ReceiptViewControllerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptViewControllerState.swift; sourceTree = "<group>"; };
 		B9FD10B02077C9ED000A45E4 /* UIColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtensions.swift; sourceTree = "<group>"; };
-		C1CA12481EFB37C226C37AD8 /* Pods_Photobook_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Photobook_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DBF41AB42E99CFC7EDCC5743 /* Pods-Photobook.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.release test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.release test.xcconfig"; sourceTree = "<group>"; };
-		EE165E68796AB33E673EA271 /* Pods-PhotobookTests.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.release test.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.release test.xcconfig"; sourceTree = "<group>"; };
-		FF99346143FA805B3676D912 /* Pods-PhotobookTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C6B6855692D66A02A4A42158 /* Pods-PhotobookTests.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.release test.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.release test.xcconfig"; sourceTree = "<group>"; };
+		E227A142AFC5FC6E64B9FB1B /* Pods-SDK Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SDK Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SDK Demo/Pods-SDK Demo.debug.xcconfig"; sourceTree = "<group>"; };
+		ECA02D1C68A2E57F2310DB7C /* Pods-Photobook App.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.debug test.xcconfig"; sourceTree = "<group>"; };
+		F0EB568F64DF3286331DE8AE /* Pods-Photobook.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.debug.xcconfig"; sourceTree = "<group>"; };
+		F8F01677BE48D13E9A3F5E95 /* Pods-PhotobookTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -900,7 +746,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FC23C2C218C51EA00F5D1EC /* Photobook.framework in Frameworks */,
-				688A35F15D418F152AA3CEC9 /* Pods_Photobook_App.framework in Frameworks */,
+				2F1A22546614AD04E702488C /* Pods_Photobook_App.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -915,19 +761,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2E8705B0208E0520004B4B36 /* Bolts.framework in Frameworks */,
-				2E8705B6208E0520004B4B36 /* FBSDKCoreKit.framework in Frameworks */,
-				2E8705BC208E0520004B4B36 /* OAuthSwift.framework in Frameworks */,
-				2E8705B2208E0520004B4B36 /* FacebookCore.framework in Frameworks */,
-				2E8705A9208E042C004B4B36 /* Photobook.framework in Frameworks */,
-				2E51FEBC20E2420F00E62102 /* PayPalDynamicLoader.framework in Frameworks */,
-				2E8705BA208E0520004B4B36 /* KeychainSwift.framework in Frameworks */,
-				2E8705BE208E0520004B4B36 /* PayPalMobileSDK.framework in Frameworks */,
-				2E8705B8208E0520004B4B36 /* FBSDKLoginKit.framework in Frameworks */,
-				2E8705C0208E0520004B4B36 /* SDWebImage.framework in Frameworks */,
-				2E8705B4208E0520004B4B36 /* FacebookLogin.framework in Frameworks */,
-				2E8705AE208E0520004B4B36 /* Analytics.framework in Frameworks */,
-				2E8705C2208E0520004B4B36 /* Stripe.framework in Frameworks */,
+				6F84BE5B2191BC230082DA5B /* Photobook.framework in Frameworks */,
+				9202A4056F77B59C18D76A85 /* Pods_SDK_Demo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -942,7 +777,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF93C3090B05063E9100B778 /* Pods_Photobook.framework in Frameworks */,
+				F01858EEB2C1E4B48922DF58 /* Pods_Photobook.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -957,8 +792,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D046AAB9F5CFA5F5150C0DF /* Pods_PhotobookTests.framework in Frameworks */,
-				F4A9F475CA7E55A564B39C0A /* Pods_PhotobookTests.framework in Frameworks */,
+				7DDA05D55D207C6B8A36C9EA /* Pods_PhotobookTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -986,8 +820,8 @@
 				2E87059B208E0183004B4B36 /* SDK DemoUITests */,
 				2E56434720A97CF900ECC98F /* HelperPhotobookUITests */,
 				2E0B587D1FB30F2100F31A9E /* Products */,
-				41442346D0981CD5E8F4B2CA /* Pods */,
 				3BAD030253756D88DE562AFF /* Frameworks */,
+				7006629E943478B6474EC422 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1341,8 +1175,6 @@
 				2EEC03C42091C8BF008725B7 /* FBSDKLoginKit.framework */,
 				2EEC03C62091C8BF008725B7 /* KeychainSwift.framework */,
 				2EEC03C82091C8BF008725B7 /* OAuthSwift.framework */,
-				2EEC03CA2091C8BF008725B7 /* Pods_Photobook.framework */,
-				2EEC03CC2091C8BF008725B7 /* Pods_PhotobookTests.framework */,
 				2EEC03CE2091C8BF008725B7 /* SDWebImage.framework */,
 				2EEC03D02091C8BF008725B7 /* Stripe.framework */,
 				2ED14C342063ABB700ED2E2C /* Analytics.framework */,
@@ -1356,30 +1188,12 @@
 				2ED14C392063ABB700ED2E2C /* PayPalMobileSDK.framework */,
 				2ED14C332063ABB700ED2E2C /* SDWebImage.framework */,
 				2ED14C3B2063ABB700ED2E2C /* Stripe.framework */,
-				35185092CEAA07251E4FD67C /* Pods_Photobook.framework */,
-				1561A4A2B130A5F1A92351A0 /* Pods_PhotobookTests.framework */,
-				C1CA12481EFB37C226C37AD8 /* Pods_Photobook_App.framework */,
+				B2100CC3E2B4F21157280947 /* Pods_Photobook.framework */,
+				726B03FFDEC4F9D91C810402 /* Pods_Photobook_App.framework */,
+				7A400D759999F769E642D7D3 /* Pods_PhotobookTests.framework */,
+				47FDE187CBEAB779888C887E /* Pods_SDK_Demo.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		41442346D0981CD5E8F4B2CA /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				FF99346143FA805B3676D912 /* Pods-PhotobookTests.debug.xcconfig */,
-				A9A9A5996008D1B40B2E10F9 /* Pods-PhotobookTests.release.xcconfig */,
-				509D34875259D1916ED674CB /* Pods-PhotobookTests.debug test.xcconfig */,
-				EE165E68796AB33E673EA271 /* Pods-PhotobookTests.release test.xcconfig */,
-				0DF76BF596B359D6FC0DC474 /* Pods-Photobook App.debug.xcconfig */,
-				69B62B8C076001BAA40216F0 /* Pods-Photobook App.debug test.xcconfig */,
-				4B2CC0AAF7A3088876060E07 /* Pods-Photobook App.release.xcconfig */,
-				6A1DA8E9A38D7AFD0E6ADA5C /* Pods-Photobook App.release test.xcconfig */,
-				3489AC8167727C8C9D74746D /* Pods-Photobook.debug.xcconfig */,
-				791A084B7DBFE4A0EF1E381B /* Pods-Photobook.debug test.xcconfig */,
-				671A688CCC48FE74472C1470 /* Pods-Photobook.release.xcconfig */,
-				DBF41AB42E99CFC7EDCC5743 /* Pods-Photobook.release test.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		6F139E0D1FB45E67005B937E /* Model */ = {
@@ -1697,6 +1511,29 @@
 			path = "Page Editing";
 			sourceTree = "<group>";
 		};
+		7006629E943478B6474EC422 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F0EB568F64DF3286331DE8AE /* Pods-Photobook.debug.xcconfig */,
+				B80F3D7B4C71EDF00E4974BF /* Pods-Photobook.debug test.xcconfig */,
+				A555CD7CB5DCC2ACE6BA08B8 /* Pods-Photobook.release.xcconfig */,
+				9F9996059845E3FC7B69605D /* Pods-Photobook.release test.xcconfig */,
+				5A114C1E7786AD45BDB5F5F8 /* Pods-Photobook App.debug.xcconfig */,
+				ECA02D1C68A2E57F2310DB7C /* Pods-Photobook App.debug test.xcconfig */,
+				54070B6AAADCB00D4B30983B /* Pods-Photobook App.release.xcconfig */,
+				AB100DE7580090AAF5E0D33E /* Pods-Photobook App.release test.xcconfig */,
+				49A764DC03F89F378FE02807 /* Pods-PhotobookTests.debug.xcconfig */,
+				12BCED1095333A8659AC02E8 /* Pods-PhotobookTests.debug test.xcconfig */,
+				F8F01677BE48D13E9A3F5E95 /* Pods-PhotobookTests.release.xcconfig */,
+				C6B6855692D66A02A4A42158 /* Pods-PhotobookTests.release test.xcconfig */,
+				E227A142AFC5FC6E64B9FB1B /* Pods-SDK Demo.debug.xcconfig */,
+				49AA8A242F2B70C77CDDD6B3 /* Pods-SDK Demo.debug test.xcconfig */,
+				2EF730E3030AD2017B88037C /* Pods-SDK Demo.release.xcconfig */,
+				A84A063C267BD3EE1AA2CFC7 /* Pods-SDK Demo.release test.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		B90F28802003B74A00FF3D15 /* OrderSummary */ = {
 			isa = PBXGroup;
 			children = (
@@ -1754,13 +1591,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2E0B588E1FB30F2100F31A9E /* Build configuration list for PBXNativeTarget "Photobook App" */;
 			buildPhases = (
-				9DBC4FA5FA30E14A33727097 /* [CP] Check Pods Manifest.lock */,
+				930FE0F570601FC7CF2DB221 /* [CP] Check Pods Manifest.lock */,
 				2E0B58781FB30F2100F31A9E /* Sources */,
 				2E0B58791FB30F2100F31A9E /* Frameworks */,
 				2E0B587A1FB30F2100F31A9E /* Resources */,
-				F8D52F1350FCC9B4F21842B0 /* [CP] Embed Pods Frameworks */,
 				2E2527302015F3A5004C12AF /* ShellScript */,
 				6FC23C30218C51EA00F5D1EC /* Embed Frameworks */,
+				9107F4B51ADAA3E5231452DC /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1794,15 +1631,17 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2E8705A7208E0183004B4B36 /* Build configuration list for PBXNativeTarget "SDK Demo" */;
 			buildPhases = (
+				9591C8D5A4EE555F418AAB71 /* [CP] Check Pods Manifest.lock */,
 				2E870581208E0181004B4B36 /* Sources */,
 				2E870582208E0181004B4B36 /* Frameworks */,
 				2E870583208E0181004B4B36 /* Resources */,
-				2E8705AD208E042C004B4B36 /* Embed Frameworks */,
+				6F84BE5F2191BC230082DA5B /* Embed Frameworks */,
+				11CE698DFDB65DA34703B85A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				2E8705AC208E042C004B4B36 /* PBXTargetDependency */,
+				6F84BE5E2191BC230082DA5B /* PBXTargetDependency */,
 			);
 			name = "SDK Demo";
 			productName = "SDK Demo";
@@ -1831,7 +1670,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2ED14BA22063A9CD00ED2E2C /* Build configuration list for PBXNativeTarget "Photobook" */;
 			buildPhases = (
-				ED7B108DA94B4CDDA8E05F00 /* [CP] Check Pods Manifest.lock */,
+				04DF2A44C2FDFCD9ADB20C8D /* [CP] Check Pods Manifest.lock */,
 				2ED14B942063A9CD00ED2E2C /* Sources */,
 				2ED14B952063A9CD00ED2E2C /* Frameworks */,
 				2ED14B962063A9CD00ED2E2C /* Headers */,
@@ -1868,11 +1707,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6FB670701FB5BAD40062D630 /* Build configuration list for PBXNativeTarget "PhotobookTests" */;
 			buildPhases = (
-				3ECB6CA75DDC06D5F75791BD /* [CP] Check Pods Manifest.lock */,
+				CCD87C8B54ECB59B43671458 /* [CP] Check Pods Manifest.lock */,
 				6FB670631FB5BAD40062D630 /* Sources */,
 				6FB670641FB5BAD40062D630 /* Frameworks */,
 				6FB670651FB5BAD40062D630 /* Resources */,
-				8ABE145D0E322A454D094B4B /* [CP] Embed Pods Frameworks */,
+				BB6460A1D08021C609316043 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2046,87 +1885,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2E2527302015F3A5004C12AF /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\" ebb34c1747d3ac14c598164178b666e2b9363b7f c3688b33fe4fc3d7339ad1c284d6834ee293e9f2e06bcd37a56b75e2333ca818";
-		};
-		3ECB6CA75DDC06D5F75791BD /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-PhotobookTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6F202CC9211998E9000A6C02 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\" ebb34c1747d3ac14c598164178b666e2b9363b7f c3688b33fe4fc3d7339ad1c284d6834ee293e9f2e06bcd37a56b75e2333ca818";
-		};
-		8ABE145D0E322A454D094B4B /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/OAuthSwift/OAuthSwift.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OAuthSwift.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9DBC4FA5FA30E14A33727097 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Photobook App-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		ED7B108DA94B4CDDA8E05F00 /* [CP] Check Pods Manifest.lock */ = {
+		04DF2A44C2FDFCD9ADB20C8D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2144,7 +1903,59 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F8D52F1350FCC9B4F21842B0 /* [CP] Embed Pods Frameworks */ = {
+		11CE698DFDB65DA34703B85A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-SDK Demo/Pods-SDK Demo-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Analytics/Analytics.framework",
+				"${BUILT_PRODUCTS_DIR}/KeychainSwift/KeychainSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
+				"${BUILT_PRODUCTS_DIR}/PayPal-iOS-Dynamic-Loader/PayPalDynamicLoader.framework",
+				"${BUILT_PRODUCTS_DIR}/Stripe/Stripe.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Analytics.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PayPalDynamicLoader.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SDK Demo/Pods-SDK Demo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2E2527302015F3A5004C12AF /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" ebb34c1747d3ac14c598164178b666e2b9363b7f c3688b33fe4fc3d7339ad1c284d6834ee293e9f2e06bcd37a56b75e2333ca818\n";
+		};
+		6F202CC9211998E9000A6C02 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" ebb34c1747d3ac14c598164178b666e2b9363b7f c3688b33fe4fc3d7339ad1c284d6834ee293e9f2e06bcd37a56b75e2333ca818";
+		};
+		9107F4B51ADAA3E5231452DC /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2176,6 +1987,78 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		930FE0F570601FC7CF2DB221 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Photobook App-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9591C8D5A4EE555F418AAB71 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SDK Demo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BB6460A1D08021C609316043 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/OAuthSwift/OAuthSwift.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OAuthSwift.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CCD87C8B54ECB59B43671458 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-PhotobookTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2423,187 +2306,66 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F202C11211998E9000A6C02 /* LayoutSelectionCollectionViewCell.swift in Sources */,
-				6F202C12211998E9000A6C02 /* ProductManager.swift in Sources */,
 				6F202C13211998E9000A6C02 /* UILabelExtensions.swift in Sources */,
 				6F202CDB211ACEBB000A6C02 /* Configuration.swift in Sources */,
-				6F202C14211998E9000A6C02 /* FontType.swift in Sources */,
-				6F202C15211998E9000A6C02 /* OrderSummaryTotalTableViewCell.swift in Sources */,
-				6F202C16211998E9000A6C02 /* PhotobookNavigationController.swift in Sources */,
-				6F202C17211998E9000A6C02 /* LayoutUtils.swift in Sources */,
-				6F202C18211998E9000A6C02 /* OrderSummaryManager.swift in Sources */,
-				6F202C19211998E9000A6C02 /* PhotobookProduct.swift in Sources */,
 				6F202C1B211998E9000A6C02 /* FacebookLandingViewController.swift in Sources */,
-				6F202C1C211998E9000A6C02 /* ShippingMethodsViewController.swift in Sources */,
 				6FC23BF0218B05C700F5D1EC /* UIImageExtensions.swift in Sources */,
-				6F202C1D211998E9000A6C02 /* AmountPickerViewController.swift in Sources */,
 				6F202C1E211998E9000A6C02 /* Story.swift in Sources */,
 				6F202C1F211998E9000A6C02 /* FullScreenImageUnwindSegue.swift in Sources */,
 				6F202C20211998E9000A6C02 /* PHAssetCollectionExtensions.swift in Sources */,
-				6F202C21211998E9000A6C02 /* OrderSummary.swift in Sources */,
-				6F202C22211998E9000A6C02 /* AddressFieldTableViewCell.swift in Sources */,
-				6F202C23211998E9000A6C02 /* PaymentAuthorizationManager.swift in Sources */,
-				6F202C24211998E9000A6C02 /* AssetSelectorAddMoreCollectionViewCell.swift in Sources */,
 				6F202C25211998E9000A6C02 /* AssetPickerCoverCollectionViewCell.swift in Sources */,
 				6F202C26211998E9000A6C02 /* InstagramLandingViewController.swift in Sources */,
 				6F096B1E219067E4004DA16F /* AssetDataSourceBackupManager.swift in Sources */,
 				6F202C27211998E9000A6C02 /* DoubleStoryTableViewCell.swift in Sources */,
-				6F202C28211998E9000A6C02 /* Checkout.swift in Sources */,
-				6F202C29211998E9000A6C02 /* ProductLayoutAsset.swift in Sources */,
 				6F202C2A211998E9000A6C02 /* PhotobookManager.swift in Sources */,
 				6F202C2B211998E9000A6C02 /* StoriesViewController.swift in Sources */,
-				6F202C2D211998E9000A6C02 /* LuhnStringExtensions.swift in Sources */,
-				6F202C2E211998E9000A6C02 /* UIColorExtensions.swift in Sources */,
-				6F202C2F211998E9000A6C02 /* EmptyScreenViewController.swift in Sources */,
-				6F202C30211998E9000A6C02 /* ProgressOverlayViewController.swift in Sources */,
-				6F202C31211998E9000A6C02 /* BorderedViewProtocol.swift in Sources */,
 				6F202C32211998E9000A6C02 /* FacebookAlbumManager.swift in Sources */,
-				6F202C33211998E9000A6C02 /* Layout.swift in Sources */,
-				6F202C34211998E9000A6C02 /* PhotobookCoverCollectionViewCell.swift in Sources */,
-				6F202C35211998E9000A6C02 /* CountryPickerTableViewController.swift in Sources */,
-				6F202C36211998E9000A6C02 /* CoverLayoutSelectionCollectionViewCell.swift in Sources */,
-				6F202C37211998E9000A6C02 /* PhotobookFrameView.swift in Sources */,
-				6F096B212190873B004DA16F /* UIAlertControllerExtensions.swift in Sources */,
-				6F202C38211998E9000A6C02 /* CGRectExtensions.swift in Sources */,
-				6F202C39211998E9000A6C02 /* Product.swift in Sources */,
-				6F202C3A211998E9000A6C02 /* CGFloatExtensions.swift in Sources */,
-				6F202C3B211998E9000A6C02 /* ArrayExtensions.swift in Sources */,
-				6F202C3C211998E9000A6C02 /* AddressTableViewController.swift in Sources */,
-				6F202C3D211998E9000A6C02 /* UITextViewExtensions.swift in Sources */,
-				6F202C3E211998E9000A6C02 /* APIClient.swift in Sources */,
-				6F202C3F211998E9000A6C02 /* PhotobookTemplate.swift in Sources */,
 				6F202C40211998E9000A6C02 /* IntroDismissSegue.swift in Sources */,
-				6F202C41211998E9000A6C02 /* OrderSummaryUpsellTableViewCell.swift in Sources */,
 				6F202C42211998E9000A6C02 /* AssetPickerCollectionViewController.swift in Sources */,
-				6F202C43211998E9000A6C02 /* FatalErrorUtil.swift in Sources */,
-				6F202C44211998E9000A6C02 /* TextLabelPlaceholderBoxView.swift in Sources */,
-				6F202C45211998E9000A6C02 /* SpineTextEditingViewController.swift in Sources */,
 				6F202C47211998E9000A6C02 /* StoryTableViewCell.swift in Sources */,
-				6F202C48211998E9000A6C02 /* ReceiptViewControllerState.swift in Sources */,
 				6F202C49211998E9000A6C02 /* AlbumsCollectionViewController+Facebook.swift in Sources */,
-				6F202C4A211998E9000A6C02 /* DeliveryAddressTableViewCell.swift in Sources */,
-				6F202C4B211998E9000A6C02 /* ReceiptDetailsTableViewCell.swift in Sources */,
-				6F202C4C211998E9000A6C02 /* AssetPlacementViewController.swift in Sources */,
-				6F202C4D211998E9000A6C02 /* PhotobookAPIManager.swift in Sources */,
-				6F202C4E211998E9000A6C02 /* UserInputTableViewCell.swift in Sources */,
-				6F202C4F211998E9000A6C02 /* ReceiptInfoTableViewCell.swift in Sources */,
-				6F202C50211998E9000A6C02 /* Analytics.swift in Sources */,
-				6F202C51211998E9000A6C02 /* LayoutSelectionViewController.swift in Sources */,
 				6FC23C0A218B350900F5D1EC /* MessageBarViewController.swift in Sources */,
-				6F202C52211998E9000A6C02 /* PublicProtocols.swift in Sources */,
-				6F202C53211998E9000A6C02 /* Country.swift in Sources */,
-				6F202C54211998E9000A6C02 /* GlobalConstants.swift in Sources */,
-				6F202C55211998E9000A6C02 /* PhotobookTextView.swift in Sources */,
-				6F202C56211998E9000A6C02 /* CreditCardTableViewController.swift in Sources */,
-				6F202C58211998E9000A6C02 /* BorderedCollectionViewCell.swift in Sources */,
 				6FC23C0E218B49E900F5D1EC /* TutorialViewController.swift in Sources */,
-				6F202C59211998E9000A6C02 /* ProductLayoutText.swift in Sources */,
-				6F202C5A211998E9000A6C02 /* CGAffineTransformExtensions.swift in Sources */,
-				6F202C5B211998E9000A6C02 /* UIAlertControllerExtensions.swift in Sources */,
-				6F202C5C211998E9000A6C02 /* ProductLayout.swift in Sources */,
-				6F202C5D211998E9000A6C02 /* PhotobookNavigationBar.swift in Sources */,
 				6F202C5E211998E9000A6C02 /* FacebookClient.swift in Sources */,
-				6F202C5F211998E9000A6C02 /* PhotobookViewController.swift in Sources */,
-				6F202C60211998E9000A6C02 /* OrderSummaryViewController.swift in Sources */,
 				6F202C61211998E9000A6C02 /* StoriesManager.swift in Sources */,
-				6F202C62211998E9000A6C02 /* DecimalExtensions.swift in Sources */,
+				6F6D131B2191B8250026B849 /* UIAlertControllerExtensions.swift in Sources */,
 				6FC23C06218B181600F5D1EC /* GlobalConstants.swift in Sources */,
-				6F202C63211998E9000A6C02 /* AssetSelectorViewController.swift in Sources */,
-				6F202C64211998E9000A6C02 /* DiskUtils.swift in Sources */,
 				6FC23C0C218B49E900F5D1EC /* TutorialPageViewController.swift in Sources */,
-				6F202C65211998E9000A6C02 /* Card.swift in Sources */,
-				6F202C66211998E9000A6C02 /* TextEditingViewController.swift in Sources */,
 				6F202C67211998E9000A6C02 /* AssetPickerCollectionViewCell.swift in Sources */,
 				6FC23BF9218B132300F5D1EC /* BorderedRoundedView.swift in Sources */,
 				6FC23BF7218B132300F5D1EC /* BorderedViewProtocol.swift in Sources */,
-				6F202C68211998E9000A6C02 /* Price.swift in Sources */,
 				6F202C69211998E9000A6C02 /* PhotosAlbumManager.swift in Sources */,
-				6F202C6A211998E9000A6C02 /* ReceiptLineItemTableViewCell.swift in Sources */,
-				6F202C6B211998E9000A6C02 /* PaymentMethodTableViewCell.swift in Sources */,
-				6F202C6D211998E9000A6C02 /* OrderManager.swift in Sources */,
-				6F202C6E211998E9000A6C02 /* DoubleExtensions.swift in Sources */,
-				6F202C6F211998E9000A6C02 /* DeliveryDetailsTableViewController.swift in Sources */,
-				6FB4B370216E264100C4223D /* ActionButtonView.swift in Sources */,
 				6F202C70211998E9000A6C02 /* ViewStorySegue.swift in Sources */,
-				6F202C72211998E9000A6C02 /* URLAsset.swift in Sources */,
-				6F202C73211998E9000A6C02 /* UIScreenExtensions.swift in Sources */,
 				6F202C74211998E9000A6C02 /* InstagramClient.swift in Sources */,
 				6F202C75211998E9000A6C02 /* ErrorUtils.swift in Sources */,
-				6F202C76211998E9000A6C02 /* ImageAsset.swift in Sources */,
-				6F202C77211998E9000A6C02 /* CurrencyRoundingBehavior.swift in Sources */,
 				6F202C78211998E9000A6C02 /* FacebookAlbum.swift in Sources */,
-				6F202C79211998E9000A6C02 /* CountryTableViewCell.swift in Sources */,
 				6F202C7A211998E9000A6C02 /* AssetCollectorCollectionViewCell.swift in Sources */,
 				6F202C7B211998E9000A6C02 /* AlbumCollectionViewCell.swift in Sources */,
-				6F202C7C211998E9000A6C02 /* ShippingMethod.swift in Sources */,
-				6F202C7D211998E9000A6C02 /* Asset.swift in Sources */,
-				6F202C7E211998E9000A6C02 /* ErrorMessage.swift in Sources */,
-				6F202C7F211998E9000A6C02 /* AddPaymentMethodTableViewCell.swift in Sources */,
-				6F202C80211998E9000A6C02 /* StringExtensions.swift in Sources */,
 				6FC23BE1218AF0F000F5D1EC /* UIImageViewExtensions.swift in Sources */,
 				6F202C81211998E9000A6C02 /* FullScreenImageViewController.swift in Sources */,
-				6F202C82211998E9000A6C02 /* CustomAsset.swift in Sources */,
 				6F202C83211998E9000A6C02 /* AlbumManager.swift in Sources */,
-				6F202C84211998E9000A6C02 /* DeliveryDetails.swift in Sources */,
 				6FC23BFF218B167700F5D1EC /* EmptyScreenViewController.swift in Sources */,
-				6F202C85211998E9000A6C02 /* BorderedRoundedView.swift in Sources */,
 				6F202C86211998E9000A6C02 /* InstagramLoginViewController.swift in Sources */,
 				6FC23BF5218B132300F5D1EC /* BorderedCollectionViewCell.swift in Sources */,
-				6F202C87211998E9000A6C02 /* Template.swift in Sources */,
 				6FC23BE4218AF9D500F5D1EC /* Analytics.swift in Sources */,
 				6F202C88211998E9000A6C02 /* IntroViewController.swift in Sources */,
 				6F202C89211998E9000A6C02 /* NSAttributedStringExtensions.swift in Sources */,
-				6F202C8A211998E9000A6C02 /* PaymentMethodsViewController.swift in Sources */,
-				6F08F910216506C600EF9529 /* ProductBackupManager.swift in Sources */,
-				6F202C8B211998E9000A6C02 /* SwiftLuhn.swift in Sources */,
 				6FC23BEB218AFF2400F5D1EC /* PhotobookTabBar.swift in Sources */,
-				6F202C8C211998E9000A6C02 /* KiteAPIClient.swift in Sources */,
-				6F202C8D211998E9000A6C02 /* PhotobookAsset.swift in Sources */,
-				6F202C8E211998E9000A6C02 /* ReceiptHeaderTableViewCell.swift in Sources */,
-				6F202C8F211998E9000A6C02 /* ReceiptProgressTableViewCell.swift in Sources */,
 				6F202C90211998E9000A6C02 /* PhotosAlbum.swift in Sources */,
 				6F202C91211998E9000A6C02 /* AccountClient.swift in Sources */,
-				6F202C92211998E9000A6C02 /* CGSizeExtensions.swift in Sources */,
 				6F202C93211998E9000A6C02 /* ModalAlbumsCollectionViewController.swift in Sources */,
-				6FED4FD0216CC12E00EC40C2 /* ActionsCollectionViewCell.swift in Sources */,
-				6F202C94211998E9000A6C02 /* BasketProductTableViewCell.swift in Sources */,
-				6F202C95211998E9000A6C02 /* MessageBarViewController.swift in Sources */,
-				6F202C96211998E9000A6C02 /* Order.swift in Sources */,
-				6F202C97211998E9000A6C02 /* LineItem.swift in Sources */,
 				6F202C98211998E9000A6C02 /* SelectedAssetsManager.swift in Sources */,
-				6F202C99211998E9000A6C02 /* TextToolBarView.swift in Sources */,
 				6FC23C02218B16FF00F5D1EC /* ErrorMessage.swift in Sources */,
-				6F202C9A211998E9000A6C02 /* PhotosAsset.swift in Sources */,
-				6F202C9B211998E9000A6C02 /* ReceiptViewController.swift in Sources */,
-				6F202C9D211998E9000A6C02 /* SpineFrameView.swift in Sources */,
-				6F202C9E211998E9000A6C02 /* AssetSelectorAssetCollectionViewCell.swift in Sources */,
-				6F202C9F211998E9000A6C02 /* UITextFieldExtensions.swift in Sources */,
-				6F202CA0211998E9000A6C02 /* Cost.swift in Sources */,
-				6F202CA1211998E9000A6C02 /* PageSetupViewController.swift in Sources */,
 				6F202CA2211998E9000A6C02 /* AppDelegate.swift in Sources */,
-				6F202CA3211998E9000A6C02 /* Pig.swift in Sources */,
-				6F202CA4211998E9000A6C02 /* CheckoutViewController.swift in Sources */,
-				6F202CA5211998E9000A6C02 /* CoverFrameView.swift in Sources */,
 				6F202CA6211998E9000A6C02 /* AssetCollectorViewController.swift in Sources */,
-				6F202CA7211998E9000A6C02 /* ReceiptFooterTableViewCell.swift in Sources */,
 				6F202CA8211998E9000A6C02 /* AssetPickerCollectionViewController+Instagram.swift in Sources */,
 				6F202CA9211998E9000A6C02 /* EmptyStoryTableViewCell.swift in Sources */,
 				6FC23BFC218B14B600F5D1EC /* UIViewExtensions.swift in Sources */,
-				6F202CAA211998E9000A6C02 /* ShippingMethodTableViewCell.swift in Sources */,
 				6F202CAC211998E9000A6C02 /* AlbumSearchResultsTableViewCell.swift in Sources */,
-				6F202CAD211998E9000A6C02 /* OrderSummaryDetailTableViewCell.swift in Sources */,
-				6F202CAE211998E9000A6C02 /* UIViewExtensions.swift in Sources */,
-				6F202CAF211998E9000A6C02 /* UpsellOption.swift in Sources */,
-				6F202CB0211998E9000A6C02 /* UIFontExtensions.swift in Sources */,
-				6F202CB1211998E9000A6C02 /* PhotobookCollectionViewCell.swift in Sources */,
-				6F202CB2211998E9000A6C02 /* AssetLoadingManager.swift in Sources */,
 				6F202CB3211998E9000A6C02 /* AlbumSearchResultsTableViewController.swift in Sources */,
-				6F202CB4211998E9000A6C02 /* LayoutBox.swift in Sources */,
 				6F202CB5211998E9000A6C02 /* AlbumsCollectionViewController.swift in Sources */,
-				6F202CB6211998E9000A6C02 /* PhotobookPageView.swift in Sources */,
 				6F202CB7211998E9000A6C02 /* InstagramAlbum.swift in Sources */,
 				6F202CB8211998E9000A6C02 /* Album.swift in Sources */,
-				6F202CBA211998E9000A6C02 /* ColorSelectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2672,10 +2434,10 @@
 			target = 2E870584208E0181004B4B36 /* SDK Demo */;
 			targetProxy = 2E870599208E0183004B4B36 /* PBXContainerItemProxy */;
 		};
-		2E8705AC208E042C004B4B36 /* PBXTargetDependency */ = {
+		6F84BE5E2191BC230082DA5B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2ED14B982063A9CD00ED2E2C /* Photobook */;
-			targetProxy = 2E8705AB208E042C004B4B36 /* PBXContainerItemProxy */;
+			targetProxy = 6F84BE5D2191BC230082DA5B /* PBXContainerItemProxy */;
 		};
 		6FB6706D1FB5BAD40062D630 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2846,7 +2608,7 @@
 		};
 		2E0B588F1FB30F2100F31A9E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0DF76BF596B359D6FC0DC474 /* Pods-Photobook App.debug.xcconfig */;
+			baseConfigurationReference = 5A114C1E7786AD45BDB5F5F8 /* Pods-Photobook App.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2872,7 +2634,7 @@
 		};
 		2E0B58901FB30F2100F31A9E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4B2CC0AAF7A3088876060E07 /* Pods-Photobook App.release.xcconfig */;
+			baseConfigurationReference = 54070B6AAADCB00D4B30983B /* Pods-Photobook App.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -3027,7 +2789,7 @@
 		};
 		2E73DA9120236D47002471F8 /* Debug Test */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 69B62B8C076001BAA40216F0 /* Pods-Photobook App.debug test.xcconfig */;
+			baseConfigurationReference = ECA02D1C68A2E57F2310DB7C /* Pods-Photobook App.debug test.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -3053,7 +2815,7 @@
 		};
 		2E73DA9220236D47002471F8 /* Debug Test */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 509D34875259D1916ED674CB /* Pods-PhotobookTests.debug test.xcconfig */;
+			baseConfigurationReference = 12BCED1095333A8659AC02E8 /* Pods-PhotobookTests.debug test.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -3123,7 +2885,7 @@
 		};
 		2E73DA9420236D51002471F8 /* Release Test */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6A1DA8E9A38D7AFD0E6ADA5C /* Pods-Photobook App.release test.xcconfig */;
+			baseConfigurationReference = AB100DE7580090AAF5E0D33E /* Pods-Photobook App.release test.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -3147,7 +2909,7 @@
 		};
 		2E73DA9520236D51002471F8 /* Release Test */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EE165E68796AB33E673EA271 /* Pods-PhotobookTests.release test.xcconfig */;
+			baseConfigurationReference = C6B6855692D66A02A4A42158 /* Pods-PhotobookTests.release test.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -3165,6 +2927,7 @@
 		};
 		2E87059F208E0183004B4B36 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E227A142AFC5FC6E64B9FB1B /* Pods-SDK Demo.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -3173,19 +2936,20 @@
 				DEVELOPMENT_TEAM = L78L4U72YJ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "SDK Demo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "ly.kite.SDK-Demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		2E8705A0208E0183004B4B36 /* Debug Test */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 49AA8A242F2B70C77CDDD6B3 /* Pods-SDK Demo.debug test.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -3194,19 +2958,20 @@
 				DEVELOPMENT_TEAM = L78L4U72YJ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "SDK Demo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "ly.kite.SDK-Demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = "Debug Test";
 		};
 		2E8705A1208E0183004B4B36 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2EF730E3030AD2017B88037C /* Pods-SDK Demo.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -3215,19 +2980,20 @@
 				DEVELOPMENT_TEAM = L78L4U72YJ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "SDK Demo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "ly.kite.SDK-Demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
 		2E8705A2208E0183004B4B36 /* Release Test */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A84A063C267BD3EE1AA2CFC7 /* Pods-SDK Demo.release test.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -3236,14 +3002,14 @@
 				DEVELOPMENT_TEAM = L78L4U72YJ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "SDK Demo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "ly.kite.SDK-Demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = "Release Test";
 		};
@@ -3327,7 +3093,7 @@
 		};
 		2ED14B9E2063A9CD00ED2E2C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3489AC8167727C8C9D74746D /* Pods-Photobook.debug.xcconfig */;
+			baseConfigurationReference = F0EB568F64DF3286331DE8AE /* Pods-Photobook.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -3359,7 +3125,7 @@
 		};
 		2ED14B9F2063A9CD00ED2E2C /* Debug Test */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 791A084B7DBFE4A0EF1E381B /* Pods-Photobook.debug test.xcconfig */;
+			baseConfigurationReference = B80F3D7B4C71EDF00E4974BF /* Pods-Photobook.debug test.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -3391,7 +3157,7 @@
 		};
 		2ED14BA02063A9CD00ED2E2C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 671A688CCC48FE74472C1470 /* Pods-Photobook.release.xcconfig */;
+			baseConfigurationReference = A555CD7CB5DCC2ACE6BA08B8 /* Pods-Photobook.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -3422,7 +3188,7 @@
 		};
 		2ED14BA12063A9CD00ED2E2C /* Release Test */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DBF41AB42E99CFC7EDCC5743 /* Pods-Photobook.release test.xcconfig */;
+			baseConfigurationReference = 9F9996059845E3FC7B69605D /* Pods-Photobook.release test.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -3537,7 +3303,7 @@
 		};
 		6FB6706E1FB5BAD40062D630 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FF99346143FA805B3676D912 /* Pods-PhotobookTests.debug.xcconfig */;
+			baseConfigurationReference = 49A764DC03F89F378FE02807 /* Pods-PhotobookTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -3555,7 +3321,7 @@
 		};
 		6FB6706F1FB5BAD40062D630 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A9A9A5996008D1B40B2E10F9 /* Pods-PhotobookTests.release.xcconfig */;
+			baseConfigurationReference = F8F01677BE48D13E9A3F5E95 /* Pods-PhotobookTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;

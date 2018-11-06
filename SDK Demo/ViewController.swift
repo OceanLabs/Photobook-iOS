@@ -42,7 +42,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        PhotobookSDK.shared.setEnvironment(environment: .test)
+        PhotobookSDK.shared.environment = .test
         PhotobookSDK.shared.kiteApiKey = "78b798ff366815c833dfa848654aba43b71a883a"
     }
 

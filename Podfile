@@ -12,6 +12,9 @@ pod 'FBSDKLoginKit'
 pod 'Analytics', '~> 3.0'
 end
 
+target 'SDK Demo' do
+end
+
 target 'Photobook' do
 pod 'Stripe'
 pod 'Fabric'
