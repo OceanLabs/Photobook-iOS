@@ -231,25 +231,25 @@ class PhotosAssetTests: XCTestCase {
     }
     
     func testPhotosAssetsFromAssets_returnsAssets() {
-        var assets = [Asset]()
+        var assets = [PhotobookAsset]()
         for _ in 0 ..< 10 {
-            assets.append(PhotosAssetMock())
+            assets.append(PhotobookAsset(asset: PhotosAssetMock())!)
         }
-        let resultingAssets = PhotosAsset.photosAssets(from: assets)
+        let resultingAssets = PhotosAsset.phAssets(from: assets)
         XCTAssertEqual(resultingAssets.count, assets.count)
     }
     
     func testPhotosAssetsFromAssets_shouldFilterOutNonPhotosAssets() {
-        var assets = [Asset]()
+        var assets = [PhotobookAsset]()
         for i in 0 ..< 10 {
             if i % 2 == 0 {
-                assets.append(PhotosAssetMock())
+                assets.append(PhotobookAsset(asset: PhotosAssetMock())!)
             } else {
                 let urlAsset = URLAsset(URL(string: testUrlString)!, size: testSize)
-                assets.append(urlAsset)
+                assets.append(PhotobookAsset(asset: urlAsset)!)
             }
         }
-        let resultingAssets = PhotosAsset.photosAssets(from: assets)
+        let resultingAssets = PhotosAsset.phAssets(from: assets)
         XCTAssertEqual(resultingAssets.count, assets.count / 2)
     }
     

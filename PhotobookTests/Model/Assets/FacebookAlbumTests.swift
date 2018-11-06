@@ -28,6 +28,7 @@
 //
 
 import XCTest
+@testable import Photobook_App
 @testable import Photobook
 
 class ErrorMock: LocalizedError {
@@ -125,4 +126,39 @@ class FacebookAlbumTests: XCTestCase {
         XCTAssertFalse(facebookAlbum.hasMoreAssetsToLoad)
     }
 
+    func testFacebookAlbum_canBeArchivedAndUnarchived() {
+        guard let data = try? PropertyListEncoder().encode(facebookAlbum) else {
+            XCTFail("Should encode the FacebookAlbum data")
+            return
+        }
+        guard archiveObject(data, to: "FacebookAlbumTests.dat") else {
+            XCTFail("Should save the FacebookAlbum data to disk")
+            return
+        }
+        guard let unarchivedData = unarchiveObject(from: "FacebookAlbumTests.dat") as? Data else {
+            XCTFail("Should unarchive the FacebookAlbum as Data")
+            return
+        }
+        guard let unarchivedFacebookAlbum = try? PropertyListDecoder().decode(FacebookAlbum.self, from: unarchivedData) else {
+            XCTFail("Should decode the PhotosAsset")
+            return
+        }
+        
+        XCTAssertEqualOptional(unarchivedFacebookAlbum.identifier, facebookAlbum.identifier)
+        XCTAssertEqualOptional(unarchivedFacebookAlbum.localizedName, facebookAlbum.localizedName)
+        XCTAssertEqualOptional(unarchivedFacebookAlbum.numberOfAssets, facebookAlbum.numberOfAssets)
+        XCTAssertEqualOptional(unarchivedFacebookAlbum.coverPhotoUrl, facebookAlbum.coverPhotoUrl)
+    }
+
+    func testCoverAsset() {
+        facebookAlbum.coverAsset { (photobookAsset) in
+            guard let urlAsset = photobookAsset?.asset as? URLAsset else {
+                XCTFail()
+                return
+            }
+            XCTAssertEqual(urlAsset.identifier, testUrl.absoluteString)
+            XCTAssertEqual(urlAsset.albumIdentifier, self.facebookAlbum.identifier)
+            self.XCTAssertEqualOptional(urlAsset.images.first?.url, testUrl)
+        }
+    }
 }

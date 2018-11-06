@@ -54,12 +54,29 @@ class CountryTests: XCTestCase {
         XCTAssert(country.currencyCode == unarchivedCountry.currencyCode, "Unarchived country did not have the correct currency")
     }
     
-    func testCountrySearchByCodeAlpha2() {
-        XCTAssert(Country.countryFor(code: "GR")?.name == "Greece", "Country search did not return the correct result")
+    func testCountrySearchByCode_shouldReturnCountry() {
+        XCTAssertEqualOptional(Country.countryFor(code: "GR")?.name, "Greece", "Country search did not return the correct result")
     }
     
-    func testCountrySearchByCodeAlpha3() {
-        XCTAssert(Country.countryFor(name: "Greece")?.codeAlpha3 == "GRC", "Country search did not return the correct result")
+    func testCountrySearchByName_shouldReturnCountry() {
+        XCTAssertEqualOptional(Country.countryFor(name: "Greece")?.codeAlpha3, "GRC", "Country search did not return the correct result")
     }
     
+    func testCountrySearchByCode_shouldReturnNil() {
+        XCTAssertNil(Country.countryFor(code: "CLND"), "Should be nil for a country that is not in the list")
+    }
+
+    func testCountrySearchByName_shouldReturnNil() {
+        XCTAssertNil(Country.countryFor(name: "Clownland"), "Should be nil for a country that is not in the list")
+    }
+    
+    func testCopy() {
+        let country = Country(name: "Westeros", codeAlpha2: "RR", codeAlpha3: "GOT", currencyCode: "Silver")
+        let myCopy = country.copy() as! Country
+        
+        XCTAssertEqual(country.name, myCopy.name)
+        XCTAssertEqual(country.codeAlpha2, myCopy.codeAlpha2)
+        XCTAssertEqual(country.codeAlpha3, myCopy.codeAlpha3)
+        XCTAssertEqual(country.currencyCode, myCopy.currencyCode)
+    }
 }

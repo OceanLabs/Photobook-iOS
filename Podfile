@@ -24,4 +24,5 @@ pod 'PayPal-iOS-Dynamic-Loader'
 end
 
 target 'PhotobookTests' do
+pod 'OAuthSwift', '~> 1.2.0'
 end

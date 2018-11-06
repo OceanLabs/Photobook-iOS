@@ -43,6 +43,11 @@ class PhotosAssetMock: PhotosAsset {
     }
     override var size: CGSize { return stubSize }
     
+    var imageStub: UIImage?
+    var imageDataStub: Data?
+    var imageExtension: AssetDataFileExtension = .jpg
+    var error: Error?
+    
     init(_ asset: PHAsset = PHAsset(), size: CGSize? = nil) {
         super.init(asset, albumIdentifier: "album")
         if let size = size {
@@ -67,6 +72,22 @@ class PhotosAssetMock: PhotosAsset {
         
         identifierStub = try values.decode(String.self, forKey: .identifierStub)
         stubSize = try values.decode(CGSize.self, forKey: .stubSize)
+    }
+    
+    override func image(size: CGSize, loadThumbnailFirst: Bool = false, progressHandler: ((Int64, Int64) -> Void)? = nil, completionHandler: @escaping (UIImage?, Error?) -> Void) {
+        if imageStub != nil || error != nil {
+            completionHandler(imageStub, error)
+            return
+        }
+        super.image(size: size, loadThumbnailFirst: loadThumbnailFirst, progressHandler: progressHandler, completionHandler: completionHandler)
+    }
+    
+    override func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension, Error?) -> Void) {
+        if imageDataStub != nil || error != nil {
+            completionHandler(imageDataStub, imageExtension, error)
+            return
+        }
+        super.imageData(progressHandler: progressHandler, completionHandler: completionHandler)
     }
 }
 
