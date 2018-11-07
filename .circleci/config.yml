@@ -28,11 +28,11 @@ jobs:
 
       # Build the SDK demo app and run UI tests
       - run:
-	  name: Build and run tests
+          name: Build and run UI tests
           command: fastlane scan
           environment:
       	    SCAN_DEVICE: iPhone 8
-	    SCAN_SCHEME: SDK Demo
+            SCAN_SCHEME: SDK Demo
           
 
       # Collect XML test results data to show in the UI,
