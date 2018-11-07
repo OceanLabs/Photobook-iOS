@@ -31,7 +31,7 @@ jobs:
           name: Build and run UI tests
           command: fastlane scan
           environment:
-      	    SCAN_DEVICE: iPhone 8
+            SCAN_DEVICE: iPhone 8
             SCAN_SCHEME: SDK Demo
           
 
