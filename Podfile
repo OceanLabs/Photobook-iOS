@@ -29,3 +29,12 @@ end
 target 'PhotobookTests' do
 pod 'OAuthSwift', '~> 1.2.0'
 end
+
+# Revert build for active architecture being set to YES by installation
+post_install do |installer_representation|
+    installer_representation.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            config.build_settings['ONLY_ACTIVE_ARCH'] = 'NO'
+        end
+    end
+end
