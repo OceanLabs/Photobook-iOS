@@ -116,14 +116,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         Analytics.shared.trackScreenViewed(.photobook)
         setup()
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
         
-        // FIXME
-        //(tabBarController?.tabBar as? PhotobookTabBar)?.isBackgroundHidden = true
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
