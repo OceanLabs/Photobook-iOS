@@ -131,7 +131,7 @@ class OrderSummaryViewController: UIViewController {
         }
         
         let controllerToDismiss = isPresentedModally() ? navigationController! : self
-        completionClosure?(controllerToDismiss, false)
+        completionClosure?(controllerToDismiss, true)
     }
     
     deinit {

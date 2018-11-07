@@ -194,6 +194,14 @@ class CheckoutViewController: UIViewController {
         payButton.titleLabel?.sizeToFit()
     }
     
+    private func showEmptyScreen() {
+        let message = NSLocalizedString("Basket/EmptyBasketTitle", value: "Your basket is empty", comment: "Title shown to the user when the basket is empty")
+        let buttonTitle = NSLocalizedString("Basket/EmptyBasketCTA", value: "Continue Shopping", comment: "Title for the button shown when basket is empty")
+        emptyScreenViewController.show(message: message, title: nil, image: nil, buttonTitle: buttonTitle, buttonAction: { [weak welf = self] in
+            welf?.tappedCancel()
+        })
+    }
+    
     private func setupApplePayButton() {
         let applePayButton = PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .black)
         applePayButton.translatesAutoresizingMaskIntoConstraints = false
@@ -230,6 +238,11 @@ class CheckoutViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        if order.products.isEmpty {
+            showEmptyScreen()
+            return
+        }
+
         updateViews()
         if !order.hasValidCachedCost {
             refresh(showProgress: emptyScreenViewController.view.superview == nil)

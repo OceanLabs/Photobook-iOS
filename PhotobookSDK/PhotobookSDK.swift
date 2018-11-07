@@ -228,7 +228,6 @@ struct AssetsNotificationName {
     ///   - dismissClosure: Closure called when the user wants to dismiss the receipt. Returns the view controller to be dismissed and whether the process was successful or not.
     /// - Returns: A checkout ViewController
     @objc public func checkoutViewController(embedInNavigation: Bool = false, dismissClosure: ((_ source: UIViewController, _ success: Bool) -> ())? = nil) -> UIViewController? {
-        guard OrderManager.shared.basketOrder.products.count > 0 else { return nil }
         
         guard KiteAPIClient.shared.apiKey != nil else {
             fatalError("Photobook SDK: Receipt View Controller not initialised because the Kite API key was not set. You can get this from the Kite Dashboard.")

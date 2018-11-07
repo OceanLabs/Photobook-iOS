@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2CE12A09C74DF5AB5E236DB0 /* Pods_Photobook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FB181F86617012F432CB05 /* Pods_Photobook.framework */; };
 		2E02B211208F26B80083DDAB /* XCUIElementExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E02B210208F26B80083DDAB /* XCUIElementExtensions.swift */; };
 		2E02B213208F4D830083DDAB /* Automation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E02B212208F4D830083DDAB /* Automation.swift */; };
 		2E02B215208F5D2F0083DDAB /* XCTestCaseExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E02B214208F5D2F0083DDAB /* XCTestCaseExtensions.swift */; };
@@ -166,7 +167,8 @@
 		2EE4BE7420B81F8100A54A77 /* PhotobookPreviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE4BE7320B81F8100A54A77 /* PhotobookPreviewTests.swift */; };
 		2EEC03D3209212B3008725B7 /* OrderSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEC03D2209212B3008725B7 /* OrderSummaryTests.swift */; };
 		2EF312B720591EEE001BE3CF /* IntroDismissSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EF312B620591EEE001BE3CF /* IntroDismissSegue.swift */; };
-		2F1A22546614AD04E702488C /* Pods_Photobook_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 726B03FFDEC4F9D91C810402 /* Pods_Photobook_App.framework */; };
+		3565FCEC1C326BAD05F643B6 /* Pods_Photobook_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1525F61AAEE6A164D123AB /* Pods_Photobook_App.framework */; };
+		50BBFDE3BA5DE043B6D8BDAE /* Pods_SDK_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC5688D75CF2ADEF29BEB88E /* Pods_SDK_Demo.framework */; };
 		6F048DA721786F9B0093E920 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D3340B2029BF80003D4338 /* JSON.swift */; };
 		6F096B1D219067E4004DA16F /* AssetDataSourceBackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F096B1C219067E4004DA16F /* AssetDataSourceBackupManager.swift */; };
 		6F096B1E219067E4004DA16F /* AssetDataSourceBackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F096B1C219067E4004DA16F /* AssetDataSourceBackupManager.swift */; };
@@ -341,8 +343,6 @@
 		6FEAC29421834B9700ECE61F /* CGFloatExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEAC29321834B9700ECE61F /* CGFloatExtensionsTests.swift */; };
 		6FED4FCF216CC12400EC40C2 /* ActionsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FED4FCD216CC12400EC40C2 /* ActionsCollectionViewCell.swift */; };
 		6FEF3EAB208F48EB00595A5B /* PhotobookProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEF3EAA208F48EB00595A5B /* PhotobookProductTests.swift */; };
-		7DDA05D55D207C6B8A36C9EA /* Pods_PhotobookTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A400D759999F769E642D7D3 /* Pods_PhotobookTests.framework */; };
-		9202A4056F77B59C18D76A85 /* Pods_SDK_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47FDE187CBEAB779888C887E /* Pods_SDK_Demo.framework */; };
 		B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */; };
 		B9ACCF6020DBF79A004EA2F5 /* Price.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9216FFB20C6C34F003671B0 /* Price.swift */; };
 		B9ACCF6120DBF7A3004EA2F5 /* ShippingMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = B937E94E20CFD4B300BC21FD /* ShippingMethod.swift */; };
@@ -351,7 +351,7 @@
 		B9BE9F941FBF33320002C459 /* AssetCollectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BE9F931FBF33320002C459 /* AssetCollectorCollectionViewCell.swift */; };
 		B9D33410202C7B13003D4338 /* OrderSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D3340F202C7B13003D4338 /* OrderSummaryTests.swift */; };
 		B9FA5302205FC3DC00669758 /* PhotobookManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FA5301205FC3DC00669758 /* PhotobookManager.swift */; };
-		F01858EEB2C1E4B48922DF58 /* Pods_Photobook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2100CC3E2B4F21157280947 /* Pods_Photobook.framework */; };
+		C470E892253461CD9AE4792E /* Pods_PhotobookTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B0FB3B4314C5915DC93BD0C /* Pods_PhotobookTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -418,7 +418,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		12BCED1095333A8659AC02E8 /* Pods-PhotobookTests.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.debug test.xcconfig"; sourceTree = "<group>"; };
+		0231F05EEF87815032496D51 /* Pods-Photobook.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.debug test.xcconfig"; sourceTree = "<group>"; };
+		167811CB1D397C74A26597AD /* Pods-Photobook App.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.debug test.xcconfig"; sourceTree = "<group>"; };
+		19C044D105CFA93E38DDA041 /* Pods-PhotobookTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.release.xcconfig"; sourceTree = "<group>"; };
 		2E02B210208F26B80083DDAB /* XCUIElementExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCUIElementExtensions.swift; sourceTree = "<group>"; };
 		2E02B212208F4D830083DDAB /* Automation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Automation.swift; sourceTree = "<group>"; };
 		2E02B214208F5D2F0083DDAB /* XCTestCaseExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestCaseExtensions.swift; sourceTree = "<group>"; };
@@ -559,12 +561,12 @@
 		2EEC03D02091C8BF008725B7 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EEC03D2209212B3008725B7 /* OrderSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryTests.swift; sourceTree = "<group>"; };
 		2EF312B620591EEE001BE3CF /* IntroDismissSegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroDismissSegue.swift; sourceTree = "<group>"; };
-		2EF730E3030AD2017B88037C /* Pods-SDK Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SDK Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-SDK Demo/Pods-SDK Demo.release.xcconfig"; sourceTree = "<group>"; };
-		47FDE187CBEAB779888C887E /* Pods_SDK_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SDK_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		49A764DC03F89F378FE02807 /* Pods-PhotobookTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.debug.xcconfig"; sourceTree = "<group>"; };
-		49AA8A242F2B70C77CDDD6B3 /* Pods-SDK Demo.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SDK Demo.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-SDK Demo/Pods-SDK Demo.debug test.xcconfig"; sourceTree = "<group>"; };
-		54070B6AAADCB00D4B30983B /* Pods-Photobook App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.release.xcconfig"; sourceTree = "<group>"; };
-		5A114C1E7786AD45BDB5F5F8 /* Pods-Photobook App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.debug.xcconfig"; sourceTree = "<group>"; };
+		301777CE1C4F333AA4920734 /* Pods-Photobook App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.release.xcconfig"; sourceTree = "<group>"; };
+		3779249CAECEAE2B105E60BA /* Pods-Photobook.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.release.xcconfig"; sourceTree = "<group>"; };
+		38FB181F86617012F432CB05 /* Pods_Photobook.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Photobook.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B0FB3B4314C5915DC93BD0C /* Pods_PhotobookTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PhotobookTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		40460F82C6DBF8BA9DA93709 /* Pods-SDK Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SDK Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-SDK Demo/Pods-SDK Demo.release.xcconfig"; sourceTree = "<group>"; };
+		599DCAC4AAC65A41FF0985AC /* Pods-PhotobookTests.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.release test.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.release test.xcconfig"; sourceTree = "<group>"; };
 		6F08F90D2165051500EF9529 /* ProductBackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductBackupManager.swift; sourceTree = "<group>"; };
 		6F096B1C219067E4004DA16F /* AssetDataSourceBackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDataSourceBackupManager.swift; sourceTree = "<group>"; };
 		6F096B1F2190873B004DA16F /* UIAlertControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExtensions.swift; sourceTree = "<group>"; };
@@ -699,14 +701,7 @@
 		6FED4FCD216CC12400EC40C2 /* ActionsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionsCollectionViewCell.swift; sourceTree = "<group>"; };
 		6FEF3EAA208F48EB00595A5B /* PhotobookProductTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookProductTests.swift; sourceTree = "<group>"; };
 		6FFE21CA202CA7F9004EC0EA /* SpineTextEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpineTextEditingViewController.swift; sourceTree = "<group>"; };
-		726B03FFDEC4F9D91C810402 /* Pods_Photobook_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Photobook_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7A400D759999F769E642D7D3 /* Pods_PhotobookTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PhotobookTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9F9996059845E3FC7B69605D /* Pods-Photobook.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.release test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.release test.xcconfig"; sourceTree = "<group>"; };
-		A555CD7CB5DCC2ACE6BA08B8 /* Pods-Photobook.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.release.xcconfig"; sourceTree = "<group>"; };
-		A84A063C267BD3EE1AA2CFC7 /* Pods-SDK Demo.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SDK Demo.release test.xcconfig"; path = "Pods/Target Support Files/Pods-SDK Demo/Pods-SDK Demo.release test.xcconfig"; sourceTree = "<group>"; };
-		AB100DE7580090AAF5E0D33E /* Pods-Photobook App.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.release test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.release test.xcconfig"; sourceTree = "<group>"; };
-		B2100CC3E2B4F21157280947 /* Pods_Photobook.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Photobook.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		B80F3D7B4C71EDF00E4974BF /* Pods-Photobook.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.debug test.xcconfig"; sourceTree = "<group>"; };
+		9BC4E23EC9FB91F30E3498D9 /* Pods-Photobook.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.debug.xcconfig"; sourceTree = "<group>"; };
 		B90EB85D203701CD0005D91C /* AmountPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AmountPickerViewController.swift; sourceTree = "<group>"; };
 		B90F287E1FFF8D1A00FF3D15 /* OrderSummaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryViewController.swift; sourceTree = "<group>"; };
 		B90F28812003B7A300FF3D15 /* OrderSummaryUpsellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummaryUpsellTableViewCell.swift; sourceTree = "<group>"; };
@@ -733,11 +728,16 @@
 		B9FA5301205FC3DC00669758 /* PhotobookManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookManager.swift; sourceTree = "<group>"; };
 		B9FA530B2063F3B200669758 /* ReceiptViewControllerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptViewControllerState.swift; sourceTree = "<group>"; };
 		B9FD10B02077C9ED000A45E4 /* UIColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtensions.swift; sourceTree = "<group>"; };
-		C6B6855692D66A02A4A42158 /* Pods-PhotobookTests.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.release test.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.release test.xcconfig"; sourceTree = "<group>"; };
-		E227A142AFC5FC6E64B9FB1B /* Pods-SDK Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SDK Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SDK Demo/Pods-SDK Demo.debug.xcconfig"; sourceTree = "<group>"; };
-		ECA02D1C68A2E57F2310DB7C /* Pods-Photobook App.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.debug test.xcconfig"; sourceTree = "<group>"; };
-		F0EB568F64DF3286331DE8AE /* Pods-Photobook.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.debug.xcconfig"; sourceTree = "<group>"; };
-		F8F01677BE48D13E9A3F5E95 /* Pods-PhotobookTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.release.xcconfig"; sourceTree = "<group>"; };
+		BB0A1245C8D3C589B0B7D953 /* Pods-Photobook.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.release test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.release test.xcconfig"; sourceTree = "<group>"; };
+		BC5688D75CF2ADEF29BEB88E /* Pods_SDK_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SDK_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF1525F61AAEE6A164D123AB /* Pods_Photobook_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Photobook_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA68CB290725D447C584048F /* Pods-SDK Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SDK Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SDK Demo/Pods-SDK Demo.debug.xcconfig"; sourceTree = "<group>"; };
+		CE4E54E481218F4B6D3496FC /* Pods-SDK Demo.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SDK Demo.release test.xcconfig"; path = "Pods/Target Support Files/Pods-SDK Demo/Pods-SDK Demo.release test.xcconfig"; sourceTree = "<group>"; };
+		D7225AE97DE3ABD25F71B79D /* Pods-Photobook App.release test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.release test.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.release test.xcconfig"; sourceTree = "<group>"; };
+		DA69B1977E9C3191102AC69F /* Pods-Photobook App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook App.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App.debug.xcconfig"; sourceTree = "<group>"; };
+		F3C3073ADEFE1D0B6BC65274 /* Pods-PhotobookTests.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.debug test.xcconfig"; sourceTree = "<group>"; };
+		F3E7267647471B307EEDF21D /* Pods-SDK Demo.debug test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SDK Demo.debug test.xcconfig"; path = "Pods/Target Support Files/Pods-SDK Demo/Pods-SDK Demo.debug test.xcconfig"; sourceTree = "<group>"; };
+		F6E8E6D9DE04F59348526C95 /* Pods-PhotobookTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotobookTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -746,7 +746,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FC23C2C218C51EA00F5D1EC /* Photobook.framework in Frameworks */,
-				2F1A22546614AD04E702488C /* Pods_Photobook_App.framework in Frameworks */,
+				3565FCEC1C326BAD05F643B6 /* Pods_Photobook_App.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -762,7 +762,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F84BE5B2191BC230082DA5B /* Photobook.framework in Frameworks */,
-				9202A4056F77B59C18D76A85 /* Pods_SDK_Demo.framework in Frameworks */,
+				50BBFDE3BA5DE043B6D8BDAE /* Pods_SDK_Demo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -777,7 +777,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F01858EEB2C1E4B48922DF58 /* Pods_Photobook.framework in Frameworks */,
+				2CE12A09C74DF5AB5E236DB0 /* Pods_Photobook.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -792,7 +792,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7DDA05D55D207C6B8A36C9EA /* Pods_PhotobookTests.framework in Frameworks */,
+				C470E892253461CD9AE4792E /* Pods_PhotobookTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -821,7 +821,7 @@
 				2E56434720A97CF900ECC98F /* HelperPhotobookUITests */,
 				2E0B587D1FB30F2100F31A9E /* Products */,
 				3BAD030253756D88DE562AFF /* Frameworks */,
-				7006629E943478B6474EC422 /* Pods */,
+				EB31E3BFBC70726D3868D074 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1188,10 +1188,10 @@
 				2ED14C392063ABB700ED2E2C /* PayPalMobileSDK.framework */,
 				2ED14C332063ABB700ED2E2C /* SDWebImage.framework */,
 				2ED14C3B2063ABB700ED2E2C /* Stripe.framework */,
-				B2100CC3E2B4F21157280947 /* Pods_Photobook.framework */,
-				726B03FFDEC4F9D91C810402 /* Pods_Photobook_App.framework */,
-				7A400D759999F769E642D7D3 /* Pods_PhotobookTests.framework */,
-				47FDE187CBEAB779888C887E /* Pods_SDK_Demo.framework */,
+				38FB181F86617012F432CB05 /* Pods_Photobook.framework */,
+				BF1525F61AAEE6A164D123AB /* Pods_Photobook_App.framework */,
+				3B0FB3B4314C5915DC93BD0C /* Pods_PhotobookTests.framework */,
+				BC5688D75CF2ADEF29BEB88E /* Pods_SDK_Demo.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1511,29 +1511,6 @@
 			path = "Page Editing";
 			sourceTree = "<group>";
 		};
-		7006629E943478B6474EC422 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				F0EB568F64DF3286331DE8AE /* Pods-Photobook.debug.xcconfig */,
-				B80F3D7B4C71EDF00E4974BF /* Pods-Photobook.debug test.xcconfig */,
-				A555CD7CB5DCC2ACE6BA08B8 /* Pods-Photobook.release.xcconfig */,
-				9F9996059845E3FC7B69605D /* Pods-Photobook.release test.xcconfig */,
-				5A114C1E7786AD45BDB5F5F8 /* Pods-Photobook App.debug.xcconfig */,
-				ECA02D1C68A2E57F2310DB7C /* Pods-Photobook App.debug test.xcconfig */,
-				54070B6AAADCB00D4B30983B /* Pods-Photobook App.release.xcconfig */,
-				AB100DE7580090AAF5E0D33E /* Pods-Photobook App.release test.xcconfig */,
-				49A764DC03F89F378FE02807 /* Pods-PhotobookTests.debug.xcconfig */,
-				12BCED1095333A8659AC02E8 /* Pods-PhotobookTests.debug test.xcconfig */,
-				F8F01677BE48D13E9A3F5E95 /* Pods-PhotobookTests.release.xcconfig */,
-				C6B6855692D66A02A4A42158 /* Pods-PhotobookTests.release test.xcconfig */,
-				E227A142AFC5FC6E64B9FB1B /* Pods-SDK Demo.debug.xcconfig */,
-				49AA8A242F2B70C77CDDD6B3 /* Pods-SDK Demo.debug test.xcconfig */,
-				2EF730E3030AD2017B88037C /* Pods-SDK Demo.release.xcconfig */,
-				A84A063C267BD3EE1AA2CFC7 /* Pods-SDK Demo.release test.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		B90F28802003B74A00FF3D15 /* OrderSummary */ = {
 			isa = PBXGroup;
 			children = (
@@ -1573,6 +1550,29 @@
 			path = Receipt;
 			sourceTree = "<group>";
 		};
+		EB31E3BFBC70726D3868D074 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9BC4E23EC9FB91F30E3498D9 /* Pods-Photobook.debug.xcconfig */,
+				0231F05EEF87815032496D51 /* Pods-Photobook.debug test.xcconfig */,
+				3779249CAECEAE2B105E60BA /* Pods-Photobook.release.xcconfig */,
+				BB0A1245C8D3C589B0B7D953 /* Pods-Photobook.release test.xcconfig */,
+				DA69B1977E9C3191102AC69F /* Pods-Photobook App.debug.xcconfig */,
+				167811CB1D397C74A26597AD /* Pods-Photobook App.debug test.xcconfig */,
+				301777CE1C4F333AA4920734 /* Pods-Photobook App.release.xcconfig */,
+				D7225AE97DE3ABD25F71B79D /* Pods-Photobook App.release test.xcconfig */,
+				F6E8E6D9DE04F59348526C95 /* Pods-PhotobookTests.debug.xcconfig */,
+				F3C3073ADEFE1D0B6BC65274 /* Pods-PhotobookTests.debug test.xcconfig */,
+				19C044D105CFA93E38DDA041 /* Pods-PhotobookTests.release.xcconfig */,
+				599DCAC4AAC65A41FF0985AC /* Pods-PhotobookTests.release test.xcconfig */,
+				CA68CB290725D447C584048F /* Pods-SDK Demo.debug.xcconfig */,
+				F3E7267647471B307EEDF21D /* Pods-SDK Demo.debug test.xcconfig */,
+				40460F82C6DBF8BA9DA93709 /* Pods-SDK Demo.release.xcconfig */,
+				CE4E54E481218F4B6D3496FC /* Pods-SDK Demo.release test.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1591,13 +1591,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2E0B588E1FB30F2100F31A9E /* Build configuration list for PBXNativeTarget "Photobook App" */;
 			buildPhases = (
-				930FE0F570601FC7CF2DB221 /* [CP] Check Pods Manifest.lock */,
+				31F3720B224E26CD0BECA110 /* [CP] Check Pods Manifest.lock */,
 				2E0B58781FB30F2100F31A9E /* Sources */,
 				2E0B58791FB30F2100F31A9E /* Frameworks */,
 				2E0B587A1FB30F2100F31A9E /* Resources */,
 				2E2527302015F3A5004C12AF /* ShellScript */,
 				6FC23C30218C51EA00F5D1EC /* Embed Frameworks */,
-				9107F4B51ADAA3E5231452DC /* [CP] Embed Pods Frameworks */,
+				E585671A655BD8AF0BC86407 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1631,12 +1631,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2E8705A7208E0183004B4B36 /* Build configuration list for PBXNativeTarget "SDK Demo" */;
 			buildPhases = (
-				9591C8D5A4EE555F418AAB71 /* [CP] Check Pods Manifest.lock */,
+				050112DBE26B33B15BA0DEB2 /* [CP] Check Pods Manifest.lock */,
 				2E870581208E0181004B4B36 /* Sources */,
 				2E870582208E0181004B4B36 /* Frameworks */,
 				2E870583208E0181004B4B36 /* Resources */,
 				6F84BE5F2191BC230082DA5B /* Embed Frameworks */,
-				11CE698DFDB65DA34703B85A /* [CP] Embed Pods Frameworks */,
+				9D8AC8478FDB5DB4383589C0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1670,7 +1670,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2ED14BA22063A9CD00ED2E2C /* Build configuration list for PBXNativeTarget "Photobook" */;
 			buildPhases = (
-				04DF2A44C2FDFCD9ADB20C8D /* [CP] Check Pods Manifest.lock */,
+				2E16CAA264A6D55D94D3EAC0 /* [CP] Check Pods Manifest.lock */,
 				2ED14B942063A9CD00ED2E2C /* Sources */,
 				2ED14B952063A9CD00ED2E2C /* Frameworks */,
 				2ED14B962063A9CD00ED2E2C /* Headers */,
@@ -1707,11 +1707,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6FB670701FB5BAD40062D630 /* Build configuration list for PBXNativeTarget "PhotobookTests" */;
 			buildPhases = (
-				CCD87C8B54ECB59B43671458 /* [CP] Check Pods Manifest.lock */,
+				EFC75E5765F3F3670D9A07AB /* [CP] Check Pods Manifest.lock */,
 				6FB670631FB5BAD40062D630 /* Sources */,
 				6FB670641FB5BAD40062D630 /* Frameworks */,
 				6FB670651FB5BAD40062D630 /* Resources */,
-				BB6460A1D08021C609316043 /* [CP] Embed Pods Frameworks */,
+				3799D81E0AA287B1B4E0F7A5 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1885,7 +1885,25 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		04DF2A44C2FDFCD9ADB20C8D /* [CP] Check Pods Manifest.lock */ = {
+		050112DBE26B33B15BA0DEB2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SDK Demo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2E16CAA264A6D55D94D3EAC0 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1903,7 +1921,69 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		11CE698DFDB65DA34703B85A /* [CP] Embed Pods Frameworks */ = {
+		2E2527302015F3A5004C12AF /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" ebb34c1747d3ac14c598164178b666e2b9363b7f c3688b33fe4fc3d7339ad1c284d6834ee293e9f2e06bcd37a56b75e2333ca818\n";
+		};
+		31F3720B224E26CD0BECA110 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Photobook App-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3799D81E0AA287B1B4E0F7A5 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/OAuthSwift/OAuthSwift.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OAuthSwift.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6F202CC9211998E9000A6C02 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" ebb34c1747d3ac14c598164178b666e2b9363b7f c3688b33fe4fc3d7339ad1c284d6834ee293e9f2e06bcd37a56b75e2333ca818";
+		};
+		9D8AC8478FDB5DB4383589C0 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1929,33 +2009,7 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SDK Demo/Pods-SDK Demo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		2E2527302015F3A5004C12AF /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\" ebb34c1747d3ac14c598164178b666e2b9363b7f c3688b33fe4fc3d7339ad1c284d6834ee293e9f2e06bcd37a56b75e2333ca818\n";
-		};
-		6F202CC9211998E9000A6C02 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\" ebb34c1747d3ac14c598164178b666e2b9363b7f c3688b33fe4fc3d7339ad1c284d6834ee293e9f2e06bcd37a56b75e2333ca818";
-		};
-		9107F4B51ADAA3E5231452DC /* [CP] Embed Pods Frameworks */ = {
+		E585671A655BD8AF0BC86407 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1989,61 +2043,7 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		930FE0F570601FC7CF2DB221 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Photobook App-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9591C8D5A4EE555F418AAB71 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-SDK Demo-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		BB6460A1D08021C609316043 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/OAuthSwift/OAuthSwift.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OAuthSwift.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		CCD87C8B54ECB59B43671458 /* [CP] Check Pods Manifest.lock */ = {
+		EFC75E5765F3F3670D9A07AB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2608,7 +2608,7 @@
 		};
 		2E0B588F1FB30F2100F31A9E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5A114C1E7786AD45BDB5F5F8 /* Pods-Photobook App.debug.xcconfig */;
+			baseConfigurationReference = DA69B1977E9C3191102AC69F /* Pods-Photobook App.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2634,7 +2634,7 @@
 		};
 		2E0B58901FB30F2100F31A9E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 54070B6AAADCB00D4B30983B /* Pods-Photobook App.release.xcconfig */;
+			baseConfigurationReference = 301777CE1C4F333AA4920734 /* Pods-Photobook App.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2789,7 +2789,7 @@
 		};
 		2E73DA9120236D47002471F8 /* Debug Test */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = ECA02D1C68A2E57F2310DB7C /* Pods-Photobook App.debug test.xcconfig */;
+			baseConfigurationReference = 167811CB1D397C74A26597AD /* Pods-Photobook App.debug test.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2815,7 +2815,7 @@
 		};
 		2E73DA9220236D47002471F8 /* Debug Test */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 12BCED1095333A8659AC02E8 /* Pods-PhotobookTests.debug test.xcconfig */;
+			baseConfigurationReference = F3C3073ADEFE1D0B6BC65274 /* Pods-PhotobookTests.debug test.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -2885,7 +2885,7 @@
 		};
 		2E73DA9420236D51002471F8 /* Release Test */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AB100DE7580090AAF5E0D33E /* Pods-Photobook App.release test.xcconfig */;
+			baseConfigurationReference = D7225AE97DE3ABD25F71B79D /* Pods-Photobook App.release test.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2909,7 +2909,7 @@
 		};
 		2E73DA9520236D51002471F8 /* Release Test */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C6B6855692D66A02A4A42158 /* Pods-PhotobookTests.release test.xcconfig */;
+			baseConfigurationReference = 599DCAC4AAC65A41FF0985AC /* Pods-PhotobookTests.release test.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -2927,7 +2927,7 @@
 		};
 		2E87059F208E0183004B4B36 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E227A142AFC5FC6E64B9FB1B /* Pods-SDK Demo.debug.xcconfig */;
+			baseConfigurationReference = CA68CB290725D447C584048F /* Pods-SDK Demo.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2949,7 +2949,7 @@
 		};
 		2E8705A0208E0183004B4B36 /* Debug Test */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 49AA8A242F2B70C77CDDD6B3 /* Pods-SDK Demo.debug test.xcconfig */;
+			baseConfigurationReference = F3E7267647471B307EEDF21D /* Pods-SDK Demo.debug test.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2971,7 +2971,7 @@
 		};
 		2E8705A1208E0183004B4B36 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2EF730E3030AD2017B88037C /* Pods-SDK Demo.release.xcconfig */;
+			baseConfigurationReference = 40460F82C6DBF8BA9DA93709 /* Pods-SDK Demo.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2993,7 +2993,7 @@
 		};
 		2E8705A2208E0183004B4B36 /* Release Test */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A84A063C267BD3EE1AA2CFC7 /* Pods-SDK Demo.release test.xcconfig */;
+			baseConfigurationReference = CE4E54E481218F4B6D3496FC /* Pods-SDK Demo.release test.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -3093,7 +3093,7 @@
 		};
 		2ED14B9E2063A9CD00ED2E2C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F0EB568F64DF3286331DE8AE /* Pods-Photobook.debug.xcconfig */;
+			baseConfigurationReference = 9BC4E23EC9FB91F30E3498D9 /* Pods-Photobook.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -3125,7 +3125,7 @@
 		};
 		2ED14B9F2063A9CD00ED2E2C /* Debug Test */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B80F3D7B4C71EDF00E4974BF /* Pods-Photobook.debug test.xcconfig */;
+			baseConfigurationReference = 0231F05EEF87815032496D51 /* Pods-Photobook.debug test.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -3157,7 +3157,7 @@
 		};
 		2ED14BA02063A9CD00ED2E2C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A555CD7CB5DCC2ACE6BA08B8 /* Pods-Photobook.release.xcconfig */;
+			baseConfigurationReference = 3779249CAECEAE2B105E60BA /* Pods-Photobook.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -3188,7 +3188,7 @@
 		};
 		2ED14BA12063A9CD00ED2E2C /* Release Test */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9F9996059845E3FC7B69605D /* Pods-Photobook.release test.xcconfig */;
+			baseConfigurationReference = BB0A1245C8D3C589B0B7D953 /* Pods-Photobook.release test.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -3303,7 +3303,7 @@
 		};
 		6FB6706E1FB5BAD40062D630 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 49A764DC03F89F378FE02807 /* Pods-PhotobookTests.debug.xcconfig */;
+			baseConfigurationReference = F6E8E6D9DE04F59348526C95 /* Pods-PhotobookTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -3321,7 +3321,7 @@
 		};
 		6FB6706F1FB5BAD40062D630 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F8F01677BE48D13E9A3F5E95 /* Pods-PhotobookTests.release.xcconfig */;
+			baseConfigurationReference = 19C044D105CFA93E38DDA041 /* Pods-PhotobookTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
