@@ -28,6 +28,7 @@
 //
 
 import UIKit
+import Photobook
 import FBSDKLoginKit
 
 protocol FacebookApiManager {
@@ -57,7 +58,7 @@ class FacebookAlbum: Codable {
     var numberOfAssets: Int
     var localizedName: String?
     var identifier: String
-    var assets = [Asset]()
+    var assets = [PhotobookAsset]()
     var coverPhotoUrl: URL
     private var after: String?
     
@@ -110,7 +111,7 @@ class FacebookAlbum: Codable {
                     return
             }
             
-            var newAssets = [Asset]()
+            var newAssets = [PhotobookAsset]()
             for photo in data {
                 guard let identifier = photo["id"] as? String,
                     let images = photo["images"] as? [[String: Any]]
@@ -126,7 +127,7 @@ class FacebookAlbum: Codable {
                     urlAssetImages.append(URLAssetImage(url: url, size: CGSize(width: width, height: height)))
                 }
                 
-                if let newAsset = URLAsset(identifier: identifier, images: urlAssetImages, albumIdentifier: self.identifier) {
+                if let newAsset = PhotobookAsset(withUrlImages: urlAssetImages, identifier: identifier, albumIdentifier: self.identifier, date: nil) {
                     newAssets.append(newAsset)
                     welf?.assets.append(newAsset)
                 }
@@ -163,8 +164,9 @@ extension FacebookAlbum: Album {
         return after != nil
     }
     
-    func coverAsset(completionHandler: @escaping (Asset?) -> Void) {
-        completionHandler(URLAsset(identifier: coverPhotoUrl.absoluteString, images: [URLAssetImage(url: coverPhotoUrl, size: .zero)], albumIdentifier: identifier))
+    func coverAsset(completionHandler: @escaping (PhotobookAsset?) -> Void) {
+        let asset = PhotobookAsset(withUrlImages: [URLAssetImage(url: coverPhotoUrl, size: .zero)], identifier: coverPhotoUrl.absoluteString, albumIdentifier: identifier, date: nil)
+        completionHandler(asset)
     }
 }
 

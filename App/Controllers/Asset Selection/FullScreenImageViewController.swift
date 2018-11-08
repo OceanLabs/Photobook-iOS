@@ -28,10 +28,11 @@
 //
 
 import UIKit
+import Photobook
 
 protocol FullScreenImageViewControllerDelegate: class {
-    func previewDidUpdate(asset: Asset)
-    func sourceView(for asset:Asset) -> UIView?
+    func previewDidUpdate(asset: PhotobookAsset)
+    func sourceView(for asset: PhotobookAsset) -> UIView?
 }
 
 class FullScreenImageViewController: UIViewController {
@@ -41,21 +42,19 @@ class FullScreenImageViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
-    var asset: Asset!
-    var album: Album!
+    var asset: PhotobookAsset!
     weak var delegate: FullScreenImageViewControllerDelegate?
     var selectedAssetsManager: SelectedAssetsManager?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        asset.image(size: preferredContentSize, loadThumbnailFirst: true, progressHandler: nil, completionHandler: { [weak welf = self] (image, _) in
+        PhotobookSDK.shared.cachedImage(for: asset, size: preferredContentSize) { [weak welf = self] (image, _) in
             if image != nil {
                 welf?.imageView.image = image
                 welf?.activityIndicator.stopAnimating()
             }
-        })
-        
+        }
     }
     
     override var prefersStatusBarHidden: Bool{
@@ -64,7 +63,7 @@ class FullScreenImageViewController: UIViewController {
     
     private func updateSelectedStatusIndicator(){
         let selected = selectedAssetsManager?.isSelected(asset) ?? false
-        selectedStatusImageView.image = selected ? UIImage(namedInPhotobookBundle: "Tick") : UIImage(namedInPhotobookBundle: "Tick-empty")
+        selectedStatusImageView.image = selected ? UIImage(named: "Tick") : UIImage(named: "Tick-empty")
     }
     
     // Run when the user presses even more firmly to pop the preview to full screen
@@ -89,7 +88,7 @@ class FullScreenImageViewController: UIViewController {
     @IBAction func tapGestureRecognized(_ sender: Any) {
         guard let selectedAssetsManager = selectedAssetsManager else { return }
         guard selectedAssetsManager.toggleSelected(asset) else {
-            let alertController = UIAlertController(title: NSLocalizedString("ImagePicker/TooManyPicturesAlertTitle", value: "Too many pictures", comment: "Alert title informing the user that they have reached the maximum number of images"), message: NSLocalizedString("ImagePicker/TooManyPicturesAlertMessage", value: "Your photo book cannot contain more than \(ProductManager.shared.maximumAllowedPages)", comment: "Alert message informing the user that they have reached the maximum number of images"), preferredStyle: .alert)
+            let alertController = UIAlertController(title: NSLocalizedString("ImagePicker/TooManyPicturesAlertTitle", value: "Too many pictures", comment: "Alert title informing the user that they have reached the maximum number of images"), message: NSLocalizedString("ImagePicker/TooManyPicturesAlertMessage", value: "Your photo book cannot contain more than \(PhotobookSDK.shared.maximumAllowedPhotos)", comment: "Alert message informing the user that they have reached the maximum number of images"), preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.alertOK, style: .default, handler: nil))
             present(alertController, animated: true, completion: nil)
             return

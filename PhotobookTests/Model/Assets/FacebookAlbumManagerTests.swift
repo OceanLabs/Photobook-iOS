@@ -28,7 +28,7 @@
 //
 
 import XCTest
-@testable import Photobook
+@testable import Photobook_App
 
 class FacebookAlbumManagerTests: XCTestCase {
     

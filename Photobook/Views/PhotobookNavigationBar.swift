@@ -35,7 +35,7 @@ public class PhotobookNavigationBar: UINavigationBar {
     private var effectView: UIVisualEffectView!
     private(set) var barType: PhotobookNavigationBarType = .white
     
-    var willShowPrompt = false {
+    public var willShowPrompt = false {
         didSet {
             if #available(iOS 11.0, *) {
                 prefersLargeTitles = !willShowPrompt
@@ -43,7 +43,7 @@ public class PhotobookNavigationBar: UINavigationBar {
         }
     }
     
-    var barHeight: CGFloat {
+    public var barHeight: CGFloat {
         return willShowPrompt ? frame.height : frame.height + UIApplication.shared.statusBarFrame.height
     }
     

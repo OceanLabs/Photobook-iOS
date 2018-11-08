@@ -41,27 +41,9 @@ import Analytics
     case error
 }
 
-protocol PickerAnalytics {
-    var selectingPhotosScreenName: Analytics.ScreenName { get }
-    var addingMorePhotosScreenName: Analytics.ScreenName { get }
-}
-
 @objc public class Analytics: NSObject {
     
     enum ScreenName: String {
-        case stories = "Stories"
-        case albums = "Albums"
-        case facebookAlbums = "Facebook Albums"
-        case albumsAddingMorePhotos = "Albums adding more photos"
-        case facebookAlbumsAddingMorePhotos = "Facebook albums adding more photos"
-        case picker = "Picker"
-        case storiesPicker = "Stories Picker"
-        case facebookPicker = "Facebook Picker"
-        case instagramPicker = "Instagram Picker"
-        case pickerAddingMorePhotos = "Picker adding more photos"
-        case storiesPickerAddingMorePhotos = "Stories picker adding more photos"
-        case instagramPickerAddingMorePhotos = "Instagram picker adding more photos"
-        case facebookPickerAddingMorePhotos = "Facebook picker adding more photos"
         case photobook = "Photobook"
         case pageEditingPhotoSelection = "Page editing / Photo selection"
         case colorSelection = "Color selection"
@@ -76,11 +58,6 @@ protocol PickerAnalytics {
     }
     
     enum ActionName: String {
-        case photoSourceSelected = "Photo source selected"
-        case pickerSelectAllTapped = "Picker select all tapped"
-        case pickerDeselectAllTapped = "Picker deselect all tapped"
-        case collectorSelectionCleared = "Collector selection cleared"
-        case collectorUseTheseTapped = "Collector use these tapped"
         case wentBackFromPhotobookPreview = "Went back from photobook preview"
         case addedPages = "Added pages"
         case pastedPages = "Pages pages"
@@ -113,11 +90,9 @@ protocol PickerAnalytics {
     }
     
     struct PropertyNames {
-        static let photoSourceName = "Photo source name"
-        static let numberOfPhotosSelected = "Number of photos selected"
         static let upsellOptionName = "Upsell option name"
-        static let secondsSinceAppOpen = "Seconds since app open"
         static let secondsInEditing = "Seconds in editing"
+        static let secondsSinceAppOpen = "Seconds since app open"
         static let secondsInBackground = "Seconds in background"
         static let environment = "Environment"
     }

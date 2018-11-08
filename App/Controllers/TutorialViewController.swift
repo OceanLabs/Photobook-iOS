@@ -28,6 +28,7 @@
 //
 
 import UIKit
+import Photobook
 
 class TutorialViewController: UIViewController {
 
@@ -48,8 +49,8 @@ class TutorialViewController: UIViewController {
     private lazy var tutorialPageControllers: [TutorialPageViewController] = {
         var pageControllers = [TutorialPageViewController]()
         for page in tutorialPages {
-            let pageController = photobookMainStoryboard.instantiateViewController(withIdentifier: Constants.tutorialPageViewControllerIdentifier) as! TutorialPageViewController
-            pageController.image = UIImage(namedInPhotobookBundle: page["image"]!)
+            let pageController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: Constants.tutorialPageViewControllerIdentifier) as! TutorialPageViewController
+            pageController.image = UIImage(named: page["image"]!)
             pageController.text = page["text"]
             pageControllers.append(pageController)
         }
@@ -63,7 +64,7 @@ class TutorialViewController: UIViewController {
     @IBOutlet private weak var nextButton: UIButton!
     @IBOutlet private weak var pageControl: UIPageControl!
     
-    weak var delegate: DismissDelegate?
+    var completionClosure: ((UIViewController) -> ())?
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard segue.identifier == Constants.pageViewControllerEmbedSegueIdentifier else { return }
@@ -80,7 +81,7 @@ class TutorialViewController: UIViewController {
     // MARK: - Button Actions
     
     @IBAction func tappedSkipButton(_ sender: UIButton) {
-        delegate?.wantsToDismiss?(self)
+        completionClosure?(self)
     }
     
     @IBAction func tappedPreviousButton(_ sender: UIButton) {
@@ -92,7 +93,7 @@ class TutorialViewController: UIViewController {
     
     @IBAction func tappedNextButton(_ sender: UIButton) {
         guard pageControl.currentPage < tutorialPages.count - 1 else {
-            delegate?.wantsToDismiss?(self)
+            completionClosure?(self)
             return
         }
         let nextPageViewController = tutorialPageControllers[pageControl.currentPage + 1]

@@ -35,15 +35,14 @@ extension UIImageView {
         static let fadeDuration = 0.2
     }
     
-    
     ///  Set the image from an Asset to the imageView and fade in while doing so
     ///
     /// - Parameters:
-    ///   - asset: The Asset to use to get the image from
+    ///   - asset: The asset to use to get the image from
     ///   - size: Request a specific size from the asset. If nil the imageView's frame size will be used
     ///   - validCellCheck: Called after the image has been fetched, but doesn't wait for the fade animation to complete. The completion handler returns a Bool indicating if we're allowed to continue. A typical example where it will be false is if we are in a reusable view (cell) which has been recycled.
-    func setImage(from: Asset?, fadeIn: Bool = true, size: CGSize? = nil, validCellCheck:(()->(Bool))? = nil) {
-        guard let asset = from else {
+    func setImage(from asset: Asset?, fadeIn: Bool = true, size: CGSize? = nil, validCellCheck:(()->(Bool))? = nil) {
+        guard let asset = asset else {
             image = nil
             return
         }

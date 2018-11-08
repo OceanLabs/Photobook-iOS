@@ -30,17 +30,17 @@
 import UIKit
 import Photos
 
-protocol AssetManager {
+@objc public protocol AssetManager {
     func fetchAsset(withLocalIdentifier identifier: String, options: PHFetchOptions?) -> PHAsset?
     func fetchAssets(in: PHAssetCollection, options: PHFetchOptions) -> PHFetchResult<PHAsset>
 }
 
-class DefaultAssetManager: AssetManager {
-    func fetchAsset(withLocalIdentifier identifier: String, options: PHFetchOptions?) -> PHAsset? {
+@objc public class DefaultAssetManager: NSObject, AssetManager {
+    public func fetchAsset(withLocalIdentifier identifier: String, options: PHFetchOptions?) -> PHAsset? {
         return PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: options).firstObject
     }
     
-    func fetchAssets(in assetCollection: PHAssetCollection, options: PHFetchOptions) -> PHFetchResult<PHAsset> {
+    public func fetchAssets(in assetCollection: PHAssetCollection, options: PHFetchOptions) -> PHFetchResult<PHAsset> {
         return PHAsset.fetchAssets(in: assetCollection, options: options)
     }
 }
@@ -189,14 +189,14 @@ class PhotosAsset: Asset {
         uploadUrl = try values.decodeIfPresent(String.self, forKey: .uploadUrl)        
     }
     
-    static func photosAssets(from assets: [Asset]) -> [PHAsset] {
-        var photosAssets = [PHAsset]()
-        for asset in assets{
-            guard let photosAsset = asset as? PhotosAsset else { continue }
-            photosAssets.append(photosAsset.photosAsset)
+    static func phAssets(from photobookAssets: [PhotobookAsset]) -> [PHAsset] {
+        var phAssets = [PHAsset]()
+        for photobookAsset in photobookAssets {
+            guard let photosAsset = photobookAsset.asset as? PhotosAsset else { continue }
+            phAssets.append(photosAsset.photosAsset)
         }
         
-        return photosAssets
+        return phAssets
     }
     
     static func assets(from photosAssets: [PHAsset], albumId: String) -> [Asset] {
@@ -206,13 +206,5 @@ class PhotosAsset: Asset {
         }
         
         return assets
-    }
-    
-    func wasRemoved(in changeInstance: PHChange) -> Bool {
-        if let changeDetails = changeInstance.changeDetails(for: photosAsset),
-            changeDetails.objectWasDeleted {
-            return true
-        }
-        return false
-    }
+    }    
 }

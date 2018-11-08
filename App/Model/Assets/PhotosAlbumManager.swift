@@ -29,6 +29,7 @@
 
 import UIKit
 import Photos
+import Photobook
 
 class PhotosAlbumManager: NSObject, AlbumManager {
     
@@ -44,7 +45,7 @@ class PhotosAlbumManager: NSObject, AlbumManager {
                                                               comment: "Button title to direct the user to the app permissions screen in the phone settings")
     }
     
-    var albums:[Album] = [Album]()
+    var albums = [Album]()
     var hasMoreAlbumsToLoad = false
     let title = NSLocalizedString("Albums/Title", value: "Albums", comment: "Title for the Albums screen")
     static let imageManager = PHCachingImageManager()
@@ -167,12 +168,20 @@ class PhotosAlbumManager: NSObject, AlbumManager {
         PhotosAlbumManager.imageManager.stopCachingImagesForAllAssets()
     }
     
-    func startCachingImages(for assets: [Asset], targetSize: CGSize) {
-        PhotosAlbumManager.imageManager.startCachingImages(for: PhotosAsset.photosAssets(from: assets), targetSize: targetSize, contentMode: .aspectFill, options: nil)
+    func startCachingImages(for assets: [PhotobookAsset], targetSize: CGSize) {
+        var phAssets = [PHAsset]()
+        assets.forEach {
+            if let phAsset = $0.phAsset { phAssets.append(phAsset) }
+        }
+        PhotosAlbumManager.imageManager.startCachingImages(for: phAssets, targetSize: targetSize, contentMode: .aspectFill, options: nil)
     }
     
-    func stopCachingImages(for assets: [Asset], targetSize: CGSize) {
-        PhotosAlbumManager.imageManager.stopCachingImages(for: PhotosAsset.photosAssets(from: assets), targetSize: targetSize, contentMode: .aspectFill, options: nil)
+    func stopCachingImages(for assets: [PhotobookAsset], targetSize: CGSize) {
+        var phAssets = [PHAsset]()
+        assets.forEach {
+            if let phAsset = $0.phAsset { phAssets.append(phAsset) }
+        }
+        PhotosAlbumManager.imageManager.stopCachingImages(for: phAssets, targetSize: targetSize, contentMode: .aspectFill, options: nil)
     }
 }
 
@@ -182,6 +191,7 @@ extension PhotosAlbumManager: PHPhotoLibraryChangeObserver {
         var albumChanges = [AlbumChange]()
         
         DispatchQueue.main.sync {
+            var albumsToLoadAssets = [Album]()
             for album in albums {
                 guard let album = album as? PhotosAlbum else { continue }
                 let (assetsInserted, assetsRemoved) = album.changedAssets(for: changeInstance)
@@ -196,24 +206,25 @@ extension PhotosAlbumManager: PHPhotoLibraryChangeObserver {
                         }
                     }
                     
-                    albumChanges.append(AlbumChange(album: album, assetsRemoved: assetsRemoved, indexesRemoved: indexesRemoved, assetsInserted: assetsInserted))
+                    albumChanges.append(AlbumChange(albumIdentifier: album.identifier, assetsRemoved: assetsRemoved, assetsInserted: assetsInserted, indexesRemoved: indexesRemoved))
+                    albumsToLoadAssets.append(album)
                 }
             }
             
             if !albumChanges.isEmpty {
                 let dispatchGroup = DispatchGroup()
                 
-                for albumChange in albumChanges {
+                albumsToLoadAssets.forEach {
                     dispatchGroup.enter()
-                    albumChange.album.loadAssets(completionHandler: { _ in
+                    $0.loadAssets(completionHandler: { _ in
                         dispatchGroup.leave()
                     })
                 }
                 
                 dispatchGroup.notify(queue: DispatchQueue.main, execute: {
-                   NotificationCenter.default.post(name: AssetsNotificationName.albumsWereUpdated, object: albumChanges)
-                })
-                
+                    NotificationCenter.default.post(name: AlbumManagerNotificationName.albumsWereUpdated, object: albumChanges)
+                    PhotobookSDK.shared.albumsWereUpdated(albumChanges)
+                })                
             }
         }
     }

@@ -28,6 +28,7 @@
 //
 
 import Photos
+import Photobook
 
 protocol CollectionManager {
     func fetchMoments(inMomentList collectionList: PHCollectionList) -> PHFetchResult<PHAssetCollection>
@@ -46,7 +47,7 @@ class Story {
     var photoCount = 0
     var isWeekend = false
     var score = 0
-    var assets = [Asset]()
+    var assets = [PhotobookAsset]()
     var hasMoreAssetsToLoad = false
     var hasPerformedAutoSelection = false
     
@@ -144,14 +145,15 @@ extension Story: Album {
             
             let fetchedAssets = self.assetsManager.fetchAssets(in: collection, options: fetchOptions)
             fetchedAssets.enumerateObjects({ (asset, _, _) in
-                self.assets.append(PhotosAsset(asset, albumIdentifier: self.identifier))
+                let photobookAsset = PhotobookAsset(withPHAsset: asset, albumIdentifier: self.identifier)
+                self.assets.append(photobookAsset)
             })
         }
         
         completionHandler?(nil)
     }
     
-    func coverAsset(completionHandler: @escaping (Asset?) -> Void) {
+    func coverAsset(completionHandler: @escaping (PhotobookAsset?) -> Void) {
         collectionForCoverPhoto.coverAsset(useFirstImageInCollection: true, completionHandler: completionHandler)
     }
     

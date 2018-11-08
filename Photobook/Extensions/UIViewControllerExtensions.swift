@@ -29,48 +29,25 @@
 
 import UIKit
 
-/// Collection of Assets
-protocol Album {
-    
-    // Identifier
-    var identifier: String { get }
-
-    /// Number of Assets in the album
-    var numberOfAssets: Int { get }
-    
-    /// Localized name
-    var localizedName: String? { get }
-    
-    /// Collection of already loaded Assets
-    var assets: [Asset] { get }
-    
-    /// True if the album has more Assets to load, False otherwise
-    var hasMoreAssetsToLoad: Bool { get }
-    
-    /// Performs the loading of a first batch of Assets
+/// Dismiss delegate
+protocol DismissDelegate {
+    /// Called when a view controller is ready to be dismissed
     ///
-    /// - Parameter completionHandler: Closure that gets called on completion
-    func loadAssets(completionHandler: ((_ error: Error?) -> Void)?)
-    
-    /// Performs the loading of the next batch of Assets
-    ///
-    /// - Parameter completionHandler: Closure that gets called on completion
-    func loadNextBatchOfAssets(completionHandler: ((_ error: Error?) -> Void)?)
-    
-    /// Retrieves the Asset to be used as cover for the Album
-    ///
-    /// - Parameter completionHandler: Closure that gets called on completion
-    func coverAsset(completionHandler: @escaping (_ asset: Asset?) -> Void)
+    /// - Parameter viewController: The view controller that wants to be dismissed. If the photo book was presented modally, this will be a UINavigationController.
+    func wantsToDismiss(_ viewController: UIViewController)
 }
 
-struct AlbumChange {
-    var album: Album
-    var assetsRemoved: [Asset]
-    var indexesRemoved: [Int]
-    var assetsInserted: [Asset]
-}
-
-struct AlbumAddition {
-    var album: Album
-    var index: Int
+extension UIViewController {
+    
+    func isPresentedModally() -> Bool {
+        return (navigationController?.isBeingPresented ?? false) || isBeingPresented
+    }
+    
+    func autoDismiss(_ animated: Bool) {
+        if isPresentedModally() {
+            presentingViewController!.dismiss(animated: animated, completion: nil)
+            return
+        }
+        navigationController!.popToRootViewController(animated: animated)
+    }
 }

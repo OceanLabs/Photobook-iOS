@@ -28,6 +28,7 @@
 //
 
 import UIKit
+import Photobook
 
 let mainStoryboard =  UIStoryboard(name: "Main", bundle: nil)
 
@@ -43,18 +44,22 @@ class PhotobookManager: NSObject {
         case facebook
     }
     
-    func setupPayments() {
-        let apiKey = KiteAPIClient.environment == .live ? Configuration.kiteApiClientLiveKey : Configuration.kiteApiClientTestKey
-        PaymentAuthorizationManager.applePayPayTo = Configuration.applePayPayToString
-        PaymentAuthorizationManager.applePayMerchantId = Configuration.applePayMerchantId
-        PhotobookAPIManager.apiKey = apiKey
-        KiteAPIClient.shared.apiKey = apiKey
+    func setup() {
+        var environment = PhotobookSDK.Environment.live
+        #if TEST_ENVIRONMENT
+        environment = .test
+        #endif
+
+        PhotobookSDK.shared.environment = environment
+        PhotobookSDK.shared.applePayMerchantId = Configuration.applePayPayToString
+        PhotobookSDK.shared.applePayPayTo = Configuration.applePayPayToString
+        PhotobookSDK.shared.kiteApiKey = environment == .live ? Configuration.kiteApiClientLiveKey : Configuration.kiteApiClientTestKey
+        PhotobookSDK.shared.ctaButtonTitle = NSLocalizedString("OrderSummary/cta", value: "Continue", comment: "Title for the CTA button")
     }
     
     func rootViewControllerForCurrentState() -> UIViewController {
-        let isProcessingOrder = OrderManager.shared.isProcessingOrder
-        ProductManager.shared.delegate = self
-        
+        let isProcessingOrder = PhotobookSDK.shared.isProcessingOrder
+
         if IntroViewController.userHasDismissed && !isProcessingOrder {
             let tabBarController = mainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
             configureTabBarController(tabBarController)
@@ -74,16 +79,17 @@ class PhotobookManager: NSObject {
             
         } else if isProcessingOrder {
             // Show receipt screen to prevent user from ordering another photobook
-            let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptViewController") as! ReceiptViewController
-            receiptViewController.order = OrderManager.shared.processingOrder
-            receiptViewController.dismissClosure = { [weak welf = self] viewController in
+            let receiptViewController = PhotobookSDK.shared.receiptViewController(embedInNavigation: true) { [weak welf = self] viewController, success in
                 guard let stelf = welf else { return }
                 let tabBarController = mainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
                 stelf.configureTabBarController(tabBarController)
                 let dismissSegue = IntroDismissSegue(identifier: "ReceiptDismiss", source: viewController, destination: tabBarController)
                 dismissSegue.perform()
+                
+                NotificationCenter.default.post(name: SelectedAssetsManager.notificationNamePhotobookComplete, object: nil)
             }
-            rootNavigationController.viewControllers = [receiptViewController]
+            
+            rootNavigationController.viewControllers = receiptViewController != nil ? [receiptViewController!] : [UIViewController()]
         }
         
         return rootNavigationController
@@ -91,35 +97,47 @@ class PhotobookManager: NSObject {
     
     func configureTabBarController(_ tabBarController: UITabBarController) {
         
-        // Browse
-        // Set the albumManager to the AlbumsCollectionViewController
-        let albumViewController = (tabBarController.viewControllers?[Tab.browse.rawValue] as? UINavigationController)?.topViewController as? AlbumsCollectionViewController
-        albumViewController?.albumManager = PhotosAlbumManager()
-        
-        // Attempt to restore photobook backup
-        if let backup = PhotobookProductBackupManager.shared.restoreBackup() {
-            ProductManager.shared.currentProduct = backup.product
+        // Attempt to restore picker data source and photobook backups
+        if let (selectedNavigationController, photobookDelegate) = restoreAssetDataSourceBackup(tabBarController),
+           let photobookViewController = PhotobookSDK.shared.photobookViewControllerFromBackup(embedInNavigation: false, delegate: photobookDelegate, completion: {
+            (viewController, success) in
             
-            let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
-            photobookViewController.assets = backup.assets
-            photobookViewController.album = backup.album
-            photobookViewController.albumManager = backup.albumManager
-            photobookViewController.completionClosure = { (photobookProduct) in
-                OrderManager.shared.reset()
-                OrderManager.shared.basketOrder.products = [photobookProduct]
+            guard success else {
+                AssetDataSourceBackupManager.shared.deleteBackup()
                 
-                let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
-                photobookViewController.navigationController?.pushViewController(checkoutViewController, animated: true)
+                if let tabBar = viewController.tabBarController?.tabBar {
+                    tabBar.isHidden = false
+                }
+
+                if let navigationController = viewController.navigationController {
+                    navigationController.popToRootViewController(animated: true)
+                }
+                return
             }
             
-            guard let browseNavigationViewController = tabBarController.viewControllers?[Tab.browse.rawValue] as? UINavigationController else { return }
-            browseNavigationViewController.pushViewController(photobookViewController, animated: false)
-            
-            if let assetPickerViewController = browseNavigationViewController.viewControllers.first as? AlbumsCollectionViewController {
-                photobookViewController.photobookDelegate = assetPickerViewController
+            let items = Checkout.shared.numberOfItemsInBasket()
+            if items == 0 {
+                Checkout.shared.addCurrentProductToBasket()
+            } else {
+                // Only allow one item in the basket
+                Checkout.shared.clearBasketOrder()
+                Checkout.shared.addCurrentProductToBasket(items: items)
             }
             
-            tabBarController.selectedIndex = Tab.browse.rawValue
+            // Push the checkout on completion
+            if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, dismissClosure: { [weak welf = self] viewController, success in
+                AssetDataSourceBackupManager.shared.deleteBackup()
+                
+                guard let stelf = welf else { return }
+                let tabBarController = mainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
+                stelf.configureTabBarController(tabBarController)
+                let dismissSegue = IntroDismissSegue(identifier: "ReceiptDismiss", source: viewController, destination: tabBarController)
+                dismissSegue.perform()
+            }) {
+                selectedNavigationController.pushViewController(checkoutViewController, animated: true)
+            }
+        }) {
+            selectedNavigationController.pushViewController(photobookViewController, animated: false)
         }
 
         // Stories
@@ -129,27 +147,52 @@ class PhotobookManager: NSObject {
                 tabBarController.viewControllers?.remove(at: Tab.stories.rawValue)
             }
         })
+    }
+    
+    private func restoreAssetDataSourceBackup(_ tabBarController: UITabBarController) -> (UINavigationController, PhotobookDelegate)? {
+        var selectedNavigationController: UINavigationController
+        var photobookDelegate: PhotobookDelegate
         
-        // Load the products here, so that the user avoids a loading screen on PhotobookViewController
-        if !PhotobookApp.isRunningUnitTests() {
-            ProductManager.shared.initialise(completion: nil)
+        guard let dataSourceBackup = AssetDataSourceBackupManager.shared.restoreBackup() else { return nil }
+        
+        if let _ = dataSourceBackup.albumManager as? FacebookAlbumManager {
+            selectedNavigationController = tabBarController.viewControllers?[Tab.facebook.rawValue] as! UINavigationController
+            tabBarController.selectedIndex = Tab.facebook.rawValue
+            
+            let facebookAlbumsCollectionViewController = AlbumsCollectionViewController.facebookAlbumsCollectionViewController()
+            facebookAlbumsCollectionViewController.assetPickerDelegate = facebookAlbumsCollectionViewController
+            selectedNavigationController.setViewControllers([facebookAlbumsCollectionViewController], animated: false)
+            
+            photobookDelegate = facebookAlbumsCollectionViewController
+        } else if let _ = dataSourceBackup.albumManager as? PhotosAlbumManager {
+            selectedNavigationController = tabBarController.viewControllers?[Tab.browse.rawValue] as! UINavigationController
+            tabBarController.selectedIndex = Tab.browse.rawValue
+            
+            let albumsViewController = selectedNavigationController.viewControllers.first as! AlbumsCollectionViewController
+            albumsViewController.albumManager = dataSourceBackup.albumManager!
+            photobookDelegate = albumsViewController
+        } else if let _ = dataSourceBackup.album as? InstagramAlbum {
+            selectedNavigationController = tabBarController.viewControllers?[Tab.instagram.rawValue] as! UINavigationController
+            tabBarController.selectedIndex = Tab.instagram.rawValue
+            
+            let assetPickerViewController = selectedNavigationController.viewControllers.first as! AssetPickerCollectionViewController
+            assetPickerViewController.album = dataSourceBackup.album!
+            photobookDelegate = assetPickerViewController
+        } else {
+            selectedNavigationController = tabBarController.viewControllers?[Tab.stories.rawValue] as! UINavigationController
+            tabBarController.selectedIndex = Tab.stories.rawValue
+            
+            let storiesViewController = selectedNavigationController.viewControllers.first as! StoriesViewController
+            
+            let assetPickerController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
+            assetPickerController.album = dataSourceBackup.album!
+            assetPickerController.selectedAssetsManager = StoriesManager.shared.selectedAssetsManager(for: dataSourceBackup.album as! Story)
+            assetPickerController.delegate = storiesViewController
+            
+            selectedNavigationController.pushViewController(assetPickerController, animated: false)
+            photobookDelegate = assetPickerController
         }
-    }
-}
-
-extension PhotobookManager: PhotobookProductChangeDelegate {
-    
-    func didChangePhotobookProduct(_ photobookProduct: PhotobookProduct, assets: [Asset], album: Album?, albumManager: AlbumManager?) {
-        let productBackup = PhotobookProductBackup()
-        productBackup.product = photobookProduct
-        productBackup.assets = assets
-        productBackup.album = album
-        productBackup.albumManager = albumManager
-
-        PhotobookProductBackupManager.shared.saveBackup(productBackup)
-    }
-    
-    func didDeletePhotobookProduct() {
-        PhotobookProductBackupManager.shared.deleteBackup()
+        
+        return (selectedNavigationController, photobookDelegate)
     }
 }
