@@ -40,9 +40,6 @@ class AssetSelectorViewController: UIViewController {
     static let assetSelectorAddedAssets = Notification.Name("assetSelectorAddedAssets")
     
     @IBOutlet weak var collectionView: UICollectionView!
-    
-    private var addMoreSelectedAssetsManager = SelectedAssetsManager()
-    var assets = [Asset]()
 
     private lazy var timesUsed: [String: Int] = {
         var temp = [String: Int]()
@@ -72,6 +69,11 @@ class AssetSelectorViewController: UIViewController {
     }
     
     weak var delegate: AssetSelectorDelegate?
+    weak var assetsDelegate: PhotobookAssetsDelegate?
+    
+    var assets: [Asset]! {
+        return assetsDelegate!.assets!
+    }
     
     var selectedAsset: Asset? {
         didSet {
@@ -198,7 +200,7 @@ extension AssetSelectorViewController: PhotobookAssetAddingDelegate {
         // Add assets that are not already in the list
         let newAssets = assets.filter { asset in !self.assets.contains { $0 == asset } }
         for asset in newAssets {
-            self.assets.insert(asset, at: 0)
+            assetsDelegate!.assets!.insert(asset, at: 0)
         }
 
         selectedAssetIndex = self.assets.index { $0.identifier == selectedAsset?.identifier } ?? -1

@@ -29,7 +29,11 @@
 
 import UIKit
 
-class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate {
+protocol PhotobookAssetsDelegate: class {
+    var assets: [Asset]! { get set }
+}
+
+class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate, PhotobookAssetsDelegate {
     
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
     
@@ -630,10 +634,10 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let barType = (navigationController?.navigationBar as? PhotobookNavigationBar)?.barType
         
         let pageSetupViewController = modalNavigationController.viewControllers.first as! PageSetupViewController
-        pageSetupViewController.assets = assets
         pageSetupViewController.pageIndex = index
         pageSetupViewController.album = album
         pageSetupViewController.albumManager = albumManager
+        pageSetupViewController.assetsDelegate = self
         pageSetupViewController.photobookDelegate = photobookDelegate
         
         if barType != nil {
