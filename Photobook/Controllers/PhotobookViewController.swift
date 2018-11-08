@@ -765,6 +765,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         cell.isPageInteractionEnabled = true
         cell.shouldRevealActions = true
         cell.animateCellClosed(completion: completion)
+        interactingItemIndexPath = nil
     }
 }
 
