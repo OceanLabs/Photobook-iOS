@@ -174,18 +174,10 @@ class ActionsCollectionViewCell: UICollectionViewCell {
             
             velocity = previousPoint.x - currentPoint.x
             
-            isPanning =  abs(previousPoint.x - currentPoint.x) >= abs(previousPoint.y - currentPoint.y)
+            isPanning = abs(previousPoint.x - currentPoint.x) >= abs(previousPoint.y - currentPoint.y)
             guard isPanning else {
                 previousPoint = .zero
                 currentPoint = .zero
-                
-                if !showingPreferredAction {
-                    gestureRecognizer.isEnabled = false
-                    gestureRecognizer.isEnabled = true
-
-                    let open = cellContentViewTrailingConstraint.constant > actionsViewWidth * 0.5
-                    animateCell(open: open, duration: 0.1)
-                }
                 return
             }
 
@@ -206,6 +198,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
                         shouldShowPreferredAction = canUsePreferredAction && hasMoreThanOneButton && !showingPreferredAction && (-delta - actionsViewWidth) > Constants.preferredActionTriggerOffset
                     } else {
                         constant = min(-delta, actionsViewWidth)
+                        constant = max(constant, 0.0)
                     }
                 } else {
                     if -delta < actionsViewWidth {
@@ -226,6 +219,8 @@ class ActionsCollectionViewCell: UICollectionViewCell {
             }
             
             cellContentViewTrailingConstraint.constant = constant
+            layoutIfNeeded()
+            
             previousPoint = currentPoint
             
             updateActionViewBackgroundColor(to: constant / actionsViewWidth)
@@ -253,14 +248,13 @@ class ActionsCollectionViewCell: UICollectionViewCell {
                         }
                     }
                     
-                    UIView.animate(withDuration: 0.1) {
+                    UIView.animate(withDuration: 0.1, delay: 0.0, options: [.beginFromCurrentState, .curveEaseOut], animations: {
                         self.layoutIfNeeded()
-                    }
+                    }, completion: nil)
                 }
             }
             
         case .ended, .cancelled:
-            guard isPanning else { return }
             isPanning = false
 
             // Check if there was a swipe
