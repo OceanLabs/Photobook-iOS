@@ -67,8 +67,6 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private var cancelBarButtonItem: UIBarButtonItem!
     
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
-    var album: Album?
-    var albumManager: AlbumManager?
     var previewAssetImage: UIImage?
     weak var photobookDelegate: PhotobookDelegate?
     
@@ -389,7 +387,9 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         var removedAssets = [Asset]()
         for albumChange in albumsChanges {
-            removedAssets.append(contentsOf: albumChange.assetsRemoved)
+            if let assetsRemoved = PhotobookAsset.assets(from: albumChange.assetsRemoved) {
+                removedAssets.append(contentsOf: assetsRemoved)
+            }
         }
         
         for removedAsset in removedAssets {
@@ -467,8 +467,6 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func setupAssetSelection() {
-        assetSelectorViewController.album = album
-        assetSelectorViewController.albumManager = albumManager
         assetSelectorViewController.photobookDelegate = photobookDelegate
         assetSelectorViewController.assetsDelegate = assetsDelegate
         assetSelectorViewController.selectedAsset = productLayout.asset
@@ -548,8 +546,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     @IBAction func tappedCancelButton(_ sender: UIBarButtonItem) {
-        Analytics.shared.trackAction(.editingCancelled, [Analytics.PropertyNames.secondsInEditing: secondsSinceEditingEntered(),
-                                                         Analytics.PropertyNames.secondsInBackground: Int(secondsSpentInBackground)
+        Analytics.shared.trackAction(.editingCancelled, [Analytics.PropertyNames.secondsInEditing: secondsSinceEditingEntered() - Int(secondsSpentInBackground)
             ])
         
         delegate?.didFinishEditingPage(editor: self)
@@ -581,8 +578,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             productLayout.productLayoutText!.text = visibleText
         }
         
-        Analytics.shared.trackAction(.editingConfirmed, [Analytics.PropertyNames.secondsInEditing: secondsSinceEditingEntered(),
-                                                         Analytics.PropertyNames.secondsInBackground: Int(secondsSpentInBackground)])
+        Analytics.shared.trackAction(.editingConfirmed, [Analytics.PropertyNames.secondsInEditing: secondsSinceEditingEntered() - Int(secondsSpentInBackground)])
         
         delegate?.didFinishEditingPage(pageIndex, pageType: pageType, productLayout: productLayout, color: selectedColor, editor: self)
     }

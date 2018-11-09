@@ -29,6 +29,7 @@
 
 import UIKit
 import Photos
+import Photobook
 
 protocol ChangeManager {
     func details(for fetchResult: PHFetchResult<PHAsset>) -> PHFetchResultChangeDetails<PHAsset>?
@@ -40,10 +41,14 @@ extension PHChange: ChangeManager {
     }
 }
 
+enum AssetLoadingException: Error {
+    case notFound
+}
+
 class PhotosAlbum: Album, Codable {
     
     let assetCollection: PHAssetCollection
-    var assets = [Asset]()
+    var assets = [PhotobookAsset]()
     var hasMoreAssetsToLoad = false
 
     private var fetchedAssets: PHFetchResult<PHAsset>?
@@ -105,28 +110,29 @@ class PhotosAlbum: Album, Codable {
         fetchOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
         fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
         let fetchedAssets = assetManager.fetchAssets(in: assetCollection, options: fetchOptions)
-        var assets = [Asset]()
+        var assets = [PhotobookAsset]()
         fetchedAssets.enumerateObjects({ (asset, _, _) in
-            assets.append(PhotosAsset(asset, albumIdentifier: self.identifier))
+            let photobookAsset = PhotobookAsset(withPHAsset: asset, albumIdentifier: self.identifier)
+            assets.append(photobookAsset)
         })
         
         self.assets = assets
         self.fetchedAssets = fetchedAssets
     }
     
-    func coverAsset(completionHandler: @escaping (Asset?) -> Void) {
+    func coverAsset(completionHandler: @escaping (PhotobookAsset?) -> Void) {
         assetCollection.coverAsset(useFirstImageInCollection: false, completionHandler: completionHandler)
     }
     
     func loadNextBatchOfAssets(completionHandler: ((Error?) -> Void)?) {}
     
-    func changedAssets(for changeInstance: ChangeManager) -> ([Asset]?, [Asset]?) {
+    func changedAssets(for changeInstance: ChangeManager) -> ([PhotobookAsset]?, [PhotobookAsset]?) {
         guard let fetchedAssets = fetchedAssets,
             let changeDetails = changeInstance.details(for: fetchedAssets)
         else { return (nil, nil) }
         
-        let insertedObjects = PhotosAsset.assets(from: changeDetails.insertedObjects, albumId: identifier)
-        let removedObjects = PhotosAsset.assets(from: changeDetails.removedObjects, albumId: identifier)
+        let insertedObjects = changeDetails.insertedObjects.map { PhotobookAsset(withPHAsset: $0, albumIdentifier: identifier)  }
+        let removedObjects = changeDetails.removedObjects.map { PhotobookAsset(withPHAsset: $0, albumIdentifier: identifier)  }
         return (insertedObjects, removedObjects)
     }
 }

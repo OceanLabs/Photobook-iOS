@@ -30,7 +30,7 @@
 import Foundation
 import Photos
 import OAuthSwift
-@testable import Photobook
+@testable import Photobook_App
 
 // MARK: - Photo Library object mocks
 class PHAssetMock: PHAsset {
@@ -116,7 +116,7 @@ class FetchResultChangeDetailsMock: PHFetchResultChangeDetails<PHAsset> {
 class ChangeManagerMock: ChangeManager {
     var phInsertedAssetsStub: [PHAsset]!
     var phRemovedAssetsStub: [PHAsset]!
-
+    
     func details(for fetchResult: PHFetchResult<PHAsset>) -> PHFetchResultChangeDetails<PHAsset>? {
         let testFetchResultChangeDetails = FetchResultChangeDetailsMock()
         testFetchResultChangeDetails.phInsertedAssetsStub = phInsertedAssetsStub
@@ -127,22 +127,6 @@ class ChangeManagerMock: ChangeManager {
 
 // MARK: - Dependency injection test classes
 
-// Conforms to the AssetManager protocol to get around dependencies on static methods for PHAsset
-class AssetManagerMock: AssetManager {
-    
-    var phAssetsStub: [PHAssetMock]?
-    
-    func fetchAsset(withLocalIdentifier identifier: String, options: PHFetchOptions?) -> PHAsset? {
-        return phAssetsStub?.first
-    }
-    
-    func fetchAssets(in assetCollection: PHAssetCollection, options: PHFetchOptions) -> PHFetchResult<PHAsset> {
-        guard let assets = phAssetsStub, let assetCollection = assetCollection as? PHAssetCollectionMock else { return AssetFetchResultMock() }
-        let fetchResult = AssetFetchResultMock()
-        fetchResult.phAssetsStub = assets.filter { $0.listIdentifier == assetCollection.localIdentifier }
-        return fetchResult
-    }
-}
 
 class CollectionManagerMock: CollectionManager {
     var phAssetCollectionStub: [PHAssetCollectionMock]?
@@ -192,18 +176,6 @@ class PHImageManagerMock: PHImageManager {
         resultHandler(imageData, dataUti, .up, nil)
         
         return 0
-    }
-}
-
-class WebImageManagerMock: WebImageManager {
-    
-    var url: URL?
-    var imageDataStub: Data?
-    var imageStub: UIImage?
-    
-    func loadImage(with url: URL, completion: @escaping (UIImage?, Data?, Error?) -> Void) {
-        self.url = url
-        completion(imageStub, imageDataStub, nil)
     }
 }
 

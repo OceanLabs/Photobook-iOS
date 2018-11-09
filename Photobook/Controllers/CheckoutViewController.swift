@@ -132,7 +132,7 @@ class CheckoutViewController: UIViewController {
         return OrderManager.shared.basketOrder
     }
     
-    weak var dismissDelegate: DismissDelegate?
+    var dismissClosure: ((_ source: UIViewController, _ success: Bool) -> ())?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -194,6 +194,14 @@ class CheckoutViewController: UIViewController {
         payButton.titleLabel?.sizeToFit()
     }
     
+    private func showEmptyScreen() {
+        let message = NSLocalizedString("Basket/EmptyBasketTitle", value: "Your basket is empty", comment: "Title shown to the user when the basket is empty")
+        let buttonTitle = NSLocalizedString("Basket/EmptyBasketCTA", value: "Continue Shopping", comment: "Title for the button shown when basket is empty")
+        emptyScreenViewController.show(message: message, title: nil, image: nil, buttonTitle: buttonTitle, buttonAction: { [weak welf = self] in
+            welf?.tappedCancel()
+        })
+    }
+    
     private func setupApplePayButton() {
         let applePayButton = PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .black)
         applePayButton.translatesAutoresizingMaskIntoConstraints = false
@@ -230,6 +238,11 @@ class CheckoutViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        if order.products.isEmpty {
+            showEmptyScreen()
+            return
+        }
+
         updateViews()
         if !order.hasValidCachedCost {
             refresh(showProgress: emptyScreenViewController.view.superview == nil)
@@ -247,12 +260,13 @@ class CheckoutViewController: UIViewController {
     }
     
     @objc func tappedCancel() {
-        if dismissDelegate?.wantsToDismiss?(self) != nil {
+        guard dismissClosure != nil else {
+            autoDismiss(true)
             return
         }
         
-        // No delegate provided
-        presentingViewController?.dismiss(animated: true, completion: nil)
+        let controllerToDismiss = isPresentedModally() ? navigationController! : self
+        dismissClosure?(controllerToDismiss, false)
     }
 
     private func refresh(showProgress: Bool = true, forceCostUpdate: Bool = false, forceShippingMethodsUpdate: Bool = false) {
@@ -557,8 +571,7 @@ class CheckoutViewController: UIViewController {
         case Constants.receiptSegueName:
             if let receiptViewController = segue.destination as? ReceiptViewController {
                 receiptViewController.order = order
-                receiptViewController.dismissDelegate = dismissDelegate
-
+                receiptViewController.dismissClosure = dismissClosure
             }
         case Constants.segueIdentifierPaymentMethods:
             if let paymentMethodsViewController = segue.destination as? PaymentMethodsViewController {

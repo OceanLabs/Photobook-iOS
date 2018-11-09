@@ -27,31 +27,39 @@
 //  THE SOFTWARE.
 //
 
-import Photos
+import UIKit
+import Photobook
 
-extension PHAssetCollection {
+/// Collection of Assets
+protocol Album {
     
-    func coverAsset(useFirstImageInCollection: Bool, completionHandler: @escaping (Asset?) -> Void) {
-        DispatchQueue.global(qos: .default).async {
-            let fetchOptions = PHFetchOptions()
-            fetchOptions.fetchLimit = 1
-            fetchOptions.wantsIncrementalChangeDetails = false
-            fetchOptions.includeHiddenAssets = false
-            fetchOptions.includeAllBurstAssets = false
-            fetchOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
-            fetchOptions.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: useFirstImageInCollection) ]
-            
-            guard let coverAsset = PHAsset.fetchAssets(in: self, options: fetchOptions).firstObject else {
-                DispatchQueue.main.async {
-                    completionHandler(nil)
-                }
-                return
-            }
-            
-            DispatchQueue.main.async {
-                completionHandler(PhotosAsset(coverAsset, albumIdentifier: self.localIdentifier))
-            }
-        }
-    }
+    // Identifier
+    var identifier: String { get }
+
+    /// Number of Assets in the album
+    var numberOfAssets: Int { get }
     
+    /// Localized name
+    var localizedName: String? { get }
+    
+    /// Collection of already loaded Assets
+    var assets: [PhotobookAsset] { get }
+    
+    /// True if the album has more Assets to load, False otherwise
+    var hasMoreAssetsToLoad: Bool { get }
+    
+    /// Performs the loading of a first batch of Assets
+    ///
+    /// - Parameter completionHandler: Closure that gets called on completion
+    func loadAssets(completionHandler: ((_ error: Error?) -> Void)?)
+    
+    /// Performs the loading of the next batch of Assets
+    ///
+    /// - Parameter completionHandler: Closure that gets called on completion
+    func loadNextBatchOfAssets(completionHandler: ((_ error: Error?) -> Void)?)
+    
+    /// Retrieves the Asset to be used as cover for the Album
+    ///
+    /// - Parameter completionHandler: Closure that gets called on completion
+    func coverAsset(completionHandler: @escaping (_ asset: PhotobookAsset?) -> Void)
 }

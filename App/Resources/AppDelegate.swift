@@ -10,6 +10,7 @@ import UIKit
 import Fabric
 import Crashlytics
 import FBSDKCoreKit
+import Photobook
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,26 +20,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         Fabric.with([Crashlytics.self])
+        PhotobookManager.shared.setup()
         
-        #if TEST_ENVIRONMENT
-        APIClient.environment = .test
-        KiteAPIClient.environment = .test
-        #endif
-        
-        // Must happen after setting up the environment
-        PhotobookManager.shared.setupPayments()
+        let result = FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         
         if !PhotobookApp.isRunningUnitTests() {
             window?.rootViewController = PhotobookManager.shared.rootViewControllerForCurrentState()
             Analytics.shared.optInToRemoteAnalytics = true
         }
         
-        return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
+        return result
     }
     
     func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
         // The application was woken up by a background task
-        _ = OrderManager.shared.loadProcessingOrder(completionHandler)
+        PhotobookSDK.shared.loadProcessingOrderAfterBackgroundRequest(completionHandler)
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
@@ -46,3 +42,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
+class PhotobookApp {
+    static func isRunningUnitTests() -> Bool {
+        return ProcessInfo.processInfo.environment["TESTS_RUNNING"] != nil
+    }
+}

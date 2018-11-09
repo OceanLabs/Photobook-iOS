@@ -28,6 +28,7 @@
 //
 
 import XCTest
+@testable import Photobook_App
 @testable import Photobook
 
 class ErrorMock: LocalizedError {
@@ -150,8 +151,8 @@ class FacebookAlbumTests: XCTestCase {
     }
 
     func testCoverAsset() {
-        facebookAlbum.coverAsset { (asset) in
-            guard let urlAsset = asset as? URLAsset else {
+        facebookAlbum.coverAsset { (photobookAsset) in
+            guard let urlAsset = photobookAsset?.asset as? URLAsset else {
                 XCTFail()
                 return
             }

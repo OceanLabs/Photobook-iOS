@@ -87,30 +87,45 @@ class Automation {
     }
     
     func fillDeliveryDetailsAndSave() {
-        let tablesQuery = app.tables
-        let nameTextField = tablesQuery.cells.containing(.staticText, identifier:"Name").textFields["userInputTextField"]
+        let nameTextField = app.textFields["firstNameTextField"]
         nameTextField.tap()
         nameTextField.clearTextField()
         nameTextField.typeText(testName)
         
-        let lastNameTextField = tablesQuery.cells.containing(.staticText, identifier:"Last Name").textFields["userInputTextField"]
+        let lastNameTextField = app.textFields["lastNameTextField"]
         lastNameTextField.tap()
         lastNameTextField.clearTextField()
         lastNameTextField.typeText(testLastName)
         
-        let emailTextField = tablesQuery.cells.containing(.staticText, identifier:"Email").textFields["userInputTextField"]
+        let emailTextField = app.textFields["emailTextField"]
         emailTextField.tap()
         emailTextField.clearTextField()
         emailTextField.typeText(testEmail)
         
-        let phoneTextField = tablesQuery.cells.containing(.staticText, identifier:"Phone").textFields["userInputTextField"]
+        let phoneTextField = app.textFields["phoneTextField"]
         phoneTextField.tap()
         phoneTextField.clearTextField()
         phoneTextField.typeText(testPhone)
-        
-        goToAddressFromDeliveryDetails()
-        
-        fillAddressAndSave()
+
+        let line1TextField = app.textFields["line1TextField"]
+        line1TextField.tap()
+        line1TextField.clearTextField()
+        line1TextField.typeText(testAddressLine1)
+
+        let cityTextField = app.textFields["cityTextField"]
+        cityTextField.tap()
+        cityTextField.clearTextField()
+        cityTextField.typeText(testCity)
+
+        let stateOrCountyTextField = app.textFields["stateOrCountyTextField"]
+        stateOrCountyTextField.tap()
+        stateOrCountyTextField.clearTextField()
+        stateOrCountyTextField.typeText(testCounty)
+
+        let zipOrPostcodeTextField = app.textFields["zipOrPostcodeTextField"]
+        zipOrPostcodeTextField.tap()
+        zipOrPostcodeTextField.clearTextField()
+        zipOrPostcodeTextField.typeText(testPostalCode)
         
         app.navigationBars["Delivery Details"].buttons["Save"].tap()
     }

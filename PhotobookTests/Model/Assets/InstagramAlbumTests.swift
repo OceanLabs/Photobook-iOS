@@ -29,6 +29,7 @@
 
 import XCTest
 import OAuthSwift
+@testable import Photobook_App
 @testable import Photobook
 
 class InstagramAlbumTests: XCTestCase {
@@ -134,8 +135,8 @@ class InstagramAlbumTests: XCTestCase {
         instagramApiManager.data = dataObject
         instagramAlbum.loadAssets { _ in }
         
-        if let asset = instagramAlbum.assets.first as? URLAsset {
-            XCTAssertEqual(asset.images.count, 3)
+        if let photobookAsset = instagramAlbum.assets.first, let urlAsset = photobookAsset.asset as? URLAsset {
+            XCTAssertEqual(urlAsset.images.count, 3)
         } else {
             XCTFail()
         }

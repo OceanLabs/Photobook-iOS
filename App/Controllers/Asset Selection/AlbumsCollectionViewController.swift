@@ -28,6 +28,7 @@
 //
 
 import UIKit
+import Photobook
 
 /// View Controller to show albums. It doesn't care about the source of those albums as long as they conform to the Album protocol.
 class AlbumsCollectionViewController: UICollectionViewController {
@@ -44,9 +45,9 @@ class AlbumsCollectionViewController: UICollectionViewController {
     private let albumCellLabelsHeight: CGFloat = 50
     private let marginBetweenAlbums: CGFloat = 20
     
-    var albumManager: AlbumManager!
+    lazy var albumManager: AlbumManager = PhotosAlbumManager()
     private let selectedAssetsManager = SelectedAssetsManager()
-    var assets: [Asset]!
+    var assets: [PhotobookAsset]!
     
     private var accountManager: AccountClient?
     var collectorMode: AssetCollectorMode = .selecting
@@ -87,8 +88,8 @@ class AlbumsCollectionViewController: UICollectionViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
         
         // Listen for album changes
-        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereAdded(_:)), name: AssetsNotificationName.albumsWereAdded, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AlbumManagerNotificationName.albumsWereUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(albumsWereAdded(_:)), name: AlbumManagerNotificationName.albumsWereAdded, object: nil)
     }
     
     func loadAlbums() {
@@ -190,7 +191,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     }
     
     @objc private func selectedAssetManagerCountChanged(_ notification: NSNotification) {
-        guard let assets = notification.userInfo?[SelectedAssetsManager.notificationUserObjectKeyAssets] as? [Asset], let collectionView = collectionView else {
+        guard let assets = notification.userInfo?[SelectedAssetsManager.notificationUserObjectKeyAssets] as? [PhotobookAsset], let collectionView = collectionView else {
             return
         }
         var indexPathsToReload = [IndexPath]()
@@ -216,7 +217,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
         var indexPathsChanged = [IndexPath]()
         
         for albumChange in albumsChanges {
-            guard let index = albumManager.albums.index(where: { $0.identifier == albumChange.album.identifier }) else { continue }
+            guard let index = albumManager.albums.index(where: { $0.identifier == albumChange.albumIdentifier }) else { continue }
             indexPathsChanged.append(IndexPath(item: index, section: 0))
         }
         
@@ -249,7 +250,7 @@ extension AlbumsCollectionViewController: LogoutHandler {
     @objc private func confirmLogout() {
         guard let accountManager = accountManager else { return }
         let alertController = UIAlertController(title: NSLocalizedString("Social/LogoutConfirmationAlertTitle", value: "Log Out", comment: "Alert title asking the user to log out of social service eg Instagram/Facebook"), message: NSLocalizedString("Social/LogoutConfirmationAlertMessage", value: "Are you sure you want to log out of \(accountManager.serviceName)?", comment: "Alert message asking the user to log out of social service eg Instagram/Facebook"), preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: NSLocalizedString("Alert/Yes", value: "Yes", comment: "Affirmative button title for alert asking the user confirmation for an action"), style: .default, handler: { _ in
+        alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.yes, style: .default, handler: { _ in
             accountManager.logout()
             self.popToLandingScreen()
         }))
@@ -272,7 +273,7 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
     func actionsForAssetCollectorViewControllerHiddenStateChange(_ assetCollectorViewController: AssetCollectorViewController, willChangeTo hidden: Bool) -> () -> () {
         return { [weak welf = self] in
             let bottomInset: CGFloat
-            if #available(iOS 11, *){
+            if #available(iOS 11, *) {
                 bottomInset = hidden ? 0 : assetCollectorViewController.viewHeight
             } else {
                 bottomInset = hidden ? assetCollectorViewController.viewHeight - assetCollectorViewController.view.transform.ty : assetCollectorViewController.viewHeight
@@ -284,31 +285,52 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
     func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
         switch collectorMode {
         case .adding:
-            let photobookAssets = PhotobookAsset.photobookAssets(with: selectedAssetsManager.selectedAssets)
-            addingDelegate?.didFinishAdding(photobookAssets)
+            addingDelegate?.didFinishAdding(selectedAssetsManager.selectedAssets)
         default:
+            let dataSourceBackup = AssetDataSourceBackup()
+            dataSourceBackup.albumManager = albumManager
+            AssetDataSourceBackupManager.shared.saveBackup(dataSourceBackup)
+            
             if UserDefaults.standard.bool(forKey: hasShownTutorialKey) {
-                navigationController?.pushViewController(photobookViewController(), animated: true)
+                if let viewController = photobookViewController() {
+                    navigationController?.pushViewController(viewController, animated: true)
+                }
             } else {
                 UserDefaults.standard.set(true, forKey: hasShownTutorialKey)
 
-                let tutorialViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
-                tutorialViewController.delegate = self
+                let tutorialViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
+                tutorialViewController.completionClosure = { [weak welf = self] (viewController) in
+                    guard let photobookViewController = welf?.photobookViewController() else { return }
+                    welf?.navigationController?.pushViewController(photobookViewController, animated: false)
+                    welf?.dismiss(animated: true, completion: nil)
+                }
                 present(tutorialViewController, animated: true, completion: nil)
             }
         }
     }
     
-    private func photobookViewController() -> PhotobookViewController {
-        let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
-        photobookViewController.assets = selectedAssetsManager.selectedAssets
-        photobookViewController.photobookDelegate = self
-        photobookViewController.completionClosure = { (photobookProduct) in
-            OrderManager.shared.reset()
-            OrderManager.shared.basketOrder.products = [photobookProduct]
+    private func photobookViewController() -> UIViewController? {
+        let photobookViewController = PhotobookSDK.shared.photobookViewController(with: selectedAssetsManager.selectedAssets, embedInNavigation: false, delegate: self) { [weak welf = self] (viewController, success) in
             
-            let checkoutViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "CheckoutViewController") as! CheckoutViewController
-            photobookViewController.navigationController?.pushViewController(checkoutViewController, animated: true)
+            let items = Checkout.shared.numberOfItemsInBasket()
+            if items == 0 {
+                Checkout.shared.addCurrentProductToBasket()
+            } else {
+                // Only allow one item in the basket
+                Checkout.shared.clearBasketOrder()
+                Checkout.shared.addCurrentProductToBasket(items: items)
+            }
+
+            // Photobook completion
+            if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, dismissClosure: {
+                [weak welf = self] (viewController, success) in
+                welf?.navigationController?.popToRootViewController(animated: true)
+                if success {
+                    NotificationCenter.default.post(name: SelectedAssetsManager.notificationNamePhotobookComplete, object: nil)
+                }
+            }) {
+                welf?.navigationController?.pushViewController(checkoutViewController, animated: true)
+            }
         }
         return photobookViewController
     }
@@ -322,22 +344,9 @@ extension AlbumsCollectionViewController: PhotobookDelegate {
 
         return modalAlbumsCollectionViewController
     }
-    
-    func wantsToDismiss(_ viewController: UIViewController) {
-        if let _ = viewController as? TutorialViewController {
-            navigationController?.pushViewController(photobookViewController(), animated: false)
-            dismiss(animated: true, completion: nil)
-            return
-        }
-        
-        if let tabBar = tabBarController?.tabBar {
-            tabBar.isHidden = false
-        }
-        navigationController?.popViewController(animated: true)
-    }
 }
 
-extension AlbumsCollectionViewController{
+extension AlbumsCollectionViewController {
     // MARK: UICollectionViewDataSource
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {

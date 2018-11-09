@@ -256,9 +256,9 @@ class AddressTableViewController: UITableViewController {
             cell.textField.autocapitalizationType = .words
             cell.textField.text = deliveryDetails.firstName
             cell.topSeparator.isHidden = false
-            cell.accessibilityIdentifier = "nameCell"
             cell.textField.accessibilityLabel = cell.label?.text
             firstNameTextField = cell.textField
+            firstNameTextField.accessibilityIdentifier = "firstNameTextField"
         case .lastName:
             cell.label?.text = DetailsFieldLabels.lastName
             if #available(iOS 10.0, *) {
@@ -268,9 +268,9 @@ class AddressTableViewController: UITableViewController {
             cell.textField.returnKeyType = .next
             cell.textField.autocapitalizationType = .words
             cell.textField.text = deliveryDetails.lastName
-            cell.accessibilityIdentifier = "lastNameCell"
             cell.textField.accessibilityLabel = cell.label?.text
             lastNameTextField = cell.textField
+            lastNameTextField.accessibilityIdentifier = "lastNameTextField"
         case .email:
             cell.label?.text = DetailsFieldLabels.email
             if #available(iOS 10.0, *) {
@@ -283,6 +283,7 @@ class AddressTableViewController: UITableViewController {
             cell.accessibilityIdentifier = "emailCell"
             cell.textField.accessibilityLabel = cell.label?.text
             emailTextField = cell.textField
+            emailTextField.accessibilityIdentifier = "emailTextField"
         case .phone:
             cell.label?.text = DetailsFieldLabels.phone
             cell.message = Constants.phoneExplanation
@@ -297,6 +298,7 @@ class AddressTableViewController: UITableViewController {
             cell.textField.accessibilityLabel = cell.label?.text
             cell.textField.accessibilityHint = Constants.phoneExplanation
             phoneTextField = cell.textField
+            phoneTextField.accessibilityIdentifier = "phoneTextField"
         case .line1:
             cell.label?.text = DetailsFieldLabels.line1
             if #available(iOS 10.0, *) {

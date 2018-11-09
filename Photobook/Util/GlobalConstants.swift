@@ -41,8 +41,6 @@ let photobookResourceBundle: Bundle = {
 }()
 let photobookMainStoryboard =  UIStoryboard(name: "Photobook", bundle: photobookResourceBundle)
 
-let hasShownTutorialKey = "PhotobookTutorialShown"
-
 struct Colors {
     static let blueTint = UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0)
     static let greyTint = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1.0)
@@ -81,11 +79,5 @@ struct CommonLocalizedStrings {
 
     static func serviceAccessError(serviceName: String) -> String {
         return NSLocalizedString("Generic/AccessError", value: "There was an error when trying to access \(serviceName)", comment: "Generic error when trying to access a social service eg Instagram/Facebook")
-    }
-}
-
-class PhotobookApp {
-    static func isRunningUnitTests() -> Bool {
-        return ProcessInfo.processInfo.environment["TESTS_RUNNING"] != nil
     }
 }

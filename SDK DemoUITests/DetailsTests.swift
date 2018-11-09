@@ -35,10 +35,15 @@ class DetailsTests: PhotobookUITest {
         automation.goToBasket()
         automation.goToDeliveryDetailsFromBasket()
         
-        let nameTextField = automation.app.cells["nameCell"].textFields["userInputTextField"]
-        let lastNameTextField = automation.app.cells["lastNameCell"].textFields["userInputTextField"]
-        let emailTextField = automation.app.cells["emailCell"].textFields["userInputTextField"]
-        let phoneTextField = automation.app.cells["phoneCell"].textFields["userInputTextField"]
+        let nameTextField = automation.app.textFields["firstNameTextField"]
+        let lastNameTextField = automation.app.textFields["lastNameTextField"]
+        let emailTextField = automation.app.textFields["emailTextField"]
+        let phoneTextField = automation.app.textFields["phoneTextField"]
+        let line1TextField = automation.app.textFields["line1TextField"]
+        let cityTextField = automation.app.textFields["cityTextField"]
+        let zipOrPostalCodeTextField = automation.app.textFields["zipOrPostcodeTextField"]
+        let stateOrCountyTextField = automation.app.textFields["stateOrCountyTextField"]
+
         
         XCTAssertNotNil(nameTextField.value as? String)
         XCTAssertEqual(nameTextField.value as! String, "Required")
@@ -51,9 +56,6 @@ class DetailsTests: PhotobookUITest {
         
         XCTAssertNotNil(phoneTextField.value as? String)
         XCTAssertEqual(phoneTextField.value as! String, "Required")
-        
-        let addressErrorMessageLabel = automation.app.staticTexts["addressErrorMessageLabel"]
-        XCTAssertEqual(addressErrorMessageLabel.label, "")
         
         automation.app.navigationBars["Delivery Details"].buttons["Save"].tap()
         XCTAssertTrue(nameTextField.isHittable, "Should not have navigated away since the required information is not entered")
@@ -78,14 +80,25 @@ class DetailsTests: PhotobookUITest {
         automation.app.navigationBars["Delivery Details"].buttons["Save"].tap()
         XCTAssertTrue(nameTextField.isHittable, "Should not have navigated away since the required information is not entered")
         
-        XCTAssertNotNil(addressErrorMessageLabel.value)
-        XCTAssertEqual(addressErrorMessageLabel.label, "Required")
-        
-        automation.goToAddressFromDeliveryDetails()
-        automation.fillAddressAndSave()
-        
+        line1TextField.tap()
+        line1TextField.typeText(automation.testAddressLine1)
         automation.app.navigationBars["Delivery Details"].buttons["Save"].tap()
+        XCTAssertTrue(line1TextField.isHittable, "Should not have navigated away since the required information is not entered")
         
+        cityTextField.tap()
+        cityTextField.typeText(automation.testCity)
+        automation.app.navigationBars["Delivery Details"].buttons["Save"].tap()
+        XCTAssertTrue(line1TextField.isHittable, "Should not have navigated away since the required information is not entered")
+        
+        zipOrPostalCodeTextField.tap()
+        zipOrPostalCodeTextField.typeText(automation.testPostalCode)
+        automation.app.navigationBars["Delivery Details"].buttons["Save"].tap()
+        XCTAssertTrue(line1TextField.isHittable, "Should not have navigated away since the required information is not entered")
+        
+        stateOrCountyTextField.tap()
+        stateOrCountyTextField.typeText(automation.testCounty)
+        automation.app.navigationBars["Delivery Details"].buttons["Save"].tap()
+
         XCTAssertFalse(nameTextField.exists, "We should have all the required information at this point so we should have navigated away")
     }
     
@@ -93,8 +106,8 @@ class DetailsTests: PhotobookUITest {
         automation.goToBasket()
         automation.goToDeliveryDetailsFromBasket()
         
-        let emailTextField = automation.app.cells["emailCell"].textFields["userInputTextField"]
-        let phoneTextField = automation.app.cells["phoneCell"].textFields["userInputTextField"]
+        let emailTextField = automation.app.textFields["emailTextField"]
+        let phoneTextField = automation.app.textFields["phoneTextField"]
         let emailMessageLabel = automation.app.cells["emailCell"].staticTexts["userInputMessageLabel"]
         let phoneMessageLabel = automation.app.cells["phoneCell"].staticTexts["userInputMessageLabel"]
         
@@ -102,7 +115,7 @@ class DetailsTests: PhotobookUITest {
         XCTAssertEqual(emailMessageLabel.label, "", "We should not be showing an error message at this time")
         emailTextField.tap()
         emailTextField.typeText("i.am.a.clown.email.com\n")
-        XCTAssertEqual(emailMessageLabel.label, "Email is invalid.", "We should be showing an error message at this time")
+        XCTAssertEqual(emailMessageLabel.label, "Email is invalid", "We should be showing an error message at this time")
         
         emailTextField.tap()
         emailTextField.typeText("this.is.a.valid.email@tada.com\n")
@@ -112,7 +125,7 @@ class DetailsTests: PhotobookUITest {
         XCTAssertEqual(phoneMessageLabel.label, "Required by the postal service in case there are any issues with the delivery", "We should not be showing an error message at this time")
         phoneTextField.tap()
         phoneTextField.typeText("1234\n")
-        XCTAssertEqual(phoneMessageLabel.label, "Phone is invalid.", "We should be showing an error message at this time")
+        XCTAssertEqual(phoneMessageLabel.label, "Phone is invalid", "We should be showing an error message at this time")
         
         phoneTextField.tap()
         phoneTextField.typeText("1234567890\n")
