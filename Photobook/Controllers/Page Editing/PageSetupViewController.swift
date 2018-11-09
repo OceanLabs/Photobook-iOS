@@ -129,7 +129,11 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     // Public settings
     weak var delegate: PageSetupDelegate?
-    var assets: [Asset]!
+    weak var assetsDelegate: PhotobookAssetsDelegate?
+    
+    var assets: [Asset]! {
+        return assetsDelegate!.assets!
+    }
     
     var pageIndex: Int! {
         didSet {
@@ -463,8 +467,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func setupAssetSelection() {
-        assetSelectorViewController.assets = assets
         assetSelectorViewController.photobookDelegate = photobookDelegate
+        assetSelectorViewController.assetsDelegate = assetsDelegate
         assetSelectorViewController.selectedAsset = productLayout.asset
     }
     
