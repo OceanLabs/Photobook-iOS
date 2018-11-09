@@ -44,7 +44,7 @@ class PhotobookPreviewTests: PhotobookUITest {
         
         let predicate = NSPredicate(format: "label != \"\(originalTitle)\"")
         expectation(for: predicate, evaluatedWith: titleButton, handler: nil)
-        waitForExpectations(timeout: 3, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
 
         XCTAssertNotEqual(titleButton.label, originalTitle)
     }
