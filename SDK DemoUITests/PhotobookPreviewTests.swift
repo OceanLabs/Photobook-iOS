@@ -42,6 +42,10 @@ class PhotobookPreviewTests: PhotobookUITest {
         let sizeButton = automation.app.sheets.buttons.matching(NSPredicate(format: "label != \"Cancel\" && label != \"\(originalTitle)\"")).firstMatch
         sizeButton.tap()
         
+        let predicate = NSPredicate(format: "label != \"\(originalTitle)\"")
+        expectation(for: predicate, evaluatedWith: titleButton, handler: nil)
+        waitForExpectations(timeout: 3, handler: nil)
+
         XCTAssertNotEqual(titleButton.label, originalTitle)
     }
     
