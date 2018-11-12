@@ -10,6 +10,7 @@ pod 'SDWebImage', '~> 4.3'
 pod 'FBSDKCoreKit'
 pod 'FBSDKLoginKit'
 pod 'Analytics', '~> 3.0'
+pod 'PayPal-iOS-SDK/Core', '~> 2.18.0'
 end
 
 target 'SDK Demo' do
@@ -19,7 +20,6 @@ target 'Photobook' do
 pod 'Stripe'
 pod 'Fabric'
 pod 'Crashlytics'
-pod 'PayPal-iOS-SDK/Core', '~> 2.18.0'
 pod 'KeychainSwift'
 pod 'SDWebImage', '~> 4.3'
 pod 'Analytics', '~> 3.0'
