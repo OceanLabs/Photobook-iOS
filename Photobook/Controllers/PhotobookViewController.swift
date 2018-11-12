@@ -1137,6 +1137,8 @@ extension PhotobookViewController: ActionsCollectionViewCellDelegate {
     func didTapActionButton(at index: Int, for indexPath: IndexPath) {
         guard indexPath.section == 1 else { return }
         
+        interactingItemIndexPath = nil
+        
         switch index {
         case 0 where indexPath.item > 0:
             deletePages(at: indexPath)
