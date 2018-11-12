@@ -444,15 +444,22 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
                     navigationController?.pushViewController(viewController, animated: true)
                 }
             } else {
-                UserDefaults.standard.set(true, forKey: hasShownTutorialKey)
+                guard let photobookViewController = self.photobookViewController() else { return }
 
-                let tutorialViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
-                tutorialViewController.completionClosure = { [weak welf = self] (viewController) in
-                    guard let photobookViewController = welf?.photobookViewController() else { return }
-                    welf?.navigationController?.pushViewController(photobookViewController, animated: false)
-                    welf?.dismiss(animated: true, completion: nil)
+                let completion = { [weak welf = self] in
+                    UserDefaults.standard.set(true, forKey: hasShownTutorialKey)
+                    
+                    let tutorialViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
+                    tutorialViewController.completionClosure = { [weak welf = self] (viewController) in
+                        welf?.dismiss(animated: true, completion: nil)
+                    }
+                    welf?.present(tutorialViewController, animated: true)
                 }
-                present(tutorialViewController, animated: true, completion: nil)
+            
+                CATransaction.begin()
+                CATransaction.setCompletionBlock(completion)
+                self.navigationController?.pushViewController(photobookViewController, animated: true)
+                CATransaction.commit()
             }
         }
         selectedAssetsManager?.orderAssetsByDate()
