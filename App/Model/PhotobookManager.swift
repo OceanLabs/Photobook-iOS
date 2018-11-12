@@ -109,9 +109,7 @@ class PhotobookManager: NSObject {
                     tabBar.isHidden = false
                 }
 
-                if let navigationController = viewController.navigationController {
-                    navigationController.popToRootViewController(animated: true)
-                }
+                viewController.navigationController?.popToRootViewController(animated: true)
                 return
             }
             
