@@ -18,8 +18,6 @@ Description here
   s.module_name         = 'Photobook'
   s.dependency "KeychainSwift", "~> 11.0.0"
   s.dependency "SDWebImage", "~> 4.4.0"
-  s.dependency "FBSDKCoreKit", "~> 4.33.0"
-  s.dependency "FBSDKLoginKit", "~> 4.33.0"
   s.dependency "Stripe"
   s.dependency "Analytics", "~> 3.0"
   s.dependency "PayPal-iOS-Dynamic-Loader"
