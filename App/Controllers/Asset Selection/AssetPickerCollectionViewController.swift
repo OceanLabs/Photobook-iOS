@@ -463,6 +463,17 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
         let photobookViewController = PhotobookSDK.shared.photobookViewController(with: selectedAssetsManager!.selectedAssets, embedInNavigation: false, delegate: self) {
             [weak welf = self] (viewController, success) in
             
+            guard success else {
+                AssetDataSourceBackupManager.shared.deleteBackup()
+                
+                if let tabBar = viewController.tabBarController?.tabBar {
+                    tabBar.isHidden = false
+                }
+                
+                viewController.navigationController?.popViewController(animated: true)
+                return
+            }
+
             let items = Checkout.shared.numberOfItemsInBasket()
             if items == 0 {
                 Checkout.shared.addCurrentProductToBasket()
