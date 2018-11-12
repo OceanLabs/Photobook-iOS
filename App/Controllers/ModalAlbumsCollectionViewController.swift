@@ -199,8 +199,10 @@ extension ModalAlbumsCollectionViewController: PhotobookAssetAddingDelegate {
     func didFinishAdding(_ assets: [PhotobookAsset]?) {
         animateContainerViewOffScreen() {
             // Post notification for any selectedAssetManagers listening
-            NotificationCenter.default.post(name: AssetPickerNotificationName.assetPickerAddedAssets, object: self, userInfo: ["assets": assets])
-
+            if let assets = assets {
+                NotificationCenter.default.post(name: AssetPickerNotificationName.assetPickerAddedAssets, object: self, userInfo: ["assets": assets])
+            }
+            
             // Notify the delegate
             self.addingDelegate?.didFinishAdding(assets)
         }

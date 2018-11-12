@@ -150,7 +150,7 @@ class MessageBarViewController: UIViewController {
             sharedController.removeFromParent()
         }
         
-        sharedController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: MessageBarViewController.identifier) as! MessageBarViewController
+        sharedController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: MessageBarViewController.identifier) as? MessageBarViewController
         sharedController.action = action
         sharedController.message = message
         sharedController.dismissAfter = dismissAfter
