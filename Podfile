@@ -14,6 +14,7 @@ pod 'PayPal-iOS-SDK/Core', '~> 2.18.0'
 end
 
 target 'SDK Demo' do
+pod 'PayPal-iOS-SDK/Core', '~> 2.18.0'
 end
 
 target 'Photobook' do
