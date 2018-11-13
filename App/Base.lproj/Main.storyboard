@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WZR-4z-wzI">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WZR-4z-wzI">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -1686,7 +1686,7 @@
         <!--Empty Screen View Controller-->
         <scene sceneID="NNa-F2-EPq">
             <objects>
-                <viewController storyboardIdentifier="EmptyScreenViewController" id="uAr-QE-x8a" customClass="EmptyScreenViewController" customModule="Photobook" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EmptyScreenViewController" id="uAr-QE-x8a" customClass="EmptyScreenViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="zOP-Ua-BAZ"/>
                         <viewControllerLayoutGuide type="bottom" id="GhX-km-5uv"/>
@@ -1767,7 +1767,7 @@
         <!--Message Bar View Controller-->
         <scene sceneID="qh2-fu-zuv">
             <objects>
-                <viewController storyboardIdentifier="MessageBarViewController" id="igj-KR-iKR" customClass="MessageBarViewController" customModule="Photobook" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MessageBarViewController" id="igj-KR-iKR" customClass="MessageBarViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Dmy-dw-CWg"/>
                         <viewControllerLayoutGuide type="bottom" id="JZW-zg-mdp"/>

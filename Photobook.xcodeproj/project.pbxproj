@@ -154,7 +154,6 @@
 		2ED14C2E2063AA4B00ED2E2C /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08CF2021E4A800C55D2F /* Montserrat-Bold.ttf */; };
 		2ED14C2F2063AA4B00ED2E2C /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FCE08D02021E4AD00C55D2F /* OpenSans-Regular.ttf */; };
 		2ED14C312063AA4B00ED2E2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E0B58861FB30F2100F31A9E /* Assets.xcassets */; };
-		2ED14C322063AB7200ED2E2C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E0B58831FB30F2100F31A9E /* Main.storyboard */; };
 		2ED5B3811FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3801FB478CC00F17F6D /* AlbumSearchResultsTableViewController.swift */; };
 		2ED5B3831FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED5B3821FB4806D00F17F6D /* AlbumSearchResultsTableViewCell.swift */; };
 		2ED79FE91FBAEDE90046B96C /* AssetPickerCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED79FE81FBAEDE90046B96C /* AssetPickerCollectionViewController.swift */; };
@@ -1841,7 +1840,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E533AD820E3840D004F8481 /* Photobook.storyboard in Resources */,
-				2ED14C322063AB7200ED2E2C /* Main.storyboard in Resources */,
 				2ED14C2D2063AA4B00ED2E2C /* Lora-Regular.ttf in Resources */,
 				2ED14C2E2063AA4B00ED2E2C /* Montserrat-Bold.ttf in Resources */,
 				2ED14C2F2063AA4B00ED2E2C /* OpenSans-Regular.ttf in Resources */,
