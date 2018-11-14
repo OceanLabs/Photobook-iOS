@@ -614,7 +614,9 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate,
     }
     
     private func editPage(_ page: PhotobookPageView, at index: Int, frame: CGRect, containerView: UIView) {
-        closeCurrentCell()
+        closeCurrentCell() {
+            self.interactingItemIndexPath = nil
+        }
         
         let modalNavigationController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PageSetupNavigationController") as! UINavigationController
         if #available(iOS 11.0, *) {
@@ -754,10 +756,11 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate,
             completion?()
             return
         }
-        cell.isPageInteractionEnabled = true
-        cell.shouldRevealActions = true
-        cell.animateCellClosed(completion: completion)
-        interactingItemIndexPath = nil
+        cell.animateCellClosed() {
+            cell.isPageInteractionEnabled = true
+            cell.shouldRevealActions = true
+            completion?()
+        }
     }
 }
 
@@ -889,7 +892,9 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
 extension PhotobookViewController: PhotobookCoverCollectionViewCellDelegate {
     
     func didTapOnSpine(with rect: CGRect, in containerView: UIView) {
-        closeCurrentCell()
+        closeCurrentCell() {
+            self.interactingItemIndexPath = nil
+        }
         
         let initialRect = containerView.convert(rect, to: view)
         
@@ -1137,23 +1142,26 @@ extension PhotobookViewController: ActionsCollectionViewCellDelegate {
     func didTapActionButton(at index: Int, for indexPath: IndexPath) {
         guard indexPath.section == 1 else { return }
         
-        interactingItemIndexPath = nil
-        
-        switch index {
-        case 0 where indexPath.item > 0:
-            deletePages(at: indexPath)
-        case 1 where indexPath.item > 0, 0 where indexPath.item == 0:
-            addPages(after: indexPath)
-        case 2 where indexPath.item > 0:
-            duplicatePages(at: indexPath)
-        default:
-            return
+        closeCurrentCell() {
+            self.interactingItemIndexPath = nil
+            
+            switch index {
+            case 0 where indexPath.item > 0:
+                self.deletePages(at: indexPath)
+            case 1 where indexPath.item > 0, 0 where indexPath.item == 0:
+                self.addPages(after: indexPath)
+            case 2 where indexPath.item > 0:
+                self.duplicatePages(at: indexPath)
+            default:
+                return
+            }
         }
     }
     
     func didCloseCell(at indexPath: IndexPath) {
         guard interactingItemIndexPath != nil, let cell = collectionView.cellForItem(at: interactingItemIndexPath!) as? PhotobookCollectionViewCell else { return }
         cell.isPageInteractionEnabled = true
+        cell.shouldRevealActions = true
         interactingItemIndexPath = nil
     }
     
@@ -1166,7 +1174,7 @@ extension PhotobookViewController: ActionsCollectionViewCellDelegate {
             interactingItemIndexPath = indexPath
         }
         
-        guard let cell = collectionView.cellForItem(at: interactingItemIndexPath!) as? PhotobookCollectionViewCell else { return }
+        guard let cell = collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell else { return }
         cell.isPageInteractionEnabled = false
     }
 }

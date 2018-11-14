@@ -376,9 +376,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
     
     private func tappedActionButton(_ actionButton: ActionButtonView) {
         let index = self.actionButtons.firstIndex(of: actionButton)!
-        animateCellClosed(duration: 0.3) {
-            self.actionsDelegate?.didTapActionButton(at: index, for: self.indexPath)
-        }
+        actionsDelegate?.didTapActionButton(at: index, for: self.indexPath)
     }
  }
 
