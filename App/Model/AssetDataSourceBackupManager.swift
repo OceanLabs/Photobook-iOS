@@ -31,6 +31,7 @@ import Foundation
 
 enum AssetDataSourceException: Error {
     case unsupported(details: String)
+    case notFound
 }
 
 class AssetDataSourceBackupManager {
@@ -82,6 +83,7 @@ class AssetDataSourceBackup: Codable {
     
     enum Datasource: Codable {
         case unsupported
+        case story(Story?)
         case photos(PhotosAlbum?)
         case facebook(FacebookAlbum?)
         case instagram
@@ -93,6 +95,9 @@ class AssetDataSourceBackup: Codable {
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             switch self {
+            case .story(let story):
+                try container.encode("story", forKey: .type)
+                try container.encode(story, forKey: .album)
             case .photos(let photosAlbum):
                 try container.encode("photos", forKey: .type)
                 try container.encode(photosAlbum, forKey: .album)
@@ -110,6 +115,9 @@ class AssetDataSourceBackup: Codable {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             let type = try container.decode(String.self, forKey: .type)
             switch type {
+            case "story":
+                let album = try? container.decode(Story.self, forKey: .album)
+                self = .story(album)
             case "photos":
                 let album = try? container.decode(PhotosAlbum.self, forKey: .album)
                 self = .photos(album)
@@ -135,7 +143,9 @@ class AssetDataSourceBackup: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
         // Encode album
-        if let album = album as? PhotosAlbum {
+        if let album = album as? Story {
+            try container.encode(Datasource.story(album), forKey: .album)
+        } else if let album = album as? PhotosAlbum {
             try container.encode(Datasource.photos(album), forKey: .album)
         } else if let album = album as? FacebookAlbum {
             try container.encode(Datasource.facebook(album), forKey: .album)
@@ -158,6 +168,7 @@ class AssetDataSourceBackup: Codable {
         
         if let albumDatasource = try values.decodeIfPresent(Datasource.self, forKey: .album) {
             switch albumDatasource {
+            case .story(let story): album = story
             case .photos(let photosAlbum): album = photosAlbum
             case .facebook(let facebookAlbum): album = facebookAlbum
             case .instagram: album = InstagramAlbum()
@@ -174,6 +185,8 @@ class AssetDataSourceBackup: Codable {
             }
             albumManager?.loadAlbums(completionHandler: nil)
         }
+        
+        if albumManager == nil && album == nil { throw AssetDataSourceException.notFound }
     }
 }
 
