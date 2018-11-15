@@ -77,10 +77,6 @@ class ViewController: UIViewController {
             welf?.navigationController?.popToRootViewController(animated: true)
         }) {
             navigationController?.pushViewController(viewController, animated: true)
-        } else {
-            let alertController = UIAlertController(title: "Basket is empty", message: nil, preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            present(alertController, animated: true, completion: nil)
         }
     }
 }
