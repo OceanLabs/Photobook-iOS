@@ -186,7 +186,8 @@ class KiteAPIClient {
                 return
             }
             
-            if let payPalDict = paymentKeys["paypal"] as? [String: Any],
+            if OLPayPalWrapper.isPayPalAvailable(),
+                let payPalDict = paymentKeys["paypal"] as? [String: Any],
                 let publicKey = payPalDict["public_key"] as? String {
                 switch KiteAPIClient.environment {
                 case .test:
