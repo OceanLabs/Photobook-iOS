@@ -276,6 +276,8 @@ class CheckoutViewController: UIViewController {
         
         order.updateCost(forceUpdate: forceCostUpdate, forceShippingMethodUpdate: forceShippingMethodsUpdate) { [weak welf = self] (error) in
             
+            OrderManager.shared.saveBasketOrder()
+            
             welf?.emptyScreenViewController.hide()
             welf?.progressOverlayViewController.hide()
             welf?.promoCodeActivityIndicator.stopAnimating()
@@ -763,6 +765,8 @@ extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
             guard let stelf = welf else { return }
             
             stelf.modalPresentationDismissedGroup.leave()
+            
+            OrderManager.shared.saveBasketOrder()
             
             if let error = error {
                 MessageBarViewController.show(message: ErrorMessage(error), parentViewController: stelf, offsetTop: stelf.navigationController!.navigationBar.frame.maxY, centred: true) {
