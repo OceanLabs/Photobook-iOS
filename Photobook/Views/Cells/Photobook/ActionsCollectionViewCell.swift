@@ -209,11 +209,15 @@ class ActionsCollectionViewCell: UICollectionViewCell {
                     shouldHidePreferredAction = hasMoreThanOneButton && showingPreferredAction && constant < actionsViewWidth + Constants.preferredActionTriggerOffset
                 }
             } else {
-                if isPanningLeft {
+                if -delta > 0.0 {
                     constant = actionsViewWidth + rubberBandDistance(offset: -delta, dimension: bounds.width)
-                    shouldShowPreferredAction = canUsePreferredAction && hasMoreThanOneButton && !showingPreferredAction && -delta > Constants.preferredActionTriggerOffset
                 } else {
                     constant = max(startingRightEdgeContentPosition - delta, 0.0)
+                }
+
+                if isPanningLeft {
+                    shouldShowPreferredAction = canUsePreferredAction && hasMoreThanOneButton && !showingPreferredAction && -delta > Constants.preferredActionTriggerOffset
+                } else {
                     shouldHidePreferredAction = hasMoreThanOneButton && showingPreferredAction && constant < actionsViewWidth + Constants.preferredActionTriggerOffset
                 }
             }
