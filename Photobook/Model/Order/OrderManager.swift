@@ -243,6 +243,7 @@ class OrderManager {
     func cancelProcessing(completion: @escaping () -> Void) {
         if !isProcessingOrder {
             completion()
+            return
         }
         
         if isCancelling {
