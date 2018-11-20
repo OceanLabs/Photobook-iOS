@@ -64,18 +64,7 @@ Objective-C:
 PhotobookAsset *asset = [[PhotobookAsset alloc] initWithUrl:[NSURL URLWithString:@"https://psps.s3.amazonaws.com/sdk_static/4.jpg"] size:CGSizeMake(1034, 1034)];
     
     UIViewController *vc = [[PhotobookSDK shared] photobookViewControllerWith:@[asset] embedInNavigation:YES delegate:nil completion:^(UIViewController *controller, BOOL success){
-        if (!success) {
-            [controller dismissViewControllerAnimated:YES completion:NULL];
-        }
-        
-        [[Checkout shared] clearBasketOrder];
-        [[Checkout shared] addCurrentProductToBasketWithItems:1];
-        
-        UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO dismissClosure:^(UIViewController *checkoutController, BOOL success){
-            [controller dismissViewControllerAnimated:YES completion:NULL];
-        }];
-        
-        [controller.navigationController pushViewController:checkoutVc animated:YES];
+        [source dismissViewControllerAnimated:YES completion:NULL];
     }];
     
     [self presentViewController:vc animated:YES completion:NULL];
@@ -84,20 +73,9 @@ Swift:
 ```swift
 let asset = PhotobookAsset(withUrl: URL(string: "https://psps.s3.amazonaws.com/sdk_static/4.jpg"), size: CGSize(width: 1034, height: 1034))
 guard let photobookViewController = PhotobookSDK.shared.photobookViewController(with: [asset], completion: { [weak welf = self] (viewController, success) in
-            guard success, let stelf = welf else {
-                self.navigationController?.popToRootViewController(animated: true)
-                return
-            }
-            
-            Checkout.shared.clearBasketOrder()
-            Checkout.shared.addCurrentProductToBasket()
-
-            if let viewController = PhotobookSDK.shared.checkoutViewController(dismissClosure: { viewController, success in
-                welf?.navigationController?.popToRootViewController(animated: true)
-            }) {
-                welf?.navigationController?.pushViewController(viewController, animated: true)
-            }
-        }) else { return }
+    source.navigationController?.popToRootViewController(animated: true)
+}) else { return }
+present(photobookViewController, animated: true, completion: nil)
 ```
 * **Step 4:**: 🎉Profit🎉
 
