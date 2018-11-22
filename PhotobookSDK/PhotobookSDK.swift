@@ -161,7 +161,8 @@ struct AssetsNotificationName {
     private func photobookViewController(with photobookAssets: [PhotobookAsset]? = nil, embedInNavigation: Bool = false, delegate: PhotobookDelegate? = nil, useBackup: Bool = false, completion: @escaping (_ source: UIViewController, _ success: Bool) -> ()) -> UIViewController? {
         
         let dismissHandler: (_ source: UIViewController, _ success: Bool)->() = { source, success in
-            guard success else {
+            let isReceipt = source as? ReceiptViewController != nil || (source as? UINavigationController)?.topViewController as? ReceiptViewController != nil
+            guard success, !isReceipt else {
                 completion(source, success)
                 return
             }
