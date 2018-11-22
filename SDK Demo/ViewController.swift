@@ -53,18 +53,9 @@ class ViewController: UIViewController {
             let asset = PhotobookAsset(withUrl: URL(string: baseImageURL + "\(imageNumber).jpg")!, size: sizes[imageNumber]!)
             assets.append(asset)
         }
-        guard let photobookViewController = PhotobookSDK.shared.photobookViewController(with: assets, completion: { [weak welf = self] (viewController, success) in
-            guard success, let stelf = welf else {
-                self.navigationController?.popToRootViewController(animated: true)
-                return
-            }
-            
-            Checkout.shared.clearBasketOrder()
-            Checkout.shared.addCurrentProductToBasket()
-
-            stelf.showBasket(stelf)
+        guard let photobookViewController = PhotobookSDK.shared.photobookViewController(with: assets, completion: { source, _ in
+            source.navigationController?.popToRootViewController(animated: true)
         }) else { return }
-        
         navigationController?.pushViewController(photobookViewController, animated: true)
     }
     
@@ -77,10 +68,6 @@ class ViewController: UIViewController {
             welf?.navigationController?.popToRootViewController(animated: true)
         }) {
             navigationController?.pushViewController(viewController, animated: true)
-        } else {
-            let alertController = UIAlertController(title: "Basket is empty", message: nil, preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            present(alertController, animated: true, completion: nil)
         }
     }
 }

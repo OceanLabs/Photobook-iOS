@@ -141,7 +141,7 @@ struct AssetsNotificationName {
     ///   - delegate: Delegate that can provide a custom photo picker
     ///   - completion: Completion closure. Returns the view controller to be dismissed and whether the process was successful or not.
     /// - Returns: A photobook UIViewController
-    @objc public func photobookViewController(with photobookAssets: [PhotobookAsset], embedInNavigation: Bool = false, delegate: PhotobookDelegate? = nil, completion: ((_ source: UIViewController, _ success: Bool) -> ())? = nil) -> UIViewController? {
+    @objc public func photobookViewController(with photobookAssets: [PhotobookAsset], embedInNavigation: Bool = false, delegate: PhotobookDelegate? = nil, completion: @escaping (_ source: UIViewController, _ success: Bool) -> ()) -> UIViewController? {
         // Load the products here, so that the user avoids a loading screen on PhotobookViewController
         ProductManager.shared.initialise(completion: nil)
         return photobookViewController(with: photobookAssets, embedInNavigation: embedInNavigation, delegate: delegate, useBackup: false, completion: completion)
@@ -154,15 +154,33 @@ struct AssetsNotificationName {
     ///   - delegate: Delegate that can provide a custom photo picker
     ///   - completion: Completion closure. Returns the view controller to be dismissed and whether the process was successful or not.
     /// - Returns: A photobook UIViewController
-    @objc public func photobookViewControllerFromBackup(embedInNavigation: Bool = false, delegate: PhotobookDelegate? = nil, completion: ((_ source: UIViewController, _ success: Bool) -> ())? = nil) -> UIViewController? {
+    @objc public func photobookViewControllerFromBackup(embedInNavigation: Bool = false, delegate: PhotobookDelegate? = nil, completion: @escaping (_ source: UIViewController, _ success: Bool) -> ()) -> UIViewController? {
         return photobookViewController(with: nil, embedInNavigation: embedInNavigation, delegate: delegate, useBackup: true, completion: completion)
     }
     
-    private func photobookViewController(with photobookAssets: [PhotobookAsset]? = nil, embedInNavigation: Bool = false, delegate: PhotobookDelegate? = nil, useBackup: Bool = false, completion: ((_ source: UIViewController, _ success: Bool) -> ())? = nil) -> UIViewController? {
+    private func photobookViewController(with photobookAssets: [PhotobookAsset]? = nil, embedInNavigation: Bool = false, delegate: PhotobookDelegate? = nil, useBackup: Bool = false, completion: @escaping (_ source: UIViewController, _ success: Bool) -> ()) -> UIViewController? {
+        
+        let dismissHandler: (_ source: UIViewController, _ success: Bool)->() = { source, success in
+            let isReceipt = source as? ReceiptViewController != nil || (source as? UINavigationController)?.topViewController as? ReceiptViewController != nil
+            guard success, !isReceipt else {
+                completion(source, success)
+                return
+            }
+            
+            Checkout.shared.addCurrentProductToBasket()
+            
+            // Photobook completion
+            if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, dismissClosure: {
+                viewController, success in
+                completion(source, success)
+            }) {
+                source.navigationController?.pushViewController(checkoutViewController, animated: true)
+            }
+        }
         
         // Return the upload / receipt screen if there is an order in progress
         guard !isProcessingOrder else {
-            return receiptViewController(dismissClosure: completion)
+            return receiptViewController(dismissClosure: dismissHandler)
         }
 
         guard KiteAPIClient.shared.apiKey != nil else {
@@ -195,7 +213,7 @@ struct AssetsNotificationName {
         let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.assets = assets
         photobookViewController.photobookDelegate = delegate
-        photobookViewController.completionClosure = completion
+        photobookViewController.completionClosure = dismissHandler
         
         return embedInNavigation ? embedViewControllerInNavigation(photobookViewController) : photobookViewController
     }
@@ -206,7 +224,7 @@ struct AssetsNotificationName {
     ///   - embedInNavigation: Whether the returned view controller should be a UINavigationController. Defaults to false. Note that a navigation controller must be provided if false.
     ///   - dismissClosure: Closure called when the user wants to dismiss the receipt. Returns the view controller to be dismissed and whether the process was successful or not.
     /// - Returns: A receipt UIViewController
-    @objc public func receiptViewController(embedInNavigation: Bool = false, dismissClosure: ((_ source: UIViewController, _ success: Bool) -> ())? = nil) -> UIViewController? {
+    @objc public func receiptViewController(embedInNavigation: Bool = false, dismissClosure: @escaping (_ source: UIViewController, _ success: Bool) -> ()) -> UIViewController? {
         guard isProcessingOrder else { return nil }
         
         guard KiteAPIClient.shared.apiKey != nil else {
@@ -227,7 +245,7 @@ struct AssetsNotificationName {
     ///   - embedInNavigation: Whether the returned view controller should be a UINavigationController. Defaults to false. Note that a navigation controller must be provided if false.
     ///   - dismissClosure: Closure called when the user wants to dismiss the receipt. Returns the view controller to be dismissed and whether the process was successful or not.
     /// - Returns: A checkout ViewController
-    @objc public func checkoutViewController(embedInNavigation: Bool = false, dismissClosure: ((_ source: UIViewController, _ success: Bool) -> ())? = nil) -> UIViewController? {
+    @objc public func checkoutViewController(embedInNavigation: Bool = false, dismissClosure: @escaping (_ source: UIViewController, _ success: Bool) -> ()) -> UIViewController? {
         
         guard KiteAPIClient.shared.apiKey != nil else {
             fatalError("Photobook SDK: Receipt View Controller not initialised because the Kite API key was not set. You can get this from the Kite Dashboard.")
