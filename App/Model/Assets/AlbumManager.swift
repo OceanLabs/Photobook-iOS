@@ -32,6 +32,16 @@ struct AlbumManagerNotificationName {
     static let albumsWereAdded = Notification.Name("ly.kite.photobook.albumsWereAddedNotificationName")
 }
 
+class AlbumAddition: NSObject {
+    var albumIdentifier: String!
+    var index: Int!
+    
+    init(albumIdentifier: String, index: Int) {
+        self.albumIdentifier = albumIdentifier
+        self.index = index
+    }
+}
+
 import UIKit
 import Photobook
 
