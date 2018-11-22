@@ -35,7 +35,7 @@ struct ReceiptNotificationName {
     static let receiptWillDismiss = Notification.Name("ly.kite.sdk.receiptWillDismissNotificationName")
 }
 
-public class ReceiptViewController: UIViewController {
+class ReceiptViewController: UIViewController {
     
     private typealias State = ReceiptViewControllerState
     
@@ -83,7 +83,7 @@ public class ReceiptViewController: UIViewController {
         return ProgressOverlayViewController.progressOverlay(parent: self)
     }()
     
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         
         (navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(.clear)
@@ -99,7 +99,7 @@ public class ReceiptViewController: UIViewController {
         updateViews()
     }
     
-    override public func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         if navigationController == nil {
@@ -144,11 +144,11 @@ public class ReceiptViewController: UIViewController {
         })
     }
     
-    override public var shouldAutorotate: Bool {
+    override var shouldAutorotate: Bool {
         return false
     }
     
-    override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
     }
 
@@ -366,11 +366,11 @@ extension ReceiptViewController: OrderProcessingDelegate {
 
 extension ReceiptViewController: UITableViewDataSource {
     
-    public func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 7
     }
     
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case Section.header.rawValue:
             return 1
@@ -389,7 +389,7 @@ extension ReceiptViewController: UITableViewDataSource {
         }
     }
     
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case Section.header.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptHeaderTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptHeaderTableViewCell
