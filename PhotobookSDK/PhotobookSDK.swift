@@ -32,17 +32,6 @@ import SDWebImage
 
 struct AssetsNotificationName {
     static let albumsWereUpdated = Notification.Name("ly.kite.photobook.albumsWereUpdatedNotificationName")
-    static let albumsWereAdded = Notification.Name("ly.kite.photobook.albumsWereAddedNotificationName")
-}
-
-@objc public class AlbumAddition: NSObject {
-    public var albumIdentifier: String!
-    public var index: Int!
-    
-    public init(albumIdentifier: String, index: Int) {
-        self.albumIdentifier = albumIdentifier
-        self.index = index
-    }
 }
 
 @objc public class AlbumChange: NSObject {
@@ -237,13 +226,6 @@ struct AssetsNotificationName {
         checkoutViewController.dismissClosure = dismissClosure
         
         return embedInNavigation ? embedViewControllerInNavigation(checkoutViewController) : checkoutViewController
-    }
-
-    /// Informs the SDK of assets being added to an album
-    ///
-    /// - Parameter additions: Data structure containing details of the assets added
-    @objc public func albumsWereAdded(_ additions: [AlbumAddition]) {
-        NotificationCenter.default.post(name: AssetsNotificationName.albumsWereAdded, object: additions)
     }
 
     /// Informs the SDK of assets being modified / deleted from an album

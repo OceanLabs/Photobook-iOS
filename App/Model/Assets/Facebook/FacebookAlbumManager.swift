@@ -94,7 +94,6 @@ class FacebookAlbumManager {
                 completionHandler(nil)
             } else {
                 NotificationCenter.default.post(name: AlbumManagerNotificationName.albumsWereAdded, object: albumAdditions)
-                PhotobookSDK.shared.albumsWereAdded(albumAdditions)
             }
         }
     }
