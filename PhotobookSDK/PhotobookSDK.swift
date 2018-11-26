@@ -127,27 +127,29 @@ struct AssetsNotificationName {
     /// - Parameters:
     ///   - photobookAssets: Images to use to initialise the photo book. Cannot be empty.
     ///   - embedInNavigation: Whether the returned view controller should be a UINavigationController. Defaults to false. Note that a navigation controller must be provided if false.
+    ///   - navigatesToCheckout: The photo book is added and the basket is presented by default. Set this flag to false to execute the completion closure when "Add to Basket" is tapped.
     ///   - delegate: Delegate that can provide a custom photo picker
     ///   - completion: Completion closure. Returns the view controller to be dismissed and whether the process was successful or not.
     /// - Returns: A photobook UIViewController
-    @objc public func photobookViewController(with photobookAssets: [PhotobookAsset], embedInNavigation: Bool = false, delegate: PhotobookDelegate? = nil, completion: @escaping (_ source: UIViewController, _ success: Bool) -> ()) -> UIViewController? {
+    @objc public func photobookViewController(with photobookAssets: [PhotobookAsset], embedInNavigation: Bool = false, navigatesToCheckout: Bool = true, delegate: PhotobookDelegate? = nil, completion: @escaping (_ source: UIViewController, _ success: Bool) -> ()) -> UIViewController? {
         // Load the products here, so that the user avoids a loading screen on PhotobookViewController
         ProductManager.shared.initialise(completion: nil)
-        return photobookViewController(with: photobookAssets, embedInNavigation: embedInNavigation, delegate: delegate, useBackup: false, completion: completion)
+        return photobookViewController(with: photobookAssets, embedInNavigation: embedInNavigation, navigatesToCheckout: navigatesToCheckout, delegate: delegate, useBackup: false, completion: completion)
     }
     
     /// Photo book view controller restored from a backup
     ///
     /// - Parameters:
     ///   - embedInNavigation: Whether the returned view controller should be a UINavigationController. Defaults to false. Note that a navigation controller must be provided if false.
+    ///   - navigatesToCheckout: The photo book is added and the basket is presented by default. Set this flag to false to execute the completion closure when "Add to Basket" is tapped.
     ///   - delegate: Delegate that can provide a custom photo picker
     ///   - completion: Completion closure. Returns the view controller to be dismissed and whether the process was successful or not.
     /// - Returns: A photobook UIViewController
-    @objc public func photobookViewControllerFromBackup(embedInNavigation: Bool = false, delegate: PhotobookDelegate? = nil, completion: @escaping (_ source: UIViewController, _ success: Bool) -> ()) -> UIViewController? {
-        return photobookViewController(with: nil, embedInNavigation: embedInNavigation, delegate: delegate, useBackup: true, completion: completion)
+    @objc public func photobookViewControllerFromBackup(embedInNavigation: Bool = false, navigatesToCheckout: Bool = true, delegate: PhotobookDelegate? = nil, completion: @escaping (_ source: UIViewController, _ success: Bool) -> ()) -> UIViewController? {
+        return photobookViewController(with: nil, embedInNavigation: embedInNavigation, navigatesToCheckout: navigatesToCheckout, delegate: delegate, useBackup: true, completion: completion)
     }
     
-    private func photobookViewController(with photobookAssets: [PhotobookAsset]? = nil, embedInNavigation: Bool = false, delegate: PhotobookDelegate? = nil, useBackup: Bool = false, completion: @escaping (_ source: UIViewController, _ success: Bool) -> ()) -> UIViewController? {
+    private func photobookViewController(with photobookAssets: [PhotobookAsset]? = nil, embedInNavigation: Bool = false, navigatesToCheckout: Bool, delegate: PhotobookDelegate? = nil, useBackup: Bool = false, completion: @escaping (_ source: UIViewController, _ success: Bool) -> ()) -> UIViewController? {
         
         let dismissHandler: (_ source: UIViewController, _ success: Bool)->() = { source, success in
             let isReceipt = source as? ReceiptViewController != nil || (source as? UINavigationController)?.topViewController as? ReceiptViewController != nil
@@ -159,17 +161,16 @@ struct AssetsNotificationName {
             Checkout.shared.addCurrentProductToBasket()
             
             // Photobook completion
-            if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, dismissClosure: {
-                viewController, success in
-                completion(source, success)
-            }) {
+            if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, dismissClosure: completion) {
                 source.navigationController?.pushViewController(checkoutViewController, animated: true)
             }
         }
         
+        let completionClosure = navigatesToCheckout ? dismissHandler : completion
+        
         // Return the upload / receipt screen if there is an order in progress
         guard !isProcessingOrder else {
-            return receiptViewController(dismissClosure: dismissHandler)
+            return receiptViewController(dismissClosure: completion)
         }
 
         guard KiteAPIClient.shared.apiKey != nil else {
@@ -202,7 +203,7 @@ struct AssetsNotificationName {
         let photobookViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PhotobookViewController") as! PhotobookViewController
         photobookViewController.assets = assets
         photobookViewController.photobookDelegate = delegate
-        photobookViewController.completionClosure = dismissHandler
+        photobookViewController.completionClosure = completionClosure
         
         return embedInNavigation ? embedViewControllerInNavigation(photobookViewController) : photobookViewController
     }
