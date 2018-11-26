@@ -467,7 +467,7 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
     
     private func photobookViewController() -> UIViewController? {
         
-        let photobookViewController = PhotobookSDK.shared.photobookViewController(with: selectedAssetsManager!.selectedAssets, embedInNavigation: false, delegate: self) {
+        let photobookViewController = PhotobookSDK.shared.photobookViewController(with: selectedAssetsManager!.selectedAssets, embedInNavigation: false, navigatesToCheckout: false, delegate: self) {
             [weak welf = self] (viewController, success) in
             
             guard success else {
@@ -493,6 +493,8 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
             // Photobook completion
             if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, dismissClosure: {
                 [weak welf = self] (viewController, success) in
+                AssetDataSourceBackupManager.shared.deleteBackup()
+                
                 welf?.navigationController?.popToRootViewController(animated: true)
                 if success {
                     NotificationCenter.default.post(name: SelectedAssetsManager.notificationNamePhotobookComplete, object: nil)

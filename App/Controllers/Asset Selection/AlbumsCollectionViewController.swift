@@ -317,7 +317,7 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
     }
     
     private func photobookViewController() -> UIViewController? {
-        let photobookViewController = PhotobookSDK.shared.photobookViewController(with: selectedAssetsManager.selectedAssets, embedInNavigation: false, delegate: self) { [weak welf = self] (viewController, success) in
+        let photobookViewController = PhotobookSDK.shared.photobookViewController(with: selectedAssetsManager.selectedAssets, embedInNavigation: false, navigatesToCheckout: false, delegate: self) { [weak welf = self] (viewController, success) in
             
             guard success else {
                 AssetDataSourceBackupManager.shared.deleteBackup()
@@ -342,6 +342,8 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
             // Photobook completion
             if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, dismissClosure: {
                 [weak welf = self] (viewController, success) in
+                AssetDataSourceBackupManager.shared.deleteBackup()
+                
                 welf?.navigationController?.popToRootViewController(animated: true)
                 if success {
                     NotificationCenter.default.post(name: SelectedAssetsManager.notificationNamePhotobookComplete, object: nil)
