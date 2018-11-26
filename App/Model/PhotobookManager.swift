@@ -51,7 +51,7 @@ class PhotobookManager: NSObject {
         #endif
 
         PhotobookSDK.shared.environment = environment
-        PhotobookSDK.shared.applePayMerchantId = Configuration.applePayPayToString
+        PhotobookSDK.shared.applePayMerchantId = Configuration.applePayMerchantId
         PhotobookSDK.shared.applePayPayTo = Configuration.applePayPayToString
         PhotobookSDK.shared.kiteApiKey = environment == .live ? Configuration.kiteApiClientLiveKey : Configuration.kiteApiClientTestKey
         PhotobookSDK.shared.ctaButtonTitle = NSLocalizedString("OrderSummary/cta", value: "Continue", comment: "Title for the CTA button")
