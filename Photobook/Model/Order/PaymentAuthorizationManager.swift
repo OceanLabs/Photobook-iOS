@@ -129,6 +129,10 @@ class PaymentAuthorizationManager: NSObject {
         }
     }
     
+    static var haveSetPaymentKeys: Bool {
+        return paypalApiKey != nil || stripeKey != nil
+    }
+    
     weak var delegate: (PaymentAuthorizationManagerDelegate & UIViewController)?
     
     static var availablePaymentMethods: [PaymentMethod] {
