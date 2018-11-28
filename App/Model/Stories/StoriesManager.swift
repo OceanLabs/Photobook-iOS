@@ -280,6 +280,9 @@ class StoriesManager: NSObject {
     }
     
     private func performAutoSelection(on story: Story) {
+        guard let selectedAssetsManager = selectedAssetsManagerPerStory[story.identifier],
+              selectedAssetsManager.selectedAssets.isEmpty else { return }
+        
         var selectedAssets = [PhotobookAsset]()
         var unusedAssets = [PhotobookAsset]()
         
@@ -306,11 +309,8 @@ class StoriesManager: NSObject {
             selectedAssets.append(unusedAssets.remove(at: selectedIndex))
         }
         
-        let selectedAssetsManager = selectedAssetsManagerPerStory[story.identifier]
-        selectedAssetsManager?.select(selectedAssets)
-        
-        // Sort
-        selectedAssetsManager?.orderAssetsByDate()
+        selectedAssetsManager.select(selectedAssets)
+        selectedAssetsManager.orderAssetsByDate()
         
         story.hasPerformedAutoSelection = true
     }

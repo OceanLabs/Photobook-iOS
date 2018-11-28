@@ -50,7 +50,12 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     
     private var previousPreheatRect = CGRect.zero
     
-    var selectedAssetsManager: SelectedAssetsManager?
+    var selectedAssetsManager: SelectedAssetsManager? {
+        didSet {
+            loadViewIfNeeded()
+            loadAssets()
+        }
+    }
     private var accountManager: AccountClient?
     private var assetCollectorController: AssetCollectorViewController!
     
@@ -107,7 +112,8 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     }
     
     private func loadAssets() {
-        guard album.assets.isEmpty else {
+        guard selectedAssetsManager != nil else { return }
+        guard let album = album, album.assets.isEmpty else {
             postAlbumLoadSetup()
             return
         }
@@ -522,7 +528,7 @@ extension AssetPickerCollectionViewController {
     //MARK: UICollectionViewDataSource
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        return album == nil || album.assets.isEmpty ? 0 : 2
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
