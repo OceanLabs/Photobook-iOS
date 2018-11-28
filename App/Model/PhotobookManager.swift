@@ -187,8 +187,6 @@ class PhotobookManager: NSObject {
             tabBarController.selectedIndex = Tab.stories.rawValue
             
             let storiesViewController = selectedNavigationController.viewControllers.first as! StoriesViewController
-            // Force the view to load to trigger the loading of the stories
-            //storiesViewController.loadViewIfNeeded()
             
             let assetPickerController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
             assetPickerController.delegate = storiesViewController
