@@ -103,6 +103,32 @@ class PaymentAuthorizationManager: NSObject {
     lazy var paymentApi: PaymentAPI = PhotobookStripeAPI()
     lazy var basketOrder: Order = OrderManager.shared.basketOrder
     
+    static var paypalApiKey: String? {
+        didSet {
+            guard OLPayPalWrapper.isPayPalAvailable(),
+                let paypalApiKey = paypalApiKey else {
+                    return
+            }
+            switch KiteAPIClient.environment {
+            case .test:
+                OLPayPalWrapper.initializeWithClientIds(forEnvironments: ["sandbox" : paypalApiKey])
+                OLPayPalWrapper.preconnect(withEnvironment: "sandbox") /*PayPalEnvironmentSandbox*/
+            case .live:
+                OLPayPalWrapper.initializeWithClientIds(forEnvironments: ["live" : paypalApiKey])
+                OLPayPalWrapper.preconnect(withEnvironment: "live") /*PayPalEnvironmentProduction*/
+            }
+        }
+    }
+    
+    static var stripeKey: String? {
+        didSet {
+            guard let stripeKey = stripeKey else {
+                return
+            }
+            Stripe.setDefaultPublishableKey(stripeKey)
+        }
+    }
+    
     weak var delegate: (PaymentAuthorizationManagerDelegate & UIViewController)?
     
     static var availablePaymentMethods: [PaymentMethod] {
