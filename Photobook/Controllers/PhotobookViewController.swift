@@ -396,11 +396,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate,
             
             Analytics.shared.trackAction(.wentBackFromPhotobookPreview)
             
-            if self.isPresentedModally() {
-                self.presentingViewController?.dismiss(animated: true, completion: nil)
+            let controllerToDismiss: UIViewController = self.isPresentedModally() ? self.navigationController! : self
+            guard self.completionClosure != nil else {
+                self.autoDismiss(true)
                 return
             }
-            self.navigationController?.popViewController(animated: true)
+            self.completionClosure?(controllerToDismiss, false)
         }))
         alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
         
