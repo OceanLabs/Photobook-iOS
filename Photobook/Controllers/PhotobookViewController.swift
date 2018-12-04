@@ -275,7 +275,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate,
         cancelPhotobook()
     }
 
-    private func switchRearrangeMode(_ status: ActiveState, completion: (()->())? = nil) {
+    private func switchRearrangeMode(_ status: ActiveState) {
         isRearranging = (status == .on)
         
         for cell in collectionView.visibleCells {
@@ -296,7 +296,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate,
                 self.ctaButtonContainerBottomConstraint.constant = -self.ctaButtonContainerHeightConstraint.constant
                 self.view.layoutIfNeeded()
             }
-        }, completion: { _ in completion?() })
+        }, completion: nil)
     }
     
     private func shouldFadeWhenRearranging(_ cell: UICollectionViewCell) -> Bool {
@@ -528,6 +528,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate,
             
             if let insertingIndexPath = self.insertingIndexPath, let cell = self.collectionView.cellForItem(at: insertingIndexPath) as? PhotobookCollectionViewCell {
                 cell.isVisible = true
+                cell.shouldRevealActions = true
                 cell.backgroundColor = UIColor(red: 0.86, green: 0.86, blue: 0.86, alpha: 1.0)
                 self.insertingIndexPath = nil
             }
@@ -966,21 +967,19 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
               indexPath.row > 0 && indexPath.row < collectionView.numberOfItems(inSection: 1) - 1
             else { return }
         
-        closeCurrentCell() {
-            if sender.state == .began {
-                guard let photobookFrameView = sender.view as? PhotobookFrameView else {
-                    fatalError("Long press failed to recognise the target view")
-                }
+        if sender.state == .began {
+            guard let photobookFrameView = sender.view as? PhotobookFrameView else {
+                fatalError("Long press failed to recognise the target view")
+            }
+            closeCurrentCell() {
                 cell.shouldRevealActions = false
                 self.liftView(photobookFrameView)
                 self.switchRearrangeMode(.on)
-            } else if sender.state == .ended {
-                self.dropView()
-                self.switchRearrangeMode(.off) {
-                    cell.shouldRevealActions = true
-                }
-                self.stopTimer()
             }
+        } else if sender.state == .ended {
+            self.dropView()
+            self.switchRearrangeMode(.off)
+            self.stopTimer()
         }
     }
     
