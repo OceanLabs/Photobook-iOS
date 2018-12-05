@@ -95,6 +95,8 @@ class AssetPickerCollectionViewController: UICollectionViewController {
             Analytics.shared.trackScreenViewed(screenName)
         }
         
+        selectAllButton?.title = nil
+        
         resetCachedAssets()
         
         if #available(iOS 11.0, *) {
@@ -185,12 +187,6 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        loadAssets()
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -267,19 +263,15 @@ class AssetPickerCollectionViewController: UICollectionViewController {
     
     func updateSelectAllButton() {
         // Hide "Select All" if current album has too many photos
-        if selectedAssetsManager?.willSelectingAllExceedTotalAllowed(album) ?? false {
+        guard let selectedAssetsManager = selectedAssetsManager else { return }
+        if selectedAssetsManager.willSelectingAllExceedTotalAllowed(album) || album.hasMoreAssetsToLoad {
             selectAllButton?.title = nil
             return
         }
         
-        updateSelectAllButtonTitle()
-    }
-    
-    func updateSelectAllButtonTitle() {        
-        if selectedAssetsManager?.count(for: album) == self.album.assets.count {
+        if selectedAssetsManager.count(for: album) == self.album.assets.count {
             selectAllButton?.title = NSLocalizedString("ImagePicker/Button/DeselectAll", value: "Deselect All", comment: "Button title for de-selecting all selected photos")
-        }
-        else {
+        } else {
             selectAllButton?.title = NSLocalizedString("ImagePicker/Button/SelectAll", value: "Select All", comment: "Button title for selecting all selected photos")
         }
     }

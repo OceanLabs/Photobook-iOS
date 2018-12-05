@@ -56,9 +56,7 @@ class SelectedAssetsManager: NSObject {
     }
     
     private func selectedAssets(for album: Album) -> [PhotobookAsset] {
-        return selectedAssets.filter { (a) -> Bool in
-            return a.albumIdentifier == album.identifier
-        }
+        return selectedAssets.filter { $0.albumIdentifier == album.identifier }
     }
     
     func select(_ asset: PhotobookAsset) {
@@ -146,7 +144,7 @@ class SelectedAssetsManager: NSObject {
     }
     
     func count(for album: Album) -> Int {
-            return selectedAssets(for: album).count
+        return selectedAssets(for: album).count
     }
     
     var count: Int {
