@@ -47,8 +47,8 @@ class PhotobookTextView: UITextView {
         // Allow deleting
         if text.count == 0 { return true }
         
-        // Disallow pasting non-ascii characters
-        if !text.canBeConverted(to: String.Encoding.ascii) { return false }
+        // Disallow pasting symbols
+        if text.components(separatedBy: CharacterSet.symbols).joined().count < text.count { return false }
         
         // Check that the new length doesn't exceed the textView bounds
         return !textGoesOverBounds(text, range: range)

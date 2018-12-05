@@ -253,9 +253,9 @@ extension SpineTextEditingViewController: UITextFieldDelegate {
         // Allow deleting
         if string.count == 0 { return true }
         
-        // Disallow pasting non-ascii characters
-        if !string.canBeConverted(to: String.Encoding.ascii) { return false }
-        
+        // Disallow pasting symbols
+        if string.components(separatedBy: CharacterSet.symbols).joined().count < string.count { return false }
+
         // Check that the new length doesn't exceed the textField bounds
         let attributedString = NSMutableAttributedString(attributedString: textField.attributedText!)
         attributedString.replaceCharacters(in: range, with: string)
