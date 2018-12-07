@@ -64,6 +64,8 @@ class PDFAsset: Codable, Asset {
 
 @objc public class PDFBookProduct: NSObject, Codable, Product {
     
+    private static let productThumbnailUrlString = "https://s3.amazonaws.com/sdk-static/product_photography/hd_photobooks/detail.1.jpg"
+    
     var pdfBookTemplate: PDFBookTemplate
     var coverPdfAsset: PDFAsset
     var insidePdfAsset: PDFAsset
@@ -120,7 +122,15 @@ class PDFAsset: Codable, Asset {
         ]
     }
     
-    public func previewImage(size: CGSize, completionHandler: @escaping (UIImage?) -> Void) {}
+    public func previewImage(size: CGSize, completionHandler: @escaping (UIImage?) -> Void) {
+        let url = URL(string: PDFBookProduct.productThumbnailUrlString)!
+        guard let data = try? Data(contentsOf: url) else {
+            completionHandler(nil)
+            return
+        }
+        let image = UIImage(data: data, scale: 1.0)
+        completionHandler(image)
+    }
     
     public func processUploadedAssets(completionHandler: @escaping (Error?) -> Void) {}
     
