@@ -72,7 +72,8 @@ class ViewController: UIViewController {
         try? FileManager.default.copyItem(atPath: coverPdfInBundle, toPath: coverFilePath)
         try? FileManager.default.copyItem(atPath: insidePdfInBundle, toPath: insideFilePath)
         
-        guard let photobookProduct = PDFBookProduct(templateId: "hdbook_297x210", coverFilePath: coverFilePath, insideFilePath: insideFilePath, pageCount: 20) else {
+        let options: [String: Any] = ["finish": "matte"]
+        guard let photobookProduct = PDFBookProduct(templateId: "hdbook_297x210", coverFilePath: coverFilePath, insideFilePath: insideFilePath, pageCount: 20, options: options) else {
             print("Could not create photo book product")
             return
         }

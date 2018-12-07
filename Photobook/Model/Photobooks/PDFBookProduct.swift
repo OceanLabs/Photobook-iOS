@@ -75,6 +75,7 @@ class PDFAsset: Codable, Asset {
     var pdfBookTemplate: PDFBookTemplate
     var coverPdfAsset: PDFAsset
     var insidePdfAsset: PDFAsset
+    var options: [String: Any]?
     
     private var pageCount: Int
     
@@ -83,7 +84,7 @@ class PDFAsset: Codable, Asset {
     public private(set) var identifier = UUID().uuidString
     public var template: Template { return pdfBookTemplate }
     
-    public init?(templateId: String, coverFilePath: String, insideFilePath: String, pageCount: Int) {
+    public init?(templateId: String, coverFilePath: String, insideFilePath: String, pageCount: Int, options: [String: Any]? = nil) {
         guard let coverPdfAsset = PDFAsset(filePath: coverFilePath),
               let insidePdfAsset = PDFAsset(filePath: insideFilePath)
             else {
@@ -93,6 +94,7 @@ class PDFAsset: Codable, Asset {
         self.coverPdfAsset = coverPdfAsset
         self.insidePdfAsset = insidePdfAsset
         self.pageCount = pageCount
+        self.options = options
     }
     
     public func assetsToUpload() -> [PhotobookAsset]? {
@@ -101,13 +103,15 @@ class PDFAsset: Codable, Asset {
     
     public func costParameters() -> [String: Any]? {
         guard let shippingMethod = selectedShippingMethod else { return nil }
-        return [
+        var parameters: [String: Any] = [
             "template_id": template.templateId,
             "multiples": itemCount,
             "shipping_class": shippingMethod.id,
             "page_count": pageCount,
             "job_id": identifier
         ]
+        if let options = options { parameters["options"] = options }
+        return parameters
     }
     
     public func orderParameters() -> [String: Any]? {
@@ -118,7 +122,7 @@ class PDFAsset: Codable, Asset {
                 return nil
         }
         
-        return [
+        var parameters: [String: Any] = [
             "template_id": template.templateId,
             "multiples": itemCount,
             "shipping_class": shippingMethod.id,
@@ -126,6 +130,8 @@ class PDFAsset: Codable, Asset {
             "inside_pdf": insideUrl,
             "cover_pdf": coverUrl
         ]
+        if let options = options { parameters["options"] = options }
+        return parameters
     }
     
     public func previewImage(size: CGSize, completionHandler: @escaping (UIImage?) -> Void) {
