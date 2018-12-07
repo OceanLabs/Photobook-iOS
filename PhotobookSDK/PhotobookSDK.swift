@@ -219,9 +219,7 @@ struct AssetsNotificationName {
         
         guard KiteAPIClient.shared.apiKey != nil else {
             fatalError("Photobook SDK: Receipt View Controller not initialised because the Kite API key was not set. You can get this from the Kite Dashboard.")
-        }
-        
-        UIFont.loadAllFonts()
+        }        
         let receiptViewController = photobookMainStoryboard.instantiateViewController(withIdentifier: "ReceiptViewController") as! ReceiptViewController
         receiptViewController.order = OrderManager.shared.processingOrder
         receiptViewController.dismissClosure = dismissClosure
