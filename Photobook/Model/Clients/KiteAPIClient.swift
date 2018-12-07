@@ -37,6 +37,17 @@ enum OrderSubmitStatus: String {
     }
 }
 
+enum MimeType {
+    case pdf, jpeg, gif
+    func headerString() -> String {
+        switch self {
+        case .pdf: return "application/pdf"
+        case .jpeg: return "image/jpeg"
+        case .gif: return "image/gif"
+        }
+    }
+}
+
 class KiteAPIClient {
     
     var apiKey: String?
@@ -50,6 +61,7 @@ class KiteAPIClient {
         static let orderStatus = "/order/"
         static let cost = "/price"
         static let template = "/template"
+        static let registrationRequest = "/asset/sign"
     }
     
     static let shared = KiteAPIClient()
@@ -63,6 +75,35 @@ class KiteAPIClient {
             "X-Person-UUID": Analytics.shared.userDistinctId
         ]
     }
+    
+    func requestSignedUrl(for type: MimeType, _ completionHandler: @escaping ((_ signedUrl: URL?, _ fileUrl: URL?, _ error: APIClientError?) -> ())) {
+        guard apiKey != nil else {
+            fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
+        }
+
+        let endpoint = KiteAPIClient.apiVersion + Endpoints.registrationRequest
+        let parameters = ["mime_types": type.headerString(),
+                          "client_asset": "true"]
+        APIClient.shared.get(context: .kite, endpoint: endpoint, parameters: parameters, headers: kiteHeaders) { response, error in
+            guard error == nil else {
+                completionHandler(nil, nil, error)
+                return
+            }
+
+            guard let signedUrlStrings = (response as? [String: Any])?["signed_requests"],
+                  let signedUrlString = (signedUrlStrings as? [String])?.first,
+                  let signedUrl = URL(string: signedUrlString),
+                  let fileUrlStrings = (response as? [String: Any])?["urls"],
+                  let fileUrlString = (fileUrlStrings as? [String])?.first,
+                  let fileUrl = URL(string: fileUrlString)
+            else {
+                completionHandler(nil, nil, APIClientError.parsing(details: "RequestSignedUrl: Could not parse signed requests"))
+                return
+            }
+            return completionHandler(signedUrl, fileUrl, nil)
+        }
+    }
+
     
     func submitOrder(parameters: [String: Any], completionHandler: @escaping (_ orderId: String?, _ error: APIClientError?) -> Void) {
         guard apiKey != nil else {

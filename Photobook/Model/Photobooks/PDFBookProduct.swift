@@ -48,13 +48,19 @@ class PDFAsset: Codable, Asset {
     var date: Date?
     var uploadUrl: String?
     
-    var filePath: String
+    var filePath: URL // Location of the file in the client app
+    var fileUrl: URL? // URL for the file once the upload succeeds
     
     init?(filePath: String) {
         if !FileManager.default.fileExists(atPath: filePath) {
             return nil
         }
-        self.filePath = filePath
+        self.filePath = URL(fileURLWithPath: filePath)
+        self.identifier = self.filePath.lastPathComponent.data(using: .utf8)!.base64EncodedString() // Create a unique ID from the file path
+    }
+    
+    func confirmUpload() {
+        uploadUrl = fileUrl?.absoluteString
     }
     
     // Non-applicable
@@ -132,7 +138,9 @@ class PDFAsset: Codable, Asset {
         completionHandler(image)
     }
     
-    public func processUploadedAssets(completionHandler: @escaping (Error?) -> Void) {}
+    public func processUploadedAssets(completionHandler: @escaping (Error?) -> Void) {
+        completionHandler(nil)
+    }
     
     private enum CodingKeys: String, CodingKey {
         case pdfBookTemplate, coverPdfAsset, insidePdfAsset, pageCount, itemCount, selectedShippingMethod, identifier
