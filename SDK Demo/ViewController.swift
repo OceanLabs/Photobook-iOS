@@ -42,7 +42,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        PhotobookSDK.shared.setEnvironment(environment: .test)
+        PhotobookSDK.shared.environment = .test
         PhotobookSDK.shared.kiteApiKey = "78b798ff366815c833dfa848654aba43b71a883a"
     }
 
@@ -53,8 +53,9 @@ class ViewController: UIViewController {
             let asset = PhotobookAsset(withUrl: URL(string: baseImageURL + "\(imageNumber).jpg")!, size: sizes[imageNumber]!)
             assets.append(asset)
         }
-        
-        guard let photobookViewController = PhotobookSDK.shared.photobookViewController(with: assets, delegate: self) else { return }
+        guard let photobookViewController = PhotobookSDK.shared.photobookViewController(with: assets, completion: { source, _ in
+            source.navigationController?.popToRootViewController(animated: true)
+        }) else { return }
         navigationController?.pushViewController(photobookViewController, animated: true)
     }
     
@@ -63,19 +64,10 @@ class ViewController: UIViewController {
     }
     
     @IBAction func showBasket(_ sender: Any) {
-        if let viewController = PhotobookSDK.shared.checkoutViewController() {
+        if let viewController = PhotobookSDK.shared.checkoutViewController(dismissClosure: { [weak welf = self] (viewController, success) in
+            welf?.navigationController?.popToRootViewController(animated: true)
+        }) {
             navigationController?.pushViewController(viewController, animated: true)
-        } else {
-            let alertController = UIAlertController(title: "Basket is empty", message: nil, preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            present(alertController, animated: true, completion: nil)
         }
-    }
-    
-}
-
-extension ViewController: PhotobookDelegate {
-    func wantsToDismiss(_ photobookViewController: UIViewController) {
-        photobookViewController.navigationController?.popViewController(animated: true)
     }
 }

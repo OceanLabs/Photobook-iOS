@@ -42,17 +42,7 @@ extension Decimal {
     }
     
     static func ==~(lhs: Decimal, rhs: Decimal) -> Bool {
-        let difference = abs(lhs - rhs)
-        
-        if lhs == rhs {
-            return true
-        } else if lhs == 0.0 || rhs == 0.0 || difference < Decimal.leastNormalMagnitude {
-            return difference < (minPrecision * Decimal.leastNormalMagnitude)
-        } else {
-            let absA = abs(lhs)
-            let absB = abs(rhs)
-            
-            return difference / (absA + absB) < minPrecision
-        }
+        if lhs == rhs { return true }
+        return abs(lhs - rhs) < minPrecision
     }
 }

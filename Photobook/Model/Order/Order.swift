@@ -122,7 +122,7 @@ class Order: Codable {
         }
         
         // If any product in the order doesn't not have shipping options, fetch shipping options for all
-        let shouldUpdateShippingMethods = products.reduce(forceShippingMethodUpdate, { $0 || $1.template.availableShippingMethods == nil })
+        let shouldUpdateShippingMethods = products.reduce(forceShippingMethodUpdate, { $0 || $1.template.availableShippingMethods == nil }) || !PaymentAuthorizationManager.haveSetPaymentKeys
         
         if shouldUpdateShippingMethods {
             updateShippingMethods { (error) in

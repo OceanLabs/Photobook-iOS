@@ -28,6 +28,7 @@
 //
 
 import UIKit
+import Photobook
 
 class AssetPickerCoverCollectionViewCell: UICollectionViewCell {
     
@@ -44,7 +45,7 @@ class AssetPickerCoverCollectionViewCell: UICollectionViewCell {
     }
     var dates: String? { didSet { datesLabel.text = dates } }
     
-    func setCover (cover: Asset?, size: CGSize) {
+    func setCover (cover: PhotobookAsset?, size: CGSize) {
         coverImageView.setImage(from: cover, size: size)
     }
     

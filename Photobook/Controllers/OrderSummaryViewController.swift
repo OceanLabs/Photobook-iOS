@@ -50,9 +50,8 @@ class OrderSummaryViewController: UIViewController {
     @IBOutlet weak var orderDetailsLabel: UILabel! { didSet { orderDetailsLabel.scaleFont() } }
     @IBOutlet weak var ctaButton: UIButton! { didSet { ctaButton.titleLabel?.scaleFont() } }
     @IBOutlet weak var loadingPreviewLabel: UILabel! { didSet { loadingPreviewLabel.scaleFont() } }
-    @IBOutlet weak var basketDisclaimerLabel: UILabel!
     
-    var completionClosure: ((_ photobook: PhotobookProduct) -> Void)?
+    var completionClosure: ((_ source: UIViewController, _ success: Bool) -> ())?
     var emptyScreenDismissGroup: DispatchGroup? = DispatchGroup()
     
     private var timer: Timer?
@@ -75,11 +74,8 @@ class OrderSummaryViewController: UIViewController {
         
         Analytics.shared.trackScreenViewed(.summary)
         
-        #if PHOTOBOOK_APP
-        basketDisclaimerLabel.text = ""
-        ctaButton.setTitle(NSLocalizedString("OrderSummary/cta", value: "Continue", comment: "Title for the CTA button"), for: .normal)
-        #endif
-                
+        ctaButton.setTitle(PhotobookSDK.shared.ctaButtonTitle, for: .normal)
+        
         emptyScreenViewController.show(message: Constants.stringLoading, activity: true)
         
         orderSummaryManager.templates = ProductManager.shared.products
@@ -128,7 +124,14 @@ class OrderSummaryViewController: UIViewController {
     
     @IBAction func tappedCallToAction(_ sender: Any) {
         product.pigBaseUrl = orderSummaryManager.summary?.pigBaseUrl
-        completionClosure?(product)
+        
+        guard completionClosure != nil else {
+            autoDismiss(true)
+            return
+        }
+        
+        let controllerToDismiss = isPresentedModally() ? navigationController! : self
+        completionClosure?(controllerToDismiss, true)
     }
     
     deinit {

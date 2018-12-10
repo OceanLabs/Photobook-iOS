@@ -29,24 +29,22 @@
 
 import UIKit
 
-class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate {
+protocol PhotobookAssetsDelegate: class {
+    var assets: [Asset]! { get set }
+}
+
+class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate, PhotobookAssetsDelegate {
     
     var photobookNavigationBarType: PhotobookNavigationBarType = .clear
     
     /// Array of Assets to populate the pages of the photobook.
     var assets: [Asset]!
     
-    /// Album to use in order to have access to additional Assets when editing a page. 'album', 'albumManager' & 'assetPickerViewController' are exclusive.
-    var album: Album?
-    
-    /// Manager for multiple albums to use in order to have access to additional Assets when editing a page. 'album', 'albumManager' & 'assetPickerViewController' are exclusive.
-    var albumManager: AlbumManager?
-
-    /// Delegate that can handle the dismissal of the photo book and also provide a custom asset picker
+    /// Delegate that can provide a custom asset picker
     weak var photobookDelegate: PhotobookDelegate?
     
-    /// Closure to call with a completed photobook product
-    var completionClosure: ((_ photobook: PhotobookProduct) -> Void)?
+    /// Closure to call when a photobook has been created or needs to be dismissed
+    var completionClosure: ((_ source: UIViewController, _ success: Bool) -> ())?
     
     private var product: PhotobookProduct! {
         return ProductManager.shared.currentProduct
@@ -115,8 +113,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     
     // Scrolling at 60Hz when we are dragging looks good enough and avoids having to normalize the scroll offset
     private lazy var screenRefreshRate: Double = 1.0 / 60.0
-    
-    private lazy var isPresentedModally: Bool = { return (navigationController?.isBeingPresented ?? false) || isBeingPresented }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -124,13 +120,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         Analytics.shared.trackScreenViewed(.photobook)
         setup()
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
         
-        (tabBarController?.tabBar as? PhotobookTabBar)?.isBackgroundHidden = true
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -199,7 +189,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         if let tabBar = tabBarController?.tabBar { tabBar.isHidden = true }
     
-        if isPresentedModally {
+        if isPresentedModally() {
             navigationItem.leftBarButtonItems = [ cancelBarButtonItem ]
         } else {
             backButton?.setTitleColor(navigationController?.navigationBar.tintColor, for: .normal)
@@ -285,7 +275,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         cancelPhotobook()
     }
 
-    private func switchRearrangeMode(_ status: ActiveState, completion: (()->())? = nil) {
+    private func switchRearrangeMode(_ status: ActiveState) {
         isRearranging = (status == .on)
         
         for cell in collectionView.visibleCells {
@@ -306,7 +296,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
                 self.ctaButtonContainerBottomConstraint.constant = -self.ctaButtonContainerHeightConstraint.constant
                 self.view.layoutIfNeeded()
             }
-        }, completion: { _ in completion?() })
+        }, completion: nil)
     }
     
     private func shouldFadeWhenRearranging(_ cell: UICollectionViewCell) -> Bool {
@@ -406,14 +396,12 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             Analytics.shared.trackAction(.wentBackFromPhotobookPreview)
             
-            let controllerToDismiss = self.isPresentedModally ? self.navigationController! : self
-            if self.photobookDelegate?.wantsToDismiss?(controllerToDismiss) == nil {
-                if self.isPresentedModally {
-                    self.presentingViewController?.dismiss(animated: true, completion: nil)
-                    return
-                }
-                self.navigationController?.popViewController(animated: true)
+            let controllerToDismiss: UIViewController = self.isPresentedModally() ? self.navigationController! : self
+            guard self.completionClosure != nil else {
+                self.autoDismiss(true)
+                return
             }
+            self.completionClosure?(controllerToDismiss, false)
         }))
         alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.cancel, style: .cancel, handler: nil))
         
@@ -449,7 +437,9 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         
         var removedAssets = [Asset]()
         for albumChange in albumsChanges {
-            removedAssets.append(contentsOf: albumChange.assetsRemoved)
+            if let assetsRemoved = PhotobookAsset.assets(from: albumChange.assetsRemoved) {
+                removedAssets.append(contentsOf: assetsRemoved)
+            }
         }
         
         for removedAsset in removedAssets {
@@ -524,13 +514,21 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             destinationY = view.frame.height + draggingView.frame.height
         }
         
+        let destinationPoint = CGPoint(x: Constants.cellSideMargin, y: destinationY * self.reverseRearrangeScale)
+        if destinationPoint == draggingView.frame.origin {
+            // If the dragging view is in place, slightly offset its position to avoid an abrupt animation
+            draggingView.frame.origin = CGPoint(x: draggingView.frame.origin.x, y: draggingView.frame.origin.y + 1.0)
+            view.layoutIfNeeded()
+        }
+        
         UIView.animate(withDuration: Constants.dropAnimationDuration, delay: 0.0, options: .curveEaseInOut, animations: {
-            draggingView.frame.origin = CGPoint(x: Constants.cellSideMargin, y: destinationY * self.reverseRearrangeScale)
+            draggingView.frame.origin = destinationPoint
             draggingView.layer.shadowRadius = 0
             draggingView.layer.shadowOpacity = 0
         }, completion: { _ in
             // Unhide the book if we're returning to the original position
             sourceCell?.isVisible = true
+            sourceCell?.shouldRevealActions = true
             
             draggingView.removeFromSuperview()
             self.draggingView = nil
@@ -538,6 +536,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             if let insertingIndexPath = self.insertingIndexPath, let cell = self.collectionView.cellForItem(at: insertingIndexPath) as? PhotobookCollectionViewCell {
                 cell.isVisible = true
+                cell.shouldRevealActions = true
                 cell.backgroundColor = UIColor(red: 0.86, green: 0.86, blue: 0.86, alpha: 1.0)
                 self.insertingIndexPath = nil
             }
@@ -620,7 +619,9 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
     
     private func editPage(_ page: PhotobookPageView, at index: Int, frame: CGRect, containerView: UIView) {
-        closeCurrentCell()
+        closeCurrentCell() {
+            self.interactingItemIndexPath = nil
+        }
         
         let modalNavigationController = photobookMainStoryboard.instantiateViewController(withIdentifier: "PageSetupNavigationController") as! UINavigationController
         if #available(iOS 11.0, *) {
@@ -630,10 +631,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
         let barType = (navigationController?.navigationBar as? PhotobookNavigationBar)?.barType
         
         let pageSetupViewController = modalNavigationController.viewControllers.first as! PageSetupViewController
-        pageSetupViewController.assets = assets
         pageSetupViewController.pageIndex = index
-        pageSetupViewController.album = album
-        pageSetupViewController.albumManager = albumManager
+        pageSetupViewController.assetsDelegate = self
         pageSetupViewController.photobookDelegate = photobookDelegate
         
         if barType != nil {
@@ -752,7 +751,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
     }
 
     private func changedPhotobook() {
-        ProductManager.shared.changedCurrentProduct(with: assets, album: album, albumManager: albumManager)
+        ProductManager.shared.changedCurrentProduct(with: assets)
     }
     
     private func closeCurrentCell(completion:(()->())? = nil) {
@@ -762,9 +761,11 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate 
             completion?()
             return
         }
-        cell.isPageInteractionEnabled = true
-        cell.shouldRevealActions = true
-        cell.animateCellClosed(completion: completion)
+        cell.animateCellClosed() {
+            cell.isPageInteractionEnabled = true
+            cell.shouldRevealActions = true
+            completion?()
+        }
     }
 }
 
@@ -896,7 +897,9 @@ extension PhotobookViewController: UICollectionViewDelegate, UICollectionViewDel
 extension PhotobookViewController: PhotobookCoverCollectionViewCellDelegate {
     
     func didTapOnSpine(with rect: CGRect, in containerView: UIView) {
-        closeCurrentCell()
+        closeCurrentCell() {
+            self.interactingItemIndexPath = nil
+        }
         
         let initialRect = containerView.convert(rect, to: view)
         
@@ -972,21 +975,19 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
               indexPath.row > 0 && indexPath.row < collectionView.numberOfItems(inSection: 1) - 1
             else { return }
         
-        closeCurrentCell() {
-            if sender.state == .began {
-                guard let photobookFrameView = sender.view as? PhotobookFrameView else {
-                    fatalError("Long press failed to recognise the target view")
-                }
+        if sender.state == .began {
+            guard let photobookFrameView = sender.view as? PhotobookFrameView else {
+                fatalError("Long press failed to recognise the target view")
+            }
+            closeCurrentCell() {
                 cell.shouldRevealActions = false
                 self.liftView(photobookFrameView)
                 self.switchRearrangeMode(.on)
-            } else if sender.state == .ended {
-                self.dropView()
-                self.switchRearrangeMode(.off) {
-                    cell.shouldRevealActions = true
-                }
-                self.stopTimer()
             }
+        } else if sender.state == .ended {
+            self.dropView()
+            self.switchRearrangeMode(.off)
+            self.stopTimer()
         }
     }
     
@@ -1001,7 +1002,7 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
         currentlyPanningGesture = sender
         
         let translation = sender.translation(in: view)
-        draggingView.transform = CGAffineTransform(translationX: translation.x, y: translation.y) //.scaledBy(x: Constants.dragLiftScale, y: Constants.dragLiftScale)
+        draggingView.transform = CGAffineTransform(translationX: translation.x, y: translation.y)
         autoScrollIfNeeded()
         updateNavBar()
         
@@ -1144,21 +1145,26 @@ extension PhotobookViewController: ActionsCollectionViewCellDelegate {
     func didTapActionButton(at index: Int, for indexPath: IndexPath) {
         guard indexPath.section == 1 else { return }
         
-        switch index {
-        case 0 where indexPath.item > 0:
-            deletePages(at: indexPath)
-        case 1 where indexPath.item > 0, 0 where indexPath.item == 0:
-            addPages(after: indexPath)
-        case 2 where indexPath.item > 0:
-            duplicatePages(at: indexPath)
-        default:
-            return
+        closeCurrentCell() {
+            self.interactingItemIndexPath = nil
+            
+            switch index {
+            case 0 where indexPath.item > 0:
+                self.deletePages(at: indexPath)
+            case 1 where indexPath.item > 0, 0 where indexPath.item == 0:
+                self.addPages(after: indexPath)
+            case 2 where indexPath.item > 0:
+                self.duplicatePages(at: indexPath)
+            default:
+                return
+            }
         }
     }
     
     func didCloseCell(at indexPath: IndexPath) {
         guard interactingItemIndexPath != nil, let cell = collectionView.cellForItem(at: interactingItemIndexPath!) as? PhotobookCollectionViewCell else { return }
         cell.isPageInteractionEnabled = true
+        cell.shouldRevealActions = true
         interactingItemIndexPath = nil
     }
     
@@ -1171,7 +1177,7 @@ extension PhotobookViewController: ActionsCollectionViewCellDelegate {
             interactingItemIndexPath = indexPath
         }
         
-        guard let cell = collectionView.cellForItem(at: interactingItemIndexPath!) as? PhotobookCollectionViewCell else { return }
+        guard let cell = collectionView.cellForItem(at: indexPath) as? PhotobookCollectionViewCell else { return }
         cell.isPageInteractionEnabled = false
     }
 }

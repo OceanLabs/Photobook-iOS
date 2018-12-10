@@ -174,18 +174,10 @@ class ActionsCollectionViewCell: UICollectionViewCell {
             
             velocity = previousPoint.x - currentPoint.x
             
-            isPanning =  abs(previousPoint.x - currentPoint.x) >= abs(previousPoint.y - currentPoint.y)
+            isPanning = abs(previousPoint.x - currentPoint.x) >= abs(previousPoint.y - currentPoint.y)
             guard isPanning else {
                 previousPoint = .zero
                 currentPoint = .zero
-                
-                if !showingPreferredAction {
-                    gestureRecognizer.isEnabled = false
-                    gestureRecognizer.isEnabled = true
-
-                    let open = cellContentViewTrailingConstraint.constant > actionsViewWidth * 0.5
-                    animateCell(open: open, duration: 0.1)
-                }
                 return
             }
 
@@ -206,6 +198,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
                         shouldShowPreferredAction = canUsePreferredAction && hasMoreThanOneButton && !showingPreferredAction && (-delta - actionsViewWidth) > Constants.preferredActionTriggerOffset
                     } else {
                         constant = min(-delta, actionsViewWidth)
+                        constant = max(constant, 0.0)
                     }
                 } else {
                     if -delta < actionsViewWidth {
@@ -216,16 +209,22 @@ class ActionsCollectionViewCell: UICollectionViewCell {
                     shouldHidePreferredAction = hasMoreThanOneButton && showingPreferredAction && constant < actionsViewWidth + Constants.preferredActionTriggerOffset
                 }
             } else {
-                if isPanningLeft {
+                if -delta > 0.0 {
                     constant = actionsViewWidth + rubberBandDistance(offset: -delta, dimension: bounds.width)
-                    shouldShowPreferredAction = canUsePreferredAction && hasMoreThanOneButton && !showingPreferredAction && -delta > Constants.preferredActionTriggerOffset
                 } else {
                     constant = max(startingRightEdgeContentPosition - delta, 0.0)
+                }
+
+                if isPanningLeft {
+                    shouldShowPreferredAction = canUsePreferredAction && hasMoreThanOneButton && !showingPreferredAction && -delta > Constants.preferredActionTriggerOffset
+                } else {
                     shouldHidePreferredAction = hasMoreThanOneButton && showingPreferredAction && constant < actionsViewWidth + Constants.preferredActionTriggerOffset
                 }
             }
             
             cellContentViewTrailingConstraint.constant = constant
+            layoutIfNeeded()
+            
             previousPoint = currentPoint
             
             updateActionViewBackgroundColor(to: constant / actionsViewWidth)
@@ -253,14 +252,13 @@ class ActionsCollectionViewCell: UICollectionViewCell {
                         }
                     }
                     
-                    UIView.animate(withDuration: 0.1) {
+                    UIView.animate(withDuration: 0.1, delay: 0.0, options: [.beginFromCurrentState, .curveEaseOut], animations: {
                         self.layoutIfNeeded()
-                    }
+                    }, completion: nil)
                 }
             }
             
         case .ended, .cancelled:
-            guard isPanning else { return }
             isPanning = false
 
             // Check if there was a swipe
@@ -382,9 +380,7 @@ class ActionsCollectionViewCell: UICollectionViewCell {
     
     private func tappedActionButton(_ actionButton: ActionButtonView) {
         let index = self.actionButtons.firstIndex(of: actionButton)!
-        animateCellClosed(duration: 0.3) {
-            self.actionsDelegate?.didTapActionButton(at: index, for: self.indexPath)
-        }
+        actionsDelegate?.didTapActionButton(at: index, for: self.indexPath)
     }
  }
 

@@ -29,6 +29,7 @@
 
 import UIKit
 import FBSDKLoginKit
+import Photobook
 
 class FacebookAlbumManager {
     
@@ -73,9 +74,8 @@ class FacebookAlbumManager {
                     else { continue }
                 
                 if let stelf = welf {
-                    let newAlbum = FacebookAlbum(identifier: albumId, localizedName: name, numberOfAssets: photoCount, coverPhotoUrl: coverPhotoUrl)
-                    albumAdditions.append(AlbumAddition(album: newAlbum, index: stelf.albums.count))
-                    stelf.albums.append(newAlbum)
+                    albumAdditions.append(AlbumAddition(albumIdentifier: albumId, index: stelf.albums.count))
+                    stelf.albums.append(FacebookAlbum(identifier: albumId, localizedName: name, numberOfAssets: photoCount, coverPhotoUrl: coverPhotoUrl))
                 }
             }
             
@@ -93,7 +93,7 @@ class FacebookAlbumManager {
             if let completionHandler = completionHandler {
                 completionHandler(nil)
             } else {
-                NotificationCenter.default.post(name: AssetsNotificationName.albumsWereAdded, object: albumAdditions)
+                NotificationCenter.default.post(name: AlbumManagerNotificationName.albumsWereAdded, object: albumAdditions)
             }
         }
     }

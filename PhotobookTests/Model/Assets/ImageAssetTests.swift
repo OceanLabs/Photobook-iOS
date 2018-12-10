@@ -111,4 +111,15 @@ class ImageAssetTests: XCTestCase {
             XCTAssertEqual(fileExtension.string(), AssetDataFileExtension.jpg.string())
         }
     }
+    
+    func testImageData_returnsNil() {
+        let image = UIImage(color: .red)!
+        let imageAsset = ImageAsset(image: image)
+        
+        imageAsset.image = nil
+        
+        imageAsset.imageData(progressHandler: nil) { (data, fileExtension, _) in
+            XCTAssertNil(data)
+        }
+    }
 }

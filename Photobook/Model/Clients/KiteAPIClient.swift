@@ -28,8 +28,6 @@
 //
 
 import UIKit
-import PayPalDynamicLoader
-import Stripe
 
 enum OrderSubmitStatus: String {
     case cancelled, error, paymentError, unknown, received, accepted, validated, processed
@@ -188,19 +186,12 @@ class KiteAPIClient {
             
             if let payPalDict = paymentKeys["paypal"] as? [String: Any],
                 let publicKey = payPalDict["public_key"] as? String {
-                switch KiteAPIClient.environment {
-                case .test:
-                    OLPayPalWrapper.initializeWithClientIds(forEnvironments: ["sandbox" : publicKey])
-                    OLPayPalWrapper.preconnect(withEnvironment: "sandbox") /*PayPalEnvironmentSandbox*/
-                case .live:
-                    OLPayPalWrapper.initializeWithClientIds(forEnvironments: ["live" : publicKey])
-                    OLPayPalWrapper.preconnect(withEnvironment: "live") /*PayPalEnvironmentProduction*/
-                }
+                PaymentAuthorizationManager.paypalApiKey = publicKey
             }
             
             if let stripeDict = paymentKeys["stripe"] as? [String: Any],
                 let publicKey = stripeDict["public_key"] as? String {
-                Stripe.setDefaultPublishableKey(publicKey)
+                PaymentAuthorizationManager.stripeKey = publicKey
             }
             
             var objectShippingClasses = [String: [String: [ShippingMethod]]]()

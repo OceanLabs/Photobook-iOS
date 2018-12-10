@@ -29,6 +29,7 @@
 
 import UIKit
 import Photos
+import Photobook
 
 protocol AssetCollectorViewControllerDelegate: class {
     func actionsForAssetCollectorViewControllerHiddenStateChange(_ assetCollectorViewController: AssetCollectorViewController, willChangeTo hidden: Bool) -> () -> ()
@@ -82,12 +83,12 @@ class AssetCollectorViewController: UIViewController {
             NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerDeletedAsset(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
         }
     }
-    private var assets: [Asset] {
+    private var assets: [PhotobookAsset] {
         get {
             if let manager = selectedAssetsManager {
                 return manager.selectedAssets
             }
-            return [Asset]()
+            return [PhotobookAsset]()
         }
     }
     
@@ -302,7 +303,7 @@ class AssetCollectorViewController: UIViewController {
         isHidden = false
         
         if !isDeletingEnabled {
-            let requiredPhotosCount = ProductManager.shared.minimumRequiredPages
+            let requiredPhotosCount = PhotobookSDK.shared.minimumRequiredPhotos
             let fadeDuration: TimeInterval = 0.25
             if mode == .adding || (mode == .selecting && assets.count >= requiredPhotosCount) {
                 //use these
@@ -370,7 +371,6 @@ class AssetCollectorViewController: UIViewController {
             
             self.imageCollectionView.deleteItems(at: indexPaths)
             self.adaptToNewAssetCount()
-            
         }
     }
     

@@ -29,13 +29,13 @@
 
 import UIKit
 
-class PhotobookNavigationController: UINavigationController {
+public class PhotobookNavigationController: UINavigationController {
     
-    override var shouldAutorotate: Bool {
+    override public var shouldAutorotate: Bool {
         return false
     }
     
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+    override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
     }
 }

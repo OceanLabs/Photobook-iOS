@@ -28,6 +28,7 @@
 //
 
 import Photos
+import Photobook
 
 protocol CollectionManager {
     func fetchMoments(inMomentList collectionList: PHCollectionList) -> PHFetchResult<PHAssetCollection>
@@ -39,14 +40,14 @@ class DefaultCollectionManager: CollectionManager {
     }
 }
 
-class Story {
-    let collectionList: PHCollectionList
-    let collectionForCoverPhoto: PHAssetCollection
+class Story: Codable {
+    private(set) var collectionList: PHCollectionList! = nil
+    private(set) var collectionForCoverPhoto: PHAssetCollection! = nil
     var components: [String]!
     var photoCount = 0
     var isWeekend = false
     var score = 0
-    var assets = [Asset]()
+    var assets = [PhotobookAsset]()
     var hasMoreAssetsToLoad = false
     var hasPerformedAutoSelection = false
     
@@ -68,9 +69,35 @@ class Story {
         return dateString().uppercased()
     }()
     
-    init(list: PHCollectionList, coverCollection: PHAssetCollection) {
+    convenience init(list: PHCollectionList, coverCollection: PHAssetCollection) {
+        self.init()
+        
         collectionList = list
         collectionForCoverPhoto = coverCollection
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case identifier, coverIdentifier
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(identifier, forKey: .identifier)
+    }
+    
+    convenience required init(from decoder: Decoder) throws {
+        self.init()
+        
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let collectionListIdentifier = try values.decode(String.self, forKey: .identifier)
+        
+        guard let collectionList = PHCollectionList.fetchCollectionLists(withLocalIdentifiers: [collectionListIdentifier], options: nil).firstObject,
+              let momentForCover = collectionManager.fetchMoments(inMomentList: collectionList).firstObject else {
+            throw AssetDataSourceException.notFound
+        }
+        
+        self.collectionList = collectionList
+        self.collectionForCoverPhoto = momentForCover
     }
     
     private func dateString() -> String {
@@ -144,14 +171,15 @@ extension Story: Album {
             
             let fetchedAssets = self.assetsManager.fetchAssets(in: collection, options: fetchOptions)
             fetchedAssets.enumerateObjects({ (asset, _, _) in
-                self.assets.append(PhotosAsset(asset, albumIdentifier: self.identifier))
+                let photobookAsset = PhotobookAsset(withPHAsset: asset, albumIdentifier: self.identifier)
+                self.assets.append(photobookAsset)
             })
         }
         
         completionHandler?(nil)
     }
     
-    func coverAsset(completionHandler: @escaping (Asset?) -> Void) {
+    func coverAsset(completionHandler: @escaping (PhotobookAsset?) -> Void) {
         collectionForCoverPhoto.coverAsset(useFirstImageInCollection: true, completionHandler: completionHandler)
     }
     

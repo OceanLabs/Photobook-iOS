@@ -28,6 +28,11 @@
 //
 
 import UIKit
+import Photobook
+
+struct AssetPickerNotificationName {
+    static let assetPickerAddedAssets = Notification.Name("ly.kite.photobook.assetPickerAddedAssetsNotificationName")
+}
 
 class ModalAlbumsCollectionViewController: UIViewController, PhotobookAssetPicker {
 
@@ -193,9 +198,9 @@ extension ModalAlbumsCollectionViewController: PhotobookAssetAddingDelegate {
     
     func didFinishAdding(_ assets: [PhotobookAsset]?) {
         animateContainerViewOffScreen() {
-            if let assets = assets as? [Asset] {
-                // Post notification for any selectedAssetManagers listening
-                NotificationCenter.default.post(name: AssetSelectorViewController.assetSelectorAddedAssets, object: self, userInfo: ["assets": assets])
+            // Post notification for any selectedAssetManagers listening
+            if let assets = assets {
+                NotificationCenter.default.post(name: AssetPickerNotificationName.assetPickerAddedAssets, object: self, userInfo: ["assets": assets])
             }
             
             // Notify the delegate

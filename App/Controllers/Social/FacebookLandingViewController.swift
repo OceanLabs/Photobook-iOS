@@ -59,7 +59,7 @@ class FacebookLandingViewController: UIViewController {
         }
     }
     
-    @IBAction func facebookSignInTapped(_ sender: UIButton) {
+    @IBAction private func facebookSignInTapped(_ sender: UIButton) {
         FBSDKLoginManager().logIn(withReadPermissions: ["public_profile", "user_photos"], from: self, handler: { [weak welf = self] result, error in
             if let error = error {
                 welf?.present(UIAlertController(errorMessage: ErrorMessage(error)), animated: true, completion: nil)
@@ -71,6 +71,4 @@ class FacebookLandingViewController: UIViewController {
             }
         })
     }
-    
-    
 }

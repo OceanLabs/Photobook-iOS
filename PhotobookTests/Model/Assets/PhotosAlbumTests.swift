@@ -30,6 +30,7 @@
 import XCTest
 import Photos
 @testable import Photobook
+@testable import Photobook_App
 
 class PhotosAlbumTests: XCTestCase {
     
@@ -65,8 +66,9 @@ class PhotosAlbumTests: XCTestCase {
         photosAlbum.loadAssetsFromPhotoLibrary()
         
         // Check that identifiers match (same asset)
-        for i in 0 ..< assets.count {
-            XCTAssertEqualOptional(assets[i].localIdentifier, (photosAlbum.assets[i] as? PhotosAsset)?.photosAsset.localIdentifier)
+        let photosAssets = PhotobookAsset.assets(from: photosAlbum.assets)!
+        for i in 0 ..< photosAssets.count {
+            XCTAssertEqualOptional(assets[i].localIdentifier, (photosAssets[i] as? PhotosAsset)?.photosAsset.localIdentifier)
         }
     }
     
@@ -74,8 +76,9 @@ class PhotosAlbumTests: XCTestCase {
         photosAlbum.loadAssets { (error) in
             // Check that identifiers match (same asset)
             
+            let photosAssets = PhotobookAsset.assets(from: self.photosAlbum.assets)!
             for i in 0 ..< self.assets.count {
-                self.XCTAssertEqualOptional(self.assets[i].localIdentifier, (self.photosAlbum.assets[i] as? PhotosAsset)?.photosAsset.localIdentifier)
+                self.XCTAssertEqualOptional(self.assets[i].localIdentifier, photosAssets[i].identifier)
             }
         }
     }

@@ -38,6 +38,13 @@ import UIKit
         OrderManager.shared.saveBasketOrder()
     }
     
+    @objc public func addCurrentProductToBasket(items: Int = 1) {
+        guard let product = ProductManager.shared.currentProduct else { return }
+        product.itemCount = items
+        OrderManager.shared.basketOrder.products.insert(product, at: 0)
+        OrderManager.shared.saveBasketOrder()
+    }
+        
     @objc public func numberOfItemsInBasket() -> Int {
         return OrderManager.shared.basketOrder.products.reduce(0, { $0 + $1.itemCount })
     }

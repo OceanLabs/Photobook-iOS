@@ -42,15 +42,16 @@ class PhotobookPreviewTests: PhotobookUITest {
         let sizeButton = automation.app.sheets.buttons.matching(NSPredicate(format: "label != \"Cancel\" && label != \"\(originalTitle)\"")).firstMatch
         sizeButton.tap()
         
+        let predicate = NSPredicate(format: "label != \"\(originalTitle)\"")
+        expectation(for: predicate, evaluatedWith: titleButton, handler: nil)
+        waitForExpectations(timeout: 30, handler: nil)
+
         XCTAssertNotEqual(titleButton.label, originalTitle)
     }
     
     func testEnterTextOnSpine() {
         automation.goToPhotobookReview()
-        
-        let spineLabel = automation.app.staticTexts["spineLabel"]
-        XCTAssertTrue(spineLabel.label.isEmpty, "The spine label should be empty at the beginning")
-        
+                
         let spineButton = automation.app.collectionViews/*@START_MENU_TOKEN@*/.otherElements["spineButton"]/*[[".cells",".otherElements[\"Spine\"]",".otherElements[\"spineButton\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/
         spineButton.tap()
         
@@ -58,46 +59,8 @@ class PhotobookPreviewTests: PhotobookUITest {
         spineTextField.typeText("The Story of the Grand Clown Fiesta\n")
         
         XCTAssertTrue(spineButton.isHittable, "Did not return to Photobook preview")
+        
+        let spineLabel = automation.app.staticTexts["spineLabel"]
         XCTAssertEqual(spineLabel.label, "The Story of the Grand Clown Fiesta")
     }
-    
-    func testRearrange() {
-        automation.goToPhotobookReview()
-        
-        automation.app.navigationBars.firstMatch.buttons["Rearrange"].tap()
-        
-        automation.app.collectionViews.otherElements["Pages 2 and 3"].tap()
-        automation.app.menuItems["Copy"].tap()
-        
-        wait(0.5) // Wait for the menu to animate away
-        
-        automation.app.collectionViews.otherElements["Pages 2 and 3"].tap()
-        automation.app.menuItems["Paste"].tap()
-        
-        wait(0.5) // Wait for the insertion animation
-        
-        automation.app.collectionViews.firstMatch.swipeUp()
-        automation.app.collectionViews.firstMatch.swipeUp()
-        
-        XCTAssertTrue(automation.app.collectionViews.otherElements["Pages 20 and 21"].exists)
-        automation.app.collectionViews.otherElements["Pages 20 and 21"].tap()
-        automation.app.menuItems["Delete"].tap()
-        
-        wait(0.5) // Wait for the menu to animate away
-        XCTAssertFalse(automation.app.collectionViews.otherElements["Pages 20 and 21"].exists)
-    }
-    
-    func testAddPages() {
-        automation.goToPhotobookReview()
-        
-        automation.app.navigationBars.firstMatch.buttons["Rearrange"].tap()
-        
-        automation.app.collectionViews.buttons["Add pages after page 1"].tap()
-        
-        wait(0.5) // Wait for the insertion animation
-        
-        automation.app.collectionViews.firstMatch.swipeUp()
-        automation.app.collectionViews.firstMatch.swipeUp()
-    }
-    
 }

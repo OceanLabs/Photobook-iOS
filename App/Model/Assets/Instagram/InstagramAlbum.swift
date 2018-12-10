@@ -30,6 +30,7 @@
 import UIKit
 import KeychainSwift
 import OAuthSwift
+import Photobook
 
 protocol InstagramApiManager {
     func startAuthorizedRequest(_ url: String,
@@ -71,7 +72,7 @@ class InstagramAlbum {
         static let pageSize = 100
     }
     
-    var assets = [Asset]()
+    var assets = [PhotobookAsset]()
     let identifier = UUID.init().uuidString
     private var nextUrl: String?
     var hasMoreAssetsToLoad: Bool {
@@ -106,7 +107,7 @@ class InstagramAlbum {
             }
             
             self.nextUrl = pagination["next_url"] as? String
-            var newAssets = [Asset]()
+            var newAssets = [PhotobookAsset]()
             
             for d in data {
                 var media = [[String : Any]]()
@@ -135,8 +136,8 @@ class InstagramAlbum {
                         urlAssetImages.append(URLAssetImage(url: standardResolutionImageUrl, size: CGSize(width: width, height: height)))
                     }
                     
-                    if let urlAsset = URLAsset(identifier: "\(identifier)-\(i)", images: urlAssetImages, albumIdentifier: self.identifier) {
-                        newAssets.append(urlAsset)
+                    if let asset = PhotobookAsset(withUrlImages: urlAssetImages, identifier: "\(identifier)-\(i)", albumIdentifier: self.identifier, date: nil) {
+                        newAssets.append(asset)
                     }
                 }
             }
@@ -178,7 +179,7 @@ extension InstagramAlbum: Album {
         fetchAssets(url: url, completionHandler: completionHandler)
     }
     
-    func coverAsset(completionHandler: @escaping (Asset?) -> Void) {
+    func coverAsset(completionHandler: @escaping (PhotobookAsset?) -> Void) {
         return completionHandler(assets.first)
     }
 }

@@ -70,8 +70,7 @@ class ReceiptViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var dismissBarButtonItem: UIBarButtonItem!
-    var dismissClosure: ((UIViewController) -> Void)?
-    weak var dismissDelegate: DismissDelegate?
+    var dismissClosure: ((UIViewController, Bool) -> Void)?
     
     private var modalPresentationDismissedGroup = DispatchGroup()
     private lazy var paymentManager: PaymentAuthorizationManager = {
@@ -83,8 +82,6 @@ class ReceiptViewController: UIViewController {
     private lazy var progressOverlayViewController: ProgressOverlayViewController = {
         return ProgressOverlayViewController.progressOverlay(parent: self)
     }()
-    
-    private lazy var isPresentedModally: Bool = { return (navigationController?.isBeingPresented ?? false) || isBeingPresented }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -188,7 +185,7 @@ class ReceiptViewController: UIViewController {
             Analytics.shared.trackAction(.paymentRetried)
             pay()
         case .cancelled:
-            dismiss()
+            dismiss(success: false)
         default:
             break
         }
@@ -205,45 +202,33 @@ class ReceiptViewController: UIViewController {
             let title = NSLocalizedString("ReceiptViewController/DismissAlertTitle", value: "Cancel Order?", comment: "Alert title when the user wants to close the upload/receipt screen")
             let message = NSLocalizedString("ReceiptViewController/DismissAlertMessage", value: "You have not been charged yet. Please note, if you cancel your design will be lost.", comment: "Alert message when the user wants to close the upload/receipt screen")
             let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.no, style: .default, handler:nil))
+            alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.no, style: .default, handler: nil))
             alertController.addAction(UIAlertAction(title: CommonLocalizedStrings.yes, style: .destructive, handler: { [weak welf = self] (_) in
                 Analytics.shared.trackAction(.uploadCancelled)
-                welf?.dismiss()
+                welf?.dismiss(success: false)
             }))
             
             present(alertController, animated: true, completion: nil)
         } else {
-            dismiss()
+            dismiss(success: true)
         }
     }
     
-    private func dismiss() {
+    private func dismiss(success: Bool) {
         OrderManager.shared.cancelProcessing { [weak welf = self] in
             ProductManager.shared.reset()
-            OrderManager.shared.reset()
-            NotificationCenter.default.post(name: ReceiptNotificationName.receiptWillDismiss, object: nil)
+            OrderManager.shared.reset()            
             
-            #if !PHOTOBOOK_APP
             guard let stelf = welf else { return }
-            let controllerToDismiss = stelf.isPresentedModally ? stelf.navigationController! : stelf
-            if stelf.dismissDelegate?.wantsToDismiss?(controllerToDismiss) == nil {
-                if stelf.isPresentedModally {
-                    stelf.presentingViewController!.dismiss(animated: true, completion: nil)
-                    return
-                }
-                stelf.navigationController!.interactivePopGestureRecognizer!.isEnabled = true
-                stelf.navigationController!.popToRootViewController(animated: true)
+            if let gestureRecognizer = stelf.navigationController?.interactivePopGestureRecognizer {
+                gestureRecognizer.isEnabled = true
             }
-            #else
-            // Check if the Photobook app was launched into the ReceiptViewController
-            if welf?.navigationController?.viewControllers.count == 1 {
-                welf?.navigationController?.isNavigationBarHidden = true
-                welf?.dismissClosure?(self)
-            } else {
-                welf?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-                welf?.navigationController?.popToRootViewController(animated: true)
+            guard stelf.dismissClosure != nil else {
+                stelf.autoDismiss(true)
+                return
             }
-            #endif
+            let controllerToDismiss = stelf.isPresentedModally() ? stelf.navigationController! : stelf
+            stelf.dismissClosure?(controllerToDismiss, success)
         }
     }
     

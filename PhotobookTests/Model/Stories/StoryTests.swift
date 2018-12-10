@@ -29,6 +29,7 @@
 
 import XCTest
 import Photos
+@testable import Photobook_App
 @testable import Photobook
 
 class StoryTests: XCTestCase {
@@ -174,7 +175,7 @@ class StoryTests: XCTestCase {
     }
     
     func testLoadAssets_shouldDoNothingIfAlreadyLoaded() {
-        story.assets = [PhotosAssetMock()]
+        story.assets = [PhotobookAsset(asset: PhotosAssetMock())!] 
         
         var called = false
         story.loadAssets { _ in
