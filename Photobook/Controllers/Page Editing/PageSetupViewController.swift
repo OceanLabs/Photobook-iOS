@@ -456,6 +456,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         case .cover:
             break
         }
+        photobookFrameView.layoutIfNeeded()
         
         let bleed = product.bleed(forPageSize: pageView.bounds.size, type: pageType)
         photobookFrameView.leftPageView.bleed = bleed
