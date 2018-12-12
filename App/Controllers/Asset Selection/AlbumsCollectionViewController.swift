@@ -153,7 +153,8 @@ class AlbumsCollectionViewController: UICollectionViewController {
         guard albumManager.albums.count > 0 else { return }
         for cell in collectionView?.visibleCells ?? [] {
             guard let cell = cell as? AlbumCollectionViewCell,
-            let indexPath = collectionView?.indexPath(for: cell)
+            let indexPath = collectionView?.indexPath(for: cell),
+            indexPath.item < albumManager.albums.count
             else { continue }
             
             let album = albumManager.albums[indexPath.item]

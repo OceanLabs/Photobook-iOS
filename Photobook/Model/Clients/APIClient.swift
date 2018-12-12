@@ -88,7 +88,7 @@ class APIClient: NSObject {
     private func baseURLString(for context: APIContext) -> String {
         switch context {
         case .none: return ""
-        case .photobook: return "https://photobook-builder.herokuapp.com"
+        case .photobook: return "https://staging-photobook-builder.herokuapp.com" //"https://photobook-builder.herokuapp.com"
         case .pig: return "https://image.kite.ly/"
         case .kite: return "https://api.kite.ly/"
         }

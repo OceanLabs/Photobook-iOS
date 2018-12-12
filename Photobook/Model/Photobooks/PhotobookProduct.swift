@@ -534,8 +534,13 @@ enum ProductColor: String, Codable {
                 
                 var layoutBox = [String: Any]()
                 
-                // Adjust container and transform to page dimensions
-                productLayoutAsset.containerSize = imageLayoutBox.rectContained(in: pageSize).size
+                // Work out the bleed rect and adjust the transform
+                let containerSize = imageLayoutBox.rectContained(in: pageSize).size
+
+                let pageType = self.pageType(forLayoutIndex: index)
+                let bleed = self.bleed(forPageSize: pageSize, type: pageType)
+                let bleedRect = imageLayoutBox.bleedRect(in: pageSize, withBleed: bleed)
+                productLayoutAsset.containerSize = bleedRect.size
                 productLayoutAsset.adjustTransform()
                 
                 layoutBox["contentType"] = "image"
@@ -546,27 +551,23 @@ enum ProductColor: String, Codable {
                 // Convert transform into css format on the backend
                 let assetAspectRatio = asset.size.width / asset.size.height
                 
-                //1. translation
-                //on web the image with scale factor 1 fills the width of the container and is aligned to the top left corner.
-                //first we calculate the offset in points to align the image center with the container center
-                let yOffset = productLayoutAsset.containerSize.height * 0.5 - productLayoutAsset.containerSize.width * 0.5 * (1.0 / assetAspectRatio) //offset in points to match initial origins within layout
-                
-                //match anchors
+                // 1. translation
+                // On web the image with scale factor 1 fills the width of the container and is aligned to the top left corner
+                // Calculate the offset in points to centre the image in the container
+                let yOffset = productLayoutAsset.containerSize.height * 0.5 - productLayoutAsset.containerSize.width * 0.5 * (1.0 / assetAspectRatio)
                 var transformX = productLayoutAsset.transform.tx
                 var transformY = productLayoutAsset.transform.ty + yOffset
-                
-                //2. zoom
-                //on the pdf back-end scale 1 fills the width of the container. scale 1 on ios is original image width
+
+                // Convert to CSS percentages
+                transformX = transformX / containerSize.width
+                transformY = transformY / containerSize.height
+
+                // 2. zoom 
                 let scaledWidth = asset.size.width * productLayoutAsset.transform.scale
-                let zoom = scaledWidth/productLayoutAsset.containerSize.width
+                let zoom = scaledWidth / containerSize.width
                 
-                //3. rotation
-                //straightfoward as it's just the angle
+                // 3. rotation
                 let rotation = productLayoutAsset.transform.angle * (180 / .pi)
-                
-                //convert to css percentages
-                transformX = transformX / productLayoutAsset.containerSize.width
-                transformY = transformY / (productLayoutAsset.containerSize.height * (1.0 / assetAspectRatio))
                 
                 var containedItem = [String: Any]()
                 var picture = [String: Any]()
@@ -585,14 +586,14 @@ enum ProductColor: String, Codable {
                 layoutBoxes.append(layoutBox)
             }
             
-            //text layout box
+            // Text layout box
             if let text = productLayout.text,
                 let textLayoutBox = productLayout.layout.textLayoutBox,
                 let productLayoutText = productLayout.productLayoutText {
                 
                 var layoutBox = [String: Any]()
                 
-                //adjust container and transform to page dimensions
+                // Adjust container and transform to page dimensions
                 productLayoutText.containerSize = textLayoutBox.rectContained(in: pageSize).size
                 
                 layoutBox["contentType"] = "text"

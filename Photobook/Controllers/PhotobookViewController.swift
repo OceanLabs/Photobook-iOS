@@ -514,13 +514,21 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate,
             destinationY = view.frame.height + draggingView.frame.height
         }
         
+        let destinationPoint = CGPoint(x: Constants.cellSideMargin, y: destinationY * self.reverseRearrangeScale)
+        if destinationPoint == draggingView.frame.origin {
+            // If the dragging view is in place, slightly offset its position to avoid an abrupt animation
+            draggingView.frame.origin = CGPoint(x: draggingView.frame.origin.x, y: draggingView.frame.origin.y + 1.0)
+            view.layoutIfNeeded()
+        }
+        
         UIView.animate(withDuration: Constants.dropAnimationDuration, delay: 0.0, options: .curveEaseInOut, animations: {
-            draggingView.frame.origin = CGPoint(x: Constants.cellSideMargin, y: destinationY * self.reverseRearrangeScale)
+            draggingView.frame.origin = destinationPoint
             draggingView.layer.shadowRadius = 0
             draggingView.layer.shadowOpacity = 0
         }, completion: { _ in
             // Unhide the book if we're returning to the original position
             sourceCell?.isVisible = true
+            sourceCell?.shouldRevealActions = true
             
             draggingView.removeFromSuperview()
             self.draggingView = nil
@@ -994,7 +1002,7 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
         currentlyPanningGesture = sender
         
         let translation = sender.translation(in: view)
-        draggingView.transform = CGAffineTransform(translationX: translation.x, y: translation.y) //.scaledBy(x: Constants.dragLiftScale, y: Constants.dragLiftScale)
+        draggingView.transform = CGAffineTransform(translationX: translation.x, y: translation.y)
         autoScrollIfNeeded()
         updateNavBar()
         
