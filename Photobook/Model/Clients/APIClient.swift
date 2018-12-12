@@ -50,7 +50,7 @@ class APIClient: NSObject {
     
     // Notification keys
     static let backgroundSessionTaskFinished = Notification.Name("ly.kite.sdk.APIClientBackgroundSessionTaskFinished")
-    static let backgroundSessionAllTasksFinished = Notification.Name("ly.kite.sdk.APIClientBackgroundSessionAllTaskFinished")
+    static let backgroundSessionTaskUploadProgress = Notification.Name("ly.kite.sdk.APIClientBackgroundSessionTaskUploadProgress")
     
     // Storage constants
     private struct Storage {
@@ -476,6 +476,12 @@ extension APIClient: URLSessionDelegate, URLSessionDataDelegate {
             completionHandler()
             backgroundSessionCompletionHandler = nil
         }
+    }
+    
+    func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
+        guard let reference = taskReferences[task.taskIdentifier] else { return }
+        let userInfo: [String: Any] = ["task_reference": reference, "progress": Double(totalBytesSent) / Double(totalBytesExpectedToSend)]
+        NotificationCenter.default.post(name: APIClient.backgroundSessionTaskUploadProgress, object: nil, userInfo: userInfo)
     }
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {

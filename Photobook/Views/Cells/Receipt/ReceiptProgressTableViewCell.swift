@@ -40,10 +40,12 @@ class ReceiptProgressTableViewCell: UITableViewCell {
     @IBOutlet private weak var infoLabel: UILabel! { didSet { infoLabel.scaleFont() } }    
     @IBOutlet private weak var progressSpinnerImageView: UIImageView!
     
-    func startProgressAnimation() {
+    private func startProgressAnimation() {
+        guard progressSpinnerImageView.layer.animation(forKey: "rotation") == nil else { return }
+        
         let fromValue = progressSpinnerImageView.layer.presentation()?.value(forKeyPath: "transform.rotation") as? CGFloat ?? 0.0
         
-        //start progress spinner
+        // Start progress spinner
         let rotateAnimation = CABasicAnimation(keyPath: "transform.rotation")
         rotateAnimation.fromValue = fromValue
         rotateAnimation.toValue = fromValue + CGFloat(.pi * 2.0)
@@ -53,13 +55,13 @@ class ReceiptProgressTableViewCell: UITableViewCell {
         progressSpinnerImageView.layer.add(rotateAnimation, forKey: "rotation")
     }
     
-    func updateProgress(pendingUploads:Int, totalUploads:Int) {
+    func updateProgress(_ progress: Double, pendingUploads: Int, totalUploads: Int) {
+        startProgressAnimation()
         let uploadedCount = totalUploads - pendingUploads
         
         let progressFormatString = NSLocalizedString("ReceiptProgressTableViewCell/ProgressFormatString", value: "%d of %d photos", comment: "Amount of photos uploaded compared to the total count. Example '7 of 24 photos'")
-        let startingCount = max(uploadedCount, 1)
+        let startingCount = max(uploadedCount, 0)
         progressLabel.text = String(format: progressFormatString, startingCount, totalUploads)        
-        progressView.setProgress(Float(startingCount) / Float(totalUploads), animated: false)
+        progressView.setProgress(Float(progress) / Float(totalUploads), animated: false)
     }
-    
 }

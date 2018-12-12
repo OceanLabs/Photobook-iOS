@@ -42,6 +42,7 @@ enum OrderProcessingError: Error {
 
 protocol OrderProcessingDelegate: class {
     func orderDidComplete(error: OrderProcessingError?)
+    func progressDidUpdate()
     func uploadStatusDidUpdate()
     func orderWillFinish()
 }
@@ -143,6 +144,7 @@ class OrderManager {
     
     private init() {
         NotificationCenter.default.addObserver(self, selector: #selector(fileUploadFinished(_:)), name: APIClient.backgroundSessionTaskFinished, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fileUploadProgress(_:)), name: APIClient.backgroundSessionTaskUploadProgress, object: nil)
     }
     
     #if DEBUG
@@ -276,6 +278,7 @@ class OrderManager {
         orderProcessingDelegate?.uploadStatusDidUpdate()
         
         // Upload images
+        uploadTaskProgress = [String: Double]()
         apiClient.updateTaskReferences { [weak welf = self] in
             for asset in assetsToUpload {
                 welf?.uploadAsset(asset: asset)
@@ -466,6 +469,44 @@ class OrderManager {
             }
         })
     }
+
+    private var uploadTaskProgress = [String: Double]()
+    var uploadProgress: Double {
+        guard isProcessingOrder else { return 0.0 }
+        let uploaded = processingOrder!.uploadedAssets()
+        
+        let currentProgress = uploadTaskProgress.reduce(0) { (result, keyValue) -> Double in
+            let (key, value) = keyValue
+            if !uploaded.contains(where: { $0.identifier == key }) {
+                return result + value
+            }
+            return result
+        }
+        
+        return currentProgress + Double(uploaded.count)
+    }
+
+    @objc private func fileUploadProgress(_ notification: Notification) {
+        guard processingOrder != nil else { return }
+        
+        guard let dictionary = notification.userInfo as? [String: AnyObject] else {
+            failedFileUpload(with: APIClientError.parsing(details: "FileUploadProgress: UserInfo not a dictionary"))
+            return
+        }
+
+        // Check if this is a photobook api manager asset upload
+        guard let reference = dictionary["task_reference"] as? String,
+            reference.hasPrefix(apiClient.imageUploadIdentifierPrefix) || reference.hasPrefix(apiClient.fileUploadIdentifierPrefix),
+            let progress = dictionary["progress"] as? Double
+        else {
+            return
+        }
+
+        let referenceId = reference.replacingOccurrences(of: apiClient.imageUploadIdentifierPrefix, with: "").replacingOccurrences(of: apiClient.fileUploadIdentifierPrefix, with: "")
+        uploadTaskProgress[referenceId] = progress
+        
+        orderProcessingDelegate?.progressDidUpdate()
+    }
     
     @objc private func fileUploadFinished(_ notification: Notification) {
         guard let order = processingOrder else { return }
@@ -519,10 +560,12 @@ class OrderManager {
             }
         }
         
-        orderProcessingDelegate?.uploadStatusDidUpdate()
+        orderProcessingDelegate?.progressDidUpdate()
         saveProcessingOrder()
         
         if order.remainingAssetsToUpload().isEmpty {
+            orderProcessingDelegate?.uploadStatusDidUpdate()
+            
             Analytics.shared.trackAction(.uploadSuccessful)
             finishOrder()
             return
