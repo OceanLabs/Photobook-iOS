@@ -216,6 +216,7 @@
 		6F84BE5B2191BC230082DA5B /* Photobook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14B992063A9CD00ED2E2C /* Photobook.framework */; };
 		6F84BE5C2191BC230082DA5B /* Photobook.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2ED14B992063A9CD00ED2E2C /* Photobook.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F87460E207CC8DB001923B7 /* PublicProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F87460C207CC8D6001923B7 /* PublicProtocols.swift */; };
+		6F93B3B021B6B341008B5BBE /* PDFBookProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F93B3AF21B6B341008B5BBE /* PDFBookProduct.swift */; };
 		6F963D7320B45421001C9688 /* LineItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F963D7220B45421001C9688 /* LineItemTests.swift */; };
 		6F963D7520B462AA001C9688 /* ShippingMethodTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F963D7420B462AA001C9688 /* ShippingMethodTest.swift */; };
 		6F963D7B20BEA876001C9688 /* DeliveryDetailsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F963D7A20BEA876001C9688 /* DeliveryDetailsTests.swift */; };
@@ -270,6 +271,9 @@
 		6FEAC29421834B9700ECE61F /* CGFloatExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEAC29321834B9700ECE61F /* CGFloatExtensionsTests.swift */; };
 		6FED4FCF216CC12400EC40C2 /* ActionsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FED4FCD216CC12400EC40C2 /* ActionsCollectionViewCell.swift */; };
 		6FEF3EAB208F48EB00595A5B /* PhotobookProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEF3EAA208F48EB00595A5B /* PhotobookProductTests.swift */; };
+		6FFBB6FF21BAC10F003878B2 /* exampleCover.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6FFBB6FD21BAC10F003878B2 /* exampleCover.pdf */; };
+		6FFBB70021BAC10F003878B2 /* exampleInside.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6FFBB6FE21BAC10F003878B2 /* exampleInside.pdf */; };
+		6FFBB70221C161AE003878B2 /* PDFAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFBB70121C161AE003878B2 /* PDFAsset.swift */; };
 		B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */; };
 		B9ACCF6020DBF79A004EA2F5 /* Price.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9216FFB20C6C34F003671B0 /* Price.swift */; };
 		B9ACCF6120DBF7A3004EA2F5 /* ShippingMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = B937E94E20CFD4B300BC21FD /* ShippingMethod.swift */; };
@@ -563,6 +567,7 @@
 		6F7B63BD20FC9F19003EB922 /* Template.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Template.swift; sourceTree = "<group>"; };
 		6F87460C207CC8D6001923B7 /* PublicProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicProtocols.swift; sourceTree = "<group>"; };
 		6F92BD011FFE3B8100460466 /* AssetSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetSelectorViewController.swift; sourceTree = "<group>"; };
+		6F93B3AF21B6B341008B5BBE /* PDFBookProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFBookProduct.swift; sourceTree = "<group>"; };
 		6F963D7220B45421001C9688 /* LineItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineItemTests.swift; sourceTree = "<group>"; };
 		6F963D7420B462AA001C9688 /* ShippingMethodTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShippingMethodTest.swift; sourceTree = "<group>"; };
 		6F963D7A20BEA876001C9688 /* DeliveryDetailsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryDetailsTests.swift; sourceTree = "<group>"; };
@@ -621,6 +626,9 @@
 		6FEAC29321834B9700ECE61F /* CGFloatExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGFloatExtensionsTests.swift; sourceTree = "<group>"; };
 		6FED4FCD216CC12400EC40C2 /* ActionsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionsCollectionViewCell.swift; sourceTree = "<group>"; };
 		6FEF3EAA208F48EB00595A5B /* PhotobookProductTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookProductTests.swift; sourceTree = "<group>"; };
+		6FFBB6FD21BAC10F003878B2 /* exampleCover.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = exampleCover.pdf; sourceTree = "<group>"; };
+		6FFBB6FE21BAC10F003878B2 /* exampleInside.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = exampleInside.pdf; sourceTree = "<group>"; };
+		6FFBB70121C161AE003878B2 /* PDFAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFAsset.swift; sourceTree = "<group>"; };
 		6FFE21CA202CA7F9004EC0EA /* SpineTextEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpineTextEditingViewController.swift; sourceTree = "<group>"; };
 		9BC4E23EC9FB91F30E3498D9 /* Pods-Photobook.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.debug.xcconfig"; sourceTree = "<group>"; };
 		B90EB85D203701CD0005D91C /* AmountPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AmountPickerViewController.swift; sourceTree = "<group>"; };
@@ -782,6 +790,7 @@
 				2E3C4DF920E65911007A5788 /* AssetLoadingManager.swift */,
 				2E7DC8CF21007A1600C6B979 /* CustomAsset.swift */,
 				6FB8868520691B7700DADB04 /* ImageAsset.swift */,
+				6FFBB70121C161AE003878B2 /* PDFAsset.swift */,
 				6FD8DEA520EE6B0100353AE0 /* PhotobookAsset.swift */,
 				2E4C9E8D204979EA00F5AD48 /* URLAsset.swift */,
 			);
@@ -993,6 +1002,8 @@
 		2E870586208E0182004B4B36 /* SDK Demo */ = {
 			isa = PBXGroup;
 			children = (
+				6FFBB6FD21BAC10F003878B2 /* exampleCover.pdf */,
+				6FFBB6FE21BAC10F003878B2 /* exampleInside.pdf */,
 				2E870587208E0182004B4B36 /* AppDelegate.swift */,
 				2E870589208E0182004B4B36 /* ViewController.swift */,
 				2E87058B208E0182004B4B36 /* Main.storyboard */,
@@ -1347,6 +1358,7 @@
 				6F3C4ACE1FC8811C00DA0196 /* ProductLayoutText.swift */,
 				2E6CD1C9207E2C7C00BAE011 /* ProductManager.swift */,
 				6F7B63BD20FC9F19003EB922 /* Template.swift */,
+				6F93B3AF21B6B341008B5BBE /* PDFBookProduct.swift */,
 			);
 			path = Photobooks;
 			sourceTree = "<group>";
@@ -1705,7 +1717,9 @@
 			files = (
 				2E870592208E0183004B4B36 /* LaunchScreen.storyboard in Resources */,
 				2E87058F208E0183004B4B36 /* Assets.xcassets in Resources */,
+				6FFBB70021BAC10F003878B2 /* exampleInside.pdf in Resources */,
 				2E87058D208E0182004B4B36 /* Main.storyboard in Resources */,
+				6FFBB6FF21BAC10F003878B2 /* exampleCover.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2022,6 +2036,7 @@
 				2ED14BDA2063AA4000ED2E2C /* PaymentMethodTableViewCell.swift in Sources */,
 				B9ACCF6120DBF7A3004EA2F5 /* ShippingMethod.swift in Sources */,
 				2ED14BBB2063AA4000ED2E2C /* CountryPickerTableViewController.swift in Sources */,
+				6FFBB70221C161AE003878B2 /* PDFAsset.swift in Sources */,
 				2ED14BD72063AA4000ED2E2C /* PhotobookCoverCollectionViewCell.swift in Sources */,
 				6F17F326207657FD00001888 /* UIFontExtensions.swift in Sources */,
 				2ED14C0B2063AA4000ED2E2C /* PaymentAuthorizationManager.swift in Sources */,
@@ -2048,6 +2063,7 @@
 				2ED14BB72063AA4000ED2E2C /* PaymentMethodsViewController.swift in Sources */,
 				B9ACCF6020DBF79A004EA2F5 /* Price.swift in Sources */,
 				6FC23BCE2189D5C200F5D1EC /* ProductBackupManager.swift in Sources */,
+				6F93B3B021B6B341008B5BBE /* PDFBookProduct.swift in Sources */,
 				2ED14C192063AA4000ED2E2C /* DecimalExtensions.swift in Sources */,
 				2ED14BF22063AA4000ED2E2C /* LayoutBox.swift in Sources */,
 				2ED14BDF2063AA4000ED2E2C /* ReceiptHeaderTableViewCell.swift in Sources */,

@@ -50,7 +50,7 @@ class APIClient: NSObject {
     
     // Notification keys
     static let backgroundSessionTaskFinished = Notification.Name("ly.kite.sdk.APIClientBackgroundSessionTaskFinished")
-    static let backgroundSessionAllTasksFinished = Notification.Name("ly.kite.sdk.APIClientBackgroundSessionAllTaskFinished")
+    static let backgroundSessionTaskUploadProgress = Notification.Name("ly.kite.sdk.APIClientBackgroundSessionTaskUploadProgress")
     
     // Storage constants
     private struct Storage {
@@ -79,9 +79,11 @@ class APIClient: NSObject {
     /// The environment of the app, live vs test
     static var environment: Environment = .live
     
-    private static let prefix = "APIClient-AssetUploader-"
+    private static let imageUploadPrefix = "APIClient-AssetUploader-"
+    private static let fileUploadPrefix = "APIClient-FileUploader-"
     
-    var imageUploadIdentifierPrefix: String { return APIClient.prefix }
+    var imageUploadIdentifierPrefix: String { return APIClient.imageUploadPrefix }
+    var fileUploadIdentifierPrefix: String { return APIClient.fileUploadPrefix }
     
     private func baseURLString(for context: APIContext) -> String {
         switch context {
@@ -416,6 +418,32 @@ class APIClient: NSObject {
         })
     }
     
+    func uploadPdf(_ file: URL, to targetUrl: URL, reference: String?) {
+        guard let _ = try? Data(contentsOf: file) else {
+            print("File Upload: cannot read file data")
+            return
+        }
+        
+        var request = URLRequest(url: targetUrl)
+        request.httpMethod = HTTPMethod.put.rawValue
+        request.setValue(MimeType.pdf.headerString(), forHTTPHeaderField: "Content-Type")
+        request.setValue("private", forHTTPHeaderField: "x-amz-acl")
+        if reference != nil {
+            // Check if the reference exists and avoid creating a new task
+            guard !taskReferences.values.contains(imageUploadIdentifierPrefix + reference!) else {
+                return
+            }
+        }
+        
+        let dataTask = backgroundUrlSession.uploadTask(with: request, fromFile: file)
+        if reference != nil {
+            taskReferences[dataTask.taskIdentifier] = fileUploadIdentifierPrefix + reference!
+            savePendingTasks()
+        }
+        
+        dataTask.resume()
+    }
+    
     func pendingBackgroundTaskCount(_ completion: @escaping ((Int)->Void)) {
         backgroundUrlSession.getAllTasks { completion($0.count) }
     }
@@ -450,6 +478,12 @@ extension APIClient: URLSessionDelegate, URLSessionDataDelegate {
         }
     }
     
+    func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
+        guard let reference = taskReferences[task.taskIdentifier] else { return }
+        let userInfo: [String: Any] = ["task_reference": reference, "progress": Double(totalBytesSent) / Double(totalBytesExpectedToSend)]
+        NotificationCenter.default.post(name: APIClient.backgroundSessionTaskUploadProgress, object: nil, userInfo: userInfo)
+    }
+    
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
 
         let postNotification = { (userInfo: [String: Any]) in
@@ -462,7 +496,10 @@ extension APIClient: URLSessionDelegate, URLSessionDataDelegate {
         let reference = taskReferences[dataTask.taskIdentifier]
         
         guard var json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: AnyObject] else {
-            var userInfo = ["error": String(data: data, encoding: String.Encoding.utf8) ?? ""]
+            var userInfo = [String: Any]()
+            if let error = String(data: data, encoding: String.Encoding.utf8), !error.isEmpty {
+                userInfo["error"] = error
+            }
             if reference != nil { userInfo["task_reference"] = reference }
             postNotification(userInfo)
             return

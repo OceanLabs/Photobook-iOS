@@ -43,7 +43,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         PhotobookSDK.shared.environment = .test
-        PhotobookSDK.shared.kiteApiKey = "78b798ff366815c833dfa848654aba43b71a883a"
+        PhotobookSDK.shared.kiteApiKey = "57c832e42dfdda93d072c6a42c41fbcddf100805" //"78b798ff366815c833dfa848654aba43b71a883a"
     }
 
     @IBAction func createPhotobookWithWebPhotos(_ sender: Any) {
@@ -57,6 +57,28 @@ class ViewController: UIViewController {
             source.navigationController?.popToRootViewController(animated: true)
         }) else { return }
         navigationController?.pushViewController(photobookViewController, animated: true)
+    }
+    
+    @IBAction func launchBasketWithPDF(_ sender: Any) {
+        let destinationPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!.appending("/SDKDemo/")
+        try? FileManager.default.createDirectory(atPath: destinationPath, withIntermediateDirectories: false, attributes: nil)
+        
+        let coverPdfInBundle = Bundle.main.path(forResource: "exampleCover", ofType: "pdf")!
+        let coverFilePath = destinationPath.appending("exampleCover.pdf")
+
+        let insidePdfInBundle = Bundle.main.path(forResource: "exampleInside", ofType: "pdf")!
+        let insideFilePath = destinationPath.appending("exampleInside.pdf")
+
+        try? FileManager.default.copyItem(atPath: coverPdfInBundle, toPath: coverFilePath)
+        try? FileManager.default.copyItem(atPath: insidePdfInBundle, toPath: insideFilePath)
+        
+        let options: [String: Any] = ["finish": "matte"]
+        guard let photobookProduct = PDFBookProduct(templateId: "hdbook_297x210", coverFilePath: coverFilePath, insideFilePath: insideFilePath, pageCount: 20, options: options) else {
+            print("Could not create photo book product")
+            return
+        }
+        Checkout.shared.addProductToBasket(photobookProduct)
+        showBasket(sender)
     }
     
     @IBAction func clearProcessingOrder(_ sender: Any) {

@@ -355,6 +355,12 @@ extension ReceiptViewController: OrderProcessingDelegate {
         state = .completed
     }
     
+    func progressDidUpdate() {
+        let indexPath = IndexPath(row: 0, section: Section.progress.rawValue)
+        guard let cell = tableView.cellForRow(at: indexPath) as? ReceiptProgressTableViewCell else { return }
+        cell.updateProgress(OrderManager.shared.uploadProgress, pendingUploads: order.remainingAssetsToUpload().count, totalUploads: order.assetsToUpload().count)        
+    }
+    
     func uploadStatusDidUpdate() {
         tableView.reloadData()
     }
@@ -400,9 +406,7 @@ extension ReceiptViewController: UITableViewDataSource {
         case Section.progress.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptProgressTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptProgressTableViewCell
             
-            let total = order.assetsToUpload().count
-            cell.updateProgress(pendingUploads: order.remainingAssetsToUpload().count, totalUploads: total)
-            cell.startProgressAnimation()
+            cell.updateProgress(OrderManager.shared.uploadProgress, pendingUploads: order.remainingAssetsToUpload().count, totalUploads: order.assetsToUpload().count)
             
             return cell
         case Section.info.rawValue:
