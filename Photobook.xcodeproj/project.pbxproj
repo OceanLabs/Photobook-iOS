@@ -273,6 +273,7 @@
 		6FEF3EAB208F48EB00595A5B /* PhotobookProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEF3EAA208F48EB00595A5B /* PhotobookProductTests.swift */; };
 		6FFBB6FF21BAC10F003878B2 /* exampleCover.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6FFBB6FD21BAC10F003878B2 /* exampleCover.pdf */; };
 		6FFBB70021BAC10F003878B2 /* exampleInside.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6FFBB6FE21BAC10F003878B2 /* exampleInside.pdf */; };
+		6FFBB70221C161AE003878B2 /* PDFAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFBB70121C161AE003878B2 /* PDFAsset.swift */; };
 		B9AA6B5A1FBD99CC00A90A89 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AA6B591FBD99CC00A90A89 /* IntroViewController.swift */; };
 		B9ACCF6020DBF79A004EA2F5 /* Price.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9216FFB20C6C34F003671B0 /* Price.swift */; };
 		B9ACCF6120DBF7A3004EA2F5 /* ShippingMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = B937E94E20CFD4B300BC21FD /* ShippingMethod.swift */; };
@@ -627,6 +628,7 @@
 		6FEF3EAA208F48EB00595A5B /* PhotobookProductTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotobookProductTests.swift; sourceTree = "<group>"; };
 		6FFBB6FD21BAC10F003878B2 /* exampleCover.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = exampleCover.pdf; sourceTree = "<group>"; };
 		6FFBB6FE21BAC10F003878B2 /* exampleInside.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = exampleInside.pdf; sourceTree = "<group>"; };
+		6FFBB70121C161AE003878B2 /* PDFAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFAsset.swift; sourceTree = "<group>"; };
 		6FFE21CA202CA7F9004EC0EA /* SpineTextEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpineTextEditingViewController.swift; sourceTree = "<group>"; };
 		9BC4E23EC9FB91F30E3498D9 /* Pods-Photobook.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photobook.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Photobook/Pods-Photobook.debug.xcconfig"; sourceTree = "<group>"; };
 		B90EB85D203701CD0005D91C /* AmountPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AmountPickerViewController.swift; sourceTree = "<group>"; };
@@ -788,6 +790,7 @@
 				2E3C4DF920E65911007A5788 /* AssetLoadingManager.swift */,
 				2E7DC8CF21007A1600C6B979 /* CustomAsset.swift */,
 				6FB8868520691B7700DADB04 /* ImageAsset.swift */,
+				6FFBB70121C161AE003878B2 /* PDFAsset.swift */,
 				6FD8DEA520EE6B0100353AE0 /* PhotobookAsset.swift */,
 				2E4C9E8D204979EA00F5AD48 /* URLAsset.swift */,
 			);
@@ -2033,6 +2036,7 @@
 				2ED14BDA2063AA4000ED2E2C /* PaymentMethodTableViewCell.swift in Sources */,
 				B9ACCF6120DBF7A3004EA2F5 /* ShippingMethod.swift in Sources */,
 				2ED14BBB2063AA4000ED2E2C /* CountryPickerTableViewController.swift in Sources */,
+				6FFBB70221C161AE003878B2 /* PDFAsset.swift in Sources */,
 				2ED14BD72063AA4000ED2E2C /* PhotobookCoverCollectionViewCell.swift in Sources */,
 				6F17F326207657FD00001888 /* UIFontExtensions.swift in Sources */,
 				2ED14C0B2063AA4000ED2E2C /* PaymentAuthorizationManager.swift in Sources */,

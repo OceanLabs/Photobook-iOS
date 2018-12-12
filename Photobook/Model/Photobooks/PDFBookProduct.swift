@@ -41,33 +41,6 @@ class PDFBookTemplate: Codable, Template {
     }
 }
 
-class PDFAsset: Codable, Asset {
-    var identifier: String!
-    var albumIdentifier: String?
-    var size: CGSize = .zero
-    var date: Date?
-    var uploadUrl: String?
-    
-    var filePath: URL // Location of the file in the client app
-    var fileUrl: URL? // URL for the file once the upload succeeds
-    
-    init?(filePath: String) {
-        if !FileManager.default.fileExists(atPath: filePath) {
-            return nil
-        }
-        self.filePath = URL(fileURLWithPath: filePath)
-        self.identifier = self.filePath.lastPathComponent.data(using: .utf8)!.base64EncodedString() // Create a unique ID from the file path
-    }
-    
-    func confirmUpload() {
-        uploadUrl = fileUrl?.absoluteString
-    }
-    
-    // Non-applicable
-    func image(size: CGSize, loadThumbnailFirst: Bool, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {}
-    func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension, Error?) -> Void) {}
-}
-
 @objc public class PDFBookProduct: NSObject, Codable, Product {
     
     private static let productThumbnailUrlString = "https://s3.amazonaws.com/sdk-static/product_photography/hd_photobooks/detail.1.jpg"
