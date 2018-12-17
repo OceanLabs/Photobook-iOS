@@ -79,13 +79,14 @@ class PhotobookManager: NSObject {
             
         } else if isProcessingOrder {
             // Show receipt screen to prevent user from ordering another photobook
-            let receiptViewController = PhotobookSDK.shared.receiptViewController(embedInNavigation: false) { viewController, success in
+            let receiptViewController = PhotobookSDK.shared.receiptViewController(embedInNavigation: false) { [weak welf = self] viewController, success in
                 AssetDataSourceBackupManager.shared.deleteBackup()
-                
-                viewController.navigationController?.popToRootViewController(animated: true)
-                if success {
-                    NotificationCenter.default.post(name: SelectedAssetsManager.notificationNamePhotobookComplete, object: nil)
-                }
+
+                guard let stelf = welf else { return }
+                let tabBarController = mainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
+                stelf.configureTabBarController(tabBarController)
+                let dismissSegue = ReceiptDismissSegue(identifier: "ReceiptDismiss", source: viewController, destination: tabBarController)
+                dismissSegue.perform()
             }
             
             rootNavigationController.viewControllers = receiptViewController != nil ? [receiptViewController!] : [UIViewController()]
