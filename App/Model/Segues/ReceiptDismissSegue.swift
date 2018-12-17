@@ -33,15 +33,12 @@ class ReceiptDismissSegue: UIStoryboardSegue {
     
     override func perform() {
         UIApplication.shared.delegate!.window!!.rootViewController = destination
+        destination.view.addSubview(source.view)
         
-        guard let sourceSnapShot = source.view.snapshotView(afterScreenUpdates: true) else {
-            return
-        }
-        
-        destination.view.addSubview(sourceSnapShot)
-        
-        UIView.animate(withDuration: 0.15, animations: {
-            sourceSnapShot.alpha = 0
-        }, completion: { _ in sourceSnapShot.removeFromSuperview() })
+        UIView.animate(withDuration: 0.3, animations: {
+            self.source.view.alpha = 0.0
+        }, completion: { _ in
+            self.source.view.removeFromSuperview()
+        })
     }
 }
