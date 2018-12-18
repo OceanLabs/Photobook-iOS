@@ -539,7 +539,7 @@ enum ProductColor: String, Codable {
 
                 let pageType = self.pageType(forLayoutIndex: index)
                 let bleed = self.bleed(forPageSize: pageSize, type: pageType)
-                let bleedRect = imageLayoutBox.bleedRect(in: pageSize, withBleed: bleed)
+                let bleedRect = imageLayoutBox.bleedRect(in: containerSize, withBleed: bleed)
                 productLayoutAsset.containerSize = bleedRect.size
                 productLayoutAsset.adjustTransform()
                 
@@ -558,9 +558,11 @@ enum ProductColor: String, Codable {
                 var transformX = productLayoutAsset.transform.tx
                 var transformY = productLayoutAsset.transform.ty + yOffset
 
+                let initialImageSize = asset.size * LayoutUtils.scaleToFill(containerSize: productLayoutAsset.containerSize, withSize: asset.size, atAngle: 0.0)
+                
                 // Convert to CSS percentages
-                transformX = transformX / containerSize.width
-                transformY = transformY / containerSize.height
+                transformX = transformX / initialImageSize.width
+                transformY = transformY / initialImageSize.height
 
                 // 2. zoom 
                 let scaledWidth = asset.size.width * productLayoutAsset.transform.scale
@@ -573,12 +575,12 @@ enum ProductColor: String, Codable {
                 var picture = [String: Any]()
                 picture["url"] = asset.uploadUrl
                 picture["dimensions"] = ["height": asset.size.height, "width": asset.size.width]
-                picture["thumbnailUrl"] = asset.uploadUrl //mock data
+                picture["thumbnailUrl"] = asset.uploadUrl
                 containedItem["picture"] = picture
                 containedItem["relativeStartPoint"] = ["x": transformX, "y": transformY]
                 containedItem["rotation"] = rotation
                 containedItem["zoom"] = zoom // X & Y axes scale should be the same, use the scale for X axis
-                containedItem["baseWidthPercent"] = 1 //mock data
+                containedItem["baseWidthPercent"] = 1
                 containedItem["flipped"] = false
                 
                 layoutBox["containedItem"] = containedItem
