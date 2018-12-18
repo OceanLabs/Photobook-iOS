@@ -539,7 +539,7 @@ enum ProductColor: String, Codable {
 
                 let pageType = self.pageType(forLayoutIndex: index)
                 let bleed = self.bleed(forPageSize: pageSize, type: pageType)
-                let bleedRect = imageLayoutBox.bleedRect(in: pageSize, withBleed: bleed)
+                let bleedRect = imageLayoutBox.bleedRect(in: containerSize, withBleed: bleed)
                 productLayoutAsset.containerSize = bleedRect.size
                 productLayoutAsset.adjustTransform()
                 
