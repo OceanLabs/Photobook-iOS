@@ -554,15 +554,15 @@ enum ProductColor: String, Codable {
                 // 1. translation
                 // On web the image with scale factor 1 fills the width of the container and is aligned to the top left corner
                 // Calculate the offset in points to centre the image in the container
-                let yOffset = productLayoutAsset.containerSize.height * 0.5 - productLayoutAsset.containerSize.width * 0.5 * (1.0 / assetAspectRatio)
+                let assetWidthWhenFitToWidth = productLayoutAsset.containerSize.width
+                let assetHeightWhenFitToWidth = assetWidthWhenFitToWidth / assetAspectRatio
+                let yOffset = productLayoutAsset.containerSize.height * 0.5 - assetHeightWhenFitToWidth * 0.5
                 var transformX = productLayoutAsset.transform.tx
                 var transformY = productLayoutAsset.transform.ty + yOffset
 
-                let initialImageSize = asset.size * LayoutUtils.scaleToFill(containerSize: productLayoutAsset.containerSize, withSize: asset.size, atAngle: 0.0)
-                
                 // Convert to CSS percentages
-                transformX = transformX / initialImageSize.width
-                transformY = transformY / initialImageSize.height
+                transformX = transformX / assetWidthWhenFitToWidth
+                transformY = transformY / assetHeightWhenFitToWidth
 
                 // 2. zoom 
                 let scaledWidth = asset.size.width * productLayoutAsset.transform.scale
