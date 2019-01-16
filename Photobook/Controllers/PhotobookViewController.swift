@@ -540,6 +540,11 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate,
                 cell.backgroundColor = UIColor(red: 0.86, green: 0.86, blue: 0.86, alpha: 1.0)
                 self.insertingIndexPath = nil
             }
+            
+            UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0.0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
+                self.ctaButtonContainerBottomConstraint.constant = 0.0
+                self.view.layoutIfNeeded()
+            })
         })
         
         if destinationIndexPath != sourceIndexPath,
@@ -564,11 +569,6 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate,
                 deleteProposalCell(enableFeedback: false)
                 collectionView.deleteItems(at: [IndexPath(item: sourceIndexPath.item + (movingDown ? 0 : 1), section: sourceIndexPath.section)])
             }, completion: { _ in
-                UIView.animate(withDuration: Constants.rearrangeAnimationDuration, delay: 0.0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
-                    self.ctaButtonContainerBottomConstraint.constant = 0.0
-                    self.view.layoutIfNeeded()
-                })
-
                 self.updateVisibleCells()
             })
             
