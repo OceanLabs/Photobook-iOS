@@ -42,6 +42,7 @@ enum OrderProcessingError: Error {
 
 protocol OrderProcessingDelegate: class {
     func orderDidComplete(error: OrderProcessingError?)
+    func progressDidUpdate()
     func uploadStatusDidUpdate()
     func orderWillFinish()
 }
@@ -142,7 +143,8 @@ class OrderManager {
     static let shared = OrderManager()
     
     private init() {
-        NotificationCenter.default.addObserver(self, selector: #selector(imageUploadFinished(_:)), name: APIClient.backgroundSessionTaskFinished, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fileUploadFinished(_:)), name: APIClient.backgroundSessionTaskFinished, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fileUploadProgress(_:)), name: APIClient.backgroundSessionTaskUploadProgress, object: nil)
     }
     
     #if DEBUG
@@ -276,6 +278,7 @@ class OrderManager {
         orderProcessingDelegate?.uploadStatusDidUpdate()
         
         // Upload images
+        uploadTaskProgress = [String: Double]()
         apiClient.updateTaskReferences { [weak welf = self] in
             for asset in assetsToUpload {
                 welf?.uploadAsset(asset: asset)
@@ -434,14 +437,27 @@ class OrderManager {
     
     // MARK: - Upload
     private func uploadAsset(asset: Asset) {
+        // If it is a PDFAsset, skip retrieving an asset image and upload the PDF instead
+        if let pdfAsset = asset as? PDFAsset {
+            kiteApiClient.requestSignedUrl(for: .pdf) { [weak welf = self] signedUrl, url, error in
+                guard error == nil else {
+                    welf?.failedFileUpload(with: error!)
+                    return
+                }
+                pdfAsset.fileUrl = url // Store final URL pending upload
+                welf?.apiClient.uploadPdf(pdfAsset.filePath, to: signedUrl!, reference: pdfAsset.identifier)
+            }
+            return
+        }
+        
         assetLoadingManager.imageData(for: asset, progressHandler: nil, completionHandler: { [weak welf = self] data, fileExtension, error in
             
             guard error == nil, let imageData = data else {
                 if let error = error {
-                    welf?.failedImageUpload(with: error)
+                    welf?.failedFileUpload(with: error)
                 } else {
                     // Unlikely to happen
-                    welf?.failedImageUpload(with: AssetLoadingException.notFound)
+                    welf?.failedFileUpload(with: AssetLoadingException.notFound)
                 }
                 return
             }
@@ -449,60 +465,107 @@ class OrderManager {
             if let fileUrl = welf?.orderDiskManager.saveDataToCachesDirectory(data: imageData, name: "\(asset.fileIdentifier).\(fileExtension.string())") {
                 welf?.apiClient.uploadImage(fileUrl, reference: asset.identifier)
             } else {
-                welf?.failedImageUpload(with: OrderDiskManagerError.couldNotSaveTempImageData)
+                welf?.failedFileUpload(with: OrderDiskManagerError.couldNotSaveTempImageData)
             }
         })
     }
+
+    private var uploadTaskProgress = [String: Double]()
+    var uploadProgress: Double {
+        guard isProcessingOrder else { return 0.0 }
+        let uploaded = processingOrder!.uploadedAssets()
+        
+        let currentProgress = uploadTaskProgress.reduce(0) { (result, keyValue) -> Double in
+            let (key, value) = keyValue
+            if !uploaded.contains(where: { $0.identifier == key }) {
+                return result + value
+            }
+            return result
+        }
+        
+        return currentProgress + Double(uploaded.count)
+    }
+
+    @objc private func fileUploadProgress(_ notification: Notification) {
+        guard processingOrder != nil else { return }
+        
+        guard let dictionary = notification.userInfo as? [String: AnyObject] else {
+            failedFileUpload(with: APIClientError.parsing(details: "FileUploadProgress: UserInfo not a dictionary"))
+            return
+        }
+
+        // Check if this is a photobook api manager asset upload
+        guard let reference = dictionary["task_reference"] as? String,
+            reference.hasPrefix(apiClient.imageUploadIdentifierPrefix) || reference.hasPrefix(apiClient.fileUploadIdentifierPrefix),
+            let progress = dictionary["progress"] as? Double
+        else {
+            return
+        }
+
+        let referenceId = reference.replacingOccurrences(of: apiClient.imageUploadIdentifierPrefix, with: "").replacingOccurrences(of: apiClient.fileUploadIdentifierPrefix, with: "")
+        uploadTaskProgress[referenceId] = progress
+        
+        orderProcessingDelegate?.progressDidUpdate()
+    }
     
-    @objc private func imageUploadFinished(_ notification: Notification) {
+    @objc private func fileUploadFinished(_ notification: Notification) {
         guard let order = processingOrder else { return }
         
         guard let dictionary = notification.userInfo as? [String: AnyObject] else {
-            failedImageUpload(with: APIClientError.parsing(details: "ImageUploadFinished: UserInfo not a dictionary"))
+            failedFileUpload(with: APIClientError.parsing(details: "FileUploadFinished: UserInfo not a dictionary"))
             return
         }
         
         // Check if this is a photobook api manager asset upload
-        if let reference = dictionary["task_reference"] as? String, !reference.hasPrefix(apiClient.imageUploadIdentifierPrefix) {
+        if let reference = dictionary["task_reference"] as? String,
+           !reference.hasPrefix(apiClient.imageUploadIdentifierPrefix) && !reference.hasPrefix(apiClient.fileUploadIdentifierPrefix) {
             return
         }
         
         if let error = dictionary["error"] as? APIClientError {
-            failedImageUpload(with: error)
+            failedFileUpload(with: error)
             return
         }
         
-        let reference = dictionary["task_reference"] as? String
+        // Check that a task reference is returned
+        guard let reference = dictionary["task_reference"] as? String else {
+            let details = "FileUploadFinished: Upload task reference missing"
+            failedFileUpload(with: APIClientError.parsing(details: details))
+            return
+        }
+
+        // If it is an image upload, check that a URL was returned
         let url = dictionary["full"] as? String
-        guard reference != nil, url != nil else {
-            let details: String
-            if let error = dictionary["error"] as? String {
-                let referenceString = reference != nil ? "(\(reference!))" : ""
-                details = "ImageUploadFinished\(referenceString): \(error)"
-            } else {
-                details = "ImageUploadFinished: Image upload \(reference == nil ? "task reference" : "full url") missing"
-            }
-            failedImageUpload(with: APIClientError.parsing(details: details))
+        if reference.hasPrefix(apiClient.imageUploadIdentifierPrefix), url == nil {
+            let details = "FileUploadFinished: Image upload \(reference) full url missing"
+            failedFileUpload(with: APIClientError.parsing(details: details))
             return
         }
         
-        let referenceId = reference!.suffix(reference!.count - apiClient.imageUploadIdentifierPrefix.count)
+        let referenceId = reference.replacingOccurrences(of: apiClient.imageUploadIdentifierPrefix, with: "").replacingOccurrences(of: apiClient.fileUploadIdentifierPrefix, with: "")
         
         let assets = order.assetsToUpload().filter({ $0.identifier == referenceId })
         guard assets.first != nil else {
-            failedImageUpload(with: AssetLoadingException.unsupported(details: "ImageUploadFinished: Could not match asset reference \(referenceId)"))
+            failedFileUpload(with: AssetLoadingException.unsupported(details: "FileUploadFinished: Could not match asset reference \(referenceId)"))
             return
         }
         
         // Store the URL string for all assets with the same id
         for var asset in assets {
-            asset.uploadUrl = url
+            // If it is a pdfAsset, confirm the upload
+            if let pdfAsset = asset as? PDFAsset {
+                pdfAsset.confirmUpload()
+            } else {
+                asset.uploadUrl = url
+            }
         }
         
-        orderProcessingDelegate?.uploadStatusDidUpdate()
+        orderProcessingDelegate?.progressDidUpdate()
         saveProcessingOrder()
         
         if order.remainingAssetsToUpload().isEmpty {
+            orderProcessingDelegate?.uploadStatusDidUpdate()
+            
             Analytics.shared.trackAction(.uploadSuccessful)
             finishOrder()
             return
@@ -511,7 +574,7 @@ class OrderManager {
         relaunchUploadsIfNeeded()
     }
     
-    private func failedImageUpload(with error: Error) {
+    private func failedFileUpload(with error: Error) {
         guard processingOrder != nil else { return }
         
         if let error = error as? OrderDiskManagerError {

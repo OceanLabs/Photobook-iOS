@@ -265,7 +265,11 @@ class Order: Codable {
     }
     
     // MARK: Convenience methods
-    
+
+    func uploadedAssets() -> [Asset] {
+        return assetsToUpload().filter({ $0.uploadUrl != nil })
+    }
+
     func remainingAssetsToUpload() -> [Asset] {
         return assetsToUpload().filter({ $0.uploadUrl == nil })
     }

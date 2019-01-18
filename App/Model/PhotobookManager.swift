@@ -80,13 +80,13 @@ class PhotobookManager: NSObject {
         } else if isProcessingOrder {
             // Show receipt screen to prevent user from ordering another photobook
             let receiptViewController = PhotobookSDK.shared.receiptViewController(embedInNavigation: false) { [weak welf = self] viewController, success in
+                AssetDataSourceBackupManager.shared.deleteBackup()
+
                 guard let stelf = welf else { return }
                 let tabBarController = mainStoryboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
                 stelf.configureTabBarController(tabBarController)
-                let dismissSegue = IntroDismissSegue(identifier: "ReceiptDismiss", source: viewController, destination: tabBarController)
+                let dismissSegue = ReceiptDismissSegue(identifier: "ReceiptDismiss", source: viewController, destination: tabBarController)
                 dismissSegue.perform()
-                
-                NotificationCenter.default.post(name: SelectedAssetsManager.notificationNamePhotobookComplete, object: nil)
             }
             
             rootNavigationController.viewControllers = receiptViewController != nil ? [receiptViewController!] : [UIViewController()]
@@ -125,7 +125,11 @@ class PhotobookManager: NSObject {
             // Push the checkout on completion
             if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, dismissClosure: { viewController, success in
                 AssetDataSourceBackupManager.shared.deleteBackup()
+                
                 viewController.navigationController?.popToRootViewController(animated: true)
+                if success {
+                    NotificationCenter.default.post(name: SelectedAssetsManager.notificationNamePhotobookComplete, object: nil)
+                }
             }) {
                 selectedNavigationController.pushViewController(checkoutViewController, animated: true)
             }

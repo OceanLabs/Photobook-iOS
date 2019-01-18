@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="mkT-zw-uHe">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="mkT-zw-uHe">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,37 +18,47 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uEE-tb-aOJ">
-                                <rect key="frame" x="52.5" y="349" width="269" height="33"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <state key="normal" title="Create Photobook with web photos"/>
-                                <connections>
-                                    <action selector="createPhotobookWithWebPhotos:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HEi-Uh-Z1J"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AmJ-lA-rDP">
-                                <rect key="frame" x="109" y="432" width="156" height="30"/>
-                                <state key="normal" title="Clear processing order"/>
-                                <connections>
-                                    <action selector="clearProcessingOrder:" destination="BYZ-38-t0r" eventType="touchUpInside" id="r1z-3Q-59r"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DFp-8S-XJA">
-                                <rect key="frame" x="143" y="269" width="88" height="30"/>
-                                <state key="normal" title="Show basket"/>
-                                <connections>
-                                    <action selector="showBasket:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PyM-iy-BfE"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="s5w-tf-s9L">
+                                <rect key="frame" x="67" y="198.5" width="241" height="270"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DFp-8S-XJA">
+                                        <rect key="frame" x="76.5" y="0.0" width="88" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <state key="normal" title="Show basket"/>
+                                        <connections>
+                                            <action selector="showBasket:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PyM-iy-BfE"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uEE-tb-aOJ">
+                                        <rect key="frame" x="0.0" y="80" width="241" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <state key="normal" title="Create Photobook with web photos"/>
+                                        <connections>
+                                            <action selector="createPhotobookWithWebPhotos:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HEi-Uh-Z1J"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CBc-FQ-5Yw">
+                                        <rect key="frame" x="29.5" y="160" width="182" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <state key="normal" title="Add custom PDF to basket"/>
+                                        <connections>
+                                            <action selector="launchBasketWithPDF:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0lD-B7-2q5"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AmJ-lA-rDP">
+                                        <rect key="frame" x="42.5" y="240" width="156" height="30"/>
+                                        <state key="normal" title="Clear processing order"/>
+                                        <connections>
+                                            <action selector="clearProcessingOrder:" destination="BYZ-38-t0r" eventType="touchUpInside" id="r1z-3Q-59r"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="AmJ-lA-rDP" firstAttribute="centerX" secondItem="uEE-tb-aOJ" secondAttribute="centerX" id="4ap-6W-PNC"/>
-                            <constraint firstItem="DFp-8S-XJA" firstAttribute="centerX" secondItem="uEE-tb-aOJ" secondAttribute="centerX" id="D5Q-wV-9JS"/>
-                            <constraint firstItem="uEE-tb-aOJ" firstAttribute="top" secondItem="DFp-8S-XJA" secondAttribute="bottom" constant="50" id="MXO-ZY-HN4"/>
-                            <constraint firstItem="AmJ-lA-rDP" firstAttribute="top" secondItem="uEE-tb-aOJ" secondAttribute="bottom" constant="50" id="QO5-2N-Hy0"/>
-                            <constraint firstItem="uEE-tb-aOJ" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="ZSk-DC-0ko"/>
-                            <constraint firstItem="uEE-tb-aOJ" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="zM6-Pb-qhg"/>
+                            <constraint firstItem="s5w-tf-s9L" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="UqM-t1-LJV"/>
+                            <constraint firstItem="s5w-tf-s9L" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="hbX-Eg-Lva"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>

@@ -456,6 +456,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         case .cover:
             break
         }
+        photobookFrameView.layoutIfNeeded()
         
         let bleed = product.bleed(forPageSize: pageView.bounds.size, type: pageType)
         photobookFrameView.leftPageView.bleed = bleed
@@ -509,7 +510,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             layoutSelectionViewController.selectedLayout = productLayout.layout
         }
-        pageView.setupImageBox()
+        pageView.setupImageBox(with: nil, animated: false, loadThumbnailFirst: false)
         setupAssetPlacement()
     }
     
@@ -726,7 +727,8 @@ extension PageSetupViewController: LayoutSelectionDelegate {
         if shouldTransitionPhotobookFrame {
             transitionPhotobookFrame()
         } else {
-            pageView.setupLayoutBoxes()
+            pageView.setupImageBox(with: nil, animated: false, loadThumbnailFirst: false)
+            pageView.setupTextBox()
         }
         
         // Deselect the asset if the layout does not have an image box

@@ -110,6 +110,7 @@ class OrderProcessingDelegateMock: OrderProcessingDelegate {
     var didComplete: Bool = false
     var error: OrderProcessingError?
     
+    func progressDidUpdate() {}
     func uploadStatusDidUpdate() {}    
     func orderWillFinish() {}
     
