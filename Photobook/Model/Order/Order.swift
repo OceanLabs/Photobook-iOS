@@ -249,6 +249,10 @@ class Order: Codable {
         }
     }
     
+    func allAssets() -> [Asset] {
+        return products.flatMap({ PhotobookAsset.assets(from: $0.assetsToUpload()) ?? [] })
+    }
+    
     func assetsToUpload() -> [Asset] {
         var assets = [Asset]()
         
