@@ -249,6 +249,17 @@ class Order: Codable {
         }
     }
     
+    func allAssets() -> [Asset] {
+        var assets = [Asset]()
+        
+        for product in products {
+            if let productAssets = PhotobookAsset.assets(from: product.assetsToUpload()) {
+                assets.append(contentsOf: productAssets)
+            }
+        }
+        return assets
+    }
+    
     func assetsToUpload() -> [Asset] {
         var assets = [Asset]()
         

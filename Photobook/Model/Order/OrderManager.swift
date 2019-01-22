@@ -544,7 +544,7 @@ class OrderManager {
         
         let referenceId = reference.replacingOccurrences(of: apiClient.imageUploadIdentifierPrefix, with: "").replacingOccurrences(of: apiClient.fileUploadIdentifierPrefix, with: "")
         
-        let assets = order.assetsToUpload().filter({ $0.identifier == referenceId })
+        let assets = order.allAssets().filter({ $0.identifier == referenceId })
         guard assets.first != nil else {
             failedFileUpload(with: AssetLoadingException.unsupported(details: "FileUploadFinished: Could not match asset reference \(referenceId)"))
             return
