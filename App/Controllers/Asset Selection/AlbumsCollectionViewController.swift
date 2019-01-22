@@ -96,6 +96,13 @@ class AlbumsCollectionViewController: UICollectionViewController {
         guard albumManager.albums.isEmpty else { return }
         
         albumManager.loadAlbums() { [weak welf = self] (error) in
+            var error = error
+            
+            if welf?.albumManager.albums.isEmpty ?? false {
+                let message = NSLocalizedString("Albums/NoAlbums", value: "No albums found", comment: "Text shown to the user if no albums are found")
+                error = ErrorMessage(text: message)
+            }
+
             guard error == nil else {
                 welf?.showErrorMessage(error: error!) { welf?.loadAlbums() }
                 return
@@ -105,7 +112,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
         }
     }
     
-    private func showErrorMessage(error: Error, dismissAfter: TimeInterval? = nil, completion: (() -> Void)?) {
+    private func showErrorMessage(error: Error, dismissAfter: TimeInterval? = nil, completion: (() -> Void)? = nil) {
         let message: ErrorMessage
         let offsetTop: CGFloat
         
