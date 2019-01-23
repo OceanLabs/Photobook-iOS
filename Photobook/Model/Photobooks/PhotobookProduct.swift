@@ -526,6 +526,7 @@ enum ProductColor: String, Codable {
             
             let templateSize = isCover ? photobookTemplate.coverSize : photobookTemplate.pageSize
             let pageSize = CGSize(width: isDoubleLayout ? templateSize.width * 2 : templateSize.width, height: templateSize.height)
+            let pageType = self.pageType(forLayoutIndex: index)
             
             // Image layout box
             if let asset = productLayout.asset,
@@ -537,7 +538,6 @@ enum ProductColor: String, Codable {
                 // Work out the bleed rect and adjust the transform
                 let containerSize = imageLayoutBox.rectContained(in: pageSize).size
 
-                let pageType = self.pageType(forLayoutIndex: index)
                 let bleed = self.bleed(forPageSize: pageSize, type: pageType)
                 let bleedRect = imageLayoutBox.bleedRect(in: containerSize, withBleed: bleed)
                 productLayoutAsset.containerSize = bleedRect.size
@@ -611,7 +611,7 @@ enum ProductColor: String, Codable {
                 font["lineHeight"] = productLayoutText.fontType.apiPhotobookLineHeight()
                 containedItem["font"] = font
                 containedItem["text"] = productLayoutText.htmlText ?? text
-                containedItem["color"] = pageColor.fontColor().hex
+                containedItem["color"] = pageType == .cover ? coverColor.fontColor().hex : pageColor.fontColor().hex
                 
                 layoutBox["containedItem"] = containedItem
                 
