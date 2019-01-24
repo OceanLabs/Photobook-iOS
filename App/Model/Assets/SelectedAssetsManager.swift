@@ -31,7 +31,7 @@ import UIKit
 import Photos
 import Photobook
 
-class SelectedAssetsManager: NSObject {
+class SelectedAssetsManager: NSObject, Codable {
     
     static let notificationUserObjectKeyAssets = "assets"
     static let notificationUserObjectKeyIndices = "indices"
@@ -41,6 +41,10 @@ class SelectedAssetsManager: NSObject {
     
     private(set) var selectedAssets = [PhotobookAsset]()
     
+    private enum CodingKeys: String, CodingKey {
+        case selectedAssets
+    }
+
     override init() {
         super.init()
         
@@ -53,6 +57,16 @@ class SelectedAssetsManager: NSObject {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(selectedAssets, forKey: .selectedAssets)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        selectedAssets = try values.decode([PhotobookAsset].self, forKey: .selectedAssets)
     }
     
     private func selectedAssets(for album: Album) -> [PhotobookAsset] {

@@ -99,7 +99,7 @@ class PhotobookManager: NSObject {
     func configureTabBarController(_ tabBarController: UITabBarController) {
         
         // Attempt to restore picker data source and photobook backups
-        if let (selectedNavigationController, photobookDelegate) = restoreAssetDataSourceBackup(tabBarController),
+        if let photobookDelegate = restoreAssetDataSourceBackup(tabBarController),
            let photobookViewController = PhotobookSDK.shared.photobookViewControllerFromBackup(embedInNavigation: false, navigatesToCheckout: false, delegate: photobookDelegate, completion: {
             (viewController, success) in
             
@@ -132,9 +132,11 @@ class PhotobookManager: NSObject {
                     NotificationCenter.default.post(name: SelectedAssetsManager.notificationNamePhotobookComplete, object: nil)
                 }
             }) {
+                let selectedNavigationController = tabBarController.viewControllers?.first as! UINavigationController
                 selectedNavigationController.pushViewController(checkoutViewController, animated: true)
             }
         }) {
+            let selectedNavigationController = tabBarController.viewControllers?.first as! UINavigationController
             selectedNavigationController.pushViewController(photobookViewController, animated: false)
         }
     }
@@ -149,59 +151,25 @@ class PhotobookManager: NSObject {
         })
     }
     
-    private func restoreAssetDataSourceBackup(_ tabBarController: UITabBarController) -> (UINavigationController, PhotobookDelegate)? {
-        var selectedNavigationController: UINavigationController
-        var photobookDelegate: PhotobookDelegate
+    private func restoreAssetDataSourceBackup(_ tabBarController: UITabBarController) -> PhotobookDelegate? {
+        var photobookDelegate: PhotobookDelegate?
         
-        guard let dataSourceBackup = AssetDataSourceBackupManager.shared.restoreBackup() else {
+        guard let selectedAssetsManager = AssetDataSourceBackupManager.shared.restoreBackup() else {
             removeStoriesTabIfNeeded(tabBarController)
             return nil
         }
         
-        if let _ = dataSourceBackup.albumManager as? FacebookAlbumManager {
-            selectedNavigationController = tabBarController.viewControllers?[Tab.facebook.rawValue] as! UINavigationController
-            tabBarController.selectedIndex = Tab.facebook.rawValue
-            
-            let facebookAlbumsCollectionViewController = AlbumsCollectionViewController.facebookAlbumsCollectionViewController()
-            facebookAlbumsCollectionViewController.assetPickerDelegate = facebookAlbumsCollectionViewController
-            selectedNavigationController.setViewControllers([facebookAlbumsCollectionViewController], animated: false)
-            removeStoriesTabIfNeeded(tabBarController)
-            
-            photobookDelegate = facebookAlbumsCollectionViewController
-        } else if let _ = dataSourceBackup.albumManager as? PhotosAlbumManager {
-            selectedNavigationController = tabBarController.viewControllers?[Tab.browse.rawValue] as! UINavigationController
-            tabBarController.selectedIndex = Tab.browse.rawValue
-            removeStoriesTabIfNeeded(tabBarController)
-            
-            let albumsViewController = selectedNavigationController.viewControllers.first as! AlbumsCollectionViewController
-            albumsViewController.albumManager = dataSourceBackup.albumManager!
-            photobookDelegate = albumsViewController
-        } else if let _ = dataSourceBackup.album as? InstagramAlbum {
-            selectedNavigationController = tabBarController.viewControllers?[Tab.instagram.rawValue] as! UINavigationController
-            tabBarController.selectedIndex = Tab.instagram.rawValue
-            removeStoriesTabIfNeeded(tabBarController)
-            
-            let assetPickerViewController = selectedNavigationController.viewControllers.first as! AssetPickerCollectionViewController
-            assetPickerViewController.album = dataSourceBackup.album!
-            photobookDelegate = assetPickerViewController
-        } else {
-            selectedNavigationController = tabBarController.viewControllers?[Tab.stories.rawValue] as! UINavigationController
-            tabBarController.selectedIndex = Tab.stories.rawValue
-            
-            let storiesViewController = selectedNavigationController.viewControllers.first as! StoriesViewController
-            
-            let assetPickerController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
-            assetPickerController.delegate = storiesViewController
-            selectedNavigationController.pushViewController(assetPickerController, animated: false)
-            photobookDelegate = assetPickerController
-            
-            StoriesManager.shared.loadTopStories() { [weak welf = self] in
-                let story = StoriesManager.shared.stories.first { $0.identifier == dataSourceBackup.album!.identifier }!
-                assetPickerController.album = story
-                assetPickerController.selectedAssetsManager = welf?.selectedAssetsManager
+        for viewController in tabBarController.viewControllers! {
+            guard let rootNavigationController = viewController as? UINavigationController,
+                  let firstViewController = rootNavigationController.viewControllers.first as? Collectable else { continue }
+
+            self.selectedAssetsManager = selectedAssetsManager
+            if photobookDelegate == nil {
+                photobookDelegate = firstViewController as? PhotobookDelegate
             }
         }
+        removeStoriesTabIfNeeded(tabBarController)
         
-        return (selectedNavigationController, photobookDelegate)
+        return photobookDelegate
     }
 }

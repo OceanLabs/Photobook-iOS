@@ -295,9 +295,7 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
         case .adding:
             addingDelegate?.didFinishAdding(selectedAssetsManager.selectedAssets)
         default:
-            let dataSourceBackup = AssetDataSourceBackup()
-            dataSourceBackup.albumManager = albumManager
-            AssetDataSourceBackupManager.shared.saveBackup(dataSourceBackup)
+            AssetDataSourceBackupManager.shared.saveBackup(selectedAssetsManager)
             
             if UserDefaults.standard.bool(forKey: hasShownTutorialKey) {
                 if let viewController = photobookViewController() {

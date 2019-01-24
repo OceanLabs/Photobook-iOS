@@ -31,7 +31,7 @@ import UIKit
 import Photos
 
 /// Represents a photo to be used in a photo book
-@objc public final class PhotobookAsset: NSObject {
+@objc public final class PhotobookAsset: NSObject, Codable {
     
     var asset: Asset
     init?(asset: Asset?) {
@@ -60,6 +60,45 @@ import Photos
         return photobookAssets.map { $0.asset }
     }
     
+    enum CodingKeys: String, CodingKey {
+        case asset
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        var data: Data? = nil
+        if let asset = asset as? PhotosAsset {
+            data = try PropertyListEncoder().encode(asset)
+        } else if let asset = asset as? URLAsset {
+            data = try PropertyListEncoder().encode(asset)
+        } else if let asset = asset as? ImageAsset {
+            data = try PropertyListEncoder().encode(asset)
+        } else if let asset = asset as? PhotosAssetMock {
+            data = try PropertyListEncoder().encode(asset)
+        }
+        try container.encode(data, forKey: .asset)
+    }
+    
+    public required convenience init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        
+        guard let data = try values.decodeIfPresent(Data.self, forKey: .asset) else {
+            throw AssetLoadingException.notFound
+        }
+
+        if let loadedAsset = try? PropertyListDecoder().decode(URLAsset.self, from: data) {
+            self.init(asset: loadedAsset)!
+        } else if let loadedAsset = try? PropertyListDecoder().decode(ImageAsset.self, from: data) {
+            self.init(asset: loadedAsset)!
+        } else if let loadedAsset = try? PropertyListDecoder().decode(PhotosAsset.self, from: data) { // Keep the PhotosAsset case last because otherwise it triggers NSPhotoLibraryUsageDescription crash if not present, which might not be needed
+            self.init(asset: loadedAsset)!
+        } else if let loadedAsset = try? PropertyListDecoder().decode(PhotosAssetMock.self, from: data) {
+            self.init(asset: loadedAsset)!
+        } else {
+            throw AssetLoadingException.unsupported(details: "PhotobookAsset: Decoding of asset failed")
+        }
+    }
+
     /// Creates a PhotobookAsset using a Photos Library asset
     ///
     /// - Parameters:
