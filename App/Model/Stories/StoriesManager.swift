@@ -55,7 +55,6 @@ class StoriesManager: NSObject {
     static let shared = StoriesManager()
     
     private let imageManager = PHCachingImageManager()
-    private var selectedAssetsManagerPerStory = [String : SelectedAssetsManager]()
     var stories = [Story]()
     var currentlySelectedStory: Story?
     var loading = false
@@ -181,7 +180,6 @@ class StoriesManager: NSObject {
             let story = Story(list: list, coverCollection: moments.firstObject!)
             story.components = locationComponents
             story.photoCount = totalAssetCount
-            welf?.selectedAssetsManagerPerStory[story.identifier] = SelectedAssetsManager()
             
             stories.append(story)
         }
@@ -269,10 +267,6 @@ class StoriesManager: NSObject {
             }
     }
     
-    func selectedAssetsManager(for story: Story) -> SelectedAssetsManager?{
-        return selectedAssetsManagerPerStory[story.identifier]
-    }
-    
     func performAutoSelectionIfNeeded(on story: Story) {
         if !story.hasPerformedAutoSelection {
             performAutoSelection(on: story)
@@ -280,8 +274,7 @@ class StoriesManager: NSObject {
     }
     
     private func performAutoSelection(on story: Story) {
-        guard let selectedAssetsManager = selectedAssetsManagerPerStory[story.identifier],
-              selectedAssetsManager.selectedAssets.isEmpty else { return }
+        guard PhotobookManager.shared.selectedAssetsManager.selectedAssets.isEmpty else { return }
         
         var selectedAssets = [PhotobookAsset]()
         var unusedAssets = [PhotobookAsset]()
@@ -309,15 +302,15 @@ class StoriesManager: NSObject {
             selectedAssets.append(unusedAssets.remove(at: selectedIndex))
         }
         
-        selectedAssetsManager.select(selectedAssets)
-        selectedAssetsManager.orderAssetsByDate()
+        PhotobookManager.shared.selectedAssetsManager.select(selectedAssets)
+        PhotobookManager.shared.selectedAssetsManager.orderAssetsByDate()
         
         story.hasPerformedAutoSelection = true
     }
     
     @objc private func resetStoriesSelections() {
         for story in stories {
-            selectedAssetsManagerPerStory[story.identifier]?.deselectAllAssetsForAllAlbums()
+            PhotobookManager.shared.selectedAssetsManager.deselectAllAssetsForAllAlbums()
             story.hasPerformedAutoSelection = false
         }
     }

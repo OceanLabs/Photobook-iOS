@@ -56,7 +56,7 @@ class SelectedAssetsManager: NSObject {
     }
     
     private func selectedAssets(for album: Album) -> [PhotobookAsset] {
-        return selectedAssets.filter { $0.albumIdentifier == album.identifier }
+        return album.assets.filter { albumAsset in selectedAssets.contains(albumAsset) }
     }
     
     func select(_ asset: PhotobookAsset) {

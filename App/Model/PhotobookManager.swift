@@ -36,6 +36,7 @@ let mainStoryboard =  UIStoryboard(name: "Main", bundle: nil)
 class PhotobookManager: NSObject {
     
     static let shared = PhotobookManager()
+    lazy var selectedAssetsManager = SelectedAssetsManager()
     
     enum Tab: Int {
         case stories
@@ -192,10 +193,10 @@ class PhotobookManager: NSObject {
             selectedNavigationController.pushViewController(assetPickerController, animated: false)
             photobookDelegate = assetPickerController
             
-            StoriesManager.shared.loadTopStories() {
+            StoriesManager.shared.loadTopStories() { [weak welf = self] in
                 let story = StoriesManager.shared.stories.first { $0.identifier == dataSourceBackup.album!.identifier }!
                 assetPickerController.album = story
-                assetPickerController.selectedAssetsManager = StoriesManager.shared.selectedAssetsManager(for: story)
+                assetPickerController.selectedAssetsManager = welf?.selectedAssetsManager
             }
         }
         

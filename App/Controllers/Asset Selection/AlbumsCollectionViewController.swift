@@ -46,7 +46,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     private let marginBetweenAlbums: CGFloat = 20
     
     lazy var albumManager: AlbumManager = PhotosAlbumManager()
-    private let selectedAssetsManager = SelectedAssetsManager()
+    private var selectedAssetsManager: SelectedAssetsManager { return PhotobookManager.shared.selectedAssetsManager }
     var assets: [PhotobookAsset]!
     
     private var accountManager: AccountClient?

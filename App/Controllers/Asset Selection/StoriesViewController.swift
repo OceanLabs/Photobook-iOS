@@ -50,6 +50,8 @@ class StoriesViewController: UIViewController {
         return stories.count == 1 ? 4 : 3
     }
     
+    private var selectedAssetsManager: SelectedAssetsManager { return PhotobookManager.shared.selectedAssetsManager }
+    
     private var openingStory = false
     
     override func viewDidLoad() {
@@ -93,7 +95,7 @@ class StoriesViewController: UIViewController {
             StoriesManager.shared.performAutoSelectionIfNeeded(on: story)
             
             assetPickerController.album = story
-            assetPickerController.selectedAssetsManager = StoriesManager.shared.selectedAssetsManager(for: story)
+            assetPickerController.selectedAssetsManager = selectedAssetsManager
             assetPickerController.delegate = self
             
             segue.coverImage = sender.coverImage
