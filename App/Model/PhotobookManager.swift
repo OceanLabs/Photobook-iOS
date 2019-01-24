@@ -139,10 +139,12 @@ class PhotobookManager: NSObject {
         }
     }
     
+    var storiesTabAvailable = true
     private func removeStoriesTabIfNeeded(_ tabBarController: UITabBarController) {
-        StoriesManager.shared.loadTopStories(completionHandler: {
+        StoriesManager.shared.loadTopStories(completionHandler: { [weak welf = self] in
             if StoriesManager.shared.stories.isEmpty {
                 tabBarController.viewControllers?.remove(at: Tab.stories.rawValue)
+                welf?.storiesTabAvailable = false
             }
         })
     }

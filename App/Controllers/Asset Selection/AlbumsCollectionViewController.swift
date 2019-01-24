@@ -46,7 +46,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     private let marginBetweenAlbums: CGFloat = 20
     
     lazy var albumManager: AlbumManager = PhotosAlbumManager()
-    private var selectedAssetsManager: SelectedAssetsManager { return PhotobookManager.shared.selectedAssetsManager }
+    lazy var selectedAssetsManager: SelectedAssetsManager = PhotobookManager.shared.selectedAssetsManager
     var assets: [PhotobookAsset]!
     
     private var accountManager: AccountClient?
@@ -493,12 +493,12 @@ extension AlbumsCollectionViewController: AlbumSearchResultsTableViewControllerD
     func searchDidSelect(_ album: Album) {
         showAlbum(album: album)
     }
-    
 }
 
 extension AlbumsCollectionViewController: AssetPickerCollectionViewControllerDelegate {
     func viewControllerForPresentingOn() -> UIViewController? {
         return tabBarController
     }
-    
 }
+
+extension AlbumsCollectionViewController: Collectable {}

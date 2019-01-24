@@ -34,6 +34,12 @@ struct AssetPickerNotificationName {
     static let assetPickerAddedAssets = Notification.Name("ly.kite.photobook.assetPickerAddedAssetsNotificationName")
 }
 
+protocol Collectable {
+    var collectorMode: AssetCollectorMode { get set }
+    var selectedAssetsManager: SelectedAssetsManager { get set }
+    var addingDelegate: PhotobookAssetAddingDelegate? { get set }
+}
+
 class ModalAlbumsCollectionViewController: UIViewController, PhotobookAssetPicker {
 
     private struct Constants {
@@ -47,12 +53,13 @@ class ModalAlbumsCollectionViewController: UIViewController, PhotobookAssetPicke
     @IBOutlet private weak var containerViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var containerViewHeightConstraint: NSLayoutConstraint!
     
-    private var rootNavigationController: UINavigationController!
-    private var downwardArrowButton: UIButton!
+    private var pickerTabBarController: UITabBarController!
+    private var downwardArrowButtons = [UIButton]()
     private var hasAppliedMask = false
     
     var collectorMode: AssetCollectorMode = .adding
     weak var addingDelegate: PhotobookAssetAddingDelegate?
+    var selectedAssetsManager = SelectedAssetsManager()
 
     var album: Album?
     var albumManager: AlbumManager?
@@ -95,43 +102,39 @@ class ModalAlbumsCollectionViewController: UIViewController, PhotobookAssetPicke
             
             hasAppliedMask = true
         }
-        downwardArrowButton.center = CGPoint(x: view.center.x, y: 20.0)
+        downwardArrowButtons.forEach { $0.center = CGPoint(x: view.center.x, y: 20.0) }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "EmbeddedNavigationController" {
-            rootNavigationController = (segue.destination as! UINavigationController)
-            rootNavigationController.delegate = self
+            pickerTabBarController = (segue.destination as! UITabBarController)
             
-            let navigationBar = rootNavigationController.navigationBar as! PhotobookNavigationBar
-            navigationBar.willShowPrompt = true
+            if !PhotobookManager.shared.storiesTabAvailable {
+                pickerTabBarController.viewControllers?.remove(at: PhotobookManager.Tab.stories.rawValue)
+            }
             
-            downwardArrowButton = UIButton(type: .custom)
-            downwardArrowButton.setImage(UIImage(named: "Drag-down-arrow"), for: .normal)
-            downwardArrowButton.setTitleColor(.black, for: .normal)
-            downwardArrowButton.sizeToFit()
-            downwardArrowButton.addTarget(self, action: #selector(didTapOnArrowButton(_:)), for: .touchUpInside)
-            navigationBar.addSubview(downwardArrowButton)
-            
-            let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didPanOnNavigationBar(_:)))
-            navigationBar.addGestureRecognizer(panGestureRecognizer)
-
-            if let albumManager = albumManager {
-                let albumsCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "AlbumsCollectionViewController") as! AlbumsCollectionViewController
-                albumsCollectionViewController.albumManager = albumManager
-                albumsCollectionViewController.collectorMode = collectorMode
-                albumsCollectionViewController.addingDelegate = self
-                albumsCollectionViewController.assetPickerDelegate = self
-                rootNavigationController.setViewControllers([albumsCollectionViewController], animated: false)
-            } else if let album = album {
-                let assetPickerCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
-                assetPickerCollectionViewController.collectorMode = collectorMode
-                assetPickerCollectionViewController.addingDelegate = self
-                assetPickerCollectionViewController.delegate = self
-                assetPickerCollectionViewController.album = album
-                assetPickerCollectionViewController.selectedAssetsManager = SelectedAssetsManager()
+            for (index, viewController) in pickerTabBarController.viewControllers!.enumerated() {
+                let rootNavigationController = viewController as! UINavigationController
+                rootNavigationController.delegate = self
                 
-                rootNavigationController.setViewControllers([assetPickerCollectionViewController], animated: false)
+                let navigationBar = rootNavigationController.navigationBar as! PhotobookNavigationBar
+                navigationBar.willShowPrompt = true
+                
+                downwardArrowButtons.append(UIButton(type: .custom))
+                downwardArrowButtons[index].setImage(UIImage(named: "Drag-down-arrow"), for: .normal)
+                downwardArrowButtons[index].setTitleColor(.black, for: .normal)
+                downwardArrowButtons[index].sizeToFit()
+                downwardArrowButtons[index].addTarget(self, action: #selector(didTapOnArrowButton(_:)), for: .touchUpInside)
+                navigationBar.addSubview(downwardArrowButtons[index])
+                
+                let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didPanOnNavigationBar(_:)))
+                navigationBar.addGestureRecognizer(panGestureRecognizer)
+
+                if var firstViewController = rootNavigationController.viewControllers.first as? Collectable {
+                    firstViewController.collectorMode = collectorMode
+                    firstViewController.selectedAssetsManager = selectedAssetsManager
+                    firstViewController.addingDelegate = self
+                }
             }
         }
     }

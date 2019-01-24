@@ -51,7 +51,9 @@ class StoriesViewController: UIViewController {
         return stories.count == 1 ? 4 : 3
     }
     
-    private var selectedAssetsManager: SelectedAssetsManager { return PhotobookManager.shared.selectedAssetsManager }
+    var collectorMode: AssetCollectorMode = .selecting
+    lazy var selectedAssetsManager: SelectedAssetsManager = PhotobookManager.shared.selectedAssetsManager
+    weak var addingDelegate: PhotobookAssetAddingDelegate?
     
     private var openingStory = false
     
@@ -68,7 +70,7 @@ class StoriesViewController: UIViewController {
         
         // Setup the Image Collector Controller
         assetCollectorViewController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
-        assetCollectorViewController.mode = .selecting
+        assetCollectorViewController.mode = collectorMode
         assetCollectorViewController.delegate = self
         
         // Listen to asset manager
@@ -109,6 +111,8 @@ class StoriesViewController: UIViewController {
             
             assetPickerController.album = story
             assetPickerController.selectedAssetsManager = selectedAssetsManager
+            assetPickerController.collectorMode = collectorMode
+            assetPickerController.addingDelegate = addingDelegate
             assetPickerController.delegate = self
             
             segue.coverImage = sender.coverImage
@@ -260,35 +264,41 @@ extension StoriesViewController: AssetCollectorViewControllerDelegate {
     }
     
     func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
-//        let dataSourceBackup = AssetDataSourceBackup()
-//        dataSourceBackup.albumManager = albumManager
-//        AssetDataSourceBackupManager.shared.saveBackup(dataSourceBackup)
-        
-        if UserDefaults.standard.bool(forKey: hasShownTutorialKey) {
-            if let viewController = photobookViewController() {
-                navigationController?.pushViewController(viewController, animated: true)
-            }
-        } else {
-            guard let photobookViewController = self.photobookViewController() else { return }
+        switch collectorMode {
+        case .adding:
+            addingDelegate?.didFinishAdding(selectedAssetsManager.selectedAssets)
+        default:
+//            let dataSourceBackup = AssetDataSourceBackup()
+//            dataSourceBackup.albumManager = albumManager
+//            AssetDataSourceBackupManager.shared.saveBackup(dataSourceBackup)
             
-            let completion = { [weak welf = self] in
-                UserDefaults.standard.set(true, forKey: hasShownTutorialKey)
-                
-                let tutorialViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
-                tutorialViewController.completionClosure = { [weak welf = self] (viewController) in
-                    welf?.dismiss(animated: true, completion: nil)
+            if UserDefaults.standard.bool(forKey: hasShownTutorialKey) {
+                if let viewController = photobookViewController() {
+                    navigationController?.pushViewController(viewController, animated: true)
                 }
-                welf?.present(tutorialViewController, animated: true)
+            } else {
+                guard let photobookViewController = self.photobookViewController() else { return }
+                
+                let completion = { [weak welf = self] in
+                    UserDefaults.standard.set(true, forKey: hasShownTutorialKey)
+                    
+                    let tutorialViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
+                    tutorialViewController.completionClosure = { [weak welf = self] (viewController) in
+                        welf?.dismiss(animated: true, completion: nil)
+                    }
+                    welf?.present(tutorialViewController, animated: true)
+                }
+                
+                CATransaction.begin()
+                CATransaction.setCompletionBlock(completion)
+                self.navigationController?.pushViewController(photobookViewController, animated: true)
+                CATransaction.commit()
             }
-            
-            CATransaction.begin()
-            CATransaction.setCompletionBlock(completion)
-            self.navigationController?.pushViewController(photobookViewController, animated: true)
-            CATransaction.commit()
         }
     }
     
     private func photobookViewController() -> UIViewController? {
+        
         let photobookViewController = PhotobookSDK.shared.photobookViewController(with: selectedAssetsManager.selectedAssets, embedInNavigation: false, navigatesToCheckout: false, delegate: self) { [weak welf = self] (viewController, success) in
             
             guard success else {
@@ -337,3 +347,5 @@ extension StoriesViewController: PhotobookDelegate {
         return modalAlbumsCollectionViewController
     }
 }
+
+extension StoriesViewController: Collectable {}

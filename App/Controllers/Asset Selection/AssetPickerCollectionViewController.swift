@@ -459,8 +459,8 @@ extension AssetPickerCollectionViewController: AssetCollectorViewControllerDeleg
                 self.navigationController?.pushViewController(photobookViewController, animated: true)
                 CATransaction.commit()
             }
+            selectedAssetsManager?.orderAssetsByDate()
         }
-        selectedAssetsManager?.orderAssetsByDate()
     }
     
     private func photobookViewController() -> UIViewController? {

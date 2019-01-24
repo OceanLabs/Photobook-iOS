@@ -4,6 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -12,9 +13,9 @@
         <!--Instagram Landing View Controller-->
         <scene sceneID="eeW-YJ-knS">
             <objects>
-                <viewController storyboardIdentifier="InstagramLandingViewController" id="CJe-ow-F6K" customClass="InstagramLandingViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="InstagramLandingViewController" id="CJe-ow-F6K" customClass="InstagramLandingViewController" customModule="Photobook_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="72Z-i4-Dnc">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="706"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Access Instagram" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qlt-FQ-DVE">
@@ -30,7 +31,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HTZ-sF-ffW">
-                                <rect key="frame" x="-2.5" y="541" width="380" height="50"/>
+                                <rect key="frame" x="-22" y="580" width="419" height="50"/>
                                 <color key="backgroundColor" red="0.20543283224105835" green="0.47096657752990723" blue="0.9647943377494812" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="0y2-Os-2z2"/>
@@ -49,7 +50,7 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" image="Instagram-big" translatesAutoresizingMaskIntoConstraints="NO" id="Jdf-5N-Pfk">
-                                <rect key="frame" x="-2.5" y="151" width="380" height="380"/>
+                                <rect key="frame" x="-22" y="151" width="419" height="419"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Jdf-5N-Pfk" secondAttribute="height" id="iAJ-74-C2M"/>
                                 </constraints>
@@ -87,13 +88,13 @@
         <!--Log In-->
         <scene sceneID="dqb-L8-Ndz">
             <objects>
-                <viewController id="mCf-Vp-0wQ" customClass="InstagramLoginViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="mCf-Vp-0wQ" customClass="InstagramLoginViewController" customModule="Photobook_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8fX-ux-CPD">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="706"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="GJF-dH-hU4">
-                                <rect key="frame" x="169" y="322.5" width="37" height="37"/>
+                                <rect key="frame" x="169" y="342" width="37" height="37"/>
                                 <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </activityIndicatorView>
                         </subviews>
@@ -117,16 +118,16 @@
         <!--Stories-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="StoriesViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="StoriesViewController" customModule="Photobook_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="706"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="7F6-wM-saA">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="706"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="StoryTableViewCell" rowHeight="210" id="htl-9v-aX7" customClass="StoryTableViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="StoryTableViewCell" rowHeight="210" id="htl-9v-aX7" customClass="StoryTableViewCell" customModule="Photobook_App" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="210"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="htl-9v-aX7" id="eJT-Z8-4Pn">
@@ -224,7 +225,7 @@
                                             <outlet property="titleLabel" destination="RjH-Ge-cK0" id="huB-q3-srx"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DoubleStoryTableViewCell" rowHeight="210" id="5UM-o8-BDz" customClass="DoubleStoryTableViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DoubleStoryTableViewCell" rowHeight="210" id="5UM-o8-BDz" customClass="DoubleStoryTableViewCell" customModule="Photobook_App" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="238" width="375" height="210"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="5UM-o8-BDz" id="5Nn-1m-uRn">
@@ -413,7 +414,7 @@
                                             <outlet property="titleLabel" destination="eOz-ny-Awi" id="GMa-bY-W7p"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="EmptyStoryTableViewCell" rowHeight="210" id="mRg-4N-YQA" customClass="EmptyStoryTableViewCell" customModule="Photobook" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="EmptyStoryTableViewCell" rowHeight="210" id="mRg-4N-YQA" customClass="EmptyStoryTableViewCell" customModule="Photobook_App" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="448" width="375" height="210"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mRg-4N-YQA" id="6nU-p5-hS2">
@@ -483,7 +484,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="7F6-wM-saA" id="XPP-qk-iV9"/>
-                        <segue destination="Wt4-pd-wZe" kind="custom" identifier="ViewStorySegue" customClass="ViewStorySegue" customModule="Photobook" customModuleProvider="target" id="3w8-4z-ZrQ"/>
+                        <segue destination="Wt4-pd-wZe" kind="custom" identifier="ViewStorySegue" customClass="ViewStorySegue" customModule="Photobook_App" customModuleProvider="target" id="3w8-4z-ZrQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -518,7 +519,7 @@
             <objects>
                 <tabBarController storyboardIdentifier="TabBarController" automaticallyAdjustsScrollViewInsets="NO" id="d5b-Ic-QyB" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="EDE-ls-DB7" customClass="PhotobookTabBar" customModule="Photobook" customModuleProvider="target">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="EDE-ls-DB7" customClass="PhotobookTabBar" customModule="Photobook_App" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -538,7 +539,7 @@
         <!--Asset Collector View Controller-->
         <scene sceneID="cPZ-5K-p1g">
             <objects>
-                <viewController storyboardIdentifier="AssetCollectorViewController" modalPresentationStyle="overCurrentContext" id="HYw-Yl-MfL" customClass="AssetCollectorViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AssetCollectorViewController" modalPresentationStyle="overCurrentContext" id="HYw-Yl-MfL" customClass="AssetCollectorViewController" customModule="Photobook_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="UMO-hB-Zun">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="125"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -677,7 +678,7 @@
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AssetCollectorCollectionViewCell" id="6nK-PW-pTc" customClass="AssetCollectorCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AssetCollectorCollectionViewCell" id="6nK-PW-pTc" customClass="AssetCollectorCollectionViewCell" customModule="Photobook_App" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -787,12 +788,12 @@
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-1240" y="564"/>
+            <point key="canvasLocation" x="-1782" y="545"/>
         </scene>
         <!--Modal Albums Collection View Controller-->
         <scene sceneID="B0s-Zk-nrB">
             <objects>
-                <viewController storyboardIdentifier="ModalAlbumsCollectionViewController" modalPresentationStyle="overFullScreen" id="aEA-H0-Uj3" customClass="ModalAlbumsCollectionViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ModalAlbumsCollectionViewController" modalPresentationStyle="overFullScreen" id="aEA-H0-Uj3" customClass="ModalAlbumsCollectionViewController" customModule="Photobook_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="fMB-DX-WcM">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -803,7 +804,7 @@
                                     <constraint firstAttribute="height" constant="706" id="I8e-2C-bTK"/>
                                 </constraints>
                                 <connections>
-                                    <segue destination="wjj-KU-1G4" kind="embed" identifier="EmbeddedNavigationController" id="RhN-Mg-LWY"/>
+                                    <segue destination="d5b-Ic-QyB" kind="embed" identifier="EmbeddedNavigationController" id="ijB-7J-9Ca"/>
                                 </connections>
                             </containerView>
                         </subviews>
@@ -823,7 +824,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="z71-M7-c2z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-582" y="1483"/>
+            <point key="canvasLocation" x="-1114" y="888"/>
         </scene>
         <!--Browse-->
         <scene sceneID="F3Q-q1-ZX1">
@@ -848,31 +849,12 @@
             </objects>
             <point key="canvasLocation" x="244" y="806"/>
         </scene>
-        <!--Photobook Navigation Controller-->
-        <scene sceneID="Vk2-Uq-zhi">
-            <objects>
-                <navigationController id="wjj-KU-1G4" customClass="PhotobookNavigationController" customModule="Photobook" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="ShZ-uO-ccj" customClass="PhotobookNavigationBar" customModule="Photobook">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <gestureRecognizers/>
-                        <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <color key="barTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </navigationBar>
-                    <connections>
-                        <outlet property="delegate" destination="ShZ-uO-ccj" id="CoF-7r-kju"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="0m7-JT-V6R" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="244" y="1483"/>
-        </scene>
         <!--Albums-->
         <scene sceneID="4ka-Hw-RNb">
             <objects>
-                <collectionViewController storyboardIdentifier="AlbumsCollectionViewController" id="dnn-z5-0C4" customClass="AlbumsCollectionViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="AlbumsCollectionViewController" id="dnn-z5-0C4" customClass="AlbumsCollectionViewController" customModule="Photobook_App" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" id="bn4-uC-JcP">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="706"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="eYK-0U-LrI">
@@ -882,7 +864,7 @@
                             <inset key="sectionInset" minX="20" minY="20" maxX="20" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AlbumCollectionViewCell" id="JMC-DK-Bi3" customClass="AlbumCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AlbumCollectionViewCell" id="JMC-DK-Bi3" customClass="AlbumCollectionViewCell" customModule="Photobook_App" customModuleProvider="target">
                                 <rect key="frame" x="99" y="20" width="177" height="227"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -987,14 +969,14 @@
         <!--Album Search Results Table View Controller-->
         <scene sceneID="K2G-GY-hbo">
             <objects>
-                <tableViewController storyboardIdentifier="AlbumSearchResultsTableViewController" id="jjT-Pf-sMB" customClass="AlbumSearchResultsTableViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="AlbumSearchResultsTableViewController" id="jjT-Pf-sMB" customClass="AlbumSearchResultsTableViewController" customModule="Photobook_App" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="28" sectionFooterHeight="28" id="6u8-Y8-Fjk">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <inset key="separatorInset" minX="83" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="AlbumSearchResultsTableViewCell" rowHeight="48" id="HQt-z8-gvL" customClass="AlbumSearchResultsTableViewCell" customModule="Photobook" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="AlbumSearchResultsTableViewCell" rowHeight="48" id="HQt-z8-gvL" customClass="AlbumSearchResultsTableViewCell" customModule="Photobook_App" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="48"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="HQt-z8-gvL" id="DKH-xp-kHh">
@@ -1051,7 +1033,7 @@
         <!--Asset Picker Collection View Controller-->
         <scene sceneID="SlZ-pU-WSS">
             <objects>
-                <collectionViewController storyboardIdentifier="AssetPickerCollectionViewController" id="Wt4-pd-wZe" customClass="AssetPickerCollectionViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="AssetPickerCollectionViewController" id="Wt4-pd-wZe" customClass="AssetPickerCollectionViewController" customModule="Photobook_App" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" id="fBL-Bq-13B">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1068,7 +1050,7 @@
                             <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </activityIndicatorView>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AssetPickerCollectionViewCell" id="UJr-go-DIA" customClass="AssetPickerCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AssetPickerCollectionViewCell" id="UJr-go-DIA" customClass="AssetPickerCollectionViewCell" customModule="Photobook_App" customModuleProvider="target">
                                 <rect key="frame" x="120.5" y="211" width="134" height="131"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -1120,7 +1102,7 @@
                                 <size key="customSize" width="319" height="81"/>
                             </collectionViewCell>
                         </cells>
-                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="coverCell" id="Z1i-T8-49g" customClass="AssetPickerCoverCollectionViewCell" customModule="Photobook" customModuleProvider="target">
+                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="coverCell" id="Z1i-T8-49g" customClass="AssetPickerCoverCollectionViewCell" customModule="Photobook_App" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="210"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
@@ -1229,8 +1211,8 @@
         <!--Photobook Navigation Controller-->
         <scene sceneID="jTb-KZ-dAJ">
             <objects>
-                <navigationController navigationBarHidden="YES" id="WZR-4z-wzI" customClass="PhotobookNavigationController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="VZg-cd-0O7" customClass="PhotobookNavigationBar" customModule="Photobook" customModuleProvider="target">
+                <navigationController navigationBarHidden="YES" id="WZR-4z-wzI" customClass="PhotobookNavigationController" customModule="Photobook_App" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="VZg-cd-0O7" customClass="PhotobookNavigationBar" customModule="Photobook_App" customModuleProvider="target">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -1244,7 +1226,7 @@
         <!--Item-->
         <scene sceneID="c5L-BD-S21">
             <objects>
-                <viewController storyboardIdentifier="IntroViewController" id="2XF-yO-9gv" customClass="IntroViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="IntroViewController" id="2XF-yO-9gv" customClass="IntroViewController" customModule="Photobook_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ZFI-Ae-tE6">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1350,7 +1332,7 @@
                         <outlet property="ctaContainerView" destination="wFH-aZ-OE8" id="fpR-MM-nHl"/>
                         <outlet property="ctaInvisibleConstraint" destination="kk3-s4-C9V" id="Uol-GR-5wD"/>
                         <outlet property="ctaVisibleConstraint" destination="O4c-I3-BvW" id="VDT-gZ-nGo"/>
-                        <segue destination="d5b-Ic-QyB" kind="custom" identifier="IntroDismiss" customClass="IntroDismissSegue" customModule="Photobook" customModuleProvider="target" id="qeW-AA-Oo4"/>
+                        <segue destination="d5b-Ic-QyB" kind="custom" identifier="IntroDismiss" customClass="IntroDismissSegue" customModule="Photobook_App" customModuleProvider="target" id="qeW-AA-Oo4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IK7-eg-46l" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1360,7 +1342,7 @@
         <!--Full Screen Image View Controller-->
         <scene sceneID="XBA-8v-eiC">
             <objects>
-                <viewController storyboardIdentifier="FullScreenImageViewController" id="nLV-6U-Lei" customClass="FullScreenImageViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FullScreenImageViewController" id="nLV-6U-Lei" customClass="FullScreenImageViewController" customModule="Photobook_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="84B-qY-2Nb">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1423,7 +1405,7 @@
                 </tapGestureRecognizer>
                 <tapGestureRecognizer id="4gs-fc-q3m">
                     <connections>
-                        <segue destination="QSg-eJ-ts9" kind="unwind" identifier="FullScreenImageUnwindSegue" customClass="FullScreenImageUnwindSegue" customModule="Photobook" customModuleProvider="target" unwindAction="unwindToThisViewWithUnwindSegue:" id="8qw-uk-XVQ"/>
+                        <segue destination="QSg-eJ-ts9" kind="unwind" identifier="FullScreenImageUnwindSegue" customClass="FullScreenImageUnwindSegue" customModule="Photobook_App" customModuleProvider="target" unwindAction="unwindToThisViewWithUnwindSegue:" id="8qw-uk-XVQ"/>
                     </connections>
                 </tapGestureRecognizer>
                 <panGestureRecognizer minimumNumberOfTouches="1" id="Y1l-LO-4J7">
@@ -1460,9 +1442,9 @@
         <!--Facebook Landing View Controller-->
         <scene sceneID="rhQ-gv-ywl">
             <objects>
-                <viewController storyboardIdentifier="FacebookLandingViewController" id="B0N-RZ-Y3E" customClass="FacebookLandingViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FacebookLandingViewController" id="B0N-RZ-Y3E" customClass="FacebookLandingViewController" customModule="Photobook_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="14C-ea-asI">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="706"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Access Facebook" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FRC-sM-ebC">
@@ -1478,7 +1460,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zfA-1O-hGS">
-                                <rect key="frame" x="-2.5" y="541" width="380" height="50"/>
+                                <rect key="frame" x="-22" y="580" width="419" height="50"/>
                                 <color key="backgroundColor" red="0.2054328322" green="0.47096657749999998" blue="0.9647943377" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="PIZ-bT-lyd"/>
@@ -1497,7 +1479,7 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" image="Facebook-big" translatesAutoresizingMaskIntoConstraints="NO" id="eR2-kc-5sU">
-                                <rect key="frame" x="-2.5" y="151" width="380" height="380"/>
+                                <rect key="frame" x="-22" y="151" width="419" height="419"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="eR2-kc-5sU" secondAttribute="height" id="cDl-sB-SCT"/>
                                 </constraints>
@@ -1558,7 +1540,7 @@
         <!--Tutorial View Controller-->
         <scene sceneID="8j7-HA-saZ">
             <objects>
-                <viewController storyboardIdentifier="TutorialViewController" id="SHX-YS-0Qw" customClass="TutorialViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TutorialViewController" id="SHX-YS-0Qw" customClass="TutorialViewController" customModule="Photobook_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="xgP-D0-UcL">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1637,7 +1619,7 @@
         <!--Tutorial Page View Controller-->
         <scene sceneID="jXO-UR-33Q">
             <objects>
-                <viewController storyboardIdentifier="TutorialPageViewController" id="1Bh-G4-bzN" customClass="TutorialPageViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TutorialPageViewController" id="1Bh-G4-bzN" customClass="TutorialPageViewController" customModule="Photobook_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="OMN-Yd-v7j">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1686,7 +1668,7 @@
         <!--Empty Screen View Controller-->
         <scene sceneID="NNa-F2-EPq">
             <objects>
-                <viewController storyboardIdentifier="EmptyScreenViewController" id="uAr-QE-x8a" customClass="EmptyScreenViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EmptyScreenViewController" id="uAr-QE-x8a" customClass="EmptyScreenViewController" customModule="Photobook_App" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="zOP-Ua-BAZ"/>
                         <viewControllerLayoutGuide type="bottom" id="GhX-km-5uv"/>
@@ -1767,7 +1749,7 @@
         <!--Message Bar View Controller-->
         <scene sceneID="qh2-fu-zuv">
             <objects>
-                <viewController storyboardIdentifier="MessageBarViewController" id="igj-KR-iKR" customClass="MessageBarViewController" customModule="Photobook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MessageBarViewController" id="igj-KR-iKR" customClass="MessageBarViewController" customModule="Photobook_App" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Dmy-dw-CWg"/>
                         <viewControllerLayoutGuide type="bottom" id="JZW-zg-mdp"/>
@@ -1845,4 +1827,7 @@
         <image name="Stories" width="29" height="24"/>
         <image name="Tick-empty" width="26" height="26"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="ijB-7J-9Ca"/>
+    </inferredMetricsTieBreakers>
 </document>
