@@ -29,6 +29,7 @@
 
 import UIKit
 import Photos
+import Photobook
 
 class StoriesViewController: UIViewController {
 
@@ -54,6 +55,8 @@ class StoriesViewController: UIViewController {
     
     private var openingStory = false
     
+    private var assetCollectorViewController: AssetCollectorViewController!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -62,6 +65,16 @@ class StoriesViewController: UIViewController {
         if StoriesManager.shared.stories.isEmpty {
             StoriesManager.shared.loadTopStories()
         }
+        
+        // Setup the Image Collector Controller
+        assetCollectorViewController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
+        assetCollectorViewController.mode = .selecting
+        assetCollectorViewController.delegate = self
+        
+        // Listen to asset manager
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(storiesWereUpdated), name: StoriesNotificationName.storiesWereUpdated, object: nil)        
     }
     
@@ -230,5 +243,97 @@ extension StoriesViewController: AssetPickerCollectionViewControllerDelegate {
     func viewControllerForPresentingOn() -> UIViewController? {
         return tabBarController
     }
+}
+
+extension StoriesViewController: AssetCollectorViewControllerDelegate {
     
+    func actionsForAssetCollectorViewControllerHiddenStateChange(_ assetCollectorViewController: AssetCollectorViewController, willChangeTo hidden: Bool) -> () -> () {
+        return { [weak welf = self] in
+            let bottomInset: CGFloat
+            if #available(iOS 11, *) {
+                bottomInset = hidden ? 0 : assetCollectorViewController.viewHeight
+            } else {
+                bottomInset = hidden ? assetCollectorViewController.viewHeight - assetCollectorViewController.view.transform.ty : assetCollectorViewController.viewHeight
+            }
+            welf?.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: bottomInset, right: 0)
+        }
+    }
+    
+    func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
+//        let dataSourceBackup = AssetDataSourceBackup()
+//        dataSourceBackup.albumManager = albumManager
+//        AssetDataSourceBackupManager.shared.saveBackup(dataSourceBackup)
+        
+        if UserDefaults.standard.bool(forKey: hasShownTutorialKey) {
+            if let viewController = photobookViewController() {
+                navigationController?.pushViewController(viewController, animated: true)
+            }
+        } else {
+            guard let photobookViewController = self.photobookViewController() else { return }
+            
+            let completion = { [weak welf = self] in
+                UserDefaults.standard.set(true, forKey: hasShownTutorialKey)
+                
+                let tutorialViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
+                tutorialViewController.completionClosure = { [weak welf = self] (viewController) in
+                    welf?.dismiss(animated: true, completion: nil)
+                }
+                welf?.present(tutorialViewController, animated: true)
+            }
+            
+            CATransaction.begin()
+            CATransaction.setCompletionBlock(completion)
+            self.navigationController?.pushViewController(photobookViewController, animated: true)
+            CATransaction.commit()
+        }
+    }
+    
+    private func photobookViewController() -> UIViewController? {
+        let photobookViewController = PhotobookSDK.shared.photobookViewController(with: selectedAssetsManager.selectedAssets, embedInNavigation: false, navigatesToCheckout: false, delegate: self) { [weak welf = self] (viewController, success) in
+            
+            guard success else {
+                AssetDataSourceBackupManager.shared.deleteBackup()
+                
+                if let tabBar = viewController.tabBarController?.tabBar {
+                    tabBar.isHidden = false
+                }
+                
+                viewController.navigationController?.popViewController(animated: true)
+                return
+            }
+            
+            let items = Checkout.shared.numberOfItemsInBasket()
+            if items == 0 {
+                Checkout.shared.addCurrentProductToBasket()
+            } else {
+                // Only allow one item in the basket
+                Checkout.shared.clearBasketOrder()
+                Checkout.shared.addCurrentProductToBasket(items: items)
+            }
+            
+            // Photobook completion
+            if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, dismissClosure: {
+                [weak welf = self] (viewController, success) in
+                AssetDataSourceBackupManager.shared.deleteBackup()
+                
+                welf?.navigationController?.popToRootViewController(animated: true)
+                if success {
+                    NotificationCenter.default.post(name: SelectedAssetsManager.notificationNamePhotobookComplete, object: nil)
+                }
+            }) {
+                welf?.navigationController?.pushViewController(checkoutViewController, animated: true)
+            }
+        }
+        return photobookViewController
+    }
+}
+
+extension StoriesViewController: PhotobookDelegate {
+    
+    func assetPickerViewController() -> PhotobookAssetPickerController {
+        let modalAlbumsCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
+        //modalAlbumsCollectionViewController.albumManager = albumManager
+        
+        return modalAlbumsCollectionViewController
+    }
 }

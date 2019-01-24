@@ -88,7 +88,9 @@ class SelectedAssetsManager: NSObject {
             addedIndices.append(selectedAssets.count-1)
         }
 
-        NotificationCenter.default.post(name: SelectedAssetsManager.notificationNameSelected, object: self, userInfo: [SelectedAssetsManager.notificationUserObjectKeyAssets:addedAssets, SelectedAssetsManager.notificationUserObjectKeyIndices:addedIndices])
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: SelectedAssetsManager.notificationNameSelected, object: self, userInfo: [SelectedAssetsManager.notificationUserObjectKeyAssets:addedAssets, SelectedAssetsManager.notificationUserObjectKeyIndices:addedIndices])
+        }
     }
     
     func deselect(_ asset: PhotobookAsset) {

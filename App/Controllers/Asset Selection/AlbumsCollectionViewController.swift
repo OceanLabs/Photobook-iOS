@@ -39,7 +39,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
         static let timeToDismissMessages: TimeInterval = 3.0
     }
     
-    var assetCollectorViewController: AssetCollectorViewController!
+    private var assetCollectorViewController: AssetCollectorViewController!
     
     /// The height between the bottom of the image and bottom of the cell where the labels sit
     private let albumCellLabelsHeight: CGFloat = 50
