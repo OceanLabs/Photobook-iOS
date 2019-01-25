@@ -297,69 +297,8 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
             AssetDataSourceBackupManager.shared.saveBackup(PhotobookManager.shared.selectedAssetsManager)
         default:
             AssetDataSourceBackupManager.shared.saveBackup(selectedAssetsManager)
-            
-            if UserDefaults.standard.bool(forKey: hasShownTutorialKey) {
-                if let viewController = photobookViewController() {
-                    navigationController?.pushViewController(viewController, animated: true)
-                }
-            } else {
-                guard let photobookViewController = self.photobookViewController() else { return }
-                
-                let completion = { [weak welf = self] in
-                    UserDefaults.standard.set(true, forKey: hasShownTutorialKey)
-                    
-                    let tutorialViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TutorialViewController") as! TutorialViewController
-                    tutorialViewController.completionClosure = { [weak welf = self] (viewController) in
-                        welf?.dismiss(animated: true, completion: nil)
-                    }
-                    welf?.present(tutorialViewController, animated: true)
-                }
-                
-                CATransaction.begin()
-                CATransaction.setCompletionBlock(completion)
-                self.navigationController?.pushViewController(photobookViewController, animated: true)
-                CATransaction.commit()
-            }
+            PhotobookManager.shared.photobook(from: self, assets: selectedAssetsManager.selectedAssets, delegate: self)
         }
-    }
-    
-    private func photobookViewController() -> UIViewController? {
-        let photobookViewController = PhotobookSDK.shared.photobookViewController(with: selectedAssetsManager.selectedAssets, embedInNavigation: false, navigatesToCheckout: false, delegate: self) { [weak welf = self] (viewController, success) in
-            
-            guard success else {
-                AssetDataSourceBackupManager.shared.deleteBackup()
-                
-                if let tabBar = viewController.tabBarController?.tabBar {
-                    tabBar.isHidden = false
-                }
-                
-                viewController.navigationController?.popViewController(animated: true)
-                return
-            }
-
-            let items = Checkout.shared.numberOfItemsInBasket()
-            if items == 0 {
-                Checkout.shared.addCurrentProductToBasket()
-            } else {
-                // Only allow one item in the basket
-                Checkout.shared.clearBasketOrder()
-                Checkout.shared.addCurrentProductToBasket(items: items)
-            }
-
-            // Photobook completion
-            if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, dismissClosure: {
-                [weak welf = self] (viewController, success) in
-                AssetDataSourceBackupManager.shared.deleteBackup()
-                
-                welf?.navigationController?.popToRootViewController(animated: true)
-                if success {
-                    NotificationCenter.default.post(name: SelectedAssetsManager.notificationNamePhotobookComplete, object: nil)
-                }
-            }) {
-                welf?.navigationController?.pushViewController(checkoutViewController, animated: true)
-            }
-        }
-        return photobookViewController
     }
 }
 
