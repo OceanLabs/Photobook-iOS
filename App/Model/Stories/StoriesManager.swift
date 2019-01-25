@@ -71,7 +71,6 @@ class StoriesManager: NSObject {
     override init() {
         super.init()
         PHPhotoLibrary.shared().register(self)
-        NotificationCenter.default.addObserver(self, selector: #selector(resetStoriesSelections), name: SelectedAssetsManager.notificationNamePhotobookComplete, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appRestoredFromBackground), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in
             welf?.fromBackground = true
@@ -119,7 +118,6 @@ class StoriesManager: NSObject {
     func prepare(story: Story, completionHandler:@escaping () -> Void) {
         DispatchQueue.global(qos: .default).async {
             story.loadAssets(completionHandler: { [weak welf = self] _ in
-                welf?.performAutoSelectionIfNeeded(on: story)
                 DispatchQueue.main.async {
                     completionHandler()
                 }
@@ -265,55 +263,7 @@ class StoriesManager: NSObject {
                     return item
                 }
             }
-    }
-    
-    func performAutoSelectionIfNeeded(on story: Story) {
-        if !story.hasPerformedAutoSelection {
-            performAutoSelection(on: story)
-        }
-    }
-    
-    private func performAutoSelection(on story: Story) {
-        guard PhotobookManager.shared.selectedAssetsManager.selectedAssets.isEmpty else { return }
-        
-        var selectedAssets = [PhotobookAsset]()
-        var unusedAssets = [PhotobookAsset]()
-        
-        let minimumAssets = PhotobookSDK.shared.minimumRequiredPhotos
-        let subarrayLength = minimumAssets // For readability
-        let subarrayCount: Int = story.photoCount / subarrayLength
-        let assetsFromEachSubarray: Int = minimumAssets / subarrayCount
-        
-        for subarrayIndex in 0 ..< subarrayCount {
-            let subarrayStartIndex = subarrayIndex * subarrayLength
-            // The last subarray will take on any leftovers resulting from integer division
-            var subarray = Array(subarrayIndex == subarrayCount - 1 ? story.assets[subarrayStartIndex...] : story.assets[subarrayStartIndex..<subarrayStartIndex + subarrayLength])
-            
-            for _ in 0 ..< assetsFromEachSubarray {
-                let selectedIndex = Int.random(in: 0 ..< subarray.count)
-                selectedAssets.append(subarray.remove(at: selectedIndex))
-            }
-            unusedAssets.append(contentsOf: subarray)
-        }
-        
-        // In case we have come up short because of all the integer divisions we have done above, select some more assets from the unused ones if needed.
-        while selectedAssets.count < minimumAssets {
-            let selectedIndex = Int.random(in: 0 ..< unusedAssets.count)
-            selectedAssets.append(unusedAssets.remove(at: selectedIndex))
-        }
-        
-        PhotobookManager.shared.selectedAssetsManager.select(selectedAssets)
-        PhotobookManager.shared.selectedAssetsManager.orderAssetsByDate()
-        
-        story.hasPerformedAutoSelection = true
-    }
-    
-    @objc private func resetStoriesSelections() {
-        for story in stories {
-            PhotobookManager.shared.selectedAssetsManager.deselectAllAssetsForAllAlbums()
-            story.hasPerformedAutoSelection = false
-        }
-    }
+    }    
 }
 
 extension StoriesManager: PHPhotoLibraryChangeObserver {

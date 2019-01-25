@@ -107,7 +107,6 @@ class StoriesViewController: UIViewController {
                 else { return }
             
             let story = stories[sender.index]
-            StoriesManager.shared.performAutoSelectionIfNeeded(on: story)
             
             assetPickerController.album = story
             assetPickerController.selectedAssetsManager = selectedAssetsManager
