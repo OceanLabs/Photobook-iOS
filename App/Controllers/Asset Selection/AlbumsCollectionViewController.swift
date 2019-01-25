@@ -294,6 +294,7 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
         switch collectorMode {
         case .adding:
             addingDelegate?.didFinishAdding(selectedAssetsManager.selectedAssets)
+            AssetDataSourceBackupManager.shared.saveBackup(PhotobookManager.shared.selectedAssetsManager)
         default:
             AssetDataSourceBackupManager.shared.saveBackup(selectedAssetsManager)
             
