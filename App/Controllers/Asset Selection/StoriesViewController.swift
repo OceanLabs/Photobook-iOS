@@ -182,6 +182,8 @@ extension StoriesViewController: UITableViewDataSource {
             doubleCell.secondDates = secondStory?.subtitle
             doubleCell.localIdentifier = story?.identifier
             doubleCell.storyIndex = storyIndex
+            doubleCell.count = selectedAssetsManager.count(for: story! as Album)
+            doubleCell.secondCount = selectedAssetsManager.count(for: secondStory! as Album)
             doubleCell.delegate = self
             doubleCell.containerView.backgroundColor = story == nil ? UIColor(white: 0, alpha: 0.04) : .groupTableViewBackground
             doubleCell.secondContainerView.backgroundColor = secondStory == nil ? UIColor(white: 0, alpha: 0.04) : .groupTableViewBackground
@@ -215,6 +217,7 @@ extension StoriesViewController: UITableViewDataSource {
         singleCell.dates = story.subtitle
         singleCell.localIdentifier = story.identifier
         singleCell.storyIndex = storyIndex
+        singleCell.count = selectedAssetsManager.count(for: story as Album)
         singleCell.delegate = self
 
         story.coverAsset(completionHandler: { asset in

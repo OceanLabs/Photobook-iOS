@@ -42,6 +42,7 @@ class StoryTableViewCell: UITableViewCell {
     
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var datesLabel: UILabel!
+    @IBOutlet private weak var selectedCountLabel: UILabel!
     @IBOutlet weak var coverImageView: UIImageView!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var overlayView: UIView!
@@ -55,6 +56,16 @@ class StoryTableViewCell: UITableViewCell {
     var dates: String? { didSet { datesLabel.text = dates } }
     var localIdentifier: String?
     var storyIndex: Int?
+    var count: Int? {
+        didSet {
+            guard count != nil && count! > 0 else {
+                selectedCountLabel.isHidden = true
+                return
+            }
+            selectedCountLabel.isHidden = false
+            selectedCountLabel.text = "\(count!)"
+        }
+    }
     
     weak var delegate: StoryTableViewCellDelegate?
     

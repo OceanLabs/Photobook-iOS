@@ -179,6 +179,22 @@
                                                                 <constraint firstItem="sg0-91-3dP" firstAttribute="top" secondItem="RjH-Ge-cK0" secondAttribute="bottom" id="rc1-zV-CAJ"/>
                                                             </constraints>
                                                         </view>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TOP-MP-Tol">
+                                                            <rect key="frame" x="301" y="166" width="24" height="24"/>
+                                                            <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="24" id="IDV-D9-i1b"/>
+                                                                <constraint firstAttribute="height" constant="24" id="JGV-1g-ty9"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <nil key="highlightedColor"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                    <real key="value" value="12"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </label>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vJE-f4-SzS">
                                                             <rect key="frame" x="0.0" y="0.0" width="335" height="200"/>
                                                             <connections>
@@ -190,10 +206,12 @@
                                                     <constraints>
                                                         <constraint firstItem="vJE-f4-SzS" firstAttribute="leading" secondItem="CPv-r5-C4F" secondAttribute="leading" id="96a-8f-WUS"/>
                                                         <constraint firstAttribute="bottom" secondItem="Y3Z-vI-ghw" secondAttribute="bottom" id="DrM-QZ-nok"/>
+                                                        <constraint firstAttribute="trailing" secondItem="TOP-MP-Tol" secondAttribute="trailing" constant="10" id="IIw-6J-43E"/>
                                                         <constraint firstAttribute="bottom" secondItem="OUH-l6-CVA" secondAttribute="bottom" id="L94-ko-GJo"/>
                                                         <constraint firstItem="vJE-f4-SzS" firstAttribute="top" secondItem="CPv-r5-C4F" secondAttribute="top" id="OjB-3G-Vu8"/>
                                                         <constraint firstItem="Zha-Il-YlN" firstAttribute="centerY" secondItem="CPv-r5-C4F" secondAttribute="centerY" id="QeX-30-FIU"/>
                                                         <constraint firstAttribute="bottom" secondItem="vJE-f4-SzS" secondAttribute="bottom" id="aHg-cx-kbb"/>
+                                                        <constraint firstAttribute="bottom" secondItem="TOP-MP-Tol" secondAttribute="bottom" constant="10" id="dDu-Xk-iIG"/>
                                                         <constraint firstAttribute="trailing" secondItem="vJE-f4-SzS" secondAttribute="trailing" id="gu7-RP-5e2"/>
                                                         <constraint firstAttribute="width" secondItem="CPv-r5-C4F" secondAttribute="height" multiplier="187:100" priority="750" id="hUD-Nf-W1a"/>
                                                         <constraint firstItem="OUH-l6-CVA" firstAttribute="leading" secondItem="CPv-r5-C4F" secondAttribute="leading" id="kvf-V2-oMh"/>
@@ -222,6 +240,7 @@
                                         <connections>
                                             <outlet property="coverImageView" destination="Y3Z-vI-ghw" id="oBt-JP-jmV"/>
                                             <outlet property="datesLabel" destination="sg0-91-3dP" id="mQA-tT-UFi"/>
+                                            <outlet property="selectedCountLabel" destination="TOP-MP-Tol" id="dVS-K9-KV3"/>
                                             <outlet property="titleLabel" destination="RjH-Ge-cK0" id="huB-q3-srx"/>
                                         </connections>
                                     </tableViewCell>
@@ -277,6 +296,22 @@
                                                                 <constraint firstItem="98S-YZ-ATE" firstAttribute="top" secondItem="eOz-ny-Awi" secondAttribute="bottom" id="xlR-dl-UMu"/>
                                                             </constraints>
                                                         </view>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jHn-hj-Xip">
+                                                            <rect key="frame" x="128.5" y="166" width="24" height="24"/>
+                                                            <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="24" id="NEi-b7-4wx"/>
+                                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="24" id="ccK-iP-Ers"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <nil key="highlightedColor"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                    <real key="value" value="12"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </label>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OO8-XX-41D">
                                                             <rect key="frame" x="0.0" y="0.0" width="162.5" height="200"/>
                                                             <connections>
@@ -288,12 +323,14 @@
                                                     <constraints>
                                                         <constraint firstItem="XP8-sz-FlQ" firstAttribute="leading" secondItem="xiN-tP-wZb" secondAttribute="leading" id="0ij-2k-4Wc"/>
                                                         <constraint firstAttribute="bottom" secondItem="XP8-sz-FlQ" secondAttribute="bottom" id="2OR-4u-ffe"/>
+                                                        <constraint firstAttribute="trailing" secondItem="jHn-hj-Xip" secondAttribute="trailing" constant="10" id="Eki-B0-ULF"/>
                                                         <constraint firstItem="OO8-XX-41D" firstAttribute="leading" secondItem="xiN-tP-wZb" secondAttribute="leading" id="FfB-cM-g8b"/>
                                                         <constraint firstAttribute="trailing" secondItem="OO8-XX-41D" secondAttribute="trailing" id="Kem-nt-Ibc"/>
                                                         <constraint firstItem="QbJ-Q4-FWD" firstAttribute="top" secondItem="xiN-tP-wZb" secondAttribute="top" id="LC2-fp-DLN"/>
                                                         <constraint firstItem="vkU-Hq-4Fn" firstAttribute="leading" secondItem="xiN-tP-wZb" secondAttribute="leading" constant="15" id="Lp4-YN-Cya"/>
                                                         <constraint firstAttribute="trailing" secondItem="vkU-Hq-4Fn" secondAttribute="trailing" constant="15" id="OUg-9G-SHy"/>
                                                         <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="vkU-Hq-4Fn" secondAttribute="bottom" id="Pvt-gb-a7y"/>
+                                                        <constraint firstAttribute="bottom" secondItem="jHn-hj-Xip" secondAttribute="bottom" constant="10" id="TL5-P9-8TL"/>
                                                         <constraint firstItem="XP8-sz-FlQ" firstAttribute="top" secondItem="xiN-tP-wZb" secondAttribute="top" id="UXK-BC-IJR"/>
                                                         <constraint firstItem="OO8-XX-41D" firstAttribute="top" secondItem="xiN-tP-wZb" secondAttribute="top" id="axA-l2-hjb"/>
                                                         <constraint firstAttribute="bottom" secondItem="QbJ-Q4-FWD" secondAttribute="bottom" id="eFq-hJ-8PJ"/>
@@ -355,6 +392,22 @@
                                                                 <constraint firstAttribute="trailing" secondItem="S8o-db-JJh" secondAttribute="trailing" id="zxo-Uq-CyG"/>
                                                             </constraints>
                                                         </view>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bn5-7H-VLm">
+                                                            <rect key="frame" x="128.5" y="166" width="24" height="24"/>
+                                                            <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="24" id="3XL-6Y-Oz9"/>
+                                                                <constraint firstAttribute="height" constant="24" id="suD-Td-AAq"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <nil key="highlightedColor"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                    <real key="value" value="12"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </label>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZwZ-GB-N9Z">
                                                             <rect key="frame" x="0.0" y="0.0" width="162.5" height="200"/>
                                                             <connections>
@@ -375,12 +428,14 @@
                                                         <constraint firstItem="zYM-e0-yG9" firstAttribute="top" relation="greaterThanOrEqual" secondItem="weU-Y8-NsY" secondAttribute="top" id="XAc-Mt-Grq"/>
                                                         <constraint firstAttribute="bottom" secondItem="ZwZ-GB-N9Z" secondAttribute="bottom" id="aq6-uS-BOZ"/>
                                                         <constraint firstItem="zYM-e0-yG9" firstAttribute="leading" secondItem="weU-Y8-NsY" secondAttribute="leading" constant="15" id="dB4-6y-EzH"/>
+                                                        <constraint firstAttribute="trailing" secondItem="bn5-7H-VLm" secondAttribute="trailing" constant="10" id="ioD-dY-idC"/>
                                                         <constraint firstItem="OAo-UX-egq" firstAttribute="top" secondItem="weU-Y8-NsY" secondAttribute="top" id="j8b-ig-18q"/>
                                                         <constraint firstAttribute="trailing" secondItem="ZwZ-GB-N9Z" secondAttribute="trailing" id="lBn-m4-Ewk"/>
                                                         <constraint firstItem="zYM-e0-yG9" firstAttribute="centerY" secondItem="weU-Y8-NsY" secondAttribute="centerY" id="lpf-DX-qy4"/>
                                                         <constraint firstItem="KZr-5e-2Xw" firstAttribute="top" secondItem="weU-Y8-NsY" secondAttribute="top" id="oQX-As-a9F"/>
                                                         <constraint firstAttribute="trailing" secondItem="OAo-UX-egq" secondAttribute="trailing" id="pi7-nD-YMc"/>
                                                         <constraint firstAttribute="trailing" secondItem="KZr-5e-2Xw" secondAttribute="trailing" id="sZQ-jN-uB4"/>
+                                                        <constraint firstAttribute="bottom" secondItem="bn5-7H-VLm" secondAttribute="bottom" constant="10" id="y8I-PV-hnu"/>
                                                         <constraint firstAttribute="bottom" secondItem="OAo-UX-egq" secondAttribute="bottom" id="zgc-8J-t1m"/>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
@@ -410,7 +465,9 @@
                                             <outlet property="secondCoverImageView" destination="OAo-UX-egq" id="c4g-SH-18t"/>
                                             <outlet property="secondDatesLabel" destination="S8o-db-JJh" id="Cvq-ff-Ckk"/>
                                             <outlet property="secondOverlayView" destination="KZr-5e-2Xw" id="OrD-ag-ALI"/>
+                                            <outlet property="secondSelectedCountLabel" destination="bn5-7H-VLm" id="TDa-Fu-RQc"/>
                                             <outlet property="secondTitleLabel" destination="a7S-9F-Ten" id="mPj-5E-5Ba"/>
+                                            <outlet property="selectedCountLabel" destination="jHn-hj-Xip" id="3Fz-Fc-hSy"/>
                                             <outlet property="titleLabel" destination="eOz-ny-Awi" id="GMa-bY-W7p"/>
                                         </connections>
                                     </tableViewCell>
