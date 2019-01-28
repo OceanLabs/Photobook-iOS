@@ -29,6 +29,7 @@
 
 import UIKit
 import Photos
+import Photobook
 
 class StoriesViewController: UIViewController {
 
@@ -50,7 +51,13 @@ class StoriesViewController: UIViewController {
         return stories.count == 1 ? 4 : 3
     }
     
+    var collectorMode: AssetCollectorMode = .selecting
+    lazy var selectedAssetsManager: SelectedAssetsManager = PhotobookManager.shared.selectedAssetsManager
+    weak var addingDelegate: PhotobookAssetAddingDelegate?
+    
     private var openingStory = false
+    
+    private var assetCollectorViewController: AssetCollectorViewController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,6 +67,16 @@ class StoriesViewController: UIViewController {
         if StoriesManager.shared.stories.isEmpty {
             StoriesManager.shared.loadTopStories()
         }
+        
+        // Setup the Image Collector Controller
+        assetCollectorViewController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: selectedAssetsManager)
+        assetCollectorViewController.mode = collectorMode
+        assetCollectorViewController.delegate = self
+        
+        // Listen to asset manager
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameSelected, object: selectedAssetsManager)
+        NotificationCenter.default.addObserver(self, selector: #selector(selectedAssetManagerCountChanged(_:)), name: SelectedAssetsManager.notificationNameDeselected, object: selectedAssetsManager)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(storiesWereUpdated), name: StoriesNotificationName.storiesWereUpdated, object: nil)        
     }
     
@@ -90,10 +107,11 @@ class StoriesViewController: UIViewController {
                 else { return }
             
             let story = stories[sender.index]
-            StoriesManager.shared.performAutoSelectionIfNeeded(on: story)
             
             assetPickerController.album = story
-            assetPickerController.selectedAssetsManager = StoriesManager.shared.selectedAssetsManager(for: story)
+            assetPickerController.selectedAssetsManager = selectedAssetsManager
+            assetPickerController.collectorMode = collectorMode
+            assetPickerController.addingDelegate = addingDelegate
             assetPickerController.delegate = self
             
             segue.coverImage = sender.coverImage
@@ -163,6 +181,8 @@ extension StoriesViewController: UITableViewDataSource {
             doubleCell.secondDates = secondStory?.subtitle
             doubleCell.localIdentifier = story?.identifier
             doubleCell.storyIndex = storyIndex
+            doubleCell.count = selectedAssetsManager.count(for: story! as Album)
+            doubleCell.secondCount = selectedAssetsManager.count(for: secondStory! as Album)
             doubleCell.delegate = self
             doubleCell.containerView.backgroundColor = story == nil ? UIColor(white: 0, alpha: 0.04) : .groupTableViewBackground
             doubleCell.secondContainerView.backgroundColor = secondStory == nil ? UIColor(white: 0, alpha: 0.04) : .groupTableViewBackground
@@ -196,6 +216,7 @@ extension StoriesViewController: UITableViewDataSource {
         singleCell.dates = story.subtitle
         singleCell.localIdentifier = story.identifier
         singleCell.storyIndex = storyIndex
+        singleCell.count = selectedAssetsManager.count(for: story as Album)
         singleCell.delegate = self
 
         story.coverAsset(completionHandler: { asset in
@@ -228,5 +249,42 @@ extension StoriesViewController: AssetPickerCollectionViewControllerDelegate {
     func viewControllerForPresentingOn() -> UIViewController? {
         return tabBarController
     }
-    
 }
+
+extension StoriesViewController: AssetCollectorViewControllerDelegate {
+    
+    func actionsForAssetCollectorViewControllerHiddenStateChange(_ assetCollectorViewController: AssetCollectorViewController, willChangeTo hidden: Bool) -> () -> () {
+        return { [weak welf = self] in
+            let bottomInset: CGFloat
+            if #available(iOS 11, *) {
+                bottomInset = hidden ? 0 : assetCollectorViewController.viewHeight
+            } else {
+                bottomInset = hidden ? assetCollectorViewController.viewHeight - assetCollectorViewController.view.transform.ty : assetCollectorViewController.viewHeight
+            }
+            welf?.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: bottomInset, right: 0)
+        }
+    }
+    
+    func assetCollectorViewControllerDidFinish(_ assetCollectorViewController: AssetCollectorViewController) {
+        switch collectorMode {
+        case .adding:
+            addingDelegate?.didFinishAdding(selectedAssetsManager.selectedAssets)
+            AssetDataSourceBackupManager.shared.saveBackup(PhotobookManager.shared.selectedAssetsManager)
+        default:
+            AssetDataSourceBackupManager.shared.saveBackup(selectedAssetsManager)
+            PhotobookManager.shared.photobook(from: self, assets: selectedAssetsManager.selectedAssets, delegate: self)
+        }
+    }
+}
+
+extension StoriesViewController: PhotobookDelegate {
+    
+    func assetPickerViewController() -> PhotobookAssetPickerController {
+        let modalAlbumsCollectionViewController = mainStoryboard.instantiateViewController(withIdentifier: "ModalAlbumsCollectionViewController") as! ModalAlbumsCollectionViewController
+        //modalAlbumsCollectionViewController.albumManager = albumManager
+        
+        return modalAlbumsCollectionViewController
+    }
+}
+
+extension StoriesViewController: Collectable {}

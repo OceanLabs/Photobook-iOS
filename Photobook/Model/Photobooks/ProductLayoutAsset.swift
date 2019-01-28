@@ -76,16 +76,7 @@ class ProductLayoutAsset: Codable {
         try container.encode(transform, forKey: .transform)
         try container.encode(containerSize, forKey: .containerSize)
 
-        var data: Data? = nil
-        if let asset = asset as? PhotosAsset {
-            data = try PropertyListEncoder().encode(asset)
-        } else if let asset = asset as? URLAsset {
-            data = try PropertyListEncoder().encode(asset)
-        } else if let asset = asset as? ImageAsset {
-            data = try PropertyListEncoder().encode(asset)
-        } else if let asset = asset as? PhotosAssetMock {
-            data = try PropertyListEncoder().encode(asset)
-        }
+        let data: Data? = try asset?.data()
         try container.encode(data, forKey: .asset)
     }
     
@@ -97,17 +88,10 @@ class ProductLayoutAsset: Codable {
         transform = try values.decode(CGAffineTransform.self, forKey: .transform)
         containerSize = try values.decodeIfPresent(CGSize.self, forKey: .containerSize)
 
-        if let data = try values.decodeIfPresent(Data.self, forKey: .asset) {
-            if let loadedAsset = try? PropertyListDecoder().decode(URLAsset.self, from: data) {
-                asset = loadedAsset
-            } else if let loadedAsset = try? PropertyListDecoder().decode(ImageAsset.self, from: data) {
-                asset = loadedAsset
-            } else if let loadedAsset = try? PropertyListDecoder().decode(PhotosAsset.self, from: data) { // Keep the PhotosAsset case last because otherwise it triggers NSPhotoLibraryUsageDescription crash if not present, which might not be needed
-                asset = loadedAsset
-            } else if let loadedAsset = try? PropertyListDecoder().decode(PhotosAssetMock.self, from: data) {
-                asset = loadedAsset
-            }
+        guard let data = try values.decodeIfPresent(Data.self, forKey: .asset) else {
+            throw AssetLoadingException.notFound
         }
+        asset = try PhotosAsset.asset(from: data) // PhotosAsset is needed to call the static method in Asset
     }
     
     func adjustTransform() {
