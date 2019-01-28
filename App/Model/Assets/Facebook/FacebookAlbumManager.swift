@@ -38,7 +38,7 @@ class FacebookAlbumManager {
         static let graphPath = "me/albums?limit=\(pageSize)&fields=id,name,count,cover_photo"
     }
     
-    var albums =  [Album]()
+    var albums = [Album]()
     let title = NSLocalizedString("Albums/Facebook/Title", value: "Facebook Albums", comment: "Facebook Albums screen title")
     
     private var after: String?
