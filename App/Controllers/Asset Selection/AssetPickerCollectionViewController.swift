@@ -201,6 +201,8 @@ class AssetPickerCollectionViewController: UICollectionViewController {
             assetCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: manager, delayAppearance: delayCollectorAppearance)
             assetCollectorController.mode = collectorMode
             assetCollectorController.delegate = self
+            
+            setupInsetsForCollector(assetCollectorController, status: manager.count > 0 ? .on : .off)
         }
     }
     
@@ -412,18 +414,22 @@ extension AssetPickerCollectionViewController: LogoutHandler {
 extension AssetPickerCollectionViewController: AssetCollectorViewControllerDelegate {
     // MARK: AssetCollectorViewControllerDelegate
     
+    func setupInsetsForCollector(_ collector: AssetCollectorViewController, status: ActiveState) {
+        let topInset: CGFloat
+        let bottomInset: CGFloat
+        if #available(iOS 11, *) {
+            topInset = 0
+            bottomInset = status == .off ? 0 : collector.viewHeight
+        } else {
+            topInset = navigationController?.navigationBar.frame.maxY ?? 0
+            bottomInset = collector.view.frame.height - collector.view.transform.ty
+        }
+        collectionView?.contentInset = UIEdgeInsets(top: topInset, left: 0, bottom: bottomInset, right: 0)
+    }
+    
     func actionsForAssetCollectorViewControllerHiddenStateChange(_ assetCollectorViewController: AssetCollectorViewController, willChangeTo hidden: Bool) -> () -> () {
         return { [weak welf = self] in
-            let topInset: CGFloat
-            let bottomInset: CGFloat
-            if #available(iOS 11, *){
-                topInset = 0
-                bottomInset = hidden ? 0 : assetCollectorViewController.viewHeight
-            } else {
-                topInset =  welf?.navigationController?.navigationBar.frame.maxY ?? 0
-                bottomInset = assetCollectorViewController.view.frame.height - assetCollectorViewController.view.transform.ty
-            }
-            welf?.collectionView?.contentInset = UIEdgeInsets(top: topInset, left: 0, bottom: bottomInset, right: 0)
+            welf?.setupInsetsForCollector(assetCollectorViewController, status: hidden ? .off : .on)
         }
     }
     

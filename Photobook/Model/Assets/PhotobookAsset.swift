@@ -106,4 +106,14 @@ import Photos
     @objc public convenience init(withDataSource dataSource: AssetDataSource, size: CGSize, date: Date? = nil) {
         self.init(asset: CustomAsset(dataSource: dataSource, size: size, date: date))!
     }
+    
+    override public func isEqual(_ object: Any?) -> Bool {
+        if let asset = object as? PhotobookAsset {
+            if self.phAsset != nil || asset.phAsset != nil {
+                return self.identifier == asset.identifier
+            }
+            return self.identifier == asset.identifier && self.albumIdentifier == asset.albumIdentifier
+        }
+        return false
+    }
 }
