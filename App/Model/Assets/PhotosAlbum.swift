@@ -135,7 +135,7 @@ class PhotosAlbum: Album, Codable {
         insertedObjects = insertedObjects.filter { !assets.contains($0) }
         
         var removedObjects = changeDetails.removedObjects.map { PhotobookAsset(withPHAsset: $0, albumIdentifier: identifier)  }
-        removedObjects = insertedObjects.filter { assets.contains($0) }
+        removedObjects = removedObjects.filter { assets.contains($0) }
         
         return (insertedObjects, removedObjects)
     }
