@@ -215,29 +215,29 @@ class AssetPickerCollectionViewController: UICollectionViewController {
             let albumsChanges = notification.object as? [AlbumChange]
             else { return }
         
-        for albumChange in albumsChanges {
-            if albumChange.albumIdentifier == self.album.identifier {
-                var indexPathsInserted = [IndexPath]()
-                for assetInserted in albumChange.assetsInserted {
-                    if let index = self.album.assets.index(where: { $0.identifier == assetInserted.identifier }) {
-                        indexPathsInserted.append(IndexPath(item: index, section: 0))
-                    }
-                }
-                
-                var indexPathsRemoved = [IndexPath]()
-                for indexRemoved in albumChange.indexesRemoved {
-                    indexPathsRemoved.append(IndexPath(item: indexRemoved, section: 0))
-                }
-                
-                collectionView.performBatchUpdates({
-                    collectionView.deleteItems(at: indexPathsRemoved)
-                    collectionView.insertItems(at: indexPathsInserted)
-                    collectionView.reloadSections(IndexSet(integer: 1))
-                }, completion: nil)
-                
-                break
+        guard let albumChange = albumsChanges.first(where: { $0.albumIdentifier == album.identifier }) else { return }
+        
+        guard (album.assets.count - albumChange.assetsInserted.count + albumChange.assetsRemoved.count) == collectionView.numberOfItems(inSection: 0) else {
+            return
+        }
+        
+        var indexPathsInserted = [IndexPath]()
+        for assetInserted in albumChange.assetsInserted {
+            if let index = self.album.assets.index(where: { $0.identifier == assetInserted.identifier }) {
+                indexPathsInserted.append(IndexPath(item: index, section: 0))
             }
         }
+        
+        var indexPathsRemoved = [IndexPath]()
+        for indexRemoved in albumChange.indexesRemoved {
+            indexPathsRemoved.append(IndexPath(item: indexRemoved, section: 0))
+        }
+        
+        collectionView.performBatchUpdates({
+            collectionView.deleteItems(at: indexPathsRemoved)
+            collectionView.insertItems(at: indexPathsInserted)
+            collectionView.reloadSections(IndexSet(integer: 1))
+        }, completion: nil)
     }
     
     @IBAction func unwindToThisView(withUnwindSegue unwindSegue: UIStoryboardSegue) {}
