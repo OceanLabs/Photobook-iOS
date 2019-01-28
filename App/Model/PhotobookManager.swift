@@ -136,18 +136,23 @@ class PhotobookManager: NSObject {
                 selectedNavigationController.pushViewController(checkoutViewController, animated: true)
             }
         }) {
-            let selectedNavigationController = tabBarController.viewControllers?.first as! UINavigationController
-            selectedNavigationController.pushViewController(photobookViewController, animated: false)
+            removeStoriesTabIfNeeded(tabBarController) {
+                let selectedNavigationController = tabBarController.viewControllers?.first as! UINavigationController
+                selectedNavigationController.pushViewController(photobookViewController, animated: false)
+            }
+            return
         }
+        removeStoriesTabIfNeeded(tabBarController)
     }
     
     var storiesTabAvailable = true
-    private func removeStoriesTabIfNeeded(_ tabBarController: UITabBarController) {
+    private func removeStoriesTabIfNeeded(_ tabBarController: UITabBarController, completionHandler: (()->())? = nil) {
         StoriesManager.shared.loadTopStories(completionHandler: { [weak welf = self] in
             if StoriesManager.shared.stories.isEmpty {
                 tabBarController.viewControllers?.remove(at: Tab.stories.rawValue)
                 welf?.storiesTabAvailable = false
             }
+            completionHandler?()
         })
     }
     
@@ -155,7 +160,6 @@ class PhotobookManager: NSObject {
         var photobookDelegate: PhotobookDelegate?
         
         guard let selectedAssetsManager = AssetDataSourceBackupManager.shared.restoreBackup() else {
-            removeStoriesTabIfNeeded(tabBarController)
             return nil
         }
         
@@ -168,7 +172,6 @@ class PhotobookManager: NSObject {
                 photobookDelegate = firstViewController as? PhotobookDelegate
             }
         }
-        removeStoriesTabIfNeeded(tabBarController)
         
         return photobookDelegate
     }
