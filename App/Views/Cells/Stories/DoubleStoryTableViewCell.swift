@@ -36,6 +36,7 @@ class DoubleStoryTableViewCell: StoryTableViewCell {
 
     @IBOutlet private weak var secondTitleLabel: UILabel!
     @IBOutlet private weak var secondDatesLabel: UILabel!
+    @IBOutlet private weak var secondSelectedCountLabel: UILabel!
     @IBOutlet weak var secondCoverImageView: UIImageView!
     @IBOutlet weak var secondContainerView: UIView!
     @IBOutlet weak var secondOverlayView: UIView!
@@ -47,6 +48,16 @@ class DoubleStoryTableViewCell: StoryTableViewCell {
         }
     }
     var secondDates: String? { didSet { secondDatesLabel.text = secondDates } }
+    var secondCount: Int? {
+        didSet {
+            guard secondCount != nil && secondCount! > 0 else {
+                secondSelectedCountLabel.isHidden = true
+                return
+            }
+            secondSelectedCountLabel.isHidden = false
+            secondSelectedCountLabel.text = "\(secondCount!)"
+        }
+    }
     
     @IBAction func tappedSecondStory(_ sender: UIButton) {
         guard let storyIndex = storyIndex else {

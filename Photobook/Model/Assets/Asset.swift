@@ -110,6 +110,36 @@ extension Asset {
     var isLandscape: Bool {
         return size.width > size.height
     }
+    
+    func data() throws -> Data {
+        var data: Data
+        if let asset = self as? PhotosAsset {
+            data = try PropertyListEncoder().encode(asset)
+        } else if let asset = self as? URLAsset {
+            data = try PropertyListEncoder().encode(asset)
+        } else if let asset = self as? ImageAsset {
+            data = try PropertyListEncoder().encode(asset)
+        } else if let asset = self as? PhotosAssetMock {
+            data = try PropertyListEncoder().encode(asset)
+        } else {
+            throw AssetLoadingException.unsupported(details: "Asset: Could not convert to data")
+        }
+        return data
+    }
+    
+    static func asset(from data: Data) throws -> Asset {
+        if let asset = try? PropertyListDecoder().decode(URLAsset.self, from: data) {
+            return asset
+        } else if let asset = try? PropertyListDecoder().decode(ImageAsset.self, from: data) {
+            return asset
+        } else if let asset = try? PropertyListDecoder().decode(PhotosAsset.self, from: data) { // Keep the PhotosAsset case last because otherwise it triggers NSPhotoLibraryUsageDescription crash if not present, which might not be needed
+            return asset
+        } else if let asset = try? PropertyListDecoder().decode(PhotosAssetMock.self, from: data) {
+            return asset
+        } else {
+            throw AssetLoadingException.unsupported(details: "From(data:): Decoding of asset failed")
+        }
+    }
 }
 
 func ==(lhs: Asset, rhs: Asset) -> Bool{

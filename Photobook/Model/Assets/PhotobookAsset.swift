@@ -31,7 +31,7 @@ import UIKit
 import Photos
 
 /// Represents a photo to be used in a photo book
-@objc public final class PhotobookAsset: NSObject {
+@objc public final class PhotobookAsset: NSObject, Codable {
     
     var asset: Asset
     init?(asset: Asset?) {
@@ -60,6 +60,26 @@ import Photos
         return photobookAssets.map { $0.asset }
     }
     
+    enum CodingKeys: String, CodingKey {
+        case asset
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        let data: Data = try asset.data()
+        try container.encode(data, forKey: .asset)
+    }
+    
+    public required convenience init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        
+        guard let data = try values.decodeIfPresent(Data.self, forKey: .asset) else {
+            throw AssetLoadingException.notFound
+        }
+        let asset = try PhotosAsset.asset(from: data) // PhotosAsset is needed to call the static method in Asset
+        self.init(asset: asset)!
+    }
+
     /// Creates a PhotobookAsset using a Photos Library asset
     ///
     /// - Parameters:
@@ -105,5 +125,15 @@ import Photos
     ///   - date: Date for the PhotobookAsset
     @objc public convenience init(withDataSource dataSource: AssetDataSource, size: CGSize, date: Date? = nil) {
         self.init(asset: CustomAsset(dataSource: dataSource, size: size, date: date))!
+    }
+
+    override public func isEqual(_ object: Any?) -> Bool {
+        if let asset = object as? PhotobookAsset {
+            if self.phAsset != nil || asset.phAsset != nil {
+                return self.identifier == asset.identifier
+            }
+            return self.identifier == asset.identifier && self.albumIdentifier == asset.albumIdentifier
+        }
+        return false
     }
 }

@@ -49,7 +49,6 @@ class Story: Codable {
     var score = 0
     var assets = [PhotobookAsset]()
     var hasMoreAssetsToLoad = false
-    var hasPerformedAutoSelection = false
     
     // Ability to set locale in Unit Tests
     lazy var locale = Locale.current

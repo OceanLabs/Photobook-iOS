@@ -31,7 +31,7 @@ import UIKit
 import Photos
 import Photobook
 
-class SelectedAssetsManager: NSObject {
+class SelectedAssetsManager: NSObject, Codable {
     
     static let notificationUserObjectKeyAssets = "assets"
     static let notificationUserObjectKeyIndices = "indices"
@@ -41,6 +41,10 @@ class SelectedAssetsManager: NSObject {
     
     private(set) var selectedAssets = [PhotobookAsset]()
     
+    private enum CodingKeys: String, CodingKey {
+        case selectedAssets
+    }
+
     override init() {
         super.init()
         
@@ -55,8 +59,18 @@ class SelectedAssetsManager: NSObject {
         NotificationCenter.default.removeObserver(self)
     }
     
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(selectedAssets, forKey: .selectedAssets)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        selectedAssets = try values.decode([PhotobookAsset].self, forKey: .selectedAssets)
+    }
+    
     private func selectedAssets(for album: Album) -> [PhotobookAsset] {
-        return selectedAssets.filter { $0.albumIdentifier == album.identifier }
+        return album.assets.filter { albumAsset in selectedAssets.contains(albumAsset) }
     }
     
     func select(_ asset: PhotobookAsset) {
@@ -88,7 +102,9 @@ class SelectedAssetsManager: NSObject {
             addedIndices.append(selectedAssets.count-1)
         }
 
-        NotificationCenter.default.post(name: SelectedAssetsManager.notificationNameSelected, object: self, userInfo: [SelectedAssetsManager.notificationUserObjectKeyAssets:addedAssets, SelectedAssetsManager.notificationUserObjectKeyIndices:addedIndices])
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: SelectedAssetsManager.notificationNameSelected, object: self, userInfo: [SelectedAssetsManager.notificationUserObjectKeyAssets:addedAssets, SelectedAssetsManager.notificationUserObjectKeyIndices:addedIndices])
+        }
     }
     
     func deselect(_ asset: PhotobookAsset) {
