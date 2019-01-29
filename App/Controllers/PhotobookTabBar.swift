@@ -56,6 +56,15 @@ class PhotobookTabBar: UITabBar {
         effectView?.frame = bounds
     }
     
+    deinit {
+        // Taken from https://stackoverflow.com/a/50920090
+        if let tabChangeObserver = tabChangeObserver {
+            tabChangeObserver.invalidate()
+            removeObserver(tabChangeObserver, forKeyPath: "selectedItem")
+            self.tabChangeObserver = nil
+        }
+    }
+    
     func setup() {
         let effectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
         self.effectView = effectView
