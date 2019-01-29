@@ -129,8 +129,6 @@ class PhotobookManager: NSObject {
                 (viewController, success) in
                 
                 guard success else {
-                    AssetDataSourceBackupManager.shared.deleteBackup()
-                    
                     if let tabBar = viewController.tabBarController?.tabBar {
                         tabBar.isHidden = false
                     }
@@ -211,8 +209,6 @@ class PhotobookManager: NSObject {
             (viewController, success) in
             
             guard success else {
-                AssetDataSourceBackupManager.shared.deleteBackup()
-                
                 if let tabBar = viewController.tabBarController?.tabBar {
                     tabBar.isHidden = false
                 }

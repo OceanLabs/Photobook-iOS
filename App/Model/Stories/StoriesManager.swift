@@ -115,9 +115,9 @@ class StoriesManager: NSObject {
         }
     }
     
-    func prepare(story: Story, completionHandler:@escaping () -> Void) {
+    func prepare(story: Story, completionHandler: @escaping () -> Void) {
         DispatchQueue.global(qos: .default).async {
-            story.loadAssets(completionHandler: { [weak welf = self] _ in
+            story.loadAssets(completionHandler: { _ in
                 DispatchQueue.main.async {
                     completionHandler()
                 }
