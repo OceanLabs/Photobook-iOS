@@ -31,7 +31,7 @@ import UIKit
 import Photobook
 
 /// View Controller to show albums. It doesn't care about the source of those albums as long as they conform to the Album protocol.
-class AlbumsCollectionViewController: UICollectionViewController {
+class AlbumsCollectionViewController: UICollectionViewController, Collectable {
     
     private struct Constants {
         static let loadingCellReuseIdentifier = "LoadingCell"
@@ -46,7 +46,7 @@ class AlbumsCollectionViewController: UICollectionViewController {
     private let marginBetweenAlbums: CGFloat = 20
     
     lazy var albumManager: AlbumManager = PhotosAlbumManager()
-    lazy var selectedAssetsManager: SelectedAssetsManager = PhotobookManager.shared.selectedAssetsManager
+    var selectedAssetsManager: SelectedAssetsManager!
     var assets: [PhotobookAsset]!
     
     private var accountManager: AccountClient?
@@ -438,5 +438,3 @@ extension AlbumsCollectionViewController: AssetPickerCollectionViewControllerDel
         return tabBarController
     }
 }
-
-extension AlbumsCollectionViewController: Collectable {}

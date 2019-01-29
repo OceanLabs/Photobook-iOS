@@ -664,6 +664,5 @@ private extension UICollectionView {
 extension AssetPickerCollectionViewController: AssetPickerCollectionViewControllerDelegate {
     func viewControllerForPresentingOn() -> UIViewController? {
         return tabBarController
-    }
-    
+    }    
 }

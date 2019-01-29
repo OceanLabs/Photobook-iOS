@@ -38,7 +38,8 @@ class InstagramLoginViewController: UIViewController {
     private lazy var emptyScreenViewController: EmptyScreenViewController = {
         return EmptyScreenViewController.emptyScreen(parent: self)
     }()
-
+    var selectedAssetsManager: SelectedAssetsManager!
+    
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     
     override func viewDidLoad() {
@@ -79,6 +80,7 @@ class InstagramLoginViewController: UIViewController {
             success: { [weak welf = self] credential, response, parameters in
                 KeychainSwift().set(credential.oauthToken, forKey: InstagramClient.Constants.keychainInstagramTokenKey)
                 let instagramAssetPicker = AssetPickerCollectionViewController.instagramAssetPicker()
+                instagramAssetPicker.selectedAssetsManager = welf?.selectedAssetsManager
                 instagramAssetPicker.delegate = instagramAssetPicker
                 welf?.navigationController?.setViewControllers([instagramAssetPicker], animated: false)
         }, failure: { [weak welf = self] error in

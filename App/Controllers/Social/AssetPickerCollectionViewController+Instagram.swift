@@ -34,7 +34,6 @@ extension AssetPickerCollectionViewController {
     static func instagramAssetPicker() -> AssetPickerCollectionViewController{
         let assetPicker = mainStoryboard.instantiateViewController(withIdentifier: "AssetPickerCollectionViewController") as! AssetPickerCollectionViewController
         assetPicker.album = InstagramAlbum()
-        assetPicker.selectedAssetsManager = SelectedAssetsManager()
         assetPicker.prepareToHandleLogout(accountManager: InstagramClient.shared)
         InstagramClient.shared.authorizeURLHandler = assetPicker
         
