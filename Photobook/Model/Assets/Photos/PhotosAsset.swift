@@ -49,7 +49,7 @@ import Photos
 class PhotosAsset: Asset {
     
     /// Photo library asset
-    var photosAsset: PHAsset {
+    var photosAsset: PHAsset! {
         didSet {
             identifier = photosAsset.localIdentifier
         }
@@ -74,7 +74,10 @@ class PhotosAsset: Asset {
         return photosAsset.creationDate
     }
 
-    var size: CGSize { return CGSize(width: photosAsset.pixelWidth, height: photosAsset.pixelHeight) }
+    var size: CGSize {
+        guard photosAsset != nil else { return .zero }
+        return CGSize(width: photosAsset.pixelWidth, height: photosAsset.pixelHeight)
+    }
     var uploadUrl: String?
     
     /// Init
@@ -89,6 +92,10 @@ class PhotosAsset: Asset {
     }
     
     func image(size: CGSize, loadThumbnailFirst: Bool = true, progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (UIImage?, Error?) -> Void) {
+        guard photosAsset != nil else {
+            completionHandler(nil, AssetLoadingException.notFound)
+            return
+        }
         
         // Request the image at the correct aspect ratio
         var imageSize = self.size.resizeAspectFill(size)
@@ -110,7 +117,11 @@ class PhotosAsset: Asset {
     }
     
     func imageData(progressHandler: ((Int64, Int64) -> Void)?, completionHandler: @escaping (Data?, AssetDataFileExtension, Error?) -> Void) {
-        
+        guard photosAsset != nil else {
+            completionHandler(nil, .unsupported, AssetLoadingException.notFound)
+            return
+        }
+
         if photosAsset.mediaType != .image {
             completionHandler(nil, .unsupported, AssetLoadingException.unsupported(details: "Photos imageData: Not an image type"))
             return
@@ -179,11 +190,9 @@ class PhotosAsset: Asset {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         
         let assetId = try values.decode(String.self, forKey: .identifier)
-        guard let asset = PhotosAsset.assetManager.fetchAsset(withLocalIdentifier: assetId, options: nil) else {
-            throw AssetLoadingException.notFound
+        if let asset = PhotosAsset.assetManager.fetchAsset(withLocalIdentifier: assetId, options: nil) {
+            photosAsset = asset
         }
-        
-        photosAsset = asset
         identifier = assetId
         albumIdentifier = try values.decodeIfPresent(String.self, forKey: .albumIdentifier)
         uploadUrl = try values.decodeIfPresent(String.self, forKey: .uploadUrl)        

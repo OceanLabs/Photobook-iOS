@@ -88,17 +88,8 @@ class PhotobookProductBackup: Codable {
         try container.encode(product, forKey: .product)
         
         // Encode assets
-        var assetsData: Data? = nil
-        if let assets = assets as? [PhotosAsset] {
-            assetsData = try PropertyListEncoder().encode(assets)
-        } else if let assets = assets as? [URLAsset] {
-            assetsData = try PropertyListEncoder().encode(assets)
-        } else if let assets = assets as? [ImageAsset] {
-            assetsData = try PropertyListEncoder().encode(assets)
-        } else if let assets = assets as? [PhotosAssetMock] {
-            assetsData = try PropertyListEncoder().encode(assets)
-        }
-        try container.encode(assetsData, forKey: .assets)
+        let photobookAssets = PhotobookAsset.photobookAssets(with: assets)
+        try container.encode(photobookAssets, forKey: .assets)
     }
     
     required convenience init(from decoder: Decoder) throws {
@@ -107,17 +98,7 @@ class PhotobookProductBackup: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         
         product = try? values.decode(PhotobookProduct.self, forKey: .product)
-        
-        if let assetsData = try values.decodeIfPresent(Data.self, forKey: .assets) {
-            if let loadedAsset = try? PropertyListDecoder().decode([URLAsset].self, from: assetsData) {
-                assets = loadedAsset
-            } else if let loadedAsset = try? PropertyListDecoder().decode([ImageAsset].self, from: assetsData) {
-                assets = loadedAsset
-            } else if let loadedAsset = try? PropertyListDecoder().decode([PhotosAsset].self, from: assetsData) { // Keep the PhotosAsset case last because otherwise it triggers NSPhotoLibraryUsageDescription crash if not present, which might not be needed
-                assets = loadedAsset
-            } else if let loadedAsset = try? PropertyListDecoder().decode([PhotosAssetMock].self, from: assetsData) {
-                assets = loadedAsset
-            }
-        }
+        let photobookAssets = try values.decode([PhotobookAsset].self, forKey: .assets)
+        assets = PhotobookAsset.assets(from: photobookAssets)
     }
 }
