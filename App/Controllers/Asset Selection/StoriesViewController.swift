@@ -31,7 +31,7 @@ import UIKit
 import Photos
 import Photobook
 
-class StoriesViewController: UIViewController {
+class StoriesViewController: UIViewController, Collectable {
 
     private struct Constants {
         static let storiesInHeader = 6
@@ -52,7 +52,7 @@ class StoriesViewController: UIViewController {
     }
     
     var collectorMode: AssetCollectorMode = .selecting
-    lazy var selectedAssetsManager: SelectedAssetsManager = PhotobookManager.shared.selectedAssetsManager
+    var selectedAssetsManager: SelectedAssetsManager!
     weak var addingDelegate: PhotobookAssetAddingDelegate?
     
     private var openingStory = false
@@ -286,5 +286,3 @@ extension StoriesViewController: PhotobookDelegate {
         return modalAlbumsCollectionViewController
     }
 }
-
-extension StoriesViewController: Collectable {}

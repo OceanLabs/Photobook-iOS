@@ -66,7 +66,8 @@ class SelectedAssetsManager: NSObject, Codable {
     
     required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        selectedAssets = try values.decode([PhotobookAsset].self, forKey: .selectedAssets)
+        let allDecodedAssets = try values.decode([PhotobookAsset].self, forKey: .selectedAssets)
+        selectedAssets = allDecodedAssets.filter { $0.size != .zero }
     }
     
     private func selectedAssets(for album: Album) -> [PhotobookAsset] {

@@ -36,7 +36,7 @@ struct AssetPickerNotificationName {
 
 protocol Collectable {
     var collectorMode: AssetCollectorMode { get set }
-    var selectedAssetsManager: SelectedAssetsManager { get set }
+    var selectedAssetsManager: SelectedAssetsManager! { get set }
     var addingDelegate: PhotobookAssetAddingDelegate? { get set }
 }
 

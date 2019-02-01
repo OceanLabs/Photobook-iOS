@@ -76,8 +76,10 @@ class ProductLayoutAsset: Codable {
         try container.encode(transform, forKey: .transform)
         try container.encode(containerSize, forKey: .containerSize)
 
-        let data: Data? = try asset?.data()
-        try container.encode(data, forKey: .asset)
+        do {
+            let data = try asset?.data()
+            try container.encode(data, forKey: .asset)
+        } catch {}
     }
     
     required convenience init(from decoder: Decoder) throws {
@@ -88,10 +90,12 @@ class ProductLayoutAsset: Codable {
         transform = try values.decode(CGAffineTransform.self, forKey: .transform)
         containerSize = try values.decodeIfPresent(CGSize.self, forKey: .containerSize)
 
-        guard let data = try values.decodeIfPresent(Data.self, forKey: .asset) else {
-            throw AssetLoadingException.notFound
-        }
-        asset = try PhotosAsset.asset(from: data) // PhotosAsset is needed to call the static method in Asset
+        do {
+            if let data = try values.decodeIfPresent(Data.self, forKey: .asset) {
+                asset = try PhotosAsset.asset(from: data) // PhotosAsset is needed to call the static method in Asset
+            }
+        } catch {}
+        asset = asset?.size != .zero ? asset : nil
     }
     
     func adjustTransform() {

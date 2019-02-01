@@ -30,10 +30,22 @@
 import UIKit
 import KeychainSwift
 import OAuthSwift
+import Photobook
 
-class InstagramLandingViewController: UIViewController {
+class InstagramLandingViewController: UIViewController, Collectable {
+    
+    var collectorMode: AssetCollectorMode = .selecting
+    var selectedAssetsManager: SelectedAssetsManager!
+    var addingDelegate: PhotobookAssetAddingDelegate?
+    
 
     @IBOutlet weak var instagramLogoCenterYConstraint: NSLayoutConstraint!
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let loginViewController = segue.destination as? InstagramLoginViewController {
+            loginViewController.selectedAssetsManager = selectedAssetsManager
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +58,10 @@ class InstagramLandingViewController: UIViewController {
             }
             
             let instagramAssetPicker = AssetPickerCollectionViewController.instagramAssetPicker()
+            instagramAssetPicker.collectorMode = collectorMode
+            instagramAssetPicker.selectedAssetsManager = selectedAssetsManager
             instagramAssetPicker.delegate = instagramAssetPicker
+            instagramAssetPicker.addingDelegate = addingDelegate
             
             // Animated: needs to be true or else it won't show the title
             navigationController?.setViewControllers([instagramAssetPicker], animated: true)
@@ -57,5 +72,4 @@ class InstagramLandingViewController: UIViewController {
             instagramLogoCenterYConstraint.constant = -(navigationController.navigationBar.frame.height / 2.0)
         }
     }
-
 }

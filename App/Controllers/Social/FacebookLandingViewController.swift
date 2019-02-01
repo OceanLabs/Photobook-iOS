@@ -29,8 +29,13 @@
 
 import UIKit
 import FBSDKLoginKit
+import Photobook
 
-class FacebookLandingViewController: UIViewController {
+class FacebookLandingViewController: UIViewController, Collectable {
+    
+    var collectorMode: AssetCollectorMode = .selecting
+    var selectedAssetsManager: SelectedAssetsManager!
+    var addingDelegate: PhotobookAssetAddingDelegate?
     
     @IBOutlet weak var facebookLogoCenterYConstraint: NSLayoutConstraint!
     
@@ -45,11 +50,8 @@ class FacebookLandingViewController: UIViewController {
                 view.isHidden = true
             }
             
-            let facebookAssetPicker = AlbumsCollectionViewController.facebookAlbumsCollectionViewController()
-            facebookAssetPicker.assetPickerDelegate = facebookAssetPicker
-            
             // Animated: needs to be true or else it won't show the title
-            navigationController?.setViewControllers([facebookAssetPicker], animated: true)
+            navigationController?.setViewControllers([albumsViewController()], animated: true)
             
             return
         } 
@@ -64,11 +66,18 @@ class FacebookLandingViewController: UIViewController {
             if let error = error {
                 welf?.present(UIAlertController(errorMessage: ErrorMessage(error)), animated: true, completion: nil)
                 return
-            } else if let result = result, !result.isCancelled {
-                let facebookAlbumsCollectionViewController = AlbumsCollectionViewController.facebookAlbumsCollectionViewController()
-                facebookAlbumsCollectionViewController.assetPickerDelegate = facebookAlbumsCollectionViewController
-                welf?.navigationController?.setViewControllers([facebookAlbumsCollectionViewController], animated: false)
+            } else if let result = result, !result.isCancelled, let viewController = welf?.albumsViewController() {
+                welf?.navigationController?.setViewControllers([viewController], animated: false)
             }
         })
+    }
+    
+    private func albumsViewController() -> AlbumsCollectionViewController {
+        let facebookAlbumsCollectionViewController = AlbumsCollectionViewController.facebookAlbumsCollectionViewController()
+        facebookAlbumsCollectionViewController.collectorMode = collectorMode
+        facebookAlbumsCollectionViewController.selectedAssetsManager = selectedAssetsManager
+        facebookAlbumsCollectionViewController.assetPickerDelegate = facebookAlbumsCollectionViewController
+        facebookAlbumsCollectionViewController.addingDelegate = addingDelegate
+        return facebookAlbumsCollectionViewController
     }
 }

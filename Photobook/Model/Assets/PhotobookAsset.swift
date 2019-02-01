@@ -42,6 +42,7 @@ import Photos
     @objc public var identifier: String { return asset.identifier }
     @objc public var albumIdentifier: String? { return asset.albumIdentifier }
     @objc public var date: Date? { return asset.date }
+    @objc public var size: CGSize { return asset.size }
     @objc public var uploadUrl: String? { return asset.uploadUrl }
     @objc public var phAsset: PHAsset? {
         guard let photoAsset = asset as? PhotosAsset else { return nil }
