@@ -201,6 +201,8 @@ class AssetPickerCollectionViewController: UICollectionViewController {
             assetCollectorController = AssetCollectorViewController.instance(fromStoryboardWithParent: self, selectedAssetsManager: manager, delayAppearance: delayCollectorAppearance)
             assetCollectorController.mode = collectorMode
             assetCollectorController.delegate = self
+            
+            setupInsetsForCollector(assetCollectorController, status: manager.count > 0 ? .on : .off)
         }
     }
     
@@ -215,29 +217,29 @@ class AssetPickerCollectionViewController: UICollectionViewController {
             let albumsChanges = notification.object as? [AlbumChange]
             else { return }
         
-        for albumChange in albumsChanges {
-            if albumChange.albumIdentifier == self.album.identifier {
-                var indexPathsInserted = [IndexPath]()
-                for assetInserted in albumChange.assetsInserted {
-                    if let index = self.album.assets.index(where: { $0.identifier == assetInserted.identifier }) {
-                        indexPathsInserted.append(IndexPath(item: index, section: 0))
-                    }
-                }
-                
-                var indexPathsRemoved = [IndexPath]()
-                for indexRemoved in albumChange.indexesRemoved {
-                    indexPathsRemoved.append(IndexPath(item: indexRemoved, section: 0))
-                }
-                
-                collectionView.performBatchUpdates({
-                    collectionView.deleteItems(at: indexPathsRemoved)
-                    collectionView.insertItems(at: indexPathsInserted)
-                    collectionView.reloadSections(IndexSet(integer: 1))
-                }, completion: nil)
-                
-                break
+        guard let albumChange = albumsChanges.first(where: { $0.albumIdentifier == album.identifier }) else { return }
+        
+        guard (album.assets.count - albumChange.assetsInserted.count + albumChange.assetsRemoved.count) == collectionView.numberOfItems(inSection: 0) else {
+            return
+        }
+        
+        var indexPathsInserted = [IndexPath]()
+        for assetInserted in albumChange.assetsInserted {
+            if let index = self.album.assets.index(where: { $0.identifier == assetInserted.identifier }) {
+                indexPathsInserted.append(IndexPath(item: index, section: 0))
             }
         }
+        
+        var indexPathsRemoved = [IndexPath]()
+        for indexRemoved in albumChange.indexesRemoved {
+            indexPathsRemoved.append(IndexPath(item: indexRemoved, section: 0))
+        }
+        
+        collectionView.performBatchUpdates({
+            collectionView.deleteItems(at: indexPathsRemoved)
+            collectionView.insertItems(at: indexPathsInserted)
+            collectionView.reloadSections(IndexSet(integer: 1))
+        }, completion: nil)
     }
     
     @IBAction func unwindToThisView(withUnwindSegue unwindSegue: UIStoryboardSegue) {}
@@ -412,18 +414,22 @@ extension AssetPickerCollectionViewController: LogoutHandler {
 extension AssetPickerCollectionViewController: AssetCollectorViewControllerDelegate {
     // MARK: AssetCollectorViewControllerDelegate
     
+    func setupInsetsForCollector(_ collector: AssetCollectorViewController, status: ActiveState) {
+        let topInset: CGFloat
+        let bottomInset: CGFloat
+        if #available(iOS 11, *) {
+            topInset = 0
+            bottomInset = status == .off ? 0 : collector.viewHeight
+        } else {
+            topInset = navigationController?.navigationBar.frame.maxY ?? 0
+            bottomInset = collector.view.frame.height - collector.view.transform.ty
+        }
+        collectionView?.contentInset = UIEdgeInsets(top: topInset, left: 0, bottom: bottomInset, right: 0)
+    }
+    
     func actionsForAssetCollectorViewControllerHiddenStateChange(_ assetCollectorViewController: AssetCollectorViewController, willChangeTo hidden: Bool) -> () -> () {
         return { [weak welf = self] in
-            let topInset: CGFloat
-            let bottomInset: CGFloat
-            if #available(iOS 11, *){
-                topInset = 0
-                bottomInset = hidden ? 0 : assetCollectorViewController.viewHeight
-            } else {
-                topInset =  welf?.navigationController?.navigationBar.frame.maxY ?? 0
-                bottomInset = assetCollectorViewController.view.frame.height - assetCollectorViewController.view.transform.ty
-            }
-            welf?.collectionView?.contentInset = UIEdgeInsets(top: topInset, left: 0, bottom: bottomInset, right: 0)
+            welf?.setupInsetsForCollector(assetCollectorViewController, status: hidden ? .off : .on)
         }
     }
     

@@ -131,8 +131,12 @@ class PhotosAlbum: Album, Codable {
             let changeDetails = changeInstance.details(for: fetchedAssets)
         else { return (nil, nil) }
         
-        let insertedObjects = changeDetails.insertedObjects.map { PhotobookAsset(withPHAsset: $0, albumIdentifier: identifier)  }
-        let removedObjects = changeDetails.removedObjects.map { PhotobookAsset(withPHAsset: $0, albumIdentifier: identifier)  }
+        var insertedObjects = changeDetails.insertedObjects.map { PhotobookAsset(withPHAsset: $0, albumIdentifier: identifier)  }
+        insertedObjects = insertedObjects.filter { !assets.contains($0) }
+        
+        var removedObjects = changeDetails.removedObjects.map { PhotobookAsset(withPHAsset: $0, albumIdentifier: identifier)  }
+        removedObjects = removedObjects.filter { assets.contains($0) }
+        
         return (insertedObjects, removedObjects)
     }
 }

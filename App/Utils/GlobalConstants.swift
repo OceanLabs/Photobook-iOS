@@ -51,3 +51,7 @@ struct CommonLocalizedStrings {
         return NSLocalizedString("Generic/AccessError", value: "There was an error when trying to access \(serviceName)", comment: "Generic error when trying to access a social service eg Instagram/Facebook")
     }
 }
+
+enum ActiveState {
+    case on, off
+}

@@ -134,10 +134,7 @@ class SelectedAssetsManager: NSObject, Codable {
     }
     
     func isSelected(_ asset: PhotobookAsset) -> Bool {
-        let index = selectedAssets.index(where: { (selectedAsset) in
-            return selectedAsset == asset
-        })
-        
+        let index = selectedAssets.index(where: { $0 == asset })        
         return index != nil
     }
     
