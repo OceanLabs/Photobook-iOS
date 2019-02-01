@@ -58,6 +58,7 @@ class PhotobookTabBar: UITabBar {
     
     deinit {
         // Taken from https://stackoverflow.com/a/50920090
+        // FIXME: Follow up on fix https://github.com/apple/swift/pull/20103
         if let tabChangeObserver = tabChangeObserver {
             tabChangeObserver.invalidate()
             removeObserver(tabChangeObserver, forKeyPath: "selectedItem")
