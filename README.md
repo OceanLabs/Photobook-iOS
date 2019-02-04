@@ -18,7 +18,7 @@ To get started, you will need to have a free Kite developer account. Go to [kite
 ## Requirements
 
 * Xcode 10.0
-* iOS 9.0+ target deployment
+* iOS 10.0+ target deployment
 
 ## Installation
 
