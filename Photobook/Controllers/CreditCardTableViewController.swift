@@ -241,9 +241,7 @@ extension CreditCardTableViewController{
             cell.textField.returnKeyType = .next
             cell.textField.placeholder = "Required"
             cell.textField.isSecureTextEntry = false
-            if #available(iOS 10.0, *) {
-                cell.textField.textContentType = .creditCardNumber
-            }
+            cell.textField.textContentType = .creditCardNumber
             cell.topSeparator.isHidden = false
             cell.separatorLeadingConstraint.constant = Constants.leadingSeparatorInset
             cell.accessibilityIdentifier = "numberCell"

@@ -480,10 +480,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate,
         collectionView.deleteItems(at: [indexPath])
         
         if enableFeedback {
-            if #available(iOS 10.0, *) {
-                let generator = UIImpactFeedbackGenerator(style: .medium)
-                generator.impactOccurred()
-            } 
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.impactOccurred()
         }
     }
     
@@ -491,10 +489,8 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate,
         proposedDropIndexPath = indexPath
         collectionView.insertItems(at: [indexPath])
         
-        if #available(iOS 10.0, *) {
-            let generator = UIImpactFeedbackGenerator(style: .medium)
-            generator.impactOccurred()
-        }
+        let generator = UIImpactFeedbackGenerator(style: .medium)
+        generator.impactOccurred()
     }
     
     private func dropView() {
