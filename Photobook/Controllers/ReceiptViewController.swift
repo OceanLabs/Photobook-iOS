@@ -250,15 +250,8 @@ class ReceiptViewController: UIViewController {
     }
     
     func notificationsSetup() {
-        if #available(iOS 10.0, *) {
-            UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) { (success, error) in
-                // Don't care about the result
-            }
-        } else {
-            // iOS 9
-            let type: UIUserNotificationType = [UIUserNotificationType.badge, UIUserNotificationType.alert, UIUserNotificationType.sound]
-            let setting = UIUserNotificationSettings(types: type, categories: nil)
-            UIApplication.shared.registerUserNotificationSettings(setting)
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) { (success, error) in
+            // Don't care about the result
         }
     }
 }
@@ -325,24 +318,12 @@ extension ReceiptViewController: OrderProcessingDelegate {
             // Send local notification
             guard let title = notificationTitle, let body = notificationBody else { return }
             
-            if #available(iOS 10.0, *) {
-                let userNotification = UNMutableNotificationContent()
-                userNotification.title = title
-                userNotification.body = body
-                userNotification.badge = 1
-                let request = UNNotificationRequest(identifier: "ReceiptViewController.OrderProcessingFailed", content: userNotification, trigger: nil)
-                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-            } else {
-                // ios 9
-                let notification = UILocalNotification()
-                notification.alertTitle = title
-                notification.alertBody = body
-                notification.fireDate = Date()
-                notification.applicationIconBadgeNumber = 1
-                notification.soundName = UILocalNotificationDefaultSoundName
-                UIApplication.shared.cancelAllLocalNotifications()
-                UIApplication.shared.scheduleLocalNotification(notification)
-            }
+            let userNotification = UNMutableNotificationContent()
+            userNotification.title = title
+            userNotification.body = body
+            userNotification.badge = 1
+            let request = UNNotificationRequest(identifier: "ReceiptViewController.OrderProcessingFailed", content: userNotification, trigger: nil)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
 
             return
         }

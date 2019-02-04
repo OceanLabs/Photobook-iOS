@@ -248,9 +248,7 @@ class AddressTableViewController: UITableViewController {
         switch row {
         case .name:
             cell.label?.text = DetailsFieldLabels.name
-            if #available(iOS 10.0, *) {
-                cell.textField.textContentType = .givenName
-            }
+            cell.textField.textContentType = .givenName
             cell.textField.keyboardType = .default
             cell.textField.returnKeyType = .next
             cell.textField.autocapitalizationType = .words
@@ -261,9 +259,7 @@ class AddressTableViewController: UITableViewController {
             firstNameTextField.accessibilityIdentifier = "firstNameTextField"
         case .lastName:
             cell.label?.text = DetailsFieldLabels.lastName
-            if #available(iOS 10.0, *) {
-                cell.textField.textContentType = .familyName
-            }
+            cell.textField.textContentType = .familyName
             cell.textField.keyboardType = .default
             cell.textField.returnKeyType = .next
             cell.textField.autocapitalizationType = .words
@@ -273,9 +269,7 @@ class AddressTableViewController: UITableViewController {
             lastNameTextField.accessibilityIdentifier = "lastNameTextField"
         case .email:
             cell.label?.text = DetailsFieldLabels.email
-            if #available(iOS 10.0, *) {
-                cell.textField.textContentType = .emailAddress
-            }
+            cell.textField.textContentType = .emailAddress
             cell.textField.keyboardType = .emailAddress
             cell.textField.returnKeyType = .next
             cell.textField.autocapitalizationType = .none
@@ -287,9 +281,7 @@ class AddressTableViewController: UITableViewController {
         case .phone:
             cell.label?.text = DetailsFieldLabels.phone
             cell.message = Constants.phoneExplanation
-            if #available(iOS 10.0, *) {
-                cell.textField.textContentType = .telephoneNumber
-            }
+            cell.textField.textContentType = .telephoneNumber
             cell.textField.keyboardType = .phonePad
             cell.textField.returnKeyType = .next
             cell.textField.text = deliveryDetails.phone
@@ -301,9 +293,7 @@ class AddressTableViewController: UITableViewController {
             phoneTextField.accessibilityIdentifier = "phoneTextField"
         case .line1:
             cell.label?.text = DetailsFieldLabels.line1
-            if #available(iOS 10.0, *) {
-                cell.textField.textContentType = .streetAddressLine1
-            }
+            cell.textField.textContentType = .streetAddressLine1
             cell.textField.returnKeyType = .next
             cell.textField.text = deliveryDetails.line1
             line1TextField = cell.textField
@@ -311,9 +301,7 @@ class AddressTableViewController: UITableViewController {
             line1TextField.accessibilityLabel = cell.label?.text
         case .line2:
             cell.label?.text = DetailsFieldLabels.line2
-            if #available(iOS 10.0, *) {
-                cell.textField.textContentType = .streetAddressLine1
-            }
+            cell.textField.textContentType = .streetAddressLine1
             cell.textField.returnKeyType = .next
             cell.textField.text = deliveryDetails.line2
             cell.textField.placeholder = nil
@@ -322,9 +310,7 @@ class AddressTableViewController: UITableViewController {
             line2TextField.accessibilityLabel = cell.label?.text
         case .city:
             cell.label?.text = DetailsFieldLabels.city
-            if #available(iOS 10.0, *) {
-                cell.textField.textContentType = .addressCity
-            }
+            cell.textField.textContentType = .addressCity
             cell.textField.returnKeyType = .next
             cell.textField.text = deliveryDetails.city
             cityTextField = cell.textField
@@ -336,9 +322,7 @@ class AddressTableViewController: UITableViewController {
             } else {
                 cell.label?.text = DetailsFieldLabels.county
             }
-            if #available(iOS 10.0, *) {
-                cell.textField.textContentType = .addressState
-            }
+            cell.textField.textContentType = .addressState
             cell.textField.returnKeyType = .next
             cell.textField.text = deliveryDetails.stateOrCounty
             stateOrCountyTextField = cell.textField
@@ -350,9 +334,7 @@ class AddressTableViewController: UITableViewController {
             } else {
                 cell.label?.text = DetailsFieldLabels.postcode
             }
-            if #available(iOS 10.0, *) {
-                cell.textField.textContentType = .postalCode
-            }
+            cell.textField.textContentType = .postalCode
             cell.textField.returnKeyType = .done
             cell.textField.autocapitalizationType = .allCharacters
             cell.textField.text = deliveryDetails.zipOrPostcode

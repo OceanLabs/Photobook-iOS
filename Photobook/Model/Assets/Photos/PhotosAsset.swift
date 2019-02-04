@@ -157,14 +157,7 @@ class PhotosAsset: Asset {
                     return
                 }
                 
-                var tmpJpegData: Data?
-                if #available(iOS 10.0, *) {
-                    tmpJpegData = CIContext().jpegRepresentation(of: ciImage, colorSpace: CGColorSpaceCreateDeviceRGB(), options: [kCGImageDestinationLossyCompressionQuality as CIImageRepresentationOption : 0.8])
-                } else {
-                    tmpJpegData = UIImage(ciImage: ciImage).jpegData(compressionQuality: 0.8)
-                }
-                
-                if let jpegData = tmpJpegData {
+                if let jpegData = CIContext().jpegRepresentation(of: ciImage, colorSpace: CGColorSpaceCreateDeviceRGB(), options: [kCGImageDestinationLossyCompressionQuality as CIImageRepresentationOption : 0.8]) {
                     completionHandler(jpegData, .jpg, nil)
                 } else {
                     completionHandler(nil, .unsupported, AssetLoadingException.unsupported(details: "Photos imageData: Could not convert to JPG"))
