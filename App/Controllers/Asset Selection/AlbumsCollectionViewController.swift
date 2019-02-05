@@ -269,7 +269,10 @@ extension AlbumsCollectionViewController: LogoutHandler {
     
     func popToLandingScreen() {
         guard let accountManager = accountManager else { return }
-        let viewController = mainStoryboard.instantiateViewController(withIdentifier: accountManager.serviceName + "LandingViewController")
+        var viewController = mainStoryboard.instantiateViewController(withIdentifier: accountManager.serviceName + "LandingViewController") as! UIViewController & Collectable
+        viewController.collectorMode = collectorMode
+        viewController.selectedAssetsManager = selectedAssetsManager
+        viewController.addingDelegate = addingDelegate
         self.navigationController?.setViewControllers([viewController, self], animated: false)
         self.navigationController?.popViewController(animated: true)
     }
