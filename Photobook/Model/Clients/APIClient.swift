@@ -43,6 +43,7 @@ enum APIContext {
     case photobook
     case pig
     case kite
+    case stripe
 }
 
 /// Network client for all interaction with the API
@@ -91,6 +92,7 @@ class APIClient: NSObject {
         case .photobook: return "https://photobook-builder.herokuapp.com" //"https://staging-photobook-builder.herokuapp.com"
         case .pig: return "https://image.kite.ly/"
         case .kite: return "https://api.kite.ly/"
+        case .stripe: return "https://kite-stripe-ios-backend.herokuapp.com"
         }
     }
 

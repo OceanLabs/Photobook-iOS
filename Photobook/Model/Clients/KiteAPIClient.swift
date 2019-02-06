@@ -28,6 +28,7 @@
 //
 
 import UIKit
+import Stripe
 
 enum OrderSubmitStatus: String {
     case cancelled, error, paymentError, unknown, received, accepted, validated, processed
@@ -48,7 +49,7 @@ enum MimeType {
     }
 }
 
-class KiteAPIClient {
+class KiteAPIClient: NSObject {
     
     var apiKey: String?
     
@@ -62,6 +63,7 @@ class KiteAPIClient {
         static let cost = "/price"
         static let template = "/template"
         static let registrationRequest = "/asset/sign"
+        static let ephemeralKey = "/ephemeral_keys"
     }
     
     static let shared = KiteAPIClient()
@@ -312,6 +314,23 @@ class KiteAPIClient {
             }
             
             completionHandler(cost, nil)
+        }
+    }
+}
+
+extension KiteAPIClient: STPEphemeralKeyProvider {
+    
+    func createCustomerKey(withAPIVersion apiVersion: String, completion: @escaping STPJSONResponseCompletionBlock) {
+        
+        let parameters: [String: Any] = ["api_version": apiVersion]
+        APIClient.shared.post(context: .stripe, endpoint: Endpoints.ephemeralKey, parameters: parameters, headers: self.kiteHeaders) { response, error in
+            
+            guard error == nil else {
+                completion(nil, error)
+                return
+            }
+            
+            completion(response as? [AnyHashable: Any], nil)
         }
     }
 }
