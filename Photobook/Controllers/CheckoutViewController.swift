@@ -29,6 +29,7 @@
 
 import UIKit
 import PassKit
+import Stripe
 
 class CheckoutViewController: UIViewController {
     
@@ -175,6 +176,19 @@ class CheckoutViewController: UIViewController {
         emptyScreenViewController.show(message: Constants.loadingDetailsText, activity: true)
     }
     
+    private var paymentContext: STPPaymentContext?
+    
+    private func setUpStripe() {
+        guard let configuration = PaymentAuthorizationManager.stripeConfiguration else { return }
+        let customerContext = STPCustomerContext(keyProvider: KiteAPIClient.shared)
+        let paymentContext = STPPaymentContext(customerContext: customerContext,
+                                               configuration: configuration,
+                                               theme: .default())
+        paymentContext.prefilledInformation = STPUserInformation()
+        paymentContext.delegate = self
+        self.paymentContext = paymentContext
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -275,6 +289,9 @@ class CheckoutViewController: UIViewController {
         }
         
         order.updateCost(forceUpdate: forceCostUpdate, forceShippingMethodUpdate: forceShippingMethodsUpdate) { [weak welf = self] (error) in
+            if welf?.paymentContext == nil {
+                welf?.setUpStripe()
+            }
             
             OrderManager.shared.saveBasketOrder()
             
@@ -578,6 +595,7 @@ class CheckoutViewController: UIViewController {
         case Constants.segueIdentifierPaymentMethods:
             if let paymentMethodsViewController = segue.destination as? PaymentMethodsViewController {
                 paymentMethodsViewController.order = order
+                paymentMethodsViewController.paymentContext = paymentContext
             }
         case Constants.segueIdentifierAddressInput:
             if let addressTableViewController = segue.destination as? AddressTableViewController {
@@ -830,5 +848,24 @@ extension CheckoutViewController: AddressTableViewControllerDelegate {
     
     func addressTableViewControllerDidEdit() {
         navigationController?.popViewController(animated: true)
+    }
+}
+
+extension CheckoutViewController: STPPaymentContextDelegate {
+    
+    func paymentContextDidChange(_ paymentContext: STPPaymentContext) {
+        print("****** \(#function)")
+    }
+    
+    func paymentContext(_ paymentContext: STPPaymentContext, didFailToLoadWithError error: Error) {
+        print("****** \(#function)")
+    }
+    
+    func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
+        print("****** \(#function)")
+    }
+    
+    func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {
+        print("****** \(#function)")
     }
 }

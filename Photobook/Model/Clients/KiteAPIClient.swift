@@ -322,14 +322,13 @@ extension KiteAPIClient: STPEphemeralKeyProvider {
     
     func createCustomerKey(withAPIVersion apiVersion: String, completion: @escaping STPJSONResponseCompletionBlock) {
         
-        let parameters: [String: Any] = ["api_version": apiVersion]
-        APIClient.shared.post(context: .stripe, endpoint: Endpoints.ephemeralKey, parameters: parameters, headers: self.kiteHeaders) { response, error in
-            
+        let parameters = ["api_version": apiVersion]
+        
+        APIClient.shared.post(context: .stripe, endpoint: Endpoints.ephemeralKey, parameters: parameters, encoding: .raw) { response, error in
             guard error == nil else {
                 completion(nil, error)
                 return
             }
-            
             completion(response as? [AnyHashable: Any], nil)
         }
     }

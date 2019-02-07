@@ -37,6 +37,8 @@ class PaymentMethodsViewController: UIViewController {
     
     var order: Order!
     
+    var paymentContext: STPPaymentContext!
+    
     @IBOutlet weak var tableView: UITableView!
 
     private var selectedPaymentMethod: PaymentMethod? {
@@ -104,20 +106,18 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
             return cell
         case .creditCard where indexPath.item != availablePaymentMethods.count - 1: // Saved card
-            guard let card = Card.currentCard else { fallthrough }
+            guard let selectedMethod = paymentContext.selectedPaymentMethod else { fallthrough }
             
             let cell = tableView.dequeueReusableCell(withIdentifier: PaymentMethodTableViewCell.reuseIdentifier, for: indexPath) as! PaymentMethodTableViewCell
-            let method = card.numberMasked
-            cell.method = method
-            
-            cell.icon = card.cardIcon
+            cell.method = selectedMethod.label
+            cell.icon = selectedMethod.image
             
             let selected = selectedPaymentMethod != nil && selectedPaymentMethod == .creditCard
             cell.ticked = selected
             
             cell.separator.isHidden = true
             cell.accessibilityIdentifier = "creditCardCell"
-            cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + method
+            cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + selectedMethod.label
             cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
             return cell
         default:
@@ -149,7 +149,9 @@ extension PaymentMethodsViewController: UITableViewDelegate {
             
             selectedPaymentMethod = .creditCard
         default: // Add Payment Method
-            performSegue(withIdentifier: Constants.creditCardSegueName, sender: nil)
+            paymentContext.hostViewController = self
+            paymentContext.presentPaymentMethodsViewController()
+            //performSegue(withIdentifier: Constants.creditCardSegueName, sender: nil)
         }
         
         tableView.reloadData()

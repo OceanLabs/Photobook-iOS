@@ -46,6 +46,11 @@ enum APIContext {
     case stripe
 }
 
+enum APIParameterEncoding {
+    case raw
+    case json
+}
+
 /// Network client for all interaction with the API
 class APIClient: NSObject {
     
@@ -231,15 +236,14 @@ class APIClient: NSObject {
     
     // MARK: Generic dataTask handling
     
-    private func dataTask(context: APIContext, endpoint: String, parameters: [String : Any]?, headers: [String : String]?, method: HTTPMethod, completion: @escaping (AnyObject?, APIClientError?) -> ()) {
+    private func dataTask(context: APIContext, endpoint: String, parameters: [String : Any]?, headers: [String : String]?, method: HTTPMethod, encoding: APIParameterEncoding = .json, completion: @escaping (AnyObject?, APIClientError?) -> ()) {
         
         var request = URLRequest(url: URL(string: baseURLString(for: context) + endpoint)!)
         
         request.httpMethod = method.rawValue
-        
-        request.setValue("gzip", forHTTPHeaderField: "Accept-Encoding")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
+        request.setValue("gzip", forHTTPHeaderField: "Accept-Encoding")
+
         for header in headers ?? [:] {
             request.setValue(header.value, forHTTPHeaderField: header.key)
         }
@@ -266,11 +270,20 @@ class APIClient: NSObject {
                 request.url = components?.url
             }
         case .post:
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             
             if let parameters = parameters {
                 do {
-                    request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: [])
+                    if encoding == .json {
+                        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+                        request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: [])
+                    } else {
+                        var parameterStrings = [String]()
+                        for (key, value) in parameters {
+                            parameterStrings.append(key + "=\(value)")
+                        }
+                        let postString = parameterStrings.map { String($0) }.joined(separator: "&")
+                        request.httpBody = postString.data(using: .utf8)
+                    }
                 } catch let error {
                     print(error.localizedDescription)
                 }
@@ -321,15 +334,15 @@ class APIClient: NSObject {
     }
 
     // MARK: - Public methods
-    func post(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion:@escaping (AnyObject?, APIClientError?) -> ()) {
-        dataTask(context: context, endpoint: endpoint, parameters: parameters, headers: headers, method: .post, completion: completion)
+    func post(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, encoding: APIParameterEncoding = .json, completion: @escaping (AnyObject?, APIClientError?) -> ()) {
+        dataTask(context: context, endpoint: endpoint, parameters: parameters, headers: headers, method: .post, encoding: encoding, completion: completion)
     }
     
-    func get(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion:@escaping (AnyObject?, APIClientError?) -> ()) {
+    func get(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion: @escaping (AnyObject?, APIClientError?) -> ()) {
         dataTask(context: context, endpoint: endpoint, parameters: parameters, headers: headers, method: .get, completion: completion)
     }
     
-    func put(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion:@escaping (AnyObject?, APIClientError?) -> ()) {
+    func put(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion: @escaping (AnyObject?, APIClientError?) -> ()) {
         dataTask(context: context, endpoint: endpoint, parameters: parameters, headers: headers, method: .put, completion: completion)
     }
     

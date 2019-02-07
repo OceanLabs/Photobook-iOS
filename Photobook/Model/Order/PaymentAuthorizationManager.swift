@@ -103,6 +103,8 @@ class PaymentAuthorizationManager: NSObject {
     lazy var paymentApi: PaymentAPI = PhotobookStripeAPI()
     lazy var basketOrder: Order = OrderManager.shared.basketOrder
     
+    static var stripeConfiguration: STPPaymentConfiguration?
+    
     static var paypalApiKey: String? {
         didSet {
             guard OLPayPalWrapper.isPayPalAvailable(),
@@ -126,6 +128,19 @@ class PaymentAuthorizationManager: NSObject {
                 return
             }
             Stripe.setDefaultPublishableKey(stripeKey)
+            
+            let config = STPPaymentConfiguration.shared()
+            guard let stripePublicKey = PaymentAuthorizationManager.stripeKey else { return }
+            config.publishableKey = stripePublicKey
+            
+            if let applePayMerchantId = PaymentAuthorizationManager.applePayMerchantId {
+                config.appleMerchantIdentifier = applePayMerchantId
+            }
+            config.companyName = PaymentAuthorizationManager.applePayPayTo
+            config.requiredBillingAddressFields = .none
+            config.requiredShippingAddressFields = [.postalAddress, .phoneNumber]
+            //config.shippingType = .shipping
+            stripeConfiguration = config
         }
     }
     

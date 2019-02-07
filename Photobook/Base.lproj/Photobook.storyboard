@@ -3639,9 +3639,6 @@ Copyright © 2018 Kite. All rights reserved.</string>
                                                     <rect key="frame" x="16" y="5.5" width="166" height="33"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <state key="normal" title="Add Payment Method"/>
-                                                    <connections>
-                                                        <segue destination="KxV-LF-cPn" kind="show" identifier="CreditCardSegue" id="Po6-eq-Ys9"/>
-                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -4777,6 +4774,6 @@ Copyright © 2018 Kite. All rights reserved.</string>
         <image name="uploading-spinner" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="aiu-5L-PJL"/>
+        <segue reference="wx8-9F-NVL"/>
     </inferredMetricsTieBreakers>
 </document>
