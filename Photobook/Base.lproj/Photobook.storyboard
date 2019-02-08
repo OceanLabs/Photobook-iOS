@@ -3639,6 +3639,9 @@ Copyright © 2018 Kite. All rights reserved.</string>
                                                     <rect key="frame" x="16" y="5.5" width="166" height="33"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <state key="normal" title="Add Payment Method"/>
+                                                    <connections>
+                                                        <action selector="tappedAddPaymentMethod:" destination="eiW-1f-aeo" eventType="touchUpInside" id="ijX-dt-7Nn"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -3682,6 +3685,7 @@ Copyright © 2018 Kite. All rights reserved.</string>
         <!--CREDIT CARD-->
         <scene sceneID="Y6v-Dm-QPS">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tn5-Y0-f2z" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="KxV-LF-cPn" customClass="CreditCardTableViewController" customModule="Photobook" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="gr8-os-wnD">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
@@ -3786,7 +3790,6 @@ Copyright © 2018 Kite. All rights reserved.</string>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                 </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="tn5-Y0-f2z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3838" y="1594"/>
         </scene>

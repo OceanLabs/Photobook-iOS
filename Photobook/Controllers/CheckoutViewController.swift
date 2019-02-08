@@ -176,19 +176,6 @@ class CheckoutViewController: UIViewController {
         emptyScreenViewController.show(message: Constants.loadingDetailsText, activity: true)
     }
     
-    private var paymentContext: STPPaymentContext?
-    
-    private func setUpStripe() {
-        guard let configuration = PaymentAuthorizationManager.stripeConfiguration else { return }
-        let customerContext = STPCustomerContext(keyProvider: KiteAPIClient.shared)
-        let paymentContext = STPPaymentContext(customerContext: customerContext,
-                                               configuration: configuration,
-                                               theme: .default())
-        paymentContext.prefilledInformation = STPUserInformation()
-        paymentContext.delegate = self
-        self.paymentContext = paymentContext
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -289,8 +276,8 @@ class CheckoutViewController: UIViewController {
         }
         
         order.updateCost(forceUpdate: forceCostUpdate, forceShippingMethodUpdate: forceShippingMethodsUpdate) { [weak welf = self] (error) in
-            if welf?.paymentContext == nil {
-                welf?.setUpStripe()
+            if welf?.paymentManager.stripePaymentContext == nil {
+                welf?.paymentManager.setupStripePaymentContext()
             }
             
             OrderManager.shared.saveBasketOrder()
@@ -371,10 +358,10 @@ class CheckoutViewController: UIViewController {
         paymentMethodIconImageView.image = nil
         if let paymentMethod = order.paymentMethod {
             switch paymentMethod {
-            case .creditCard where Card.currentCard != nil:
-                let card = Card.currentCard!
-                paymentMethodIconImageView.image = card.cardIcon
-                paymentMethodView.accessibilityValue = card.number.cardType()?.stringValue()
+            case .creditCard where paymentManager.stripePaymentContext?.selectedPaymentMethod != nil:
+                let card = paymentManager.stripePaymentContext!.selectedPaymentMethod!
+                paymentMethodIconImageView.image = card.image
+                paymentMethodView.accessibilityValue = card.label
                 paymentMethodTitleLabel.text = Constants.payingWithText
             case .applePay:
                 paymentMethodIconImageView.image = UIImage(namedInPhotobookBundle: "apple-pay-method")
@@ -585,6 +572,8 @@ class CheckoutViewController: UIViewController {
         }
     }
     
+    private weak var paymentMethodsViewController: PaymentMethodsViewController?
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
         case Constants.receiptSegueName:
@@ -595,7 +584,8 @@ class CheckoutViewController: UIViewController {
         case Constants.segueIdentifierPaymentMethods:
             if let paymentMethodsViewController = segue.destination as? PaymentMethodsViewController {
                 paymentMethodsViewController.order = order
-                paymentMethodsViewController.paymentContext = paymentContext
+                paymentMethodsViewController.paymentManager = paymentManager
+                self.paymentMethodsViewController = paymentMethodsViewController
             }
         case Constants.segueIdentifierAddressInput:
             if let addressTableViewController = segue.destination as? AddressTableViewController {
@@ -759,6 +749,10 @@ extension CheckoutViewController: AmountPickerDelegate {
 
 extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
     
+    func paymentContextDidChange() {
+        paymentMethodsViewController?.reloadPaymentMethods()
+    }
+    
     func costUpdated() {
         updateViews()
     }
@@ -848,24 +842,5 @@ extension CheckoutViewController: AddressTableViewControllerDelegate {
     
     func addressTableViewControllerDidEdit() {
         navigationController?.popViewController(animated: true)
-    }
-}
-
-extension CheckoutViewController: STPPaymentContextDelegate {
-    
-    func paymentContextDidChange(_ paymentContext: STPPaymentContext) {
-        print("****** \(#function)")
-    }
-    
-    func paymentContext(_ paymentContext: STPPaymentContext, didFailToLoadWithError error: Error) {
-        print("****** \(#function)")
-    }
-    
-    func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
-        print("****** \(#function)")
-    }
-    
-    func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {
-        print("****** \(#function)")
     }
 }

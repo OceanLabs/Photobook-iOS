@@ -46,6 +46,7 @@ enum PaymentMethod: Int, Codable {
 
 protocol PaymentAuthorizationManagerDelegate: class {
     func costUpdated()
+    func paymentContextDidChange()
     func paymentAuthorizationDidFinish(token: String?, error: Error?, completionHandler: ((PKPaymentAuthorizationStatus) -> Void)?)
     func modalPresentationDidFinish()
     func modalPresentationWillBegin()
@@ -103,7 +104,7 @@ class PaymentAuthorizationManager: NSObject {
     lazy var paymentApi: PaymentAPI = PhotobookStripeAPI()
     lazy var basketOrder: Order = OrderManager.shared.basketOrder
     
-    static var stripeConfiguration: STPPaymentConfiguration?
+    var stripePaymentContext: STPPaymentContext?
     
     static var paypalApiKey: String? {
         didSet {
@@ -128,19 +129,6 @@ class PaymentAuthorizationManager: NSObject {
                 return
             }
             Stripe.setDefaultPublishableKey(stripeKey)
-            
-            let config = STPPaymentConfiguration.shared()
-            guard let stripePublicKey = PaymentAuthorizationManager.stripeKey else { return }
-            config.publishableKey = stripePublicKey
-            
-            if let applePayMerchantId = PaymentAuthorizationManager.applePayMerchantId {
-                config.appleMerchantIdentifier = applePayMerchantId
-            }
-            config.companyName = PaymentAuthorizationManager.applePayPayTo
-            config.requiredBillingAddressFields = .none
-            config.requiredShippingAddressFields = [.postalAddress, .phoneNumber]
-            //config.shippingType = .shipping
-            stripeConfiguration = config
         }
     }
     
@@ -150,21 +138,20 @@ class PaymentAuthorizationManager: NSObject {
     
     weak var delegate: (PaymentAuthorizationManagerDelegate & UIViewController)?
     
-    static var availablePaymentMethods: [PaymentMethod] {
+    var availablePaymentMethods: [PaymentMethod] {
         var methods = [PaymentMethod]()
         
         // Apple Pay
-        if isApplePayAvailable {
+        if PaymentAuthorizationManager.isApplePayAvailable {
             methods.append(.applePay)
         }
         
         // PayPal
-        if isPayPalAvailable {
+        if PaymentAuthorizationManager.isPayPalAvailable {
             methods.append(.payPal)
         }
         
-        // Existing card
-        if Card.currentCard != nil {
+        if stripePaymentContext?.selectedPaymentMethod != nil {
             methods.append(.creditCard)
         }
         
@@ -190,6 +177,25 @@ class PaymentAuthorizationManager: NSObject {
         case .creditCard:
             authorizeCreditCard(cost: cost)
         }
+    }
+
+    func setupStripePaymentContext() {
+        let config = STPPaymentConfiguration.shared()
+        guard let stripePublicKey = PaymentAuthorizationManager.stripeKey else { return }
+        
+        config.publishableKey = stripePublicKey
+        config.companyName = PaymentAuthorizationManager.applePayPayTo
+        config.requiredBillingAddressFields = .none
+        config.requiredShippingAddressFields = [.postalAddress, .phoneNumber]
+        config.canDeletePaymentMethods = true
+
+        let customerContext = STPCustomerContext(keyProvider: KiteAPIClient.shared)
+        let paymentContext = STPPaymentContext(customerContext: customerContext,
+                                               configuration: config,
+                                               theme: .default())
+        paymentContext.prefilledInformation = STPUserInformation()
+        paymentContext.delegate = self
+        stripePaymentContext = paymentContext
     }
     
     /// Ask Stripe for a charge authorization token
@@ -361,3 +367,23 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
     }
 
 }
+
+extension PaymentAuthorizationManager: STPPaymentContextDelegate {
+    
+    func paymentContextDidChange(_ paymentContext: STPPaymentContext) {
+        if stripePaymentContext?.selectedPaymentMethod != nil {
+            basketOrder.paymentMethod = .creditCard
+        }
+        delegate?.paymentContextDidChange()
+    }
+    
+    func paymentContext(_ paymentContext: STPPaymentContext, didFailToLoadWithError error: Error) {
+    }
+    
+    func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
+    }
+    
+    func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {
+    }
+}
+
