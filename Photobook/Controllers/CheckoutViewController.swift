@@ -749,7 +749,7 @@ extension CheckoutViewController: AmountPickerDelegate {
 
 extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
     
-    func paymentContextDidChange() {
+    func paymentAuthorizationManagerUpdatedDetails() {
         paymentMethodsViewController?.reloadPaymentMethods()
     }
     

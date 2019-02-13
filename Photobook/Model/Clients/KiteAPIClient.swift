@@ -29,6 +29,7 @@
 
 import UIKit
 import Stripe
+import KeychainSwift
 
 enum OrderSubmitStatus: String {
     case cancelled, error, paymentError, unknown, received, accepted, validated, processed
@@ -64,6 +65,7 @@ class KiteAPIClient: NSObject {
         static let template = "/template"
         static let registrationRequest = "/asset/sign"
         static let ephemeralKey = "/ephemeral_keys"
+        static let createStripeCustomer = "/create_customer"
     }
     
     static let shared = KiteAPIClient()
@@ -316,20 +318,71 @@ class KiteAPIClient: NSObject {
             completionHandler(cost, nil)
         }
     }
+    
+    // MARK: - Stripe
+    func createStripeCustomer(_ completionHandler: @escaping (_ customerId: String?, _ error: APIClientError?) -> Void) {
+        
+        APIClient.shared.post(context: .stripe, endpoint: Endpoints.createStripeCustomer) { response, error in
+            guard error == nil else {
+                completionHandler(nil, error)
+                return
+            }
+            
+            guard let res = response as? [String: Any], let customerId = res["customer_id"] as? String else {
+                completionHandler(nil, .parsing(details: "CreateStripeCustomer: Could not parse customer ID"))
+                return
+            }
+            
+            completionHandler(customerId, nil)
+        }
+    }
 }
 
 extension KiteAPIClient: STPEphemeralKeyProvider {
     
     func createCustomerKey(withAPIVersion apiVersion: String, completion: @escaping STPJSONResponseCompletionBlock) {
         
-        let parameters = ["api_version": apiVersion]
+        var parameters = ["api_version": apiVersion]
         
-        APIClient.shared.post(context: .stripe, endpoint: Endpoints.ephemeralKey, parameters: parameters, encoding: .raw) { response, error in
-            guard error == nil else {
+        func requestEphemeralKey(for customerId: String) {
+            parameters["customer_id"] = customerId
+            
+            APIClient.shared.post(context: .stripe, endpoint: Endpoints.ephemeralKey, parameters: parameters, encoding: .raw) { response, error in
+                guard error == nil else {
+                    completion(nil, error)
+                    return
+                }
+                completion(response as? [AnyHashable: Any], nil)
+            }
+        }
+        
+        if let customerId = StripeCredentialsHandler.load() {
+            requestEphemeralKey(for: customerId)
+            return
+        }
+        
+        createStripeCustomer { (customerId, error) in
+            guard error == nil, let cusId = customerId else {
                 completion(nil, error)
                 return
             }
-            completion(response as? [AnyHashable: Any], nil)
+
+            StripeCredentialsHandler.save(cusId)
+            requestEphemeralKey(for: cusId)
         }
+    }
+}
+
+
+fileprivate class StripeCredentialsHandler {
+    
+    private static let stripeStorageKey = "StripeCustomerIdKey"
+    
+    static func save(_ key: String) {
+        KeychainSwift().set(key, forKey: stripeStorageKey)
+    }
+    
+    static func load() -> String? {
+        return KeychainSwift().get(stripeStorageKey)
     }
 }

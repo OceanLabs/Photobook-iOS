@@ -46,7 +46,7 @@ enum PaymentMethod: Int, Codable {
 
 protocol PaymentAuthorizationManagerDelegate: class {
     func costUpdated()
-    func paymentContextDidChange()
+    func paymentAuthorizationManagerUpdatedDetails()
     func paymentAuthorizationDidFinish(token: String?, error: Error?, completionHandler: ((PKPaymentAuthorizationStatus) -> Void)?)
     func modalPresentationDidFinish()
     func modalPresentationWillBegin()
@@ -54,7 +54,6 @@ protocol PaymentAuthorizationManagerDelegate: class {
 
 protocol PaymentAPI {
     var supportsApplePay: Bool { get }
-    func createToken(withCard card: Card, completion: @escaping (String?, Error?) -> ())
     func createToken(withPayment payment: PKPayment, completion: @escaping (String?, Error?) -> ())
     func applePayPaymentRequest(withMerchantId merchantId: String, country: String, currency: String) -> PKPaymentRequest
 }
@@ -63,19 +62,6 @@ class PhotobookStripeAPI: PaymentAPI {
     
     var supportsApplePay: Bool {
         return Stripe.deviceSupportsApplePay()
-    }
-    
-    func createToken(withCard card: Card, completion: @escaping (String?, Error?) -> ()) {
-        
-        let cardParams = STPCardParams()
-        cardParams.number = card.number
-        cardParams.expMonth = UInt(card.expireMonth)
-        cardParams.expYear = UInt(card.expireYear)
-        cardParams.cvc = card.cvv2
-
-        STPAPIClient.shared().createToken(withCard: cardParams) { (token, error) in
-            completion(token?.tokenId, error)
-        }
     }
     
     func createToken(withPayment payment: PKPayment, completion: @escaping (String?, Error?) -> ()) {
@@ -202,11 +188,11 @@ class PaymentAuthorizationManager: NSObject {
     ///
     /// - Parameter cost: The total cost of the order
     private func authorizeCreditCard(cost: Cost) {
-        guard let currentCard = Card.currentCard else { return }
-        
-        paymentApi.createToken(withCard: currentCard) { [weak welf = self] (tokenId, error) in
-            welf?.delegate?.paymentAuthorizationDidFinish(token: tokenId, error: error, completionHandler: nil)
-        }
+        guard let paymentContext = stripePaymentContext else { return }
+
+        paymentContext.paymentCurrency = cost.total.currencyCode
+        paymentContext.paymentAmount = cost.total.int()
+        paymentContext.requestPayment()
     }
     
     /// Present the Apple Pay authorization sheet
@@ -374,16 +360,17 @@ extension PaymentAuthorizationManager: STPPaymentContextDelegate {
         if stripePaymentContext?.selectedPaymentMethod != nil {
             basketOrder.paymentMethod = .creditCard
         }
-        delegate?.paymentContextDidChange()
+        delegate?.paymentAuthorizationManagerUpdatedDetails()
     }
     
     func paymentContext(_ paymentContext: STPPaymentContext, didFailToLoadWithError error: Error) {
+        delegate?.paymentAuthorizationDidFinish(token: nil, error: error, completionHandler: nil)
     }
     
     func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
+        delegate?.paymentAuthorizationDidFinish(token: paymentResult.source.stripeID, error: nil, completionHandler: nil)
     }
     
-    func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {
-    }
+    func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {}
 }
 

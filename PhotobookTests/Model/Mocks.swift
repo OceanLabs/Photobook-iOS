@@ -41,7 +41,7 @@ class APIClientMock: APIClient {
         completion(response, error)
     }
     
-    override func post(context: APIContext, endpoint: String, parameters: [String : Any]?, headers: [String : String]?, completion: @escaping (AnyObject?, APIClientError?) -> ()) {
+    override func post(context: APIContext, endpoint: String, parameters: [String : Any]?, headers: [String : String]?, encoding: APIParameterEncoding, completion: @escaping (AnyObject?, APIClientError?) -> ()) {
         completion(response, error)
     }
     
