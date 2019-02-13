@@ -102,7 +102,7 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             let selected = selectedPaymentMethod != nil && selectedPaymentMethod == .payPal
             cell.ticked = selected
             
-            cell.separator.isHidden = false
+            cell.separator.isHidden = paymentManager.stripePaymentContext?.selectedPaymentMethod != nil
             cell.accessibilityIdentifier = "payPalCell"
             cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + method
             cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
@@ -117,7 +117,7 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             let selected = order.paymentMethod == .creditCard
             cell.ticked = selected
             
-            cell.separator.isHidden = true
+            cell.separator.isHidden = false
             cell.accessibilityIdentifier = "creditCardCell"
             cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + (selectedPaymentMethod?.label ?? "")
             cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
