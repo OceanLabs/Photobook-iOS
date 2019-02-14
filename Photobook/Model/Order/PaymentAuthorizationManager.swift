@@ -46,7 +46,7 @@ enum PaymentMethod: Int, Codable {
 
 protocol PaymentAuthorizationManagerDelegate: class {
     func costUpdated()
-    func paymentAuthorizationManagerUpdatedDetails()
+    func paymentAuthorizationManagerDidUpdateDetails()
     func paymentAuthorizationDidFinish(token: String?, error: Error?, completionHandler: ((PKPaymentAuthorizationStatus) -> Void)?)
     func modalPresentationDidFinish()
     func modalPresentationWillBegin()
@@ -360,7 +360,7 @@ extension PaymentAuthorizationManager: STPPaymentContextDelegate {
         if stripePaymentContext?.selectedPaymentMethod != nil {
             basketOrder.paymentMethod = .creditCard
         }
-        delegate?.paymentAuthorizationManagerUpdatedDetails()
+        delegate?.paymentAuthorizationManagerDidUpdateDetails()
     }
     
     func paymentContext(_ paymentContext: STPPaymentContext, didFailToLoadWithError error: Error) {

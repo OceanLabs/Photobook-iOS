@@ -54,7 +54,7 @@ class PaymentAuthorizationManagerDelegateMock: UIViewController {
 extension PaymentAuthorizationManagerDelegateMock: PaymentAuthorizationManagerDelegate {
     
     func costUpdated() {}    
-    func paymentAuthorizationManagerUpdatedDetails() {}
+    func paymentAuthorizationManagerDidUpdateDetails() {}
     func paymentAuthorizationDidFinish(token: String?, error: Error?, completionHandler: ((PKPaymentAuthorizationStatus) -> Void)?) {}
     func modalPresentationDidFinish() {}
     func modalPresentationWillBegin() {}

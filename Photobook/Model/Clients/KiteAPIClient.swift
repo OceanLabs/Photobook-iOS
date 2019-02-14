@@ -64,8 +64,8 @@ class KiteAPIClient: NSObject {
         static let cost = "/price"
         static let template = "/template"
         static let registrationRequest = "/asset/sign"
-        static let ephemeralKey = "/ephemeral_keys"
-        static let createStripeCustomer = "/create_customer"
+        static let ephemeralKey = "/create_ephemeral_key/"
+        static let createStripeCustomer = "/create_stripe_customer/"
     }
     
     static let shared = KiteAPIClient()
@@ -328,7 +328,7 @@ class KiteAPIClient: NSObject {
                 return
             }
             
-            guard let res = response as? [String: Any], let customerId = res["customer_id"] as? String else {
+            guard let res = response as? [String: Any], let customerId = res["stripe_customer_id"] as? String else {
                 completionHandler(nil, .parsing(details: "CreateStripeCustomer: Could not parse customer ID"))
                 return
             }
@@ -345,9 +345,9 @@ extension KiteAPIClient: STPEphemeralKeyProvider {
         var parameters = ["api_version": apiVersion]
         
         func requestEphemeralKey(for customerId: String) {
-            parameters["customer_id"] = customerId
+            parameters["stripe_customer_id"] = customerId
             
-            APIClient.shared.post(context: .stripe, endpoint: Endpoints.ephemeralKey, parameters: parameters, encoding: .raw) { response, error in
+            APIClient.shared.post(context: .stripe, endpoint: Endpoints.ephemeralKey, parameters: parameters) { response, error in
                 guard error == nil else {
                     completion(nil, error)
                     return
@@ -356,11 +356,12 @@ extension KiteAPIClient: STPEphemeralKeyProvider {
             }
         }
         
+        //requestEphemeralKey(for: "")
         if let customerId = StripeCredentialsHandler.load() {
             requestEphemeralKey(for: customerId)
             return
         }
-        
+
         createStripeCustomer { (customerId, error) in
             guard error == nil, let cusId = customerId else {
                 completion(nil, error)

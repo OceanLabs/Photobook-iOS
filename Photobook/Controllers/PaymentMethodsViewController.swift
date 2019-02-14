@@ -165,10 +165,3 @@ extension PaymentMethodsViewController: UITableViewDelegate {
         tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
     }
 }
-
-extension PaymentMethodsViewController: CreditCardTableViewControllerDelegate {
-
-    func didAddCreditCard(on viewController: CreditCardTableViewController) {
-        navigationController?.popViewController(animated: true)
-    }
-}

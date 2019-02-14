@@ -276,16 +276,6 @@ class CheckoutViewController: UIViewController {
         }
         
         order.updateCost(forceUpdate: forceCostUpdate, forceShippingMethodUpdate: forceShippingMethodsUpdate) { [weak welf = self] (error) in
-            if welf?.paymentManager.stripePaymentContext == nil {
-                welf?.paymentManager.setupStripePaymentContext()
-            }
-            
-            OrderManager.shared.saveBasketOrder()
-            
-            welf?.emptyScreenViewController.hide()
-            welf?.progressOverlayViewController.hide()
-            welf?.promoCodeActivityIndicator.stopAnimating()
-            welf?.promoCodeTextField.isUserInteractionEnabled = true
             
             if let error = error {
                 if !(welf?.order.hasCachedCost ?? false) {
@@ -299,6 +289,10 @@ class CheckoutViewController: UIViewController {
                     welf?.refresh(showProgress: showProgress, forceCostUpdate: forceCostUpdate, forceShippingMethodsUpdate: forceShippingMethodsUpdate)
                 }
                 return
+            }
+            
+            if welf?.paymentManager.stripePaymentContext == nil {
+                welf?.paymentManager.setupStripePaymentContext()
             }
             
             welf?.updateViews()
@@ -483,7 +477,7 @@ class CheckoutViewController: UIViewController {
     }
     
     private func paymentMethodIsValid() -> Bool {
-        return order.orderIsFree || (order.paymentMethod != nil && (order.paymentMethod != .creditCard || Card.currentCard != nil))
+        return order.orderIsFree || (order.paymentMethod != nil && (order.paymentMethod != .creditCard || paymentManager.stripePaymentContext?.selectedPaymentMethod != nil))
     }
     
     private func indicateDeliveryDetailsError() {
@@ -749,8 +743,16 @@ extension CheckoutViewController: AmountPickerDelegate {
 
 extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
     
-    func paymentAuthorizationManagerUpdatedDetails() {
+    func paymentAuthorizationManagerDidUpdateDetails() {
+        OrderManager.shared.saveBasketOrder()
+
+        updateViews()
         paymentMethodsViewController?.reloadPaymentMethods()
+
+        emptyScreenViewController.hide()
+        progressOverlayViewController.hide()
+        promoCodeActivityIndicator.stopAnimating()
+        promoCodeTextField.isUserInteractionEnabled = true
     }
     
     func costUpdated() {
