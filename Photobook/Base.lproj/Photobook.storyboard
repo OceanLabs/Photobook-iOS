@@ -1683,7 +1683,7 @@
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                             </label>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="apple-pay-method" translatesAutoresizingMaskIntoConstraints="NO" id="d2G-D9-1PL">
-                                                <rect key="frame" x="288" y="0.5" width="44" height="44"/>
+                                                <rect key="frame" x="300" y="12" width="32" height="21"/>
                                             </imageView>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="1000" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" image="chevron-right" translatesAutoresizingMaskIntoConstraints="NO" id="eoN-wz-njW">
                                                 <rect key="frame" x="347" y="16" width="13" height="13"/>
@@ -3588,14 +3588,14 @@ Copyright © 2018 Kite. All rights reserved.</string>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apple Pay" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MRq-gJ-qjX">
-                                                    <rect key="frame" x="77" y="11.5" width="76.5" height="20.5"/>
+                                                    <rect key="frame" x="65" y="11.5" width="76.5" height="20.5"/>
                                                     <accessibility key="accessibilityConfiguration" identifier="paymentMethodNameLabel"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="apple-pay-method" translatesAutoresizingMaskIntoConstraints="NO" id="Tf1-0c-5kY">
-                                                    <rect key="frame" x="17" y="-0.5" width="44" height="44.5"/>
+                                                    <rect key="frame" x="17" y="11.5" width="32" height="21"/>
                                                 </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tick-plain" translatesAutoresizingMaskIntoConstraints="NO" id="Tbh-Fr-A3E">
                                                     <rect key="frame" x="340" y="15" width="19" height="14"/>
@@ -3685,7 +3685,6 @@ Copyright © 2018 Kite. All rights reserved.</string>
         <!--CREDIT CARD-->
         <scene sceneID="Y6v-Dm-QPS">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="tn5-Y0-f2z" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="KxV-LF-cPn" customClass="CreditCardTableViewController" customModule="Photobook" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="gr8-os-wnD">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
@@ -3790,6 +3789,7 @@ Copyright © 2018 Kite. All rights reserved.</string>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tn5-Y0-f2z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3838" y="1594"/>
         </scene>
@@ -4759,7 +4759,7 @@ Copyright © 2018 Kite. All rights reserved.</string>
         <image name="Tick-empty-dark" width="26" height="26"/>
         <image name="Tick-plain" width="19" height="14.5"/>
         <image name="addMore" width="26" height="26"/>
-        <image name="apple-pay-method" width="44" height="44"/>
+        <image name="apple-pay-method" width="32" height="21"/>
         <image name="assetPlaceholder" width="18" height="18"/>
         <image name="back-chevron" width="13" height="21"/>
         <image name="chevron-right" width="10" height="15"/>
