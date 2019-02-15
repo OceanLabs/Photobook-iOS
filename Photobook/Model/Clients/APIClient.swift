@@ -90,14 +90,14 @@ class APIClient: NSObject {
     
     var imageUploadIdentifierPrefix: String { return APIClient.imageUploadPrefix }
     var fileUploadIdentifierPrefix: String { return APIClient.fileUploadPrefix }
-    
+
     private func baseURLString(for context: APIContext) -> String {
         switch context {
         case .none: return ""
         case .photobook: return "https://photobook-builder.herokuapp.com" //"https://staging-photobook-builder.herokuapp.com"
         case .pig: return "https://image.kite.ly/"
         case .kite: return "https://api.kite.ly/"
-        case .stripe: return "https://kite-stripe-ios-backend.herokuapp.com"
+        case .stripe: return "https://staging.kite.ly/" // FIXME: Remove once the endpoints are in prod
         }
     }
 

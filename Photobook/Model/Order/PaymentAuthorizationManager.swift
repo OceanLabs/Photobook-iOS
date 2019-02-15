@@ -92,7 +92,7 @@ class PaymentAuthorizationManager: NSObject {
     
     var stripePaymentContext: STPPaymentContext?
     
-    static var paypalApiKey: String? {
+    private static var paypalApiKey: String? {
         didSet {
             guard OLPayPalWrapper.isPayPalAvailable(),
                 let paypalApiKey = paypalApiKey else {
@@ -109,7 +109,7 @@ class PaymentAuthorizationManager: NSObject {
         }
     }
     
-    static var stripeKey: String? {
+    private static var stripeKey: String? {
         didSet {
             guard let stripeKey = stripeKey else {
                 return
@@ -154,6 +154,24 @@ class PaymentAuthorizationManager: NSObject {
         return NSClassFromString("PayPalMobile") != nil
     }
     
+    static func setPaymentKeys(_ completionHandler: ((_ error: APIClientError?) -> Void)? = nil) {
+        guard !haveSetPaymentKeys else {
+            completionHandler?(nil)
+            return
+        }
+        
+        KiteAPIClient.shared.getPaymentKeys() { paypalKey, stripeKey, error in
+            guard error == nil else {
+                completionHandler?(error)
+                return
+            }
+            
+            self.paypalApiKey = paypalKey
+            self.stripeKey = stripeKey
+            completionHandler?(nil)
+        }
+    }
+    
     func authorizePayment(cost: Cost, method: PaymentMethod) {
         switch method {
         case .applePay:
@@ -166,22 +184,28 @@ class PaymentAuthorizationManager: NSObject {
     }
 
     func setupStripePaymentContext() {
-        let config = STPPaymentConfiguration.shared()
-        guard let stripePublicKey = PaymentAuthorizationManager.stripeKey else { return }
+        func configure(with stripeKey: String) {
+            let config = STPPaymentConfiguration.shared()
+            
+            config.publishableKey = stripeKey
+            config.companyName = PaymentAuthorizationManager.applePayPayTo
+            config.requiredBillingAddressFields = .none
+            config.requiredShippingAddressFields = [.postalAddress, .phoneNumber]
+            config.canDeletePaymentMethods = true
+            
+            let customerContext = STPCustomerContext(keyProvider: KiteAPIClient.shared)
+            let paymentContext = STPPaymentContext(customerContext: customerContext,
+                                                   configuration: config,
+                                                   theme: .default())
+            paymentContext.prefilledInformation = STPUserInformation()
+            paymentContext.delegate = self
+            stripePaymentContext = paymentContext
+        }
         
-        config.publishableKey = stripePublicKey
-        config.companyName = PaymentAuthorizationManager.applePayPayTo
-        config.requiredBillingAddressFields = .none
-        config.requiredShippingAddressFields = [.postalAddress, .phoneNumber]
-        config.canDeletePaymentMethods = true
-
-        let customerContext = STPCustomerContext(keyProvider: KiteAPIClient.shared)
-        let paymentContext = STPPaymentContext(customerContext: customerContext,
-                                               configuration: config,
-                                               theme: .default())
-        paymentContext.prefilledInformation = STPUserInformation()
-        paymentContext.delegate = self
-        stripePaymentContext = paymentContext
+        PaymentAuthorizationManager.setPaymentKeys() { error in
+            guard let stripePublicKey = PaymentAuthorizationManager.stripeKey else { return }
+            configure(with: stripePublicKey)
+        }
     }
     
     /// Ask Stripe for a charge authorization token

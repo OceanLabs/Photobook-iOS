@@ -135,6 +135,8 @@ class CheckoutViewController: UIViewController {
     
     var dismissClosure: ((_ source: UIViewController, _ success: Bool) -> ())?
     
+    private var dispatchGroup: DispatchGroup? = DispatchGroup()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -174,6 +176,24 @@ class CheckoutViewController: UIViewController {
         order.deliveryDetails = DeliveryDetails.selectedDetails()
 
         emptyScreenViewController.show(message: Constants.loadingDetailsText, activity: true)
+        
+        // Enter dispatch group for PaymentContext and Refresh calls
+        dispatchGroup?.enter()
+        dispatchGroup?.enter()
+        
+        dispatchGroup?.notify(queue: DispatchQueue.main, execute: { [weak welf = self] in
+            OrderManager.shared.saveBasketOrder()
+            
+            welf?.emptyScreenViewController.hide()
+            welf?.progressOverlayViewController.hide()
+            welf?.promoCodeActivityIndicator.stopAnimating()
+            welf?.promoCodeTextField.isUserInteractionEnabled = true
+            
+            welf?.updateViews()
+            welf?.dispatchGroup = nil
+        })
+        
+        setupPaymentContext()
     }
     
     override func viewDidLayoutSubviews() {
@@ -269,14 +289,23 @@ class CheckoutViewController: UIViewController {
         let controllerToDismiss = isPresentedModally() ? navigationController! : self
         dismissClosure?(controllerToDismiss, false)
     }
-
+    
+    private func setupPaymentContext() {
+        guard paymentManager.stripePaymentContext == nil else {
+            dispatchGroup?.leave()
+            return
+        }
+        paymentManager.setupStripePaymentContext()
+    }
+    
+    private var refreshInProgress = false
     private func refresh(showProgress: Bool = true, forceCostUpdate: Bool = false, forceShippingMethodsUpdate: Bool = false) {
         if showProgress {
             progressOverlayViewController.show(message: Constants.loadingDetailsText)
         }
         
         order.updateCost(forceUpdate: forceCostUpdate, forceShippingMethodUpdate: forceShippingMethodsUpdate) { [weak welf = self] (error) in
-            
+
             if let error = error {
                 if !(welf?.order.hasCachedCost ?? false) {
                     let errorMessage = ErrorMessage(error)
@@ -291,11 +320,7 @@ class CheckoutViewController: UIViewController {
                 return
             }
             
-            if welf?.paymentManager.stripePaymentContext == nil {
-                welf?.paymentManager.setupStripePaymentContext()
-            }
-            
-            welf?.updateViews()
+            welf?.dispatchGroup?.leave()
         }
     }
     
@@ -744,15 +769,9 @@ extension CheckoutViewController: AmountPickerDelegate {
 extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
     
     func paymentAuthorizationManagerDidUpdateDetails() {
-        OrderManager.shared.saveBasketOrder()
-
         updateViews()
         paymentMethodsViewController?.reloadPaymentMethods()
-
-        emptyScreenViewController.hide()
-        progressOverlayViewController.hide()
-        promoCodeActivityIndicator.stopAnimating()
-        promoCodeTextField.isUserInteractionEnabled = true
+        dispatchGroup?.leave()
     }
     
     func costUpdated() {

@@ -87,6 +87,7 @@ struct AssetsNotificationName {
         didSet {
             PhotobookAPIManager.apiKey = kiteApiKey
             KiteAPIClient.shared.apiKey = kiteApiKey
+            PaymentAuthorizationManager.setPaymentKeys()
         }
     }
     

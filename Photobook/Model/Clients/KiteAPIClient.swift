@@ -57,12 +57,13 @@ class KiteAPIClient: NSObject {
     /// The environment of the app, live vs test
     static var environment: Environment = .live
     
-    private static let apiVersion = "v4.0"
+    private static let apiVersion = "v4.1"
     private struct Endpoints {
         static let orderSubmission = "/print"
         static let orderStatus = "/order/"
         static let cost = "/price"
         static let template = "/template"
+        static let shipping = "/template/shipping"
         static let registrationRequest = "/asset/sign"
         static let ephemeralKey = "/create_ephemeral_key/"
         static let createStripeCustomer = "/create_stripe_customer/"
@@ -198,21 +199,14 @@ class KiteAPIClient: NSObject {
         }
     }
 
-    /// Loads template information for a given array of template IDs.
-    func getTemplateInfo(for templateIds: [String], completionHandler: @escaping (_ shippingClasses: [String: [String: [ShippingMethod]]]?, _ countryToRegionMapping: [String: [String: String]]?, _ error: APIClientError?) -> Void) {
-
+    /// Retrieve PalPal and Stripe keys
+    func getPaymentKeys(completionHandler: @escaping (_ paypalKey: String?, _ stripeKey: String?, _ error: APIClientError?) -> Void) {
+        
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
         }
         
-        let uniqueTemplatesIds = Set(templateIds)
-        var templateIdString = ""
-        for templateId in uniqueTemplatesIds {
-            if templateId != uniqueTemplatesIds.first { templateIdString += "," }
-            templateIdString += templateId
-        }
-        
-        let endpoint = KiteAPIClient.apiVersion + Endpoints.template + "/?template_id__in=\(templateIdString)&limit=\(uniqueTemplatesIds.count)"
+        let endpoint = KiteAPIClient.apiVersion + Endpoints.template + "/?limit=1"
         APIClient.shared.get(context: .kite, endpoint: endpoint, headers: kiteHeaders) { (response, error) in
             
             if let error = error {
@@ -222,60 +216,108 @@ class KiteAPIClient: NSObject {
             
             //get objects for each product
             guard let jsonDict = response as? [String: Any],
-                let objects = jsonDict["objects"] as? [[String: Any]],
-                let paymentKeys = jsonDict["payment_keys"] as? [String: Any]
+                  let paymentKeys = jsonDict["payment_keys"] as? [String: Any]
             else {
                 completionHandler(nil, nil, .parsing(details: "GetTemplateInfo: Could not parse root objects"))
                 return
             }
             
+            var payPalKey: String?
+            var stripeKey: String?
             if let payPalDict = paymentKeys["paypal"] as? [String: Any],
                 let publicKey = payPalDict["public_key"] as? String {
-                PaymentAuthorizationManager.paypalApiKey = publicKey
+                payPalKey = publicKey
             }
             
             if let stripeDict = paymentKeys["stripe"] as? [String: Any],
                 let publicKey = stripeDict["public_key"] as? String {
-                PaymentAuthorizationManager.stripeKey = publicKey
+                stripeKey = publicKey
+            }
+
+            completionHandler(payPalKey, stripeKey, nil)
+        }
+    }
+    
+    /// Loads shipping information for a given array of template IDs.
+    func getShippingInfo(for templateIds: [String], completionHandler: @escaping (_ shippingInfo: [String: Any]?, _ error: APIClientError?) -> Void) {
+        
+        guard apiKey != nil else {
+            fatalError("Missing Kite API key: KiteSDK.shared.kiteApiKey")
+        }
+        
+        let uniqueTemplatesIds = Set(templateIds)
+        var templateIdString = ""
+        for templateId in uniqueTemplatesIds {
+            if templateId != uniqueTemplatesIds.first { templateIdString += "," }
+            templateIdString += templateId
+        }
+        
+        let endpoint = KiteAPIClient.apiVersion + Endpoints.shipping + "/?template_ids=\(templateIdString)"
+        APIClient.shared.get(context: .kite, endpoint: endpoint, headers: kiteHeaders) { (response, error) in
+            
+            if let error = error {
+                completionHandler(nil, error)
+                return
             }
             
-            var objectShippingClasses = [String: [String: [ShippingMethod]]]()
-            var objectRegionMapping = [String: [String: String]]()
+            //get objects for each product
+            guard let jsonDict = response as? [String: Any],
+                let objects = jsonDict["objects"] as? [String: Any]
+                else {
+                    completionHandler(nil, .parsing(details: "GetShippingInfo: Could not parse root objects"))
+                    return
+            }
             
+            var shippingInfo = [String: Any]()
             for object in objects {
+                let templateId = object.key
+                guard let dict = object.value as? [String: Any]
+                    else {
+                        completionHandler(nil, .parsing(details: "GetShippingInfo: Could not parse region mapping. Missing object."))
+                        return
+                }
+                
                 var regionShippingClasses = [String: [ShippingMethod]]()
                 
-                guard let regionMappings = object["country_to_region_mapping"] as? [String: String],
-                    let shippingRegions = object["shipping_regions"] as? [String: Any],
-                    let templateId = object["template_id"] as? String
+                guard let regionMappings = dict["country_to_region_mapping"] as? [String: String],
+                    let shippingRegions = dict["shipping_regions"] as? [String: Any]
                     else {
-                        completionHandler(nil, nil, .parsing(details: "GetTemplateInfo: Could not parse region mapping"))
+                        completionHandler(nil, .parsing(details: "GetShippingInfo: Could not parse region mapping"))
                         return
                 }
                 
                 for region in shippingRegions.keys {
                     var shippingClasses = [ShippingMethod]()
-                    for dictionary in ((shippingRegions[region] as? [String: Any])?["shipping_classes"]) as? [[String: Any]] ?? [] {
-                        guard let shippingClass = ShippingMethod.parse(dictionary: dictionary) else {
-                            completionHandler(nil, nil, .parsing(details: "GetTemplateInfo: Could not parse shipping class"))
-                            return
+                    if let shippingClassesDictionaries = ((shippingRegions[region] as? [String: Any])?["shipping_classes"]) as? [[String: Any]] {
+                        let orderedShippingClasses = shippingClassesDictionaries.sorted(by: {
+                            $0["max_delivery_time"] as! Int > $1["max_delivery_time"] as! Int
+                        })
+                        
+                        for dictionary in orderedShippingClasses {
+                            guard let shippingClass = ShippingMethod.parse(dictionary: dictionary) else {
+                                completionHandler(nil, .parsing(details: "GetShippingInfo: Could not parse shipping class"))
+                                return
+                            }
+                            shippingClasses.append(shippingClass)
                         }
-                        shippingClasses.append(shippingClass)
                     }
-                    
                     regionShippingClasses[region] = shippingClasses
                 }
                 
                 if regionShippingClasses.keys.count == 0 { // Inconsistent
-                    completionHandler(nil, nil, .parsing(details: "GetTemplateInfo: Zero shipping classes parsed"))
+                    completionHandler(nil, .parsing(details: "GetShippingInfo: zero shipping classes parsed"))
                     return
                 }
                 
-                objectShippingClasses[templateId] = regionShippingClasses
-                objectRegionMapping[templateId] = regionMappings
+                shippingInfo[templateId] = ["availableShippingMethods": regionShippingClasses, "countryToRegionMapping": regionMappings]
             }
             
-            completionHandler(objectShippingClasses, objectRegionMapping, nil)
+            if shippingInfo.isEmpty {
+                completionHandler(nil, .parsing(details: "GetShippingInfo: No templates returned"))
+                return
+            }
+            
+            completionHandler(shippingInfo, nil)
         }
     }
     
@@ -322,7 +364,8 @@ class KiteAPIClient: NSObject {
     // MARK: - Stripe
     func createStripeCustomer(_ completionHandler: @escaping (_ customerId: String?, _ error: APIClientError?) -> Void) {
         
-        APIClient.shared.post(context: .stripe, endpoint: Endpoints.createStripeCustomer) { response, error in
+        let endpoint = KiteAPIClient.apiVersion + Endpoints.createStripeCustomer
+        APIClient.shared.post(context: .stripe, endpoint: endpoint) { response, error in
             guard error == nil else {
                 completionHandler(nil, error)
                 return
@@ -347,7 +390,8 @@ extension KiteAPIClient: STPEphemeralKeyProvider {
         func requestEphemeralKey(for customerId: String) {
             parameters["stripe_customer_id"] = customerId
             
-            APIClient.shared.post(context: .stripe, endpoint: Endpoints.ephemeralKey, parameters: parameters) { response, error in
+            let endpoint = KiteAPIClient.apiVersion + Endpoints.ephemeralKey
+            APIClient.shared.post(context: .stripe, endpoint: endpoint, parameters: parameters) { response, error in
                 guard error == nil else {
                     completion(nil, error)
                     return
@@ -356,7 +400,6 @@ extension KiteAPIClient: STPEphemeralKeyProvider {
             }
         }
         
-        //requestEphemeralKey(for: "")
         if let customerId = StripeCredentialsHandler.load() {
             requestEphemeralKey(for: customerId)
             return
