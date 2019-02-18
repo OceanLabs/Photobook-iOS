@@ -155,8 +155,6 @@ class DeliveryDetails: NSCopying, Codable {
     func jsonRepresentation() -> [String: String] {
         var json = [String: String]()
 
-        json["recipient_first_name"] = firstName
-        json["recipient_last_name"] = lastName
         json["recipient_name"] = fullName
         json["address_line_1"] = line1
         json["address_line_2"] = line2

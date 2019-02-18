@@ -176,22 +176,26 @@ class Order: Codable {
             completionHandler(nil)
         }
     }
-    
+
     func orderParameters() -> [String: Any]? {
         
         guard let finalTotalCost = cost?.total else { return nil }
         
-        let shippingAddress = deliveryDetails?.jsonRepresentation()
-        
         var parameters = [String: Any]()
-        parameters["proof_of_payment"] = paymentToken
-        parameters["shipping_address"] = shippingAddress
-        parameters["customer_email"] = deliveryDetails?.email
-        parameters["customer_phone"] = deliveryDetails?.phone
+        parameters["user_data"] = ["user_agent": KiteAPIClient.userAgent]
+        
+        parameters["shipping_address"] = deliveryDetails?.jsonRepresentation()
         parameters["promo_code"] = promoCode
-        parameters["customer_payment"] = [
+        
+        parameters["payment"] = [
             "currency": finalTotalCost.currencyCode,
-            "amount": finalTotalCost.value
+            "amount": finalTotalCost.value,
+            "proof_of_payment": paymentToken ?? ""
+        ]
+        
+        parameters["customer"] = [
+            "email": deliveryDetails?.email ?? "",
+            "phone": deliveryDetails?.phone
         ]
         
         var jobs = [[String: Any]]()

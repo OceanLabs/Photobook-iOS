@@ -43,7 +43,6 @@ enum APIContext {
     case photobook
     case pig
     case kite
-    case stripe
 }
 
 enum APIParameterEncoding {
@@ -96,8 +95,7 @@ class APIClient: NSObject {
         case .none: return ""
         case .photobook: return "https://photobook-builder.herokuapp.com" //"https://staging-photobook-builder.herokuapp.com"
         case .pig: return "https://image.kite.ly/"
-        case .kite: return "https://api.kite.ly/"
-        case .stripe: return "https://staging.kite.ly/" // FIXME: Remove once the endpoints are in prod
+        case .kite: return "https://staging.kite.ly/" // FIXME: "https://api.kite.ly/"
         }
     }
 

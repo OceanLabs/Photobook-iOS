@@ -182,18 +182,22 @@ class CheckoutViewController: UIViewController {
         dispatchGroup?.enter()
         
         dispatchGroup?.notify(queue: DispatchQueue.main, execute: { [weak welf = self] in
-            OrderManager.shared.saveBasketOrder()
-            
-            welf?.emptyScreenViewController.hide()
-            welf?.progressOverlayViewController.hide()
-            welf?.promoCodeActivityIndicator.stopAnimating()
-            welf?.promoCodeTextField.isUserInteractionEnabled = true
-            
-            welf?.updateViews()
+            welf?.detailsDidRefresh()
             welf?.dispatchGroup = nil
         })
         
         setupPaymentContext()
+    }
+    
+    private func detailsDidRefresh() {
+        OrderManager.shared.saveBasketOrder()
+        
+        emptyScreenViewController.hide()
+        progressOverlayViewController.hide()
+        promoCodeActivityIndicator.stopAnimating()
+        promoCodeTextField.isUserInteractionEnabled = true
+        
+        updateViews()
     }
     
     override func viewDidLayoutSubviews() {
@@ -320,7 +324,12 @@ class CheckoutViewController: UIViewController {
                 return
             }
             
-            welf?.dispatchGroup?.leave()
+            if welf?.dispatchGroup != nil {
+                welf?.dispatchGroup?.leave()
+                return
+            }
+            
+            welf?.detailsDidRefresh()
         }
     }
     
@@ -682,13 +691,15 @@ class CheckoutViewController: UIViewController {
             showReceipt()
         }
         else {
-            if order.paymentMethod == .applePay{
+            if order.paymentMethod == .applePay {
                 modalPresentationDismissedGroup.enter()
             }
             
             guard let paymentMethod = order.paymentMethod else { return }
             
             progressOverlayViewController.show(message: Constants.loadingPaymentText)
+            
+            paymentManager.stripePaymentContext?.hostViewController = self
             paymentManager.authorizePayment(cost: cost, method: paymentMethod)
         }
     }

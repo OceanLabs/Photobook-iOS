@@ -685,9 +685,11 @@ enum ProductColor: String, Codable {
             "multiples": itemCount,
             "shipping_class": shippingMethod.id,
             "options": options,
-            "page_count": numberOfPages,
-            "inside_pdf": insideUrl,
-            "cover_pdf": coverUrl
+            "assets": [
+                "inside_pdf": insideUrl,
+                "cover_pdf": coverUrl,
+                "page_count": numberOfPages
+            ]
         ]
     }
     

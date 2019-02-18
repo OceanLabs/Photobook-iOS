@@ -190,8 +190,9 @@ class PaymentAuthorizationManager: NSObject {
             config.publishableKey = stripeKey
             config.companyName = PaymentAuthorizationManager.applePayPayTo
             config.requiredBillingAddressFields = .none
-            config.requiredShippingAddressFields = [.postalAddress, .phoneNumber]
+            config.requiredShippingAddressFields = nil
             config.canDeletePaymentMethods = true
+            config.createCardSources = true
             
             let customerContext = STPCustomerContext(keyProvider: KiteAPIClient.shared)
             let paymentContext = STPPaymentContext(customerContext: customerContext,
