@@ -154,14 +154,4 @@ extension PaymentMethodsViewController: UITableViewDelegate {
         
         tableView.reloadData()
     }
-
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        let cardIndex = PaymentAuthorizationManager.isApplePayAvailable ? 2 : 1
-        return indexPath.item == cardIndex
-    }
-
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if PaymentAuthorizationManager.isApplePayAvailable { selectedPaymentMethod = .applePay }
-        tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
-    }
 }
