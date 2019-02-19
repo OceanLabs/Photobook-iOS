@@ -443,9 +443,14 @@ extension ReceiptViewController: UITableViewDataSource {
             
             return cell
         case Section.lineItems.rawValue:
+            guard indexPath.row < min(order.cost?.lineItems.count ?? 0, order.products.count) else { return UITableViewCell() }
+            
+            let product = order.products[indexPath.row]
+            guard let lineItem = order.lineItem(for: product) else { return UITableViewCell() }
+
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptLineItemTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptLineItemTableViewCell
-            cell.lineItemNameLabel.text = cost?.lineItems[indexPath.row].name
-            cell.lineItemCostLabel.text = cost?.lineItems[indexPath.row].price.formatted
+            cell.lineItemNameLabel.text = "\(product.itemCount) x \(lineItem.name)"
+            cell.lineItemCostLabel.text = lineItem.price.formatted
             return cell
         case Section.shipping.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptLineItemTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptLineItemTableViewCell
