@@ -431,6 +431,7 @@ fileprivate class StripeCredentialsHandler {
     }
     
     static func load() -> String? {
+        if ProcessInfo.processInfo.arguments.contains("UITESTINGENVIRONMENT") { return nil }
         return KeychainSwift().get(stripeStorageKey)
     }
 }
