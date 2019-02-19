@@ -188,8 +188,6 @@ class DeliveryDetailsTests: XCTestCase {
         let deliveryDetails = validDetails()
         
         let dictionary = deliveryDetails.jsonRepresentation()
-        XCTAssertEqualOptional(dictionary["recipient_first_name"], deliveryDetails.firstName)
-        XCTAssertEqualOptional(dictionary["recipient_last_name"], deliveryDetails.lastName)
         XCTAssertEqualOptional(dictionary["recipient_name"], deliveryDetails.fullName)
         XCTAssertEqualOptional(dictionary["address_line_1"], deliveryDetails.line1)
         XCTAssertEqualOptional(dictionary["address_line_2"], deliveryDetails.line2)
