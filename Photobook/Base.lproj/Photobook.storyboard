@@ -2529,6 +2529,7 @@ Copyright © 2018 Kite. All rights reserved.</string>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="disclaimerLabel" destination="yJ9-ir-SG6" id="tO3-h4-qFP"/>
                                             <outlet property="itemLabel" destination="YkY-h9-Mt3" id="FlY-X1-fuY"/>
                                             <outlet property="totalCostLabel" destination="Vj9-s8-xAr" id="gKD-RI-4WK"/>
                                         </connections>
