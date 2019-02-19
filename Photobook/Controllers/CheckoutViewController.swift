@@ -186,7 +186,7 @@ class CheckoutViewController: UIViewController {
             welf?.dispatchGroup = nil
         })
         
-        setupPaymentContext()
+        paymentManager.setStripePaymentContext()
     }
     
     private func detailsDidRefresh() {
@@ -294,15 +294,6 @@ class CheckoutViewController: UIViewController {
         dismissClosure?(controllerToDismiss, false)
     }
     
-    private func setupPaymentContext() {
-        guard paymentManager.stripePaymentContext == nil else {
-            dispatchGroup?.leave()
-            return
-        }
-        paymentManager.setupStripePaymentContext()
-    }
-    
-    private var refreshInProgress = false
     private func refresh(showProgress: Bool = true, forceCostUpdate: Bool = false, forceShippingMethodsUpdate: Bool = false) {
         if showProgress {
             progressOverlayViewController.show(message: Constants.loadingDetailsText)

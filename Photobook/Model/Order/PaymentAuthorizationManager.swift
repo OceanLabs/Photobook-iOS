@@ -183,7 +183,7 @@ class PaymentAuthorizationManager: NSObject {
         }
     }
 
-    func setupStripePaymentContext() {
+    func setStripePaymentContext() {
         func configure(with stripeKey: String) {
             let config = STPPaymentConfiguration.shared()
             
