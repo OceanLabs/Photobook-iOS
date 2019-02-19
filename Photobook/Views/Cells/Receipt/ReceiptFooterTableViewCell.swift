@@ -35,4 +35,14 @@ class ReceiptFooterTableViewCell: UITableViewCell {
 
     @IBOutlet weak var totalCostLabel: UILabel! { didSet { totalCostLabel.scaleFont() } }
     @IBOutlet weak var itemLabel: UILabel! { didSet { itemLabel.scaleFont() } }
+    
+    @IBOutlet weak var disclaimerLabel: UILabel! {
+        didSet {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy"
+            let year = dateFormatter.string(from: Date())
+            
+            disclaimerLabel.text = NSLocalizedString("Views/Receipt/ReceiptFooterTableViewCell/DisclaimerText", value: "This transaction will appear as Kite Tech Ltd in your bank statement. If you have any questions about your order, please contact us at support@kite.ly\n\nCopyright © \(year) Kite. All rights reserved.", comment: "")
+        }
+    }
 }
