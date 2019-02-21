@@ -424,14 +424,22 @@ extension KiteAPIClient: STPEphemeralKeyProvider {
 
 fileprivate class StripeCredentialsHandler {
     
-    private static let stripeStorageKey = "StripeCustomerIdKey"
+    private struct StorageKeys {
+        static var live = "StripeLiveCustomerIdKey"
+        static var test = "StripeTestCustomerIdKey"
+    }
+
+    private static var storageKey: String {
+        return APIClient.environment == .live ? StorageKeys.live : StorageKeys.test
+    }
     
     static func save(_ key: String) {
-        KeychainSwift().set(key, forKey: stripeStorageKey)
+        if ProcessInfo.processInfo.arguments.contains("UITESTINGENVIRONMENT") { return }
+        KeychainSwift().set(key, forKey: storageKey)
     }
     
     static func load() -> String? {
         if ProcessInfo.processInfo.arguments.contains("UITESTINGENVIRONMENT") { return nil }
-        return KeychainSwift().get(stripeStorageKey)
+        return KeychainSwift().get(storageKey)
     }
 }

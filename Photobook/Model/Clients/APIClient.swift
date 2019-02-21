@@ -95,7 +95,8 @@ class APIClient: NSObject {
         case .none: return ""
         case .photobook: return "https://photobook-builder.herokuapp.com" //"https://staging-photobook-builder.herokuapp.com"
         case .pig: return "https://image.kite.ly/"
-        case .kite: return "https://staging.kite.ly/" // FIXME: "https://api.kite.ly/"
+        case .kite:
+            return APIClient.environment == .live ? "https://api.kite.ly/" : "https://staging.kite.ly/"
         }
     }
 
@@ -173,14 +174,10 @@ class APIClient: NSObject {
         
         switch imageType {
         case .jpeg:
-            guard let data = image.jpegData(compressionQuality: 0.8) else {
-                return nil
-            }
+            guard let data = image.jpegData(compressionQuality: 0.8) else { return nil }
             imageData = data
         case .png:
-            guard let data = image.pngData() else {
-                return nil
-            }
+            guard let data = image.pngData() else { return nil }
             imageData = data
         }
         
