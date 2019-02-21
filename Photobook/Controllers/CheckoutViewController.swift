@@ -29,6 +29,7 @@
 
 import UIKit
 import PassKit
+import Stripe
 
 class CheckoutViewController: UIViewController {
     
@@ -134,6 +135,8 @@ class CheckoutViewController: UIViewController {
     
     var dismissClosure: ((_ source: UIViewController, _ success: Bool) -> ())?
     
+    private var dispatchGroup: DispatchGroup? = DispatchGroup()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -173,6 +176,28 @@ class CheckoutViewController: UIViewController {
         order.deliveryDetails = DeliveryDetails.selectedDetails()
 
         emptyScreenViewController.show(message: Constants.loadingDetailsText, activity: true)
+        
+        // Enter dispatch group for PaymentContext and Refresh calls
+        dispatchGroup?.enter()
+        dispatchGroup?.enter()
+        
+        dispatchGroup?.notify(queue: DispatchQueue.main, execute: { [weak welf = self] in
+            welf?.detailsDidRefresh()
+            welf?.dispatchGroup = nil
+        })
+        
+        paymentManager.setStripePaymentContext()
+    }
+    
+    private func detailsDidRefresh() {
+        OrderManager.shared.saveBasketOrder()
+        
+        emptyScreenViewController.hide()
+        progressOverlayViewController.hide()
+        promoCodeActivityIndicator.stopAnimating()
+        promoCodeTextField.isUserInteractionEnabled = true
+        
+        updateViews()
     }
     
     override func viewDidLayoutSubviews() {
@@ -268,21 +293,14 @@ class CheckoutViewController: UIViewController {
         let controllerToDismiss = isPresentedModally() ? navigationController! : self
         dismissClosure?(controllerToDismiss, false)
     }
-
+    
     private func refresh(showProgress: Bool = true, forceCostUpdate: Bool = false, forceShippingMethodsUpdate: Bool = false) {
         if showProgress {
             progressOverlayViewController.show(message: Constants.loadingDetailsText)
         }
         
         order.updateCost(forceUpdate: forceCostUpdate, forceShippingMethodUpdate: forceShippingMethodsUpdate) { [weak welf = self] (error) in
-            
-            OrderManager.shared.saveBasketOrder()
-            
-            welf?.emptyScreenViewController.hide()
-            welf?.progressOverlayViewController.hide()
-            welf?.promoCodeActivityIndicator.stopAnimating()
-            welf?.promoCodeTextField.isUserInteractionEnabled = true
-            
+
             if let error = error {
                 if !(welf?.order.hasCachedCost ?? false) {
                     let errorMessage = ErrorMessage(error)
@@ -297,7 +315,12 @@ class CheckoutViewController: UIViewController {
                 return
             }
             
-            welf?.updateViews()
+            if welf?.dispatchGroup != nil {
+                welf?.dispatchGroup?.leave()
+                return
+            }
+            
+            welf?.detailsDidRefresh()
         }
     }
     
@@ -354,10 +377,10 @@ class CheckoutViewController: UIViewController {
         paymentMethodIconImageView.image = nil
         if let paymentMethod = order.paymentMethod {
             switch paymentMethod {
-            case .creditCard where Card.currentCard != nil:
-                let card = Card.currentCard!
-                paymentMethodIconImageView.image = card.cardIcon
-                paymentMethodView.accessibilityValue = card.number.cardType()?.stringValue()
+            case .creditCard where paymentManager.stripePaymentContext?.selectedPaymentMethod != nil:
+                let card = paymentManager.stripePaymentContext!.selectedPaymentMethod!
+                paymentMethodIconImageView.image = card.image
+                paymentMethodView.accessibilityValue = card.label
                 paymentMethodTitleLabel.text = Constants.payingWithText
             case .applePay:
                 paymentMethodIconImageView.image = UIImage(namedInPhotobookBundle: "apple-pay-method")
@@ -479,7 +502,7 @@ class CheckoutViewController: UIViewController {
     }
     
     private func paymentMethodIsValid() -> Bool {
-        return order.orderIsFree || (order.paymentMethod != nil && (order.paymentMethod != .creditCard || Card.currentCard != nil))
+        return order.orderIsFree || (order.paymentMethod != nil && (order.paymentMethod != .creditCard || paymentManager.stripePaymentContext?.selectedPaymentMethod != nil))
     }
     
     private func indicateDeliveryDetailsError() {
@@ -568,6 +591,8 @@ class CheckoutViewController: UIViewController {
         }
     }
     
+    private weak var paymentMethodsViewController: PaymentMethodsViewController?
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
         case Constants.receiptSegueName:
@@ -578,6 +603,8 @@ class CheckoutViewController: UIViewController {
         case Constants.segueIdentifierPaymentMethods:
             if let paymentMethodsViewController = segue.destination as? PaymentMethodsViewController {
                 paymentMethodsViewController.order = order
+                paymentMethodsViewController.paymentManager = paymentManager
+                self.paymentMethodsViewController = paymentMethodsViewController
             }
         case Constants.segueIdentifierAddressInput:
             if let addressTableViewController = segue.destination as? AddressTableViewController {
@@ -655,13 +682,15 @@ class CheckoutViewController: UIViewController {
             showReceipt()
         }
         else {
-            if order.paymentMethod == .applePay{
+            if order.paymentMethod == .applePay {
                 modalPresentationDismissedGroup.enter()
             }
             
             guard let paymentMethod = order.paymentMethod else { return }
             
             progressOverlayViewController.show(message: Constants.loadingPaymentText)
+            
+            paymentManager.stripePaymentContext?.hostViewController = self
             paymentManager.authorizePayment(cost: cost, method: paymentMethod)
         }
     }
@@ -740,6 +769,12 @@ extension CheckoutViewController: AmountPickerDelegate {
 }
 
 extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
+    
+    func paymentAuthorizationManagerDidUpdateDetails() {
+        updateViews()
+        paymentMethodsViewController?.reloadPaymentMethods()
+        dispatchGroup?.leave()
+    }
     
     func costUpdated() {
         updateViews()

@@ -258,6 +258,8 @@ class ReceiptViewController: UIViewController {
 
 extension ReceiptViewController: PaymentAuthorizationManagerDelegate {
     
+    func paymentAuthorizationManagerDidUpdateDetails() {}
+    
     func costUpdated() {
         updateViews()
     }

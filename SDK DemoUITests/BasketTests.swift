@@ -79,7 +79,7 @@ class BasketTests: PhotobookUITest {
         let paymentMethodView = automation.app.buttons["paymentMethodView"]
         let paymentMethodViewValue = paymentMethodView.value as? String
         XCTAssertNotNil(paymentMethodViewValue)
-        XCTAssertEqual(paymentMethodViewValue!, "Visa")
+        XCTAssertEqual(paymentMethodViewValue!, "Visa 4242")
         
         let deliveryDetailsView = automation.app.buttons["deliveryDetailsView"]
         XCTAssertTrue(deliveryDetailsView.value as? String == nil || (deliveryDetailsView.value as! String).isEmpty, "We should be showing no details or warning at this point")

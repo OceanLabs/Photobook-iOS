@@ -44,7 +44,7 @@ class PaymentMethodTests: PhotobookUITest {
         
         let cardLabel = creditCardCell.staticTexts["paymentMethodNameLabel"].label
         
-        XCTAssertEqual(cardLabel, "•••• •••• •••• " + automation.testCreditCardNumber.suffix(4))
+        XCTAssertEqual(cardLabel, "Visa " + automation.testCreditCardNumber.suffix(4))
     }
     
 }

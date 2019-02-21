@@ -122,7 +122,7 @@ class Order: Codable {
         }
         
         // If any product in the order doesn't not have shipping options, fetch shipping options for all
-        let shouldUpdateShippingMethods = products.reduce(forceShippingMethodUpdate, { $0 || $1.template.availableShippingMethods == nil }) || !PaymentAuthorizationManager.haveSetPaymentKeys
+        let shouldUpdateShippingMethods = products.reduce(forceShippingMethodUpdate, { $0 || $1.template.availableShippingMethods == nil })
         
         if shouldUpdateShippingMethods {
             updateShippingMethods { (error) in
@@ -153,7 +153,7 @@ class Order: Codable {
     }
     
     func updateShippingMethods(_ completionHandler: @escaping (_ error: APIClientError?) -> Void) {
-        KiteAPIClient.shared.getTemplateInfo(for: OrderManager.shared.basketOrder.products.map({ $0.template.templateId })) { [weak welf = self] (shippingMethods, regionMapping, error) in
+        KiteAPIClient.shared.getShippingInfo(for: OrderManager.shared.basketOrder.products.map({ $0.template.templateId })) { [weak welf = self] shippingInfo, error in
             guard error == nil else {
                 if let error = error, case .parsing(let details) = error {
                     Analytics.shared.trackError(.parsing, details)
@@ -163,34 +163,39 @@ class Order: Codable {
             }
             
             for product in welf?.products ?? [] {
-                let availableShippingMethods = shippingMethods?[product.template.templateId]
-                product.template.countryToRegionMapping = regionMapping?[product.template.templateId]
-                product.template.availableShippingMethods = availableShippingMethods
+                guard let shippingInfoForProduct = shippingInfo?[product.template.templateId] as? [String: Any] else { continue }
+
+                product.template.countryToRegionMapping = shippingInfoForProduct["countryToRegionMapping"] as? [String : String]
+                product.template.availableShippingMethods = shippingInfoForProduct["availableShippingMethods"] as? [String : [ShippingMethod]]
                 
                 let countryCode = welf?.deliveryDetails?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
                 if let regionCode = product.template.countryToRegionMapping?[countryCode] {
-                    product.selectedShippingMethod = availableShippingMethods?[regionCode]?.first
+                    product.selectedShippingMethod = product.template.availableShippingMethods?[regionCode]?.first
                 }
             }
             completionHandler(nil)
         }
     }
-    
+
     func orderParameters() -> [String: Any]? {
         
         guard let finalTotalCost = cost?.total else { return nil }
         
-        let shippingAddress = deliveryDetails?.jsonRepresentation()
-        
         var parameters = [String: Any]()
-        parameters["proof_of_payment"] = paymentToken
-        parameters["shipping_address"] = shippingAddress
-        parameters["customer_email"] = deliveryDetails?.email
-        parameters["customer_phone"] = deliveryDetails?.phone
+        parameters["user_data"] = ["user_agent": KiteAPIClient.userAgent]
+        
+        parameters["shipping_address"] = deliveryDetails?.jsonRepresentation()
         parameters["promo_code"] = promoCode
-        parameters["customer_payment"] = [
+        
+        parameters["payment"] = [
             "currency": finalTotalCost.currencyCode,
-            "amount": finalTotalCost.value
+            "amount": finalTotalCost.value,
+            "proof_of_payment": paymentToken ?? ""
+        ]
+        
+        parameters["customer"] = [
+            "email": deliveryDetails?.email ?? "",
+            "phone": deliveryDetails?.phone
         ]
         
         var jobs = [[String: Any]]()

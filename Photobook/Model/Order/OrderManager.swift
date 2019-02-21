@@ -118,7 +118,6 @@ class OrderManager {
                 try? FileManager.default.removeItem(atPath: Storage.processingOrderBackupFile)
                 return
             }
-            
             saveProcessingOrder()
         }
     }
@@ -266,8 +265,10 @@ class OrderManager {
     
     /// Uploads the assets
     func uploadAssets() {
+        guard let processingOrder = processingOrder else { return }
+        
         // If all assets have already been uploaded, jump to finishing the order
-        let assetsToUpload = processingOrder!.remainingAssetsToUpload()
+        let assetsToUpload = processingOrder.remainingAssetsToUpload()
         guard !assetsToUpload.isEmpty else {
             Analytics.shared.trackAction(.uploadSuccessful)
             automaticRetryCount = 0
@@ -290,14 +291,14 @@ class OrderManager {
         Analytics.shared.trackAction(.orderSubmitted, [Analytics.PropertyNames.secondsSinceAppOpen: Analytics.shared.secondsSinceAppOpen(),
                                                        Analytics.PropertyNames.secondsInBackground: Int(Analytics.shared.secondsSpentInBackground)])
         
-        // TODO: Break down parameters parsing errors
         guard let orderParameters = processingOrder?.orderParameters() else {
             completionHandler(.parsing(details: "SubmitOrder: Could not parse order parameters"))
             return
         }
         
         kiteApiClient.submitOrder(parameters: orderParameters, completionHandler: { [weak welf = self] orderId, error in
-            welf?.processingOrder?.orderId = orderId
+            guard let processingOrder = welf?.processingOrder else { return }
+            processingOrder.orderId = orderId
             completionHandler(error)
         })
     }
@@ -311,20 +312,22 @@ class OrderManager {
         }
         
         kiteApiClient.checkOrderStatus(receipt: receipt) { [weak welf = self] (status, error, orderId) in
+            guard let stelf = welf else { return }
             if let error = error {
                 completionHandler(status, error)
                 return
             }
             
             if status == .accepted || status == .received {
+                stelf.numberOfTimesPolled += 1
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-                    welf?.pollOrderStatus(completionHandler: completionHandler)
+                    stelf.pollOrderStatus(completionHandler: completionHandler)
                 })
                 return
             }
             
-            welf?.numberOfTimesPolled = 0
-            if let orderId = orderId, let processingOrder = welf?.processingOrder {
+            stelf.numberOfTimesPolled = 0
+            if let orderId = orderId, let processingOrder = stelf.processingOrder {
                 processingOrder.orderId = orderId
             }
             
@@ -344,15 +347,17 @@ class OrderManager {
             // Process uploaded assets
             pdfGenerationDispatchGroup.enter()
             product.processUploadedAssets(completionHandler: { [weak welf = self] error in
-                if let swelf = welf, swelf.isCancelling {
-                    swelf.processingOrder = nil
-                    swelf.cancelCompletionBlock?()
-                    swelf.cancelCompletionBlock = nil
+                guard let stelf = welf else { return }
+                
+                if stelf.isCancelling {
+                    stelf.processingOrder = nil
+                    stelf.cancelCompletionBlock?()
+                    stelf.cancelCompletionBlock = nil
                     return
                 }
                 
                 guard error == nil else {
-                    welf?.orderProcessingDelegate?.orderDidComplete(error: .uploadProcessing)
+                    stelf.orderProcessingDelegate?.orderDidComplete(error: .uploadProcessing)
                     return
                 }
                 
@@ -361,17 +366,18 @@ class OrderManager {
         }
         
         pdfGenerationDispatchGroup.notify(queue: DispatchQueue.main, execute: { [weak welf = self] in
-            guard welf?.processingOrder != nil, !(welf?.isSubmittingOrder ?? true) else { return }
+            guard let stelf = welf, stelf.processingOrder != nil, !stelf.isSubmittingOrder else { return }
             
             // Submit order
-            welf?.isSubmittingOrder = true
-            welf?.submitOrder(completionHandler: { (error) in
+            stelf.isSubmittingOrder = true
+            stelf.submitOrder(completionHandler: { [weak welf = self] (error) in
+                guard let stelf = welf else { return }
                 
-                if let swelf = welf, swelf.isCancelling {
-                    swelf.processingOrder = nil
-                    swelf.cancelCompletionBlock?()
-                    swelf.cancelCompletionBlock = nil
-                    swelf.isSubmittingOrder = false
+                if stelf.isCancelling {
+                    stelf.processingOrder = nil
+                    stelf.cancelCompletionBlock?()
+                    stelf.cancelCompletionBlock = nil
+                    stelf.isSubmittingOrder = false
                     return
                 }
                 
@@ -379,31 +385,32 @@ class OrderManager {
                     // Something went wrong while parsing the order parameters or response. Order should be cancelled.
                     if case APIClientError.parsing(let details) = error {
                         Analytics.shared.trackError(.parsing, details)
-                        welf?.orderDidComplete(error: .cancelled)
+                        stelf.orderDidComplete(error: .cancelled)
                     } else {
                         // Non-critical error. Tell the user and allow retrying.
                         if case APIClientError.server(let code, let message) = error {
                             Analytics.shared.trackError(.orderSubmission, "Server error: \(message) (\(code))")
                         }
-                        welf?.orderDidComplete(error: OrderProcessingError.api(message: ErrorMessage(error)))
+                        stelf.orderDidComplete(error: OrderProcessingError.api(message: ErrorMessage(error)))
                     }
                     return
                 }
                 
                 // Check for order success
                 welf?.pollOrderStatus { [weak welf = self] (status, error) in
+                    guard let stelf = welf else { return }
                     
-                    if let swelf = welf, swelf.isCancelling {
-                        swelf.processingOrder = nil
-                        swelf.cancelCompletionBlock?()
-                        swelf.cancelCompletionBlock = nil
-                        swelf.isSubmittingOrder = false
+                    if stelf.isCancelling {
+                        stelf.processingOrder = nil
+                        stelf.cancelCompletionBlock?()
+                        stelf.cancelCompletionBlock = nil
+                        stelf.isSubmittingOrder = false
                         return
                     }    
                     
                     if status == .paymentError {
                         Analytics.shared.trackError(.payment)
-                        welf?.orderDidComplete(error: .payment)
+                        stelf.orderDidComplete(error: .payment)
                         return
                     }
                     
@@ -417,14 +424,14 @@ class OrderManager {
                             break
                         }
                         
-                        welf?.orderDidComplete(error: .api(message: ErrorMessage(error)))
+                        stelf.orderDidComplete(error: .api(message: ErrorMessage(error)))
                         return
                     }
                     
                     // Success
                     Analytics.shared.trackAction(.orderCompleted, ["orderId": welf?.processingOrder?.orderId ?? ""])
-                    welf?.processingOrder = nil
-                    welf?.orderDidComplete()
+                    stelf.processingOrder = nil
+                    stelf.orderDidComplete()
                 }
             })
         })
@@ -451,7 +458,6 @@ class OrderManager {
         }
         
         assetLoadingManager.imageData(for: asset, progressHandler: nil, completionHandler: { [weak welf = self] data, fileExtension, error in
-            
             guard error == nil, let imageData = data else {
                 if let error = error {
                     welf?.failedFileUpload(with: error)

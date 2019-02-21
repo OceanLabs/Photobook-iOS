@@ -51,6 +51,13 @@ struct Price: Codable {
         }
     }
     
+    func int() -> Int {
+        if let intPrice = Int(formatted) {
+            return intPrice * 100
+        }
+        return Int(formatted.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())!
+    }
+    
     static func parse(_ dictionary: [String: Any], prioritizedCurrencyCodes: [String] = OrderManager.shared.prioritizedCurrencyCodes, formattingLocale: Locale = Locale.current) -> Price? {
         
         guard let valuesDict = dictionary as? [String: Double] else {

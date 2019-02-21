@@ -40,6 +40,7 @@ class Automation {
     let testPostalCode = "11111"
     let testCounty = "Clownborough"
     let testCreditCardNumber = "4242424242424242"
+    let testCreditCardDate = "0140" // January 2040
     let testCreditCardCVV = "111"
     
     let app: XCUIApplication
@@ -169,7 +170,10 @@ class Automation {
         goToPaymentMethodFromBasket()
         goToCreditCardFromPaymentMethod()
         fillCreditCardAndSave()
-        app.navigationBars["Payment Methods"].buttons["Back"].tap()
+        
+        let backButton = app.navigationBars["Payment Methods"].buttons["Back"]
+        testCase.wait(for: backButton)
+        backButton.tap()
     }
     
     func goToPaymentMethodFromBasket() {
@@ -177,25 +181,15 @@ class Automation {
     }
     
     func goToCreditCardFromPaymentMethod() {
-        app.tables/*@START_MENU_TOKEN@*/.buttons["Add Payment Method"]/*[[".cells.buttons[\"Add Payment Method\"]",".buttons[\"Add Payment Method\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        
+        app.tables.buttons["Add New Card"].tap()
     }
     
     func fillCreditCardAndSave() {
-        let cardNumberTextField = app.tables.cells["numberCell"].textFields["userInputTextField"]
-        cardNumberTextField.tap()
-        cardNumberTextField.typeText(testCreditCardNumber)
-        
-        app.toolbars["Toolbar"].buttons["Next"].tap()
-        
-        app.pickers.children(matching: .pickerWheel).element(boundBy: 0).swipeUp()
-        app.pickers.children(matching: .pickerWheel).element(boundBy: 1).swipeUp()
-        
-        app.toolbars["Toolbar"].buttons["Next"].tap()
-        
-        let cvvTextField = app.cells["cvvCell"].secureTextFields["userInputTextField"]
-        cvvTextField.typeText(testCreditCardCVV)
-        
-        app.navigationBars["Card Details"].buttons["Save"].tap()
+        let cardInputCell = app.tables.cells.firstMatch
+        cardInputCell.typeText(testCreditCardNumber)
+        cardInputCell.typeText(testCreditCardDate)
+        cardInputCell.typeText(testCreditCardCVV)
+        app.navigationBars["Add a Card"].buttons["Done"].tap()
     }
-    
 }

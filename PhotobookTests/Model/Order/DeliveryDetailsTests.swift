@@ -43,7 +43,7 @@ class DeliveryDetailsTests: XCTestCase {
         deliveryDetails.city = "London"
         deliveryDetails.zipOrPostcode = "CL0 WN4"
         deliveryDetails.stateOrCounty = "Clownborough"
-        deliveryDetails.country = Country(name: "United Kingdom", codeAlpha2: "UK", codeAlpha3: "GBA", currencyCode: "GBP")
+        deliveryDetails.country = Country(name: "United Kingdom", codeAlpha2: "UK", codeAlpha3: "GBR", currencyCode: "GBP")
         
         return deliveryDetails
     }
@@ -188,8 +188,6 @@ class DeliveryDetailsTests: XCTestCase {
         let deliveryDetails = validDetails()
         
         let dictionary = deliveryDetails.jsonRepresentation()
-        XCTAssertEqualOptional(dictionary["recipient_first_name"], deliveryDetails.firstName)
-        XCTAssertEqualOptional(dictionary["recipient_last_name"], deliveryDetails.lastName)
         XCTAssertEqualOptional(dictionary["recipient_name"], deliveryDetails.fullName)
         XCTAssertEqualOptional(dictionary["address_line_1"], deliveryDetails.line1)
         XCTAssertEqualOptional(dictionary["address_line_2"], deliveryDetails.line2)
