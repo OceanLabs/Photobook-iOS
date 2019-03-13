@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "Photobook"
-  s.version      = "1.1.0"
+  s.version      = "1.3.0"
   s.summary      = "Summary here"
   s.description  = <<-DESC
 Description here

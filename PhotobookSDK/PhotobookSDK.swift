@@ -31,7 +31,7 @@ import UIKit
 import SDWebImage
 
 struct AssetsNotificationName {
-    static let albumsWereUpdated = Notification.Name("ly.kite.photobook.albumsWereUpdatedNotificationName")
+    static let albumsWereUpdated = Notification.Name("ly.kite.photobook.sdk.albumsWereUpdatedNotificationName")
 }
 
 @objc public class AlbumChange: NSObject {
