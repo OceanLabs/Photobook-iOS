@@ -160,7 +160,7 @@ struct AssetsNotificationName {
                 return
             }
             
-            Checkout.shared.addCurrentProductToBasket()
+            PhotobookSDK.shared.addCurrentProductToBasket()
             
             // Photobook completion
             if let checkoutViewController = PhotobookSDK.shared.checkoutViewController(embedInNavigation: false, dismissClosure: completion) {
@@ -273,5 +273,31 @@ struct AssetsNotificationName {
         let navigationController = PhotobookNavigationController(navigationBarClass: PhotobookNavigationBar.self, toolbarClass: nil)
         navigationController.viewControllers = [ viewController ]
         return navigationController
+    }
+    
+    // MARK:- Basket Operations
+    
+    @objc public func addProductToBasket(_ product: Product) {
+        OrderManager.shared.basketOrder.products.insert(product, at: 0)
+        OrderManager.shared.saveBasketOrder()
+    }
+    
+    @objc public func addCurrentProductToBasket(items: Int = 1) {
+        guard let product = ProductManager.shared.currentProduct else { return }
+        product.itemCount = items
+        OrderManager.shared.basketOrder.products.insert(product, at: 0)
+        OrderManager.shared.saveBasketOrder()
+    }
+    
+    @objc public func numberOfItemsInBasket() -> Int {
+        return OrderManager.shared.basketOrder.products.reduce(0, { $0 + $1.itemCount })
+    }
+    
+    @objc public func setPromoCode(_ code: String?) {
+        OrderManager.shared.basketOrder.promoCode = code
+    }
+    
+    @objc public func clearBasketOrder() {
+        OrderManager.shared.reset()
     }
 }

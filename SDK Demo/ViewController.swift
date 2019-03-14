@@ -77,7 +77,7 @@ class ViewController: UIViewController {
             print("Could not create photo book product")
             return
         }
-        Checkout.shared.addProductToBasket(photobookProduct)
+        PhotobookSDK.shared.addProductToBasket(photobookProduct)
         showBasket(sender)
     }
     

@@ -137,13 +137,13 @@ class PhotobookManager: NSObject {
                     return
                 }
                 
-                let items = Checkout.shared.numberOfItemsInBasket()
+                let items = PhotobookSDK.shared.numberOfItemsInBasket()
                 if items == 0 {
-                    Checkout.shared.addCurrentProductToBasket()
+                    PhotobookSDK.shared.addCurrentProductToBasket()
                 } else {
                     // Only allow one item in the basket
-                    Checkout.shared.clearBasketOrder()
-                    Checkout.shared.addCurrentProductToBasket(items: items)
+                    PhotobookSDK.shared.clearBasketOrder()
+                    PhotobookSDK.shared.addCurrentProductToBasket(items: items)
                 }
                 
                 // Push the checkout on completion
@@ -217,13 +217,13 @@ class PhotobookManager: NSObject {
                 return
             }
             
-            let items = Checkout.shared.numberOfItemsInBasket()
+            let items = PhotobookSDK.shared.numberOfItemsInBasket()
             if items == 0 {
-                Checkout.shared.addCurrentProductToBasket()
+                PhotobookSDK.shared.addCurrentProductToBasket()
             } else {
                 // Only allow one item in the basket
-                Checkout.shared.clearBasketOrder()
-                Checkout.shared.addCurrentProductToBasket(items: items)
+                PhotobookSDK.shared.clearBasketOrder()
+                PhotobookSDK.shared.addCurrentProductToBasket(items: items)
             }
             
             // Photobook completion
