@@ -8,8 +8,8 @@ Description here
                    DESC
 
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
-  s.platform     = :ios, "9.0"
-  s.authors      = { 'Konstantinos Karagiannis' => 'kkarayannis@gmail.com', 'Jaime Landazuri' => '', 'Julian Gruber' => '' }
+  s.platform     = :ios, "10.0"
+  s.authors      = { 'Konstantinos Karagiannis' => 'kkarayannis@gmail.com', 'Jaime Landazuri' => 'jlandazuri42@gmail.com', 'Julian Gruber' => '' }
   s.homepage     = 'https://www.kite.ly'
   s.source       = { :git => "https://github.com/OceanLabs/Photobook-iOS.git", :tag => "v" + s.version.to_s }
   s.source_files  = ["Photobook/**/*.swift", "PhotobookSDK/**/*.swift"]
