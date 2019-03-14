@@ -32,8 +32,8 @@ import XCTest
 
 class DeliveryDetailsTests: XCTestCase {
     
-    func validDetails() -> DeliveryDetails {
-        let deliveryDetails = DeliveryDetails()
+    func validDetails() -> OLDeliveryDetails {
+        let deliveryDetails = OLDeliveryDetails()
         deliveryDetails.firstName = "George"
         deliveryDetails.lastName = "Clowney"
         deliveryDetails.email = "g.clowney@clownmail.com"
@@ -50,7 +50,7 @@ class DeliveryDetailsTests: XCTestCase {
     
     func testCopy() {
         let validDetails = self.validDetails()
-        let validDetailsCopy = validDetails.copy() as! DeliveryDetails
+        let validDetailsCopy = validDetails.copy() as! OLDeliveryDetails
         
         XCTAssertEqual(validDetails.firstName, validDetailsCopy.firstName)
         XCTAssertEqual(validDetails.lastName, validDetailsCopy.lastName)
@@ -166,9 +166,9 @@ class DeliveryDetailsTests: XCTestCase {
 
     func testDetails_canBePersisted() {
         let deliveryDetails = validDetails()
-        DeliveryDetails.add(deliveryDetails)
-        DeliveryDetails.loadSavedDetails()
-        XCTAssertEqual([deliveryDetails], DeliveryDetails.savedDeliveryDetails)
+        OLDeliveryDetails.add(deliveryDetails)
+        OLDeliveryDetails.loadSavedDetails()
+        XCTAssertEqual([deliveryDetails], OLDeliveryDetails.savedDeliveryDetails)
     }
     
     func testSelectedDetails() {
@@ -176,11 +176,11 @@ class DeliveryDetailsTests: XCTestCase {
         let deliveryDetails2 = validDetails()
         let deliveryDetails3 = validDetails()
 
-        DeliveryDetails.add(deliveryDetails)
-        DeliveryDetails.add(deliveryDetails3)
-        DeliveryDetails.add(deliveryDetails2)
+        OLDeliveryDetails.add(deliveryDetails)
+        OLDeliveryDetails.add(deliveryDetails3)
+        OLDeliveryDetails.add(deliveryDetails2)
         
-        let selected = DeliveryDetails.selectedDetails()
+        let selected = OLDeliveryDetails.selectedDetails()
         XCTAssertEqualOptional(selected, deliveryDetails2)
     }
     
@@ -198,34 +198,34 @@ class DeliveryDetailsTests: XCTestCase {
     }
     
     func testDetails_shouldBeEmpty() {
-        XCTAssertTrue(DeliveryDetails.savedDeliveryDetails.count == 0)
+        XCTAssertTrue(OLDeliveryDetails.savedDeliveryDetails.count == 0)
     }
     
     func testDetails_shouldSaveTheDetails() {
         let deliveryDetails = validDetails()
-        DeliveryDetails.add(deliveryDetails)
-        DeliveryDetails.loadSavedDetails()
-        XCTAssertEqual([deliveryDetails], DeliveryDetails.savedDeliveryDetails)
+        OLDeliveryDetails.add(deliveryDetails)
+        OLDeliveryDetails.loadSavedDetails()
+        XCTAssertEqual([deliveryDetails], OLDeliveryDetails.savedDeliveryDetails)
     }
     
     func testDetails_shouldEditTheDetails() {
         let deliveryDetails = validDetails()
-        DeliveryDetails.add(deliveryDetails)
+        OLDeliveryDetails.add(deliveryDetails)
         deliveryDetails.city = "Clowntown"
-        DeliveryDetails.edit(deliveryDetails, at: 0)
-        DeliveryDetails.loadSavedDetails()
-        XCTAssertEqual([deliveryDetails], DeliveryDetails.savedDeliveryDetails)
+        OLDeliveryDetails.edit(deliveryDetails, at: 0)
+        OLDeliveryDetails.loadSavedDetails()
+        XCTAssertEqual([deliveryDetails], OLDeliveryDetails.savedDeliveryDetails)
     }
     
     func testDetails_shouldRemoveTheDetails() {
         let deliveryDetails = validDetails()
-        DeliveryDetails.add(deliveryDetails)
-        DeliveryDetails.remove(deliveryDetails)
-        XCTAssertFalse(DeliveryDetails.savedDeliveryDetails.contains(deliveryDetails))
+        OLDeliveryDetails.add(deliveryDetails)
+        OLDeliveryDetails.remove(deliveryDetails)
+        XCTAssertFalse(OLDeliveryDetails.savedDeliveryDetails.contains(deliveryDetails))
     }
     
     override func setUp() {
-        UserDefaults.standard.removeObject(forKey: DeliveryDetails.savedDetailsKey)
-        DeliveryDetails.loadSavedDetails()
+        UserDefaults.standard.removeObject(forKey: OLDeliveryDetails.savedDetailsKey)
+        OLDeliveryDetails.loadSavedDetails()
     }
 }

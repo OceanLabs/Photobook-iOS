@@ -41,7 +41,7 @@ protocol AddressTableViewControllerDelegate: class {
 
 class AddressTableViewController: UITableViewController {
     
-    lazy var deliveryDetails = DeliveryDetails()
+    lazy var deliveryDetails = OLDeliveryDetails()
     var index: Int?
     
     weak var delegate: AddressTableViewControllerDelegate?
@@ -124,9 +124,9 @@ class AddressTableViewController: UITableViewController {
         if firstNameInvalidReason == nil && lastNameInvalidReason == nil && emailInvalidReason == nil && phoneInvalidReason == nil && line1IsValid == nil && cityIsValid == nil && postCodeIsValid == nil && stateOrCountyIsValid == nil {
             
             if let index = index {
-                DeliveryDetails.edit(deliveryDetails, at: index)
+                OLDeliveryDetails.edit(deliveryDetails, at: index)
             } else {
-                DeliveryDetails.add(deliveryDetails)
+                OLDeliveryDetails.add(deliveryDetails)
             }
             
             OrderManager.shared.basketOrder.deliveryDetails = deliveryDetails

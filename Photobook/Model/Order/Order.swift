@@ -36,7 +36,7 @@ struct OrdersNotificationName {
 
 class Order: Codable {
     
-    var deliveryDetails: DeliveryDetails?
+    var deliveryDetails: OLDeliveryDetails?
     var paymentMethod: PaymentMethod? = PaymentAuthorizationManager.isApplePayAvailable ? .applePay : nil
     var products = [Product]()
     var promoCode: String?
@@ -233,7 +233,7 @@ class Order: Codable {
     convenience required init(from decoder: Decoder) throws {
         self.init()
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        deliveryDetails = try values.decodeIfPresent(DeliveryDetails.self, forKey: .deliveryDetails)
+        deliveryDetails = try values.decodeIfPresent(OLDeliveryDetails.self, forKey: .deliveryDetails)
         paymentMethod = try values.decodeIfPresent(PaymentMethod.self, forKey: .paymentMethod)
         promoCode = try values.decodeIfPresent(String.self, forKey: .promoCode)
         lastSubmissionDate = try values.decodeIfPresent(Date.self, forKey: .lastSubmissionDate)

@@ -300,4 +300,8 @@ struct AssetsNotificationName {
     @objc public func clearBasketOrder() {
         OrderManager.shared.reset()
     }
+    
+    @objc public func setDeliveryDetails(_ deliveryDetails: OLDeliveryDetails) {
+        OLDeliveryDetails.add(deliveryDetails)
+    }
 }

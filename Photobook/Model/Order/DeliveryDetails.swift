@@ -29,24 +29,53 @@
 
 import UIKit
 
-class DeliveryDetails: NSCopying, Codable {
+@objc public class OLDeliveryDetails: NSObject, NSCopying, Codable {
     
     static let savedDetailsKey = "ly.kite.sdk.savedDetailsKey"
     
-    static private(set) var savedDeliveryDetails = [DeliveryDetails]()
+    static private(set) var savedDeliveryDetails = [OLDeliveryDetails]()
     
-    var firstName: String?
-    var lastName: String?
-    var email: String?
-    var phone: String?
-    var line1: String?
-    var line2: String?
-    var city: String?
-    var stateOrCounty: String?
-    var zipOrPostcode: String?
+    internal(set) public var firstName: String?
+    internal(set) public var lastName: String?
+    internal(set) public var email: String?
+    internal(set) public var phone: String?
+    internal(set) public var line1: String?
+    internal(set) public var line2: String?
+    internal(set) public var city: String?
+    internal(set) public var stateOrCounty: String?
+    internal(set) public var zipOrPostcode: String?
+    public var countryCode: String { return country.codeAlpha3 }
+    
     var country = Country.countryForCurrentLocale()
     private(set) var selected = false
-
+    
+    
+    override init() {
+        // Overriden to make initialiser internal
+    }
+    
+    public convenience init?(firstName: String, lastName: String,
+                email: String, phone: String,
+                line1: String, line2: String?,
+                city: String, stateOrCounty: String, countryCode: String) {
+        
+        guard let country = Country.countryFor(code: countryCode) else { return nil }
+        
+        self.init()
+        
+        self.firstName = firstName
+        self.lastName = lastName
+        self.email = email
+        self.phone = phone
+        self.line1 = line1
+        self.line2 = line2
+        self.city = city
+        self.stateOrCounty = stateOrCounty
+        self.country = country
+        
+        if !self.isValid { return nil }
+    }
+    
     var isValid: Bool {
         get {
             guard let firstName = firstName, !firstName.isEmpty,
@@ -63,8 +92,8 @@ class DeliveryDetails: NSCopying, Codable {
         }
     }
     
-    func copy(with zone: NSZone? = nil) -> Any {
-        let copy = DeliveryDetails()
+    public func copy(with zone: NSZone? = nil) -> Any {
+        let copy = OLDeliveryDetails()
         copy.firstName = firstName
         copy.lastName = lastName
         copy.email = email
@@ -82,10 +111,10 @@ class DeliveryDetails: NSCopying, Codable {
     
     static func loadSavedDetails() {
         guard let deliveryDetailsData = UserDefaults.standard.object(forKey: savedDetailsKey) as? Data,
-            let deliveryDetails = try? PropertyListDecoder().decode([DeliveryDetails].self, from: deliveryDetailsData)
-        else {
-            savedDeliveryDetails = [DeliveryDetails]()
-            return
+            let deliveryDetails = try? PropertyListDecoder().decode([OLDeliveryDetails].self, from: deliveryDetailsData)
+            else {
+                savedDeliveryDetails = [OLDeliveryDetails]()
+                return
         }
         savedDeliveryDetails = deliveryDetails
     }
@@ -96,21 +125,21 @@ class DeliveryDetails: NSCopying, Codable {
         UserDefaults.standard.synchronize()
     }
     
-    static func add(_ deliveryDetails: DeliveryDetails) {
+    static func add(_ deliveryDetails: OLDeliveryDetails) {
         guard !savedDeliveryDetails.contains(deliveryDetails) else { return }
         savedDeliveryDetails.append(deliveryDetails)
         select(deliveryDetails)
         saveDeliveryDetails()
     }
     
-    static func edit(_ deliveryDetails: DeliveryDetails, at index: Int) {
+    static func edit(_ deliveryDetails: OLDeliveryDetails, at index: Int) {
         guard index < savedDeliveryDetails.count else { return }
         savedDeliveryDetails.remove(at: index)
         savedDeliveryDetails.insert(deliveryDetails, at: index)
         saveDeliveryDetails()
     }
-
-    static func remove(_ deliveryDetails: DeliveryDetails) {
+    
+    static func remove(_ deliveryDetails: OLDeliveryDetails) {
         guard let index = savedDeliveryDetails.index(where: { $0 == deliveryDetails }) else { return }
         savedDeliveryDetails.remove(at: index)
         if deliveryDetails.selected, let firstDetails = savedDeliveryDetails.first {
@@ -119,12 +148,12 @@ class DeliveryDetails: NSCopying, Codable {
         saveDeliveryDetails()
     }
     
-    static func selectedDetails() -> DeliveryDetails? {
+    static func selectedDetails() -> OLDeliveryDetails? {
         loadSavedDetails()
         return savedDeliveryDetails.first { $0.selected }
     }
     
-    static func select(_ deliveryDetails: DeliveryDetails) {
+    static func select(_ deliveryDetails: OLDeliveryDetails) {
         guard savedDeliveryDetails.contains(deliveryDetails) else { return }
         savedDeliveryDetails.forEach { $0.selected = false }
         deliveryDetails.selected = true
@@ -154,7 +183,7 @@ class DeliveryDetails: NSCopying, Codable {
     
     func jsonRepresentation() -> [String: String] {
         var json = [String: String]()
-
+        
         json["recipient_name"] = fullName
         json["address_line_1"] = line1
         json["address_line_2"] = line2
@@ -162,31 +191,31 @@ class DeliveryDetails: NSCopying, Codable {
         json["county_state"] = stateOrCounty
         json["postcode"] = zipOrPostcode
         json["country_code"] = country.codeAlpha3
-
+        
         return json
     }
-}
-
-func ==(lhs: DeliveryDetails, rhs: DeliveryDetails) -> Bool{
-    return lhs.firstName == rhs.firstName
-        && lhs.lastName == rhs.lastName
-        && lhs.email == rhs.email
-        && lhs.phone == rhs.phone
-        && lhs.line1 == rhs.line1
-        && lhs.line2 == rhs.line2
-        && lhs.city == rhs.city
-        && lhs.stateOrCounty == rhs.stateOrCounty
-        && lhs.zipOrPostcode == rhs.zipOrPostcode
-        && lhs.country.codeAlpha3 == rhs.country.codeAlpha3
-}
-
-extension DeliveryDetails: Hashable {
     
     /// Only the address matters
-    func hash(into hasher: inout Hasher) {
+    public override var hash: Int {
+        var hasher = Hasher()
         hasher.combine(city)
         hasher.combine(zipOrPostcode)
         hasher.combine(stateOrCounty)
         hasher.combine(country.name)
+        return hasher.finalize()
+    }
+    
+    override public func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? OLDeliveryDetails else { return false }
+        return firstName == other.firstName
+            && lastName == other.lastName
+            && email == other.email
+            && phone == other.phone
+            && line1 == other.line1
+            && line2 == other.line2
+            && city == other.city
+            && stateOrCounty == other.stateOrCounty
+            && zipOrPostcode == other.zipOrPostcode
+            && country.codeAlpha3 == other.country.codeAlpha3
     }
 }

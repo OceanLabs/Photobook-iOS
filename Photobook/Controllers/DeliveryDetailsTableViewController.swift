@@ -42,7 +42,7 @@ class DeliveryDetailsTableViewController: UITableViewController {
         
         if identifier == "addressSegue", let addressViewController = segue.destination as? AddressTableViewController {
             let dictionary = sender as? [String: Any] ?? [String: Any]()
-            addressViewController.deliveryDetails = dictionary["details"] as? DeliveryDetails ?? DeliveryDetails()
+            addressViewController.deliveryDetails = dictionary["details"] as? OLDeliveryDetails ?? OLDeliveryDetails()
             addressViewController.index = dictionary["index"] as? Int
             addressViewController.delegate = self
         }
@@ -56,7 +56,7 @@ extension DeliveryDetailsTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return DeliveryDetails.savedDeliveryDetails.count + 1
+        return OLDeliveryDetails.savedDeliveryDetails.count + 1
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -64,9 +64,9 @@ extension DeliveryDetailsTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.item < DeliveryDetails.savedDeliveryDetails.count {
+        if indexPath.item < OLDeliveryDetails.savedDeliveryDetails.count {
             let cell = tableView.dequeueReusableCell(withIdentifier: DeliveryAddressTableViewCell.reuseIdentifier, for: indexPath) as! DeliveryAddressTableViewCell
-            let details = DeliveryDetails.savedDeliveryDetails[indexPath.item]
+            let details = OLDeliveryDetails.savedDeliveryDetails[indexPath.item]
             cell.topLabel.text = details.line1
             cell.bottomLabel.text = details.descriptionWithoutLine1()
             
@@ -85,9 +85,9 @@ extension DeliveryDetailsTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.item < DeliveryDetails.savedDeliveryDetails.count {
-            let details = DeliveryDetails.savedDeliveryDetails[indexPath.item]
-            DeliveryDetails.select(details)
+        if indexPath.item < OLDeliveryDetails.savedDeliveryDetails.count {
+            let details = OLDeliveryDetails.savedDeliveryDetails[indexPath.item]
+            OLDeliveryDetails.select(details)
             
             OrderManager.shared.basketOrder.deliveryDetails = details
             
@@ -100,20 +100,20 @@ extension DeliveryDetailsTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        let details = DeliveryDetails.savedDeliveryDetails[indexPath.item]
+        let details = OLDeliveryDetails.savedDeliveryDetails[indexPath.item]
         performSegue(withIdentifier: "addressSegue", sender: ["details": details.copy(), "index": indexPath.item])
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        guard indexPath.row < DeliveryDetails.savedDeliveryDetails.count else { return false }
+        guard indexPath.row < OLDeliveryDetails.savedDeliveryDetails.count else { return false }
         return true
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { return }
         
-        let details = DeliveryDetails.savedDeliveryDetails[indexPath.item]
-        DeliveryDetails.remove(details)
+        let details = OLDeliveryDetails.savedDeliveryDetails[indexPath.item]
+        OLDeliveryDetails.remove(details)
         
         tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
     }

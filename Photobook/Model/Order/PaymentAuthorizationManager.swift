@@ -288,7 +288,7 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: @escaping (PKPaymentAuthorizationStatus) -> Void) {
 
-        let deliveryDetails = DeliveryDetails()
+        let deliveryDetails = OLDeliveryDetails()
         deliveryDetails.firstName = payment.shippingContact?.name?.givenName
         deliveryDetails.lastName = payment.shippingContact?.name?.familyName
         deliveryDetails.email = payment.shippingContact?.emailAddress
@@ -336,7 +336,7 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didSelectShippingContact contact: PKContact, completion: @escaping (PKPaymentAuthorizationStatus, [PKShippingMethod], [PKPaymentSummaryItem]) -> Void) {
         
-        let deliveryDetails = DeliveryDetails()
+        let deliveryDetails = OLDeliveryDetails()
         if let code = contact.postalAddress?.isoCountryCode, let country = Country.countryFor(code: code){
             deliveryDetails.country = country
         }

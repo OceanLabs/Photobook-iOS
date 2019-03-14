@@ -39,7 +39,7 @@ class PaymentAuthorizationManagerTests: XCTestCase {
     func fakeOrder() -> OrderMock {
         let order = OrderMock()
         
-        let deliveryDetails = DeliveryDetails()
+        let deliveryDetails = OLDeliveryDetails()
         deliveryDetails.firstName = "George"
         deliveryDetails.lastName = "Clowney"
         deliveryDetails.email = "g.clowney@clownmail.com"

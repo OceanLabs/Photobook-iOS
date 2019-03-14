@@ -173,7 +173,7 @@ class CheckoutViewController: UIViewController {
             navigationItem.leftBarButtonItems = [ cancelBarButtonItem ]
         }
         
-        order.deliveryDetails = DeliveryDetails.selectedDetails()
+        order.deliveryDetails = OLDeliveryDetails.selectedDetails()
 
         emptyScreenViewController.show(message: Constants.loadingDetailsText, activity: true)
         
@@ -649,7 +649,7 @@ class CheckoutViewController: UIViewController {
     }
     
     @IBAction func deliveryDetailsTapped(_ sender: UITapGestureRecognizer) {
-        if DeliveryDetails.savedDeliveryDetails.count == 0 {
+        if OLDeliveryDetails.savedDeliveryDetails.count == 0 {
             performSegue(withIdentifier: Constants.segueIdentifierAddressInput, sender: nil)
             return
         }
