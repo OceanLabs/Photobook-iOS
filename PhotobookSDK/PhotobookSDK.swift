@@ -98,6 +98,7 @@ struct AssetsNotificationName {
     @objc public static let shared: PhotobookSDK = {
         let sdk = PhotobookSDK()
         sdk.environment = .live
+        SDWebImageManager.shared().imageCache?.config.shouldDecompressImages = false
         return sdk
     }()
     
@@ -179,7 +180,6 @@ struct AssetsNotificationName {
         }
         
         UIFont.loadAllFonts()
-        SDWebImageManager.shared().imageCache?.config.shouldCacheImagesInMemory = false
         
         if ProcessInfo.processInfo.arguments.contains("UITESTINGENVIRONMENT") {
             OrderManager.shared.cancelProcessing {}
