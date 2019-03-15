@@ -277,11 +277,17 @@ struct AssetsNotificationName {
     
     // MARK:- Basket Operations
     
+    /// Adds a product to the basket
+    ///
+    /// - Parameter product: Any product conforming to the Product protocol
     @objc public func addProductToBasket(_ product: Product) {
         OrderManager.shared.basketOrder.products.insert(product, at: 0)
         OrderManager.shared.saveBasketOrder()
     }
     
+    /// Adds the SDK's current photo book product to the basket
+    ///
+    /// - Parameter items: Amount of copies of the product
     @objc public func addCurrentProductToBasket(items: Int = 1) {
         guard let product = ProductManager.shared.currentProduct else { return }
         product.itemCount = items
@@ -289,18 +295,28 @@ struct AssetsNotificationName {
         OrderManager.shared.saveBasketOrder()
     }
     
+    /// Number of items currently in the basket
+    ///
+    /// - Returns: The total amount of items in the basket including copies
     @objc public func numberOfItemsInBasket() -> Int {
         return OrderManager.shared.basketOrder.products.reduce(0, { $0 + $1.itemCount })
     }
     
+    /// Sets a promo code to be used at checkout
+    ///
+    /// - Parameter code: The promo code
     @objc public func setPromoCode(_ code: String?) {
         OrderManager.shared.basketOrder.promoCode = code
     }
     
+    /// Clears the basket of all items
     @objc public func clearBasketOrder() {
         OrderManager.shared.reset()
     }
     
+    /// Adds a delivery address to the user's address book and selects it to be used at checkout
+    ///
+    /// - Parameter deliveryDetails: The delivery address to use
     @objc public func setDeliveryDetails(_ deliveryDetails: OLDeliveryDetails) {
         OLDeliveryDetails.add(deliveryDetails)
     }
