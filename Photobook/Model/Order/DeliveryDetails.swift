@@ -70,11 +70,13 @@ import UIKit
     ///   - line2: Second line of the recipient's address, if needed
     ///   - city: City of the recipient's address
     ///   - stateOrCounty: State or county of the recipient's address
+    ///   - zipOrPostcode: ZIP code or postcode of the recipient's address
     ///   - countryCode: 2 or 3 letter code as listed by ISO / UN
     @objc public convenience init?(firstName: String, lastName: String,
                 email: String, phone: String,
                 line1: String, line2: String?,
-                city: String, stateOrCounty: String, countryCode: String) {
+                city: String, stateOrCounty: String,
+                zipOrPostcode: String, countryCode: String) {
         
         guard let country = Country.countryFor(code: countryCode) else { return nil }
         
@@ -88,6 +90,7 @@ import UIKit
         self.line2 = line2
         self.city = city
         self.stateOrCounty = stateOrCounty
+        self.zipOrPostcode = zipOrPostcode
         self.country = country
         
         if !self.isValid { return nil }
