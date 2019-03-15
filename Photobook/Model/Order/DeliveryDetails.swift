@@ -29,6 +29,7 @@
 
 import UIKit
 
+/// Delivery details information to be used at checkout
 @objc public class OLDeliveryDetails: NSObject, NSCopying, Codable {
     
     static let savedDetailsKey = "ly.kite.sdk.savedDetailsKey"
@@ -44,6 +45,8 @@ import UIKit
     @objc internal(set) public var city: String?
     @objc internal(set) public var stateOrCounty: String?
     @objc internal(set) public var zipOrPostcode: String?
+    
+    /// 3-letter country code
     @objc public var countryCode: String { return country.codeAlpha3 }
     
     var country = Country.countryForCurrentLocale()
@@ -54,6 +57,20 @@ import UIKit
         // Overriden to make initialiser internal
     }
     
+    /// Initializer
+    ///
+    /// - Note: The initializer will fail if a valid email is not provided or the phone number is less than 5 characters long
+    ///
+    /// - Parameters:
+    ///   - firstName: The firstname of the recipient
+    ///   - lastName: The lastname of the recipient
+    ///   - email: A valid contact email
+    ///   - phone: A contact phone
+    ///   - line1: First line of the recipient's address
+    ///   - line2: Second line of the recipient's address, if needed
+    ///   - city: City of the recipient's address
+    ///   - stateOrCounty: State or county of the recipient's address
+    ///   - countryCode: 2 or 3 letter code as listed by ISO / UN
     @objc public convenience init?(firstName: String, lastName: String,
                 email: String, phone: String,
                 line1: String, line2: String?,
