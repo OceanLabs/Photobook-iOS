@@ -35,16 +35,16 @@ import UIKit
     
     static private(set) var savedDeliveryDetails = [OLDeliveryDetails]()
     
-    internal(set) public var firstName: String?
-    internal(set) public var lastName: String?
-    internal(set) public var email: String?
-    internal(set) public var phone: String?
-    internal(set) public var line1: String?
-    internal(set) public var line2: String?
-    internal(set) public var city: String?
-    internal(set) public var stateOrCounty: String?
-    internal(set) public var zipOrPostcode: String?
-    public var countryCode: String { return country.codeAlpha3 }
+    @objc internal(set) public var firstName: String?
+    @objc internal(set) public var lastName: String?
+    @objc internal(set) public var email: String?
+    @objc internal(set) public var phone: String?
+    @objc internal(set) public var line1: String?
+    @objc internal(set) public var line2: String?
+    @objc internal(set) public var city: String?
+    @objc internal(set) public var stateOrCounty: String?
+    @objc internal(set) public var zipOrPostcode: String?
+    @objc public var countryCode: String { return country.codeAlpha3 }
     
     var country = Country.countryForCurrentLocale()
     private(set) var selected = false
@@ -54,7 +54,7 @@ import UIKit
         // Overriden to make initialiser internal
     }
     
-    public convenience init?(firstName: String, lastName: String,
+    @objc public convenience init?(firstName: String, lastName: String,
                 email: String, phone: String,
                 line1: String, line2: String?,
                 city: String, stateOrCounty: String, countryCode: String) {
