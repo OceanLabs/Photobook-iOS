@@ -18,7 +18,7 @@ pod 'PayPal-iOS-SDK/Core', '~> 2.18.0'
 end
 
 target 'Photobook' do
-pod 'Stripe'
+pod 'Stripe', '14.0.0'
 pod 'Fabric'
 pod 'Crashlytics'
 pod 'KeychainSwift'
