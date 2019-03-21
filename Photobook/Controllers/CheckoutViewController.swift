@@ -302,6 +302,10 @@ class CheckoutViewController: UIViewController {
         order.updateCost(forceUpdate: forceCostUpdate, forceShippingMethodUpdate: forceShippingMethodsUpdate) { [weak welf = self] (error) in
 
             if let error = error {
+                if case .parsing(_) = error {
+                    OrderManager.shared.reset()
+                }
+
                 if !(welf?.order.hasCachedCost ?? false) {
                     let errorMessage = ErrorMessage(error)
                     welf?.emptyScreenViewController.show(message: errorMessage.text, title: errorMessage.title)
