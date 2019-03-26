@@ -451,7 +451,8 @@ extension ReceiptViewController: UITableViewDataSource {
             guard let lineItem = order.lineItem(for: product) else { return UITableViewCell() }
 
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptLineItemTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptLineItemTableViewCell
-            cell.lineItemNameLabel.text = "\(product.itemCount) x \(lineItem.name)"
+            let quantityPrefix = "\(product.itemCount) x "
+            cell.lineItemNameLabel.text = lineItem.name.hasPrefix(quantityPrefix) ? lineItem.name : "\(product.itemCount) x \(lineItem.name)"
             cell.lineItemCostLabel.text = lineItem.price.formatted
             return cell
         case Section.shipping.rawValue:
