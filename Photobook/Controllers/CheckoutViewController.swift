@@ -381,8 +381,8 @@ class CheckoutViewController: UIViewController {
         paymentMethodIconImageView.image = nil
         if let paymentMethod = order.paymentMethod {
             switch paymentMethod {
-            case .creditCard where paymentManager.stripePaymentContext?.selectedPaymentMethod != nil:
-                let card = paymentManager.stripePaymentContext!.selectedPaymentMethod!
+            case .creditCard where paymentManager.stripePaymentContext?.selectedPaymentOption != nil:
+                let card = paymentManager.stripePaymentContext!.selectedPaymentOption!
                 paymentMethodIconImageView.image = card.image
                 paymentMethodView.accessibilityValue = card.label
                 paymentMethodTitleLabel.text = Constants.payingWithText
@@ -506,7 +506,7 @@ class CheckoutViewController: UIViewController {
     }
     
     private func paymentMethodIsValid() -> Bool {
-        return order.orderIsFree || (order.paymentMethod != nil && (order.paymentMethod != .creditCard || paymentManager.stripePaymentContext?.selectedPaymentMethod != nil))
+        return order.orderIsFree || (order.paymentMethod != nil && (order.paymentMethod != .creditCard || paymentManager.stripePaymentContext?.selectedPaymentOption != nil))
     }
     
     private func indicateDeliveryDetailsError() {

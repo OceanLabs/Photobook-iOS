@@ -20,7 +20,7 @@ PODS:
   - SDWebImage (4.4.2):
     - SDWebImage/Core (= 4.4.2)
   - SDWebImage/Core (4.4.2)
-  - Stripe (14.0.0)
+  - Stripe (15.0.0)
 
 DEPENDENCIES:
   - Analytics (~> 3.0)
@@ -33,7 +33,7 @@ DEPENDENCIES:
   - PayPal-iOS-Dynamic-Loader
   - PayPal-iOS-SDK/Core (~> 2.18.0)
   - SDWebImage (~> 4.3)
-  - Stripe (= 14.0.0)
+  - Stripe
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -62,8 +62,8 @@ SPEC CHECKSUMS:
   PayPal-iOS-Dynamic-Loader: a32db083fe7e8f8d9ad4309e483e369c9a47e5eb
   PayPal-iOS-SDK: 10654cd111e911a9807bddb96fae81aacb8e9915
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
-  Stripe: db29ad197c74aca6fb981e4e8355cf7ebd0fca5a
+  Stripe: 312b22a67af9fa55c246d26148b3f3a9636a0ff2
 
-PODFILE CHECKSUM: f8df7378b9001cd1e706496348645c1a3f2f778e
+PODFILE CHECKSUM: 5bbaf4c5ad3ec156cc4119551c726d716381cd17
 
 COCOAPODS: 1.5.3

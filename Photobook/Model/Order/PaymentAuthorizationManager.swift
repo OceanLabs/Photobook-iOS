@@ -137,7 +137,7 @@ class PaymentAuthorizationManager: NSObject {
             methods.append(.payPal)
         }
         
-        if stripePaymentContext?.selectedPaymentMethod != nil {
+        if stripePaymentContext?.selectedPaymentOption != nil {
             methods.append(.creditCard)
         }
         
@@ -191,7 +191,7 @@ class PaymentAuthorizationManager: NSObject {
             config.companyName = PaymentAuthorizationManager.applePayPayTo
             config.requiredBillingAddressFields = .none
             config.requiredShippingAddressFields = nil
-            config.canDeletePaymentMethods = true
+            config.canDeletePaymentOptions = true
             config.createCardSources = true
             
             let customerContext = STPCustomerContext(keyProvider: KiteAPIClient.shared)
@@ -382,7 +382,7 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
 extension PaymentAuthorizationManager: STPPaymentContextDelegate {
     
     func paymentContextDidChange(_ paymentContext: STPPaymentContext) {
-        if stripePaymentContext?.selectedPaymentMethod != nil {
+        if stripePaymentContext?.selectedPaymentOption != nil {
             basketOrder.paymentMethod = .creditCard
         }
         delegate?.paymentAuthorizationManagerDidUpdateDetails()

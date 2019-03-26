@@ -1,4 +1,4 @@
-platform :ios, '9.0'
+platform :ios, '10.0'
 use_frameworks!
 
 target 'Photobook App' do
@@ -18,7 +18,7 @@ pod 'PayPal-iOS-SDK/Core', '~> 2.18.0'
 end
 
 target 'Photobook' do
-pod 'Stripe', '14.0.0'
+pod 'Stripe'
 pod 'Fabric'
 pod 'Crashlytics'
 pod 'KeychainSwift'

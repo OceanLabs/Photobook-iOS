@@ -62,7 +62,7 @@ class PaymentMethodsViewController: UIViewController {
     @IBAction func tappedAddPaymentMethod(_ sender: Any) {
         guard let paymentContext = paymentManager.stripePaymentContext else { return }
         paymentContext.hostViewController = self
-        paymentContext.pushPaymentMethodsViewController()
+        paymentContext.pushPaymentOptionsViewController()
     }
     
     func reloadPaymentMethods() {
@@ -102,13 +102,13 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             let selected = selectedPaymentMethod != nil && selectedPaymentMethod == .payPal
             cell.ticked = selected
             
-            cell.separator.isHidden = paymentManager.stripePaymentContext?.selectedPaymentMethod != nil
+            cell.separator.isHidden = paymentManager.stripePaymentContext?.selectedPaymentOption != nil
             cell.accessibilityIdentifier = "payPalCell"
             cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + method
             cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
             return cell
         case .creditCard where indexPath.item != paymentManager.availablePaymentMethods.count - 1: // Saved card
-            let selectedPaymentMethod = paymentManager.stripePaymentContext?.selectedPaymentMethod
+            let selectedPaymentMethod = paymentManager.stripePaymentContext?.selectedPaymentOption
             
             let cell = tableView.dequeueReusableCell(withIdentifier: PaymentMethodTableViewCell.reuseIdentifier, for: indexPath) as! PaymentMethodTableViewCell
             cell.method = selectedPaymentMethod?.label
