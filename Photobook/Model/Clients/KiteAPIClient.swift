@@ -385,7 +385,7 @@ class KiteAPIClient: NSObject {
     }
 }
 
-extension KiteAPIClient: STPEphemeralKeyProvider {
+extension KiteAPIClient: STPCustomerEphemeralKeyProvider {
     
     func createCustomerKey(withAPIVersion apiVersion: String, completion: @escaping STPJSONResponseCompletionBlock) {
         
