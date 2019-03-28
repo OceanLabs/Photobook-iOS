@@ -75,6 +75,10 @@ class Order: Codable {
         return String(format: NSLocalizedString("Order/Description", value: "%@ & %d others", comment: "Description of an order"), products.first!.template.name, products.count - 1)
     }
     
+    var countryCode: String {
+        return deliveryDetails?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
+    }
+
     var hashValue: Int {
         let country = deliveryDetails?.country ?? Country.countryForCurrentLocale()
         var stringHash = "ad:\(country.codeAlpha3.hashValue),"
@@ -136,8 +140,7 @@ class Order: Codable {
             // Since we will update the cost, it means that we may have changed destination country, so check if the selected method is still valid.
             let countryCode = deliveryDetails?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
             for product in products {
-                guard let regionCode = product.template.countryToRegionMapping?[countryCode],
-                let availableShippingMethods = product.template.availableShippingMethods?[regionCode] else {
+                guard let availableShippingMethods = product.template.shippingMethodsFor(countryCode: countryCode) else {
                     product.selectedShippingMethod = nil
                     continue
                 }
@@ -154,6 +157,7 @@ class Order: Codable {
     
     func updateShippingMethods(_ completionHandler: @escaping (_ error: APIClientError?) -> Void) {
         KiteAPIClient.shared.getShippingInfo(for: OrderManager.shared.basketOrder.products.map({ $0.template.templateId })) { [weak welf = self] shippingInfo, error in
+            guard let stelf = welf else { return }
             guard error == nil else {
                 if let error = error, case .parsing(let details) = error {
                     Analytics.shared.trackError(.parsing, details)
@@ -162,15 +166,14 @@ class Order: Codable {
                 return
             }
             
-            for product in welf?.products ?? [] {
+            for product in stelf.products {
                 guard let shippingInfoForProduct = shippingInfo?[product.template.templateId] as? [String: Any] else { continue }
 
-                product.template.countryToRegionMapping = shippingInfoForProduct["countryToRegionMapping"] as? [String : String]
+                product.template.countryToRegionMapping = shippingInfoForProduct["countryToRegionMapping"] as? [String: [String]]
                 product.template.availableShippingMethods = shippingInfoForProduct["availableShippingMethods"] as? [String : [ShippingMethod]]
                 
-                let countryCode = welf?.deliveryDetails?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
-                if let regionCode = product.template.countryToRegionMapping?[countryCode] {
-                    product.selectedShippingMethod = product.template.availableShippingMethods?[regionCode]?.first
+                if let shippingMethods = product.template.shippingMethodsFor(countryCode: stelf.countryCode) {
+                    product.selectedShippingMethod = shippingMethods.first
                 }
             }
             completionHandler(nil)

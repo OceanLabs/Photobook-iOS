@@ -33,5 +33,19 @@ import Foundation
     var templateId: String { get }
     var name: String { get }
     var availableShippingMethods: [String: [ShippingMethod]]? { get set }
-    var countryToRegionMapping: [String: String]? { get set }
+    var countryToRegionMapping: [String: [String]]? { get set }
+}
+
+extension Template {
+    
+    func shippingMethodsFor(countryCode: String) -> [ShippingMethod]? {
+        guard let regionCodes = countryToRegionMapping?[countryCode],
+            let availableShippingMethods = availableShippingMethods else {
+                return nil
+        }
+        
+        let shippingMethods = Array(regionCodes.compactMap { (region) -> [ShippingMethod]? in availableShippingMethods[region] }.joined())
+        return shippingMethods
+    }
+
 }

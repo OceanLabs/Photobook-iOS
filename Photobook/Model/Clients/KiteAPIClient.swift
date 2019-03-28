@@ -283,7 +283,7 @@ class KiteAPIClient: NSObject {
                 
                 var regionShippingClasses = [String: [ShippingMethod]]()
                 
-                guard let regionMappings = dict["country_to_region_mapping"] as? [String: String],
+                guard let regionMappings = dict["country_to_region_mapping"] as? [String: [String]],
                     let shippingRegions = dict["shipping_regions"] as? [String: Any]
                     else {
                         completionHandler(nil, .parsing(details: "GetShippingInfo: Could not parse region mapping"))

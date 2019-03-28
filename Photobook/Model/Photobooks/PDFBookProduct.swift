@@ -32,8 +32,8 @@ import UIKit
 class PDFBookTemplate: Codable, Template {
     var templateId: String
     var name: String
-    var availableShippingMethods: [String : [ShippingMethod]]?
-    var countryToRegionMapping: [String : String]?
+    var availableShippingMethods: [String: [ShippingMethod]]?
+    var countryToRegionMapping: [String: [String]]?
     
     init(templateId: String) {
         self.templateId = templateId

@@ -47,7 +47,7 @@ import UIKit
     var maxPages: Int = 100
     var pageBleed: CGFloat
     var availableShippingMethods: [String: [ShippingMethod]]?
-    var countryToRegionMapping: [String : String]?
+    var countryToRegionMapping: [String: [String]]?
     
     init(id: Int, name: String, templateId: String, kiteId: String, coverSize: CGSize, pageSize: CGSize, spineTextRatio: CGFloat, coverLayouts: [Int], layouts: [Int], pageBleed: CGFloat) {
         self.id = id
