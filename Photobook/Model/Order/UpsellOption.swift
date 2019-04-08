@@ -66,11 +66,12 @@ func ==(lhs: UpsellOption, rhs: UpsellOption) -> Bool {
 }
 
 extension UpsellOption: Hashable {
-    var hashValue: Int {
-        get {
-            var value = type.hashValue ^ displayName.hashValue
-            if let targetTemplateId = targetTemplateId { value = value ^ targetTemplateId.hashValue}
-            return value
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(type)
+        hasher.combine(displayName)
+        if let targetTemplateId = targetTemplateId {
+            hasher.combine(targetTemplateId)
         }
     }
 }
