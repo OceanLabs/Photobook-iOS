@@ -122,7 +122,7 @@ extension ShippingMethodsViewController: UITableViewDataSource {
 extension ShippingMethodsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        var product = order.products[indexPath.section]
+        let product = order.products[indexPath.section]
         let shippingMethods = product.template.shippingMethodsFor(countryCode: order.countryCode)!
         let shippingMethod = shippingMethods[indexPath.row]
         
