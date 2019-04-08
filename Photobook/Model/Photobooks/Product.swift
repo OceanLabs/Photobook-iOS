@@ -34,7 +34,7 @@ import UIKit
     var identifier: String { get }
     var itemCount: Int { get set }
     var template: Template { get }
-    var hashValue: Int { get }
+    var hash: Int { get }
     func assetsToUpload() -> [PhotobookAsset]?
     func orderParameters() -> [String: Any]?
     func costParameters() -> [String: Any]?
