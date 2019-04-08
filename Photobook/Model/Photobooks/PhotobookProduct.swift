@@ -759,15 +759,13 @@ extension PhotobookProduct {
     }
 
     override var hash: Int {
-        get {
-            var stringHash = upsoldTemplate != nil ? "pt:\(upsoldTemplate!.templateId)," : "pt:\(photobookTemplate.templateId),"
-            if let upsoldOptions = upsoldOptions {
-                stringHash += "po:\(upsoldOptions),"
-            }
-            stringHash += "pc:\(itemCount),"
-            stringHash += "pg:\(numberOfPages),"
-
-            return stringHash.hashValue
+        var hasher = Hasher()
+        hasher.combine(upsoldTemplate != nil ? upsoldTemplate!.templateId : photobookTemplate.templateId)
+        if let upsoldOptions = upsoldOptions {
+            hasher.combine(upsoldOptions.description)
         }
+        hasher.combine(itemCount)
+        hasher.combine(numberOfPages)
+        return hasher.finalize()
     }
 }

@@ -89,7 +89,7 @@ class Order: Codable {
         var shippingHash: Int = 0
         var productsHash: Int = 0
         for product in products {
-            productsHash = productsHash ^ product.hashValue
+            productsHash = productsHash ^ product.hash
             shippingHash = shippingHash ^ (product.selectedShippingMethod?.id ?? 0)
         }
         
