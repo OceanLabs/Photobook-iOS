@@ -70,7 +70,7 @@ class OrderManager {
         static let automaticRetryCountKey = "AutomaticRetryCount"
     }
     static let maxNumberOfAutomaticRetries = 20
-    static let maxNumberOfPollingTries = 60
+    static let maxNumberOfPollingTries = 20
     
     private lazy var kiteApiClient = KiteAPIClient.shared
     private lazy var apiClient = APIClient.shared
@@ -397,6 +397,7 @@ class OrderManager {
                 }
                 
                 // Check for order success
+                welf?.numberOfTimesPolled = 0
                 welf?.pollOrderStatus { [weak welf = self] (status, error) in
                     guard let stelf = welf else { return }
                     
