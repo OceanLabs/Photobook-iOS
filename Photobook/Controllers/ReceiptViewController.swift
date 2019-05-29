@@ -30,6 +30,7 @@
 import UIKit
 import PassKit
 import UserNotifications
+import Stripe
 
 struct ReceiptNotificationName {
     static let receiptWillDismiss = Notification.Name("ly.kite.sdk.receiptWillDismissNotificationName")
@@ -83,6 +84,8 @@ class ReceiptViewController: UIViewController {
         return ProgressOverlayViewController.progressOverlay(parent: self)
     }()
     
+    private var redirectContext: STPRedirectContext?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -97,6 +100,11 @@ class ReceiptViewController: UIViewController {
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     
         updateViews()
+        
+        paymentManager.setStripePaymentContext()
+        
+        // Register for notifications
+        NotificationCenter.default.addObserver(self, selector: #selector(paymentAuthorized(_:)), name: PaymentNotificationName.authorized, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -152,6 +160,18 @@ class ReceiptViewController: UIViewController {
         return .portrait
     }
 
+    @objc func paymentAuthorized(_ notification: NSNotification) {
+        guard let parameters = notification.userInfo as? [String: String],
+            let paymentIntentId = parameters["payment_intent"] else {
+                state = .paymentRetry
+                tableView.reloadData()
+                return
+        }
+        
+        order.paymentToken = paymentIntentId
+        OrderManager.shared.finishOrder()
+    }
+    
     // MARK: - Population
     
     private func updateViews() {
@@ -245,6 +265,7 @@ class ReceiptViewController: UIViewController {
     
     private func showPaymentMethods() {
         let paymentViewController = storyboard?.instantiateViewController(withIdentifier: "PaymentMethodsViewController") as! PaymentMethodsViewController
+        paymentViewController.paymentManager = paymentManager
         paymentViewController.order = order
         navigationController?.pushViewController(paymentViewController, animated: true)
     }
@@ -257,6 +278,11 @@ class ReceiptViewController: UIViewController {
 }
 
 extension ReceiptViewController: PaymentAuthorizationManagerDelegate {
+    
+    func paymentAuthorizationRequiresAction(withContext context: STPRedirectContext) {
+        redirectContext = context
+        redirectContext?.startRedirectFlow(from: self)
+    }
     
     func paymentAuthorizationManagerDidUpdateDetails() {}
     
@@ -276,7 +302,6 @@ extension ReceiptViewController: PaymentAuthorizationManagerDelegate {
         }
         
         order.paymentToken = token
-        
         OrderManager.shared.finishOrder()
     }
     

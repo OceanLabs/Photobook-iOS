@@ -133,6 +133,8 @@ class CheckoutViewController: UIViewController {
         return OrderManager.shared.basketOrder
     }
     
+    private var redirectContext: STPRedirectContext?
+    
     var dismissClosure: ((_ source: UIViewController, _ success: Bool) -> ())?
     
     private var dispatchGroup: DispatchGroup? = DispatchGroup()
@@ -187,6 +189,30 @@ class CheckoutViewController: UIViewController {
         })
         
         paymentManager.setStripePaymentContext()
+        
+        // Register for notifications
+        NotificationCenter.default.addObserver(self, selector: #selector(paymentAuthorized(_:)), name: PaymentNotificationName.authorized, object: nil)
+    }
+        
+    @objc func paymentAuthorized(_ notification: NSNotification) {
+        // Ignore if the basket is not the last controller in the navigation
+        guard navigationController?.topViewController == self else { return }
+        
+        guard let parameters = notification.userInfo as? [String: String],
+              let paymentIntentId = parameters["payment_intent"],
+              let clientSecret = parameters["payment_intent_client_secret"] else {
+            progressOverlayViewController.hide()
+            present(UIAlertController(errorMessage: ErrorMessage(.generic)), animated: true)
+            return
+        }
+
+        paymentManager.isPaymentAuthorized(withClientSecret: clientSecret) { [weak welf = self] authorized in
+            welf?.progressOverlayViewController.hide()            
+            if authorized {
+                welf?.order.paymentToken = paymentIntentId
+                welf?.showReceipt()
+            }
+        }
     }
     
     private func detailsDidRefresh() {
@@ -585,13 +611,20 @@ class CheckoutViewController: UIViewController {
         
         OrderManager.shared.saveBasketOrder()
         
-        if self.presentedViewController == nil {
-            self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
-        }
-        else {
-            self.dismiss(animated: true, completion: {
-                self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
+        if presentedViewController == nil {
+            performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
+        } else {
+            // The 3D secure dialog (SFSafariViewController) dismisses itself and calling dismiss on this vc would not execute the completion block.
+            // That is why the code below uses CATransaction instead
+            CATransaction.begin()
+            CATransaction.setCompletionBlock({
+                // Add a delay so it is not as abrupt
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+                    self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
+                })
             })
+            dismiss(animated: true, completion: nil)
+            CATransaction.commit()
         }
     }
     
@@ -773,6 +806,11 @@ extension CheckoutViewController: AmountPickerDelegate {
 }
 
 extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
+    
+    func paymentAuthorizationRequiresAction(withContext context: STPRedirectContext) {
+        redirectContext = context
+        redirectContext?.startRedirectFlow(from: self)
+    }
     
     func paymentAuthorizationManagerDidUpdateDetails() {
         updateViews()
