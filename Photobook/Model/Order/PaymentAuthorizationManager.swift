@@ -449,8 +449,6 @@ extension PaymentAuthorizationManager: STPPaymentContextDelegate {
         }
     }
     
-    func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {
-        delegate?.paymentAuthorizationDidFinish(token: nil, error: error, completionHandler: nil)
-    }
+    func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {}
 }
 
