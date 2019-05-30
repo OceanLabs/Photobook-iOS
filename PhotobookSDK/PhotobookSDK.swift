@@ -118,6 +118,10 @@ struct AssetsNotificationName {
         return ProductManager.shared.maximumAllowedPages
     }
     
+    /// Call this method from your app delegate to handle the return from Safari as part of the credit card authorization process
+    ///
+    /// - Parameter url: The return URL passed to the application
+    /// - Returns: Yes if the URL should be handled by the SDK, no otherwise
     @objc public func handleUrlCallBack(with url: URL) -> Bool {
         guard Stripe.handleURLCallback(with: url) else { return false }
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
