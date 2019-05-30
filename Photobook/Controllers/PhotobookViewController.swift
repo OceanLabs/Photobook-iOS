@@ -200,10 +200,27 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate,
         
         NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
         
-        if let photobook = ProductManager.shared.products?.first {
-            setup(with: photobook)
-        } else {
+        if ProductManager.shared.products == nil {
             loadProducts()
+            return
+        }
+        setupProduct()
+    }
+    
+    private func setupProduct() {
+        if let product = product, let _ = assets {
+            setup(with: product)
+        } else if let photobook = ProductManager.shared.products?.first {
+            setup(with: photobook)
+        }
+    }
+    
+    private func setup(with product: PhotobookProduct) {
+        setupTitleView()
+        
+        if emptyScreenViewController.parent != nil {
+            collectionView.reloadData()
+            emptyScreenViewController.hide(animated: true)
         }
     }
     
@@ -216,24 +233,20 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate,
         
         guard let _ = ProductManager.shared.setCurrentProduct(with: photobook, assets: assets) else { return }
         changedPhotobook()
-        setupTitleView()
         
-        if emptyScreenViewController.parent != nil {
-            collectionView.reloadData()
-            emptyScreenViewController.hide(animated: true)
-        }
+        setup(with: product)
     }
     
     private func loadProducts() {
         emptyScreenViewController.show(message: NSLocalizedString("Photobook/Loading", value: "Loading products", comment: "Loading products screen message"), activity: true)
         ProductManager.shared.initialise(completion: { [weak welf = self] (errorMessage: ErrorMessage?) in
-            guard let photobook = ProductManager.shared.products?.first, errorMessage == nil else {
+            guard let stelf = welf, let _ = ProductManager.shared.products?.first, errorMessage == nil else {
                 let actionableErrorMessage = ActionableErrorMessage.withErrorMessage(errorMessage ?? ErrorMessage(.generic)) { welf?.loadProducts() }
                 welf?.emptyScreenViewController.show(actionableErrorMessage)
                 return
             }
             
-            welf?.setup(with: photobook)
+            stelf.setupProduct()
         })
     }
     
