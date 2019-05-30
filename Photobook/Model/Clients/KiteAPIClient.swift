@@ -53,6 +53,10 @@ enum MimeType {
 class KiteAPIClient: NSObject {
     
     var apiKey: String?
+    lazy var urlScheme: String? = {
+        guard let apiKey = apiKey else { return nil }
+        return "kite\(apiKey)"
+    }()
     
     /// The environment of the app, live vs test
     static var environment: Environment = .live
@@ -391,6 +395,10 @@ class KiteAPIClient: NSObject {
     
     func createPaymentIntentWithSourceId(_ sourceId: String, amount: Double, currency: String, completionHandler: @escaping (_ paymentIntent: STPPaymentIntent?, _ error: APIClientError?) -> Void)
     {
+        guard let urlScheme = urlScheme else {
+            fatalError("Invalid URL Scheme: API key is nil or a nil scheme was provided")
+        }
+        
         if stripeCustomerId == nil {
             stripeCustomerId = StripeCredentialsHandler.load()
         }
@@ -405,7 +413,7 @@ class KiteAPIClient: NSObject {
                                          "source": sourceId,
                                          "amount": amount,
                                          "currency": currency,
-                                         "return_url": "canonphotobook://stripe-redirect"]
+                                         "return_url": "\(urlScheme)://stripe-redirect"]
         
         APIClient.shared.post(context: .kite, endpoint: endpoint, parameters: parameters, headers: kiteHeaders) { response, error in
             guard error == nil else {

@@ -81,14 +81,20 @@ struct AssetsNotificationName {
     }
     
     /// ApplePay merchand ID
-    @objc public var applePayMerchantId: String! { didSet { PaymentAuthorizationManager.applePayMerchantId = applePayMerchantId } }
+    @objc public var applePayMerchantId: String? { didSet { PaymentAuthorizationManager.applePayMerchantId = applePayMerchantId } }
     
     /// Kite public API key
-    @objc public var kiteApiKey: String! {
+    @objc public var kiteApiKey: String? {
         didSet {
             PhotobookAPIManager.apiKey = kiteApiKey
             KiteAPIClient.shared.apiKey = kiteApiKey
             PaymentAuthorizationManager.setPaymentKeys()
+        }
+    }
+    
+    @objc public var kiteUrlScheme: String? {
+        didSet {
+            KiteAPIClient.shared.urlScheme = kiteUrlScheme
         }
     }
     
