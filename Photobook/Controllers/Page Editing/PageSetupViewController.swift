@@ -203,8 +203,6 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         toolbarButtons[Tool.selectLayout.rawValue].isSelected = true
         sendScreenViewedAnalyticsEvent(for: Tool.selectLayout)
         
-        (navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(photobookNavigationBarType)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(albumsWereUpdated(_:)), name: AssetsNotificationName.albumsWereUpdated, object: nil)
         
         NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: OperationQueue.main, using: { [weak welf = self] _ in            
@@ -221,6 +219,8 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         super.viewDidLayoutSubviews()
         
         if !hasDoneSetup {
+            (navigationController?.navigationBar as? PhotobookNavigationBar)?.setBarType(photobookNavigationBarType)
+            
             pageView.shouldSetImage = false
             
             coverFrameView.color = product.coverColor
