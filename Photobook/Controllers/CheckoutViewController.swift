@@ -146,12 +146,14 @@ class CheckoutViewController: UIViewController {
         
         Analytics.shared.trackScreenViewed(.basket)
         
-        if APIClient.environment == .test {
-            title = Constants.title + " (TEST)"
-        } else {
-            title = Constants.title
+        title = Constants.title
+        if PhotobookSDK.shared.environment == .test {
+            title = title! + " (TEST)"
         }
-        
+        if PhotobookSDK.shared.shouldUseStaging {
+            title = title! + " - STAGING"
+        }
+
         registerForKeyboardNotifications()
         
         // Clear fields
