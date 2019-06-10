@@ -56,6 +56,13 @@ struct AssetsNotificationName {
         case live
     }
     
+    /// Whether to use staging or not. As a client of the SDK, this should be false for both your test and live accounts
+    @objc public var shouldUseStaging = false {
+        didSet {
+            APIClient.shouldUseStaging = shouldUseStaging
+        }
+    }
+    
     /// Set to use the live or test environment
     @objc public var environment: Environment = .live {
         didSet {
