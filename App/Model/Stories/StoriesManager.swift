@@ -27,6 +27,7 @@
 //  THE SOFTWARE.
 //
 
+import UIKit
 import Photos
 import Photobook
 

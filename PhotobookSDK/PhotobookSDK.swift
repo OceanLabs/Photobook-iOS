@@ -214,6 +214,9 @@ struct AssetsNotificationName {
         photobookViewController.assets = assets
         photobookViewController.photobookDelegate = delegate
         photobookViewController.completionClosure = completionClosure
+        if #available(iOS 11.0, *) {
+            photobookViewController.navigationItem.largeTitleDisplayMode = .never
+        }
         
         return embedInNavigation ? embedViewControllerInNavigation(photobookViewController) : photobookViewController
     }
