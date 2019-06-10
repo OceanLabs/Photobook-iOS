@@ -50,6 +50,10 @@ enum MimeType {
     }
 }
 
+struct KiteApiNotificationName {
+    static let failedToCreateCustomerKey = Notification.Name("ly.kite.photobook.failedToCreateCustomerKeyNotificationName")
+}
+
 class KiteAPIClient: NSObject {
     
     var apiKey: String?
@@ -397,6 +401,11 @@ extension KiteAPIClient: STPCustomerEphemeralKeyProvider {
             let endpoint = KiteAPIClient.apiVersion + Endpoints.ephemeralKey
             APIClient.shared.post(context: .kite, endpoint: endpoint, parameters: parameters) { response, error in
                 guard error == nil else {
+                    if case APIClientError.parsing(_) = error! {
+                        // If there was a parsing error, chances are the customer ID is invalid
+                        StripeCredentialsHandler.delete()
+                        NotificationCenter.default.post(name: KiteApiNotificationName.failedToCreateCustomerKey, object: nil)
+                    }
                     completion(nil, error)
                     return
                 }
@@ -441,5 +450,10 @@ fileprivate class StripeCredentialsHandler {
     static func load() -> String? {
         if ProcessInfo.processInfo.arguments.contains("UITESTINGENVIRONMENT") { return nil }
         return KeychainSwift().get(storageKey)
+    }
+    
+    static func delete() {
+        if ProcessInfo.processInfo.arguments.contains("UITESTINGENVIRONMENT") { return }
+        KeychainSwift().delete(storageKey)
     }
 }

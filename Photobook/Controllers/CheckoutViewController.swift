@@ -188,6 +188,12 @@ class CheckoutViewController: UIViewController {
             welf?.dispatchGroup = nil
         })
         
+        NotificationCenter.default.addObserver(self, selector: #selector(failedToCreateCustomerKey), name: KiteApiNotificationName.failedToCreateCustomerKey, object: nil)
+        
+        paymentManager.setStripePaymentContext()
+    }
+    
+    @objc private func failedToCreateCustomerKey() {
         paymentManager.setStripePaymentContext()
     }
     
