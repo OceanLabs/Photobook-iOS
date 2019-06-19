@@ -666,7 +666,9 @@ enum ProductColor: String, Codable {
             "multiples": itemCount,
             "shipping_class": shippingMethod.id,
             "options": options,
-            "page_count": numberOfPages,
+            "assets": [
+                "page_count": numberOfPages,
+            ],
             "job_id": identifier
         ]
     }

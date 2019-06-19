@@ -61,7 +61,7 @@ class KiteAPIClient: NSObject {
     /// The environment of the app, live vs test
     static var environment: Environment = .live
     
-    private static let apiVersion = "v4.1"
+    private static let apiVersion = "v5"
     private static let sdkVersion = "v1.0.0"
     static let userAgent = "Kite SDK iOS Swift \(sdkVersion)"
 
@@ -335,7 +335,7 @@ class KiteAPIClient: NSObject {
         }
         
         var parameters = [String: Any]()
-        parameters["currency"] = OrderManager.shared.preferredCurrencyCode
+        parameters["currencies"] = [OrderManager.shared.preferredCurrencyCode]
         
         if let promoCode = order.promoCode {
             parameters["promo_code"] = promoCode
@@ -349,11 +349,11 @@ class KiteAPIClient: NSObject {
             lineItems.append(parameters)
         }
         
-        parameters["shipping_country_code"] = order.deliveryDetails?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
-        parameters["basket"] = lineItems
-        
+        parameters["shipping_address"] = ["country_code": order.deliveryDetails?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3]
+        parameters["jobs"] = lineItems
+
         let endpoint = KiteAPIClient.apiVersion + Endpoints.cost
-        APIClient.shared.post(context: .kite, endpoint: endpoint, parameters: parameters, headers: self.kiteHeaders) { response, error in
+        APIClient.shared.post(context: .kite, endpoint: endpoint, parameters: parameters, headers: kiteHeaders) { response, error in
             
             guard error == nil else {
                 completionHandler(nil, error)
@@ -373,7 +373,7 @@ class KiteAPIClient: NSObject {
     func createStripeCustomer(_ completionHandler: @escaping (_ customerId: String?, _ error: APIClientError?) -> Void) {
         
         let endpoint = KiteAPIClient.apiVersion + Endpoints.createStripeCustomer
-        APIClient.shared.post(context: .kite, endpoint: endpoint) { response, error in
+        APIClient.shared.post(context: .kite, endpoint: endpoint, headers: kiteHeaders) { response, error in
             guard error == nil else {
                 completionHandler(nil, error)
                 return
@@ -399,7 +399,7 @@ extension KiteAPIClient: STPCustomerEphemeralKeyProvider {
             parameters["stripe_customer_id"] = customerId
             
             let endpoint = KiteAPIClient.apiVersion + Endpoints.ephemeralKey
-            APIClient.shared.post(context: .kite, endpoint: endpoint, parameters: parameters) { response, error in
+            APIClient.shared.post(context: .kite, endpoint: endpoint, parameters: parameters, headers: kiteHeaders) { response, error in
                 guard error == nil else {
                     if case APIClientError.parsing(_) = error! {
                         // If there was a parsing error, chances are the customer ID is invalid
