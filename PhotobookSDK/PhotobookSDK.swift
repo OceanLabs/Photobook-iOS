@@ -29,6 +29,7 @@
 
 import UIKit
 import SDWebImage
+import Stripe
 
 struct AssetsNotificationName {
     static let albumsWereUpdated = Notification.Name("ly.kite.photobook.sdk.albumsWereUpdatedNotificationName")
@@ -80,14 +81,20 @@ struct AssetsNotificationName {
     }
     
     /// ApplePay merchand ID
-    @objc public var applePayMerchantId: String! { didSet { PaymentAuthorizationManager.applePayMerchantId = applePayMerchantId } }
+    @objc public var applePayMerchantId: String? { didSet { PaymentAuthorizationManager.applePayMerchantId = applePayMerchantId } }
     
     /// Kite public API key
-    @objc public var kiteApiKey: String! {
+    @objc public var kiteApiKey: String? {
         didSet {
             PhotobookAPIManager.apiKey = kiteApiKey
             KiteAPIClient.shared.apiKey = kiteApiKey
             PaymentAuthorizationManager.setPaymentKeys()
+        }
+    }
+    
+    @objc public var kiteUrlScheme: String? {
+        didSet {
+            KiteAPIClient.shared.urlScheme = kiteUrlScheme
         }
     }
     
@@ -115,6 +122,21 @@ struct AssetsNotificationName {
     /// The maximum allowed number of photos to create a photo book
     @objc public var maximumAllowedPhotos: Int {
         return ProductManager.shared.maximumAllowedPages
+    }
+    
+    /// Call this method from your app delegate to handle the return from Safari as part of the credit card authorization process
+    ///
+    /// - Parameter url: The return URL passed to the application
+    /// - Returns: Yes if the URL should be handled by the SDK, no otherwise
+    @objc public func handleUrlCallBack(with url: URL) -> Bool {
+        guard Stripe.handleURLCallback(with: url) else { return false }
+        let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        var parameters = [String: String]()
+        components?.queryItems?.forEach { parameters[$0.name] = $0.value }
+        
+        NotificationCenter.default.post(name: PaymentNotificationName.authorized, object: self, userInfo: parameters)
+        
+        return true
     }
     
     /// To be called from application(_: handleEventsForBackgroundURLSession: completionHandler:) when the app wakes up due to a background session update

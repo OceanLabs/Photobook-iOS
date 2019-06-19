@@ -44,9 +44,14 @@ enum PaymentMethod: Int, Codable {
     }
 }
 
+struct PaymentNotificationName {
+    static let authorized = Notification.Name("ly.kite.photobook.sdk.paymentAuthorizedNotificationName")
+}
+
 protocol PaymentAuthorizationManagerDelegate: class {
     func costUpdated()
     func paymentAuthorizationManagerDidUpdateDetails()
+    func paymentAuthorizationRequiresAction(withContext context: STPRedirectContext)
     func paymentAuthorizationDidFinish(token: String?, error: Error?, completionHandler: ((PKPaymentAuthorizationStatus) -> Void)?)
     func modalPresentationDidFinish()
     func modalPresentationWillBegin()
@@ -206,6 +211,21 @@ class PaymentAuthorizationManager: NSObject {
         PaymentAuthorizationManager.setPaymentKeys() { error in
             guard let stripePublicKey = PaymentAuthorizationManager.stripeKey else { return }
             configure(with: stripePublicKey)
+        }
+    }
+    
+    func isPaymentAuthorized(withClientSecret clientSecret: String, completionHandler: @escaping (_ authorized: Bool) -> Void) {
+        STPAPIClient.shared().retrievePaymentIntent(withClientSecret: clientSecret) { paymentIntent, error in
+            guard error == nil else {
+                completionHandler(false)
+                return
+            }
+            
+            if let paymentIntent = paymentIntent, paymentIntent.status == .requiresCapture {
+                completionHandler(true)
+                return
+            }
+            completionHandler(false)
         }
     }
     
@@ -393,7 +413,40 @@ extension PaymentAuthorizationManager: STPPaymentContextDelegate {
     }
     
     func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
-        delegate?.paymentAuthorizationDidFinish(token: paymentResult.source.stripeID, error: nil, completionHandler: nil)
+        let sourceId = paymentResult.source.stripeID
+        let amount = Double(paymentContext.paymentAmount) / 100.0
+        let currency = paymentContext.paymentCurrency
+        
+        KiteAPIClient.shared.createPaymentIntentWithSourceId(sourceId, amount: amount, currency: currency) { [weak welf = self] paymentIntent, error in
+            guard let stelf = welf else {
+                completion(nil)
+                return
+            }
+            guard error == nil else {
+                stelf.delegate?.paymentAuthorizationDidFinish(token: nil, error: error, completionHandler: nil)
+                completion(error)
+                return
+            }
+            guard let paymentIntent = paymentIntent else {
+                let error = APIClientError.parsing(details: "PaymentResult: Failed to parse intent")
+                stelf.delegate?.paymentAuthorizationDidFinish(token: nil, error: error, completionHandler: nil)
+                completion(error)
+                return
+            }
+
+            if paymentIntent.status == .requiresAction {
+                guard let redirectContext = STPRedirectContext(paymentIntent: paymentIntent, completion: { _, _ in }) else {
+                    let error = APIClientError.parsing(details: "PaymentResult: Failed to redirect to authorization page")
+                    stelf.delegate?.paymentAuthorizationDidFinish(token: nil, error: error, completionHandler: nil)
+                    completion(error)
+                    return
+                }
+                stelf.delegate?.paymentAuthorizationRequiresAction(withContext: redirectContext)
+            } else {
+                stelf.delegate?.paymentAuthorizationDidFinish(token: paymentResult.source.stripeID, error: nil, completionHandler: nil)
+            }
+            completion(nil)
+        }
     }
     
     func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {}
