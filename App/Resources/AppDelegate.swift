@@ -38,7 +38,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        return FBSDKApplicationDelegate.sharedInstance().application(_: app, open: url, options: options)
+        let kiteHandled = PhotobookSDK.shared.handleUrlCallBack(with: url)
+        return kiteHandled || FBSDKApplicationDelegate.sharedInstance().application(_: app, open: url, options: options)
+    }
+    
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+              let url = userActivity.webpageURL else { return false }
+        return PhotobookSDK.shared.handleUrlCallBack(with: url)
     }
 }
 

@@ -57,6 +57,10 @@ struct KiteApiNotificationName {
 class KiteAPIClient: NSObject {
     
     var apiKey: String?
+    lazy var urlScheme: String? = {
+        guard let apiKey = apiKey else { return nil }
+        return "kite\(apiKey)"
+    }()
     
     /// The environment of the app, live vs test
     static var environment: Environment = .live
@@ -74,6 +78,7 @@ class KiteAPIClient: NSObject {
         static let registrationRequest = "/asset/sign"
         static let ephemeralKey = "/create_ephemeral_key/"
         static let createStripeCustomer = "/create_stripe_customer/"
+        static let createStripePaymentIntent = "/create_stripe_payment_intent/"
     }
     
     static let shared = KiteAPIClient()
@@ -88,6 +93,8 @@ class KiteAPIClient: NSObject {
             "User-Agent": KiteAPIClient.userAgent
         ]
     }
+    
+    private var stripeCustomerId: String?
     
     func requestSignedUrl(for type: MimeType, _ completionHandler: @escaping ((_ signedUrl: URL?, _ fileUrl: URL?, _ error: APIClientError?) -> ())) {
         guard apiKey != nil else {
@@ -164,7 +171,7 @@ class KiteAPIClient: NSObject {
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
         }
-
+        
         let endpoint = KiteAPIClient.apiVersion + Endpoints.orderStatus + receipt
         APIClient.shared.get(context: .kite, endpoint: endpoint, parameters: nil, headers: kiteHeaders) { (response, error) in
             guard error == nil else {
@@ -387,6 +394,50 @@ class KiteAPIClient: NSObject {
             completionHandler(customerId, nil)
         }
     }
+    
+    func createPaymentIntentWithSourceId(_ sourceId: String, amount: Double, currency: String, completionHandler: @escaping (_ paymentIntent: STPPaymentIntent?, _ error: APIClientError?) -> Void)
+    {
+        guard let urlScheme = urlScheme else {
+            fatalError("Invalid URL Scheme: API key is nil or a nil scheme was provided")
+        }
+        
+        if stripeCustomerId == nil {
+            stripeCustomerId = StripeCredentialsHandler.load()
+        }
+        
+        guard let customerId = stripeCustomerId else {
+            completionHandler(nil, .generic)
+            return
+        }
+        
+        let endpoint = KiteAPIClient.apiVersion + Endpoints.createStripePaymentIntent
+        let parameters: [String: Any] = ["stripe_customer_id": customerId,
+                                         "source": sourceId,
+                                         "amount": amount,
+                                         "currency": currency,
+                                         "return_url": "\(urlScheme)://stripe-redirect"]
+        
+        APIClient.shared.post(context: .kite, endpoint: endpoint, parameters: parameters, headers: kiteHeaders) { response, error in
+            guard error == nil else {
+                completionHandler(nil, error)
+                return
+            }
+            
+            guard let res = response as? [String: Any], let clientSecret = res["client_secret"] as? String else {
+                completionHandler(nil, .parsing(details: "CreatePaymentIntent: could not parse client"))
+                return
+            }
+            
+            STPAPIClient.shared().retrievePaymentIntent(withClientSecret: clientSecret) { paymentIntent, error in
+                guard error == nil else {
+                    completionHandler(nil, .parsing(details: "CreatePaymentIntent: could not retrieve payment details"))
+                    return
+                }
+                
+                completionHandler(paymentIntent, nil)
+            }
+        }
+    }    
 }
 
 extension KiteAPIClient: STPCustomerEphemeralKeyProvider {
@@ -413,17 +464,22 @@ extension KiteAPIClient: STPCustomerEphemeralKeyProvider {
             }
         }
         
-        if let customerId = StripeCredentialsHandler.load() {
+        if stripeCustomerId == nil {
+            stripeCustomerId = StripeCredentialsHandler.load()
+        }
+
+        if let customerId = stripeCustomerId {
             requestEphemeralKey(for: customerId)
             return
         }
 
-        createStripeCustomer { (customerId, error) in
+        createStripeCustomer { [weak welf = self] (customerId, error) in
             guard error == nil, let cusId = customerId else {
                 completion(nil, error)
                 return
             }
 
+            welf?.stripeCustomerId = cusId
             StripeCredentialsHandler.save(cusId)
             requestEphemeralKey(for: cusId)
         }
