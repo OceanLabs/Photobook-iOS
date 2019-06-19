@@ -36,7 +36,7 @@ struct Price: Codable {
     let formatted: String
     private let formattingLocale: Locale
     
-    init?(currencyCode: String, value: Decimal, formattingLocale: Locale = Locale.current) {
+    init(currencyCode: String, value: Decimal, formattingLocale: Locale = Locale.current) {
         var decimalNumberValue = value as NSDecimalNumber
         decimalNumberValue = decimalNumberValue.rounding(accordingToBehavior: CurrencyRoundingBehavior())
         

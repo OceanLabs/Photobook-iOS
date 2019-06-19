@@ -47,7 +47,7 @@ class ShippingMethodTest: XCTestCase {
         let maxDeliveryTime = 7
         let minDeliveryTime = 5
         
-        let shippingMethod = ShippingMethod(id: id, name: name, price: cost!, maxDeliveryTime: maxDeliveryTime, minDeliveryTime: minDeliveryTime)
+        let shippingMethod = ShippingMethod(id: id, name: name, price: cost, maxDeliveryTime: maxDeliveryTime, minDeliveryTime: minDeliveryTime)
         
         XCTAssertEqual(shippingMethod.id, id)
         XCTAssertEqual(shippingMethod.name, name)
