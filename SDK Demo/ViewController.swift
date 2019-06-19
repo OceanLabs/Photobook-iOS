@@ -43,7 +43,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         PhotobookSDK.shared.environment = .test
-        PhotobookSDK.shared.kiteApiKey = "57c832e42dfdda93d072c6a42c41fbcddf100805" //"78b798ff366815c833dfa848654aba43b71a883a"
+        PhotobookSDK.shared.kiteApiKey = "78b798ff366815c833dfa848654aba43b71a883a"
     }
 
     @IBAction func createPhotobookWithWebPhotos(_ sender: Any) {
