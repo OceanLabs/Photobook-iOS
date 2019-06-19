@@ -1805,7 +1805,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/OAuthSwift/OAuthSwift.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -1814,7 +1814,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PhotobookTests/Pods-PhotobookTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9D8AC8478FDB5DB4383589C0 /* [CP] Embed Pods Frameworks */ = {
@@ -1823,7 +1823,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-SDK Demo/Pods-SDK Demo-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-SDK Demo/Pods-SDK Demo-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Analytics/Analytics.framework",
 				"${BUILT_PRODUCTS_DIR}/KeychainSwift/KeychainSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
@@ -1840,7 +1840,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SDK Demo/Pods-SDK Demo-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SDK Demo/Pods-SDK Demo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E585671A655BD8AF0BC86407 /* [CP] Embed Pods Frameworks */ = {
@@ -1849,7 +1849,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Photobook App/Pods-Photobook App-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Analytics/Analytics.framework",
 				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
 				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
@@ -1874,7 +1874,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Photobook App/Pods-Photobook App-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Photobook App/Pods-Photobook App-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		EFC75E5765F3F3670D9A07AB /* [CP] Check Pods Manifest.lock */ = {

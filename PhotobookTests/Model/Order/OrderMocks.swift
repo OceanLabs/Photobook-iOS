@@ -29,6 +29,7 @@
 
 import Foundation
 import PassKit
+import Stripe
 @testable import Photobook
 
 class OrderMock: Order {
@@ -55,6 +56,7 @@ extension PaymentAuthorizationManagerDelegateMock: PaymentAuthorizationManagerDe
     
     func costUpdated() {}    
     func paymentAuthorizationManagerDidUpdateDetails() {}
+    func paymentAuthorizationRequiresAction(withContext context: STPRedirectContext) {}
     func paymentAuthorizationDidFinish(token: String?, error: Error?, completionHandler: ((PKPaymentAuthorizationStatus) -> Void)?) {}
     func modalPresentationDidFinish() {}
     func modalPresentationWillBegin() {}
