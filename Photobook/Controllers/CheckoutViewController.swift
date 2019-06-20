@@ -217,7 +217,7 @@ class CheckoutViewController: UIViewController {
             welf?.progressOverlayViewController.hide()            
             if authorized {
                 welf?.order.paymentToken = paymentIntentId
-                welf?.showReceipt()
+                welf?.showReceipt(after3DAuthorisation: true)
             }
         }
     }
@@ -612,7 +612,7 @@ class CheckoutViewController: UIViewController {
         }
     }
     
-    private func showReceipt() {
+    private func showReceipt(after3DAuthorisation: Bool = false) {
         order.lastSubmissionDate = Date()
         NotificationCenter.default.post(name: OrdersNotificationName.orderWasCreated, object: order)
         
@@ -620,18 +620,15 @@ class CheckoutViewController: UIViewController {
         
         if presentedViewController == nil {
             performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
-        } else {
-            // The 3D secure dialog (SFSafariViewController) dismisses itself and calling dismiss on this vc would not execute the completion block.
-            // That is why the code below uses CATransaction instead
-            CATransaction.begin()
-            CATransaction.setCompletionBlock({
-                // Add a delay so it is not as abrupt
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-                    self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
-                })
+        } else if after3DAuthorisation {
+            // The 3D secure dialog (SFSafariViewController) dismisses itself
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+                self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
             })
-            dismiss(animated: true, completion: nil)
-            CATransaction.commit()
+        } else {
+            dismiss(animated: true) {
+                self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
+            }
         }
     }
     
@@ -817,6 +814,7 @@ extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
     func paymentAuthorizationRequiresAction(withContext context: STPRedirectContext) {
         redirectContext = context
         redirectContext?.startRedirectFlow(from: self)
+        progressOverlayViewController.hide()
     }
     
     func paymentAuthorizationManagerDidUpdateDetails() {
