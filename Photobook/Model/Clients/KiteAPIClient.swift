@@ -190,8 +190,8 @@ class KiteAPIClient: NSObject {
                     return
                 }
                 
-                if code == "E20" { // The order was successful but with a different (previously sent) print order id
-                    let receipt = errorDictionary["print_order_id"] as? String
+                if code == "E20" { // The order was successful but with a different (previously sent) order id
+                    let receipt = errorDictionary["order_id"] as? String
                     completionHandler(.validated, nil, receipt)
                 } else if code == "P11" { // Payment error
                     completionHandler(.paymentError, nil, nil)
