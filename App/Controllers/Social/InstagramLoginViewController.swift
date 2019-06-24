@@ -76,19 +76,23 @@ class InstagramLoginViewController: UIViewController {
         })
         
         InstagramClient.shared.authorizeURLHandler = self
-        InstagramClient.shared.authorize(withCallbackURL: URL(string: InstagramClient.Constants.redirectUri)!, scope: InstagramClient.Constants.scope, state:"INSTAGRAM",
-            success: { [weak welf = self] credential, response, parameters in
+        
+        InstagramClient.shared.authorize(withCallbackURL: URL(string: InstagramClient.Constants.redirectUri)!, scope: InstagramClient.Constants.scope, state:"INSTAGRAM") { [weak welf = self] result in
+            switch result {
+            case .success(let credential, _, _):
                 KeychainSwift().set(credential.oauthToken, forKey: InstagramClient.Constants.keychainInstagramTokenKey)
+                
                 let instagramAssetPicker = AssetPickerCollectionViewController.instagramAssetPicker()
                 instagramAssetPicker.selectedAssetsManager = welf?.selectedAssetsManager
                 instagramAssetPicker.delegate = instagramAssetPicker
                 welf?.navigationController?.setViewControllers([instagramAssetPicker], animated: false)
-        }, failure: { [weak welf = self] error in
-            welf?.emptyScreenViewController.show(ErrorUtils.genericRetryErrorMessage(message: error.localizedDescription, action: { [weak welf = self] in
-                welf?.emptyScreenViewController.hide()
-                welf?.startAuthenticatingUser()
-            }))
-        })
+            case .failure(let error):
+                welf?.emptyScreenViewController.show(ErrorUtils.genericRetryErrorMessage(message: error.localizedDescription, action: { [weak welf = self] in
+                    welf?.emptyScreenViewController.hide()
+                    welf?.startAuthenticatingUser()
+                }))
+            }
+        }
     }
 }
 

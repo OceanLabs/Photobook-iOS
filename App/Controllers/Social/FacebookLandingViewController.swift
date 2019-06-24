@@ -43,7 +43,7 @@ class FacebookLandingViewController: UIViewController, Collectable {
         super.viewDidLoad()
         
         // If we are logged in show the Facebook album picker
-        if FBSDKAccessToken.current() != nil {
+        if AccessToken.current != nil {
             
             // Hide all views because this screen will be shown for a split second
             for view in view.subviews {
@@ -62,7 +62,7 @@ class FacebookLandingViewController: UIViewController, Collectable {
     }
     
     @IBAction private func facebookSignInTapped(_ sender: UIButton) {
-        FBSDKLoginManager().logIn(withReadPermissions: ["public_profile", "user_photos"], from: self, handler: { [weak welf = self] result, error in
+        LoginManager().logIn(permissions: ["public_profile", "user_photos"], from: self, handler: { [weak welf = self] result, error in
             if let error = error {
                 welf?.present(UIAlertController(errorMessage: ErrorMessage(error)), animated: true, completion: nil)
                 return

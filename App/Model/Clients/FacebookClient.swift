@@ -41,7 +41,7 @@ class FacebookClient {
 extension FacebookClient: AccountClient {
     
     func logout() {
-        FBSDKLoginManager().logOut()
+        LoginManager().logOut()
     }
     
     var serviceName: String {

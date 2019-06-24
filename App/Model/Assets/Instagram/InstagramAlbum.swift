@@ -36,8 +36,7 @@ protocol InstagramApiManager {
     func startAuthorizedRequest(_ url: String,
                                 method: OAuthSwiftHTTPRequest.Method,
                                 onTokenRenewal: OAuthSwift.TokenRenewedHandler?,
-                                success: @escaping OAuthSwiftHTTPRequest.SuccessHandler,
-                                failure: @escaping OAuthSwiftHTTPRequest.FailureHandler)
+                                completionHandler: @escaping OAuthSwiftHTTPRequest.CompletionHandler)
 }
 
 protocol KeychainHandler {
@@ -48,9 +47,8 @@ class DefaultInstagramApiManager: InstagramApiManager {
     func startAuthorizedRequest(_ url: String,
                                 method: OAuthSwiftHTTPRequest.Method,
                                 onTokenRenewal: OAuthSwift.TokenRenewedHandler?,
-                                success: @escaping OAuthSwiftHTTPRequest.SuccessHandler,
-                                failure: @escaping OAuthSwiftHTTPRequest.FailureHandler) {
-        InstagramClient.shared.startAuthorizedRequest(url, method: method, parameters: [:], onTokenRenewal: onTokenRenewal, success: success, failure: failure)
+                                completionHandler: @escaping OAuthSwiftHTTPRequest.CompletionHandler) {
+        InstagramClient.shared.startAuthorizedRequest(url, method: method, parameters: [:], headers: nil, renewHeaders: nil, body: nil, onTokenRenewal: onTokenRenewal, completionHandler: completionHandler)
     }
 }
 
@@ -95,67 +93,72 @@ class InstagramAlbum {
         }
         urlToLoad = "\(urlToLoad)&count=\(Constants.pageSize)"
         
-        instagramApiManager.startAuthorizedRequest(urlToLoad, method: .GET, onTokenRenewal: { [weak welf = self] (credential) in
-            welf?.keychainHandler.tokenKey = credential.oauthToken
-        }, success: { response in
-            guard let json = (try? JSONSerialization.jsonObject(with: response.data, options: [])) as? [String : Any],
-                let pagination = json["pagination"] as? [String : Any],
-                let data = json["data"] as? [[String : Any]]
-                else {
-                    completionHandler?(ErrorMessage(text: CommonLocalizedStrings.serviceAccessError(serviceName: InstagramClient.Constants.serviceName)))
-                    return
+        instagramApiManager.startAuthorizedRequest(urlToLoad, method: .GET, onTokenRenewal: { [weak welf = self] result in
+            if let credential = try? result.get() {
+                welf?.keychainHandler.tokenKey = credential.oauthToken
             }
-            
-            self.nextUrl = pagination["next_url"] as? String
-            var newAssets = [PhotobookAsset]()
-            
-            for d in data {
-                var media = [[String : Any]]()
-                if let array = d["carousel_media"] as? [[String : Any]] {
-                    for imagesDict in array {
-                        guard let images = imagesDict["images"] as? [String : Any] else { continue }
+        }) { result in
+            switch result {
+            case .success(let response):
+                guard let json = (try? JSONSerialization.jsonObject(with: response.data, options: [])) as? [String : Any],
+                    let pagination = json["pagination"] as? [String : Any],
+                    let data = json["data"] as? [[String : Any]]
+                    else {
+                        completionHandler?(ErrorMessage(text: CommonLocalizedStrings.serviceAccessError(serviceName: InstagramClient.Constants.serviceName)))
+                        return
+                }
+                
+                self.nextUrl = pagination["next_url"] as? String
+                var newAssets = [PhotobookAsset]()
+                
+                for d in data {
+                    var media = [[String : Any]]()
+                    if let array = d["carousel_media"] as? [[String : Any]] {
+                        for imagesDict in array {
+                            guard let images = imagesDict["images"] as? [String : Any] else { continue }
+                            media.append(images)
+                        }
+                    } else if let images = d["images"] as? [String : Any] {
                         media.append(images)
                     }
-                } else if let images = d["images"] as? [String : Any] {
-                    media.append(images)
-                }
-                
-                guard let identifier = d["id"] as? String else { continue }
-                
-                for i in 0 ..< media.count {
-                    let images = media[i]
-                    var urlAssetImages = [URLAssetImage]()
-                    for key in ["standard_resolution", "low_resolution", "thumbnail"] {
-                        guard let image = images[key] as? [String : Any],
-                            let width = image["width"] as? Int,
-                            let height = image["height"] as? Int,
-                            let standardResolutionImageUrlString = image["url"] as? String,
-                            let standardResolutionImageUrl = URL(string: standardResolutionImageUrlString)
-                            else { continue }
-                        
-                        urlAssetImages.append(URLAssetImage(url: standardResolutionImageUrl, size: CGSize(width: width, height: height)))
-                    }
                     
-                    if let asset = PhotobookAsset(withUrlImages: urlAssetImages, identifier: "\(identifier)-\(i)", albumIdentifier: self.identifier, date: nil) {
-                        newAssets.append(asset)
+                    guard let identifier = d["id"] as? String else { continue }
+                    
+                    for i in 0 ..< media.count {
+                        let images = media[i]
+                        var urlAssetImages = [URLAssetImage]()
+                        for key in ["standard_resolution", "low_resolution", "thumbnail"] {
+                            guard let image = images[key] as? [String : Any],
+                                let width = image["width"] as? Int,
+                                let height = image["height"] as? Int,
+                                let standardResolutionImageUrlString = image["url"] as? String,
+                                let standardResolutionImageUrl = URL(string: standardResolutionImageUrlString)
+                                else { continue }
+                            
+                            urlAssetImages.append(URLAssetImage(url: standardResolutionImageUrl, size: CGSize(width: width, height: height)))
+                        }
+                        
+                        if let asset = PhotobookAsset(withUrlImages: urlAssetImages, identifier: "\(identifier)-\(i)", albumIdentifier: self.identifier, date: nil) {
+                            newAssets.append(asset)
+                        }
                     }
                 }
-            }
-            
-            self.assets.append(contentsOf: newAssets)
-            
-            completionHandler?(nil)
-        }) { failure in
-            // Not worth showing an error if one of the later pagination requests fail
-            guard self.assets.isEmpty else { return }
-            
-            if ((failure.underlyingError as NSError?)?.userInfo["Response-Body"] as? String)?.contains("OAuthAccessTokenException") == true {
-                completionHandler?(AccountError.notLoggedIn)
-                return
-            }
-            
-            let message = failure.underlyingError?.localizedDescription ?? CommonLocalizedStrings.serviceAccessError(serviceName: InstagramClient.Constants.serviceName)
-            completionHandler?(ErrorMessage(text: message))
+                
+                self.assets.append(contentsOf: newAssets)
+                
+                completionHandler?(nil)
+            case .failure(let failure):
+                // Not worth showing an error if one of the later pagination requests fail
+                guard self.assets.isEmpty else { return }
+                
+                if ((failure.underlyingError as NSError?)?.userInfo["Response-Body"] as? String)?.contains("OAuthAccessTokenException") == true {
+                    completionHandler?(AccountError.notLoggedIn)
+                    return
+                }
+                
+                let message = failure.underlyingError?.localizedDescription ?? CommonLocalizedStrings.serviceAccessError(serviceName: InstagramClient.Constants.serviceName)
+                completionHandler?(ErrorMessage(text: message))
+            }                                    
         }
     }
 }

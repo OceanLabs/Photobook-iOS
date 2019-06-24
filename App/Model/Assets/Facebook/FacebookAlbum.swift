@@ -38,11 +38,11 @@ protocol FacebookApiManager {
 
 class DefaultFacebookApiManager: FacebookApiManager {
     var accessToken: String? {
-        return FBSDKAccessToken.current().tokenString
+        return AccessToken.current?.tokenString
     }
     func request(withGraphPath path: String, parameters: [String : Any]?, completion: @escaping (Any?, Error?) -> Void) {
-        let graphRequest = FBSDKGraphRequest(graphPath: path, parameters: parameters)
-        _ = graphRequest?.start { _, result, error in
+        let graphRequest = GraphRequest(graphPath: path, parameters: parameters ?? [:])
+        _ = graphRequest.start { _, result, error in
             completion(result, error)
         }
     }

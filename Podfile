@@ -4,7 +4,7 @@ use_frameworks!
 target 'Photobook App' do
 pod 'Fabric'
 pod 'Crashlytics'
-pod 'OAuthSwift', '~> 1.2.0'
+pod 'OAuthSwift', '~> 2.0.0'
 pod 'KeychainSwift'
 pod 'SDWebImage', '~> 4.3'
 pod 'FBSDKCoreKit'
@@ -28,7 +28,7 @@ pod 'PayPal-iOS-Dynamic-Loader'
 end
 
 target 'PhotobookTests' do
-pod 'OAuthSwift', '~> 1.2.0'
+pod 'OAuthSwift', '~> 2.0.0'
 end
 
 # Revert build for active architecture being set to YES by installation

@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Fabric.with([Crashlytics.self])
         PhotobookManager.shared.setup()
         
-        let result = FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
+        let result = ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
         
         if !PhotobookApp.isRunningUnitTests() {
             window?.rootViewController = PhotobookManager.shared.rootViewControllerForCurrentState()
@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         let kiteHandled = PhotobookSDK.shared.handleUrlCallBack(with: url)
-        return kiteHandled || FBSDKApplicationDelegate.sharedInstance().application(_: app, open: url, options: options)
+        return kiteHandled || ApplicationDelegate.shared.application(_: app, open: url, options: options)
     }
     
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
