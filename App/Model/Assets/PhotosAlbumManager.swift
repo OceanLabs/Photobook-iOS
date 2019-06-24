@@ -197,7 +197,7 @@ extension PhotosAlbumManager: PHPhotoLibraryChangeObserver {
                     
                     var indexesRemoved = [Int]()
                     for assetRemoved in assetsRemoved {
-                        if let index = album.assets.index(where: { $0.identifier == assetRemoved.identifier}) {
+                        if let index = album.assets.firstIndex(where: { $0.identifier == assetRemoved.identifier}) {
                             indexesRemoved.append(index)
                         }
                     }

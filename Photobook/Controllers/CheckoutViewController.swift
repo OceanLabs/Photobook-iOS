@@ -902,7 +902,7 @@ extension CheckoutViewController: UITableViewDelegate {
 
 extension CheckoutViewController: BasketProductTableViewCellDelegate {
     func didTapAmountButton(for productIdentifier: String) {
-        editingProductIndex = order.products.index(where: { $0.identifier == productIdentifier })
+        editingProductIndex = order.products.firstIndex(where: { $0.identifier == productIdentifier })
         let selectedAmount = editingProductIndex != nil ? order.products[editingProductIndex!].itemCount : 1
         presentAmountPicker(selectedAmount: selectedAmount)
     }

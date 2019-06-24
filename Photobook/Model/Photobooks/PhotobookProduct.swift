@@ -437,7 +437,7 @@ enum ProductColor: String, Codable {
     }
     
     func deletePages(for productLayout: ProductLayout) {
-        guard let index = productLayouts.index(where: { $0 === productLayout }) else { return }
+        guard let index = productLayouts.firstIndex(where: { $0 === productLayout }) else { return }
         productLayouts.remove(at: index)
         
         if !productLayout.layout.isDoubleLayout {

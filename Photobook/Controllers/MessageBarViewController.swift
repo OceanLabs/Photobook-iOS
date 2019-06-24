@@ -97,7 +97,7 @@ class MessageBarViewController: UIViewController {
         defer { super.viewDidLayoutSubviews() }
         
         if dismissAfter == nil && messageViewHeightConstraint == nil {
-            messageViewHeightConstraint = NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: view.superview, attribute: .height, multiplier: 1.0, constant: 0.0)
+            messageViewHeightConstraint = NSLayoutConstraint(item: view!, attribute: .height, relatedBy: .equal, toItem: view.superview, attribute: .height, multiplier: 1.0, constant: 0.0)
             view.superview?.addConstraint(messageViewHeightConstraint!)
         } else if dismissAfter != nil && messageViewHeightConstraint != nil {
             view.superview?.removeConstraint(messageViewHeightConstraint!)

@@ -106,7 +106,7 @@ class LayoutSelectionViewController: UIViewController {
     
     var selectedLayoutIndex = 0
     var selectedLayout: Layout! {
-        didSet { selectedLayoutIndex = layouts.index(of: selectedLayout) ?? 0 }
+        didSet { selectedLayoutIndex = layouts.firstIndex(of: selectedLayout) ?? 0 }
     }
     var isEditingDoubleLayout = false
     weak var delegate: LayoutSelectionDelegate?

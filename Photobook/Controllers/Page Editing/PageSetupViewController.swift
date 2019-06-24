@@ -557,7 +557,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
         // If in the asset placement tool, go back to the previous tool
         if toolbarButtons[Tool.placeAsset.rawValue].isSelected {
             // Check if the previous tool is the text editor. If so, select the first tool instead
-            let previousTool = Tool(rawValue: toolbarButtons.index(of: previouslySelectedButton)!)
+            let previousTool = Tool(rawValue: toolbarButtons.firstIndex(of: previouslySelectedButton)!)
             if previousTool == .editText {
                 previouslySelectedButton = toolbarButtons.first!
             }
@@ -587,7 +587,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     private var isAnimatingTool = false
     @IBAction func tappedToolButton(_ sender: UIButton) {
 
-        guard !isAnimatingTool, let index = toolbarButtons.index(of: sender),
+        guard !isAnimatingTool, let index = toolbarButtons.firstIndex(of: sender),
             !toolbarButtons[index].isSelected,
             let tool = Tool(rawValue: index) else { return }
         

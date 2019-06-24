@@ -39,7 +39,7 @@ class ColorSelectionViewController: UIViewController {
     var selectedColor: ProductColor! {
         didSet {
             guard productColorButtons != nil else { return }
-            let index = productColors.index(of: selectedColor)
+            let index = productColors.firstIndex(of: selectedColor)
             for (i, productColorButton) in productColorButtons.enumerated() {
                 let selected = i == index
                 productColorButton.isBorderVisible = selected
@@ -63,7 +63,7 @@ class ColorSelectionViewController: UIViewController {
 extension ColorSelectionViewController: ProductColorButtonViewDelegate {
     
     func didTap(on button: ProductColorButtonView) {
-        guard let index = productColorButtons.index(of: button),
+        guard let index = productColorButtons.firstIndex(of: button),
             index < productColors.count
             else { fatalError("Tapped button with no product color equivalent") }
         

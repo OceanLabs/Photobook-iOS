@@ -230,7 +230,7 @@ extension OrderSummaryViewController: UITableViewDelegate {
                 return optionInCollection != upsellOption && optionInCollection.type == upsellOption.type
             }
             for option in selectedSameTypeUpsellOptions {
-                if let row = orderSummaryManager.upsellOptions?.index(of: option) {
+                if let row = orderSummaryManager.upsellOptions?.firstIndex(of: option) {
                     let optionIndexPath = IndexPath(row: row, section: Constants.sectionOptions)
                     (tableView.cellForRow(at: optionIndexPath) as? OrderSummaryUpsellTableViewCell)?.setEnabled(false)
                     orderSummaryManager.deselectUpsellOption(option)

@@ -91,7 +91,7 @@ class SelectedAssetsManager: NSObject, Codable {
         var addedAssets = [PhotobookAsset]()
         var addedIndices = [Int]()
         for asset in assets {
-            if selectedAssets.index(where: { (selectedAsset) in
+            if selectedAssets.firstIndex(where: { (selectedAsset) in
                 return selectedAsset == asset
             }) != nil {
                 //already added
@@ -116,7 +116,7 @@ class SelectedAssetsManager: NSObject, Codable {
         var removedAssets = [PhotobookAsset]()
         var removedIndices = [Int]()
         for asset in assets {
-            if let index = selectedAssets.index(where: { (selectedAsset) in
+            if let index = selectedAssets.firstIndex(where: { (selectedAsset) in
                 return selectedAsset == asset
             }) {
                 removedAssets.append(asset)
@@ -124,7 +124,7 @@ class SelectedAssetsManager: NSObject, Codable {
             }
         }
         for a in removedAssets {
-            if let index = selectedAssets.index(where: { (asset) in
+            if let index = selectedAssets.firstIndex(where: { (asset) in
                 return a == asset
             }) {
                 selectedAssets.remove(at: index)
@@ -135,7 +135,7 @@ class SelectedAssetsManager: NSObject, Codable {
     }
     
     func isSelected(_ asset: PhotobookAsset) -> Bool {
-        let index = selectedAssets.index(where: { $0 == asset })        
+        let index = selectedAssets.firstIndex(where: { $0 == asset })        
         return index != nil
     }
     

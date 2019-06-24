@@ -69,7 +69,7 @@ class AssetSelectorViewController: UIViewController {
         didSet {
             guard selectedAsset != nil else {
                 if let previousAsset = oldValue, timesUsed[previousAsset.identifier] != nil {
-                    if assets.index(where: { $0.identifier == previousAsset.identifier }) == nil {
+                    if assets.firstIndex(where: { $0.identifier == previousAsset.identifier }) == nil {
                         timesUsed.removeValue(forKey: previousAsset.identifier)
                     } else {
                         timesUsed[previousAsset.identifier] = timesUsed[previousAsset.identifier]! - 1
@@ -80,7 +80,7 @@ class AssetSelectorViewController: UIViewController {
                 collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .centeredHorizontally, animated: false)
                 return
             }
-            selectedAssetIndex = assets.index { $0.identifier == selectedAsset!.identifier } ?? -1
+            selectedAssetIndex = assets.firstIndex { $0.identifier == selectedAsset!.identifier } ?? -1
             if collectionView.numberOfItems(inSection: 0) > selectedAssetIndex && selectedAssetIndex >= 0 {
                 collectionView.scrollToItem(at: IndexPath(item: selectedAssetIndex, section: 0), at: .centeredHorizontally, animated: true)
             }
@@ -193,7 +193,7 @@ extension AssetSelectorViewController: PhotobookAssetAddingDelegate {
             assetsDelegate!.assets!.insert(asset, at: 0)
         }
 
-        selectedAssetIndex = self.assets.index { $0.identifier == selectedAsset?.identifier } ?? -1
+        selectedAssetIndex = self.assets.firstIndex { $0.identifier == selectedAsset?.identifier } ?? -1
         collectionView.reloadData()
         self.dismiss(animated: photobookDelegate?.shouldAnimateAssetPicker ?? true, completion: nil)
     }
