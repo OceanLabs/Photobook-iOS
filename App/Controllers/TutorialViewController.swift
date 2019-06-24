@@ -103,7 +103,7 @@ class TutorialViewController: UIViewController {
     
     private func pageViewControllerDidFinishAnimating() {
         guard let pageViewController = pageViewController.viewControllers?.first as? TutorialPageViewController,
-            let index = tutorialPageControllers.index(of: pageViewController)
+            let index = tutorialPageControllers.firstIndex(of: pageViewController)
             else {
                 pageControl.currentPage = 0
                 return
@@ -132,7 +132,7 @@ extension TutorialViewController: UIPageViewControllerDataSource {
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         guard let pageViewController = viewController as? TutorialPageViewController,
-            let index = tutorialPageControllers.index(of: pageViewController)
+            let index = tutorialPageControllers.firstIndex(of: pageViewController)
         else { return nil}
         
         if index == 0 { return nil }
@@ -141,7 +141,7 @@ extension TutorialViewController: UIPageViewControllerDataSource {
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         guard let pageViewController = viewController as? TutorialPageViewController,
-            let index = tutorialPageControllers.index(of: pageViewController)
+            let index = tutorialPageControllers.firstIndex(of: pageViewController)
             else { return nil}
 
         if index == tutorialPages.count - 1 { return nil }

@@ -84,6 +84,9 @@ class APIClient: NSObject {
     /// The environment of the app, live vs test
     static var environment: Environment = .live
     
+    /// Whether to use staging or not
+    static var shouldUseStaging = false
+    
     private static let imageUploadPrefix = "APIClient-AssetUploader-"
     private static let fileUploadPrefix = "APIClient-FileUploader-"
     
@@ -96,10 +99,9 @@ class APIClient: NSObject {
         case .photobook: return "https://photobook-builder.herokuapp.com" //"https://staging-photobook-builder.herokuapp.com"
         case .pig: return "https://image.kite.ly/"
         case .kite:
-            return APIClient.environment == .live ? "https://api.kite.ly/" : "https://staging.kite.ly/"
+            return APIClient.shouldUseStaging ? "https://staging.kite.ly/" : "https://api.kite.ly/"
         }
     }
-
     
     /// Shared client
     static let shared: APIClient = {

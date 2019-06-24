@@ -42,9 +42,9 @@ class OrderTests: XCTestCase {
     }
 
     func fakeCost(totalCost: Decimal = 0.0) -> Cost {
-        let lineItem = LineItem(templateId: "hdbook_127x127", name: "item", price: Price(currencyCode: "GBP", value: 20)!, identifier: "")
+        let lineItem = LineItem(templateId: "hdbook_127x127", name: "item", price: Price(currencyCode: "GBP", value: 20), identifier: "")
         
-        return Cost(hash: 1, lineItems: [lineItem], totalShippingPrice: Price(currencyCode: "GBP", value: 7)!, total: Price(currencyCode: "GBP", value: totalCost)!, promoDiscount: nil, promoCodeInvalidReason: nil)
+        return Cost(hash: 1, lineItems: [lineItem], totalShippingPrice: Price(currencyCode: "GBP", value: 7), total: Price(currencyCode: "GBP", value: totalCost), promoDiscount: nil, promoCodeInvalidReason: nil)
     }
 
     func testOrderIsFree_shouldBeFalseWithNoValidCost() {

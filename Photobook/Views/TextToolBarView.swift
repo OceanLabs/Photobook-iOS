@@ -64,7 +64,7 @@ class TextToolBarView: UIView {
     }
     
     @IBAction func tappedToolButton(_ sender: UIButton) {
-        let index = toolButtons.index(of: sender)!
+        let index = toolButtons.firstIndex(of: sender)!
         select(index: index)
         
         let fontType = FontType(rawValue: index)!

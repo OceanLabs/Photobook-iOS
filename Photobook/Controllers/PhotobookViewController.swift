@@ -456,7 +456,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate,
         }
         
         for removedAsset in removedAssets {
-            if let removedIndex = product.productLayouts.index(where: { $0.asset?.identifier == removedAsset.identifier }) {
+            if let removedIndex = product.productLayouts.firstIndex(where: { $0.asset?.identifier == removedAsset.identifier }) {
                 product.productLayouts[removedIndex].asset = nil
                 
                 // Check if the cover needs refreshing

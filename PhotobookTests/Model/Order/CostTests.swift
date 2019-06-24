@@ -32,23 +32,25 @@ import XCTest
 
 class CostTests: XCTestCase {
     
+    
     let validDictionary: [String: Any] = [
-        "total_shipping_cost": ["GBP": 7.06, "EUR": 8.039999999999999],
+        "total_shipping_costs": ["GBP": 7.06, "EUR": 8.039999999999999],
         "promo_code": [
-            "invalid_message": "<null>",
             "discount": ["GBP": 2, "EUR": 2.5]
         ],
-        "total": ["GBP": 26.06, "EUR": 30.53],
+        "total_costs": ["GBP": 26.06, "EUR": 30.53],
         "shipping_discount": ["GBP": 0, "EUR": 0],
-        "total_product_cost": ["GBP": 21, "EUR": 24.99],
-        "line_items": [
-            ["job_id": "<null>",
-             "quantity": 1,
-             "shipping_cost": ["GBP": 7.06, "EUR": 8.039999999999999],
-             "template_id": "hdbook_127x127",
-             "product_cost": ["GBP": 21, "EUR": 24.99],
-             "description": "1 x Premium Square Photobook 12.7cm (Matte)",
-             "upsell_discount": ["GBP": 0, "EUR": 0]]
+        "total_product_costs": ["GBP": 21, "EUR": 24.99],
+        "shipments": [
+            ["items": [
+                ["job_id": "<null>",
+                 "quantity": 1,
+                 "shipping_cost": ["GBP": 7.06, "EUR": 8.039999999999999],
+                 "template_id": "hdbook_127x127",
+                 "product_costs": ["GBP": 21, "EUR": 24.99],
+                 "description": "1 x Premium Square Photobook 12.7cm (Matte)",
+                 "upsell_discount": ["GBP": 0, "EUR": 0]]
+                ]]
         ]
     ]
     
@@ -58,9 +60,9 @@ class CostTests: XCTestCase {
         let promoDiscount = Price(currencyCode: "GBP", value: 0)
         let promoCodeInvalidReason = "reason"
         let total = Price(currencyCode: "GBP", value: 28.06)
-        let lineItems = [LineItem(templateId: "hdbook_127x127", name: "item", price: Price(currencyCode: "GBP", value: 21)!, identifier: "")]
+        let lineItems = [LineItem(templateId: "hdbook_127x127", name: "item", price: Price(currencyCode: "GBP", value: 21), identifier: "")]
         
-        let cost = Cost(hash: hash, lineItems: lineItems, totalShippingPrice: totalShippingCost!, total: total!, promoDiscount: promoDiscount, promoCodeInvalidReason: promoCodeInvalidReason)
+        let cost = Cost(hash: hash, lineItems: lineItems, totalShippingPrice: totalShippingCost, total: total, promoDiscount: promoDiscount, promoCodeInvalidReason: promoCodeInvalidReason)
         
         XCTAssertEqual(cost.orderHash, 233)
         XCTAssertEqualOptional(cost.lineItems.first?.templateId, "hdbook_127x127")
@@ -69,7 +71,7 @@ class CostTests: XCTestCase {
         XCTAssertEqualOptional(cost.promoDiscount, promoDiscount)
         XCTAssertEqualOptional(cost.promoCodeInvalidReason, "reason")
     }
-
+    
     func testParseDetails_shoudParseAValidDictionary() {
         let cost = Cost.parseDetails(dictionary: validDictionary)
         
@@ -77,9 +79,18 @@ class CostTests: XCTestCase {
         XCTAssertEqualOptional(cost?.lineItems.count, 1)
     }
     
+    func testParseDetails_shouldHaveAReasonForAnInvalidCode() {
+        var invalidCodeDictionary = validDictionary
+        invalidCodeDictionary["promo_code"] = ["invalid_message": "The code you entered is invalid"]
+        let cost = Cost.parseDetails(dictionary: invalidCodeDictionary)
+        
+        XCTAssertNotNil(cost)
+        XCTAssertEqualOptional(cost?.promoCodeInvalidReason, "Invalid code")
+    }
+    
     func testParseDetails_shouldFailIfLineItemsAreMissing() {
         var invalidDictionary = validDictionary
-        invalidDictionary["line_items"] = nil
+        invalidDictionary["shipments"] = nil
         
         let cost = Cost.parseDetails(dictionary: invalidDictionary)
         XCTAssertNil(cost)
@@ -87,21 +98,12 @@ class CostTests: XCTestCase {
     
     func testParseDetails_shouldFailIfTotalIsissing() {
         var invalidDictionary = validDictionary
-        invalidDictionary["total"] = nil
+        invalidDictionary["total_costs"] = nil
         
         let cost = Cost.parseDetails(dictionary: invalidDictionary)
         XCTAssertNil(cost)
     }
-
-    func testParseDetails_shouldParsePromoDiscount() {
-        var validDictionaryCopy = validDictionary
-        validDictionaryCopy["promo_code"] = ["discount": ["GBP": 2.0, "EUR": 2.3]]
-        
-        let cost = Cost.parseDetails(dictionary: validDictionaryCopy)
-        XCTAssertEqualOptional(cost?.promoDiscount?.value, 2.0)
-        XCTAssertEqualOptional(cost?.promoDiscount?.currencyCode, "GBP")
-    }
-
+    
     func testParseDetails_shouldPopulatePromoDiscountError() {
         var invalidDictionary = validDictionary
         invalidDictionary["promo_code"] = ["invalid_message": "Promo code not recognised"]

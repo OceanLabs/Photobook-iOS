@@ -279,7 +279,7 @@ class AssetCollectorViewController: UIViewController {
         
         if heightConstraint == nil {
             //create new contraint
-            heightConstraint = NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: height)
+            heightConstraint = NSLayoutConstraint(item: view!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: height)
             view.addConstraint(heightConstraint!)
         }
         

@@ -437,7 +437,7 @@ enum ProductColor: String, Codable {
     }
     
     func deletePages(for productLayout: ProductLayout) {
-        guard let index = productLayouts.index(where: { $0 === productLayout }) else { return }
+        guard let index = productLayouts.firstIndex(where: { $0 === productLayout }) else { return }
         productLayouts.remove(at: index)
         
         if !productLayout.layout.isDoubleLayout {
@@ -666,7 +666,9 @@ enum ProductColor: String, Codable {
             "multiples": itemCount,
             "shipping_class": shippingMethod.id,
             "options": options,
-            "page_count": numberOfPages,
+            "assets": [
+                "page_count": numberOfPages,
+            ],
             "job_id": identifier
         ]
     }

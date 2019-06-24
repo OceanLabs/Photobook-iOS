@@ -48,9 +48,9 @@ class Cost: Codable {
     }
     
     static func parseDetails(dictionary: [String: Any]) -> Cost? {
-        guard let lineItemsDictionary = dictionary["line_items"] as? [[String: Any]],
-            let totalShippingCostDictionary = dictionary["total_shipping_cost"] as? [String: Any],
-            let totalDictionary = dictionary["total"] as? [String: Any],
+        guard let shipmentsArray = dictionary["shipments"] as? [[String: Any]],
+            let totalShippingCostDictionary = dictionary["total_shipping_costs"] as? [String: Any],
+            let totalDictionary = dictionary["total_costs"] as? [String: Any],
             let totalShippingCost = Price.parse(totalShippingCostDictionary),
             let total = Price.parse(totalDictionary) else { return nil }
         
@@ -66,9 +66,11 @@ class Cost: Codable {
         }
         
         var lineItems = [LineItem]()
-        for item in lineItemsDictionary {
-            guard let lineItem = LineItem.parseDetails(dictionary: item) else { return nil }
-            lineItems.append(lineItem)
+        for shipment in shipmentsArray {
+            for item in shipment["items"] as? [[String: Any]] ?? [] {
+                guard let lineItem = LineItem.parseDetails(dictionary: item) else { return nil }
+                lineItems.append(lineItem)
+            }
         }
         
         return Cost(hash: 0, lineItems: lineItems, totalShippingPrice: totalShippingCost, total: total, promoDiscount: promoDiscount, promoCodeInvalidReason: promoInvalidMessage)

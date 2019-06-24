@@ -225,7 +225,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
         
         var indexPathsInserted = [IndexPath]()
         for assetInserted in albumChange.assetsInserted {
-            if let index = self.album.assets.index(where: { $0.identifier == assetInserted.identifier }) {
+            if let index = self.album.assets.firstIndex(where: { $0.identifier == assetInserted.identifier }) {
                 indexPathsInserted.append(IndexPath(item: index, section: 0))
             }
         }
@@ -371,7 +371,7 @@ class AssetPickerCollectionViewController: UICollectionViewController {
             return
         }
         for asset in assets {
-            if let index = album.assets.index(where: { (a) -> Bool in
+            if let index = album.assets.firstIndex(where: { (a) -> Bool in
                 return a == asset
             }) {
                 updateSelectedStatus(indexPath: IndexPath(row: index, section: 0), asset: asset)
@@ -638,7 +638,7 @@ extension AssetPickerCollectionViewController: FullScreenImageViewControllerDele
     // MARK: FullScreenImageViewControllerDelegate
     
     func previewDidUpdate(asset: PhotobookAsset) {
-        guard let index = album.assets.index(where: { (selectedAsset) in
+        guard let index = album.assets.firstIndex(where: { (selectedAsset) in
             return selectedAsset.identifier == asset.identifier
         }),
             index != NSNotFound
@@ -648,7 +648,7 @@ extension AssetPickerCollectionViewController: FullScreenImageViewControllerDele
     }
     
     func sourceView(for asset: PhotobookAsset) -> UIView?{
-        guard let index = album.assets.index(where: { (selectedAsset) in
+        guard let index = album.assets.firstIndex(where: { (selectedAsset) in
             return selectedAsset.identifier == asset.identifier
         }),
             index != NSNotFound,

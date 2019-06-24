@@ -220,7 +220,7 @@ class StoriesManager: NSObject {
                     // Check if the locations are among the most visited
                     var hasCommonLocation = false
                     for component in story.components {
-                        if orderedLocations.index(of: component)! <= Int(Double(component.count) * 0.2) {
+                        if orderedLocations.firstIndex(of: component)! <= Int(Double(component.count) * 0.2) {
                             hasCommonLocation = true
                             break
                         }
@@ -283,7 +283,7 @@ extension StoriesManager: PHPhotoLibraryChangeObserver {
                 if let changeDetails = changeInstance.changeDetails(for: phAsset), changeDetails.objectWasDeleted {
                     assetsRemoved.append(asset)
                     
-                    if let index = story.assets.index(where: { $0 == asset }) {
+                    if let index = story.assets.firstIndex(where: { $0 == asset }) {
                         indexesRemoved.append(index)
                     }
                 }

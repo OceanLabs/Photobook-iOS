@@ -148,12 +148,14 @@ class CheckoutViewController: UIViewController {
         
         Analytics.shared.trackScreenViewed(.basket)
         
-        if APIClient.environment == .test {
-            title = Constants.title + " (TEST)"
-        } else {
-            title = Constants.title
+        title = Constants.title
+        if PhotobookSDK.shared.environment == .test {
+            title = title! + " (TEST)"
         }
-        
+        if PhotobookSDK.shared.shouldUseStaging {
+            title = title! + " - STAGING"
+        }
+
         registerForKeyboardNotifications()
         
         // Clear fields
@@ -188,10 +190,15 @@ class CheckoutViewController: UIViewController {
             welf?.dispatchGroup = nil
         })
         
-        paymentManager.setStripePaymentContext()
-        
         // Register for notifications
         NotificationCenter.default.addObserver(self, selector: #selector(paymentAuthorized(_:)), name: PaymentNotificationName.authorized, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(failedToCreateCustomerKey), name: KiteApiNotificationName.failedToCreateCustomerKey, object: nil)
+        
+        paymentManager.setStripePaymentContext()
+    }
+    
+    @objc private func failedToCreateCustomerKey() {
+        paymentManager.setStripePaymentContext()
     }
         
     @objc func paymentAuthorized(_ notification: NSNotification) {
@@ -210,7 +217,7 @@ class CheckoutViewController: UIViewController {
             welf?.progressOverlayViewController.hide()            
             if authorized {
                 welf?.order.paymentToken = paymentIntentId
-                welf?.showReceipt()
+                welf?.showReceipt(after3DAuthorisation: true)
             }
         }
     }
@@ -605,7 +612,7 @@ class CheckoutViewController: UIViewController {
         }
     }
     
-    private func showReceipt() {
+    private func showReceipt(after3DAuthorisation: Bool = false) {
         order.lastSubmissionDate = Date()
         NotificationCenter.default.post(name: OrdersNotificationName.orderWasCreated, object: order)
         
@@ -613,18 +620,15 @@ class CheckoutViewController: UIViewController {
         
         if presentedViewController == nil {
             performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
-        } else {
-            // The 3D secure dialog (SFSafariViewController) dismisses itself and calling dismiss on this vc would not execute the completion block.
-            // That is why the code below uses CATransaction instead
-            CATransaction.begin()
-            CATransaction.setCompletionBlock({
-                // Add a delay so it is not as abrupt
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-                    self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
-                })
+        } else if after3DAuthorisation {
+            // The 3D secure dialog (SFSafariViewController) dismisses itself
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+                self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
             })
-            dismiss(animated: true, completion: nil)
-            CATransaction.commit()
+        } else {
+            dismiss(animated: true) {
+                self.performSegue(withIdentifier: Constants.receiptSegueName, sender: nil)
+            }
         }
     }
     
@@ -810,6 +814,7 @@ extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
     func paymentAuthorizationRequiresAction(withContext context: STPRedirectContext) {
         redirectContext = context
         redirectContext?.startRedirectFlow(from: self)
+        progressOverlayViewController.hide()
     }
     
     func paymentAuthorizationManagerDidUpdateDetails() {
@@ -897,7 +902,7 @@ extension CheckoutViewController: UITableViewDelegate {
 
 extension CheckoutViewController: BasketProductTableViewCellDelegate {
     func didTapAmountButton(for productIdentifier: String) {
-        editingProductIndex = order.products.index(where: { $0.identifier == productIdentifier })
+        editingProductIndex = order.products.firstIndex(where: { $0.identifier == productIdentifier })
         let selectedAmount = editingProductIndex != nil ? order.products[editingProductIndex!].itemCount : 1
         presentAmountPicker(selectedAmount: selectedAmount)
     }

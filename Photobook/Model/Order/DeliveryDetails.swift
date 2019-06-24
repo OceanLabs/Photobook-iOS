@@ -160,7 +160,7 @@ import UIKit
     }
     
     static func remove(_ deliveryDetails: OLDeliveryDetails) {
-        guard let index = savedDeliveryDetails.index(where: { $0 == deliveryDetails }) else { return }
+        guard let index = savedDeliveryDetails.firstIndex(where: { $0 == deliveryDetails }) else { return }
         savedDeliveryDetails.remove(at: index)
         if deliveryDetails.selected, let firstDetails = savedDeliveryDetails.first {
             firstDetails.selected = true

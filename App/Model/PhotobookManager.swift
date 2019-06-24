@@ -50,6 +50,10 @@ class PhotobookManager: NSObject {
         #if TEST_ENVIRONMENT
         environment = .test
         #endif
+        
+        #if STAGING
+        PhotobookSDK.shared.shouldUseStaging = true
+        #endif
 
         PhotobookSDK.shared.environment = environment
         PhotobookSDK.shared.applePayMerchantId = Configuration.applePayMerchantId

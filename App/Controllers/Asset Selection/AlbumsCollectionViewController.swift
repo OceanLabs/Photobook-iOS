@@ -204,11 +204,11 @@ class AlbumsCollectionViewController: UICollectionViewController, Collectable {
         }
         var indexPathsToReload = [IndexPath]()
         for asset in assets {
-            if let index = albumManager.albums.index(where: { (album) -> Bool in
+            if let index = albumManager.albums.firstIndex(where: { (album) -> Bool in
                 return album.identifier == asset.albumIdentifier
             }) {
                 //check if indexpath is already added
-                if indexPathsToReload.index(where: { (indexPath) -> Bool in
+                if indexPathsToReload.firstIndex(where: { (indexPath) -> Bool in
                     return indexPath.row == index
                 }) == nil {
                     //not added yet, add
@@ -225,7 +225,7 @@ class AlbumsCollectionViewController: UICollectionViewController, Collectable {
         var indexPathsChanged = [IndexPath]()
         
         for albumChange in albumsChanges {
-            guard let index = albumManager.albums.index(where: { $0.identifier == albumChange.albumIdentifier }) else { continue }
+            guard let index = albumManager.albums.firstIndex(where: { $0.identifier == albumChange.albumIdentifier }) else { continue }
             indexPathsChanged.append(IndexPath(item: index, section: 0))
         }
         

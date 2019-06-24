@@ -70,7 +70,7 @@ class OrderManager {
         static let automaticRetryCountKey = "AutomaticRetryCount"
     }
     static let maxNumberOfAutomaticRetries = 20
-    static let maxNumberOfPollingTries = 20
+    static let maxNumberOfPollingTries = 60
     
     private lazy var kiteApiClient = KiteAPIClient.shared
     private lazy var apiClient = APIClient.shared
@@ -320,7 +320,7 @@ class OrderManager {
             
             if status == .accepted || status == .received {
                 stelf.numberOfTimesPolled += 1
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                     stelf.pollOrderStatus(completionHandler: completionHandler)
                 })
                 return

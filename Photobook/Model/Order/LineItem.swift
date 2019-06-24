@@ -47,7 +47,7 @@ class LineItem: Codable {
         guard
             let templateId = dictionary["template_id"] as? String,
             let name = dictionary["description"] as? String,
-            let costDictionary = dictionary["product_cost"] as? [String: Any],
+            let costDictionary = dictionary["product_costs"] as? [String: Any],
             let cost = Price.parse(costDictionary, prioritizedCurrencyCodes: prioritizedCurrencyCodes, formattingLocale: formattingLocale),
             let identifier = dictionary["job_id"] as? String
             else { return nil }

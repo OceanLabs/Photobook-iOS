@@ -36,7 +36,7 @@ struct Price: Codable {
     let formatted: String
     private let formattingLocale: Locale
     
-    init?(currencyCode: String, value: Decimal, formattingLocale: Locale = Locale.current) {
+    init(currencyCode: String, value: Decimal, formattingLocale: Locale = Locale.current) {
         var decimalNumberValue = value as NSDecimalNumber
         decimalNumberValue = decimalNumberValue.rounding(accordingToBehavior: CurrencyRoundingBehavior())
         
@@ -45,9 +45,9 @@ struct Price: Codable {
         self.formattingLocale = formattingLocale
         
         if value > 0 {
-            self.formatted = value.formattedCost(currencyCode: currencyCode, locale: formattingLocale)
+            formatted = value.formattedCost(currencyCode: currencyCode, locale: formattingLocale)
         } else {
-            self.formatted = NSLocalizedString("Model/Order/Price/FormattedFree", value: "Free", comment: "Text that gets displayed if a price is 0.0").uppercased()
+            formatted = NSLocalizedString("Model/Order/Price/FormattedFree", value: "Free", comment: "Text that gets displayed if a price is 0.0").uppercased()
         }
     }
     
@@ -60,18 +60,27 @@ struct Price: Codable {
     
     static func parse(_ dictionary: [String: Any], prioritizedCurrencyCodes: [String] = OrderManager.shared.prioritizedCurrencyCodes, formattingLocale: Locale = Locale.current) -> Price? {
         
-        guard let valuesDict = dictionary as? [String: Double] else {
+        var prices: [String: Any]!
+        if let doubleValues = dictionary as? [String: Double] {
+            prices = doubleValues
+        } else if let stringValues = dictionary as? [String: String] {
+            prices = stringValues
+        } else {
             return nil
         }
         
         for currencyCode in prioritizedCurrencyCodes {
-            if let value = valuesDict[currencyCode] {
-                return Price(currencyCode: currencyCode, value: Decimal(value), formattingLocale: formattingLocale)
+            var value: Decimal!
+            if let doubleValue = prices[currencyCode] as? Double {
+                value = Decimal(doubleValue)
+            } else if let stringValue = prices[currencyCode] as? String {
+                value = Decimal(string: stringValue)
             }
+            if value == nil { continue }
+            return Price(currencyCode: currencyCode, value: value!, formattingLocale: formattingLocale)
         }
         
         return nil
-        
     }
     
     static func parse(_ dictionaries: [[String: Any]], prioritizedCurrencyCodes: [String] = OrderManager.shared.prioritizedCurrencyCodes, formattingLocale: Locale = Locale.current) -> Price? {
@@ -79,19 +88,23 @@ struct Price: Codable {
         for currencyCode in prioritizedCurrencyCodes {
             for dictionary in dictionaries {
                 if let currency = dictionary["currency"] as? String,
-                    currency == currencyCode,
-                    let value = dictionary["amount"] as? Double {
-                    return Price(currencyCode: currencyCode, value: Decimal(value), formattingLocale: formattingLocale)
+                    currency == currencyCode {
+                    if let value = dictionary["amount"] as? Double {
+                        return Price(currencyCode: currencyCode, value: Decimal(value), formattingLocale: formattingLocale)
+                    }
+                    if let valueString = dictionary["amount"] as? String,
+                        let value = Double(valueString) {
+                        return Price(currencyCode: currencyCode, value: Decimal(value), formattingLocale: formattingLocale)
+                    }
                 }
             }
         }
         
         return nil
     }
-    
 }
 
-extension Price : Equatable {
+extension Price: Equatable {
     static func == (lhs: Price, rhs: Price) -> Bool {
         return
             lhs.currencyCode == rhs.currencyCode &&
