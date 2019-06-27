@@ -99,6 +99,7 @@ struct AssetsNotificationName {
         }
     }
     
+    /// Scheme to handle URL callbacks
     @objc public var kiteUrlScheme: String? {
         didSet {
             KiteAPIClient.shared.urlScheme = kiteUrlScheme

@@ -34,7 +34,10 @@ struct OrdersNotificationName {
     static let orderWasSuccessful = Notification.Name("ly.kite.sdk.orderWasSuccessful")
 }
 
-class Order: Codable {
+class Order: Codable, Hashable {
+    static func == (lhs: Order, rhs: Order) -> Bool {
+        return lhs.hashValue == rhs.hashValue
+    }
     
     var deliveryDetails: OLDeliveryDetails?
     var paymentMethod: PaymentMethod? = PaymentAuthorizationManager.isApplePayAvailable ? .applePay : nil
@@ -79,21 +82,17 @@ class Order: Codable {
         return deliveryDetails?.country.codeAlpha3 ?? Country.countryForCurrentLocale().codeAlpha3
     }
 
-    var hashValue: Int {
+    func hash(into hasher: inout Hasher) {
         let country = deliveryDetails?.country ?? Country.countryForCurrentLocale()
-        var stringHash = "ad:\(country.codeAlpha3.hashValue),"
+        hasher.combine(country.codeAlpha3)
+        
         if let promoCode = promoCode {
-            stringHash += "pc:\(promoCode),"
+            hasher.combine(promoCode)
         }
-        
-        var shippingHash: Int = 0
-        var productsHash: Int = 0
         for product in products {
-            productsHash = productsHash ^ product.hash
-            shippingHash = shippingHash ^ (product.selectedShippingMethod?.id ?? 0)
+            hasher.combine(product.hash)
+            hasher.combine(product.selectedShippingMethod?.id ?? 0)
         }
-        
-        return stringHash.hashValue ^ shippingHash ^ productsHash
     }
     
     var hasCachedCost: Bool {
