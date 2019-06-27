@@ -283,13 +283,16 @@ extension AlbumsCollectionViewController: AssetCollectorViewControllerDelegate {
     
     func actionsForAssetCollectorViewControllerHiddenStateChange(_ assetCollectorViewController: AssetCollectorViewController, willChangeTo hidden: Bool) -> () -> () {
         return { [weak welf = self] in
+            let topInset: CGFloat
             let bottomInset: CGFloat
             if #available(iOS 11, *) {
-                bottomInset = hidden ? 0 : assetCollectorViewController.viewHeight
+                topInset = 0.0
+                bottomInset = hidden ? 0.0 : assetCollectorViewController.viewHeight
             } else {
+                topInset = hidden ? (welf?.navigationController?.navigationBar.frame.maxY ?? 0.0) : 0.0
                 bottomInset = hidden ? assetCollectorViewController.viewHeight - assetCollectorViewController.view.transform.ty : assetCollectorViewController.viewHeight
             }
-            welf?.collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: bottomInset, right: 0)
+            welf?.collectionView?.contentInset = UIEdgeInsets(top: topInset, left: 0, bottom: bottomInset, right: 0)
         }
     }
     
