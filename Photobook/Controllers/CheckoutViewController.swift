@@ -731,7 +731,9 @@ class CheckoutViewController: UIViewController {
             
             progressOverlayViewController.show(message: Constants.loadingPaymentText)
             
-            paymentManager.stripePaymentContext?.hostViewController = self
+            if paymentManager.stripePaymentContext?.hostViewController == nil {
+                paymentManager.stripePaymentContext?.hostViewController = self
+            }
             paymentManager.authorizePayment(cost: cost, method: paymentMethod)
         }
     }
