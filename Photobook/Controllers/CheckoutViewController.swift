@@ -347,9 +347,17 @@ class CheckoutViewController: UIViewController {
             stelf.dispatchGroup = nil
             if let error = stelf.apiClientError {
                 let errorMessage = ErrorMessage(error)
-                stelf.emptyScreenViewController.show(message: errorMessage.text, title: errorMessage.title, image: nil, buttonTitle: CommonLocalizedStrings.retry, buttonAction: { [weak welf = self] in
-                    welf?.refresh(showProgress: showProgress, forceCostUpdate: forceCostUpdate, forceShippingMethodsUpdate: forceShippingMethodsUpdate)
-                })
+                
+                if !stelf.order.hasCachedCost {
+                    stelf.emptyScreenViewController.show(message: errorMessage.text, title: errorMessage.title, image: nil, buttonTitle: CommonLocalizedStrings.retry, buttonAction: { [weak welf = self] in
+                        welf?.refresh(showProgress: showProgress, forceCostUpdate: forceCostUpdate, forceShippingMethodsUpdate: forceShippingMethodsUpdate)
+                    })
+                } else {
+                    MessageBarViewController.show(message: ErrorMessage(error), parentViewController: stelf, offsetTop: stelf.navigationController!.navigationBar.frame.maxY, centred: true) {
+                        welf?.refresh(showProgress: showProgress, forceCostUpdate: forceCostUpdate, forceShippingMethodsUpdate: forceShippingMethodsUpdate)
+                    }
+                }
+                
                 stelf.apiClientError = nil
                 return
             }
@@ -369,14 +377,7 @@ class CheckoutViewController: UIViewController {
                 if case .parsing(_) = error {
                     OrderManager.shared.reset()
                 }
-
-                if !stelf.order.hasCachedCost {
-                    stelf.apiClientError = error
-                } else {
-                    MessageBarViewController.show(message: ErrorMessage(error), parentViewController: stelf, offsetTop: stelf.navigationController!.navigationBar.frame.maxY, centred: true) {
-                        welf?.refresh(showProgress: showProgress, forceCostUpdate: forceCostUpdate, forceShippingMethodsUpdate: forceShippingMethodsUpdate)
-                    }
-                }
+                stelf.apiClientError = error
             }
             
             stelf.dispatchGroup?.leave()
