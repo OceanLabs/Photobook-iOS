@@ -104,9 +104,7 @@ class Order: Codable, Hashable {
     }
     
     func updateCost(forceUpdate: Bool = false, forceShippingMethodUpdate: Bool = false, _ completionHandler: @escaping (_ error : APIClientError?) -> Void) {
-        guard products.count != 0,
-        !hasValidCachedCost || forceUpdate
-        else {
+        guard products.count != 0, !hasValidCachedCost || forceUpdate else {
             completionHandler(nil)
             return
         }

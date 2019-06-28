@@ -185,24 +185,15 @@ class CheckoutViewController: UIViewController {
 
         emptyScreenViewController.show(message: Constants.loadingDetailsText, activity: true)
         
-        // Enter dispatch group for PaymentContext and Refresh calls
-        dispatchGroup?.enter()
-        dispatchGroup?.enter()
-        
-        dispatchGroup?.notify(queue: DispatchQueue.main, execute: { [weak welf = self] in
-            welf?.detailsDidRefresh()
-            welf?.dispatchGroup = nil
-        })
-        
         // Register for notifications
         NotificationCenter.default.addObserver(self, selector: #selector(paymentAuthorized(_:)), name: PaymentNotificationName.authorized, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(failedToCreateCustomerKey), name: KiteApiNotificationName.failedToCreateCustomerKey, object: nil)
-        
-        paymentManager.setStripePaymentContext()
     }
     
+    private var hasSetUpStripe = false
     @objc private func failedToCreateCustomerKey() {
-        paymentManager.setStripePaymentContext()
+        apiClientError = .generic
+        dispatchGroup?.leave()
     }
         
     @objc func paymentAuthorized(_ notification: NSNotification) {
@@ -338,37 +329,54 @@ class CheckoutViewController: UIViewController {
         dismissClosure?(controllerToDismiss, false)
     }
     
+    private var apiClientError: APIClientError?
     private func refresh(showProgress: Bool = true, forceCostUpdate: Bool = false, forceShippingMethodsUpdate: Bool = false) {
         if showProgress {
             progressOverlayViewController.show(message: Constants.loadingDetailsText)
         }
         
-        order.updateCost(forceUpdate: forceCostUpdate, forceShippingMethodUpdate: forceShippingMethodsUpdate) { [weak welf = self] (error) in
+        // Enter dispatch group for PaymentContext and Refresh calls
+        dispatchGroup = DispatchGroup()
+        dispatchGroup?.enter()
+        
+        dispatchGroup?.notify(queue: DispatchQueue.main, execute: { [weak welf = self] in
+            guard let stelf = welf else { return }
+            
+            stelf.dispatchGroup = nil
+            if let error = stelf.apiClientError {
+                let errorMessage = ErrorMessage(error)
+                stelf.emptyScreenViewController.show(message: errorMessage.text, title: errorMessage.title, image: nil, buttonTitle: CommonLocalizedStrings.retry, buttonAction: { [weak welf = self] in
+                    welf?.refresh(showProgress: showProgress, forceCostUpdate: forceCostUpdate, forceShippingMethodsUpdate: forceShippingMethodsUpdate)
+                })
+                return
+            }
+            
+            stelf.detailsDidRefresh()
+        })
+        
+        if !hasSetUpStripe {
+            dispatchGroup?.enter()
+            paymentManager.setStripePaymentContext()
+        }
 
+        order.updateCost(forceUpdate: forceCostUpdate, forceShippingMethodUpdate: forceShippingMethodsUpdate) { [weak welf = self] (error) in
+            guard let stelf = welf else { return }
+            
             if let error = error {
                 if case .parsing(_) = error {
                     OrderManager.shared.reset()
                 }
 
-                if !(welf?.order.hasCachedCost ?? false) {
-                    let errorMessage = ErrorMessage(error)
-                    welf?.emptyScreenViewController.show(message: errorMessage.text, title: errorMessage.title)
-                    return
+                if !stelf.order.hasCachedCost {
+                    stelf.apiClientError = error
+                } else {
+                    MessageBarViewController.show(message: ErrorMessage(error), parentViewController: stelf, offsetTop: stelf.navigationController!.navigationBar.frame.maxY, centred: true) {
+                        welf?.refresh(showProgress: showProgress, forceCostUpdate: forceCostUpdate, forceShippingMethodsUpdate: forceShippingMethodsUpdate)
+                    }
                 }
-                
-                guard let stelf = welf else { return }
-                MessageBarViewController.show(message: ErrorMessage(error), parentViewController: stelf, offsetTop: stelf.navigationController!.navigationBar.frame.maxY, centred: true) {
-                    welf?.refresh(showProgress: showProgress, forceCostUpdate: forceCostUpdate, forceShippingMethodsUpdate: forceShippingMethodsUpdate)
-                }
-                return
             }
             
-            if welf?.dispatchGroup != nil {
-                welf?.dispatchGroup?.leave()
-                return
-            }
-            
-            welf?.detailsDidRefresh()
+            stelf.dispatchGroup?.leave()
         }
     }
     
@@ -833,6 +841,8 @@ extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
     func paymentAuthorizationManagerDidUpdateDetails() {
         updateViews()
         paymentMethodsViewController?.reloadPaymentMethods()
+        
+        hasSetUpStripe = true
         dispatchGroup?.leave()
     }
     

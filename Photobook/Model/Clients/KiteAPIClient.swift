@@ -451,7 +451,6 @@ class KiteAPIClient: NSObject {
 extension KiteAPIClient: STPCustomerEphemeralKeyProvider {
     
     func createCustomerKey(withAPIVersion apiVersion: String, completion: @escaping STPJSONResponseCompletionBlock) {
-        
         var parameters = ["api_version": apiVersion]
         
         func requestEphemeralKey(for customerId: String) {
@@ -463,8 +462,8 @@ extension KiteAPIClient: STPCustomerEphemeralKeyProvider {
                     if case APIClientError.parsing(_) = error! {
                         // If there was a parsing error, chances are the customer ID is invalid
                         StripeCredentialsHandler.delete()
-                        NotificationCenter.default.post(name: KiteApiNotificationName.failedToCreateCustomerKey, object: nil)
                     }
+                    NotificationCenter.default.post(name: KiteApiNotificationName.failedToCreateCustomerKey, object: nil)
                     completion(nil, error)
                     return
                 }
@@ -483,6 +482,7 @@ extension KiteAPIClient: STPCustomerEphemeralKeyProvider {
 
         createStripeCustomer { [weak welf = self] (customerId, error) in
             guard error == nil, let cusId = customerId else {
+                NotificationCenter.default.post(name: KiteApiNotificationName.failedToCreateCustomerKey, object: nil)
                 completion(nil, error)
                 return
             }
