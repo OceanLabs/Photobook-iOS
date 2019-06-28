@@ -57,10 +57,7 @@ struct KiteApiNotificationName {
 class KiteAPIClient: NSObject {
     
     var apiKey: String?
-    lazy var urlScheme: String? = {
-        guard let apiKey = apiKey else { return nil }
-        return "kite\(apiKey)"
-    }()
+    var urlScheme: String?
     
     /// The environment of the app, live vs test
     static var environment: Environment = .live
@@ -257,7 +254,7 @@ class KiteAPIClient: NSObject {
     func getShippingInfo(for templateIds: [String], completionHandler: @escaping (_ shippingInfo: [String: Any]?, _ error: APIClientError?) -> Void) {
         
         guard apiKey != nil else {
-            fatalError("Missing Kite API key: KiteSDK.shared.kiteApiKey")
+            fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
         }
         
         let uniqueTemplatesIds = Set(templateIds)
@@ -378,7 +375,14 @@ class KiteAPIClient: NSObject {
     
     // MARK: - Stripe
     func createStripeCustomer(_ completionHandler: @escaping (_ customerId: String?, _ error: APIClientError?) -> Void) {
-        
+        guard apiKey != nil else {
+            fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
+        }
+
+        guard urlScheme != nil else {
+            fatalError("Missing URL Scheme: PhotobookSDK.shared.kiteUrlScheme")
+        }
+
         let endpoint = KiteAPIClient.apiVersion + Endpoints.createStripeCustomer
         APIClient.shared.post(context: .kite, endpoint: endpoint, headers: kiteHeaders) { response, error in
             guard error == nil else {
@@ -397,8 +401,12 @@ class KiteAPIClient: NSObject {
     
     func createPaymentIntentWithSourceId(_ sourceId: String, amount: Double, currency: String, completionHandler: @escaping (_ paymentIntent: STPPaymentIntent?, _ error: APIClientError?) -> Void)
     {
+        guard apiKey != nil else {
+            fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
+        }
+
         guard let urlScheme = urlScheme else {
-            fatalError("Invalid URL Scheme: API key is nil or a nil scheme was provided")
+            fatalError("Missing URL Scheme: PhotobookSDK.shared.kiteUrlScheme")
         }
         
         if stripeCustomerId == nil {

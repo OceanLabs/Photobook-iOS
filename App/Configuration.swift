@@ -33,6 +33,7 @@ struct Configuration {
     static let shouldIntroBackgroundImageScroll = true
     static let kiteApiClientLiveKey = "REPLACE_WITH_YOUR_API_KEY"
     static let kiteApiClientTestKey = "78b798ff366815c833dfa848654aba43b71a883a"
+    static let kiteUrlScheme = "photobook78b798ff"
     static let applePayPayToString = "Kite.ly (via HD Photobooks)"
     static let applePayMerchantId = "merchant.ly.kite.sdk"
 }

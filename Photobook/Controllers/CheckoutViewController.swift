@@ -155,6 +155,10 @@ class CheckoutViewController: UIViewController {
         if PhotobookSDK.shared.shouldUseStaging {
             title = title! + " - STAGING"
         }
+        
+        guard PhotobookSDK.shared.kiteUrlScheme != nil else {
+            return
+        }
 
         registerForKeyboardNotifications()
         
@@ -295,6 +299,13 @@ class CheckoutViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        guard PhotobookSDK.shared.kiteUrlScheme != nil else {
+            let title = NSLocalizedString("Controllers/CheckoutViewController/EmptyScreenURLSchemeTitle", value: "URL Scheme Not Set", comment: "Title of the error displayed when the developers of the host app did not set up 3D Secure payments")
+            let message = NSLocalizedString("Controllers/CheckoutViewController/EmptyScreenURLSchemeText", value: "A URL scheme is necessary to implement 3D Secure 2 payments. For more information please check our Quick Integration guide.", comment: "Text of the error displayed when the developers of the host app did not set up 3D Secure payments")
+            emptyScreenViewController.show(message: message, title: title)
+            return
+        }
         
         if order.products.isEmpty {
             showEmptyScreen()
