@@ -17,7 +17,7 @@ To get started, you will need to have a free Kite developer account. Go to [kite
 
 ## Requirements
 
-* Xcode 10.0
+* Xcode 10.2
 * iOS 10.0+ target deployment
 
 ## Installation
@@ -57,7 +57,51 @@ Swift:
 PhotobookSDK.shared.environment = .live // Or .test for testing
 PhotobookSDK.shared.kiteApiKey = "YOUR_API_KEY"
 ```
-* **Step 3:** Create and present the Photobook SDK ViewController:
+
+* **Step 3:** Set up 3D Secure 2 payments:
+
+Read about SCA (Strong Customer Authentication) requirements [here](https://stripe.com/gb/guides/strong-customer-authentication).
+
+Add a URL Scheme to your info.plist:
+```
+<key>CFBundleURLTypes</key>
+<array>
+	<dict>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<string>photobook1234567</string>
+		</array>
+	</dict>
+</array>
+```
+
+Pass the URL Scheme you defined to the Photobook SDK:
+
+Objective-C:
+```obj-c
+[[PhotobookSDK shared] setKiteApiKey:@"myappname123456"];
+```
+Swift:
+```swift
+PhotobookSDK.shared.kiteUrlScheme = "myappname123456"
+```
+
+Implement the following method in your app delegate:
+
+Objective-C
+```obj-c
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+	return [[PhotobookSDK shared] handleUrlCallBack: url];   
+}
+```
+Swift:
+```swift
+func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+   	return PhotobookSDK.shared.handleUrlCallBack(with: url)
+}
+```
+
+* **Step 4:** Create and present the Photobook SDK ViewController:
 
 Objective-C:
 ```obj-c
@@ -77,7 +121,7 @@ guard let photobookViewController = PhotobookSDK.shared.photobookViewController(
 }) else { return }
 present(photobookViewController, animated: true, completion: nil)
 ```
-* **Step 4:**: 🎉Profit🎉
+* **Step 5:**: 🎉Profit🎉
 
 💰💵💶💷💴
 
