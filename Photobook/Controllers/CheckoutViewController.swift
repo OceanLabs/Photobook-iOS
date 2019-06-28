@@ -192,7 +192,9 @@ class CheckoutViewController: UIViewController {
     
     private var hasSetUpStripe = false
     @objc private func failedToCreateCustomerKey() {
-        apiClientError = .generic
+        if apiClientError == nil {
+            apiClientError = .generic
+        }
         dispatchGroup?.leave()
     }
         
@@ -348,6 +350,7 @@ class CheckoutViewController: UIViewController {
                 stelf.emptyScreenViewController.show(message: errorMessage.text, title: errorMessage.title, image: nil, buttonTitle: CommonLocalizedStrings.retry, buttonAction: { [weak welf = self] in
                     welf?.refresh(showProgress: showProgress, forceCostUpdate: forceCostUpdate, forceShippingMethodsUpdate: forceShippingMethodsUpdate)
                 })
+                stelf.apiClientError = nil
                 return
             }
             
