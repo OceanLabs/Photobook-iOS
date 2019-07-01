@@ -304,13 +304,7 @@ class CheckoutViewController: UIViewController {
             showEmptyScreen()
             return
         }
-
-        updateViews()
-        if !order.hasValidCachedCost {
-            refresh(showProgress: emptyScreenViewController.view.superview == nil)
-        } else {
-            emptyScreenViewController.hide()
-        }
+        refresh(showProgress: emptyScreenViewController.view.superview == nil)
     }
     
     override var shouldAutorotate: Bool {
