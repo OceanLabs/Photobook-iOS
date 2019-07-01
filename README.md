@@ -69,7 +69,7 @@ Add a URL Scheme to your info.plist:
 	<dict>
 		<key>CFBundleURLSchemes</key>
 		<array>
-			<string>photobook1234567</string>
+			<string>myappname123456</string>
 		</array>
 	</dict>
 </array>
@@ -79,7 +79,7 @@ Pass the URL Scheme you defined to the Photobook SDK:
 
 Objective-C:
 ```obj-c
-[[PhotobookSDK shared] setKiteApiKey:@"myappname123456"];
+[[PhotobookSDK shared] setKiteUrlScheme:@"myappname123456"];
 ```
 Swift:
 ```swift
@@ -91,7 +91,7 @@ Implement the following method in your app delegate:
 Objective-C
 ```obj-c
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
-	return [[PhotobookSDK shared] handleUrlCallBack: url];   
+	return [[PhotobookSDK shared] handleUrlCallBack:url];   
 }
 ```
 Swift:
