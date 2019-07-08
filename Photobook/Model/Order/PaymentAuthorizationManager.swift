@@ -443,7 +443,7 @@ extension PaymentAuthorizationManager: STPPaymentContextDelegate {
                 }
                 stelf.delegate?.paymentAuthorizationRequiresAction(withContext: redirectContext)
             } else {
-                stelf.delegate?.paymentAuthorizationDidFinish(token: paymentResult.source.stripeID, error: nil, completionHandler: nil)
+                stelf.delegate?.paymentAuthorizationDidFinish(token: paymentIntent.stripeId, error: nil, completionHandler: nil)
             }
             completion(nil)
         }
