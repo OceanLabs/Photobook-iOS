@@ -185,13 +185,14 @@ class Order: Codable, Hashable {
         parameters["user_data"] = ["user_agent": KiteAPIClient.userAgent]
         
         parameters["shipping_address"] = deliveryDetails?.jsonRepresentation()
-        parameters["promo_code"] = promoCode
         
-        parameters["payment"] = [
+        var payment: [String: Any] = [
             "currency": finalTotalCost.currencyCode,
             "amount": finalTotalCost.value,
             "proof_of_payment": paymentToken ?? ""
         ]
+        payment["promo_code"] = promoCode
+        parameters["payment"] = payment
         
         parameters["customer"] = [
             "email": deliveryDetails?.email ?? "",

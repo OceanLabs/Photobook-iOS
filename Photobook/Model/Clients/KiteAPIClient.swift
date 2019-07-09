@@ -342,7 +342,7 @@ class KiteAPIClient: NSObject {
         parameters["currencies"] = [OrderManager.shared.preferredCurrencyCode]
         
         if let promoCode = order.promoCode {
-            parameters["promo_code"] = promoCode
+            parameters["payment"] = ["promo_code": promoCode]
         }
         
         var lineItems = [[String: Any]]()

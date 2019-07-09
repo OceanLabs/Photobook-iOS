@@ -415,7 +415,7 @@ class CheckoutViewController: UIViewController {
         
         // Promo code
         if let promoDiscount = order.cost?.promoDiscount, promoDiscount.value != 0 {
-            promoCodeTextField.text = promoDiscount.formatted
+            promoCodeTextField.text = "-" + promoDiscount.formatted
             previousPromoText = promoDiscount.formatted
             promoCodeClearButton.isHidden = false
             promoCodeAccessoryConstraint.priority = .defaultHigh
