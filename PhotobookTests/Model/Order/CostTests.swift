@@ -32,11 +32,15 @@ import XCTest
 
 class CostTests: XCTestCase {
     
-    
     let validDictionary: [String: Any] = [
         "total_shipping_costs": ["GBP": 7.06, "EUR": 8.039999999999999],
-        "promo_code": [
-            "discount": ["GBP": 2, "EUR": 2.5]
+        "discount": [
+            "discounts_applied": [
+                "total": ["GBP": 2, "EUR": 2.5]
+            ],
+            "amended_costs": [
+                "total": ["GBP": 24.06, "EUR": 28.03]
+            ]
         ],
         "total_costs": ["GBP": 26.06, "EUR": 30.53],
         "shipping_discount": ["GBP": 0, "EUR": 0],
@@ -81,7 +85,7 @@ class CostTests: XCTestCase {
     
     func testParseDetails_shouldHaveAReasonForAnInvalidCode() {
         var invalidCodeDictionary = validDictionary
-        invalidCodeDictionary["promo_code"] = ["invalid_message": "The code you entered is invalid"]
+        invalidCodeDictionary["promo_error"] = "The code you entered is invalid"
         let cost = Cost.parseDetails(dictionary: invalidCodeDictionary)
         
         XCTAssertNotNil(cost)
@@ -104,11 +108,9 @@ class CostTests: XCTestCase {
         XCTAssertNil(cost)
     }
     
-    func testParseDetails_shouldPopulatePromoDiscountError() {
-        var invalidDictionary = validDictionary
-        invalidDictionary["promo_code"] = ["invalid_message": "Promo code not recognised"]
-        
-        let cost = Cost.parseDetails(dictionary: invalidDictionary)
-        XCTAssertNotNil(cost?.promoCodeInvalidReason)
+    func testParseDetails_shouldPopulatePromoDiscountAndTotal() {
+        let cost = Cost.parseDetails(dictionary: validDictionary)
+        XCTAssertEqualOptional(cost?.promoDiscount?.value, 2)
+        XCTAssertEqualOptional(cost?.total.value, 24.06)
     }
 }
