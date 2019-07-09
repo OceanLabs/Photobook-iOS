@@ -54,15 +54,20 @@ class Cost: Codable {
             let totalShippingCost = Price.parse(totalShippingCostDictionary),
             let total = Price.parse(totalDictionary) else { return nil }
         
+        var amendedTotal: Price?
         var promoDiscount: Price?
         var promoInvalidMessage: String?
-        
-        if let promoCode = dictionary["promo_code"] as? [String: Any] {
-            if (promoCode["invalid_message"] as? String) != nil {
-                promoInvalidMessage = NSLocalizedString("Model/Cost/PromoInvalidMessage", value: "Invalid code", comment: "An invalid promo code has been entered and couldn't be applied to the order")//use generic localised string because response isn't optimised for mobile
-            } else if let discount = promoCode["discount"] as? [String: Any] {
-                promoDiscount = Price.parse(discount)
-            }
+
+        if let _ = dictionary["promo_error"] as? String {
+            promoInvalidMessage = NSLocalizedString("Model/Cost/PromoInvalidMessage", value: "Invalid code", comment: "An invalid promo code has been entered and couldn't be applied to the order")//use generic localised string because response isn't optimised for mobile
+        } else if let discount = dictionary["discount"] as? [String: Any],
+                    let discountsApplied = discount["discounts_applied"] as? [String: Any],
+                    let totalDiscount = discountsApplied["total"] as? [String: Any],
+                    let amendedCosts = discount["amended_costs"] as? [String: Any],
+                    let totalCost = amendedCosts["total"] as? [String: Any]
+        {
+            promoDiscount = Price.parse(totalDiscount)
+            amendedTotal = Price.parse(totalCost)
         }
         
         var lineItems = [LineItem]()
@@ -73,6 +78,6 @@ class Cost: Codable {
             }
         }
         
-        return Cost(hash: 0, lineItems: lineItems, totalShippingPrice: totalShippingCost, total: total, promoDiscount: promoDiscount, promoCodeInvalidReason: promoInvalidMessage)
+        return Cost(hash: 0, lineItems: lineItems, totalShippingPrice: totalShippingCost, total: amendedTotal ?? total, promoDiscount: promoDiscount, promoCodeInvalidReason: promoInvalidMessage)
     }
 }
