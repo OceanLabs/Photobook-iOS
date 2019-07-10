@@ -37,13 +37,8 @@ struct Layout: Equatable, Codable {
     var textLayoutBox: LayoutBox?
     var isDoubleLayout: Bool = false
     
-    func isEmptyLayout() -> Bool {
-        return imageLayoutBox == nil && textLayoutBox == nil
-    }
-    
-    func isLandscape() -> Bool {
-        return imageLayoutBox != nil ? imageLayoutBox!.isLandscape() : false
-    }
+    func isEmptyLayout() -> Bool { return imageLayoutBox == nil && textLayoutBox == nil }
+    func isLandscape() -> Bool { return imageLayoutBox != nil && imageLayoutBox!.isLandscape() }
     
     static func parse(_ layoutDictionary: [String: AnyObject]) -> Layout? {
         guard
