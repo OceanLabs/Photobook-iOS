@@ -402,7 +402,7 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
 extension PaymentAuthorizationManager: STPPaymentContextDelegate {
     
     func paymentContextDidChange(_ paymentContext: STPPaymentContext) {
-        if stripePaymentContext?.selectedPaymentOption != nil {
+        if stripePaymentContext?.selectedPaymentOption != nil && basketOrder.paymentMethod == nil {
             basketOrder.paymentMethod = .creditCard
         }
         delegate?.paymentAuthorizationManagerDidUpdateDetails()
