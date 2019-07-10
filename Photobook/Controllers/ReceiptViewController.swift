@@ -50,7 +50,7 @@ class ReceiptViewController: UIViewController {
     }
     
     private enum Section: Int {
-        case header, progress, info, details, lineItems, shipping, footer
+        case header, progress, info, details, lineItems, shipping, promocode, footer
     }
     
     var order: Order!
@@ -381,7 +381,7 @@ extension ReceiptViewController: OrderProcessingDelegate {
 extension ReceiptViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 7
+        return 8
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -397,6 +397,9 @@ extension ReceiptViewController: UITableViewDataSource {
             return cost?.lineItems.count ?? 0
         case Section.shipping.rawValue, Section.details.rawValue, Section.footer.rawValue:
             if state == .cancelled { return 0 }
+            return 1
+        case Section.promocode.rawValue:
+            if state == .cancelled || order.cost?.promoDiscount == nil { return 0 }
             return 1
         default:
             return 0
@@ -484,6 +487,11 @@ extension ReceiptViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptLineItemTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptLineItemTableViewCell
             cell.lineItemNameLabel.text = CommonLocalizedStrings.shipping
             cell.lineItemCostLabel.text = cost?.totalShippingPrice.formatted
+            return cell
+        case Section.promocode.rawValue:
+            let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptLineItemTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptLineItemTableViewCell
+            cell.lineItemNameLabel.text = NSLocalizedString("ReceiptViewController/Promotion", value: "Promotion", comment: "Label for the discounted amount")
+            cell.lineItemCostLabel.text = "-" + cost!.promoDiscount!.formatted
             return cell
         case Section.footer.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReceiptFooterTableViewCell.reuseIdentifier, for: indexPath) as! ReceiptFooterTableViewCell
