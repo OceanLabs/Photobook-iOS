@@ -36,9 +36,7 @@ struct LayoutBox: Codable {
     // Normalised rect
     let rect: CGRect!
     
-    func isLandscape() -> Bool {
-        return rect.width > rect.height
-    }
+    func isLandscape() -> Bool { return rect.width > rect.height }
     
     func isSquareEnoughForVoiceOver() -> Bool {
         let ratio = rect.width / rect.height

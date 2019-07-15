@@ -27,7 +27,6 @@
 //  THE SOFTWARE.
 //
 
-import Foundation
 import UIKit
 
 // Defines the characteristics of a photobook / product
