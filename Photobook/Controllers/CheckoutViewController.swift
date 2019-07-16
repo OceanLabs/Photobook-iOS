@@ -180,8 +180,6 @@ class CheckoutViewController: UIViewController {
         if isPresentedModally {
             navigationItem.leftBarButtonItems = [ cancelBarButtonItem ]
         }
-        
-        order.deliveryDetails = OLDeliveryDetails.selectedDetails()
 
         emptyScreenViewController.show(message: Constants.loadingDetailsText, activity: true)
         
@@ -364,6 +362,9 @@ class CheckoutViewController: UIViewController {
             paymentManager.setStripePaymentContext()
         }
 
+        if order.paymentMethod == .creditCard {
+            order.deliveryDetails = OLDeliveryDetails.selectedDetails()
+        }
         order.updateCost(forceUpdate: forceCostUpdate, forceShippingMethodUpdate: forceShippingMethodsUpdate) { [weak welf = self] (error) in
             guard let stelf = welf else { return }
             
@@ -617,7 +618,7 @@ class CheckoutViewController: UIViewController {
             return
         }
         
-        //textfield is not empty
+        // is not empty
         if previousPromoText != text { //and it has changed
             order.promoCode = text
             promoCodeAccessoryConstraint.priority = .defaultHigh

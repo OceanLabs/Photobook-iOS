@@ -97,19 +97,17 @@ import UIKit
     }
     
     var isValid: Bool {
-        get {
-            guard let firstName = firstName, !firstName.isEmpty,
-                let lastName = lastName, !lastName.isEmpty,
-                let email = email, email.isValidEmailAddress(),
-                let phone = phone, phone.count >= FormConstants.minPhoneNumberLength,
-                let line1 = line1, !line1.isEmpty,
-                let city = city, !city.isEmpty,
-                let zipOrPostcode = zipOrPostcode, !zipOrPostcode.isEmpty,
-                let stateOrCounty = stateOrCounty, !stateOrCounty.isEmpty
-                else { return false }
-            
-            return true
-        }
+        guard let firstName = firstName, !firstName.isEmpty,
+            let lastName = lastName, !lastName.isEmpty,
+            let email = email, email.isValidEmailAddress(),
+            let phone = phone, phone.count >= FormConstants.minPhoneNumberLength,
+            let line1 = line1, !line1.isEmpty,
+            let city = city, !city.isEmpty,
+            let zipOrPostcode = zipOrPostcode, !zipOrPostcode.isEmpty,
+            let stateOrCounty = stateOrCounty, !stateOrCounty.isEmpty
+            else { return false }
+        
+        return true
     }
     
     public func copy(with zone: NSZone? = nil) -> Any {
