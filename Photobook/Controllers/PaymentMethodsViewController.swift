@@ -46,6 +46,10 @@ class PaymentMethodsViewController: UIViewController {
         set { order.paymentMethod = newValue }
     }
 
+    lazy var stripeSelectedCard: STPPaymentOption? = {
+        return paymentManager.stripePaymentContext?.selectedPaymentOption
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -56,6 +60,14 @@ class PaymentMethodsViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        // Check if a new card has been added / selected
+        if let currentStripeCard = paymentManager.stripePaymentContext?.selectedPaymentOption,
+           let stripeSelectedCard = stripeSelectedCard,
+           stripeSelectedCard.hash != currentStripeCard.hash {
+                self.stripeSelectedCard = currentStripeCard
+                selectedPaymentMethod = .creditCard
+        }
         tableView.reloadData()
     }
     
