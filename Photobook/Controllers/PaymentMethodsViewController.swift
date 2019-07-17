@@ -153,19 +153,18 @@ extension PaymentMethodsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let supportsApplePay = PaymentAuthorizationManager.isApplePayAvailable ? 1 : 0
-        
         switch indexPath.item {
-        case -1 + supportsApplePay: // Apple Pay
+        case 0 where PaymentAuthorizationManager.isApplePayAvailable: // Apple Pay
             selectedPaymentMethod = .applePay
-        case 0 + supportsApplePay: // PayPal
+        case 0 where !PaymentAuthorizationManager.isApplePayAvailable && PaymentAuthorizationManager.isPayPalAvailable: // PayPal
+            fallthrough
+        case 1 where PaymentAuthorizationManager.isApplePayAvailable && PaymentAuthorizationManager.isPayPalAvailable: // PayPal
             selectedPaymentMethod = .payPal
         case paymentManager.availablePaymentMethods.count - 1: // Saved card
             tappedAddPaymentMethod(self)
         default: // Add Payment Method
             selectedPaymentMethod = .creditCard
         }
-        
         tableView.reloadData()
     }
 }
