@@ -747,7 +747,8 @@ class CheckoutViewController: UIViewController {
             
             guard let paymentMethod = order.paymentMethod else { return }
             
-            progressOverlayViewController.show(message: Constants.loadingPaymentText)            
+            progressOverlayViewController.show(message: Constants.loadingPaymentText)
+            paymentManager.stripeHostViewController = self
             paymentManager.authorizePayment(cost: cost, method: paymentMethod)
         }
     }

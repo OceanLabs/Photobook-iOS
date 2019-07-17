@@ -73,9 +73,7 @@ class PaymentMethodsViewController: UIViewController {
     
     @IBAction func tappedAddPaymentMethod(_ sender: Any) {
         guard let paymentContext = paymentManager.stripePaymentContext else { return }
-        if paymentContext.hostViewController == nil {
-            paymentContext.hostViewController = self
-        }
+        paymentManager.stripeHostViewController = self
         paymentContext.pushPaymentOptionsViewController()
     }
     

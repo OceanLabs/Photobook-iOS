@@ -260,6 +260,7 @@ class ReceiptViewController: UIViewController {
         }
         
         progressOverlayViewController.show(message: Constants.loadingPaymentText)
+        paymentManager.stripeHostViewController = self
         paymentManager.authorizePayment(cost: cost, method: paymentMethod)
     }
     
