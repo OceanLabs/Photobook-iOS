@@ -46,6 +46,10 @@ class PaymentMethodsViewController: UIViewController {
         set { order.paymentMethod = newValue }
     }
 
+    lazy var stripeSelectedCard: STPPaymentOption? = {
+        return paymentManager.stripePaymentContext?.selectedPaymentOption
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -56,14 +60,20 @@ class PaymentMethodsViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        // Check if a new card has been added / selected
+        if let currentStripeCard = paymentManager.stripePaymentContext?.selectedPaymentOption,
+           let stripeSelectedCard = stripeSelectedCard,
+           stripeSelectedCard.hash != currentStripeCard.hash {
+                self.stripeSelectedCard = currentStripeCard
+                selectedPaymentMethod = .creditCard
+        }
         tableView.reloadData()
     }
     
     @IBAction func tappedAddPaymentMethod(_ sender: Any) {
         guard let paymentContext = paymentManager.stripePaymentContext else { return }
-        if paymentContext.hostViewController == nil {
-            paymentContext.hostViewController = self
-        }
+        paymentManager.stripeHostViewController = self
         paymentContext.pushPaymentOptionsViewController()
     }
     
@@ -141,19 +151,18 @@ extension PaymentMethodsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let supportsApplePay = PaymentAuthorizationManager.isApplePayAvailable ? 1 : 0
-        
         switch indexPath.item {
-        case -1 + supportsApplePay: // Apple Pay
+        case 0 where PaymentAuthorizationManager.isApplePayAvailable: // Apple Pay
             selectedPaymentMethod = .applePay
-        case 0 + supportsApplePay: // PayPal
+        case 0 where !PaymentAuthorizationManager.isApplePayAvailable && PaymentAuthorizationManager.isPayPalAvailable: // PayPal
+            fallthrough
+        case 1 where PaymentAuthorizationManager.isApplePayAvailable && PaymentAuthorizationManager.isPayPalAvailable: // PayPal
             selectedPaymentMethod = .payPal
         case paymentManager.availablePaymentMethods.count - 1: // Saved card
             tappedAddPaymentMethod(self)
         default: // Add Payment Method
             selectedPaymentMethod = .creditCard
         }
-        
         tableView.reloadData()
     }
 }

@@ -217,6 +217,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate,
     
     private func setup(with product: PhotobookProduct) {
         setupTitleView()
+        ProductManager.shared.setProduct(product, with: product.photobookTemplate)
         
         if emptyScreenViewController.parent != nil {
             collectionView.reloadData()

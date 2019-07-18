@@ -188,6 +188,27 @@ class PaymentAuthorizationManager: NSObject {
         }
     }
 
+    // Stripe does not allow changing the host vc once set as this is usually the checkout vc.
+    // However, in our case it might be necessary to reset it to the payments vc or receipt vc.
+    private weak var _stripeHostViewControllerStorage1: UIViewController?
+    private weak var _stripeHostViewControllerStorage2: UIViewController?
+    var stripeHostViewController: UIViewController? {
+        didSet {
+            guard stripePaymentContext != nil else { return }
+            if _stripeHostViewControllerStorage1 != nil {
+                guard _stripeHostViewControllerStorage1 != stripeHostViewController else { return }
+                _stripeHostViewControllerStorage1 = nil
+                _stripeHostViewControllerStorage2 = stripeHostViewController
+                stripePaymentContext?.hostViewController = _stripeHostViewControllerStorage2
+            } else {
+                guard _stripeHostViewControllerStorage2 != stripeHostViewController else { return }
+                _stripeHostViewControllerStorage2 = nil
+                _stripeHostViewControllerStorage1 = stripeHostViewController
+                stripePaymentContext?.hostViewController = _stripeHostViewControllerStorage1
+            }
+        }
+    }
+    
     func setStripePaymentContext() {
         func configure(with stripeKey: String) {
             let config = STPPaymentConfiguration.shared()
