@@ -224,8 +224,11 @@ class CheckoutViewController: UIViewController {
         progressOverlayViewController.hide()
         promoCodeActivityIndicator.stopAnimating()
         promoCodeTextField.isUserInteractionEnabled = true
-        
         updateViews()
+        
+        if order.products.isEmpty {
+            showEmptyScreen()
+        }
     }
     
     override func viewDidLayoutSubviews() {
