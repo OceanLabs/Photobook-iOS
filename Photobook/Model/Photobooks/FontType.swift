@@ -52,11 +52,7 @@ import UIKit
         if isSpineText {
             paragraphStyle.alignment = .center
         } else {
-            switch self {
-            case .plain: paragraphStyle.lineHeightMultiple = 1.25
-            case .classic: paragraphStyle.lineHeightMultiple = 1.27
-            case .solid: paragraphStyle.lineHeightMultiple = 1.23
-            }
+            paragraphStyle.lineHeightMultiple = lineHeight()
         }
 
         return paragraphStyle.copy() as! NSParagraphStyle
@@ -64,9 +60,17 @@ import UIKit
     
     func photobookFontSize() -> CGFloat {
         switch self {
-        case .plain: return 8.0
-        case .classic: return 11.0
-        case .solid: return 13.0
+        case .plain: return 13.0
+        case .classic: return 13.0
+        case .solid: return 15.0
+        }
+    }
+    
+    func lineHeight() -> CGFloat {
+        switch self {
+        case .plain: return 1.25
+        case .classic: return 1.27
+        case .solid: return 1.23
         }
     }
     
@@ -113,16 +117,14 @@ import UIKit
 /// Values for Photobook API
 extension FontType {
     var apiFontFamily: String {
-        get {
-            switch self {
-            case .plain: return "\'Open Sans\', sans-serif"
-            case .classic: return "Lora, serif"
-            case .solid: return "Montserrat, sans-serif"
-            }
+        switch self {
+        case .plain: return "\'Open Sans\', sans-serif"
+        case .classic: return "Lora, serif"
+        case .solid: return "Montserrat, sans-serif"
         }
     }
     
-    func apiPhotobookFontWeight() -> CGFloat {
+    var apiPhotobookFontWeight: CGFloat {
         switch self {
         case .plain: return 400
         case .classic: return 400
@@ -130,11 +132,7 @@ extension FontType {
         }
     }
     
-    func apiPhotobookLineHeight() -> CGFloat {
-        return 1.2
-    }
-    
-    func apiPhotobookFontSize() -> String {
+    var apiPhotobookFontSize: String {
         return "\(photobookFontSize())pt"
     }
 }

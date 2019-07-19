@@ -40,9 +40,7 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
     
     @IBOutlet private weak var spineButton: UIButton!
     @IBOutlet private weak var spineFrameView: SpineFrameView!
-    @IBOutlet private weak var coverFrameView: CoverFrameView! {
-        didSet { coverFrameView.interaction = .wholePage }
-    }
+    @IBOutlet private weak var coverFrameView: CoverFrameView!
 
     var width: CGFloat! {
         didSet { coverFrameView.width = width }
@@ -82,6 +80,7 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
         coverFrameView.pageView.pageIndex = 0
         coverFrameView.pageView.productLayout = product.productLayouts.first
         coverFrameView.pageView.bleed = product.bleed(forPageSize: coverFrameView.pageView.bounds.size, type: .cover)
+        coverFrameView.pageView.interaction = .wholePage
         coverFrameView.pageView.setupImageBox()
         coverFrameView.pageView.setupTextBox(mode: .userTextOnly)
         

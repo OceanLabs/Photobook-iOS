@@ -154,6 +154,11 @@
                                                                 <fontDescription key="fontDescription" type="system" pointSize="8"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
+                                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="reG-we-DQY">
+                                                                <rect key="frame" x="29" y="163" width="116" height="21"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            </view>
                                                         </subviews>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
@@ -166,6 +171,7 @@
                                                             <outlet property="assetPlaceholderIconImageView" destination="tho-p9-ghB" id="yKp-3N-OSG"/>
                                                             <outlet property="bleedAssetContainerView" destination="Rwd-gS-Y2k" id="z5H-e0-L3D"/>
                                                             <outlet property="pageTextLabel" destination="CLX-rE-8ac" id="BGs-1Z-7G4"/>
+                                                            <outlet property="textAreaView" destination="reG-we-DQY" id="omO-Ac-esJ"/>
                                                         </connections>
                                                     </view>
                                                 </subviews>
@@ -257,6 +263,11 @@
                                                         <fontDescription key="fontDescription" type="system" pointSize="8"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
+                                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Onb-Bj-rw3">
+                                                        <rect key="frame" x="20" y="163" width="116" height="21"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </view>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
@@ -269,6 +280,7 @@
                                                     <outlet property="assetPlaceholderIconImageView" destination="NTK-aC-9DY" id="PXI-Gr-tZT"/>
                                                     <outlet property="bleedAssetContainerView" destination="TNk-6T-ewK" id="NHo-8f-a9j"/>
                                                     <outlet property="pageTextLabel" destination="f1I-iY-MP8" id="7mB-5f-siZ"/>
+                                                    <outlet property="textAreaView" destination="Onb-Bj-rw3" id="eTq-VT-rFd"/>
                                                 </connections>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ext-3a-SVs" customClass="PhotobookPageView" customModule="Photobook">
@@ -302,6 +314,11 @@
                                                         <fontDescription key="fontDescription" type="system" pointSize="6"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
+                                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NnU-AR-INk">
+                                                        <rect key="frame" x="20" y="163" width="116" height="21"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </view>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
@@ -314,6 +331,7 @@
                                                     <outlet property="assetPlaceholderIconImageView" destination="ul5-cx-tYZ" id="5sM-Ii-NIO"/>
                                                     <outlet property="bleedAssetContainerView" destination="LnQ-rk-Kd0" id="WaM-Y2-Fn6"/>
                                                     <outlet property="pageTextLabel" destination="dbm-j0-eAm" id="PH9-wB-c0u"/>
+                                                    <outlet property="textAreaView" destination="NnU-AR-INk" id="qeO-r1-64N"/>
                                                 </connections>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C4w-ms-gXv" userLabel="Page Divider View" customClass="PhotobookFramePageDividerView" customModule="Photobook">

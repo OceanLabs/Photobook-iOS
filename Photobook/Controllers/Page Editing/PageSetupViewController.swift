@@ -83,7 +83,6 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
     @IBOutlet private weak var coverFrameView: CoverFrameView! {
         didSet {
             coverFrameView.isHidden = pageType != .cover
-            coverFrameView.interaction = .assetAndText
         }
     }
     @IBOutlet private weak var photobookFrameView: PhotobookFrameView! {
@@ -225,6 +224,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             
             coverFrameView.color = product.coverColor
             coverFrameView.pageView.aspectRatio = product.photobookTemplate.coverAspectRatio
+            coverFrameView.pageView.interaction = .assetAndText
             coverFrameView.pageView.delegate = self
             
             photobookFrameView.pageColor = product.pageColor

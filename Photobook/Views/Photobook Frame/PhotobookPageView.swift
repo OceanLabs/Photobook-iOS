@@ -89,6 +89,7 @@ class PhotobookPageView: UIView {
     @IBOutlet private weak var assetContainerView: UIView!
     @IBOutlet private weak var assetPlaceholderIconImageView: UIImageView!
     @IBOutlet private weak var assetImageView: UIImageView!
+    @IBOutlet private weak var textAreaView: UIView?
     @IBOutlet private weak var pageTextLabel: UILabel? {
         didSet {
             pageTextLabel!.alpha = 0.0
@@ -129,7 +130,7 @@ class PhotobookPageView: UIView {
             assetContainerView.addGestureRecognizer(assetTapGestureRecognizer)
             
             let textTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOnText(_:)))
-            pageTextLabel?.addGestureRecognizer(textTapGestureRecognizer)
+            textAreaView?.addGestureRecognizer(textTapGestureRecognizer)
         default:
             break
         }
@@ -260,6 +261,8 @@ class PhotobookPageView: UIView {
         
         pageTextLabel.transform = .identity
         pageTextLabel.frame = CGRect(x: finalFrame.minX, y: finalFrame.minY, width: originalSize.width * textBox.rect.width, height: originalSize.height * textBox.rect.height)
+        
+        textAreaView?.frame = finalFrame
         
         let scale = finalFrame.width / (originalSize.width * textBox.rect.width)
         guard pageTextLabel.text != nil else {

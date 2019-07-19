@@ -606,9 +606,9 @@ enum ProductColor: String, Codable {
                 var containedItem = [String: Any]()
                 var font = [String: Any]()
                 font["fontFamily"] = productLayoutText.fontType.apiFontFamily
-                font["fontSize"] = productLayoutText.fontType.apiPhotobookFontSize()
-                font["fontWeight"] = productLayoutText.fontType.apiPhotobookFontWeight()
-                font["lineHeight"] = productLayoutText.fontType.apiPhotobookLineHeight()
+                font["fontSize"] = productLayoutText.fontType.apiPhotobookFontSize
+                font["fontWeight"] = productLayoutText.fontType.apiPhotobookFontWeight
+                font["lineHeight"] = productLayoutText.fontType.lineHeight
                 containedItem["font"] = font
                 containedItem["text"] = productLayoutText.htmlText ?? text
                 containedItem["color"] = pageType == .cover ? coverColor.fontColor().hex : pageColor.fontColor().hex
@@ -641,9 +641,9 @@ enum ProductColor: String, Codable {
         var font = [String: Any]()
         
         font["fontFamily"] = spineFontType.apiFontFamily
-        font["fontSize"] = spineFontType.apiPhotobookFontSize()
-        font["fontWeight"] = spineFontType.apiPhotobookFontWeight()
-        font["lineHeight"] = spineFontType.apiPhotobookLineHeight()
+        font["fontSize"] = spineFontType.apiPhotobookFontSize
+        font["fontWeight"] = spineFontType.apiPhotobookFontWeight
+        font["lineHeight"] = spineFontType.lineHeight
         
         spineText["font"] = font
         
