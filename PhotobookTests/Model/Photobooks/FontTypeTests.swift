@@ -67,9 +67,9 @@ class FontTypeTests: XCTestCase {
     
     func testSizeForScreenRatio_shouldReturnPhotobookFontSize() {
         let inputs = [
-            (FontType.plain, CGFloat(8.0)),
-            (FontType.classic, CGFloat(11.0)),
-            (FontType.solid, CGFloat(13.0))
+            (FontType.plain, CGFloat(13.0)),
+            (FontType.classic, CGFloat(13.0)),
+            (FontType.solid, CGFloat(15.0))
         ]
         
         for input in inputs {
@@ -81,15 +81,16 @@ class FontTypeTests: XCTestCase {
     
     func testSizeForScreenRatio_shouldReturnScaledPhotobookFontSize() {
         let inputs = [
-            (FontType.plain, CGFloat(2.22)),
-            (FontType.classic, CGFloat(3.06)),
-            (FontType.solid, CGFloat(3.61))
+            (FontType.plain, CGFloat(3.61)),
+            (FontType.classic, CGFloat(3.61)),
+            (FontType.solid, CGFloat(4.17))
         ]
         
         let ratio: CGFloat = 100.0 / 360.0 // Height on screen is 100pt, original page height 360pt
         for input in inputs {
             let fontType = input.0
             let fontSize = fontType.sizeForScreenToPageRatio(ratio)
+            print("***** \(fontSize)")
             XCTAssertTrue(fontSize ==~ input.1, "Incorrect font size for type \(fontType)")
         }
     }
