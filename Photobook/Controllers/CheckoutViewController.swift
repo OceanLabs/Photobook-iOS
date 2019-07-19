@@ -218,6 +218,11 @@ class CheckoutViewController: UIViewController {
     }
     
     private func detailsDidRefresh() {
+        guard !order.products.isEmpty else {
+            dismissBasket()
+            return
+        }
+
         OrderManager.shared.saveBasketOrder()
         
         emptyScreenViewController.hide()
@@ -225,10 +230,6 @@ class CheckoutViewController: UIViewController {
         promoCodeActivityIndicator.stopAnimating()
         promoCodeTextField.isUserInteractionEnabled = true
         updateViews()
-        
-        if order.products.isEmpty {
-            showEmptyScreen()
-        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -326,6 +327,14 @@ class CheckoutViewController: UIViewController {
         dismissClosure?(controllerToDismiss, false)
     }
     
+    private func dismissBasket() {
+        if isPresentedModally {
+            tappedCancel()
+        } else {
+            navigationController?.popViewController(animated: true)
+        }
+    }
+    
     private var apiClientError: APIClientError?
     private func refresh(showProgress: Bool = true, forceCostUpdate: Bool = false, forceShippingMethodsUpdate: Bool = false) {
         if showProgress {
@@ -343,8 +352,14 @@ class CheckoutViewController: UIViewController {
             if let error = stelf.apiClientError {
                 let errorMessage = ErrorMessage(error)
                 
-                if !stelf.order.hasCachedCost {
-                    stelf.emptyScreenViewController.show(message: errorMessage.text, title: errorMessage.title, image: nil, buttonTitle: CommonLocalizedStrings.retry, buttonAction: { [weak welf = self] in
+                var parsingError = false
+                if case .parsing(_) = error {
+                    OrderManager.shared.reset()
+                    parsingError = true
+                }
+
+                if parsingError || !stelf.order.hasCachedCost {
+                    stelf.emptyScreenViewController.show(message: errorMessage.text, title: errorMessage.title, image: nil, buttonTitle: parsingError ? nil : CommonLocalizedStrings.retry, buttonAction: { [weak welf = self] in
                         welf?.refresh(showProgress: showProgress, forceCostUpdate: forceCostUpdate, forceShippingMethodsUpdate: forceShippingMethodsUpdate)
                     })
                 } else {
@@ -372,9 +387,6 @@ class CheckoutViewController: UIViewController {
             guard let stelf = welf else { return }
             
             if let error = error {
-                if case .parsing(_) = error {
-                    OrderManager.shared.reset()
-                }
                 stelf.apiClientError = error
             }
             
@@ -910,11 +922,7 @@ extension CheckoutViewController: UITableViewDelegate {
             tableView.deleteRows(at: [indexPath], with: .automatic)
             
             guard !order.products.isEmpty else {
-                if isPresentedModally {
-                    tappedCancel()
-                } else {
-                    navigationController?.popViewController(animated: true)
-                }
+                dismissBasket()
                 return
             }
             refresh(forceCostUpdate: true, forceShippingMethodsUpdate: false)
