@@ -188,27 +188,15 @@ class PaymentAuthorizationManager: NSObject {
         }
     }
 
-    // Stripe does not allow changing the host vc once set as this is usually the checkout vc.
-    // However, in our case it might be necessary to reset it to the payments vc or receipt vc.
-    private weak var _stripeHostViewControllerStorage1: UIViewController?
-    private weak var _stripeHostViewControllerStorage2: UIViewController?
+    private var customerContext = STPCustomerContext(keyProvider: KiteAPIClient.shared)
+
     var stripeHostViewController: UIViewController? {
         didSet {
-            guard stripePaymentContext != nil else { return }
-            if _stripeHostViewControllerStorage1 != nil {
-                guard _stripeHostViewControllerStorage1 != stripeHostViewController else { return }
-                _stripeHostViewControllerStorage1 = nil
-                _stripeHostViewControllerStorage2 = stripeHostViewController
-                stripePaymentContext?.hostViewController = _stripeHostViewControllerStorage2
-            } else {
-                guard _stripeHostViewControllerStorage2 != stripeHostViewController else { return }
-                _stripeHostViewControllerStorage2 = nil
-                _stripeHostViewControllerStorage1 = stripeHostViewController
-                stripePaymentContext?.hostViewController = _stripeHostViewControllerStorage1
-            }
+            guard stripePaymentContext?.hostViewController == nil else { return }
+            stripePaymentContext?.hostViewController = stripeHostViewController
         }
     }
-    
+
     func setStripePaymentContext() {
         func configure(with stripeKey: String) {
             let config = STPPaymentConfiguration.shared()
@@ -220,13 +208,17 @@ class PaymentAuthorizationManager: NSObject {
             config.canDeletePaymentOptions = true
             config.createCardSources = true
             
-            let customerContext = STPCustomerContext(keyProvider: KiteAPIClient.shared)
             let paymentContext = STPPaymentContext(customerContext: customerContext,
                                                    configuration: config,
                                                    theme: .default())
             paymentContext.prefilledInformation = STPUserInformation()
             paymentContext.delegate = self
             stripePaymentContext = paymentContext
+        }
+        
+        if let stripePublicKey = PaymentAuthorizationManager.stripeKey {
+            configure(with: stripePublicKey)
+            return
         }
         
         PaymentAuthorizationManager.setPaymentKeys() { error in

@@ -306,6 +306,9 @@ class CheckoutViewController: UIViewController {
             showEmptyScreen()
             return
         }
+        
+        // Reset payment context in case we come back from payment methods
+        hasSetUpStripe = false
         refresh(showProgress: emptyScreenViewController.view.superview == nil)
     }
     
