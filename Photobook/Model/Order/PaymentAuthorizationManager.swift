@@ -192,12 +192,15 @@ class PaymentAuthorizationManager: NSObject {
 
     var stripeHostViewController: UIViewController? {
         didSet {
-            guard stripePaymentContext?.hostViewController == nil else { return }
-            stripePaymentContext?.hostViewController = stripeHostViewController
+            guard let stripeHostViewController = stripeHostViewController, stripePaymentContext?.hostViewController != stripeHostViewController else {
+                delegate?.paymentAuthorizationManagerDidUpdateDetails()
+                return
+            }
+            setStripePaymentContext(with: stripeHostViewController)
         }
     }
 
-    func setStripePaymentContext() {
+    private func setStripePaymentContext(with hostViewController: UIViewController) {
         func configure(with stripeKey: String) {
             let config = STPPaymentConfiguration.shared()
             
@@ -212,6 +215,7 @@ class PaymentAuthorizationManager: NSObject {
                                                    configuration: config,
                                                    theme: .default())
             paymentContext.prefilledInformation = STPUserInformation()
+            paymentContext.hostViewController = hostViewController
             paymentContext.delegate = self
             stripePaymentContext = paymentContext
         }

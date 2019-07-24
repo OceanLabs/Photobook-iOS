@@ -101,7 +101,7 @@ class ReceiptViewController: UIViewController {
     
         updateViews()
         
-        paymentManager.setStripePaymentContext()
+        paymentManager.stripeHostViewController = self
         
         // Register for notifications
         NotificationCenter.default.addObserver(self, selector: #selector(paymentAuthorized(_:)), name: PaymentNotificationName.authorized, object: nil)
@@ -260,7 +260,6 @@ class ReceiptViewController: UIViewController {
         }
         
         progressOverlayViewController.show(message: Constants.loadingPaymentText)
-        paymentManager.stripeHostViewController = self
         paymentManager.authorizePayment(cost: cost, method: paymentMethod)
     }
     

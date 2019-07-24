@@ -42,6 +42,22 @@ import UIKit
         }
     }
     
+    var photobookFontSize: CGFloat {
+        switch self {
+        case .plain: return 13.0
+        case .classic: return 13.0
+        case .solid: return 15.0
+        }
+    }
+    
+    var lineHeight: CGFloat {
+        switch self {
+        case .plain: return 1.25
+        case .classic: return 1.27
+        case .solid: return 1.23
+        }
+    }
+
     private func fontWithSize(_ size: CGFloat) -> UIFont {
         return UIFont(name: fontFamily, size: size)!
     }
@@ -52,26 +68,10 @@ import UIKit
         if isSpineText {
             paragraphStyle.alignment = .center
         } else {
-            paragraphStyle.lineHeightMultiple = lineHeight()
+            paragraphStyle.lineHeightMultiple = lineHeight
         }
 
         return paragraphStyle.copy() as! NSParagraphStyle
-    }
-    
-    func photobookFontSize() -> CGFloat {
-        switch self {
-        case .plain: return 13.0
-        case .classic: return 13.0
-        case .solid: return 15.0
-        }
-    }
-    
-    func lineHeight() -> CGFloat {
-        switch self {
-        case .plain: return 1.25
-        case .classic: return 1.27
-        case .solid: return 1.23
-        }
     }
     
     /// Typing attributes for a photobook input field
@@ -110,7 +110,7 @@ import UIKit
     /// - Returns: The scaled font size. If a ratio is not provided, it returns the original font size.
     func sizeForScreenToPageRatio(_ screenToPageRatio: CGFloat? = nil) -> CGFloat {
         let photobookToOnScreenScale = screenToPageRatio != nil ? screenToPageRatio! : 1.0
-        return photobookFontSize() * photobookToOnScreenScale
+        return photobookFontSize * photobookToOnScreenScale
     }
 }
 
@@ -133,6 +133,6 @@ extension FontType {
     }
     
     var apiPhotobookFontSize: String {
-        return "\(photobookFontSize())pt"
+        return "\(photobookFontSize)pt"
     }
 }

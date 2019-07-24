@@ -72,14 +72,9 @@ class PaymentMethodsViewController: UIViewController {
     }
     
     @IBAction func tappedAddPaymentMethod(_ sender: Any) {
-        guard let paymentContext = paymentManager.stripePaymentContext else { return }
         paymentManager.stripeHostViewController = self
-        paymentContext.pushPaymentOptionsViewController()
-    }
-    
-    func reloadPaymentMethods() {
-        tableView.reloadData()
-    }
+        paymentManager.stripePaymentContext?.pushPaymentOptionsViewController()
+    }    
 }
 
 extension PaymentMethodsViewController: UITableViewDataSource {

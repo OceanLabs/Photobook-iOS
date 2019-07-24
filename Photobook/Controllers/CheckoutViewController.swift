@@ -307,8 +307,6 @@ class CheckoutViewController: UIViewController {
             return
         }
         
-        // Reset payment context in case we come back from payment methods
-        hasSetUpStripe = false
         refresh(showProgress: emptyScreenViewController.view.superview == nil)
     }
     
@@ -380,9 +378,9 @@ class CheckoutViewController: UIViewController {
         
         if !hasSetUpStripe {
             dispatchGroup?.enter()
-            paymentManager.setStripePaymentContext()
+            paymentManager.stripeHostViewController = self
         }
-
+        
         if order.paymentMethod == .creditCard {
             order.deliveryDetails = OLDeliveryDetails.selectedDetails()
         }
@@ -668,8 +666,6 @@ class CheckoutViewController: UIViewController {
         }
     }
     
-    private weak var paymentMethodsViewController: PaymentMethodsViewController?
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
         case Constants.receiptSegueName:
@@ -681,7 +677,6 @@ class CheckoutViewController: UIViewController {
             if let paymentMethodsViewController = segue.destination as? PaymentMethodsViewController {
                 paymentMethodsViewController.order = order
                 paymentMethodsViewController.paymentManager = paymentManager
-                self.paymentMethodsViewController = paymentMethodsViewController
             }
         case Constants.segueIdentifierAddressInput:
             if let addressTableViewController = segue.destination as? AddressTableViewController {
@@ -853,11 +848,12 @@ extension CheckoutViewController: PaymentAuthorizationManagerDelegate {
     }
     
     func paymentAuthorizationManagerDidUpdateDetails() {
+        if !hasSetUpStripe {
+            hasSetUpStripe = true
+            dispatchGroup?.leave()
+            return
+        }
         updateViews()
-        paymentMethodsViewController?.reloadPaymentMethods()
-        
-        hasSetUpStripe = true
-        dispatchGroup?.leave()
     }
     
     func costUpdated() {
