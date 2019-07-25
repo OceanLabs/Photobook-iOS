@@ -40,7 +40,7 @@ class Order: Codable, Hashable {
     }
     
     var deliveryDetails: OLDeliveryDetails?
-    var paymentMethod: PaymentMethod? = PaymentAuthorizationManager.isApplePayAvailable ? .applePay : nil
+    var paymentMethod: PaymentMethod? = SelectedPaymentMethodHandler.load()
     var products = [Product]()
     var promoCode: String?
     var lastSubmissionDate: Date?
@@ -287,5 +287,4 @@ class Order: Codable, Hashable {
     func lineItem(for product: Product) -> LineItem? {
         return cost?.lineItems.first(where: { $0.identifier == product.identifier })
     }
-    
 }

@@ -67,6 +67,7 @@ class PaymentMethodsViewController: UIViewController {
            stripeSelectedCard.hash != currentStripeCard.hash {
                 self.stripeSelectedCard = currentStripeCard
                 selectedPaymentMethod = .creditCard
+                SelectedPaymentMethodHandler.save(.creditCard)
         }
         tableView.reloadData()
     }
@@ -153,10 +154,13 @@ extension PaymentMethodsViewController: UITableViewDelegate {
             fallthrough
         case 1 where PaymentAuthorizationManager.isApplePayAvailable && PaymentAuthorizationManager.isPayPalAvailable: // PayPal
             selectedPaymentMethod = .payPal
-        case paymentManager.availablePaymentMethods.count - 1: // Saved card
+        case paymentManager.availablePaymentMethods.count - 1: // Add Payment Method
             tappedAddPaymentMethod(self)
-        default: // Add Payment Method
+        default: // Saved card
             selectedPaymentMethod = .creditCard
+        }
+        if let paymentMethod = selectedPaymentMethod {
+            SelectedPaymentMethodHandler.save(paymentMethod)
         }
         tableView.reloadData()
     }

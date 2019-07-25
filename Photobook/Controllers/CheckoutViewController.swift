@@ -181,13 +181,23 @@ class CheckoutViewController: UIViewController {
             navigationItem.leftBarButtonItems = [ cancelBarButtonItem ]
         }
         
-        order.deliveryDetails = OLDeliveryDetails.selectedDetails()
+        setUpOrder()
 
         emptyScreenViewController.show(message: Constants.loadingDetailsText, activity: true)
         
         // Register for notifications
         NotificationCenter.default.addObserver(self, selector: #selector(paymentAuthorized(_:)), name: PaymentNotificationName.authorized, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(failedToCreateCustomerKey), name: KiteApiNotificationName.failedToCreateCustomerKey, object: nil)
+    }
+    
+    private func setUpOrder() {
+        order.deliveryDetails = OLDeliveryDetails.selectedDetails()
+        
+        if (order.paymentMethod == .applePay && !PaymentAuthorizationManager.isApplePayAvailable) ||
+            (order.paymentMethod == .payPal && !PaymentAuthorizationManager.isPayPalAvailable) ||
+            (order.paymentMethod == .creditCard && paymentManager.stripePaymentContext?.selectedPaymentOption == nil) {
+            order.paymentMethod = nil
+        }
     }
     
     private var hasSetUpStripe = false
@@ -211,11 +221,17 @@ class CheckoutViewController: UIViewController {
         }
 
         paymentManager.isPaymentAuthorized(withClientSecret: clientSecret) { [weak welf = self] authorized in
-            welf?.progressOverlayViewController.hide()            
-            if authorized {
-                welf?.order.paymentToken = paymentIntentId
-                welf?.showReceipt(after3DAuthorisation: true)
+            guard let stelf = welf else { return }
+            
+            stelf.progressOverlayViewController.hide()
+            if !authorized {
+                let errorMessage = ErrorMessage(text: NSLocalizedString("Checkout/AuthorisationFailed", value: "Authorisation Failed", comment: "Message informing the user that the authorisation of their card failed"))
+                MessageBarViewController.show(message: errorMessage, parentViewController: stelf, offsetTop: stelf.navigationController!.navigationBar.frame.maxY, centred: true)
+                return
             }
+
+            stelf.order.paymentToken = paymentIntentId
+            stelf.showReceipt(after3DAuthorisation: true)
         }
     }
     

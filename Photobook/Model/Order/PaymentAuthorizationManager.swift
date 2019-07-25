@@ -238,6 +238,9 @@ class PaymentAuthorizationManager: NSObject {
                 return
             }
             
+            // The payment intent should have a status of "requires capture" for the app to proceed and finalise the order
+            // Any other status is assumed a failure to authorise. Stripe hinted at a charges array having information about the error
+            // but it is not available through the iOS API
             if let paymentIntent = paymentIntent, paymentIntent.status == .requiresCapture {
                 completionHandler(true)
                 return
@@ -469,3 +472,23 @@ extension PaymentAuthorizationManager: STPPaymentContextDelegate {
     func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {}
 }
 
+class SelectedPaymentMethodHandler {
+    
+    private struct StorageKeys {
+        static var live = "SelectedPaymentMethodLive"
+        static var test = "SelectedPaymentMethodTest"
+    }
+    
+    private static var storageKey: String {
+        return APIClient.environment == .live ? StorageKeys.live : StorageKeys.test
+    }
+    
+    static func save(_ paymentMethod: PaymentMethod) {
+        UserDefaults.standard.set(paymentMethod.rawValue, forKey: storageKey)
+    }
+    
+    static func load() -> PaymentMethod {
+        let rawPaymentMethod = UserDefaults.standard.integer(forKey: storageKey)
+        return PaymentMethod(rawValue: rawPaymentMethod)!
+    }
+}
