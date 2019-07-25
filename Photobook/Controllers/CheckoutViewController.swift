@@ -180,6 +180,8 @@ class CheckoutViewController: UIViewController {
         if isPresentedModally {
             navigationItem.leftBarButtonItems = [ cancelBarButtonItem ]
         }
+        
+        order.deliveryDetails = OLDeliveryDetails.selectedDetails()
 
         emptyScreenViewController.show(message: Constants.loadingDetailsText, activity: true)
         
