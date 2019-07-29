@@ -21,9 +21,9 @@ target 'Photobook' do
 pod 'Stripe', '~> 15.0.1'
 pod 'Fabric'
 pod 'Crashlytics'
-pod 'KeychainSwift'
+pod 'KeychainSwift', "~> 16.0.1"
 pod 'SDWebImage', '~> 4.3'
-pod 'Analytics', '~> 3.0'
+pod 'Analytics', '~> 3.6.10'
 pod 'PayPal-iOS-Dynamic-Loader'
 end
 

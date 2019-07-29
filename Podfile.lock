@@ -22,11 +22,13 @@ PODS:
 
 DEPENDENCIES:
   - Analytics (~> 3.0)
+  - Analytics (~> 3.6.10)
   - Crashlytics
   - Fabric
   - FBSDKCoreKit
   - FBSDKLoginKit
   - KeychainSwift
+  - KeychainSwift (~> 16.0.1)
   - OAuthSwift (~> 2.0.0)
   - PayPal-iOS-Dynamic-Loader
   - PayPal-iOS-SDK/Core (~> 2.18.0)
@@ -60,6 +62,6 @@ SPEC CHECKSUMS:
   SDWebImage: c10d14a8883ebd89664f02a422006f66a85c0c5d
   Stripe: 2c4d0a88817361a102886315ff452d90f65e898b
 
-PODFILE CHECKSUM: b2e2109e60da4c027f85ba61bf88adf3b58dec83
+PODFILE CHECKSUM: 840ce7849753ef90369764221f52e9f1140fc46f
 
 COCOAPODS: 1.7.3
