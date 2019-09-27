@@ -980,17 +980,17 @@ extension PhotobookViewController: PhotobookCollectionViewCellDelegate {
         editPage(page, at: index, frame: frame, containerView: containerView)
     }
 
-    func didLongPress(_ sender: UILongPressGestureRecognizer, on cell: PhotobookCollectionViewCell) {
-        
-        // Disallow dragging first and last pages
-        guard let indexPath = collectionView.indexPath(for: cell),
-              indexPath.row > 0 && indexPath.row < collectionView.numberOfItems(inSection: 1) - 1
-            else { return }
-        
+    func didLongPress(_ sender: UILongPressGestureRecognizer, on cell: PhotobookCollectionViewCell) {                
         if sender.state == .began {
             guard let photobookFrameView = sender.view as? PhotobookFrameView else {
                 fatalError("Long press failed to recognise the target view")
             }
+            
+            // Disallow dragging first and last pages
+            guard let indexPath = collectionView.indexPath(for: cell),
+                  indexPath.row > 0 && indexPath.row < collectionView.numberOfItems(inSection: 1) - 1
+                else { return }
+            
             closeCurrentCell() {
                 cell.shouldRevealActions = false
                 self.liftView(photobookFrameView)
