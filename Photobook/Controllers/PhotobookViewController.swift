@@ -508,7 +508,7 @@ class PhotobookViewController: UIViewController, PhotobookNavigationBarDelegate,
     }
     
     private func dropView() {
-        guard var sourceIndexPath = interactingItemIndexPath, let draggingView = draggingView else { return }
+        guard let sourceIndexPath = interactingItemIndexPath, let draggingView = draggingView else { return }
         
         let sourceCell = (collectionView.cellForItem(at: sourceIndexPath) as? PhotobookCollectionViewCell)
         
@@ -803,6 +803,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
         switch indexPath.section {
         case 0:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotobookCoverCollectionViewCell.reuseIdentifier, for: indexPath) as! PhotobookCoverCollectionViewCell
+            cell.product = product
             cell.width = (view.bounds.size.width - Constants.cellSideMargin * 2.0) / 2.0
             cell.delegate = self
             cell.isPageInteractionEnabled = !isRearranging
@@ -815,6 +816,7 @@ extension PhotobookViewController: UICollectionViewDataSource {
             }
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotobookCollectionViewCell.reuseIdentifier, for: indexPath) as! PhotobookCollectionViewCell
+            cell.product = product
             cell.isVisible = indexPath != interactingItemIndexPath && indexPath != insertingIndexPath
             cell.width = view.bounds.size.width - Constants.cellSideMargin * 2.0
             cell.clipsToBounds = false

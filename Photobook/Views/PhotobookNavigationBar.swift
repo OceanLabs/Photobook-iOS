@@ -91,10 +91,10 @@ public class PhotobookNavigationBar: UINavigationBar {
         switch barType {
         case .clear:
             barTintColor = .clear
-            effectView.alpha = 0.0
+            if effectView != nil { effectView.alpha = 0.0 }
         case .white:
             barTintColor = .white
-            effectView.alpha = 1.0
+            if effectView != nil { effectView.alpha = 1.0 }
         }
     }
 }

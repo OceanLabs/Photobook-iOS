@@ -85,6 +85,13 @@ class PhotobookFrameView: UIView {
     var coverColor: ProductColor = .white
     var pageColor: ProductColor = .white
         
+    var product: PhotobookProduct! {
+        didSet {
+            leftPageView.product = product
+            rightPageView.product = product
+        }
+    }
+
     var isLeftPageVisible = true {
         didSet {
             guard isLeftPageVisible != oldValue else { return }

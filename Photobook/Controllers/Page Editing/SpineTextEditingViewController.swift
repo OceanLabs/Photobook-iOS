@@ -170,14 +170,18 @@ class SpineTextEditingViewController: UIViewController {
 
         let initialContainerRatio = initialRect.width / initialRect.height
         
+        spineFrameView.color = product.coverColor
+        spineFrameView.spineTextRatio = product.photobookTemplate.spineTextRatio
+        spineFrameView.coverHeight = product.photobookTemplate.coverSize.height
+        spineFrameView.resetSpineColor()
+
         // Figure out the size of the spine frame
+        view.layoutIfNeeded()
         let height = textField.bounds.width / product.photobookTemplate.spineTextRatio
         let width = height * initialContainerRatio
         
         spineFrameViewWidthConstraint.constant = width
         spineFrameViewHeightConstraint.constant = height
-        spineFrameView.color = product.coverColor
-        spineFrameView.resetSpineColor()
         
         textFieldHeightConstraint.constant = width // Since the cover will be on its side
         
@@ -192,7 +196,7 @@ class SpineTextEditingViewController: UIViewController {
         view.backgroundColor = .clear
         view.alpha = 1.0
         
-        spineContainerView.layoutIfNeeded()
+        view.layoutIfNeeded()
         
         // Take a view snapshot and shrink it to the initial frame
         animatableSpineImageView.transform = .identity

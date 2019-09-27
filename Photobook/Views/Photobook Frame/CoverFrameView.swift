@@ -59,6 +59,9 @@ class CoverFrameView: UIView {
     var pageSide = PageSide.left
     var color: ProductColor = .white
     var aspectRatio: CGFloat!
+    var product: PhotobookProduct! {
+        didSet { pageView.product = product }
+    }
     
     override func layoutSubviews() {
         layer.shadowOffset = PhotobookConstants.shadowOffset

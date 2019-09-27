@@ -252,6 +252,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             // Setup the opposite layout if necessary
             if !isDoublePage && (pageType == .left || pageType == .right) {
                 let oppositeIndex = pageIndex! + (pageType == .left ? 1 : -1)
+                oppositePageView!.product = product
                 oppositePageView!.shouldSetImage = false
                 oppositePageView!.pageIndex = oppositeIndex
                 oppositePageView!.productLayout = product.productLayouts[oppositeIndex]

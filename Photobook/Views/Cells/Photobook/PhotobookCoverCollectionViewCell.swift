@@ -61,8 +61,12 @@ class PhotobookCoverCollectionViewCell: UICollectionViewCell, InteractivePagesCe
         }
     }
     
-    private var product: PhotobookProduct! {
-        return ProductManager.shared.currentProduct
+    var product: PhotobookProduct! {
+        didSet {
+            coverFrameView.product = product
+            spineFrameView.spineTextRatio = product.photobookTemplate.spineTextRatio
+            spineFrameView.coverHeight = product.photobookTemplate.coverSize.height
+        }
     }
 
     override func prepareForReuse() {

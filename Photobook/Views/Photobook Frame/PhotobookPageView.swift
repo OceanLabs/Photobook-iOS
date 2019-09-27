@@ -102,9 +102,7 @@ class PhotobookPageView: UIView {
     
     @IBOutlet private var aspectRatioConstraint: NSLayoutConstraint!
     
-    private var product: PhotobookProduct! {
-        return ProductManager.shared.currentProduct
-    }
+    var product: PhotobookProduct!
     
     override func layoutSubviews() {
         setupImageBox(with: productLayout?.productLayoutAsset?.currentImage)
@@ -285,7 +283,7 @@ class PhotobookPageView: UIView {
     private func setImagePlaceholder() {
         let iconSize = min(assetContainerView.bounds.width, assetContainerView.bounds.height)
 
-        assetContainerView.backgroundColor = UIColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1.0)
+        assetContainerView.backgroundColor = Colors.lightGrey
         assetPlaceholderIconImageView.bounds.size = CGSize(width: iconSize * 0.2, height: iconSize * 0.2)
         assetPlaceholderIconImageView.center = CGPoint(x: assetContainerView.bounds.midX, y: assetContainerView.bounds.midY)
         assetPlaceholderIconImageView.alpha = 1.0

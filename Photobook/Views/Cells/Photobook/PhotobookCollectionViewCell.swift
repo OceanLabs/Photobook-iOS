@@ -48,12 +48,7 @@ extension InteractivePagesCell {
 
 class PhotobookCollectionViewCell: ActionsCollectionViewCell, InteractivePagesCell {
     
-    @IBOutlet private weak var photobookFrameView: PhotobookFrameView! {
-        didSet {
-            photobookFrameView.coverColor = product.coverColor
-            photobookFrameView.pageColor = product.pageColor
-        }
-    }
+    @IBOutlet private weak var photobookFrameView: PhotobookFrameView!
 
     static let reuseIdentifier = NSStringFromClass(PhotobookCollectionViewCell.self).components(separatedBy: ".").last!
     
@@ -80,10 +75,10 @@ class PhotobookCollectionViewCell: ActionsCollectionViewCell, InteractivePagesCe
         didSet { photobookFrameView.alpha = isFaded ? interactivePageFadedAlpha : 1.0 }
     }
     
-    private var product: PhotobookProduct! {
-        return ProductManager.shared.currentProduct
+    var product: PhotobookProduct! {
+        didSet { photobookFrameView.product = product }
     }
-    
+
     override func prepareForReuse() {
         super.prepareForReuse()
         

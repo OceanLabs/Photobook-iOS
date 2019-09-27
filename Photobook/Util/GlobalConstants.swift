@@ -44,6 +44,7 @@ let photobookMainStoryboard =  UIStoryboard(name: "Photobook", bundle: photobook
 struct Colors {
     static let blueTint = UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0)
     static let greyTint = UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1.0)
+    static let lightGrey = UIColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1.0)
 }
 
 enum Environment {
