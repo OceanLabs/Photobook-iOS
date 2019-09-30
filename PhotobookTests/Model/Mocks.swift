@@ -37,24 +37,40 @@ class APIClientMock: APIClient {
     var error: APIClientError?
     var uploadImageUserInfo: [String: Any]?
     
-    override func get(context: APIContext, endpoint: String, parameters: [String : Any]?, headers: [String : String]? = nil, completion: @escaping (AnyObject?, APIClientError?) -> ()) {
-        completion(response, error)
+    override func get(context: APIContext, endpoint: String, parameters: [String: Any]?, headers: [String : String]? = nil, parseJsonResponse: Bool = true, completion: @escaping (Result<AnyObject, APIClientError>) -> Void) {
+        if let error = error {
+            completion(.failure(error))
+            return
+        }
+        completion(.success(response!))
     }
     
-    override func post(context: APIContext, endpoint: String, parameters: [String : Any]?, headers: [String : String]?, encoding: APIParameterEncoding, completion: @escaping (AnyObject?, APIClientError?) -> ()) {
-        completion(response, error)
+    override func post(context: APIContext, endpoint: String, parameters: [String: Any]?, headers: [String : String]?, encoding: APIParameterEncoding, parseJsonResponse: Bool = true, completion: @escaping (Result<AnyObject, APIClientError>) -> Void) {
+        if let error = error {
+            completion(.failure(error))
+            return
+        }
+        completion(.success(response!))
     }
     
-    override func uploadImage(_ image: UIImage, imageName: String, completion: @escaping (AnyObject?, Error?) -> ()) {
-        completion(response, error)
+    override func uploadImage(_ image: UIImage, imageName: String, completion: @escaping (Result<AnyObject, APIClientError>) -> Void) {
+        if let error = error {
+            completion(.failure(error))
+            return
+        }
+        completion(.success(response!))
     }
     
     override func uploadImage(_ file: URL, reference: String?) {
         NotificationCenter.default.post(name: APIClient.backgroundSessionTaskFinished, object: nil, userInfo: uploadImageUserInfo)
     }
     
-    override func downloadImage(_ imageUrl: URL, completion: @escaping (UIImage?, Error?) -> ()) {
-        completion(image, error)
+    override func downloadImage(_ imageUrl: URL, completion: @escaping (Result<UIImage, APIClientError>) -> Void) {
+        if let error = error {
+            completion(.failure(error))
+            return
+        }
+        completion(.success(image!))
     }
 }
 
@@ -65,25 +81,37 @@ class KiteAPIClientMock: KiteAPIClient {
     
     var status: OrderSubmitStatus?
     var receipt: String?
-    var statusError: APIClientError?
+    var statusError: Error?
     
-    override func submitOrder(parameters: [String: Any], completionHandler: @escaping (_ orderId: String?, _ error: APIClientError?) -> Void) {
-        completionHandler(orderId, submitError)
+    override func submitOrder(parameters: [String: Any], completionHandler: @escaping (Result<String, APIClientError>) -> Void) {
+        if let submitError = submitError {
+            completionHandler(.failure(submitError))
+            return
+        }
+        completionHandler(.success(orderId!))
     }
     
-    override func checkOrderStatus(receipt: String, completionHandler: @escaping (_ status: OrderSubmitStatus, _ error: APIClientError?, _ receipt: String?) -> Void) {
-        completionHandler(status!, statusError, receipt)
+    override func checkOrderStatus(receipt: String, completionHandler: @escaping (Result<(status: OrderSubmitStatus, receipt: String?), Error>) -> Void) {
+        if let statusError = statusError {
+            completionHandler(.failure(statusError))
+            return
+        }
+        completionHandler(.success((status!, receipt)))
     }
 }
 
 class PhotobookAPIManagerMock: PhotobookAPIManager {
     
     var pdfUrls: [String]?
-    var error: Error?
+    var error: APIClientError?
     
-    override func createPdf(withPhotobook photobook: PhotobookProduct, completionHandler: @escaping ([String]?, Error?) -> Void) {
-        completionHandler(pdfUrls, error)
-    }    
+    override func createPdf(withPhotobook photobook: PhotobookProduct, completionHandler: @escaping (Result<[String], APIClientError>) -> Void) {
+        if let error = error {
+            completionHandler(.failure(error))
+            return
+        }
+        completionHandler(.success(pdfUrls!))
+    }
 }
 
 class OrderDiskManagerMock: OrderDiskManager {

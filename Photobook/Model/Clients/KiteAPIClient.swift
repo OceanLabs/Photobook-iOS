@@ -32,11 +32,15 @@ import Stripe
 import KeychainSwift
 
 enum OrderSubmitStatus: String {
-    case cancelled, error, paymentError, unknown, received, accepted, validated, processed
+    case cancelled, unknown, received, accepted, validated, processed
     
     static func fromApiString(_ string: String) -> OrderSubmitStatus? {
         return OrderSubmitStatus(rawValue: string.lowercased())
     }
+}
+
+enum KiteAPIClientError: Error {
+    case paymentError
 }
 
 enum MimeType {
@@ -93,7 +97,7 @@ class KiteAPIClient: NSObject {
     
     private var stripeCustomerId: String?
     
-    func requestSignedUrl(for type: MimeType, _ completionHandler: @escaping ((_ signedUrl: URL?, _ fileUrl: URL?, _ error: APIClientError?) -> ())) {
+    func requestSignedUrl(for type: MimeType, _ completionHandler: @escaping (Result<(signedUrl: URL, fileUrl: URL), APIClientError>) -> Void) {
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
         }
@@ -101,136 +105,135 @@ class KiteAPIClient: NSObject {
         let endpoint = KiteAPIClient.apiVersion + Endpoints.registrationRequest
         let parameters = ["mime_types": type.headerString(),
                           "client_asset": "true"]
-        APIClient.shared.get(context: .kite, endpoint: endpoint, parameters: parameters, headers: kiteHeaders) { response, error in
-            guard error == nil else {
-                completionHandler(nil, nil, error)
-                return
+        APIClient.shared.get(context: .kite, endpoint: endpoint, parameters: parameters, headers: kiteHeaders) { result in
+            switch result {
+            case .failure(let error):
+                completionHandler(.failure(error))
+            case .success(let response):
+                guard let signedUrlStrings = (response as? [String: Any])?["signed_requests"],
+                      let signedUrlString = (signedUrlStrings as? [String])?.first,
+                      let signedUrl = URL(string: signedUrlString),
+                      let fileUrlStrings = (response as? [String: Any])?["urls"],
+                      let fileUrlString = (fileUrlStrings as? [String])?.first,
+                      let fileUrl = URL(string: fileUrlString)
+                else {
+                    completionHandler(.failure(.parsing(details: "RequestSignedUrl: Could not parse signed requests")))
+                    return
+                }
+                completionHandler(.success((signedUrl, fileUrl)))
             }
-
-            guard let signedUrlStrings = (response as? [String: Any])?["signed_requests"],
-                  let signedUrlString = (signedUrlStrings as? [String])?.first,
-                  let signedUrl = URL(string: signedUrlString),
-                  let fileUrlStrings = (response as? [String: Any])?["urls"],
-                  let fileUrlString = (fileUrlStrings as? [String])?.first,
-                  let fileUrl = URL(string: fileUrlString)
-            else {
-                completionHandler(nil, nil, APIClientError.parsing(details: "RequestSignedUrl: Could not parse signed requests"))
-                return
-            }
-            return completionHandler(signedUrl, fileUrl, nil)
         }
     }
-
     
-    func submitOrder(parameters: [String: Any], completionHandler: @escaping (_ orderId: String?, _ error: APIClientError?) -> Void) {
+    func submitOrder(parameters: [String: Any], completionHandler: @escaping (Result<String, APIClientError>) -> Void) {
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
         }
         
         let endpoint = KiteAPIClient.apiVersion + Endpoints.orderSubmission
-        APIClient.shared.post(context: .kite, endpoint: endpoint, parameters: parameters, headers: kiteHeaders) { response, error in
-            guard error == nil else {
-                completionHandler(nil, error)
-                return
-            }
+        APIClient.shared.post(context: .kite, endpoint: endpoint, parameters: parameters, headers: kiteHeaders) { result in
             
-            let orderId = (response as? [String: Any])?["order_id"] as? String
-            
-            if let responseError = (response as? [String: Any])?["error"] as? [String: Any] {
-                guard let message = responseError["message"] as? String,
-                    let errorCodeString = responseError["code"] as? String,
-                    let errorCode = Int(errorCodeString)
-                    else {
-                        completionHandler(nil, .parsing(details: "SubmitOrder: Missing error info"))
-                        return                        
-                }
+            switch result {
+            case .failure(let error):
+                completionHandler(.failure(error))
+            case .success(let response):
+                let orderId = (response as? [String: Any])?["order_id"] as? String
                 
-                if errorCode == 20, let orderId = orderId {
-                    // This is not actually an error, we can report success.
-                    completionHandler(orderId, nil)
+                if let responseError = (response as? [String: Any])?["error"] as? [String: Any] {
+                    guard let message = responseError["message"] as? String,
+                        let errorCodeString = responseError["code"] as? String,
+                        let errorCode = Int(errorCodeString)
+                        else {
+                            completionHandler(.failure(.parsing(details: "SubmitOrder: Missing error info")))
+                            return
+                    }
+                    
+                    if errorCode == 20, let orderId = orderId {
+                        // This is not actually an error, we can report success.
+                        completionHandler(.success(orderId))
+                        return
+                    }
+                    
+                    completionHandler(.failure(.server(code: errorCode, message: message)))
                     return
                 }
                 
-                completionHandler(nil, .server(code: errorCode, message: message))
-                return
+                if let orderId = orderId {
+                    completionHandler(.success(orderId))
+                    return
+                }
+                completionHandler(.failure(.generic))
             }
-            
-            if let orderId = orderId  {
-                completionHandler(orderId, nil)
-                return
-            }
-            
-            completionHandler(nil, .generic)
         }
     }
     
-    func checkOrderStatus(receipt: String, completionHandler: @escaping (_ status: OrderSubmitStatus, _ error: APIClientError?, _ receipt: String?) -> Void) {
+    func checkOrderStatus(receipt: String, completionHandler: @escaping (Result<(status: OrderSubmitStatus, receipt: String?), Error>) -> Void) {
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
         }
         
         let endpoint = KiteAPIClient.apiVersion + Endpoints.orderStatus + receipt
-        APIClient.shared.get(context: .kite, endpoint: endpoint, parameters: nil, headers: kiteHeaders) { (response, error) in
-            guard error == nil else {
-                completionHandler(.error, error, nil)
+        APIClient.shared.get(context: .kite, endpoint: endpoint, parameters: nil, headers: kiteHeaders) { result in
+            if case .failure(let error) = result {
+                completionHandler(.failure(error))
                 return
             }
             
-            guard let pollingData = response as? [String: AnyObject] else {
-                completionHandler(.error, .parsing(details: "CheckOrderStatus: Could not parse root object"), nil)
+            guard let pollingData = (try? result.get()) as? [String: AnyObject] else {
+                completionHandler(.failure(APIClientError.parsing(details: "CheckOrderStatus: Could not parse root object")))
                 return
             }
 
             if let errorDictionary = pollingData["error"] as? [String: AnyObject] {
                 guard let code = errorDictionary["code"] as? String else {
-                    completionHandler(.error, .parsing(details: "CheckOrderStatus: Missing error code"), nil)
+                    completionHandler(.failure(APIClientError.parsing(details: "CheckOrderStatus: Missing error code")))
                     return
                 }
                 
-                if code == "E20" { // The order was successful but with a different (previously sent) order id
-                    let receipt = errorDictionary["order_id"] as? String
-                    completionHandler(.validated, nil, receipt)
+                if code == "E20", let receipt = errorDictionary["order_id"] as? String { // The order was successful but with a different (previously sent) print order id
+                    completionHandler(.success((.validated, receipt)))
                 } else if code == "P11" { // Payment error
-                    completionHandler(.paymentError, nil, nil)
+                    completionHandler(.failure(KiteAPIClientError.paymentError))
                 } else if let message = errorDictionary["message"] as? String {
-                    completionHandler(.error, .server(code: 0, message: message), nil)
+                    completionHandler(.failure(APIClientError.server(code: 0, message: message)))
                 } else {
-                    completionHandler(.error, .generic, nil)
+                    completionHandler(.failure(APIClientError.generic))
                 }
                 return
             }
             
             guard let statusString = pollingData["status"] as? String,
-                  let status = OrderSubmitStatus.fromApiString(statusString)
+                let status = OrderSubmitStatus.fromApiString(statusString)
                 else {
-                    completionHandler(.error, .generic, nil)
+                    completionHandler(.failure(APIClientError.generic))
                     return
             }
             
-            completionHandler(status, nil, nil)
+            completionHandler(.success((status, nil)))
         }
     }
 
     /// Retrieve PalPal and Stripe keys
-    func getPaymentKeys(completionHandler: @escaping (_ paypalKey: String?, _ stripeKey: String?, _ error: APIClientError?) -> Void) {
-        
+    func getPaymentKeys(completionHandler: @escaping (Result<(paypalKey: String?, stripeKey: String?), APIClientError>) -> Void) {
+
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
         }
         
         let endpoint = KiteAPIClient.apiVersion + Endpoints.template + "/?limit=1"
-        APIClient.shared.get(context: .kite, endpoint: endpoint, headers: kiteHeaders) { (response, error) in
+        APIClient.shared.get(context: .kite, endpoint: endpoint, headers: kiteHeaders) { result in
             
-            if let error = error {
-                completionHandler(nil, nil, error)
+            if case .failure(let error) = result {
+                completionHandler(.failure(error))
                 return
             }
-            
+            let response = try! result.get()
+
             //get objects for each product
             guard let jsonDict = response as? [String: Any],
                   let paymentKeys = jsonDict["payment_keys"] as? [String: Any]
             else {
-                completionHandler(nil, nil, .parsing(details: "GetTemplateInfo: Could not parse root objects"))
+                completionHandler(.failure(.parsing(details: "GetPaymentKeys: Could not parse root objects")))
                 return
             }
             
@@ -246,12 +249,12 @@ class KiteAPIClient: NSObject {
                 stripeKey = publicKey
             }
 
-            completionHandler(payPalKey, stripeKey, nil)
+            completionHandler(.success((payPalKey, stripeKey)))
         }
     }
     
     /// Loads shipping information for a given array of template IDs.
-    func getShippingInfo(for templateIds: [String], completionHandler: @escaping (_ shippingInfo: [String: Any]?, _ error: APIClientError?) -> Void) {
+    func getShippingInfo(for templateIds: [String], completionHandler: @escaping (Result<[String: Any], APIClientError>) -> Void) {
         
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
@@ -265,18 +268,19 @@ class KiteAPIClient: NSObject {
         }
         
         let endpoint = KiteAPIClient.apiVersion + Endpoints.shipping + "/?template_ids=\(templateIdString)"
-        APIClient.shared.get(context: .kite, endpoint: endpoint, headers: kiteHeaders) { (response, error) in
+        APIClient.shared.get(context: .kite, endpoint: endpoint, headers: kiteHeaders) { result in
             
-            if let error = error {
-                completionHandler(nil, error)
+            if case .failure(let error) = result {
+                completionHandler(.failure(error))
                 return
             }
-            
+            let response = try! result.get()
+
             //get objects for each product
             guard let jsonDict = response as? [String: Any],
                 let objects = jsonDict["objects"] as? [String: Any]
                 else {
-                    completionHandler(nil, .parsing(details: "GetShippingInfo: Could not parse root objects"))
+                    completionHandler(.failure(.parsing(details: "GetShippingInfo: Could not parse root objects")))
                     return
             }
             
@@ -285,7 +289,7 @@ class KiteAPIClient: NSObject {
                 let templateId = object.key
                 guard let dict = object.value as? [String: Any]
                     else {
-                        completionHandler(nil, .parsing(details: "GetShippingInfo: Could not parse region mapping. Missing object."))
+                        completionHandler(.failure(.parsing(details: "GetShippingInfo: Could not parse region mapping. Missing object.")))
                         return
                 }
                 
@@ -294,7 +298,7 @@ class KiteAPIClient: NSObject {
                 guard let regionMappings = dict["country_to_region_mapping"] as? [String: [String]],
                     let shippingRegions = dict["shipping_regions"] as? [String: Any]
                     else {
-                        completionHandler(nil, .parsing(details: "GetShippingInfo: Could not parse region mapping"))
+                        completionHandler(.failure(.parsing(details: "GetShippingInfo: Could not parse region mapping")))
                         return
                 }
                 
@@ -307,7 +311,7 @@ class KiteAPIClient: NSObject {
                         
                         for dictionary in orderedShippingClasses {
                             guard let shippingClass = ShippingMethod.parse(dictionary: dictionary) else {
-                                completionHandler(nil, .parsing(details: "GetShippingInfo: Could not parse shipping class"))
+                                completionHandler(.failure(.parsing(details: "GetShippingInfo: Could not parse shipping class")))
                                 return
                             }
                             shippingClasses.append(shippingClass)
@@ -316,8 +320,8 @@ class KiteAPIClient: NSObject {
                     regionShippingClasses[region] = shippingClasses
                 }
                 
-                if regionShippingClasses.keys.count == 0 { // Inconsistent
-                    completionHandler(nil, .parsing(details: "GetShippingInfo: zero shipping classes parsed"))
+                if regionShippingClasses.keys.isEmpty { // Inconsistent
+                    completionHandler(.failure(.parsing(details: "GetShippingInfo: zero shipping classes parsed")))
                     return
                 }
                 
@@ -325,15 +329,15 @@ class KiteAPIClient: NSObject {
             }
             
             if shippingInfo.isEmpty {
-                completionHandler(nil, .parsing(details: "GetShippingInfo: No templates returned"))
+                completionHandler(.failure(.parsing(details: "GetShippingInfo: No templates returned")))
                 return
             }
             
-            completionHandler(shippingInfo, nil)
+            completionHandler(.success(shippingInfo))
         }
     }
     
-    func getCost(order: Order, completionHandler: @escaping (_ cost: Cost?, _ error: APIClientError?) -> Void) {
+    func getCost(order: Order, completionHandler: @escaping (Result<Cost, APIClientError>) -> Void) {
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
         }
@@ -357,24 +361,24 @@ class KiteAPIClient: NSObject {
         parameters["jobs"] = lineItems
 
         let endpoint = KiteAPIClient.apiVersion + Endpoints.cost
-        APIClient.shared.post(context: .kite, endpoint: endpoint, parameters: parameters, headers: kiteHeaders) { response, error in
-            
-            guard error == nil else {
-                completionHandler(nil, error)
+        APIClient.shared.post(context: .kite, endpoint: endpoint, parameters: parameters, headers: kiteHeaders) { result in
+            if case .failure(let error) = result {
+                completionHandler(.failure(error))
+                return
+            }
+            let response = try! result.get()
+
+            guard let responseDictionary = response as? [String: Any], let cost = Cost.parseDetails(dictionary: responseDictionary) else {
+                completionHandler(.failure(.parsing(details: "GetCost: Could not parse cost")))
                 return
             }
             
-            guard let response = response as? [String: Any], let cost = Cost.parseDetails(dictionary: response) else {
-                completionHandler(nil, .parsing(details: "GetCost: Could not parse cost"))
-                return
-            }
-            
-            completionHandler(cost, nil)
+            completionHandler(.success(cost))
         }
     }
     
     // MARK: - Stripe
-    func createStripeCustomer(_ completionHandler: @escaping (_ customerId: String?, _ error: APIClientError?) -> Void) {
+    func createStripeCustomer(_ completionHandler: @escaping (Result<String, APIClientError>) -> Void) {
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
         }
@@ -384,22 +388,23 @@ class KiteAPIClient: NSObject {
         }
 
         let endpoint = KiteAPIClient.apiVersion + Endpoints.createStripeCustomer
-        APIClient.shared.post(context: .kite, endpoint: endpoint, headers: kiteHeaders) { response, error in
-            guard error == nil else {
-                completionHandler(nil, error)
+        APIClient.shared.post(context: .kite, endpoint: endpoint, headers: kiteHeaders) { result in
+            if case .failure(let error) = result {
+                completionHandler(.failure(error))
                 return
             }
+            let response = try! result.get()
             
             guard let res = response as? [String: Any], let customerId = res["stripe_customer_id"] as? String else {
-                completionHandler(nil, .parsing(details: "CreateStripeCustomer: Could not parse customer ID"))
+                completionHandler(.failure(.parsing(details: "CreateStripeCustomer: Could not parse customer ID")))
                 return
             }
             
-            completionHandler(customerId, nil)
+            completionHandler(.success(customerId))
         }
     }
     
-    func createPaymentIntentWithSourceId(_ sourceId: String, amount: Double, currency: String, completionHandler: @escaping (_ paymentIntent: STPPaymentIntent?, _ error: APIClientError?) -> Void)
+    func createPaymentIntentWithSourceId(_ sourceId: String, amount: Double, currency: String, completionHandler: @escaping (Result<STPPaymentIntent, APIClientError>) -> Void)
     {
         guard apiKey != nil else {
             fatalError("Missing Kite API key: PhotobookSDK.shared.kiteApiKey")
@@ -414,10 +419,10 @@ class KiteAPIClient: NSObject {
         }
         
         guard let customerId = stripeCustomerId else {
-            completionHandler(nil, .generic)
+            completionHandler(.failure(.generic))
             return
         }
-        
+
         let endpoint = KiteAPIClient.apiVersion + Endpoints.createStripePaymentIntent
         let parameters: [String: Any] = ["stripe_customer_id": customerId,
                                          "source": sourceId,
@@ -425,24 +430,24 @@ class KiteAPIClient: NSObject {
                                          "currency": currency,
                                          "return_url": "\(urlScheme)://stripe-redirect"]
         
-        APIClient.shared.post(context: .kite, endpoint: endpoint, parameters: parameters, headers: kiteHeaders) { response, error in
-            guard error == nil else {
-                completionHandler(nil, error)
+        APIClient.shared.post(context: .kite, endpoint: endpoint, parameters: parameters, headers: kiteHeaders) { result in
+            if case .failure(let error) = result {
+                completionHandler(.failure(error))
                 return
             }
-            
+            let response = try! result.get()
+
             guard let res = response as? [String: Any], let clientSecret = res["client_secret"] as? String else {
-                completionHandler(nil, .parsing(details: "CreatePaymentIntent: could not parse client"))
+                completionHandler(.failure(.parsing(details: "CreatePaymentIntent: could not parse client")))
                 return
             }
             
             STPAPIClient.shared().retrievePaymentIntent(withClientSecret: clientSecret) { paymentIntent, error in
-                guard error == nil else {
-                    completionHandler(nil, .parsing(details: "CreatePaymentIntent: could not retrieve payment details"))
+                guard error == nil, let paymentIntent = paymentIntent else {
+                    completionHandler(.failure(.parsing(details: "CreatePaymentIntent: could not retrieve payment details")))
                     return
                 }
-                
-                completionHandler(paymentIntent, nil)
+                completionHandler(.success(paymentIntent))
             }
         }
     }    
@@ -457,9 +462,9 @@ extension KiteAPIClient: STPCustomerEphemeralKeyProvider {
             parameters["stripe_customer_id"] = customerId
             
             let endpoint = KiteAPIClient.apiVersion + Endpoints.ephemeralKey
-            APIClient.shared.post(context: .kite, endpoint: endpoint, parameters: parameters, headers: kiteHeaders) { response, error in
-                guard error == nil else {
-                    if case APIClientError.parsing(_) = error! {
+            APIClient.shared.post(context: .kite, endpoint: endpoint, parameters: parameters, headers: kiteHeaders) { result in
+                if case .failure(let error) = result {
+                    if case APIClientError.parsing = error {
                         // If there was a parsing error, chances are the customer ID is invalid
                         StripeCredentialsHandler.delete()
                     }
@@ -467,6 +472,7 @@ extension KiteAPIClient: STPCustomerEphemeralKeyProvider {
                     completion(nil, error)
                     return
                 }
+                let response = try! result.get()
                 completion(response as? [AnyHashable: Any], nil)
             }
         }
@@ -480,16 +486,17 @@ extension KiteAPIClient: STPCustomerEphemeralKeyProvider {
             return
         }
 
-        createStripeCustomer { [weak welf = self] (customerId, error) in
-            guard error == nil, let cusId = customerId else {
+        createStripeCustomer { [weak welf = self] result in
+            if case .failure(let error) = result {
                 NotificationCenter.default.post(name: KiteApiNotificationName.failedToCreateCustomerKey, object: nil)
                 completion(nil, error)
                 return
             }
+            let customerId = try! result.get()
 
-            welf?.stripeCustomerId = cusId
-            StripeCredentialsHandler.save(cusId)
-            requestEphemeralKey(for: cusId)
+            welf?.stripeCustomerId = customerId
+            StripeCredentialsHandler.save(customerId)
+            requestEphemeralKey(for: customerId)
         }
     }
 }

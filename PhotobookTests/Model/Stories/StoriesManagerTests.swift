@@ -100,7 +100,7 @@ class StoriesManagerTests: XCTestCase {
     }
     
     func testLoadTopStories_shouldNotLoadOldStories() {
-        var (collectionLists, assetCollections, assets) = photoLibrarySetup()
+        let (collectionLists, assetCollections, assets) = photoLibrarySetup()
         
         for i in 0 ..< collectionLists.count {
             collectionLists[i].startDateStub = Calendar.current.date(byAdding: .year, value: -i, to: Date())
@@ -117,7 +117,7 @@ class StoriesManagerTests: XCTestCase {
     }
     
     func testLoadStopStories_shouldOnlyAddStoriesWithAMinNumberOfAssets() {
-        var (collectionLists, assetCollections, assets) = photoLibrarySetup()
+        let (collectionLists, assetCollections, assets) = photoLibrarySetup()
         
         // Change list id on last asset, reducing count to 19
         assets[assets.count - 1].listIdentifier = "another_id"
@@ -133,7 +133,7 @@ class StoriesManagerTests: XCTestCase {
     }
     
     func testLoadTopStories_shouldBreakDownTheLocationsInTheTitle() {
-        var (collectionLists, assetCollections, assets) = photoLibrarySetup()
+        let (collectionLists, assetCollections, assets) = photoLibrarySetup()
         
         collectionLists[0].localizedTitleStub = "Barcelona & Madrid"
         collectionLists[1].localizedTitleStub = "Segovia, Seville & Grenada"

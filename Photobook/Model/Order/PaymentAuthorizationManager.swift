@@ -165,14 +165,15 @@ class PaymentAuthorizationManager: NSObject {
             return
         }
         
-        KiteAPIClient.shared.getPaymentKeys() { paypalKey, stripeKey, error in
-            guard error == nil else {
+        KiteAPIClient.shared.getPaymentKeys() { result in
+            if case .failure(let error) = result {
                 completionHandler?(error)
                 return
             }
+            let keys = try! result.get()
             
-            self.paypalApiKey = paypalKey
-            self.stripeKey = stripeKey
+            self.paypalApiKey = keys.paypalKey
+            self.stripeKey = keys.stripeKey
             completionHandler?(nil)
         }
     }
@@ -437,22 +438,14 @@ extension PaymentAuthorizationManager: STPPaymentContextDelegate {
         let amount = Double(paymentContext.paymentAmount) / 100.0
         let currency = paymentContext.paymentCurrency
         
-        KiteAPIClient.shared.createPaymentIntentWithSourceId(sourceId, amount: amount, currency: currency) { [weak welf = self] paymentIntent, error in
-            guard let stelf = welf else {
-                completion(nil)
-                return
-            }
-            guard error == nil else {
+        KiteAPIClient.shared.createPaymentIntentWithSourceId(sourceId, amount: amount, currency: currency) { [weak welf = self] result in
+            guard let stelf = welf else { return }
+            
+            if case .failure(let error) = result {
                 stelf.delegate?.paymentAuthorizationDidFinish(token: nil, error: error, completionHandler: nil)
-                completion(error)
                 return
             }
-            guard let paymentIntent = paymentIntent else {
-                let error = APIClientError.parsing(details: "PaymentResult: Failed to parse intent")
-                stelf.delegate?.paymentAuthorizationDidFinish(token: nil, error: error, completionHandler: nil)
-                completion(error)
-                return
-            }
+            let paymentIntent = try! result.get()
 
             if paymentIntent.status == .requiresAction {
                 guard let redirectContext = STPRedirectContext(paymentIntent: paymentIntent, completion: { _, _ in }) else {

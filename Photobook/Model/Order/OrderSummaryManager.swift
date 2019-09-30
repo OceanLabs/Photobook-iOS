@@ -107,54 +107,50 @@ extension OrderSummaryManager {
     /// Initial summary fetch
     private func fetchOrderSummary() {
         delegate?.orderSummaryManagerWillUpdate()
-        
         summary = nil
         
-        apiManager.getOrderSummary(product: product) { [weak self] (summary, upsellOptions, productPayload, error) in
+        apiManager.getOrderSummary(product: product) { [weak welf = self] result in
+            guard let stelf = welf else { return }
             
-            guard let stelf = self else { return }
-            guard let summary = summary else {
-                if let error = error as? APIClientError, case .parsing(let details) = error {
+            if case .failure(let error) = result {
+                if case .parsing(let details) = error {
                     Analytics.shared.trackError(.parsing, details)
                 }
-                let errorMessage = ErrorMessage(error != nil ? error! : APIClientError.generic)
-                
-                stelf.delegate?.orderSummaryManagerDidUpdate(nil, error: errorMessage)
+                stelf.delegate?.orderSummaryManagerDidUpdate(nil, error: ErrorMessage(error))
                 return
             }
+            let summaryInfo = try! result.get()
             
-            stelf.product.setUpsellData(template: stelf.product.photobookTemplate, payload: productPayload)
-            stelf.upsellOptions = upsellOptions
-            stelf.handleReceivingSummary(summary)
+            stelf.product.setUpsellData(template: stelf.product.photobookTemplate, payload: summaryInfo.productPayload)
+            stelf.upsellOptions = summaryInfo.upsellOptions
+            stelf.handleReceivingSummary(summaryInfo.orderSummary)
         }
     }
     
     private func applyUpsells(_ failure:((_ error: ErrorMessage) -> Void)? = nil) {
         delegate?.orderSummaryManagerWillUpdate()
         
-        apiManager.applyUpsells(product: product, upsellOptions: Array<UpsellOption>(selectedUpsellOptions)) { [weak welf = self] (summary, upsoldTemplateId, productPayload, error) in
-            
-            // API errors
-            guard let summary = summary, let templateId = upsoldTemplateId else {
-                if let error = error as? APIClientError, case .parsing(let details) = error {
+        apiManager.applyUpsells(product: product, upsellOptions: Array<UpsellOption>(selectedUpsellOptions)) { [weak welf = self] result in
+            guard let stelf = welf else { return }
+            if case .failure(let error) = result {
+                if case .parsing(let details) = error {
                     Analytics.shared.trackError(.parsing, details)
                 }
-                let errorMessage = ErrorMessage(error != nil ? error! : APIClientError.generic)
-                
-                failure?(errorMessage)
+                failure?(ErrorMessage(error))
                 return
             }
+            let upsellInfo = try! result.get()
 
             // Check if the template ID can be matched
-            guard let upsoldTemplate = welf?.templates?.first(where: {$0.templateId == templateId}) else {
-                Analytics.shared.trackError(.upsellError, "ApplyUpsells: Failed to find \(templateId)")
+            guard let upsoldTemplate = stelf.templates?.first(where: {$0.templateId == upsellInfo.upsoldTemplateId}) else {
+                Analytics.shared.trackError(.upsellError, "ApplyUpsells: Failed to find \(upsellInfo.upsoldTemplateId)")
                 
                 failure?(ErrorMessage(.generic))
                 return
             }
-            
-            welf?.product.setUpsellData(template: upsoldTemplate, payload: productPayload)
-            welf?.handleReceivingSummary(summary)
+
+            stelf.product.setUpsellData(template: upsoldTemplate, payload: upsellInfo.productPayload)
+            stelf.handleReceivingSummary(upsellInfo.summary)
         }
     }
     
@@ -188,17 +184,20 @@ extension OrderSummaryManager {
         }
         
         isUploadingCoverImage = true
-        Pig.uploadImage(coverImage) { [weak welf = self] url, error in
-            welf?.isUploadingCoverImage = false
+        Pig.uploadImage(coverImage) { [weak welf = self] result in
+            guard let stelf = welf else { return }
             
-            if error != nil {
-                welf?.delegate?.orderSummaryManagerFailedToSetPreviewImageUrl()
-                return
-            }
-
-            welf?.product.pigCoverUrl = url
-            if welf?.isPreviewImageUrlReady() ?? false {
-                welf?.delegate?.orderSummaryManagerDidSetPreviewImageUrl()
+            stelf.isUploadingCoverImage = false
+            switch result {
+            case .success(let url):
+                stelf.product.pigCoverUrl = url
+                if stelf.isPreviewImageUrlReady() {
+                    stelf.delegate?.orderSummaryManagerDidSetPreviewImageUrl()
+                    return
+                }
+                fallthrough
+            case .failure:
+                stelf.delegate?.orderSummaryManagerFailedToSetPreviewImageUrl()
             }
         }
     }

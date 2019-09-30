@@ -142,7 +142,7 @@ class OrderManagerTests: XCTestCase {
     func testFinishOrder_shouldFail_ifProductFailsToCreatePdfs() {
         
         // The photobook API fails to create PDFs
-        photobookApiManager.error = OrderProcessingError.uploadProcessing
+        photobookApiManager.error = .generic
         
         let expect = expectation(forNotification: .orderDidComplete, object: nil) { (notification) -> Bool in
             if let error = notification.object as? OrderProcessingError, case .uploadProcessing = error {
@@ -241,7 +241,7 @@ class OrderManagerTests: XCTestCase {
         
         // Order submits but polling fails
         kiteApiClient.orderId = "Order1"
-        kiteApiClient.status = .paymentError
+        kiteApiClient.statusError = KiteAPIClientError.paymentError
         
         let expect = expectation(forNotification: .orderDidComplete, object: nil) { (notification) -> Bool in
             if let error = notification.object as? OrderProcessingError, case .payment = error {
@@ -262,8 +262,7 @@ class OrderManagerTests: XCTestCase {
         
         // Order submits but polling fails
         kiteApiClient.orderId = "Order1"
-        kiteApiClient.status = .error
-        kiteApiClient.statusError = .generic
+        kiteApiClient.statusError = APIClientError.generic
         
         let expect = expectation(forNotification: .orderDidComplete, object: nil) { (notification) -> Bool in
             if let error = notification.object as? OrderProcessingError, case .api(let message) = error {
@@ -452,6 +451,8 @@ class OrderManagerTests: XCTestCase {
         
         assetLoadingManager.fileExtension = .jpg
         assetLoadingManager.imageData = Data()
+        
+        photobookApiManager.error = .generic
         
         orderDiskManager.fileUrl = URL(string: "http://clownrepo.co.uk/fiestaking.jpg")
         apiClient.uploadImageUserInfo = ["full": "http://pig/223434.jpg", "task_reference": "\(apiClient.imageUploadIdentifierPrefix)\(photosAsset.identifier!)"]

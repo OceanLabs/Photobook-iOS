@@ -296,27 +296,33 @@ class OrderManager {
             return
         }
         
-        kiteApiClient.submitOrder(parameters: orderParameters, completionHandler: { [weak welf = self] orderId, error in
+        kiteApiClient.submitOrder(parameters: orderParameters, completionHandler: { [weak welf = self] result in
             guard let processingOrder = welf?.processingOrder else { return }
-            processingOrder.orderId = orderId
-            completionHandler(error)
+            switch result {
+            case .success(let orderId):
+                processingOrder.orderId = orderId
+                completionHandler(nil)
+            case .failure(let error):
+                completionHandler(error)
+            }
         })
     }
     
     private var numberOfTimesPolled = 0
-    private func pollOrderStatus(completionHandler: @escaping (_ status: OrderSubmitStatus, _ error: APIClientError?) -> Void) {
+    private func pollOrderStatus(completionHandler: @escaping (Error?) -> Void) {
         guard let receipt = processingOrder?.orderId,
             numberOfTimesPolled < OrderManager.maxNumberOfPollingTries else {
-                completionHandler(.error, .generic)
+                completionHandler(APIClientError.generic)
                 return
         }
         
-        kiteApiClient.checkOrderStatus(receipt: receipt) { [weak welf = self] (status, error, orderId) in
+        kiteApiClient.checkOrderStatus(receipt: receipt) { [weak welf = self] result in
             guard let stelf = welf else { return }
-            if let error = error {
-                completionHandler(status, error)
+            if case .failure(let error) = result {
+                completionHandler(error)
                 return
             }
+            let (status, orderId) = try! result.get()
             
             if status == .accepted || status == .received {
                 stelf.numberOfTimesPolled += 1
@@ -331,7 +337,7 @@ class OrderManager {
                 processingOrder.orderId = orderId
             }
             
-            completionHandler(status, nil)
+            completionHandler(nil)
         }
     }
 
@@ -398,7 +404,7 @@ class OrderManager {
                 
                 // Check for order success
                 welf?.numberOfTimesPolled = 0
-                welf?.pollOrderStatus { [weak welf = self] (status, error) in
+                welf?.pollOrderStatus { [weak welf = self] error in
                     guard let stelf = welf else { return }
                     
                     if stelf.isCancelling {
@@ -407,24 +413,22 @@ class OrderManager {
                         stelf.cancelCompletionBlock = nil
                         stelf.isSubmittingOrder = false
                         return
-                    }    
-                    
-                    if status == .paymentError {
-                        Analytics.shared.trackError(.payment)
-                        stelf.orderDidComplete(error: .payment)
-                        return
                     }
                     
                     if let error = error {
                         switch error {
-                        case .parsing(let details):
+                        case APIClientError.parsing(let details):
                             Analytics.shared.trackError(.parsing, details)
-                        case .server(let code, let message):
+                        case APIClientError.server(let code, let message):
                             Analytics.shared.trackError(.payment, "Server error: \(message) (\(code))")
+                        case KiteAPIClientError.paymentError:
+                            Analytics.shared.trackError(.payment)
+                            stelf.orderDidComplete(error: .payment)
+                            return
                         default:
                             break
                         }
-                        
+
                         stelf.orderDidComplete(error: .api(message: ErrorMessage(error)))
                         return
                     }
@@ -447,13 +451,16 @@ class OrderManager {
     private func uploadAsset(asset: Asset) {
         // If it is a PDFAsset, skip retrieving an asset image and upload the PDF instead
         if let pdfAsset = asset as? PDFAsset {
-            kiteApiClient.requestSignedUrl(for: .pdf) { [weak welf = self] signedUrl, url, error in
-                guard error == nil else {
-                    welf?.failedFileUpload(with: error!)
+            kiteApiClient.requestSignedUrl(for: .pdf) { [weak welf = self] result in
+                guard let stelf = welf else { return }
+                if case .failure(let error) = result {
+                    stelf.failedFileUpload(with: error)
                     return
                 }
-                pdfAsset.fileUrl = url // Store final URL pending upload
-                welf?.apiClient.uploadPdf(pdfAsset.filePath, to: signedUrl!, reference: pdfAsset.identifier)
+                let (signedUrl, fileUrl) = try! result.get()
+                
+                pdfAsset.fileUrl = fileUrl // Store final URL pending upload
+                stelf.apiClient.uploadPdf(pdfAsset.filePath, to: signedUrl, reference: pdfAsset.identifier)
             }
             return
         }

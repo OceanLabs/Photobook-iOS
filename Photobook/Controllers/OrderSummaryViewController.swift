@@ -149,7 +149,7 @@ class OrderSummaryViewController: UIViewController {
         coverSnapshotPageView.backgroundColor = .clear
         coverSnapshotPageView.frame.size = CGSize(width: Constants.dimensionsForCoverPhotoSnapshot, height: Constants.dimensionsForCoverPhotoSnapshot / product.photobookTemplate.coverAspectRatio)
         coverSnapshotPageView.productLayout = product.productLayouts.first
-        
+        coverSnapshotPageView.product = product
         coverSnapshotPageView.color = product.coverColor
         coverSnapshotPageView.setupTextBox(mode: .userTextOnly)
         

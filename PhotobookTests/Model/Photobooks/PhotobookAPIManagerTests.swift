@@ -43,22 +43,36 @@ class PhotobookAPIManagerTests: XCTestCase {
     func testRequestPhotobookInfo_ReturnsServerError() {
         apiClient.error = .server(code: 500, message: "")
         
-        photobookAPIManager.requestPhotobookInfo { (_, _, error) in
-            XCTAssertTrue(APIClientError.isError(error, ofType: self.apiClient.error!), "PhotobookInfo: Should return a server error")
+        photobookAPIManager.requestPhotobookInfo { result in
+            if case .failure(let error) = result {
+                XCTAssertTrue(APIClientError.isError(error, ofType: self.apiClient.error!), "PhotobookInfo: Should return a server error")
+                return
+            }
+            XCTFail()
         }
     }
     
     func testRequestPhotobookInfo_ReturnsConnectionError() {
-        apiClient.error = APIClientError.connection
+        apiClient.error = .connection
         
-        photobookAPIManager.requestPhotobookInfo { (_, _, error) in
-            XCTAssertTrue(APIClientError.isError(error, ofType: .connection), "PhotobookInfo: Should return a server error")
+        photobookAPIManager.requestPhotobookInfo { result in
+            if case .failure(let error) = result {
+                XCTAssertTrue(APIClientError.isError(error, ofType: .connection), "PhotobookInfo: Should return a server error")
+                return
+            }
+            XCTFail()
         }
     }
 
     func testRequestPhotobookInfo_ReturnsParsingError() {
-        photobookAPIManager.requestPhotobookInfo { (_, _, error) in
-            XCTAssertTrue(APIClientError.isError(error, ofType: .parsing(details: "")), "PhotobookInfo: Should return a parsing error")
+        apiClient.error = .parsing(details: "Something went wrong")
+        
+        photobookAPIManager.requestPhotobookInfo { result in
+            if case .failure(let error) = result {
+                XCTAssertTrue(APIClientError.isError(error, ofType: .parsing(details: "")), "PhotobookInfo: Should return a parsing error")
+                return
+            }
+            XCTFail()
         }
     }
 
@@ -66,16 +80,24 @@ class PhotobookAPIManagerTests: XCTestCase {
     
         apiClient.response = [ "products": nil, "layouts": nil, "upsellOptions": nil ] as AnyObject
         
-        photobookAPIManager.requestPhotobookInfo { (_, _, error) in
-            XCTAssertTrue(APIClientError.isError(error, ofType: .parsing(details: "")), "PhotobookInfo: Should return a parsing error")
+        photobookAPIManager.requestPhotobookInfo { result in
+            if case .failure(let error) = result {
+                XCTAssertTrue(APIClientError.isError(error, ofType: .parsing(details: "")), "PhotobookInfo: Should return a parsing error")
+                return
+            }
+            XCTFail()
         }
     }
     
     func testRequestPhotobookInfo_ReturnsParsingErrorWithZeroCounts() {
         apiClient.response = [ "products": [], "layouts": [], "upsellOptions": [] ] as AnyObject
         
-        photobookAPIManager.requestPhotobookInfo { (_, _, error) in
-            XCTAssertTrue(APIClientError.isError(error, ofType: .parsing(details: "")), "PhotobookInfo: Should return a parsing error")
+        photobookAPIManager.requestPhotobookInfo { result in
+            if case .failure(let error) = result {
+                XCTAssertTrue(APIClientError.isError(error, ofType: .parsing(details: "")), "PhotobookInfo: Should return a parsing error")
+                return
+            }
+            XCTFail()
         }
     }
     
@@ -83,18 +105,26 @@ class PhotobookAPIManagerTests: XCTestCase {
         
         apiClient.response = [ "products": 10, "layouts": "Not a layout" ] as AnyObject
         
-        photobookAPIManager.requestPhotobookInfo { (_, _, error) in
-            XCTAssertTrue(APIClientError.isError(error, ofType: .parsing(details: "")), "PhotobookInfo: Should return a parsing error")
+        photobookAPIManager.requestPhotobookInfo { result in
+            if case .failure(let error) = result {
+                XCTAssertTrue(APIClientError.isError(error, ofType: .parsing(details: "")), "PhotobookInfo: Should return a parsing error")
+                return
+            }
+            XCTFail()
         }
     }
     
     func testRequestPhotobookInfo_ShouldParseValidObjects() {
         apiClient.response = JSON.parse(file: "photobooks")
         
-        photobookAPIManager.requestPhotobookInfo { (photobooks, layouts, error) in
-            XCTAssertNil(error, "PhotobookInfo: Error should be nil with a valid response")
-            XCTAssertEqual((photobooks ?? []).count, 4, "PhotobookInfo: Photobooks should include layouts products")
-            XCTAssertEqual((layouts ?? []).count, 52, "PhotobookInfo: Layouts should include 52 layouts")
+        photobookAPIManager.requestPhotobookInfo { result in
+            switch result {
+            case .failure(let error):
+                XCTAssertNil(error, "PhotobookInfo: Error should be nil with a valid response")
+            case .success(let (photobooks, layouts)):
+                XCTAssertEqual(photobooks.count, 4, "PhotobookInfo: Photobooks should include layouts products")
+                XCTAssertEqual(layouts.count, 52, "PhotobookInfo: Layouts should include 52 layouts")
+            }
         }
     }
 }

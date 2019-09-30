@@ -6,7 +6,7 @@
 //  Copyright © 2018 Kite.ly. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import Photos
 @testable import Photobook
 

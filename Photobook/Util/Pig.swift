@@ -43,25 +43,24 @@ class Pig {
     /// - Parameters:
     ///   - image: The UIImage to upload
     ///   - completion: Completion block returning a URL or an error
-    static func uploadImage(_ image: UIImage, completion: @escaping (_ url: String?, _ error: Error?) -> Void) {
+    static func uploadImage(_ image: UIImage, completion: @escaping (Result<String, Error>) -> Void) {
         
-        apiClient.uploadImage(image, imageName: "OrderSummaryPreviewImage.png") { (json, error) in
-
-            if let error = error {
-                completion(nil, error)
+        apiClient.uploadImage(image, imageName: "OrderSummaryPreviewImage.png") { result in
+            if case .failure(let error) = result {
+                completion(.failure(error))
                 return
             }
+            let json = try! result.get()
             
             guard let dictionary = json as? [String: AnyObject], let url = dictionary["full"] as? String else {
                 print("Pig: Couldn't parse URL of uploaded image")
-                completion(nil, PigError.parsing)
+                completion(.failure(PigError.parsing))
                 return
             }
-            
-            completion(url, nil)
+            completion(.success(url))
         }
     }
-    
+
     
     /// Generates the PIG URL of the preview image
     ///
@@ -88,7 +87,8 @@ class Pig {
     ///   - url: The URL of the preview image
     ///   - completion: Completion block returning an image
     static func fetchPreviewImage(with url: URL, completion: @escaping (UIImage?) -> Void) {
-        apiClient.downloadImage(url) { (image, _) in
+        apiClient.downloadImage(url) { result in
+            let image = try? result.get()
             completion(image)
         }
     }

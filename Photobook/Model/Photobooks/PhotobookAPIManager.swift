@@ -59,21 +59,21 @@ class PhotobookAPIManager {
     /// Requests the information about photobook products and layouts from the API
     ///
     /// - Parameter completionHandler: Closure to be called when the request completes
-    func requestPhotobookInfo(_ completionHandler:@escaping ([PhotobookTemplate]?, [Layout]?, Error?) -> ()) {
-        
-        apiClient.get(context: .photobook, endpoint: EndPoints.products, parameters: nil, headers: PhotobookAPIManager.headers) { (jsonData, error) in
-            
-            if jsonData == nil, error != nil {
-                completionHandler(nil, nil, error!)
+    func requestPhotobookInfo(_ completionHandler: @escaping ((Result<(photobookTemplates: [PhotobookTemplate], layouts: [Layout]), APIClientError>) -> Void)) {
+
+        apiClient.get(context: .photobook, endpoint: EndPoints.products, parameters: nil, headers: PhotobookAPIManager.headers) { result in
+            if case .failure(let error) = result {
+                completionHandler(.failure(error))
                 return
             }
+            let jsonData = try! result.get()
             
             guard
                 let photobooksData = jsonData as? [String: AnyObject],
                 let productsData = photobooksData["products"] as? [[String: AnyObject]],
                 let layoutsData = photobooksData["layouts"] as? [[String: AnyObject]]
             else {
-                completionHandler(nil, nil, APIClientError.parsing(details: "RequestPhotobookInfo: Could not parse root objects"))
+                completionHandler(.failure(.parsing(details: "RequestPhotobookInfo: Could not parse root objects")))
                 return
             }
             
@@ -86,7 +86,7 @@ class PhotobookAPIManager {
             }
             
             if tempLayouts.isEmpty {
-                completionHandler(nil, nil, APIClientError.parsing(details: "RequestPhotobookInfo: Could not parse layouts"))
+                completionHandler(.failure(.parsing(details: "RequestPhotobookInfo: Could not parse layouts")))
                 return
             }
             
@@ -100,34 +100,35 @@ class PhotobookAPIManager {
             }
             
             if tempPhotobooks.isEmpty {
-                completionHandler(nil, nil, APIClientError.parsing(details: "RequestPhotobookInfo: Could not parse photobooks"))
+                completionHandler(.failure(.parsing(details: "RequestPhotobookInfo: Could not parse photobooks")))
                 return
             }
 
             // Sort products by cover width
             tempPhotobooks.sort(by: { return $0.coverSize.width < $1.coverSize.width })
             
-            completionHandler(tempPhotobooks, tempLayouts, nil)
+            completionHandler(.success((tempPhotobooks, tempLayouts)))
         }
     }
     
-    func getOrderSummary(product: PhotobookProduct, completionHandler: @escaping (_ summary: OrderSummary?, _ upsellOptions: [UpsellOption]?, _ productPayload: [String: Any]?, _ error: Error?) -> Void) {
+    func getOrderSummary(product: PhotobookProduct, completionHandler: @escaping (Result<(orderSummary: OrderSummary, upsellOptions: [UpsellOption], productPayload: [String: Any]), APIClientError>) -> Void) {
         
         let parameters: [String: Any] = ["productId": product.photobookTemplate.id, "pageCount": product.numberOfPages, "color": product.coverColor.rawValue, "currencyCode": OrderManager.shared.preferredCurrencyCode]
-        apiClient.post(context: .photobook, endpoint: EndPoints.summary, parameters: parameters, headers: PhotobookAPIManager.headers) { (jsonData, error) in
+        apiClient.post(context: .photobook, endpoint: EndPoints.summary, parameters: parameters, headers: PhotobookAPIManager.headers) { result in
             
-            if let error = error {
-                completionHandler(nil, nil, nil, error)
+            if case .failure(let error) = result {
+                completionHandler(.failure(error))
                 return
             }
+            let response = try! result.get()
             
-            guard let jsonData = jsonData as? [String: Any],
+            guard let jsonData = response as? [String: Any],
                 let summaryDict = jsonData["summary"] as? [String: Any],
                 let summary = OrderSummary.parse(summaryDict),
                 let upsellOptionsDict = jsonData["upsells"] as? [[String: Any]],
                 let payload = jsonData["productPayload"] as? [String: Any]
                 else {
-                    completionHandler(nil, nil, nil, APIClientError.parsing(details: "GetOrderSummary: Could not parse root objects"))
+                    completionHandler(.failure(.parsing(details: "GetOrderSummary: Could not parse root objects")))
                     return
             }
             
@@ -138,26 +139,26 @@ class PhotobookAPIManager {
                 }
             }
             
-            completionHandler(summary, upsellOptions, payload, nil)
+            completionHandler(.success((summary, upsellOptions, payload)))
         }
     }
     
-    func applyUpsells(product: PhotobookProduct, upsellOptions:[UpsellOption], completionHandler: @escaping (_ summary: OrderSummary?, _ upsoldTemplateId: String?, _ productPayload: [String: Any]?, _ error: Error?) -> Void) {
-        
+    func applyUpsells(product: PhotobookProduct, upsellOptions:[UpsellOption], completionHandler: @escaping (Result<(summary: OrderSummary, upsoldTemplateId: String, productPayload: [String: Any]), APIClientError>) -> Void) {
+
         var parameters: [String: Any] = ["productId": product.photobookTemplate.id, "pageCount": product.numberOfPages, "color": product.coverColor.rawValue, "currencyCode": OrderManager.shared.preferredCurrencyCode]
         var upsellDicts = [[String: Any]]()
         for upsellOption in upsellOptions {
             upsellDicts.append(upsellOption.dict)
         }
         parameters["upsells"] = upsellDicts
-        apiClient.post(context: .photobook, endpoint: EndPoints.applyUpsells, parameters: parameters, headers: PhotobookAPIManager.headers) { (jsonData, error) in
-            
-            if let error = error {
-                completionHandler(nil, nil, nil, error)
+        apiClient.post(context: .photobook, endpoint: EndPoints.applyUpsells, parameters: parameters, headers: PhotobookAPIManager.headers) { result in
+            if case .failure(let error) = result {
+                completionHandler(.failure(error))
                 return
             }
-                                                                                        
-            guard let jsonData = jsonData as? [String: Any],
+            let response = try! result.get()
+
+            guard let jsonData = response as? [String: Any],
                 let summaryDict = jsonData["summary"] as? [String: Any],
                 let summary = OrderSummary.parse(summaryDict),
                 let productDict = jsonData["newProduct"] as? [String: Any],
@@ -165,11 +166,11 @@ class PhotobookAPIManager {
                 let templateId = variantDicts.first?["templateId"] as? String,
                 let payload = jsonData["productPayload"] as? [String: Any]
                 else {
-                    completionHandler(nil, nil, nil, APIClientError.parsing(details: "ApplyUpsells: Could not parse root objects"))
+                    completionHandler(.failure(.parsing(details: "ApplyUpsells: Could not parse root objects")))
                     return
             }
         
-            completionHandler(summary, templateId, payload, nil)
+            completionHandler(.success((summary, templateId, payload)))
         }
     }
     
@@ -179,14 +180,18 @@ class PhotobookAPIManager {
     /// - Parameters:
     ///   - photobook: Photobook product to use for creating the PDF
     ///   - completionHandler: Closure to be called with PDF URLs if successful, or an error if it fails
-    func createPdf(withPhotobook photobook: PhotobookProduct, completionHandler: @escaping (_ urls: [String]?, _ error: Error?) -> Void) {
-        apiClient.post(context: .photobook, endpoint: EndPoints.createPdf, parameters: photobook.pdfParameters(), headers: PhotobookAPIManager.headers) { (response, error) in
-            guard let response = response as? [String: Any], let coverUrl = response["coverUrl"] as? String, let insideUrl = response["insideUrl"] as? String else {
-                completionHandler(nil, error)
-                return
+    func createPdf(withPhotobook photobook: PhotobookProduct, completionHandler: @escaping (Result<[String], APIClientError>) -> Void) {
+        apiClient.post(context: .photobook, endpoint: EndPoints.createPdf, parameters: photobook.pdfParameters(), headers: PhotobookAPIManager.headers) { result in
+            switch result {
+            case .success(let response):
+                if let response = response as? [String: Any], let coverUrl = response["coverUrl"] as? String, let insideUrl = response["insideUrl"] as? String {
+                    completionHandler(.success([coverUrl, insideUrl]))
+                    return
+                }
+                completionHandler(.failure(.generic))
+            case .failure(let error):
+                completionHandler(.failure(error))
             }
-            completionHandler([coverUrl, insideUrl], nil)
         }
     }
-    
 }

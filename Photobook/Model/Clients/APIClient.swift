@@ -198,7 +198,7 @@ class APIClient: NSObject {
     /// Called when the app is launched by the system by pending tasks
     ///
     /// - Parameter completionHandler: The completion handler provided by the system and that should be called when the event handling is done.
-    func recreateBackgroundSession(_ completionHandler: (()->Void)? = nil) {
+    func recreateBackgroundSession(_ completionHandler: (() -> Void)? = nil) {
         backgroundSessionCompletionHandler = completionHandler
         
         // Trigger lazy initialisation
@@ -232,9 +232,8 @@ class APIClient: NSObject {
     }
     
     // MARK: Generic dataTask handling
-    
-    private func dataTask(context: APIContext, endpoint: String, parameters: [String : Any]?, headers: [String : String]?, method: HTTPMethod, encoding: APIParameterEncoding = .json, completion: @escaping (AnyObject?, APIClientError?) -> ()) {
-        
+    private func dataTask(context: APIContext, endpoint: String, parameters: [String : Any]?, headers: [String : String]?, method: HTTPMethod, encoding: APIParameterEncoding = .json, parseJsonResponse: Bool = true, completion: @escaping (Result<AnyObject, APIClientError>) -> Void) {
+
         var request = URLRequest(url: URL(string: baseURLString(for: context) + endpoint)!)
         
         request.httpMethod = method.rawValue
@@ -289,61 +288,72 @@ class APIClient: NSObject {
             fatalError("API client: Unsupported HTTP method")
         }
         
-        urlSession.dataTask(with: request) { (data, response, error) in
+        urlSession.dataTask(with: request) { [weak welf = self] (data, response, error) in
+            guard let stelf = welf else { return }
             guard error == nil else {
-                let error = error as NSError?
-                switch error!.code {
-                case Int(CFNetworkErrors.cfurlErrorBadServerResponse.rawValue):
-                    completion(nil, .server(code: 500, message: ""))
-                case Int(CFNetworkErrors.cfurlErrorSecureConnectionFailed.rawValue) ..< Int(CFNetworkErrors.cfurlErrorUnknown.rawValue):
-                    completion(nil, .connection)
-                default:
-                    completion(nil, .server(code: error!.code, message: error!.localizedDescription))
-                }
+                let apiError = stelf.apiClientError(from: error!)
+                completion(.failure(apiError))
                 return
             }
-            
+
             guard let data = data else {
-                completion(nil, .parsing(details: "DataTask: Missing data for \(request.url?.absoluteString ?? "")"))
+                completion(.failure(.parsing(details: "DataTask: Missing data for \(request.url?.absoluteString ?? "")")))
                 return
             }
             
+            if !parseJsonResponse {
+                completion(.success(data as AnyObject))
+                return
+            }
+
             // Attempt parsing to JSON
             if let json = try? JSONSerialization.jsonObject(with: data, options: []) {
                 // Check if there's an error in the response
                 if let responseDictionary = json as? [String: AnyObject],
                     let errorDict = responseDictionary["error"] as? [String : AnyObject],
                     let errorMessage = (errorDict["message"] as? [AnyObject])?.last as? String {
-                    completion(nil, .server(code: (response as? HTTPURLResponse)?.statusCode ?? 0, message: errorMessage))
+                    completion(.failure(.server(code: (response as? HTTPURLResponse)?.statusCode ?? 0, message: errorMessage)))
                 } else {
-                    completion(json as AnyObject, nil)
+                    completion(.success(json as AnyObject))
                 }
-            } else if let image = UIImage(data: data) { // Attempt parsing UIImage
-                completion(image, nil)
             } else { // Parsing error
                 var details = "DataTask: Bad data for \(request.url?.absoluteString ?? "")"
                 if let stringData = String(data: data, encoding: String.Encoding.utf8) {
                     details = details + ": " + stringData
                 }
-                completion(nil, .parsing(details: details))
+                completion(.failure(.parsing(details: details)))
             }
             }.resume()
     }
+    
+    private func apiClientError(from error: Error?) -> APIClientError {
+        guard let error = error as NSError? else { return .generic }
+        
+        switch error.code {
+        case Int(CFNetworkErrors.cfurlErrorBadServerResponse.rawValue):
+            return .server(code: 500, message: "")
+        case Int(CFNetworkErrors.cfurlErrorSecureConnectionFailed.rawValue) ..< Int(CFNetworkErrors.cfurlErrorUnknown.rawValue):
+            return .connection
+        default:
+            return .server(code: error.code, message: error.localizedDescription)
+        }
+    }
+
 
     // MARK: - Public methods
-    func post(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, encoding: APIParameterEncoding = .json, completion: @escaping (AnyObject?, APIClientError?) -> ()) {
-        dataTask(context: context, endpoint: endpoint, parameters: parameters, headers: headers, method: .post, encoding: encoding, completion: completion)
+    func post(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, encoding: APIParameterEncoding = .json, parseJsonResponse: Bool = true, completion: @escaping (Result<AnyObject, APIClientError>) -> Void) {
+        dataTask(context: context, endpoint: endpoint, parameters: parameters, headers: headers, method: .post, encoding: encoding, parseJsonResponse: parseJsonResponse, completion: completion)
     }
     
-    func get(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion: @escaping (AnyObject?, APIClientError?) -> ()) {
-        dataTask(context: context, endpoint: endpoint, parameters: parameters, headers: headers, method: .get, completion: completion)
+    func get(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, parseJsonResponse: Bool = true, completion: @escaping (Result<AnyObject, APIClientError>) -> Void) {
+        dataTask(context: context, endpoint: endpoint, parameters: parameters, headers: headers, method: .get, parseJsonResponse: parseJsonResponse, completion: completion)
     }
     
-    func put(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion: @escaping (AnyObject?, APIClientError?) -> ()) {
+    func put(context: APIContext, endpoint: String, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion: @escaping (Result<AnyObject, APIClientError>) -> Void) {
         dataTask(context: context, endpoint: endpoint, parameters: parameters, headers: headers, method: .put, completion: completion)
     }
     
-    func uploadImage(_ data: Data, imageName: String, completion: @escaping (AnyObject?, Error?) -> ()) {
+    func uploadImage(_ data: Data, imageName: String, completion: @escaping (Result<AnyObject, APIClientError>) -> Void) {
         let boundaryString = "Boundary-\(NSUUID().uuidString)"
         let fileUrl = createFileWith(imageData: data, imageName: imageName, boundaryString: boundaryString)
     
@@ -353,28 +363,27 @@ class APIClient: NSObject {
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("multipart/form-data; boundary=\(boundaryString)", forHTTPHeaderField:"content-type")
         
-        URLSession.shared.uploadTask(with: request, fromFile: fileUrl) { (data, response, error) in
+        URLSession.shared.uploadTask(with: request, fromFile: fileUrl) { [weak welf = self] (data, response, error) in
+            guard let stelf = welf else { return }
             guard let data = data, let json = try? JSONSerialization.jsonObject(with: data, options: []) else {
-                DispatchQueue.main.async { completion(nil, error) }
+                let error = stelf.apiClientError(from: error)
+                DispatchQueue.main.async { completion(.failure(error)) }
                 return
             }
             
-            DispatchQueue.main.async { completion(json as AnyObject, nil) }
-            
+            DispatchQueue.main.async { completion(.success(json as AnyObject)) }
         }.resume()
     }
     
-    func uploadImage(_ image: UIImage, imageName: String, completion: @escaping (AnyObject?, Error?) -> ()) {
-        
+    func uploadImage(_ image: UIImage, imageName: String, completion: @escaping (Result<AnyObject, APIClientError>) -> Void) {
         guard let imageData = imageData(withImage: image, imageName: imageName) else {
             print("Image Upload: cannot read image data")
-            completion(nil, nil)
+            completion(.failure(APIClientError.generic))
             return
         }
-        
         uploadImage(imageData, imageName: imageName, completion: completion)
     }
-    
+
     func uploadImage(_ data: Data, imageName: String, reference: String?) {
         let boundaryString = "Boundary-\(NSUUID().uuidString)"
         let fileUrl = createFileWith(imageData: data, imageName: imageName, boundaryString: boundaryString)
@@ -422,14 +431,22 @@ class APIClient: NSObject {
         uploadImage(fileData, imageName: imageName, reference: reference)
     }
     
-    func downloadImage(_ imageUrl: URL, completion: @escaping ((UIImage?, Error?) -> Void)) {
-        SDWebImageManager.shared().loadImage(with: imageUrl, options: [], progress: nil, completed: { image, _, error, _, _, _ in
+    func downloadImage(_ imageUrl: URL, completion: @escaping ((Result<UIImage, APIClientError>) -> Void)) {
+        SDWebImageManager.shared().loadImage(with: imageUrl, options: [], progress: nil, completed: { [weak welf = self] image, _, error, _, _, _ in
+            guard let stelf = welf else { return }
             DispatchQueue.main.async {
-                completion(image, error)
+                if let image = image, error == nil {
+                    completion(.success(image))
+                } else if let error = error {
+                    let error = stelf.apiClientError(from: error)
+                    completion(.failure(error))
+                } else {
+                    completion(.failure(APIClientError.generic))
+                }
             }
         })
     }
-    
+
     func uploadPdf(_ file: URL, to targetUrl: URL, reference: String?) {
         guard let _ = try? Data(contentsOf: file) else {
             print("File Upload: cannot read file data")
@@ -456,7 +473,7 @@ class APIClient: NSObject {
         dataTask.resume()
     }
     
-    func pendingBackgroundTaskCount(_ completion: @escaping ((Int)->Void)) {
+    func pendingBackgroundTaskCount(_ completion: @escaping ((Int) -> Void)) {
         backgroundUrlSession.getAllTasks { completion($0.count) }
     }
     
@@ -469,7 +486,7 @@ class APIClient: NSObject {
         }
     }
     
-    func updateTaskReferences(completion: @escaping ()->()) {
+    func updateTaskReferences(completion: @escaping () -> Void) {
         backgroundUrlSession.getAllTasks { [weak welf = self] (tasks) in
             guard let stelf = welf else { return }
             stelf.taskReferences = stelf.taskReferences.filter({ (key, _) -> Bool in

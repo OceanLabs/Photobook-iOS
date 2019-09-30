@@ -719,8 +719,8 @@ enum ProductColor: String, Codable {
         if let coverUrl = pigCoverUrl { // Fetch the preview image if the cover URL is available
             fetchClosure(coverUrl)
         } else if let coverSnapshot = coverSnapshot { // Upload cover otherwise
-            Pig.uploadImage(coverSnapshot) { [weak welf = self] coverUrl, _ in
-                guard let coverUrl = coverUrl else { return }
+            Pig.uploadImage(coverSnapshot) { [weak welf = self] result in
+                guard let coverUrl = try? result.get() else { return }
                 welf?.pigCoverUrl = coverUrl
                 fetchClosure(coverUrl)
             }
@@ -730,28 +730,25 @@ enum ProductColor: String, Codable {
     var photobookApiManager = PhotobookAPIManager()
     
     func processUploadedAssets(completionHandler: @escaping (Error?) -> Void) {
-        photobookApiManager.createPdf(withPhotobook: self) { [weak welf = self] (urls, error) in
-            guard error == nil else {
-                Analytics.shared.trackError(.pdfCreation)
-                completionHandler(error)
-                return
-            }
+        photobookApiManager.createPdf(withPhotobook: self) { [weak welf = self] result in
+            guard let stelf = welf else { return }
             
-            guard let urls = urls,
-                urls.count >= 2
-                else {
+            switch result {
+            case .success(let urls):
+                guard urls.count >= 2 else {
                     Analytics.shared.trackError(.pdfCreation)
                     completionHandler(OrderProcessingError.uploadProcessing)
                     return
+                }
+                stelf.coverPdfUrl = urls[0]
+                stelf.insidePdfUrl = urls[1]
+                completionHandler(nil)
+            case .failure(let error):
+                Analytics.shared.trackError(.pdfCreation)
+                completionHandler(error)
             }
-            
-            welf?.coverPdfUrl = urls[0]
-            welf?.insidePdfUrl = urls[1]
-            
-            completionHandler(nil)
         }
     }
-    
 }
 
 extension PhotobookProduct {

@@ -109,16 +109,24 @@ class Order: Codable, Hashable {
             return
         }
         
-        let getCostClosure = {
-            KiteAPIClient.shared.getCost(order: self) { [weak self] (cost, error) in
-                self?.cachedCost = cost
-                cost?.orderHash = self?.hashValue ?? 0
-                
-                if let error = error, case .parsing(let details) = error {
-                    Analytics.shared.trackError(.parsing, details)
+        let closure = {
+            KiteAPIClient.shared.getCost(order: self) { [weak welf = self] result in
+                guard let stelf = welf else { return }
+                if case .failure(let error) = result {
+                    if case .parsing(let details) = error {
+                        OrderManager.shared.reset()
+                        Analytics.shared.trackError(.parsing, details)
+                        completionHandler(.generic)
+                    } else {
+                        completionHandler(error)
+                    }
+                    return
                 }
-
-                completionHandler(error)
+                let cost = try! result.get()
+                
+                stelf.cachedCost = cost
+                cost.orderHash = stelf.hashValue
+                completionHandler(nil)
             }
         }
         
@@ -131,7 +139,7 @@ class Order: Codable, Hashable {
                     completionHandler(error)
                     return
                 }
-                getCostClosure()
+                closure()
             }
         } else {
             // Since we will update the cost, it means that we may have changed destination country, so check if the selected method is still valid.
@@ -148,23 +156,27 @@ class Order: Codable, Hashable {
                 }
             }
             
-            getCostClosure()
+            closure()
         }
     }
     
     func updateShippingMethods(_ completionHandler: @escaping (_ error: APIClientError?) -> Void) {
-        KiteAPIClient.shared.getShippingInfo(for: OrderManager.shared.basketOrder.products.map({ $0.template.templateId })) { [weak welf = self] shippingInfo, error in
+        KiteAPIClient.shared.getShippingInfo(for: OrderManager.shared.basketOrder.products.map({ $0.template.templateId })) { [weak welf = self] result in
             guard let stelf = welf else { return }
-            guard error == nil else {
-                if let error = error, case .parsing(let details) = error {
+            
+            if case .failure(let error) = result {
+                if case .parsing(let details) = error {
                     Analytics.shared.trackError(.parsing, details)
+                    completionHandler(.generic)
+                } else {
+                    completionHandler(error)
                 }
-                completionHandler(error)
                 return
             }
-            
+            let shippingInfo = try! result.get()
+
             for product in stelf.products {
-                guard let shippingInfoForProduct = shippingInfo?[product.template.templateId] as? [String: Any] else { continue }
+                guard let shippingInfoForProduct = shippingInfo[product.template.templateId] as? [String: Any] else { continue }
 
                 product.template.countryToRegionMapping = shippingInfoForProduct["countryToRegionMapping"] as? [String: [String]]
                 product.template.availableShippingMethods = shippingInfoForProduct["availableShippingMethods"] as? [String : [ShippingMethod]]

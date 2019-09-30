@@ -70,20 +70,21 @@ class ProductManager {
     /// Requests the photobook details so the user can start building their photobook
     ///
     /// - Parameter completion: Completion block with an optional error
-    func initialise(completion:((ErrorMessage?)->())?) {
-        apiManager.requestPhotobookInfo { [weak welf = self] (photobooks, layouts, error) in
-            guard error == nil else {
-                if let error = error as? APIClientError, case .parsing(let details) = error {
+    func initialise(completion: ((ErrorMessage?) -> Void)?) {
+        apiManager.requestPhotobookInfo { [weak welf = self] result in
+            guard let stelf = welf else { return }
+            switch result {
+            case .success(let photobookInfo):
+                stelf.products = photobookInfo.photobookTemplates
+                stelf.layouts = photobookInfo.layouts
+                
+                completion?(nil)
+            case .failure(let error):
+                if case .parsing(let details) = error {
                     Analytics.shared.trackError(.parsing, details)
                 }
-                completion?(ErrorMessage(error!))
-                return
+                completion?(ErrorMessage(error))
             }
-            
-            welf?.products = photobooks
-            welf?.layouts = layouts
-            
-            completion?(nil)
         }
     }
         
