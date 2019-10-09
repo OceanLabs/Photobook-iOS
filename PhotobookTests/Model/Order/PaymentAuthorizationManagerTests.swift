@@ -82,10 +82,4 @@ class PaymentAuthorizationManagerTests: XCTestCase {
 
         XCTAssertTrue(delegate.viewControllerToPresent != nil && delegate.viewControllerToPresent! is PKPaymentAuthorizationViewController)
     }
-    
-    func testAuthorizePayment_payPal_shouldPresentPaypalController() {
-        paymentAuthorizationManager.authorizePayment(cost: fakeCost(), method: .payPal)
-        
-        XCTAssertTrue(delegate.viewControllerToPresent != nil)
-    }
 }
