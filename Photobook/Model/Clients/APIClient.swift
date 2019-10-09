@@ -432,7 +432,7 @@ class APIClient: NSObject {
     }
     
     func downloadImage(_ imageUrl: URL, completion: @escaping ((Result<UIImage, APIClientError>) -> Void)) {
-        SDWebImageManager.shared().loadImage(with: imageUrl, options: [], progress: nil, completed: { [weak welf = self] image, _, error, _, _, _ in
+        SDWebImageManager.shared.loadImage(with: imageUrl, options: [], progress: nil, completed: { [weak welf = self] image, _, error, _, _, _ in
             guard let stelf = welf else { return }
             DispatchQueue.main.async {
                 if let image = image, error == nil {

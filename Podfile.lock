@@ -1,5 +1,5 @@
 PODS:
-  - Analytics (3.6.10)
+  - Analytics (3.7.0)
   - Crashlytics (3.14.0):
     - Fabric (~> 1.10.2)
   - Fabric (1.10.2)
@@ -13,24 +13,24 @@ PODS:
     - FBSDKLoginKit/Login (= 5.8.0)
   - FBSDKLoginKit/Login (5.8.0):
     - FBSDKCoreKit (~> 5.0)
-  - KeychainSwift (16.0.1)
+  - KeychainSwift (17.0.0)
   - OAuthSwift (2.0.0)
   - PayPal-iOS-Dynamic-Loader (1.0.1)
-  - SDWebImage (4.4.7):
-    - SDWebImage/Core (= 4.4.7)
-  - SDWebImage/Core (4.4.7)
+  - SDWebImage (5.2.3):
+    - SDWebImage/Core (= 5.2.3)
+  - SDWebImage/Core (5.2.3)
   - Stripe (18.0.0)
 
 DEPENDENCIES:
-  - Analytics (~> 3.6.10)
-  - Crashlytics
-  - Fabric
-  - FBSDKCoreKit
-  - FBSDKLoginKit
-  - KeychainSwift (~> 16.0.1)
+  - Analytics (~> 3.7.0)
+  - Crashlytics (~> 3.14.0)
+  - Fabric (~> 1.10.0)
+  - FBSDKCoreKit (~> 5.8.0)
+  - FBSDKLoginKit (~> 5.8.0)
+  - KeychainSwift (~> 17.0.0)
   - OAuthSwift (~> 2.0.0)
   - PayPal-iOS-Dynamic-Loader
-  - SDWebImage (~> 4.3)
+  - SDWebImage (~> 5.2.0)
   - Stripe (~> 18.0.0)
 
 SPEC REPOS:
@@ -47,17 +47,17 @@ SPEC REPOS:
     - Stripe
 
 SPEC CHECKSUMS:
-  Analytics: 63744ad4afa65c3bcdcdb7a94b62515bde5b3900
+  Analytics: 77fd5fb102a4a5eedafa2c2b0245ceb7b7c15e45
   Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
   FBSDKCoreKit: e7dcac0aabcfb09d0166998edd95fe3b05a0ce5d
   FBSDKLoginKit: 1b0cf04df0370b37404213157b060d6666ede814
-  KeychainSwift: 4209611373ca4a098e09b1e547eebd87c544dcc4
+  KeychainSwift: 9f43f562dffc88af6efadb57d74b14c598eb337f
   OAuthSwift: 6805456763cf1c7ae0c16765257ed430b7aacae7
   PayPal-iOS-Dynamic-Loader: a32db083fe7e8f8d9ad4309e483e369c9a47e5eb
-  SDWebImage: c10d14a8883ebd89664f02a422006f66a85c0c5d
+  SDWebImage: 46a7f73228f84ce80990c786e4372cf4db5875ce
   Stripe: 8c9ac6b717a38ed4f373d4db9204cfe8c4120d65
 
-PODFILE CHECKSUM: 574056b2d5a9274b2459700bf3796afa4672bcc0
+PODFILE CHECKSUM: 8f9e6d2f93ce65454b15407450af71cd2c7c095b
 
 COCOAPODS: 1.8.3

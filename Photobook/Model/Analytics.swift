@@ -118,7 +118,7 @@ import Analytics
             userId = UIDevice.current.identifierForVendor?.uuidString ?? UUID.init().uuidString
             keychain.set(userId, forKey: Constants.userIdKeychainKey)
             
-            SEGAnalytics.shared().identify(userId)
+            SEGAnalytics.shared()?.identify(userId)
         }
         
         return userId
@@ -168,7 +168,7 @@ import Analytics
         let properties = addEnvironment(to: properties)
         
         if optInToRemoteAnalytics {
-            SEGAnalytics.shared().screen(screenName.rawValue, properties: properties)
+            SEGAnalytics.shared()?.screen(screenName.rawValue, properties: properties)
         }
         delegate?.photobookAnalyticsEventDidFire(type: .screenViewed, name: screenName.rawValue, properties: properties)
     }
@@ -181,7 +181,7 @@ import Analytics
         let properties = addEnvironment(to: properties)
         
         if optInToRemoteAnalytics {
-            SEGAnalytics.shared().track(actionName.rawValue, properties: properties)
+            SEGAnalytics.shared()?.track(actionName.rawValue, properties: properties)
         }
         delegate?.photobookAnalyticsEventDidFire(type: .action, name: actionName.rawValue, properties: properties)
     }
@@ -199,7 +199,7 @@ import Analytics
         
         // TODO: Remove once it's ok from a legal point to track errors (TOS update etc)
         if optInToRemoteAnalytics {
-            SEGAnalytics.shared().track(errorName.rawValue, properties: properties)
+            SEGAnalytics.shared()?.track(errorName.rawValue, properties: properties)
         }
         delegate?.photobookAnalyticsEventDidFire(type: .error, name: errorName.rawValue, properties: properties)
     }

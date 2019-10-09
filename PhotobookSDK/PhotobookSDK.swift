@@ -113,7 +113,6 @@ struct AssetsNotificationName {
     @objc public static let shared: PhotobookSDK = {
         let sdk = PhotobookSDK()
         sdk.environment = .live
-        SDWebImageManager.shared().imageCache?.config.shouldDecompressImages = false
         return sdk
     }()
     

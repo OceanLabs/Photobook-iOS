@@ -37,7 +37,7 @@ protocol WebImageManager {
 class DefaultWebImageManager: WebImageManager {
     
     func loadImage(with url: URL, completion: @escaping (UIImage?, Data?, Error?) -> Void) {
-        SDWebImageManager.shared().loadImage(with: url, options: [], progress: nil) { (image, data, error, _, _, _) in
+        SDWebImageManager.shared.loadImage(with: url, options: [], progress: nil) { (image, data, error, _, _, _) in
             completion(image, data, error)
         }
     }

@@ -102,7 +102,7 @@ protocol PickerAnalytics {
             userId = UIDevice.current.identifierForVendor?.uuidString ?? UUID.init().uuidString
             keychain.set(userId, forKey: Constants.userIdKeychainKey)
             
-            SEGAnalytics.shared().identify(userId)
+            SEGAnalytics.shared()?.identify(userId)
         }
         
         return userId
@@ -152,7 +152,7 @@ protocol PickerAnalytics {
         let properties = addEnvironment(to: properties)
         
         if optInToRemoteAnalytics {
-            SEGAnalytics.shared().screen(screenName.rawValue, properties: properties)
+            SEGAnalytics.shared()?.screen(screenName.rawValue, properties: properties)
         }
         delegate?.photobookAnalyticsEventDidFire(type: .screenViewed, name: screenName.rawValue, properties: properties)
     }
@@ -165,7 +165,7 @@ protocol PickerAnalytics {
         let properties = addEnvironment(to: properties)
         
         if optInToRemoteAnalytics {
-            SEGAnalytics.shared().track(actionName.rawValue, properties: properties)
+            SEGAnalytics.shared()?.track(actionName.rawValue, properties: properties)
         }
         delegate?.photobookAnalyticsEventDidFire(type: .action, name: actionName.rawValue, properties: properties)
     }
