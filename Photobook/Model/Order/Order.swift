@@ -40,7 +40,7 @@ class Order: Codable, Hashable {
     }
     
     var deliveryDetails: OLDeliveryDetails?
-    var paymentMethod: PaymentMethod? = SelectedPaymentMethodHandler.load()
+    var paymentMethod: PaymentMethod? = PaymentAuthorizationManager.isApplePayAvailable ? .applePay : nil
     var products = [Product]()
     var promoCode: String?
     var lastSubmissionDate: Date?

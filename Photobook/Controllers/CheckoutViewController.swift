@@ -181,8 +181,6 @@ class CheckoutViewController: UIViewController {
             navigationItem.leftBarButtonItems = [ cancelBarButtonItem ]
         }
         
-        setUpOrder()
-
         emptyScreenViewController.show(message: Constants.loadingDetailsText, activity: true)
         
         // Register for notifications
@@ -193,9 +191,13 @@ class CheckoutViewController: UIViewController {
     private func setUpOrder() {
         order.deliveryDetails = OLDeliveryDetails.selectedDetails()
         
+        // Load previously selected payment method
+        let (paymentMethod, _) = SelectedPaymentMethodHandler.load()
+        order.paymentMethod = paymentMethod
+        
         if (order.paymentMethod == .applePay && !PaymentAuthorizationManager.isApplePayAvailable) ||
             (order.paymentMethod == .payPal && !PaymentAuthorizationManager.isPayPalAvailable) ||
-            (order.paymentMethod == .creditCard && paymentManager.stripePaymentContext?.selectedPaymentOption == nil) {
+            (order.paymentMethod == .creditCard && paymentManager.selectedPaymentOption() == nil) {
             order.paymentMethod = nil
         }
     }
@@ -247,6 +249,8 @@ class CheckoutViewController: UIViewController {
         progressOverlayViewController.hide()
         promoCodeActivityIndicator.stopAnimating()
         promoCodeTextField.isUserInteractionEnabled = true
+        
+        setUpOrder()
         updateViews()
     }
     
@@ -466,8 +470,8 @@ class CheckoutViewController: UIViewController {
         paymentMethodIconImageView.image = nil
         if let paymentMethod = order.paymentMethod {
             switch paymentMethod {
-            case .creditCard where paymentManager.stripePaymentContext?.selectedPaymentOption != nil:
-                let card = paymentManager.stripePaymentContext!.selectedPaymentOption!
+            case .creditCard where paymentManager.selectedPaymentOption() != nil:
+                let card = paymentManager.selectedPaymentOption()!
                 paymentMethodIconImageView.image = card.image
                 paymentMethodView.accessibilityValue = card.label
                 paymentMethodTitleLabel.text = Constants.payingWithText
@@ -591,7 +595,7 @@ class CheckoutViewController: UIViewController {
     }
     
     private func paymentMethodIsValid() -> Bool {
-        return order.orderIsFree || (order.paymentMethod != nil && (order.paymentMethod != .creditCard || paymentManager.stripePaymentContext?.selectedPaymentOption != nil))
+        return order.orderIsFree || (order.paymentMethod != nil && (order.paymentMethod != .creditCard || paymentManager.selectedPaymentOption() != nil))
     }
     
     private func indicateDeliveryDetailsError() {

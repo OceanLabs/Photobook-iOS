@@ -36,7 +36,6 @@ class PaymentMethodsViewController: UIViewController {
     }
     
     var order: Order!
-    
     var paymentManager: PaymentAuthorizationManager!
     
     @IBOutlet weak var tableView: UITableView!
@@ -46,9 +45,7 @@ class PaymentMethodsViewController: UIViewController {
         set { order.paymentMethod = newValue }
     }
 
-    lazy var stripeSelectedCard: STPPaymentOption? = {
-        return paymentManager.stripePaymentContext?.selectedPaymentOption
-    }()
+    private var stripeIdForSelectedCard: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,14 +57,17 @@ class PaymentMethodsViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        // Check if a new card has been added / selected
-        if let currentStripeCard = paymentManager.stripePaymentContext?.selectedPaymentOption,
-           let stripeSelectedCard = stripeSelectedCard,
-           stripeSelectedCard.hash != currentStripeCard.hash {
-                self.stripeSelectedCard = currentStripeCard
+                
+        // Check if the user has a card selected
+        if let currentStripeCard = paymentManager.selectedPaymentOptionStripeId() {
+            if stripeIdForSelectedCard != currentStripeCard {
+                stripeIdForSelectedCard = currentStripeCard
                 selectedPaymentMethod = .creditCard
-                SelectedPaymentMethodHandler.save(.creditCard)
+                SelectedPaymentMethodHandler.save(.creditCard, id: stripeIdForSelectedCard)
+            }
+        } else if let firstAvailableMethod = paymentManager.availablePaymentMethods.first {
+            selectedPaymentMethod = firstAvailableMethod
+            SelectedPaymentMethodHandler.save(firstAvailableMethod)
         }
         tableView.reloadData()
     }
@@ -116,18 +116,17 @@ extension PaymentMethodsViewController: UITableViewDataSource {
             cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
             return cell
         case .creditCard where indexPath.item != paymentManager.availablePaymentMethods.count - 1: // Saved card
-            let selectedPaymentMethod = paymentManager.stripePaymentContext?.selectedPaymentOption
+            let selectedPaymentOption = paymentManager.selectedPaymentOption()
             
             let cell = tableView.dequeueReusableCell(withIdentifier: PaymentMethodTableViewCell.reuseIdentifier, for: indexPath) as! PaymentMethodTableViewCell
-            cell.method = selectedPaymentMethod?.label
-            cell.icon = selectedPaymentMethod?.image
+            cell.method = selectedPaymentOption?.label
+            cell.icon = selectedPaymentOption?.image
             
-            let selected = order.paymentMethod == .creditCard
+            let selected = selectedPaymentMethod == .creditCard
             cell.ticked = selected
             
-            cell.separator.isHidden = false
             cell.accessibilityIdentifier = "creditCardCell"
-            cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + (selectedPaymentMethod?.label ?? "")
+            cell.accessibilityLabel = (selected ? CommonLocalizedStrings.accessibilityListItemSelected : "") + (selectedPaymentOption?.label ?? "")
             cell.accessibilityHint = selected ? nil : CommonLocalizedStrings.accessibilityDoubleTapToSelectListItem
             return cell
         default:
@@ -150,17 +149,21 @@ extension PaymentMethodsViewController: UITableViewDelegate {
         switch indexPath.item {
         case 0 where PaymentAuthorizationManager.isApplePayAvailable: // Apple Pay
             selectedPaymentMethod = .applePay
+            stripeIdForSelectedCard = nil
+            SelectedPaymentMethodHandler.save(.applePay)
         case 0 where !PaymentAuthorizationManager.isApplePayAvailable && PaymentAuthorizationManager.isPayPalAvailable: // PayPal
             fallthrough
         case 1 where PaymentAuthorizationManager.isApplePayAvailable && PaymentAuthorizationManager.isPayPalAvailable: // PayPal
             selectedPaymentMethod = .payPal
+            stripeIdForSelectedCard = nil
+            SelectedPaymentMethodHandler.save(.payPal)
         case paymentManager.availablePaymentMethods.count - 1: // Add Payment Method
             tappedAddPaymentMethod(self)
         default: // Saved card
+            let currentStripeCard = paymentManager.selectedPaymentOptionStripeId()
             selectedPaymentMethod = .creditCard
-        }
-        if let paymentMethod = selectedPaymentMethod {
-            SelectedPaymentMethodHandler.save(paymentMethod)
+            stripeIdForSelectedCard = currentStripeCard
+            SelectedPaymentMethodHandler.save(.creditCard, id: currentStripeCard)
         }
         tableView.reloadData()
     }

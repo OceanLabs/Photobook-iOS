@@ -29,6 +29,7 @@
 
 import UIKit
 import Stripe
+import KeychainSwift
 import PassKit
 import PayPalDynamicLoader
 
@@ -133,18 +134,12 @@ class PaymentAuthorizationManager: NSObject {
         var methods = [PaymentMethod]()
         
         // Apple Pay
-        if PaymentAuthorizationManager.isApplePayAvailable {
-            methods.append(.applePay)
-        }
+        if PaymentAuthorizationManager.isApplePayAvailable { methods.append(.applePay) }
         
         // PayPal
-        if PaymentAuthorizationManager.isPayPalAvailable {
-            methods.append(.payPal)
-        }
+        if PaymentAuthorizationManager.isPayPalAvailable { methods.append(.payPal) }
         
-        if stripePaymentContext?.selectedPaymentOption != nil {
-            methods.append(.creditCard)
-        }
+        if selectedPaymentOption() != nil { methods.append(.creditCard) }
         
         methods.append(.creditCard) // Adding a new card is always available
         
@@ -210,13 +205,13 @@ class PaymentAuthorizationManager: NSObject {
             config.requiredBillingAddressFields = .none
             config.requiredShippingAddressFields = nil
             config.canDeletePaymentOptions = true
-            config.createCardSources = true
             
             let paymentContext = STPPaymentContext(customerContext: customerContext,
                                                    configuration: config,
                                                    theme: .default())
             paymentContext.prefilledInformation = STPUserInformation()
             paymentContext.hostViewController = hostViewController
+            paymentContext.defaultPaymentMethod = selectedPaymentOptionStripeId()
             paymentContext.delegate = self
             stripePaymentContext = paymentContext
         }
@@ -250,17 +245,66 @@ class PaymentAuthorizationManager: NSObject {
         }
     }
     
+    func selectedPaymentOptionStripeId() -> String? {
+        return (selectedPaymentOption() as? STPPaymentMethod)?.stripeId
+    }
+    
+    func selectedPaymentOption() -> STPPaymentOption? {
+        if let paymentOption = stripePaymentContext?.selectedPaymentOption { return paymentOption }
+        
+        let (paymentMethod, stripeId) = SelectedPaymentMethodHandler.load()
+        if paymentMethod == .creditCard, let stripeId = stripeId {
+            if stripePaymentContext?.defaultPaymentMethod != stripeId {
+                stripePaymentContext?.defaultPaymentMethod = stripeId
+            }
+            return stripePaymentContext?.paymentOptions?.first { ($0 as? STPPaymentMethod)?.stripeId == stripeId }
+        }
+
+        return nil
+    }
+    
     /// Ask Stripe for a charge authorization token
     ///
     /// - Parameter cost: The total cost of the order
     private func authorizeCreditCard(cost: Cost) {
-        guard let paymentContext = stripePaymentContext else { return }
-
-        paymentContext.paymentCurrency = cost.total.currencyCode
-        paymentContext.paymentAmount = cost.total.int()
-        paymentContext.requestPayment()
+        createPaymentIntent(withCost: cost)
     }
     
+    private func createPaymentIntent(withCost cost: Cost) {
+        var sourceId = (selectedPaymentOption() as? STPPaymentMethod)?.stripeId
+        if sourceId == nil {
+            // In some rare scenarios the context seems to be setting initialising and missing the payment options
+            // However the default payment method will be set by selectedPaymentOption()
+            sourceId = stripePaymentContext?.defaultPaymentMethod
+        }
+        
+        guard sourceId != nil else { return }
+    
+        let amount = Double(cost.total.int()) / 100.0
+        let currency = cost.total.currencyCode
+        
+        KiteAPIClient.shared.createPaymentIntentWithSourceId(sourceId!, amount: amount, currency: currency) { [weak welf = self] result in
+            guard let stelf = welf else { return }
+            
+            if case .failure(let error) = result {
+                stelf.delegate?.paymentAuthorizationDidFinish(token: nil, error: error, completionHandler: nil)
+                return
+            }
+            let paymentIntent = try! result.get()
+            
+            if paymentIntent.status == .requiresAction {
+                guard let redirectContext = STPRedirectContext(paymentIntent: paymentIntent, completion: { _, _ in }) else {
+                    let error = APIClientError.parsing(details: "PaymentResult: Failed to redirect to authorization page")
+                    stelf.delegate?.paymentAuthorizationDidFinish(token: nil, error: error, completionHandler: nil)
+                    return
+                }
+                stelf.delegate?.paymentAuthorizationRequiresAction(withContext: redirectContext)
+            } else {
+                stelf.delegate?.paymentAuthorizationDidFinish(token: paymentIntent.stripeId, error: nil, completionHandler: nil)
+            }
+        }
+    }
+
     /// Present the Apple Pay authorization sheet
     ///
     /// - Parameter cost: The total cost of the order
@@ -395,7 +439,7 @@ extension PaymentAuthorizationManager: PKPaymentAuthorizationViewControllerDeleg
                 return
             }
 
-            //Cost is expected to change here so update views
+            // Cost is expected to change here so update views
             stelf.delegate?.costUpdated()
             
             completion(.success, [PKShippingMethod](), applePaySummary)
@@ -433,38 +477,12 @@ extension PaymentAuthorizationManager: STPPaymentContextDelegate {
         delegate?.paymentAuthorizationDidFinish(token: nil, error: error, completionHandler: nil)
     }
     
-    func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
-        let sourceId = paymentResult.source.stripeID
-        let amount = Double(paymentContext.paymentAmount) / 100.0
-        let currency = paymentContext.paymentCurrency
-        
-        KiteAPIClient.shared.createPaymentIntentWithSourceId(sourceId, amount: amount, currency: currency) { [weak welf = self] result in
-            guard let stelf = welf else { return }
-            
-            if case .failure(let error) = result {
-                stelf.delegate?.paymentAuthorizationDidFinish(token: nil, error: error, completionHandler: nil)
-                return
-            }
-            let paymentIntent = try! result.get()
-
-            if paymentIntent.status == .requiresAction {
-                guard let redirectContext = STPRedirectContext(paymentIntent: paymentIntent, completion: { _, _ in }) else {
-                    let error = APIClientError.parsing(details: "PaymentResult: Failed to redirect to authorization page")
-                    stelf.delegate?.paymentAuthorizationDidFinish(token: nil, error: error, completionHandler: nil)
-                    completion(error)
-                    return
-                }
-                stelf.delegate?.paymentAuthorizationRequiresAction(withContext: redirectContext)
-            } else {
-                stelf.delegate?.paymentAuthorizationDidFinish(token: paymentIntent.stripeId, error: nil, completionHandler: nil)
-            }
-            completion(nil)
-        }
-    }
-    
+    func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPPaymentStatusBlock) {}
     func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {}
 }
 
+/// Saves the payment method selected by the user
+/// For bank cards, it also saves the stripeId in case the user adds multiple ones.
 class SelectedPaymentMethodHandler {
     
     private struct StorageKeys {
@@ -476,12 +494,18 @@ class SelectedPaymentMethodHandler {
         return APIClient.environment == .live ? StorageKeys.live : StorageKeys.test
     }
     
-    static func save(_ paymentMethod: PaymentMethod) {
-        UserDefaults.standard.set(paymentMethod.rawValue, forKey: storageKey)
+    static func save(_ paymentMethod: PaymentMethod, id: String? = nil) {
+        if ProcessInfo.processInfo.arguments.contains("UITESTINGENVIRONMENT") { return }
+        let value = "\(paymentMethod.rawValue)" + (id != nil ? ":" + id! : "")
+        KeychainSwift().set(value, forKey: storageKey)
     }
     
-    static func load() -> PaymentMethod {
-        let rawPaymentMethod = UserDefaults.standard.integer(forKey: storageKey)
-        return PaymentMethod(rawValue: rawPaymentMethod)!
+    static func load() -> (PaymentMethod, String?) {
+        if ProcessInfo.processInfo.arguments.contains("UITESTINGENVIRONMENT") { return (.applePay, nil) }
+        if let value = KeychainSwift().get(storageKey) {
+            let components = value.components(separatedBy: ":")
+            return (PaymentMethod(rawValue: Int(components.first!)!)!, components.count > 1 ? components[1] : nil)
+        }
+        return (.applePay, nil)
     }
 }
