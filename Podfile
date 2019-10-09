@@ -5,23 +5,21 @@ target 'Photobook App' do
 pod 'Fabric'
 pod 'Crashlytics'
 pod 'OAuthSwift', '~> 2.0.0'
-pod 'KeychainSwift'
+pod 'KeychainSwift', '~> 16.0.1'
 pod 'SDWebImage', '~> 4.3'
 pod 'FBSDKCoreKit'
 pod 'FBSDKLoginKit'
-pod 'Analytics', '~> 3.0'
-pod 'PayPal-iOS-SDK/Core', '~> 2.18.0'
+pod 'Analytics', '~> 3.6.10'
 end
 
 target 'SDK Demo' do
-pod 'PayPal-iOS-SDK/Core', '~> 2.18.0'
 end
 
 target 'Photobook' do
-pod 'Stripe', '~> 15.0.1'
+pod 'Stripe', '~> 18.0.0'
 pod 'Fabric'
 pod 'Crashlytics'
-pod 'KeychainSwift', "~> 16.0.1"
+pod 'KeychainSwift', '~> 16.0.1'
 pod 'SDWebImage', '~> 4.3'
 pod 'Analytics', '~> 3.6.10'
 pod 'PayPal-iOS-Dynamic-Loader'
