@@ -41,8 +41,9 @@ class DefaultCollectionManager: CollectionManager {
 }
 
 class Story: Codable {
-    private(set) var collectionList: PHCollectionList! = nil
-    private(set) var collectionForCoverPhoto: PHAssetCollection! = nil
+    private(set) var title: String!
+    private(set) var collectionList: PHCollectionList!
+    private(set) var collectionForCoverPhoto: PHAssetCollection!
     var components: [String]!
     var photoCount = 0
     var isWeekend = false
@@ -52,10 +53,6 @@ class Story: Codable {
     
     // Ability to set locale in Unit Tests
     lazy var locale = Locale.current
-    
-    var title: String {
-        return collectionList.localizedTitle!.uppercased()
-    }
     
     lazy var collectionManager: CollectionManager = DefaultCollectionManager()
     lazy var assetsManager: AssetManager = DefaultAssetManager()
@@ -68,9 +65,10 @@ class Story: Codable {
         return dateString().uppercased()
     }()
     
-    convenience init(list: PHCollectionList, coverCollection: PHAssetCollection) {
+    convenience init(list: PHCollectionList, storyTitle: String, coverCollection: PHAssetCollection) {
         self.init()
         
+        title = storyTitle.uppercased()
         collectionList = list
         collectionForCoverPhoto = coverCollection
     }

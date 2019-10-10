@@ -159,11 +159,27 @@ class StoriesManager: NSObject {
                 totalAssetCount += filteredCollection.count
             }
             
-            // Must also have a title
-            guard let title = list.localizedTitle else { return }
+            var locationComponents = [String]()
+            var storyTitle: String?
+            if let title = list.localizedTitle {
+                // Break down the cluster title into different locations
+                storyTitle = title
+                locationComponents = self.breakDownLocation(title: title)
+            } else {
+                // The Photo Library seems to be phasing out moment lists as of iOS 13 and they don't have a title after the update.
+                // If that's the case, use the individual moments to work out a title
+                var locationsDictionary = [String: Int]()
+                for i in 0 ..< moments.count {
+                    guard let title = moments[i].localizedTitle else { continue }
+                    let locationCount = locationsDictionary[title] ?? 0
+                    locationsDictionary[title] = locationCount + 1
+                }
+                let locationsSorted = locationsDictionary.sorted { $0.value > $1.value }
+                storyTitle = locationsSorted.first?.key
+                if locationsSorted.count > 1 { storyTitle = storyTitle! + ", " + locationsSorted[1].key }
+            }
             
-            // Break down the cluster title into different locations
-            let locationComponents = self.breakDownLocation(title: title)
+            guard let title = storyTitle else { return }
             
             for component in locationComponents {
                 if let locationItem = locations[component] {
@@ -176,7 +192,7 @@ class StoriesManager: NSObject {
             // Minimum asset count
             guard totalAssetCount >= PhotobookSDK.shared.minimumRequiredPhotos else { return }
             
-            let story = Story(list: list, coverCollection: moments.firstObject!)
+            let story = Story(list: list, storyTitle: title, coverCollection: moments.firstObject!)
             story.components = locationComponents
             story.photoCount = totalAssetCount
             

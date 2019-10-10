@@ -42,7 +42,7 @@ class StoryTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        story = Story(list: list, coverCollection: coverCollection)
+        story = Story(list: list, storyTitle: list.localizedTitle!, coverCollection: coverCollection)
     }
     
     override func tearDown() {
