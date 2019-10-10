@@ -246,6 +246,7 @@ class PageSetupViewController: UIViewController, PhotobookNavigationBarDelegate 
             setupTextEditing()
             
             pageView.pageIndex = pageIndex
+            pageView.product = product
             pageView.productLayout = productLayout
             pageView.setupTextBox(mode: .userTextOnly)
             
