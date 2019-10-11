@@ -92,6 +92,6 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIUserInterfaceStyle</key>
-	<string>light</string>
+	<string>Light</string>
 </dict>
 </plist>
