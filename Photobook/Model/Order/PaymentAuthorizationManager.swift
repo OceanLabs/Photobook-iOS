@@ -124,8 +124,12 @@ class PaymentAuthorizationManager: NSObject {
         }
     }
     
-    static var haveSetPaymentKeys: Bool {
+    static var hasSetPaymentKeys: Bool {
         return paypalApiKey != nil || stripeKey != nil
+    }
+    
+    static var shouldUpdatePaymentKeys = true {
+        didSet { KiteAPIClient.shared.stripeCustomerId = nil }
     }
     
     weak var delegate: (PaymentAuthorizationManagerDelegate & UIViewController)?
@@ -154,12 +158,12 @@ class PaymentAuthorizationManager: NSObject {
         return NSClassFromString("PayPalMobile") != nil
     }
     
-    static func setPaymentKeys(_ completionHandler: ((_ error: APIClientError?) -> Void)? = nil) {
-        guard !haveSetPaymentKeys else {
+    private static func setPaymentKeys(_ completionHandler: ((_ error: APIClientError?) -> Void)? = nil) {
+        guard !hasSetPaymentKeys || shouldUpdatePaymentKeys else {
             completionHandler?(nil)
             return
         }
-        
+
         KiteAPIClient.shared.getPaymentKeys() { result in
             if case .failure(let error) = result {
                 completionHandler?(error)
@@ -169,6 +173,8 @@ class PaymentAuthorizationManager: NSObject {
             
             self.paypalApiKey = keys.paypalKey
             self.stripeKey = keys.stripeKey
+            PaymentAuthorizationManager.shouldUpdatePaymentKeys = false
+            
             completionHandler?(nil)
         }
     }
@@ -215,12 +221,7 @@ class PaymentAuthorizationManager: NSObject {
             paymentContext.delegate = self
             stripePaymentContext = paymentContext
         }
-        
-        if let stripePublicKey = PaymentAuthorizationManager.stripeKey {
-            configure(with: stripePublicKey)
-            return
-        }
-        
+                
         PaymentAuthorizationManager.setPaymentKeys() { error in
             guard let stripePublicKey = PaymentAuthorizationManager.stripeKey else { return }
             configure(with: stripePublicKey)

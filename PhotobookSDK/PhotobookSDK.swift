@@ -75,6 +75,7 @@ struct AssetsNotificationName {
                 APIClient.environment = .live
                 KiteAPIClient.environment = .live
             }
+            PaymentAuthorizationManager.shouldUpdatePaymentKeys = true
         }
     }
 
@@ -95,7 +96,7 @@ struct AssetsNotificationName {
         didSet {
             PhotobookAPIManager.apiKey = kiteApiKey
             KiteAPIClient.shared.apiKey = kiteApiKey
-            PaymentAuthorizationManager.setPaymentKeys()
+            PaymentAuthorizationManager.shouldUpdatePaymentKeys = true
         }
     }
     

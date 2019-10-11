@@ -95,7 +95,7 @@ class KiteAPIClient: NSObject {
         ]
     }
     
-    private var stripeCustomerId: String?
+    var stripeCustomerId: String?
     
     func requestSignedUrl(for type: MimeType, _ completionHandler: @escaping (Result<(signedUrl: URL, fileUrl: URL), APIClientError>) -> Void) {
         guard apiKey != nil else {
