@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "Photobook"
-  s.version      = "2.1.0"
+  s.version      = "2.1.1"
   s.summary      = "The Photobook SDK makes it easy to create beautiful, high quality photo books from within your app"
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.platform     = :ios, "10.0"
