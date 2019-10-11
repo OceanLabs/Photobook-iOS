@@ -1,3 +1,7 @@
+### 2.1.1
+- Updated Stripe to latest version
+- Bug fixes
+
 ## 2.1.0
 - Added support for 3DS2 payments
 - Fixes and improvements
