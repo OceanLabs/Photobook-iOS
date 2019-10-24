@@ -1,3 +1,6 @@
+### 2.1.2
+- Amended wording on upload screen
+
 ### 2.1.1
 - Updated Stripe to latest version
 - Bug fixes
